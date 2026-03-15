@@ -1,201 +1,209 @@
-import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@nestjs/swagger";
+import { Mixin } from "ts-mixer";
 import {
-  IsDateString,
+  EntityBaseRestDto,
+  PaginatedFilterByIdRestDto,
+  PaginationMetaRestDto,
+} from "@/modules/@shared/infrastructure/presentation/rest/dtos";
+import {
+  ApiProperty,
+  ApiPropertyOptional,
+  ApiSchema,
+  commonProperties,
+  PartialType,
+  RegisterModel,
+  simpleProperty,
+  TransformToArray,
+} from "@/modules/@shared/presentation/rest";
+import {
+  IsArray,
   IsEmail,
   IsNotEmpty,
   IsOptional,
-  IsString,
   IsUUID,
-  Length,
-} from "class-validator";
-import {
-  PaginationInputRestDto,
-  UuidParamRestDto,
-} from "@/modules/@shared/infrastructure/presentation/rest/dtos";
+} from "@/modules/@shared/presentation/shared";
+import { EstagiarioFieldsMixin } from "../estagiario.validation-mixin";
 
-@ApiSchema({ name: "EstagiarioCreateInputDto" })
-export class EstagiarioCreateInputRestDto {
-  @ApiProperty({
-    type: "string",
-    format: "uuid",
-    description: "ID do perfil vinculado ao estagiário",
-  })
-  @IsUUID("4")
-  idPerfilFk!: string;
-
-  @ApiProperty({
-    type: "string",
-    format: "uuid",
-    description: "ID do curso vinculado ao estagiário",
-  })
-  @IsUUID("4")
-  idCursoFk!: string;
-
-  @ApiProperty({
-    type: "string",
-    format: "uuid",
-    description: "ID da turma vinculada ao estagiário",
-  })
-  @IsUUID("4")
-  idTurmaFk!: string;
-
-  @ApiProperty({
-    type: "string",
-    description: "Telefone do estagiário",
-    minLength: 1,
-    maxLength: 15,
-  })
-  @IsString()
-  @Length(1, 15)
-  telefone!: string;
-
-  @ApiProperty({
-    type: "string",
-    format: "email",
-    description: "Email institucional do estagiário",
-  })
-  @IsEmail()
-  @IsNotEmpty()
-  emailInstitucional!: string;
-
-  @ApiProperty({ type: "string", format: "date", description: "Data de nascimento do estagiário" })
-  @IsDateString()
-  dataNascimento!: string;
-}
-
-@ApiSchema({ name: "EstagiarioUpdateInputDto" })
-export class EstagiarioUpdateInputRestDto {
-  @ApiPropertyOptional({
-    type: "string",
-    format: "uuid",
-    description: "ID do perfil vinculado ao estagiário",
-  })
-  @IsUUID("4")
-  @IsOptional()
-  idPerfilFk?: string;
-
-  @ApiPropertyOptional({
-    type: "string",
-    format: "uuid",
-    description: "ID do curso vinculado ao estagiário",
-  })
-  @IsUUID("4")
-  @IsOptional()
-  idCursoFk?: string;
-
-  @ApiPropertyOptional({
-    type: "string",
-    format: "uuid",
-    description: "ID da turma vinculada ao estagiário",
-  })
-  @IsUUID("4")
-  @IsOptional()
-  idTurmaFk?: string;
-
-  @ApiPropertyOptional({
-    type: "string",
-    description: "Telefone do estagiário",
-    minLength: 1,
-    maxLength: 15,
-  })
-  @IsString()
-  @Length(1, 15)
-  @IsOptional()
-  telefone?: string;
-
-  @ApiProperty({
-    type: "string",
-    format: "email",
-    description: "Email institucional do estagiário",
-  })
-  @IsEmail()
-  @IsNotEmpty()
-  emailInstitucional!: string;
-
-  @ApiPropertyOptional({
-    type: "string",
-    format: "date",
-    description: "Data de nascimento do estagiário",
-  })
-  @IsDateString()
-  @IsOptional()
-  dataNascimento?: string;
-}
-
-@ApiSchema({ name: "EstagiarioFindOneInputDto" })
-export class EstagiarioFindOneInputRestDto extends UuidParamRestDto {}
-
-@ApiSchema({ name: "EstagiarioListInputDto" })
-export class EstagiarioListInputRestDto extends PaginationInputRestDto {
-  @ApiPropertyOptional({
-    type: "string",
-    format: "uuid",
-    description: "Filtro por ID de perfil (string ou array)",
-  })
-  @IsOptional()
-  "filter.idPerfilFk"?: string | string[];
-
-  @ApiPropertyOptional({
-    type: "string",
-    format: "uuid",
-    description: "Filtro por ID de curso (string ou array)",
-  })
-  @IsOptional()
-  "filter.idCursoFk"?: string | string[];
-
-  @ApiPropertyOptional({
-    type: "string",
-    format: "uuid",
-    description: "Filtro por ID de turma (string ou array)",
-  })
-  @IsOptional()
-  "filter.idTurmaFk"?: string | string[];
-}
+// ============================================================================
+// FindOne Output
+// ============================================================================
 
 @ApiSchema({ name: "EstagiarioFindOneOutputDto" })
-export class EstagiarioFindOneOutputRestDto {
-  @ApiProperty({ type: "string", format: "uuid" })
-  id!: string;
+@RegisterModel({
+  name: "EstagiarioFindOneOutputDto",
+  properties: [
+    simpleProperty("id"),
+    simpleProperty("idPerfilFk"),
+    simpleProperty("idCursoFk"),
+    simpleProperty("idTurmaFk"),
+    simpleProperty("telefone"),
+    simpleProperty("emailInstitucional"),
+    simpleProperty("dataNascimento"),
+    simpleProperty("ativo"),
+    ...commonProperties.dated,
+  ],
+})
+export class EstagiarioFindOneOutputRestDto extends Mixin(
+  EntityBaseRestDto,
+  EstagiarioFieldsMixin,
+) {
+  @ApiProperty({
+    type: "string",
+    format: "uuid",
+    description: "ID do perfil vinculado ao estagiário",
+  })
+  declare idPerfilFk: string;
 
-  @ApiProperty({ type: "string", format: "uuid" })
-  idPerfilFk!: string;
+  @ApiProperty({
+    type: "string",
+    format: "uuid",
+    description: "ID do curso vinculado ao estagiário",
+  })
+  declare idCursoFk: string;
 
-  @ApiProperty({ type: "string", format: "uuid" })
-  idCursoFk!: string;
+  @ApiProperty({
+    type: "string",
+    format: "uuid",
+    description: "ID da turma vinculada ao estagiário",
+  })
+  declare idTurmaFk: string;
 
-  @ApiProperty({ type: "string", format: "uuid" })
-  idTurmaFk!: string;
+  @ApiProperty({
+    type: "string",
+    description: "Telefone do estagiário",
+    minLength: 1,
+    maxLength: 15,
+  })
+  declare telefone: string;
 
-  @ApiProperty({ type: "string" })
-  telefone!: string;
+  @ApiPropertyOptional({
+    type: "string",
+    format: "email",
+    nullable: true,
+    description: "Email institucional do estagiário",
+  })
+  emailInstitucional: string | null;
 
-  @ApiPropertyOptional({ type: "string", format: "email", nullable: false })
-  emailInstitucional!: string | null;
+  @ApiProperty({ type: "string", format: "date", description: "Data de nascimento do estagiário" })
+  declare dataNascimento: string;
 
-  @ApiProperty({ type: "string", format: "date" })
-  dataNascimento!: string;
+  @ApiProperty({ type: "boolean", description: "Se o estagiário está ativo" })
+  ativo: boolean;
+}
 
-  @ApiProperty({ type: "boolean" })
-  ativo!: boolean;
+// ============================================================================
+// List Input/Output
+// ============================================================================
 
-  @ApiProperty({ type: "string", format: "date-time" })
-  dateCreated!: string;
+@ApiSchema({ name: "EstagiarioListInputDto" })
+export class EstagiarioListInputRestDto extends PaginatedFilterByIdRestDto {
+  @ApiPropertyOptional({
+    type: "string",
+    format: "uuid",
+    description: "Filtro por ID de perfil",
+    isArray: true,
+  })
+  @TransformToArray()
+  @IsOptional()
+  @IsArray()
+  @IsUUID(undefined, { each: true })
+  "filter.idPerfilFk"?: string[];
 
-  @ApiProperty({ type: "string", format: "date-time" })
-  dateUpdated!: string;
+  @ApiPropertyOptional({
+    type: "string",
+    format: "uuid",
+    description: "Filtro por ID de curso",
+    isArray: true,
+  })
+  @TransformToArray()
+  @IsOptional()
+  @IsArray()
+  @IsUUID(undefined, { each: true })
+  "filter.idCursoFk"?: string[];
+
+  @ApiPropertyOptional({
+    type: "string",
+    format: "uuid",
+    description: "Filtro por ID de turma",
+    isArray: true,
+  })
+  @TransformToArray()
+  @IsOptional()
+  @IsArray()
+  @IsUUID(undefined, { each: true })
+  "filter.idTurmaFk"?: string[];
 }
 
 @ApiSchema({ name: "EstagiarioListOutputDto" })
 export class EstagiarioListOutputRestDto {
-  @ApiProperty({ type: () => [EstagiarioFindOneOutputRestDto] })
-  data!: EstagiarioFindOneOutputRestDto[];
+  @ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" })
+  meta: PaginationMetaRestDto;
 
-  @ApiProperty({ type: "number" })
-  total!: number;
+  @ApiProperty({ type: () => [EstagiarioFindOneOutputRestDto], description: "Resultados da busca" })
+  data: EstagiarioFindOneOutputRestDto[];
+}
 
-  @ApiProperty({ type: "number" })
-  page!: number;
+// ============================================================================
+// Create/Update Input
+// ============================================================================
 
-  @ApiProperty({ type: "number" })
-  limit!: number;
+@ApiSchema({ name: "EstagiarioCreateInputDto" })
+export class EstagiarioCreateInputRestDto extends EstagiarioFieldsMixin {
+  @ApiProperty({
+    type: "string",
+    format: "uuid",
+    description: "ID do perfil vinculado ao estagiário",
+  })
+  declare idPerfilFk: string;
+
+  @ApiProperty({
+    type: "string",
+    format: "uuid",
+    description: "ID do curso vinculado ao estagiário",
+  })
+  declare idCursoFk: string;
+
+  @ApiProperty({
+    type: "string",
+    format: "uuid",
+    description: "ID da turma vinculada ao estagiário",
+  })
+  declare idTurmaFk: string;
+
+  @ApiProperty({
+    type: "string",
+    description: "Telefone do estagiário",
+    minLength: 1,
+    maxLength: 15,
+  })
+  declare telefone: string;
+
+  @ApiProperty({
+    type: "string",
+    format: "email",
+    description: "Email institucional do estagiário",
+  })
+  @IsEmail()
+  @IsNotEmpty()
+  emailInstitucional: string;
+
+  @ApiProperty({ type: "string", format: "date", description: "Data de nascimento do estagiário" })
+  declare dataNascimento: string;
+}
+
+@ApiSchema({ name: "EstagiarioUpdateInputDto" })
+export class EstagiarioUpdateInputRestDto extends PartialType(EstagiarioCreateInputRestDto) {}
+
+// ============================================================================
+// FindOne Input (for path params)
+// ============================================================================
+
+@ApiSchema({ name: "EstagiarioFindOneInputDto" })
+export class EstagiarioFindOneInputRestDto {
+  @ApiProperty({
+    type: "string",
+    description: "Identificador do registro (uuid)",
+    format: "uuid",
+  })
+  @IsUUID()
+  id: string;
 }

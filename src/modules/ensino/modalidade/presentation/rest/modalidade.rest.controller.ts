@@ -7,7 +7,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
-import { DeclareDependency, IContainer } from "@/domain/dependency-injection";
+import { DeclareDependency } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { IModalidadeCreateCommandHandler } from "@/modules/ensino/modalidade/domain/commands/modalidade-create.command.handler.interface";
@@ -29,7 +29,18 @@ import { ModalidadeRestMapper } from "./modalidade.rest.mapper";
 @ApiTags("modalidades")
 @Controller("/modalidades")
 export class ModalidadeRestController {
-  constructor(@DeclareDependency(IContainer) private readonly container: IContainer) {}
+  constructor(
+    @DeclareDependency(IModalidadeListQueryHandler)
+    private readonly listHandler: IModalidadeListQueryHandler,
+    @DeclareDependency(IModalidadeFindOneQueryHandler)
+    private readonly findOneHandler: IModalidadeFindOneQueryHandler,
+    @DeclareDependency(IModalidadeCreateCommandHandler)
+    private readonly createHandler: IModalidadeCreateCommandHandler,
+    @DeclareDependency(IModalidadeUpdateCommandHandler)
+    private readonly updateHandler: IModalidadeUpdateCommandHandler,
+    @DeclareDependency(IModalidadeDeleteCommandHandler)
+    private readonly deleteHandler: IModalidadeDeleteCommandHandler,
+  ) {}
 
   @Get("/")
   @ApiOperation({ summary: "Lista modalidades", operationId: "modalidadeFindAll" })
@@ -40,10 +51,7 @@ export class ModalidadeRestController {
     @Query() dto: ModalidadeListInputRestDto,
   ): Promise<ModalidadeListOutputRestDto> {
     const input = ModalidadeRestMapper.toListInput(dto);
-    const listHandler = this.container.get<IModalidadeListQueryHandler>(
-      IModalidadeListQueryHandler,
-    );
-    const result = await listHandler.execute(accessContext, input);
+    const result = await this.listHandler.execute(accessContext, input);
     return ModalidadeRestMapper.toListOutputDto(result);
   }
 
@@ -57,10 +65,7 @@ export class ModalidadeRestController {
     @Param() params: ModalidadeFindOneInputRestDto,
   ): Promise<ModalidadeFindOneOutputRestDto> {
     const input = ModalidadeRestMapper.toFindOneInput(params);
-    const findOneHandler = this.container.get<IModalidadeFindOneQueryHandler>(
-      IModalidadeFindOneQueryHandler,
-    );
-    const result = await findOneHandler.execute(accessContext, input);
+    const result = await this.findOneHandler.execute(accessContext, input);
     ensureExists(result, Modalidade.entityName, input.id);
     return ModalidadeRestMapper.toFindOneOutputDto(result);
   }
@@ -74,10 +79,7 @@ export class ModalidadeRestController {
     @Body() dto: ModalidadeCreateInputRestDto,
   ): Promise<ModalidadeFindOneOutputRestDto> {
     const input = ModalidadeRestMapper.toCreateInput(dto);
-    const createHandler = this.container.get<IModalidadeCreateCommandHandler>(
-      IModalidadeCreateCommandHandler,
-    );
-    const result = await createHandler.execute(accessContext, input);
+    const result = await this.createHandler.execute(accessContext, input);
     return ModalidadeRestMapper.toFindOneOutputDto(result);
   }
 
@@ -92,10 +94,7 @@ export class ModalidadeRestController {
     @Body() dto: ModalidadeUpdateInputRestDto,
   ): Promise<ModalidadeFindOneOutputRestDto> {
     const input = ModalidadeRestMapper.toUpdateInput(params, dto);
-    const updateHandler = this.container.get<IModalidadeUpdateCommandHandler>(
-      IModalidadeUpdateCommandHandler,
-    );
-    const result = await updateHandler.execute(accessContext, input);
+    const result = await this.updateHandler.execute(accessContext, input);
     return ModalidadeRestMapper.toFindOneOutputDto(result);
   }
 
@@ -109,9 +108,6 @@ export class ModalidadeRestController {
     @Param() params: ModalidadeFindOneInputRestDto,
   ): Promise<boolean> {
     const input = ModalidadeRestMapper.toFindOneInput(params);
-    const deleteHandler = this.container.get<IModalidadeDeleteCommandHandler>(
-      IModalidadeDeleteCommandHandler,
-    );
-    return deleteHandler.execute(accessContext, input);
+    return this.deleteHandler.execute(accessContext, input);
   }
 }

@@ -1,6 +1,6 @@
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
-import { DeclareDependency, IContainer } from "@/domain/dependency-injection";
+import { DeclareDependency } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
@@ -22,8 +22,16 @@ import { ModalidadeGraphqlMapper } from "./modalidade.graphql.mapper";
 @Resolver(() => ModalidadeFindOneOutputGraphQlDto)
 export class ModalidadeGraphqlResolver {
   constructor(
-    @DeclareDependency(IContainer)
-    private readonly container: IContainer,
+    @DeclareDependency(IModalidadeListQueryHandler)
+    private readonly listHandler: IModalidadeListQueryHandler,
+    @DeclareDependency(IModalidadeFindOneQueryHandler)
+    private readonly findOneHandler: IModalidadeFindOneQueryHandler,
+    @DeclareDependency(IModalidadeCreateCommandHandler)
+    private readonly createHandler: IModalidadeCreateCommandHandler,
+    @DeclareDependency(IModalidadeUpdateCommandHandler)
+    private readonly updateHandler: IModalidadeUpdateCommandHandler,
+    @DeclareDependency(IModalidadeDeleteCommandHandler)
+    private readonly deleteHandler: IModalidadeDeleteCommandHandler,
   ) {}
 
   @Query(() => ModalidadeListOutputGraphQlDto, { name: "modalidadeFindAll" })
@@ -37,11 +45,7 @@ export class ModalidadeGraphqlResolver {
     if (input) {
       input.selection = graphqlExtractSelection(info, "paginated");
     }
-
-    const listHandler = this.container.get<IModalidadeListQueryHandler>(
-      IModalidadeListQueryHandler,
-    );
-    const result = await listHandler.execute(accessContext, input);
+    const result = await this.listHandler.execute(accessContext, input);
     return ModalidadeGraphqlMapper.toListOutputDto(result);
   }
 
@@ -52,10 +56,7 @@ export class ModalidadeGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<ModalidadeFindOneOutputGraphQlDto> {
     const selection = graphqlExtractSelection(info);
-    const findOneHandler = this.container.get<IModalidadeFindOneQueryHandler>(
-      IModalidadeFindOneQueryHandler,
-    );
-    const result = await findOneHandler.execute(accessContext, { id, selection });
+    const result = await this.findOneHandler.execute(accessContext, { id, selection });
     ensureExists(result, Modalidade.entityName, id);
     return ModalidadeGraphqlMapper.toFindOneOutputDto(result);
   }
@@ -67,10 +68,7 @@ export class ModalidadeGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<ModalidadeFindOneOutputGraphQlDto> {
     const input = ModalidadeGraphqlMapper.toCreateInput(dto);
-    const createHandler = this.container.get<IModalidadeCreateCommandHandler>(
-      IModalidadeCreateCommandHandler,
-    );
-    const result = await createHandler.execute(accessContext, input);
+    const result = await this.createHandler.execute(accessContext, input);
     return ModalidadeGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -82,10 +80,7 @@ export class ModalidadeGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<ModalidadeFindOneOutputGraphQlDto> {
     const input = ModalidadeGraphqlMapper.toUpdateInput({ id }, dto);
-    const updateHandler = this.container.get<IModalidadeUpdateCommandHandler>(
-      IModalidadeUpdateCommandHandler,
-    );
-    const result = await updateHandler.execute(accessContext, input);
+    const result = await this.updateHandler.execute(accessContext, input);
     return ModalidadeGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -94,9 +89,6 @@ export class ModalidadeGraphqlResolver {
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<boolean> {
-    const deleteHandler = this.container.get<IModalidadeDeleteCommandHandler>(
-      IModalidadeDeleteCommandHandler,
-    );
-    return deleteHandler.execute(accessContext, { id });
+    return this.deleteHandler.execute(accessContext, { id });
   }
 }

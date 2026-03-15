@@ -1,6 +1,6 @@
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
-import { DeclareDependency, IContainer } from "@/domain/dependency-injection";
+import { DeclareDependency } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
@@ -21,7 +21,18 @@ import { OfertaFormacaoNivelFormacaoGraphqlMapper } from "./oferta-formacao-nive
 
 @Resolver(() => OfertaFormacaoNivelFormacaoFindOneOutputGraphQlDto)
 export class OfertaFormacaoNivelFormacaoGraphqlResolver {
-  constructor(@DeclareDependency(IContainer) private readonly container: IContainer) {}
+  constructor(
+    @DeclareDependency(IOfertaFormacaoNivelFormacaoListQueryHandler)
+    private readonly listHandler: IOfertaFormacaoNivelFormacaoListQueryHandler,
+    @DeclareDependency(IOfertaFormacaoNivelFormacaoFindOneQueryHandler)
+    private readonly findOneHandler: IOfertaFormacaoNivelFormacaoFindOneQueryHandler,
+    @DeclareDependency(IOfertaFormacaoNivelFormacaoCreateCommandHandler)
+    private readonly createHandler: IOfertaFormacaoNivelFormacaoCreateCommandHandler,
+    @DeclareDependency(IOfertaFormacaoNivelFormacaoUpdateCommandHandler)
+    private readonly updateHandler: IOfertaFormacaoNivelFormacaoUpdateCommandHandler,
+    @DeclareDependency(IOfertaFormacaoNivelFormacaoDeleteCommandHandler)
+    private readonly deleteHandler: IOfertaFormacaoNivelFormacaoDeleteCommandHandler,
+  ) {}
 
   @Query(() => OfertaFormacaoNivelFormacaoListOutputGraphQlDto, {
     name: "ofertaFormacaoNivelFormacaoFindAll",
@@ -36,11 +47,7 @@ export class OfertaFormacaoNivelFormacaoGraphqlResolver {
     if (input) {
       input.selection = graphqlExtractSelection(info, "paginated");
     }
-
-    const listHandler = this.container.get<IOfertaFormacaoNivelFormacaoListQueryHandler>(
-      IOfertaFormacaoNivelFormacaoListQueryHandler,
-    );
-    const result = await listHandler.execute(accessContext, input);
+    const result = await this.listHandler.execute(accessContext, input);
     return OfertaFormacaoNivelFormacaoGraphqlMapper.toListOutputDto(result);
   }
 
@@ -53,10 +60,7 @@ export class OfertaFormacaoNivelFormacaoGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<OfertaFormacaoNivelFormacaoFindOneOutputGraphQlDto> {
     const selection = graphqlExtractSelection(info);
-    const findOneHandler = this.container.get<IOfertaFormacaoNivelFormacaoFindOneQueryHandler>(
-      IOfertaFormacaoNivelFormacaoFindOneQueryHandler,
-    );
-    const result = await findOneHandler.execute(accessContext, { id, selection });
+    const result = await this.findOneHandler.execute(accessContext, { id, selection });
     ensureExists(result, OfertaFormacaoNivelFormacao.entityName, id);
     return OfertaFormacaoNivelFormacaoGraphqlMapper.toFindOneOutputDto(result);
   }
@@ -70,10 +74,7 @@ export class OfertaFormacaoNivelFormacaoGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<OfertaFormacaoNivelFormacaoFindOneOutputGraphQlDto> {
     const input = OfertaFormacaoNivelFormacaoGraphqlMapper.toCreateInput(dto);
-    const createHandler = this.container.get<IOfertaFormacaoNivelFormacaoCreateCommandHandler>(
-      IOfertaFormacaoNivelFormacaoCreateCommandHandler,
-    );
-    const result = await createHandler.execute(accessContext, input);
+    const result = await this.createHandler.execute(accessContext, input);
     return OfertaFormacaoNivelFormacaoGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -87,10 +88,7 @@ export class OfertaFormacaoNivelFormacaoGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<OfertaFormacaoNivelFormacaoFindOneOutputGraphQlDto> {
     const input = OfertaFormacaoNivelFormacaoGraphqlMapper.toUpdateInput({ id }, dto);
-    const updateHandler = this.container.get<IOfertaFormacaoNivelFormacaoUpdateCommandHandler>(
-      IOfertaFormacaoNivelFormacaoUpdateCommandHandler,
-    );
-    const result = await updateHandler.execute(accessContext, input);
+    const result = await this.updateHandler.execute(accessContext, input);
     return OfertaFormacaoNivelFormacaoGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -99,9 +97,6 @@ export class OfertaFormacaoNivelFormacaoGraphqlResolver {
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<boolean> {
-    const deleteHandler = this.container.get<IOfertaFormacaoNivelFormacaoDeleteCommandHandler>(
-      IOfertaFormacaoNivelFormacaoDeleteCommandHandler,
-    );
-    return deleteHandler.execute(accessContext, { id });
+    return this.deleteHandler.execute(accessContext, { id });
   }
 }

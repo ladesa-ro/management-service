@@ -1,12 +1,4 @@
-import {
-  IsDateString,
-  IsEmail,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-  IsUUID,
-  Length,
-} from "class-validator";
+import { IsDateString, IsEmail, IsOptional, IsString, IsUUID, Length } from "class-validator";
 
 export class EstagiarioUpdateCommand {
   @IsUUID("4")
@@ -27,8 +19,8 @@ export class EstagiarioUpdateCommand {
   telefone?: string;
 
   @IsEmail()
-  @IsNotEmpty()
-  emailInstitucional!: string;
+  @IsOptional()
+  emailInstitucional?: string;
 
   @IsDateString()
   @IsOptional()

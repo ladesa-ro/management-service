@@ -88,6 +88,7 @@ export class EstagiarioMapper {
       ativo: !entity.dateDeleted,
       dateCreated: formatDateToISOString(entity.dateCreated),
       dateUpdated: formatDateToISOString(entity.dateUpdated),
+      dateDeleted: entity.dateDeleted ? entity.dateDeleted.toISOString() : null,
     };
   }
 
@@ -106,6 +107,7 @@ export class EstagiarioMapper {
       ativo: estagiario.ativo,
       dateCreated: estagiario.dateCreated,
       dateUpdated: estagiario.dateUpdated,
+      dateDeleted: estagiario.dateDeleted ?? null,
     };
   }
 }

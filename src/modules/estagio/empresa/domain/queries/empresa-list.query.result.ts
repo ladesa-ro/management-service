@@ -1,8 +1,4 @@
+import { PaginationQueryResult } from "@/domain/abstractions";
 import { EmpresaFindOneQueryResult } from "./empresa-find-one.query.result";
 
-export class EmpresaListQueryResult {
-  data!: EmpresaFindOneQueryResult[];
-  total!: number;
-  page!: number;
-  limit!: number;
-}
+export class EmpresaListQueryResult extends PaginationQueryResult<EmpresaFindOneQueryResult> {}

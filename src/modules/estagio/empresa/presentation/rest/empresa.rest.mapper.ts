@@ -1,107 +1,81 @@
-import type {
+import {
+  createFindOneInputMapper,
+  createListInputMapper,
+  createListOutputMapper,
+  mapDatedFields,
+  mapFieldsIfDefined,
+} from "@/modules/@shared/application/mappers";
+import {
   EmpresaCreateCommand,
   EmpresaUpdateCommand,
 } from "@/modules/estagio/empresa/domain/commands";
-import type {
+import {
   EmpresaFindOneQuery,
-  EmpresaFindOneQueryResult,
+  type EmpresaFindOneQueryResult,
   EmpresaListQuery,
-  EmpresaListQueryResult,
 } from "@/modules/estagio/empresa/domain/queries";
 import {
   EmpresaCreateInputRestDto,
   EmpresaFindOneInputRestDto,
   EmpresaFindOneOutputRestDto,
-  EmpresaListInputRestDto,
   EmpresaListOutputRestDto,
   EmpresaUpdateInputRestDto,
 } from "./empresa.rest.dto";
 
-/**
- * Mapeador de DTOs REST para aplicação
- */
 export class EmpresaRestMapper {
+  static toFindOneInput = createFindOneInputMapper(EmpresaFindOneQuery);
+
+  static toListInput = createListInputMapper(EmpresaListQuery, [
+    "filter.id",
+    "filter.cnpj",
+    "filter.nomeFantasia",
+    "filter.idEnderecoFk",
+  ]);
+
   static toCreateInput(dto: EmpresaCreateInputRestDto): EmpresaCreateCommand {
-    return {
-      razaoSocial: dto.razaoSocial,
-      nomeFantasia: dto.nomeFantasia,
-      cnpj: dto.cnpj,
-      telefone: dto.telefone,
-      email: dto.email,
-      idEnderecoFk: dto.idEnderecoFk,
-    };
+    const input = new EmpresaCreateCommand();
+    input.razaoSocial = dto.razaoSocial;
+    input.nomeFantasia = dto.nomeFantasia;
+    input.cnpj = dto.cnpj;
+    input.telefone = dto.telefone;
+    input.email = dto.email;
+    input.idEnderecoFk = dto.idEnderecoFk;
+    return input;
   }
 
-  static toUpdateInput(dto: EmpresaUpdateInputRestDto): EmpresaUpdateCommand {
-    return {
-      razaoSocial: dto.razaoSocial,
-      nomeFantasia: dto.nomeFantasia,
-      cnpj: dto.cnpj,
-      telefone: dto.telefone,
-      email: dto.email,
-      idEnderecoFk: dto.idEnderecoFk,
-    };
+  static toUpdateInput(
+    params: EmpresaFindOneInputRestDto,
+    dto: EmpresaUpdateInputRestDto,
+  ): EmpresaFindOneQuery & EmpresaUpdateCommand {
+    const input = new EmpresaFindOneQuery() as EmpresaFindOneQuery & EmpresaUpdateCommand;
+    input.id = params.id;
+    mapFieldsIfDefined(input, dto, [
+      "razaoSocial",
+      "nomeFantasia",
+      "cnpj",
+      "telefone",
+      "email",
+      "idEnderecoFk",
+    ]);
+    return input;
   }
 
-  static toFindOneInput(dto: EmpresaFindOneInputRestDto): EmpresaFindOneQuery {
-    return {
-      id: dto.id,
-    };
+  static toFindOneOutputDto(output: EmpresaFindOneQueryResult): EmpresaFindOneOutputRestDto {
+    const dto = new EmpresaFindOneOutputRestDto();
+    dto.id = output.id;
+    dto.razaoSocial = output.razaoSocial;
+    dto.nomeFantasia = output.nomeFantasia;
+    dto.cnpj = output.cnpj;
+    dto.telefone = output.telefone;
+    dto.email = output.email;
+    dto.idEnderecoFk = output.idEnderecoFk;
+    dto.ativo = output.ativo;
+    mapDatedFields(dto, output);
+    return dto;
   }
 
-  static toListInput(dto: EmpresaListInputRestDto): EmpresaListQuery {
-    const normalizeCnpj = (value: string | string[] | undefined): string[] | undefined => {
-      if (!value) return undefined;
-      const arr = Array.isArray(value) ? value : [value];
-      const filtered = arr.filter((c) => c && c.trim());
-      return filtered.length > 0 ? filtered : undefined;
-    };
-
-    const normalizeNomeFantasia = (value: string | string[] | undefined): string[] | undefined => {
-      if (!value) return undefined;
-      const arr = Array.isArray(value) ? value : [value];
-      const filtered = arr.filter((nome) => nome && nome.trim());
-      return filtered.length > 0 ? filtered : undefined;
-    };
-
-    const normalizeIdEndereco = (value: string | string[] | undefined): string[] | undefined => {
-      if (!value) return undefined;
-      const arr = Array.isArray(value) ? value : [value];
-      const filtered = arr.filter((id) => id && id.trim());
-      return filtered.length > 0 ? filtered : undefined;
-    };
-
-    return {
-      page: dto.page,
-      limit: dto.limit,
-      search: dto.search,
-      filterCnpj: normalizeCnpj(dto["filter.cnpj"]),
-      filterNomeFantasia: normalizeNomeFantasia(dto["filter.nomeFantasia"]),
-      filterIdEnderecoFk: normalizeIdEndereco(dto["filter.idEnderecoFk"]),
-    };
-  }
-
-  static toFindOneOutputDto(data: EmpresaFindOneQueryResult): EmpresaFindOneOutputRestDto {
-    return {
-      id: data.id,
-      razaoSocial: data.razaoSocial,
-      nomeFantasia: data.nomeFantasia,
-      cnpj: data.cnpj,
-      telefone: data.telefone,
-      email: data.email,
-      idEnderecoFk: data.idEnderecoFk,
-      ativo: data.ativo,
-      dateCreated: data.dateCreated,
-      dateUpdated: data.dateUpdated,
-    };
-  }
-
-  static toListOutputDto(data: EmpresaListQueryResult): EmpresaListOutputRestDto {
-    return {
-      data: data.data.map((item) => this.toFindOneOutputDto(item)),
-      total: data.total,
-      page: data.page,
-      limit: data.limit,
-    };
-  }
+  static toListOutputDto = createListOutputMapper(
+    EmpresaListOutputRestDto,
+    EmpresaRestMapper.toFindOneOutputDto,
+  );
 }

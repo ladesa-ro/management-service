@@ -65,12 +65,10 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
       );
     }
 
-    if (
-      dto?.filterIdPerfilFk &&
-      Array.isArray(dto.filterIdPerfilFk) &&
-      dto.filterIdPerfilFk.length > 0
-    ) {
-      const validIds = dto.filterIdPerfilFk.filter((id) => id && id.trim());
+    if (dto?.["filter.idPerfilFk"]) {
+      const raw = dto["filter.idPerfilFk"];
+      const arr = Array.isArray(raw) ? raw : [raw];
+      const validIds = arr.map(String).filter((id) => id && id.trim());
       if (validIds.length > 0) {
         query.andWhere("estagiario.idPerfilFk IN (:...idPerfis)", {
           idPerfis: validIds,
@@ -78,12 +76,10 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
       }
     }
 
-    if (
-      dto?.filterIdCursoFk &&
-      Array.isArray(dto.filterIdCursoFk) &&
-      dto.filterIdCursoFk.length > 0
-    ) {
-      const validIds = dto.filterIdCursoFk.filter((id) => id && id.trim());
+    if (dto?.["filter.idCursoFk"]) {
+      const raw = dto["filter.idCursoFk"];
+      const arr = Array.isArray(raw) ? raw : [raw];
+      const validIds = arr.map(String).filter((id) => id && id.trim());
       if (validIds.length > 0) {
         query.andWhere("estagiario.idCursoFk IN (:...idCursos)", {
           idCursos: validIds,
@@ -91,12 +87,10 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
       }
     }
 
-    if (
-      dto?.filterIdTurmaFk &&
-      Array.isArray(dto.filterIdTurmaFk) &&
-      dto.filterIdTurmaFk.length > 0
-    ) {
-      const validIds = dto.filterIdTurmaFk.filter((id) => id && id.trim());
+    if (dto?.["filter.idTurmaFk"]) {
+      const raw = dto["filter.idTurmaFk"];
+      const arr = Array.isArray(raw) ? raw : [raw];
+      const validIds = arr.map(String).filter((id) => id && id.trim());
       if (validIds.length > 0) {
         query.andWhere("estagiario.idTurmaFk IN (:...idTurmas)", {
           idTurmas: validIds,
@@ -107,10 +101,16 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
     const [data, total] = await query.skip(skip).take(limit).getManyAndCount();
 
     return {
+      meta: {
+        currentPage: page,
+        totalPages: Math.ceil(total / limit),
+        itemsPerPage: limit,
+        totalItems: total,
+        sortBy: [],
+        filter: {},
+        search: dto?.search ?? "",
+      },
       data: data.map((entity) => EstagiarioMapper.toOutputDto(entity)),
-      total,
-      page,
-      limit,
     };
   }
 

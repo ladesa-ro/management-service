@@ -1,93 +1,81 @@
-import type {
+import {
+  createFindOneInputMapper,
+  createListInputMapper,
+  createListOutputMapper,
+  mapDatedFields,
+  mapFieldsIfDefined,
+} from "@/modules/@shared/application/mappers";
+import {
   EstagiarioCreateCommand,
   EstagiarioUpdateCommand,
 } from "@/modules/estagio/estagiario/domain/commands";
-import type {
+import {
   EstagiarioFindOneQuery,
-  EstagiarioFindOneQueryResult,
+  type EstagiarioFindOneQueryResult,
   EstagiarioListQuery,
-  EstagiarioListQueryResult,
 } from "@/modules/estagio/estagiario/domain/queries";
 import {
   EstagiarioCreateInputRestDto,
   EstagiarioFindOneInputRestDto,
   EstagiarioFindOneOutputRestDto,
-  EstagiarioListInputRestDto,
   EstagiarioListOutputRestDto,
   EstagiarioUpdateInputRestDto,
 } from "./estagiario.rest.dto";
 
-/**
- * Mapeador de DTOs REST para aplicação
- */
 export class EstagiarioRestMapper {
+  static toFindOneInput = createFindOneInputMapper(EstagiarioFindOneQuery);
+
+  static toListInput = createListInputMapper(EstagiarioListQuery, [
+    "filter.id",
+    "filter.idPerfilFk",
+    "filter.idCursoFk",
+    "filter.idTurmaFk",
+  ]);
+
   static toCreateInput(dto: EstagiarioCreateInputRestDto): EstagiarioCreateCommand {
-    return {
-      idPerfilFk: dto.idPerfilFk,
-      idCursoFk: dto.idCursoFk,
-      idTurmaFk: dto.idTurmaFk,
-      telefone: dto.telefone,
-      emailInstitucional: dto.emailInstitucional,
-      dataNascimento: dto.dataNascimento,
-    };
+    const input = new EstagiarioCreateCommand();
+    input.idPerfilFk = dto.idPerfilFk;
+    input.idCursoFk = dto.idCursoFk;
+    input.idTurmaFk = dto.idTurmaFk;
+    input.telefone = dto.telefone;
+    input.emailInstitucional = dto.emailInstitucional;
+    input.dataNascimento = dto.dataNascimento;
+    return input;
   }
 
-  static toUpdateInput(dto: EstagiarioUpdateInputRestDto): EstagiarioUpdateCommand {
-    return {
-      idPerfilFk: dto.idPerfilFk,
-      idCursoFk: dto.idCursoFk,
-      idTurmaFk: dto.idTurmaFk,
-      telefone: dto.telefone,
-      emailInstitucional: dto.emailInstitucional,
-      dataNascimento: dto.dataNascimento,
-    };
+  static toUpdateInput(
+    params: EstagiarioFindOneInputRestDto,
+    dto: EstagiarioUpdateInputRestDto,
+  ): EstagiarioFindOneQuery & EstagiarioUpdateCommand {
+    const input = new EstagiarioFindOneQuery() as EstagiarioFindOneQuery & EstagiarioUpdateCommand;
+    input.id = params.id;
+    mapFieldsIfDefined(input, dto, [
+      "idPerfilFk",
+      "idCursoFk",
+      "idTurmaFk",
+      "telefone",
+      "emailInstitucional",
+      "dataNascimento",
+    ]);
+    return input;
   }
 
-  static toFindOneInput(dto: EstagiarioFindOneInputRestDto): EstagiarioFindOneQuery {
-    return {
-      id: dto.id,
-    };
+  static toFindOneOutputDto(output: EstagiarioFindOneQueryResult): EstagiarioFindOneOutputRestDto {
+    const dto = new EstagiarioFindOneOutputRestDto();
+    dto.id = output.id;
+    dto.idPerfilFk = output.idPerfilFk;
+    dto.idCursoFk = output.idCursoFk;
+    dto.idTurmaFk = output.idTurmaFk;
+    dto.telefone = output.telefone;
+    dto.emailInstitucional = output.emailInstitucional;
+    dto.dataNascimento = output.dataNascimento;
+    dto.ativo = output.ativo;
+    mapDatedFields(dto, output);
+    return dto;
   }
 
-  static toListInput(dto: EstagiarioListInputRestDto): EstagiarioListQuery {
-    const normalizeIdArray = (value: string | string[] | undefined): string[] | undefined => {
-      if (!value) return undefined;
-      const arr = Array.isArray(value) ? value : [value];
-      const filtered = arr.filter((id) => id && id.trim());
-      return filtered.length > 0 ? filtered : undefined;
-    };
-
-    return {
-      page: dto.page,
-      limit: dto.limit,
-      search: dto.search,
-      filterIdPerfilFk: normalizeIdArray(dto["filter.idPerfilFk"]),
-      filterIdCursoFk: normalizeIdArray(dto["filter.idCursoFk"]),
-      filterIdTurmaFk: normalizeIdArray(dto["filter.idTurmaFk"]),
-    };
-  }
-
-  static toFindOneOutputDto(data: EstagiarioFindOneQueryResult): EstagiarioFindOneOutputRestDto {
-    return {
-      id: data.id,
-      idPerfilFk: data.idPerfilFk,
-      idCursoFk: data.idCursoFk,
-      idTurmaFk: data.idTurmaFk,
-      telefone: data.telefone,
-      emailInstitucional: data.emailInstitucional,
-      dataNascimento: data.dataNascimento,
-      ativo: data.ativo,
-      dateCreated: data.dateCreated,
-      dateUpdated: data.dateUpdated,
-    };
-  }
-
-  static toListOutputDto(data: EstagiarioListQueryResult): EstagiarioListOutputRestDto {
-    return {
-      data: data.data.map((item) => this.toFindOneOutputDto(item)),
-      total: data.total,
-      page: data.page,
-      limit: data.limit,
-    };
-  }
+  static toListOutputDto = createListOutputMapper(
+    EstagiarioListOutputRestDto,
+    EstagiarioRestMapper.toFindOneOutputDto,
+  );
 }

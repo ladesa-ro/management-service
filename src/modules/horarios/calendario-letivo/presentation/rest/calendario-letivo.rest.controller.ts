@@ -7,7 +7,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
-import { DeclareDependency, IContainer } from "@/domain/dependency-injection";
+import { DeclareDependency } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { CalendarioLetivo } from "@/modules/horarios/calendario-letivo/domain/calendario-letivo";
@@ -29,7 +29,18 @@ import { CalendarioLetivoRestMapper } from "./calendario-letivo.rest.mapper";
 @ApiTags("calendarios-letivos")
 @Controller("/calendarios-letivos")
 export class CalendarioLetivoRestController {
-  constructor(@DeclareDependency(IContainer) private readonly container: IContainer) {}
+  constructor(
+    @DeclareDependency(ICalendarioLetivoListQueryHandler)
+    private readonly listHandler: ICalendarioLetivoListQueryHandler,
+    @DeclareDependency(ICalendarioLetivoFindOneQueryHandler)
+    private readonly findOneHandler: ICalendarioLetivoFindOneQueryHandler,
+    @DeclareDependency(ICalendarioLetivoCreateCommandHandler)
+    private readonly createHandler: ICalendarioLetivoCreateCommandHandler,
+    @DeclareDependency(ICalendarioLetivoUpdateCommandHandler)
+    private readonly updateHandler: ICalendarioLetivoUpdateCommandHandler,
+    @DeclareDependency(ICalendarioLetivoDeleteCommandHandler)
+    private readonly deleteHandler: ICalendarioLetivoDeleteCommandHandler,
+  ) {}
 
   @Get("/")
   @ApiOperation({ summary: "Lista calendarios letivos", operationId: "calendarioLetivoFindAll" })
@@ -39,11 +50,8 @@ export class CalendarioLetivoRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Query() dto: CalendarioLetivoListInputRestDto,
   ): Promise<CalendarioLetivoListOutputRestDto> {
-    const listHandler = this.container.get<ICalendarioLetivoListQueryHandler>(
-      ICalendarioLetivoListQueryHandler,
-    );
     const input = CalendarioLetivoRestMapper.toListInput(dto);
-    const result = await listHandler.execute(accessContext, input);
+    const result = await this.listHandler.execute(accessContext, input);
     return CalendarioLetivoRestMapper.toListOutputDto(result);
   }
 
@@ -59,11 +67,8 @@ export class CalendarioLetivoRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: CalendarioLetivoFindOneInputRestDto,
   ): Promise<CalendarioLetivoFindOneOutputRestDto> {
-    const findOneHandler = this.container.get<ICalendarioLetivoFindOneQueryHandler>(
-      ICalendarioLetivoFindOneQueryHandler,
-    );
     const input = CalendarioLetivoRestMapper.toFindOneInput(params);
-    const result = await findOneHandler.execute(accessContext, input);
+    const result = await this.findOneHandler.execute(accessContext, input);
     ensureExists(result, CalendarioLetivo.entityName, input.id);
     return CalendarioLetivoRestMapper.toFindOneOutputDto(result);
   }
@@ -76,11 +81,8 @@ export class CalendarioLetivoRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Body() dto: CalendarioLetivoCreateInputRestDto,
   ): Promise<CalendarioLetivoFindOneOutputRestDto> {
-    const createHandler = this.container.get<ICalendarioLetivoCreateCommandHandler>(
-      ICalendarioLetivoCreateCommandHandler,
-    );
     const input = CalendarioLetivoRestMapper.toCreateInput(dto);
-    const result = await createHandler.execute(accessContext, input);
+    const result = await this.createHandler.execute(accessContext, input);
     return CalendarioLetivoRestMapper.toFindOneOutputDto(result);
   }
 
@@ -94,11 +96,8 @@ export class CalendarioLetivoRestController {
     @Param() params: CalendarioLetivoFindOneInputRestDto,
     @Body() dto: CalendarioLetivoUpdateInputRestDto,
   ): Promise<CalendarioLetivoFindOneOutputRestDto> {
-    const updateHandler = this.container.get<ICalendarioLetivoUpdateCommandHandler>(
-      ICalendarioLetivoUpdateCommandHandler,
-    );
     const input = CalendarioLetivoRestMapper.toUpdateInput(params, dto);
-    const result = await updateHandler.execute(accessContext, input);
+    const result = await this.updateHandler.execute(accessContext, input);
     return CalendarioLetivoRestMapper.toFindOneOutputDto(result);
   }
 
@@ -114,10 +113,7 @@ export class CalendarioLetivoRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: CalendarioLetivoFindOneInputRestDto,
   ): Promise<boolean> {
-    const deleteHandler = this.container.get<ICalendarioLetivoDeleteCommandHandler>(
-      ICalendarioLetivoDeleteCommandHandler,
-    );
     const input = CalendarioLetivoRestMapper.toFindOneInput(params);
-    return deleteHandler.execute(accessContext, input);
+    return this.deleteHandler.execute(accessContext, input);
   }
 }

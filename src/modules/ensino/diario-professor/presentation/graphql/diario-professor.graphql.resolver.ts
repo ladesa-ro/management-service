@@ -1,6 +1,6 @@
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
-import { DeclareDependency, IContainer } from "@/domain/dependency-injection";
+import { DeclareDependency } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
@@ -22,8 +22,16 @@ import { DiarioProfessorGraphqlMapper } from "./diario-professor.graphql.mapper"
 @Resolver(() => DiarioProfessorFindOneOutputGraphQlDto)
 export class DiarioProfessorGraphqlResolver {
   constructor(
-    @DeclareDependency(IContainer)
-    private readonly container: IContainer,
+    @DeclareDependency(IDiarioProfessorListQueryHandler)
+    private readonly listHandler: IDiarioProfessorListQueryHandler,
+    @DeclareDependency(IDiarioProfessorFindOneQueryHandler)
+    private readonly findOneHandler: IDiarioProfessorFindOneQueryHandler,
+    @DeclareDependency(IDiarioProfessorCreateCommandHandler)
+    private readonly createHandler: IDiarioProfessorCreateCommandHandler,
+    @DeclareDependency(IDiarioProfessorUpdateCommandHandler)
+    private readonly updateHandler: IDiarioProfessorUpdateCommandHandler,
+    @DeclareDependency(IDiarioProfessorDeleteCommandHandler)
+    private readonly deleteHandler: IDiarioProfessorDeleteCommandHandler,
   ) {}
 
   @Query(() => DiarioProfessorListOutputGraphQlDto, { name: "diarioProfessorFindAll" })
@@ -37,11 +45,7 @@ export class DiarioProfessorGraphqlResolver {
     if (input) {
       input.selection = graphqlExtractSelection(info, "paginated");
     }
-
-    const listHandler = this.container.get<IDiarioProfessorListQueryHandler>(
-      IDiarioProfessorListQueryHandler,
-    );
-    const result = await listHandler.execute(accessContext, input);
+    const result = await this.listHandler.execute(accessContext, input);
     return DiarioProfessorGraphqlMapper.toListOutputDto(result);
   }
 
@@ -52,10 +56,7 @@ export class DiarioProfessorGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<DiarioProfessorFindOneOutputGraphQlDto> {
     const selection = graphqlExtractSelection(info);
-    const findOneHandler = this.container.get<IDiarioProfessorFindOneQueryHandler>(
-      IDiarioProfessorFindOneQueryHandler,
-    );
-    const result = await findOneHandler.execute(accessContext, { id, selection });
+    const result = await this.findOneHandler.execute(accessContext, { id, selection });
     ensureExists(result, DiarioProfessor.entityName, id);
     return DiarioProfessorGraphqlMapper.toFindOneOutputDto(result);
   }
@@ -67,10 +68,7 @@ export class DiarioProfessorGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<DiarioProfessorFindOneOutputGraphQlDto> {
     const input = DiarioProfessorGraphqlMapper.toCreateInput(dto);
-    const createHandler = this.container.get<IDiarioProfessorCreateCommandHandler>(
-      IDiarioProfessorCreateCommandHandler,
-    );
-    const result = await createHandler.execute(accessContext, input);
+    const result = await this.createHandler.execute(accessContext, input);
     return DiarioProfessorGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -82,10 +80,7 @@ export class DiarioProfessorGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<DiarioProfessorFindOneOutputGraphQlDto> {
     const input = DiarioProfessorGraphqlMapper.toUpdateInput({ id }, dto);
-    const updateHandler = this.container.get<IDiarioProfessorUpdateCommandHandler>(
-      IDiarioProfessorUpdateCommandHandler,
-    );
-    const result = await updateHandler.execute(accessContext, input);
+    const result = await this.updateHandler.execute(accessContext, input);
     return DiarioProfessorGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -94,9 +89,6 @@ export class DiarioProfessorGraphqlResolver {
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<boolean> {
-    const deleteHandler = this.container.get<IDiarioProfessorDeleteCommandHandler>(
-      IDiarioProfessorDeleteCommandHandler,
-    );
-    return deleteHandler.execute(accessContext, { id });
+    return this.deleteHandler.execute(accessContext, { id });
   }
 }

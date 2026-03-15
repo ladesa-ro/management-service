@@ -1,6 +1,6 @@
 import { Args, ID, Info, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
-import { DeclareDependency, IContainer } from "@/domain/dependency-injection";
+import { DeclareDependency } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
@@ -11,7 +11,10 @@ import { EnderecoGraphqlMapper } from "./endereco.graphql.mapper";
 
 @Resolver(() => EnderecoFindOneOutputGraphQlDto)
 export class EnderecoGraphqlResolver {
-  constructor(@DeclareDependency(IContainer) private readonly container: IContainer) {}
+  constructor(
+    @DeclareDependency(IEnderecoFindOneQueryHandler)
+    private readonly findOneHandler: IEnderecoFindOneQueryHandler,
+  ) {}
 
   @Query(() => EnderecoFindOneOutputGraphQlDto, { name: "enderecoFindById" })
   async findById(
@@ -20,10 +23,7 @@ export class EnderecoGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<EnderecoFindOneOutputGraphQlDto> {
     const selection = graphqlExtractSelection(info);
-    const findOneHandler = this.container.get<IEnderecoFindOneQueryHandler>(
-      IEnderecoFindOneQueryHandler,
-    );
-    const result = await findOneHandler.execute(accessContext, { id, selection });
+    const result = await this.findOneHandler.execute(accessContext, { id, selection });
     ensureExists(result, Endereco.entityName, id);
     return EnderecoGraphqlMapper.toFindOneOutputDto(result);
   }

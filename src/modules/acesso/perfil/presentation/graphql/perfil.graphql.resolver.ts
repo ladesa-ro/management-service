@@ -1,6 +1,6 @@
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
-import { DeclareDependency, IContainer } from "@/domain/dependency-injection";
+import { DeclareDependency } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@seguranca/contexto-acesso";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
 import { IPerfilSetVinculosCommandHandler } from "@/modules/acesso/perfil/domain/commands/perfil-set-vinculos.command.handler.interface";
@@ -16,7 +16,14 @@ import { PerfilGraphqlMapper } from "./perfil.graphql.mapper";
 
 @Resolver(() => PerfilFindOneOutputGraphQlDto)
 export class PerfilGraphqlResolver {
-  constructor(@DeclareDependency(IContainer) private readonly container: IContainer) {}
+  constructor(
+    @DeclareDependency(IPerfilListQueryHandler)
+    private readonly listHandler: IPerfilListQueryHandler,
+    @DeclareDependency(IPerfilFindOneQueryHandler)
+    private readonly findOneHandler: IPerfilFindOneQueryHandler,
+    @DeclareDependency(IPerfilSetVinculosCommandHandler)
+    private readonly setVinculosHandler: IPerfilSetVinculosCommandHandler,
+  ) {}
 
   @Query(() => PerfilListOutputGraphQlDto, { name: "perfilFindAll" })
   async findAll(
@@ -29,9 +36,7 @@ export class PerfilGraphqlResolver {
     if (input) {
       input.selection = graphqlExtractSelection(info, "paginated");
     }
-
-    const listHandler = this.container.get<IPerfilListQueryHandler>(IPerfilListQueryHandler);
-    const result = await listHandler.execute(accessContext, input);
+    const result = await this.listHandler.execute(accessContext, input);
     return PerfilGraphqlMapper.toListOutputDto(result);
   }
 
@@ -42,10 +47,7 @@ export class PerfilGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<PerfilFindOneOutputGraphQlDto | null> {
     const selection = graphqlExtractSelection(info);
-    const findOneHandler = this.container.get<IPerfilFindOneQueryHandler>(
-      IPerfilFindOneQueryHandler,
-    );
-    const result = await findOneHandler.execute(accessContext, { id, selection });
+    const result = await this.findOneHandler.execute(accessContext, { id, selection });
     if (!result) {
       return null;
     }
@@ -59,10 +61,7 @@ export class PerfilGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<PerfilListOutputGraphQlDto> {
     const input = PerfilGraphqlMapper.toSetVinculosInput(dto);
-    const setVinculosHandler = this.container.get<IPerfilSetVinculosCommandHandler>(
-      IPerfilSetVinculosCommandHandler,
-    );
-    const result = await setVinculosHandler.execute(accessContext, input);
+    const result = await this.setVinculosHandler.execute(accessContext, input);
     return PerfilGraphqlMapper.toListOutputDto(result);
   }
 }
