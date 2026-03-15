@@ -1,5 +1,5 @@
 import type { IdUuid } from "@/modules/@shared/domain/abstractions/scalars.types";
-import { DatedQueryResult } from "./dated-query-result";
+import { DatedQueryResult } from "./dated.query.result";
 
 /**
  * Base para query result de entidade com ID e campos de data.

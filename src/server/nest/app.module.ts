@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
 import { APP_FILTER } from "@nestjs/core";
-import { ContainerModule } from "@/infrastructure.container";
+import { ContainerModule } from "@/infrastructure.dependency-injection";
 import { AccessContextCoreModule } from "@/modules/@seguranca/contexto-acesso";
 import { InfrastructureModule } from "@/modules/@shared/infrastructure";
 import { TransactionModule } from "@/modules/@shared/infrastructure/persistence/typeorm";

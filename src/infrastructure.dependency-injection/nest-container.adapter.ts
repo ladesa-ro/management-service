@@ -1,8 +1,8 @@
-import { Injectable } from "@nestjs/common";
 import { ModuleRef } from "@nestjs/core";
+import { DeclareImplementation } from "@/domain/dependency-injection";
 import { IContainer } from "@/domain/dependency-injection/interfaces/container.interface";
 
-@Injectable()
+@DeclareImplementation()
 export class NestContainerAdapter implements IContainer {
   constructor(private readonly moduleRef: ModuleRef) {}
 
