@@ -19,7 +19,7 @@ import {
 } from "@/modules/estagio/estagiario/domain/queries";
 import { IEstagiarioRepository } from "@/modules/estagio/estagiario/domain/repositories";
 import { EstagiarioTypeOrmRepositoryAdapter } from "@/modules/estagio/estagiario/infrastructure.database";
-import { EstagiarioRestController } from "@/modules/estagio/estagiario/presentation/rest/estagiario.rest.controller";
+import { EstagiarioRestController } from "@/modules/estagio/estagiario/presentation.rest/estagiario.rest.controller";
 
 @Module({
   imports: [],

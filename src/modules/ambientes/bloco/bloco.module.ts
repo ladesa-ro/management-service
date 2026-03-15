@@ -26,8 +26,8 @@ import {
 } from "@/modules/ambientes/bloco/domain/queries";
 import { IBlocoRepository } from "@/modules/ambientes/bloco/domain/repositories";
 import { BlocoTypeOrmRepositoryAdapter } from "@/modules/ambientes/bloco/infrastructure.database";
-import { BlocoGraphqlResolver } from "@/modules/ambientes/bloco/presentation/graphql/bloco.graphql.resolver";
-import { BlocoRestController } from "@/modules/ambientes/bloco/presentation/rest/bloco.rest.controller";
+import { BlocoGraphqlResolver } from "@/modules/ambientes/bloco/presentation.graphql/bloco.graphql.resolver";
+import { BlocoRestController } from "@/modules/ambientes/bloco/presentation.rest/bloco.rest.controller";
 import { CampusModule } from "@/modules/ambientes/campus/campus.module";
 import { ArquivoModule } from "@/modules/armazenamento/arquivo/arquivo.module";
 import { ImagemModule } from "@/modules/armazenamento/imagem/imagem.module";

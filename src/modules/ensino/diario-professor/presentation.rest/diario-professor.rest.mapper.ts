@@ -1,0 +1,85 @@
+import {
+  createFindOneInputMapper,
+  createListInputMapper,
+  createListOutputMapper,
+  mapDatedFields,
+} from "@/modules/@shared/application/mappers";
+import { PerfilRestMapper } from "@/modules/acesso/perfil/presentation.rest";
+import { DiarioRestMapper } from "@/modules/ensino/diario/presentation.rest";
+import {
+  DiarioProfessorCreateCommand,
+  DiarioProfessorFindOneQuery,
+  DiarioProfessorFindOneQueryResult,
+  DiarioProfessorListQuery,
+  DiarioProfessorUpdateCommand,
+} from "@/modules/ensino/diario-professor";
+import {
+  DiarioProfessorCreateInputRestDto,
+  DiarioProfessorFindOneInputRestDto,
+  DiarioProfessorFindOneOutputRestDto,
+  DiarioProfessorListOutputRestDto,
+  DiarioProfessorUpdateInputRestDto,
+} from "./diario-professor.rest.dto";
+
+export class DiarioProfessorRestMapper {
+  // ============================================================================
+  // Input: Server DTO -> Core DTO
+  // ============================================================================
+
+  static toFindOneInput = createFindOneInputMapper(DiarioProfessorFindOneQuery);
+
+  static toListInput = createListInputMapper(DiarioProfessorListQuery, [
+    "filter.id",
+    "filter.diario.id",
+    "filter.perfil.id",
+    "filter.perfil.usuario.id",
+  ]);
+
+  static toCreateInput(dto: DiarioProfessorCreateInputRestDto): DiarioProfessorCreateCommand {
+    const input = new DiarioProfessorCreateCommand();
+    input.situacao = dto.situacao;
+    input.diario = { id: dto.diario.id };
+    input.perfil = { id: dto.perfil.id };
+    return input;
+  }
+
+  static toUpdateInput(
+    params: DiarioProfessorFindOneInputRestDto,
+    dto: DiarioProfessorUpdateInputRestDto,
+  ): DiarioProfessorFindOneQuery & DiarioProfessorUpdateCommand {
+    const input = new DiarioProfessorFindOneQuery() as DiarioProfessorFindOneQuery &
+      DiarioProfessorUpdateCommand;
+    input.id = params.id;
+    if (dto.situacao !== undefined) {
+      input.situacao = dto.situacao;
+    }
+    if (dto.diario !== undefined) {
+      input.diario = { id: dto.diario.id };
+    }
+    if (dto.perfil !== undefined) {
+      input.perfil = { id: dto.perfil.id };
+    }
+    return input;
+  }
+
+  // ============================================================================
+  // Output: Core DTO -> Server DTO
+  // ============================================================================
+
+  static toFindOneOutputDto(
+    output: DiarioProfessorFindOneQueryResult,
+  ): DiarioProfessorFindOneOutputRestDto {
+    const dto = new DiarioProfessorFindOneOutputRestDto();
+    dto.id = output.id;
+    dto.situacao = output.situacao;
+    dto.diario = DiarioRestMapper.toFindOneOutputDto(output.diario);
+    dto.perfil = PerfilRestMapper.toFindOneOutputDto(output.perfil);
+    mapDatedFields(dto, output);
+    return dto;
+  }
+
+  static toListOutputDto = createListOutputMapper(
+    DiarioProfessorListOutputRestDto,
+    DiarioProfessorRestMapper.toFindOneOutputDto,
+  );
+}

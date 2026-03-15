@@ -24,8 +24,8 @@ import {
 } from "@/modules/ensino/diario-professor/domain/queries";
 import { IDiarioProfessorRepository } from "@/modules/ensino/diario-professor/domain/repositories";
 import { DiarioProfessorTypeOrmRepositoryAdapter } from "@/modules/ensino/diario-professor/infrastructure.database";
-import { DiarioProfessorGraphqlResolver } from "@/modules/ensino/diario-professor/presentation/graphql/diario-professor.graphql.resolver";
-import { DiarioProfessorController } from "@/modules/ensino/diario-professor/presentation/rest";
+import { DiarioProfessorGraphqlResolver } from "@/modules/ensino/diario-professor/presentation.graphql/diario-professor.graphql.resolver";
+import { DiarioProfessorController } from "@/modules/ensino/diario-professor/presentation.rest";
 
 @Module({
   imports: [DiarioModule, PerfilModule],

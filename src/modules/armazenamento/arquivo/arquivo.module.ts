@@ -7,7 +7,7 @@ import { IArquivoCreateCommandHandler } from "@/modules/armazenamento/arquivo/do
 import { IArquivoGetStreamableFileQueryHandler } from "@/modules/armazenamento/arquivo/domain/queries";
 import { IArquivoRepository } from "@/modules/armazenamento/arquivo/domain/repositories";
 import { ArquivoTypeOrmRepositoryAdapter } from "@/modules/armazenamento/arquivo/infrastructure.database";
-import { ArquivoRestController } from "@/modules/armazenamento/arquivo/presentation/rest/arquivo.rest.controller";
+import { ArquivoRestController } from "@/modules/armazenamento/arquivo/presentation.rest/arquivo.rest.controller";
 
 @Global()
 @Module({
