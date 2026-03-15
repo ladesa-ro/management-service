@@ -60,6 +60,7 @@ export class EmpresaMapper {
       ativo: !entity.dateDeleted,
       dateCreated: entity.dateCreated.toISOString(),
       dateUpdated: entity.dateUpdated.toISOString(),
+      dateDeleted: entity.dateDeleted ? entity.dateDeleted.toISOString() : null,
     };
   }
 
@@ -78,6 +79,7 @@ export class EmpresaMapper {
       ativo: empresa.ativo,
       dateCreated: empresa.dateCreated,
       dateUpdated: empresa.dateUpdated,
+      dateDeleted: empresa.dateDeleted ?? null,
     };
   }
 }

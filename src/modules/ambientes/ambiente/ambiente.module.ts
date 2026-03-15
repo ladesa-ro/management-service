@@ -26,8 +26,8 @@ import {
 } from "@/modules/ambientes/ambiente/domain/queries";
 import { IAmbienteRepository } from "@/modules/ambientes/ambiente/domain/repositories";
 import { AmbienteTypeOrmRepositoryAdapter } from "@/modules/ambientes/ambiente/infrastructure.database";
-import { AmbienteGraphqlResolver } from "@/modules/ambientes/ambiente/presentation/graphql/ambiente.graphql.resolver";
-import { AmbienteRestController } from "@/modules/ambientes/ambiente/presentation/rest/ambiente.rest.controller";
+import { AmbienteGraphqlResolver } from "@/modules/ambientes/ambiente/presentation.graphql/ambiente.graphql.resolver";
+import { AmbienteRestController } from "@/modules/ambientes/ambiente/presentation.rest/ambiente.rest.controller";
 import { BlocoModule } from "@/modules/ambientes/bloco/bloco.module";
 import { ArquivoModule } from "@/modules/armazenamento/arquivo/arquivo.module";
 import { ImagemModule } from "@/modules/armazenamento/imagem/imagem.module";

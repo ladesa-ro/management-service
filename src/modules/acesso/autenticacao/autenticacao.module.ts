@@ -14,7 +14,7 @@ import {
   IAutenticacaoRefreshCommandHandler,
 } from "@/modules/acesso/autenticacao/domain/commands";
 import { IAutenticacaoWhoAmIQueryHandler } from "@/modules/acesso/autenticacao/domain/queries";
-import { AutenticacaoRestController } from "@/modules/acesso/autenticacao/presentation/rest";
+import { AutenticacaoRestController } from "@/modules/acesso/autenticacao/presentation.rest";
 import { PerfilModule } from "@/modules/acesso/perfil/perfil.module";
 import { UsuarioModule } from "@/modules/acesso/usuario/usuario.module";
 

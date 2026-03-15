@@ -7,7 +7,10 @@ import { Empresa } from "@/modules/estagio/empresa/domain/empresa";
 import { createEmpresaRepository } from "@/modules/estagio/empresa/infrastructure.database/typeorm/empresa.typeorm.repository";
 import { Estagiario } from "@/modules/estagio/estagiario/domain/estagiario";
 import { createEstagiarioRepository } from "@/modules/estagio/estagiario/infrastructure.database/typeorm/estagiario.typeorm.repository";
-import type { EstagioCreateCommand, EstagioUpdateCommand } from "@/modules/estagio/estagio/domain/commands";
+import type {
+  EstagioCreateCommand,
+  EstagioUpdateCommand,
+} from "@/modules/estagio/estagio/domain/commands";
 import { Estagio, EstagioStatus } from "@/modules/estagio/estagio/domain/estagio";
 import type {
   EstagioFindOneQuery,
@@ -16,11 +19,7 @@ import type {
   EstagioListQueryResult,
 } from "@/modules/estagio/estagio/domain/queries";
 import type { IEstagioRepository } from "@/modules/estagio/estagio/domain/repositories";
-import {
-  createEstagioRepository,
-  createHorarioEstagioRepository,
-  EstagioMapper,
-} from "./typeorm";
+import { createEstagioRepository, createHorarioEstagioRepository, EstagioMapper } from "./typeorm";
 
 @DeclareImplementation()
 export class EstagioTypeOrmRepositoryAdapter implements IEstagioRepository {
@@ -93,7 +92,9 @@ export class EstagioTypeOrmRepositoryAdapter implements IEstagioRepository {
     }
 
     if (dto?.filterStatus && Array.isArray(dto.filterStatus) && dto.filterStatus.length > 0) {
-      const validStatus = dto.filterStatus.filter((status) => Object.values(EstagioStatus).includes(status));
+      const validStatus = dto.filterStatus.filter((status) =>
+        Object.values(EstagioStatus).includes(status),
+      );
       if (validStatus.length > 0) {
         query.andWhere("estagio.status IN (:...status)", {
           status: validStatus,

@@ -23,8 +23,8 @@ import {
 } from "@/modules/ensino/diario/domain/queries";
 import { IDiarioRepository } from "@/modules/ensino/diario/domain/repositories";
 import { DiarioTypeOrmRepositoryAdapter } from "@/modules/ensino/diario/infrastructure.database";
-import { DiarioGraphqlResolver } from "@/modules/ensino/diario/presentation/graphql/diario.graphql.resolver";
-import { DiarioRestController } from "@/modules/ensino/diario/presentation/rest/diario.rest.controller";
+import { DiarioGraphqlResolver } from "@/modules/ensino/diario/presentation.graphql/diario.graphql.resolver";
+import { DiarioRestController } from "@/modules/ensino/diario/presentation.rest/diario.rest.controller";
 import { DisciplinaModule } from "@/modules/ensino/disciplina/disciplina.module";
 import { TurmaModule } from "@/modules/ensino/turma/turma.module";
 import { CalendarioLetivoModule } from "@/modules/horarios/calendario-letivo/calendario-letivo.module";

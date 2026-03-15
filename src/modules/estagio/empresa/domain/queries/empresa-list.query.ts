@@ -1,7 +1,8 @@
-import { PaginationQuery } from "@/domain/abstractions/queries/pagination.query";
+import { type IFilterAcceptableValues, PaginationQuery } from "@/domain/abstractions";
 
 export class EmpresaListQuery extends PaginationQuery {
-  filterCnpj?: string[];
-  filterNomeFantasia?: string[];
-  filterIdEnderecoFk?: string[];
+  "filter.id"?: IFilterAcceptableValues;
+  "filter.cnpj"?: IFilterAcceptableValues;
+  "filter.nomeFantasia"?: IFilterAcceptableValues;
+  "filter.idEnderecoFk"?: IFilterAcceptableValues;
 }

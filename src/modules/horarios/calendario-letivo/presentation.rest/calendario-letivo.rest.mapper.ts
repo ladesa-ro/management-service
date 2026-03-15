@@ -1,0 +1,89 @@
+import {
+  createFindOneInputMapper,
+  createListInputMapper,
+  createListOutputMapper,
+  mapDatedFields,
+} from "@/modules/@shared/application/mappers";
+import { CampusRestMapper } from "@/modules/ambientes/campus/presentation.rest";
+import { OfertaFormacaoRestMapper } from "@/modules/ensino/oferta-formacao/presentation.rest";
+import {
+  CalendarioLetivoCreateCommand,
+  CalendarioLetivoFindOneQuery,
+  CalendarioLetivoFindOneQueryResult,
+  CalendarioLetivoListQuery,
+  CalendarioLetivoUpdateCommand,
+} from "@/modules/horarios/calendario-letivo";
+import {
+  CalendarioLetivoCreateInputRestDto,
+  CalendarioLetivoFindOneInputRestDto,
+  CalendarioLetivoFindOneOutputRestDto,
+  CalendarioLetivoListOutputRestDto,
+  CalendarioLetivoUpdateInputRestDto,
+} from "./calendario-letivo.rest.dto";
+
+export class CalendarioLetivoRestMapper {
+  // ============================================================================
+  // Input: Server DTO -> Core DTO
+  // ============================================================================
+
+  static toFindOneInput = createFindOneInputMapper(CalendarioLetivoFindOneQuery);
+
+  static toListInput = createListInputMapper(CalendarioLetivoListQuery, [
+    "filter.id",
+    "filter.campus.id",
+    "filter.ofertaFormacao.id",
+  ]);
+
+  static toCreateInput(dto: CalendarioLetivoCreateInputRestDto): CalendarioLetivoCreateCommand {
+    const input = new CalendarioLetivoCreateCommand();
+    input.nome = dto.nome;
+    input.ano = dto.ano;
+    input.campus = { id: dto.campus.id };
+    input.ofertaFormacao = { id: dto.ofertaFormacao.id };
+    return input;
+  }
+
+  static toUpdateInput(
+    params: CalendarioLetivoFindOneInputRestDto,
+    dto: CalendarioLetivoUpdateInputRestDto,
+  ): CalendarioLetivoFindOneQuery & CalendarioLetivoUpdateCommand {
+    const input = new CalendarioLetivoFindOneQuery() as CalendarioLetivoFindOneQuery &
+      CalendarioLetivoUpdateCommand;
+    input.id = params.id;
+    if (dto.nome !== undefined) {
+      input.nome = dto.nome;
+    }
+    if (dto.ano !== undefined) {
+      input.ano = dto.ano;
+    }
+    if (dto.campus !== undefined) {
+      input.campus = { id: dto.campus.id };
+    }
+    if (dto.ofertaFormacao !== undefined) {
+      input.ofertaFormacao = { id: dto.ofertaFormacao.id };
+    }
+    return input;
+  }
+
+  // ============================================================================
+  // Output: Core DTO -> Server DTO
+  // ============================================================================
+
+  static toFindOneOutputDto(
+    output: CalendarioLetivoFindOneQueryResult,
+  ): CalendarioLetivoFindOneOutputRestDto {
+    const dto = new CalendarioLetivoFindOneOutputRestDto();
+    dto.id = output.id;
+    dto.nome = output.nome;
+    dto.ano = output.ano;
+    dto.campus = CampusRestMapper.toFindOneOutputDto(output.campus);
+    dto.ofertaFormacao = OfertaFormacaoRestMapper.toFindOneOutputDto(output.ofertaFormacao);
+    mapDatedFields(dto, output);
+    return dto;
+  }
+
+  static toListOutputDto = createListOutputMapper(
+    CalendarioLetivoListOutputRestDto,
+    CalendarioLetivoRestMapper.toFindOneOutputDto,
+  );
+}

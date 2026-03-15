@@ -53,8 +53,10 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
       );
     }
 
-    if (dto?.filterCnpj && Array.isArray(dto.filterCnpj) && dto.filterCnpj.length > 0) {
-      const validCnpjs = dto.filterCnpj.filter((cnpj) => cnpj && cnpj.trim());
+    const filterCnpj = dto?.["filter.cnpj"];
+    if (filterCnpj) {
+      const arr = Array.isArray(filterCnpj) ? filterCnpj : [filterCnpj];
+      const validCnpjs = arr.filter((cnpj) => typeof cnpj === "string" && cnpj.trim());
       if (validCnpjs.length > 0) {
         query.andWhere("empresa.cnpj IN (:...cnpjs)", {
           cnpjs: validCnpjs,
@@ -62,12 +64,10 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
       }
     }
 
-    if (
-      dto?.filterNomeFantasia &&
-      Array.isArray(dto.filterNomeFantasia) &&
-      dto.filterNomeFantasia.length > 0
-    ) {
-      const validNomes = dto.filterNomeFantasia.filter((nome) => nome && nome.trim());
+    const filterNomeFantasia = dto?.["filter.nomeFantasia"];
+    if (filterNomeFantasia) {
+      const arr = Array.isArray(filterNomeFantasia) ? filterNomeFantasia : [filterNomeFantasia];
+      const validNomes = arr.filter((nome) => typeof nome === "string" && nome.trim());
       if (validNomes.length > 0) {
         query.andWhere("empresa.nomeFantasia IN (:...nomes)", {
           nomes: validNomes,
@@ -75,12 +75,10 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
       }
     }
 
-    if (
-      dto?.filterIdEnderecoFk &&
-      Array.isArray(dto.filterIdEnderecoFk) &&
-      dto.filterIdEnderecoFk.length > 0
-    ) {
-      const validIdEnderecos = dto.filterIdEnderecoFk.filter((id) => id && id.trim());
+    const filterIdEnderecoFk = dto?.["filter.idEnderecoFk"];
+    if (filterIdEnderecoFk) {
+      const arr = Array.isArray(filterIdEnderecoFk) ? filterIdEnderecoFk : [filterIdEnderecoFk];
+      const validIdEnderecos = arr.filter((id) => typeof id === "string" && id.trim());
       if (validIdEnderecos.length > 0) {
         query.andWhere("empresa.idEnderecoFk IN (:...idEnderecos)", {
           idEnderecos: validIdEnderecos,
@@ -91,10 +89,16 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
     const [data, total] = await query.skip(skip).take(limit).getManyAndCount();
 
     return {
+      meta: {
+        currentPage: page,
+        totalPages: Math.ceil(total / limit),
+        itemsPerPage: limit,
+        totalItems: total,
+        sortBy: [],
+        filter: {},
+        search: dto?.search ?? "",
+      },
       data: data.map((entity) => EmpresaMapper.toOutputDto(entity)),
-      total,
-      page,
-      limit,
     };
   }
 

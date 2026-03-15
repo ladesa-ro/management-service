@@ -1,5 +1,6 @@
-export class EstagiarioFindOneQueryResult {
-  id!: string;
+import { EntityQueryResult } from "@/domain/abstractions";
+
+export class EstagiarioFindOneQueryResult extends EntityQueryResult {
   idPerfilFk!: string;
   idCursoFk!: string;
   idTurmaFk!: string;
@@ -7,6 +8,4 @@ export class EstagiarioFindOneQueryResult {
   emailInstitucional!: string | null;
   dataNascimento!: string;
   ativo!: boolean;
-  dateCreated!: string;
-  dateUpdated!: string;
 }

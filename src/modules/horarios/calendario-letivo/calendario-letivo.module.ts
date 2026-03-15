@@ -24,8 +24,8 @@ import {
   ICalendarioLetivoListQueryHandler,
 } from "@/modules/horarios/calendario-letivo/domain/queries";
 import { CalendarioLetivoTypeOrmRepositoryAdapter } from "@/modules/horarios/calendario-letivo/infrastructure.database";
-import { CalendarioLetivoGraphqlResolver } from "@/modules/horarios/calendario-letivo/presentation/graphql/calendario-letivo.graphql.resolver";
-import { CalendarioLetivoRestController } from "@/modules/horarios/calendario-letivo/presentation/rest/calendario-letivo.rest.controller";
+import { CalendarioLetivoGraphqlResolver } from "@/modules/horarios/calendario-letivo/presentation.graphql/calendario-letivo.graphql.resolver";
+import { CalendarioLetivoRestController } from "@/modules/horarios/calendario-letivo/presentation.rest/calendario-letivo.rest.controller";
 
 @Module({
   imports: [CampusModule, OfertaFormacaoModule],

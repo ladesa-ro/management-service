@@ -1,5 +1,6 @@
-export class EmpresaFindOneQueryResult {
-  id!: string;
+import { EntityQueryResult } from "@/domain/abstractions";
+
+export class EmpresaFindOneQueryResult extends EntityQueryResult {
   razaoSocial!: string;
   nomeFantasia!: string;
   cnpj!: string;
@@ -7,6 +8,4 @@ export class EmpresaFindOneQueryResult {
   email!: string;
   idEnderecoFk!: string;
   ativo!: boolean;
-  dateCreated!: string;
-  dateUpdated!: string;
 }

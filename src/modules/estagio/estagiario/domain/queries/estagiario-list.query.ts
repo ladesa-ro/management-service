@@ -1,7 +1,8 @@
-import { PaginationQuery } from "@/domain/abstractions/queries/pagination.query";
+import { type IFilterAcceptableValues, PaginationQuery } from "@/domain/abstractions";
 
 export class EstagiarioListQuery extends PaginationQuery {
-  filterIdPerfilFk?: string[];
-  filterIdCursoFk?: string[];
-  filterIdTurmaFk?: string[];
+  "filter.id"?: IFilterAcceptableValues;
+  "filter.idPerfilFk"?: IFilterAcceptableValues;
+  "filter.idCursoFk"?: IFilterAcceptableValues;
+  "filter.idTurmaFk"?: IFilterAcceptableValues;
 }
