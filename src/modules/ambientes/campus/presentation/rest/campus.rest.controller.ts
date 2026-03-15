@@ -41,7 +41,7 @@ export class CampusRestController {
   ): Promise<CampusListOutputRestDto> {
     const input = CampusRestMapper.toListInput(dto);
     const listHandler = this.container.get<ICampusListQueryHandler>(ICampusListQueryHandler);
-    const result = await listHandler.execute({ accessContext, dto: input });
+    const result = await listHandler.execute(accessContext, input);
     return CampusRestMapper.toListOutputDto(result);
   }
 
@@ -58,7 +58,7 @@ export class CampusRestController {
     const findOneHandler = this.container.get<ICampusFindOneQueryHandler>(
       ICampusFindOneQueryHandler,
     );
-    const result = await findOneHandler.execute({ accessContext, dto: input });
+    const result = await findOneHandler.execute(accessContext, input);
     ensureExists(result, Campus.entityName, input.id);
     return CampusRestMapper.toFindOneOutputDto(result);
   }
@@ -75,7 +75,7 @@ export class CampusRestController {
     const createHandler = this.container.get<ICampusCreateCommandHandler>(
       ICampusCreateCommandHandler,
     );
-    const result = await createHandler.execute({ accessContext, dto: input });
+    const result = await createHandler.execute(accessContext, input);
     return CampusRestMapper.toFindOneOutputDto(result);
   }
 
@@ -93,7 +93,7 @@ export class CampusRestController {
     const updateHandler = this.container.get<ICampusUpdateCommandHandler>(
       ICampusUpdateCommandHandler,
     );
-    const result = await updateHandler.execute({ accessContext, dto: input });
+    const result = await updateHandler.execute(accessContext, input);
     return CampusRestMapper.toFindOneOutputDto(result);
   }
 
@@ -110,6 +110,6 @@ export class CampusRestController {
     const deleteHandler = this.container.get<ICampusDeleteCommandHandler>(
       ICampusDeleteCommandHandler,
     );
-    return deleteHandler.execute({ accessContext, dto: input });
+    return deleteHandler.execute(accessContext, input);
   }
 }

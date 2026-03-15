@@ -58,7 +58,7 @@ export class BlocoRestController {
   ): Promise<BlocoListOutputRestDto> {
     const input = BlocoRestMapper.toListInput(dto);
     const listHandler = this.container.get<IBlocoListQueryHandler>(IBlocoListQueryHandler);
-    const result = await listHandler.execute({ accessContext, dto: input });
+    const result = await listHandler.execute(accessContext, input);
     return BlocoRestMapper.toListOutputDto(result);
   }
 
@@ -73,7 +73,7 @@ export class BlocoRestController {
   ): Promise<BlocoFindOneOutputRestDto> {
     const input = BlocoRestMapper.toFindOneInput(params);
     const findOneHandler = this.container.get<IBlocoFindOneQueryHandler>(IBlocoFindOneQueryHandler);
-    const result = await findOneHandler.execute({ accessContext, dto: input });
+    const result = await findOneHandler.execute(accessContext, input);
     ensureExists(result, Bloco.entityName, input.id);
     return BlocoRestMapper.toFindOneOutputDto(result);
   }
@@ -90,7 +90,7 @@ export class BlocoRestController {
     const createHandler = this.container.get<IBlocoCreateCommandHandler>(
       IBlocoCreateCommandHandler,
     );
-    const result = await createHandler.execute({ accessContext, dto: input });
+    const result = await createHandler.execute(accessContext, input);
     return BlocoRestMapper.toFindOneOutputDto(result);
   }
 
@@ -108,7 +108,7 @@ export class BlocoRestController {
     const updateHandler = this.container.get<IBlocoUpdateCommandHandler>(
       IBlocoUpdateCommandHandler,
     );
-    const result = await updateHandler.execute({ accessContext, dto: input });
+    const result = await updateHandler.execute(accessContext, input);
     return BlocoRestMapper.toFindOneOutputDto(result);
   }
 
@@ -127,7 +127,7 @@ export class BlocoRestController {
     const getImagemCapaHandler = this.container.get<IBlocoGetImagemCapaQueryHandler>(
       IBlocoGetImagemCapaQueryHandler,
     );
-    return getImagemCapaHandler.execute({ accessContext, id: params.id });
+    return getImagemCapaHandler.execute(accessContext, { id: params.id });
   }
 
   @Put("/:id/imagem/capa")
@@ -157,7 +157,7 @@ export class BlocoRestController {
     const updateImagemCapaHandler = this.container.get<IBlocoUpdateImagemCapaCommandHandler>(
       IBlocoUpdateImagemCapaCommandHandler,
     );
-    return updateImagemCapaHandler.execute({ accessContext, dto: params, file });
+    return updateImagemCapaHandler.execute(accessContext, { dto: params, file });
   }
 
   @Delete("/:id")
@@ -173,6 +173,6 @@ export class BlocoRestController {
     const deleteHandler = this.container.get<IBlocoDeleteCommandHandler>(
       IBlocoDeleteCommandHandler,
     );
-    return deleteHandler.execute({ accessContext, dto: input });
+    return deleteHandler.execute(accessContext, input);
   }
 }

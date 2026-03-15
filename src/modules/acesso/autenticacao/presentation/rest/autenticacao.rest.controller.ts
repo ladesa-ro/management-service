@@ -49,10 +49,7 @@ export class AutenticacaoRestController {
     const usuarioEnsinoHandler = this.container.get<IUsuarioEnsinoQueryHandler>(
       IUsuarioEnsinoQueryHandler,
     );
-    return usuarioEnsinoHandler.execute({
-      accessContext,
-      dto: { id: idUsuario },
-    }) as any;
+    return usuarioEnsinoHandler.execute(accessContext, { id: idUsuario }) as any;
   }
 
   @Get("/quem-sou-eu")
@@ -68,9 +65,10 @@ export class AutenticacaoRestController {
     const whoAmIHandler = this.container.get<IAutenticacaoWhoAmIQueryHandler>(
       IAutenticacaoWhoAmIQueryHandler,
     );
-    return whoAmIHandler.execute({
+    return whoAmIHandler.execute(
       accessContext,
-    }) as unknown as Promise<AuthWhoAmIOutputRestDto>;
+      undefined,
+    ) as unknown as Promise<AuthWhoAmIOutputRestDto>;
   }
 
   @Post("/login")
@@ -88,7 +86,7 @@ export class AutenticacaoRestController {
     const loginHandler = this.container.get<IAutenticacaoLoginCommandHandler>(
       IAutenticacaoLoginCommandHandler,
     );
-    return loginHandler.execute({ accessContext, dto });
+    return loginHandler.execute(accessContext, dto);
   }
 
   @Post("/login/refresh")
@@ -106,7 +104,7 @@ export class AutenticacaoRestController {
     const refreshHandler = this.container.get<IAutenticacaoRefreshCommandHandler>(
       IAutenticacaoRefreshCommandHandler,
     );
-    return refreshHandler.execute({ accessContext, dto });
+    return refreshHandler.execute(accessContext, dto);
   }
 
   @Post("/definir-senha")
@@ -123,7 +121,7 @@ export class AutenticacaoRestController {
     const definirSenhaHandler = this.container.get<IAutenticacaoDefinirSenhaCommandHandler>(
       IAutenticacaoDefinirSenhaCommandHandler,
     );
-    return definirSenhaHandler.execute({ accessContext, dto });
+    return definirSenhaHandler.execute(accessContext, dto);
   }
 
   @Post("/redefinir-senha")
@@ -140,6 +138,6 @@ export class AutenticacaoRestController {
     const recoverPasswordHandler = this.container.get<IAutenticacaoRecoverPasswordCommandHandler>(
       IAutenticacaoRecoverPasswordCommandHandler,
     );
-    return recoverPasswordHandler.execute({ accessContext, dto });
+    return recoverPasswordHandler.execute(accessContext, dto);
   }
 }

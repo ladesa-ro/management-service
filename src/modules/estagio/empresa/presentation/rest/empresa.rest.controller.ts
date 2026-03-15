@@ -42,7 +42,7 @@ export class EmpresaRestController {
   ): Promise<EmpresaListOutputRestDto> {
     const listHandler = this.container.get<IEmpresaListQueryHandler>(IEmpresaListQueryHandler);
     const input = EmpresaRestMapper.toListInput(dto);
-    const result = await listHandler.execute({ accessContext, dto: input });
+    const result = await listHandler.execute(accessContext, input);
     return EmpresaRestMapper.toListOutputDto(result);
   }
 
@@ -59,7 +59,7 @@ export class EmpresaRestController {
       IEmpresaFindOneQueryHandler,
     );
     const input = EmpresaRestMapper.toFindOneInput(params);
-    const result = await findOneHandler.execute({ accessContext, dto: input });
+    const result = await findOneHandler.execute(accessContext, input);
     ensureExists(result, Empresa.entityName, input.id);
     return EmpresaRestMapper.toFindOneOutputDto(result);
   }
@@ -77,7 +77,7 @@ export class EmpresaRestController {
       IEmpresaCreateCommandHandler,
     );
     const input = EmpresaRestMapper.toCreateInput(dto);
-    const result = await createHandler.execute({ accessContext, dto: input });
+    const result = await createHandler.execute(accessContext, input);
     return EmpresaRestMapper.toFindOneOutputDto(result);
   }
 
@@ -96,7 +96,7 @@ export class EmpresaRestController {
       IEmpresaUpdateCommandHandler,
     );
     const input = EmpresaRestMapper.toUpdateInput(dto);
-    const result = await updateHandler.execute({ accessContext, id: params.id, dto: input });
+    const result = await updateHandler.execute(accessContext, { id: params.id, ...input });
     return EmpresaRestMapper.toFindOneOutputDto(result);
   }
 
@@ -112,7 +112,7 @@ export class EmpresaRestController {
     const deleteHandler = this.container.get<IEmpresaDeleteCommandHandler>(
       IEmpresaDeleteCommandHandler,
     );
-    await deleteHandler.execute({ accessContext, id: params.id });
+    await deleteHandler.execute(accessContext, { id: params.id });
     return { message: "Empresa deletada com sucesso" };
   }
 }

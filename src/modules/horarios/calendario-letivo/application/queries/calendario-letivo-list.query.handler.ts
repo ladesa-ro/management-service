@@ -1,9 +1,10 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import {
-  type ICalendarioLetivoListQuery,
-  ICalendarioLetivoListQueryHandler,
-} from "@/modules/horarios/calendario-letivo/domain/queries/calendario-letivo-list.query.handler.interface";
-import type { CalendarioLetivoListQueryResult } from "../../domain/queries";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
+import { ICalendarioLetivoListQueryHandler } from "@/modules/horarios/calendario-letivo/domain/queries/calendario-letivo-list.query.handler.interface";
+import type {
+  CalendarioLetivoListQuery,
+  CalendarioLetivoListQueryResult,
+} from "../../domain/queries";
 import { ICalendarioLetivoRepository } from "../../domain/repositories";
 
 @DeclareImplementation()
@@ -13,11 +14,10 @@ export class CalendarioLetivoListQueryHandlerImpl implements ICalendarioLetivoLi
     private readonly repository: ICalendarioLetivoRepository,
   ) {}
 
-  async execute({
-    accessContext,
-    dto,
-    selection,
-  }: ICalendarioLetivoListQuery): Promise<CalendarioLetivoListQueryResult> {
-    return this.repository.findAll(accessContext, dto, selection);
+  async execute(
+    accessContext: AccessContext | null,
+    dto: CalendarioLetivoListQuery | null,
+  ): Promise<CalendarioLetivoListQueryResult> {
+    return this.repository.findAll(accessContext, dto, dto?.selection);
   }
 }

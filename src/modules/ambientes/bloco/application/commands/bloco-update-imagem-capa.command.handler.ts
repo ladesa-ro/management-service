@@ -1,8 +1,9 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists, saveEntityImagemField } from "@/modules/@shared";
 import { Bloco } from "@/modules/ambientes/bloco/domain/bloco.domain";
 import {
-  type IBlocoUpdateImagemCapaCommand,
+  type BlocoUpdateImagemCapaCommand,
   IBlocoUpdateImagemCapaCommandHandler,
 } from "@/modules/ambientes/bloco/domain/commands/bloco-update-imagem-capa.command.handler.interface";
 import {
@@ -25,7 +26,10 @@ export class BlocoUpdateImagemCapaCommandHandlerImpl
     private readonly saveImagemCapaHandler: IImagemSaveImagemCapaCommandHandlerType,
   ) {}
 
-  async execute({ accessContext, dto, file }: IBlocoUpdateImagemCapaCommand): Promise<boolean> {
+  async execute(
+    accessContext: AccessContext | null,
+    { dto, file }: BlocoUpdateImagemCapaCommand,
+  ): Promise<boolean> {
     const current = await this.repository.findById(accessContext, dto);
 
     ensureExists(current, Bloco.entityName, dto.id);

@@ -20,7 +20,7 @@ export interface IPerfilRepository extends IPersistRepository<Record<string, any
    * Lista perfis com paginação
    */
   findAll(
-    accessContext: AccessContext,
+    accessContext: AccessContext | null,
     dto: PerfilListQuery | null,
   ): Promise<PerfilListQueryResult>;
 
@@ -28,7 +28,7 @@ export interface IPerfilRepository extends IPersistRepository<Record<string, any
    * Busca um perfil por ID
    */
   findById(
-    accessContext: AccessContext,
+    accessContext: AccessContext | null,
     dto: PerfilFindOneQuery,
   ): Promise<PerfilFindOneQueryResult | null>;
 

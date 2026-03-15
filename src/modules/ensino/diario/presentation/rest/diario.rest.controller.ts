@@ -41,7 +41,7 @@ export class DiarioRestController {
   ): Promise<DiarioListOutputRestDto> {
     const input = DiarioRestMapper.toListInput(dto);
     const listHandler = this.container.get<IDiarioListQueryHandler>(IDiarioListQueryHandler);
-    const result = await listHandler.execute({ accessContext, dto: input });
+    const result = await listHandler.execute(accessContext, input);
     return DiarioRestMapper.toListOutputDto(result);
   }
 
@@ -58,7 +58,7 @@ export class DiarioRestController {
     const findOneHandler = this.container.get<IDiarioFindOneQueryHandler>(
       IDiarioFindOneQueryHandler,
     );
-    const result = await findOneHandler.execute({ accessContext, dto: input });
+    const result = await findOneHandler.execute(accessContext, input);
     ensureExists(result, Diario.entityName, input.id);
     return DiarioRestMapper.toFindOneOutputDto(result);
   }
@@ -75,7 +75,7 @@ export class DiarioRestController {
     const createHandler = this.container.get<IDiarioCreateCommandHandler>(
       IDiarioCreateCommandHandler,
     );
-    const result = await createHandler.execute({ accessContext, dto: input });
+    const result = await createHandler.execute(accessContext, input);
     return DiarioRestMapper.toFindOneOutputDto(result);
   }
 
@@ -93,7 +93,7 @@ export class DiarioRestController {
     const updateHandler = this.container.get<IDiarioUpdateCommandHandler>(
       IDiarioUpdateCommandHandler,
     );
-    const result = await updateHandler.execute({ accessContext, dto: input });
+    const result = await updateHandler.execute(accessContext, input);
     return DiarioRestMapper.toFindOneOutputDto(result);
   }
 
@@ -110,6 +110,6 @@ export class DiarioRestController {
     const deleteHandler = this.container.get<IDiarioDeleteCommandHandler>(
       IDiarioDeleteCommandHandler,
     );
-    return deleteHandler.execute({ accessContext, dto: input });
+    return deleteHandler.execute(accessContext, input);
   }
 }

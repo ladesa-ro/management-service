@@ -1,10 +1,9 @@
 import { InternalServerErrorException } from "@nestjs/common";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ResourceNotFoundError } from "@/modules/@shared";
-import {
-  type IEstagiarioDeleteCommand,
-  IEstagiarioDeleteCommandHandler,
-} from "@/modules/estagio/estagiario/domain/commands/estagiario-delete.command.handler.interface";
+import { IEstagiarioDeleteCommandHandler } from "@/modules/estagio/estagiario/domain/commands/estagiario-delete.command.handler.interface";
+import type { EstagiarioFindOneQuery } from "@/modules/estagio/estagiario/domain/queries";
 import { IEstagiarioRepository } from "../../domain/repositories";
 
 @DeclareImplementation()
@@ -14,7 +13,10 @@ export class EstagiarioDeleteCommandHandlerImpl implements IEstagiarioDeleteComm
     private readonly repository: IEstagiarioRepository,
   ) {}
 
-  async execute({ accessContext, id }: IEstagiarioDeleteCommand): Promise<void> {
+  async execute(
+    accessContext: AccessContext | null,
+    { id }: EstagiarioFindOneQuery,
+  ): Promise<void> {
     try {
       await this.repository.delete(accessContext, id);
     } catch (error) {

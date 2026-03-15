@@ -1,9 +1,7 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import {
-  type IModalidadeListQuery,
-  IModalidadeListQueryHandler,
-} from "@/modules/ensino/modalidade/domain/queries/modalidade-list.query.handler.interface";
-import type { ModalidadeListQueryResult } from "../../domain/queries";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
+import { IModalidadeListQueryHandler } from "@/modules/ensino/modalidade/domain/queries/modalidade-list.query.handler.interface";
+import type { ModalidadeListQuery, ModalidadeListQueryResult } from "../../domain/queries";
 import { IModalidadeRepository } from "../../domain/repositories";
 
 @DeclareImplementation()
@@ -13,11 +11,10 @@ export class ModalidadeListQueryHandlerImpl implements IModalidadeListQueryHandl
     private readonly repository: IModalidadeRepository,
   ) {}
 
-  async execute({
-    accessContext,
-    dto,
-    selection,
-  }: IModalidadeListQuery): Promise<ModalidadeListQueryResult> {
-    return this.repository.findAll(accessContext, dto, selection);
+  async execute(
+    accessContext: AccessContext | null,
+    dto: ModalidadeListQuery | null,
+  ): Promise<ModalidadeListQueryResult> {
+    return this.repository.findAll(accessContext, dto, dto?.selection);
   }
 }

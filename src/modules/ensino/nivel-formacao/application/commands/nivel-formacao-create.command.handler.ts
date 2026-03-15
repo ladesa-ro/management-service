@@ -1,9 +1,8 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
-import {
-  type INivelFormacaoCreateCommand,
-  INivelFormacaoCreateCommandHandler,
-} from "@/modules/ensino/nivel-formacao/domain/commands/nivel-formacao-create.command.handler.interface";
+import type { NivelFormacaoCreateCommand } from "@/modules/ensino/nivel-formacao/domain/commands/nivel-formacao-create.command";
+import { INivelFormacaoCreateCommandHandler } from "@/modules/ensino/nivel-formacao/domain/commands/nivel-formacao-create.command.handler.interface";
 import { NivelFormacao } from "@/modules/ensino/nivel-formacao/domain/nivel-formacao.domain";
 import { INivelFormacaoPermissionChecker } from "../../domain/authorization";
 import type { NivelFormacaoFindOneQueryResult } from "../../domain/queries";
@@ -18,10 +17,10 @@ export class NivelFormacaoCreateCommandHandlerImpl implements INivelFormacaoCrea
     private readonly permissionChecker: INivelFormacaoPermissionChecker,
   ) {}
 
-  async execute({
-    accessContext,
-    dto,
-  }: INivelFormacaoCreateCommand): Promise<NivelFormacaoFindOneQueryResult> {
+  async execute(
+    accessContext: AccessContext | null,
+    dto: NivelFormacaoCreateCommand,
+  ): Promise<NivelFormacaoFindOneQueryResult> {
     await this.permissionChecker.ensureCanCreate(accessContext, { dto });
 
     const domain = NivelFormacao.criar({ slug: dto.slug });

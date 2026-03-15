@@ -1,9 +1,7 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import {
-  type IOfertaFormacaoListQuery,
-  IOfertaFormacaoListQueryHandler,
-} from "@/modules/ensino/oferta-formacao/domain/queries/oferta-formacao-list.query.handler.interface";
-import type { OfertaFormacaoListQueryResult } from "../../domain/queries";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
+import { IOfertaFormacaoListQueryHandler } from "@/modules/ensino/oferta-formacao/domain/queries/oferta-formacao-list.query.handler.interface";
+import type { OfertaFormacaoListQuery, OfertaFormacaoListQueryResult } from "../../domain/queries";
 import { IOfertaFormacaoRepository } from "../../domain/repositories";
 
 @DeclareImplementation()
@@ -13,11 +11,10 @@ export class OfertaFormacaoListQueryHandlerImpl implements IOfertaFormacaoListQu
     private readonly repository: IOfertaFormacaoRepository,
   ) {}
 
-  async execute({
-    accessContext,
-    dto,
-    selection,
-  }: IOfertaFormacaoListQuery): Promise<OfertaFormacaoListQueryResult> {
-    return this.repository.findAll(accessContext, dto, selection);
+  async execute(
+    accessContext: AccessContext | null,
+    dto: OfertaFormacaoListQuery | null,
+  ): Promise<OfertaFormacaoListQueryResult> {
+    return this.repository.findAll(accessContext, dto, dto?.selection);
   }
 }

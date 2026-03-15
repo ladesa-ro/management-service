@@ -41,7 +41,7 @@ export class OfertaFormacaoGraphqlResolver {
     const listHandler = this.container.get<IOfertaFormacaoListQueryHandler>(
       IOfertaFormacaoListQueryHandler,
     );
-    const result = await listHandler.execute({ accessContext, dto: input });
+    const result = await listHandler.execute(accessContext, input);
     return OfertaFormacaoGraphqlMapper.toListOutputDto(result);
   }
 
@@ -55,7 +55,7 @@ export class OfertaFormacaoGraphqlResolver {
     const findOneHandler = this.container.get<IOfertaFormacaoFindOneQueryHandler>(
       IOfertaFormacaoFindOneQueryHandler,
     );
-    const result = await findOneHandler.execute({ accessContext, dto: { id, selection } });
+    const result = await findOneHandler.execute(accessContext, { id, selection });
     ensureExists(result, OfertaFormacao.entityName, id);
     return OfertaFormacaoGraphqlMapper.toFindOneOutputDto(result);
   }
@@ -70,7 +70,7 @@ export class OfertaFormacaoGraphqlResolver {
     const createHandler = this.container.get<IOfertaFormacaoCreateCommandHandler>(
       IOfertaFormacaoCreateCommandHandler,
     );
-    const result = await createHandler.execute({ accessContext, dto: input });
+    const result = await createHandler.execute(accessContext, input);
     return OfertaFormacaoGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -85,7 +85,7 @@ export class OfertaFormacaoGraphqlResolver {
     const updateHandler = this.container.get<IOfertaFormacaoUpdateCommandHandler>(
       IOfertaFormacaoUpdateCommandHandler,
     );
-    const result = await updateHandler.execute({ accessContext, dto: input });
+    const result = await updateHandler.execute(accessContext, input);
     return OfertaFormacaoGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -97,6 +97,6 @@ export class OfertaFormacaoGraphqlResolver {
     const deleteHandler = this.container.get<IOfertaFormacaoDeleteCommandHandler>(
       IOfertaFormacaoDeleteCommandHandler,
     );
-    return deleteHandler.execute({ accessContext, dto: { id } });
+    return deleteHandler.execute(accessContext, { id });
   }
 }

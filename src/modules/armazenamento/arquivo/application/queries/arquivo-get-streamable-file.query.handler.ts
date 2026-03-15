@@ -2,6 +2,7 @@ import type { Readable } from "node:stream";
 import { ForbiddenException, ServiceUnavailableException, StreamableFile } from "@nestjs/common";
 import { IStorageService } from "@/domain/abstractions/storage";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists, isValidUuid } from "@/modules/@shared";
 import { UsuarioEntity } from "@/modules/acesso/usuario/infrastructure/persistence/typeorm";
 import { Arquivo } from "@/modules/armazenamento/arquivo/domain/arquivo.domain";
@@ -22,12 +23,10 @@ export class ArquivoGetStreamableFileQueryHandlerImpl
     private storageService: IStorageService,
   ) {}
 
-  async execute({
-    input,
-  }: {
-    accessContext?: unknown;
-    input: ArquivoGetFileQuery;
-  }): Promise<StreamableFile> {
+  async execute(
+    _accessContext: AccessContext | null,
+    input: ArquivoGetFileQuery,
+  ): Promise<StreamableFile> {
     const file = await this.getFile(input);
 
     if (!file.stream) {

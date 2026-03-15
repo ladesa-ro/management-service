@@ -1,4 +1,5 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import {
   IImagemSaveImageCommandHandler,
   type IImagemSaveImagemCapaCommand,
@@ -12,8 +13,11 @@ export class ImagemSaveImagemCapaCommandHandlerImpl implements IImagemSaveImagem
     private readonly saveImageHandler: IImagemSaveImageCommandHandler,
   ) {}
 
-  async execute({ file }: IImagemSaveImagemCapaCommand): Promise<{ imagem: { id: string } }> {
-    return this.saveImageHandler.execute({
+  async execute(
+    _accessContext: AccessContext | null,
+    { file }: IImagemSaveImagemCapaCommand,
+  ): Promise<{ imagem: { id: string } }> {
+    return this.saveImageHandler.execute(null, {
       file,
       options: {
         minWidth: 1,

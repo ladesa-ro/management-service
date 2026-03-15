@@ -1,13 +1,12 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists, type PersistInput } from "@/modules/@shared";
 import { NivelFormacao } from "@/modules/ensino/nivel-formacao/domain/nivel-formacao.domain";
 import { INivelFormacaoFindOneQueryHandler } from "@/modules/ensino/nivel-formacao/domain/queries/nivel-formacao-find-one.query.handler.interface";
 import { OfertaFormacao } from "@/modules/ensino/oferta-formacao/domain/oferta-formacao.domain";
 import { IOfertaFormacaoFindOneQueryHandler } from "@/modules/ensino/oferta-formacao/domain/queries/oferta-formacao-find-one.query.handler.interface";
-import {
-  type IOfertaFormacaoNivelFormacaoCreateCommand,
-  IOfertaFormacaoNivelFormacaoCreateCommandHandler,
-} from "@/modules/ensino/oferta-formacao-nivel-formacao/domain/commands/oferta-formacao-nivel-formacao-create.command.handler.interface";
+import type { OfertaFormacaoNivelFormacaoCreateCommand } from "@/modules/ensino/oferta-formacao-nivel-formacao/domain/commands/oferta-formacao-nivel-formacao-create.command";
+import { IOfertaFormacaoNivelFormacaoCreateCommandHandler } from "@/modules/ensino/oferta-formacao-nivel-formacao/domain/commands/oferta-formacao-nivel-formacao-create.command.handler.interface";
 import { OfertaFormacaoNivelFormacao } from "@/modules/ensino/oferta-formacao-nivel-formacao/domain/oferta-formacao-nivel-formacao.domain";
 import type { IOfertaFormacaoNivelFormacao } from "@/modules/ensino/oferta-formacao-nivel-formacao/domain/oferta-formacao-nivel-formacao.types";
 import { IOfertaFormacaoNivelFormacaoPermissionChecker } from "../../domain/authorization";
@@ -29,25 +28,23 @@ export class OfertaFormacaoNivelFormacaoCreateCommandHandlerImpl
     private readonly nivelFormacaoFindOneHandler: INivelFormacaoFindOneQueryHandler,
   ) {}
 
-  async execute({
-    accessContext,
-    dto,
-  }: IOfertaFormacaoNivelFormacaoCreateCommand): Promise<OfertaFormacaoNivelFormacaoFindOneQueryResult> {
+  async execute(
+    accessContext: AccessContext | null,
+    dto: OfertaFormacaoNivelFormacaoCreateCommand,
+  ): Promise<OfertaFormacaoNivelFormacaoFindOneQueryResult> {
     await this.permissionChecker.ensureCanCreate(accessContext, { dto });
 
     const createData: Partial<PersistInput<IOfertaFormacaoNivelFormacao>> = {};
     if (dto.ofertaFormacao) {
-      const ofertaFormacao = await this.ofertaFormacaoFindOneHandler.execute({
-        accessContext,
-        dto: { id: dto.ofertaFormacao.id },
+      const ofertaFormacao = await this.ofertaFormacaoFindOneHandler.execute(accessContext, {
+        id: dto.ofertaFormacao.id,
       });
       ensureExists(ofertaFormacao, OfertaFormacao.entityName, dto.ofertaFormacao.id);
       createData.ofertaFormacao = { id: ofertaFormacao.id };
     }
     if (dto.nivelFormacao) {
-      const nivelFormacao = await this.nivelFormacaoFindOneHandler.execute({
-        accessContext,
-        dto: { id: dto.nivelFormacao.id },
+      const nivelFormacao = await this.nivelFormacaoFindOneHandler.execute(accessContext, {
+        id: dto.nivelFormacao.id,
       });
       ensureExists(nivelFormacao, NivelFormacao.entityName, dto.nivelFormacao.id);
       createData.nivelFormacao = { id: nivelFormacao.id };

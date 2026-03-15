@@ -43,7 +43,7 @@ export class DiaCalendarioRestController {
       IDiaCalendarioListQueryHandler,
     );
     const input = DiaCalendarioRestMapper.toListInput(dto);
-    const result = await listHandler.execute({ accessContext, dto: input as any });
+    const result = await listHandler.execute(accessContext, input as any);
     return DiaCalendarioRestMapper.toListOutputDto(result as any);
   }
 
@@ -63,7 +63,7 @@ export class DiaCalendarioRestController {
       IDiaCalendarioFindOneQueryHandler,
     );
     const input = DiaCalendarioRestMapper.toFindOneInput(params);
-    const result = await findOneHandler.execute({ accessContext, dto: input as any });
+    const result = await findOneHandler.execute(accessContext, input as any);
     ensureExists(result, DiaCalendario.entityName, (input as any).id);
     return DiaCalendarioRestMapper.toFindOneOutputDto(result as any);
   }
@@ -80,7 +80,7 @@ export class DiaCalendarioRestController {
       IDiaCalendarioCreateCommandHandler,
     );
     const input = DiaCalendarioRestMapper.toCreateInput(dto);
-    const result = await createHandler.execute({ accessContext, dto: input as any });
+    const result = await createHandler.execute(accessContext, input as any);
     return DiaCalendarioRestMapper.toFindOneOutputDto(result as any);
   }
 
@@ -98,7 +98,7 @@ export class DiaCalendarioRestController {
       IDiaCalendarioUpdateCommandHandler,
     );
     const input = DiaCalendarioRestMapper.toUpdateInput(params, dto);
-    const result = await updateHandler.execute({ accessContext, dto: input as any });
+    const result = await updateHandler.execute(accessContext, input as any);
     return DiaCalendarioRestMapper.toFindOneOutputDto(result as any);
   }
 
@@ -118,6 +118,6 @@ export class DiaCalendarioRestController {
       IDiaCalendarioDeleteCommandHandler,
     );
     const input = DiaCalendarioRestMapper.toFindOneInput(params);
-    return deleteHandler.execute({ accessContext, dto: input as any });
+    return deleteHandler.execute(accessContext, input as any);
   }
 }

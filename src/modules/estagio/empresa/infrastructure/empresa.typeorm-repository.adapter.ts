@@ -32,9 +32,9 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
   }
 
   async findAll(
-    accessContext: AccessContext,
+    accessContext: AccessContext | null,
     dto: EmpresaListQuery | null = null,
-    selection?: string[] | boolean,
+    selection?: string[] | boolean | null,
   ): Promise<EmpresaListQueryResult> {
     const page = dto?.page || 1;
     const limit = dto?.limit || 10;
@@ -101,7 +101,7 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
   async findById(
     accessContext: AccessContext | null,
     dto: EmpresaFindOneQuery,
-    selection?: string[] | boolean,
+    selection?: string[] | boolean | null,
   ): Promise<EmpresaFindOneQueryResult | null> {
     const entity = await this.repository.findOne({
       where: { id: dto.id, dateDeleted: null as any },
@@ -115,7 +115,7 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
   }
 
   async create(
-    accessContext: AccessContext,
+    accessContext: AccessContext | null,
     dto: EmpresaCreateCommand,
   ): Promise<EmpresaFindOneQueryResult> {
     const endereco = await this.enderecoRepository.findOne({
@@ -133,7 +133,7 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
   }
 
   async update(
-    accessContext: AccessContext,
+    accessContext: AccessContext | null,
     id: string,
     dto: EmpresaUpdateCommand,
   ): Promise<EmpresaFindOneQueryResult> {
@@ -161,7 +161,7 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
     return EmpresaMapper.toOutputDto(saved);
   }
 
-  async delete(accessContext: AccessContext, id: string): Promise<void> {
+  async delete(accessContext: AccessContext | null, id: string): Promise<void> {
     const entity = await this.repository.findOne({
       where: { id, dateDeleted: null as any },
     });

@@ -13,10 +13,14 @@ export const QbEfficientLoadCore = (
   modelRepresentation: ModelRepresentation,
   qb: SelectQueryBuilder<any>,
   alias: string,
-  selection: boolean | string[] = true,
+  selection: boolean | string[] | null | undefined = true,
   parent: string[] = [],
 ) => {
   let counter = 0;
+
+  if (selection == null) {
+    selection = true;
+  }
 
   let rootSelection: boolean | string[];
 
@@ -105,7 +109,7 @@ export const QbEfficientLoad = (
   entityDefRef: string,
   qb: SelectQueryBuilder<any>,
   alias: string,
-  selection: boolean | string[] = true,
+  selection: boolean | string[] | null | undefined = true,
   parent: string[] = [],
 ) => {
   const model = modelRegistry.get(entityDefRef);

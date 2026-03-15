@@ -23,7 +23,7 @@ export class EnderecoGraphqlResolver {
     const findOneHandler = this.container.get<IEnderecoFindOneQueryHandler>(
       IEnderecoFindOneQueryHandler,
     );
-    const result = await findOneHandler.execute({ accessContext, dto: { id, selection } });
+    const result = await findOneHandler.execute(accessContext, { id, selection });
     ensureExists(result, Endereco.entityName, id);
     return EnderecoGraphqlMapper.toFindOneOutputDto(result);
   }

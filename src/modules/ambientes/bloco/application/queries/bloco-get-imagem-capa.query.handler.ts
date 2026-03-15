@@ -1,11 +1,9 @@
 import { type StreamableFile } from "@nestjs/common";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists, getEntityImagemStreamableFile } from "@/modules/@shared";
 import { Bloco } from "@/modules/ambientes/bloco/domain/bloco.domain";
-import {
-  type IBlocoGetImagemCapaQuery,
-  IBlocoGetImagemCapaQueryHandler,
-} from "@/modules/ambientes/bloco/domain/queries/bloco-get-imagem-capa.query.handler.interface";
+import { IBlocoGetImagemCapaQueryHandler } from "@/modules/ambientes/bloco/domain/queries/bloco-get-imagem-capa.query.handler.interface";
 import {
   IArquivoGetStreamableFileQueryHandler,
   type IArquivoGetStreamableFileQueryHandler as IArquivoGetStreamableFileQueryHandlerType,
@@ -14,6 +12,7 @@ import {
   IImagemGetLatestArquivoIdQueryHandler,
   type IImagemGetLatestArquivoIdQueryHandler as IImagemGetLatestArquivoIdQueryHandlerType,
 } from "@/modules/armazenamento/imagem/domain/queries";
+import type { BlocoFindOneQuery } from "../../domain/queries";
 import { IBlocoRepository } from "../../domain/repositories";
 
 @DeclareImplementation()
@@ -27,7 +26,10 @@ export class BlocoGetImagemCapaQueryHandlerImpl implements IBlocoGetImagemCapaQu
     private readonly getStreamableFileHandler: IArquivoGetStreamableFileQueryHandlerType,
   ) {}
 
-  async execute({ accessContext, id }: IBlocoGetImagemCapaQuery): Promise<StreamableFile> {
+  async execute(
+    accessContext: AccessContext | null,
+    { id }: BlocoFindOneQuery,
+  ): Promise<StreamableFile> {
     const entity = await this.repository.findById(accessContext, { id });
 
     ensureExists(entity, Bloco.entityName, id);

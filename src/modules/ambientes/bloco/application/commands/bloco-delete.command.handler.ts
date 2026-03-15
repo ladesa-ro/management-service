@@ -1,10 +1,9 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { Bloco } from "@/modules/ambientes/bloco/domain/bloco.domain";
-import {
-  type IBlocoDeleteCommand,
-  IBlocoDeleteCommandHandler,
-} from "@/modules/ambientes/bloco/domain/commands/bloco-delete.command.handler.interface";
+import { IBlocoDeleteCommandHandler } from "@/modules/ambientes/bloco/domain/commands/bloco-delete.command.handler.interface";
+import type { BlocoFindOneQuery } from "@/modules/ambientes/bloco/domain/queries";
 import { IBlocoPermissionChecker } from "../../domain/authorization";
 import { IBlocoRepository } from "../../domain/repositories";
 
@@ -17,7 +16,7 @@ export class BlocoDeleteCommandHandlerImpl implements IBlocoDeleteCommandHandler
     private readonly permissionChecker: IBlocoPermissionChecker,
   ) {}
 
-  async execute({ accessContext, dto }: IBlocoDeleteCommand): Promise<boolean> {
+  async execute(accessContext: AccessContext | null, dto: BlocoFindOneQuery): Promise<boolean> {
     await this.permissionChecker.ensureCanDelete(accessContext, { dto }, dto.id);
 
     const entity = await this.repository.findById(accessContext, dto);

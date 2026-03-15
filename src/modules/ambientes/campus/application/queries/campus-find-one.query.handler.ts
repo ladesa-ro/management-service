@@ -1,9 +1,7 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import {
-  type ICampusFindOneQuery,
-  ICampusFindOneQueryHandler,
-} from "@/modules/ambientes/campus/domain/queries/campus-find-one.query.handler.interface";
-import type { CampusFindOneQueryResult } from "../../domain/queries";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
+import { ICampusFindOneQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-find-one.query.handler.interface";
+import type { CampusFindOneQuery, CampusFindOneQueryResult } from "../../domain/queries";
 import { ICampusRepository } from "../../domain/repositories";
 
 @DeclareImplementation()
@@ -13,11 +11,10 @@ export class CampusFindOneQueryHandlerImpl implements ICampusFindOneQueryHandler
     private readonly repository: ICampusRepository,
   ) {}
 
-  async execute({
-    accessContext,
-    dto,
-    selection,
-  }: ICampusFindOneQuery): Promise<CampusFindOneQueryResult | null> {
-    return this.repository.findById(accessContext, dto, selection);
+  async execute(
+    accessContext: AccessContext | null,
+    dto: CampusFindOneQuery,
+  ): Promise<CampusFindOneQueryResult | null> {
+    return this.repository.findById(accessContext, dto, dto?.selection);
   }
 }

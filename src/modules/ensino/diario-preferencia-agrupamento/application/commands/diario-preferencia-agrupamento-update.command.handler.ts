@@ -1,14 +1,14 @@
 import { has } from "lodash";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists, type PersistInput } from "@/modules/@shared";
 import { Diario } from "@/modules/ensino/diario/domain/diario.domain";
 import { IDiarioFindOneQueryHandler } from "@/modules/ensino/diario/domain/queries/diario-find-one.query.handler.interface";
-import {
-  type IDiarioPreferenciaAgrupamentoUpdateCommand,
-  IDiarioPreferenciaAgrupamentoUpdateCommandHandler,
-} from "@/modules/ensino/diario-preferencia-agrupamento/domain/commands/diario-preferencia-agrupamento-update.command.handler.interface";
+import type { DiarioPreferenciaAgrupamentoUpdateCommand } from "@/modules/ensino/diario-preferencia-agrupamento/domain/commands/diario-preferencia-agrupamento-update.command";
+import { IDiarioPreferenciaAgrupamentoUpdateCommandHandler } from "@/modules/ensino/diario-preferencia-agrupamento/domain/commands/diario-preferencia-agrupamento-update.command.handler.interface";
 import { DiarioPreferenciaAgrupamento } from "@/modules/ensino/diario-preferencia-agrupamento/domain/diario-preferencia-agrupamento.domain";
 import type { IDiarioPreferenciaAgrupamento } from "@/modules/ensino/diario-preferencia-agrupamento/domain/diario-preferencia-agrupamento.types";
+import type { DiarioPreferenciaAgrupamentoFindOneQuery } from "@/modules/ensino/diario-preferencia-agrupamento/domain/queries";
 import { IDiarioPreferenciaAgrupamentoPermissionChecker } from "../../domain/authorization";
 import type { DiarioPreferenciaAgrupamentoFindOneQueryResult } from "../../domain/queries";
 import { IDiarioPreferenciaAgrupamentoRepository } from "../../domain/repositories";
@@ -26,10 +26,10 @@ export class DiarioPreferenciaAgrupamentoUpdateCommandHandlerImpl
     private readonly diarioFindOneHandler: IDiarioFindOneQueryHandler,
   ) {}
 
-  async execute({
-    accessContext,
-    dto,
-  }: IDiarioPreferenciaAgrupamentoUpdateCommand): Promise<DiarioPreferenciaAgrupamentoFindOneQueryResult> {
+  async execute(
+    accessContext: AccessContext | null,
+    dto: DiarioPreferenciaAgrupamentoFindOneQuery & DiarioPreferenciaAgrupamentoUpdateCommand,
+  ): Promise<DiarioPreferenciaAgrupamentoFindOneQueryResult> {
     const current = await this.repository.findById(accessContext, { id: dto.id });
 
     ensureExists(current, DiarioPreferenciaAgrupamento.entityName, dto.id);
@@ -50,10 +50,7 @@ export class DiarioPreferenciaAgrupamentoUpdateCommandHandlerImpl
       dataFim: domain.dataFim,
     };
     if (has(dto, "diario") && dto.diario !== undefined) {
-      const diario = await this.diarioFindOneHandler.execute({
-        accessContext,
-        dto: dto.diario,
-      });
+      const diario = await this.diarioFindOneHandler.execute(accessContext, dto.diario);
       ensureExists(diario, Diario.entityName, dto.diario.id);
       updateData.diario = { id: diario.id };
     }

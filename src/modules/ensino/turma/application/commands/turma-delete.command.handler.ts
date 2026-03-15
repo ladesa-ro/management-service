@@ -1,9 +1,8 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
-import {
-  type ITurmaDeleteCommand,
-  ITurmaDeleteCommandHandler,
-} from "@/modules/ensino/turma/domain/commands/turma-delete.command.handler.interface";
+import { ITurmaDeleteCommandHandler } from "@/modules/ensino/turma/domain/commands/turma-delete.command.handler.interface";
+import type { TurmaFindOneQuery } from "@/modules/ensino/turma/domain/queries";
 import { Turma } from "@/modules/ensino/turma/domain/turma.domain";
 import { ITurmaPermissionChecker } from "../../domain/authorization";
 import { ITurmaRepository } from "../../domain/repositories";
@@ -17,7 +16,7 @@ export class TurmaDeleteCommandHandlerImpl implements ITurmaDeleteCommandHandler
     private readonly permissionChecker: ITurmaPermissionChecker,
   ) {}
 
-  async execute({ accessContext, dto }: ITurmaDeleteCommand): Promise<boolean> {
+  async execute(accessContext: AccessContext | null, dto: TurmaFindOneQuery): Promise<boolean> {
     await this.permissionChecker.ensureCanDelete(accessContext, { dto }, dto.id);
 
     const entity = await this.repository.findById(accessContext, dto);

@@ -33,7 +33,7 @@ export class ImagemArquivoGraphqlResolver {
     const listHandler = this.container.get<IImagemArquivoListQueryHandler>(
       IImagemArquivoListQueryHandler,
     );
-    const result = await listHandler.execute({ accessContext, dto: input });
+    const result = await listHandler.execute(accessContext, input);
     return ImagemArquivoGraphqlMapper.toListOutputDto(result);
   }
 
@@ -47,7 +47,7 @@ export class ImagemArquivoGraphqlResolver {
     const findOneHandler = this.container.get<IImagemArquivoFindOneQueryHandler>(
       IImagemArquivoFindOneQueryHandler,
     );
-    const result = await findOneHandler.execute({ accessContext, dto: { id, selection } });
+    const result = await findOneHandler.execute(accessContext, { id, selection });
     ensureExists(result, ImagemArquivo.entityName, id);
     return ImagemArquivoGraphqlMapper.toFindOneOutputDto(result);
   }

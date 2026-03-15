@@ -31,7 +31,7 @@ export class CidadeGraphqlResolver {
     }
 
     const listHandler = this.container.get<ICidadeListQueryHandler>(ICidadeListQueryHandler);
-    const result = await listHandler.execute({ accessContext, dto: input });
+    const result = await listHandler.execute(accessContext, input);
     return CidadeGraphqlMapper.toListOutputDto(result);
   }
 
@@ -45,7 +45,7 @@ export class CidadeGraphqlResolver {
     const findOneHandler = this.container.get<ICidadeFindOneQueryHandler>(
       ICidadeFindOneQueryHandler,
     );
-    const result = await findOneHandler.execute({ accessContext, dto: { id, selection } });
+    const result = await findOneHandler.execute(accessContext, { id, selection });
     ensureExists(result, Cidade.entityName, id);
     return CidadeGraphqlMapper.toFindOneOutputDto(result);
   }

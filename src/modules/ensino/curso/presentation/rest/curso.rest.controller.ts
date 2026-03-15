@@ -58,7 +58,7 @@ export class CursoRestController {
   ): Promise<CursoListOutputRestDto> {
     const input = CursoRestMapper.toListInput(dto);
     const listHandler = this.container.get<ICursoListQueryHandler>(ICursoListQueryHandler);
-    const result = await listHandler.execute({ accessContext, dto: input });
+    const result = await listHandler.execute(accessContext, input);
     return CursoRestMapper.toListOutputDto(result as any);
   }
 
@@ -73,7 +73,7 @@ export class CursoRestController {
   ): Promise<CursoFindOneOutputRestDto> {
     const input = CursoRestMapper.toFindOneInput(params);
     const findOneHandler = this.container.get<ICursoFindOneQueryHandler>(ICursoFindOneQueryHandler);
-    const result = await findOneHandler.execute({ accessContext, dto: input });
+    const result = await findOneHandler.execute(accessContext, input);
     ensureExists(result, Curso.entityName, input.id);
     return CursoRestMapper.toFindOneOutputDto(result as any);
   }
@@ -90,7 +90,7 @@ export class CursoRestController {
     const createHandler = this.container.get<ICursoCreateCommandHandler>(
       ICursoCreateCommandHandler,
     );
-    const result = await createHandler.execute({ accessContext, dto: input });
+    const result = await createHandler.execute(accessContext, input);
     return CursoRestMapper.toFindOneOutputDto(result as any);
   }
 
@@ -108,7 +108,7 @@ export class CursoRestController {
     const updateHandler = this.container.get<ICursoUpdateCommandHandler>(
       ICursoUpdateCommandHandler,
     );
-    const result = await updateHandler.execute({ accessContext, dto: input });
+    const result = await updateHandler.execute(accessContext, input);
     return CursoRestMapper.toFindOneOutputDto(result as any);
   }
 
@@ -124,7 +124,7 @@ export class CursoRestController {
     const getImagemCapaHandler = this.container.get<ICursoGetImagemCapaQueryHandler>(
       ICursoGetImagemCapaQueryHandler,
     );
-    return getImagemCapaHandler.execute({ accessContext, id: params.id });
+    return getImagemCapaHandler.execute(accessContext, { id: params.id });
   }
 
   @Put("/:id/imagem/capa")
@@ -154,7 +154,7 @@ export class CursoRestController {
     const updateImagemCapaHandler = this.container.get<ICursoUpdateImagemCapaCommandHandler>(
       ICursoUpdateImagemCapaCommandHandler,
     );
-    return updateImagemCapaHandler.execute({ accessContext, dto: params, file });
+    return updateImagemCapaHandler.execute(accessContext, { dto: params, file });
   }
 
   @Delete("/:id")
@@ -170,6 +170,6 @@ export class CursoRestController {
     const deleteHandler = this.container.get<ICursoDeleteCommandHandler>(
       ICursoDeleteCommandHandler,
     );
-    return deleteHandler.execute({ accessContext, dto: input });
+    return deleteHandler.execute(accessContext, input);
   }
 }

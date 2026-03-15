@@ -2,11 +2,11 @@ import { ServiceUnavailableException } from "@nestjs/common";
 import { has } from "lodash";
 import { IIdpUserService } from "@/domain/abstractions/identity-provider";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists, ValidationFailedException } from "@/modules/@shared";
-import {
-  type IUsuarioUpdateCommand,
-  IUsuarioUpdateCommandHandler,
-} from "@/modules/acesso/usuario/domain/commands/usuario-update.command.handler.interface";
+import type { UsuarioUpdateCommand } from "@/modules/acesso/usuario/domain/commands/usuario-update.command";
+import { IUsuarioUpdateCommandHandler } from "@/modules/acesso/usuario/domain/commands/usuario-update.command.handler.interface";
+import type { UsuarioFindOneQuery } from "@/modules/acesso/usuario/domain/queries";
 import { Usuario } from "@/modules/acesso/usuario/domain/usuario.domain";
 import { IUsuarioPermissionChecker } from "../../domain/authorization";
 import type { UsuarioFindOneQueryResult } from "../../domain/queries";
@@ -23,7 +23,10 @@ export class UsuarioUpdateCommandHandlerImpl implements IUsuarioUpdateCommandHan
     private readonly permissionChecker: IUsuarioPermissionChecker,
   ) {}
 
-  async execute({ accessContext, dto }: IUsuarioUpdateCommand): Promise<UsuarioFindOneQueryResult> {
+  async execute(
+    accessContext: AccessContext | null,
+    dto: UsuarioFindOneQuery & UsuarioUpdateCommand,
+  ): Promise<UsuarioFindOneQueryResult> {
     const currentUsuario = await this.repository.findById(accessContext, dto);
 
     ensureExists(currentUsuario, Usuario.entityName, dto.id);

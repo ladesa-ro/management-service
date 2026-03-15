@@ -1,9 +1,7 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import {
-  type IPerfilListQuery,
-  IPerfilListQueryHandler,
-} from "@/modules/acesso/perfil/domain/queries/perfil-list.query.handler.interface";
-import type { PerfilListQueryResult } from "../../domain/queries";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
+import { IPerfilListQueryHandler } from "@/modules/acesso/perfil/domain/queries/perfil-list.query.handler.interface";
+import type { PerfilListQuery, PerfilListQueryResult } from "../../domain/queries";
 import { IPerfilRepository } from "../../domain/repositories";
 
 @DeclareImplementation()
@@ -13,7 +11,10 @@ export class PerfilListQueryHandlerImpl implements IPerfilListQueryHandler {
     private readonly repository: IPerfilRepository,
   ) {}
 
-  async execute({ accessContext, dto }: IPerfilListQuery): Promise<PerfilListQueryResult> {
+  async execute(
+    accessContext: AccessContext | null,
+    dto: PerfilListQuery | null,
+  ): Promise<PerfilListQueryResult> {
     return this.repository.findAll(accessContext, dto);
   }
 }

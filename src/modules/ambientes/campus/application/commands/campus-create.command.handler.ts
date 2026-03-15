@@ -1,10 +1,9 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { Campus } from "@/modules/ambientes/campus/domain/campus.domain";
-import {
-  type ICampusCreateCommand,
-  ICampusCreateCommandHandler,
-} from "@/modules/ambientes/campus/domain/commands/campus-create.command.handler.interface";
+import type { CampusCreateCommand } from "@/modules/ambientes/campus/domain/commands/campus-create.command";
+import { ICampusCreateCommandHandler } from "@/modules/ambientes/campus/domain/commands/campus-create.command.handler.interface";
 import { IEnderecoCreateOrUpdateCommandHandler } from "@/modules/localidades/endereco/domain/commands/endereco-create-or-update.command.handler.interface";
 import { ICampusPermissionChecker } from "../../domain/authorization";
 import type { CampusFindOneQueryResult } from "../../domain/queries";
@@ -21,10 +20,13 @@ export class CampusCreateCommandHandlerImpl implements ICampusCreateCommandHandl
     private readonly enderecoCreateOrUpdateHandler: IEnderecoCreateOrUpdateCommandHandler,
   ) {}
 
-  async execute({ accessContext, dto }: ICampusCreateCommand): Promise<CampusFindOneQueryResult> {
+  async execute(
+    accessContext: AccessContext | null,
+    dto: CampusCreateCommand,
+  ): Promise<CampusFindOneQueryResult> {
     await this.permissionChecker.ensureCanCreate(accessContext, { dto });
 
-    const endereco = await this.enderecoCreateOrUpdateHandler.execute({
+    const endereco = await this.enderecoCreateOrUpdateHandler.execute(null, {
       id: null,
       dto: dto.endereco,
     });

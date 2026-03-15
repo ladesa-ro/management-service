@@ -41,7 +41,7 @@ export class ModalidadeGraphqlResolver {
     const listHandler = this.container.get<IModalidadeListQueryHandler>(
       IModalidadeListQueryHandler,
     );
-    const result = await listHandler.execute({ accessContext, dto: input });
+    const result = await listHandler.execute(accessContext, input);
     return ModalidadeGraphqlMapper.toListOutputDto(result);
   }
 
@@ -55,7 +55,7 @@ export class ModalidadeGraphqlResolver {
     const findOneHandler = this.container.get<IModalidadeFindOneQueryHandler>(
       IModalidadeFindOneQueryHandler,
     );
-    const result = await findOneHandler.execute({ accessContext, dto: { id, selection } });
+    const result = await findOneHandler.execute(accessContext, { id, selection });
     ensureExists(result, Modalidade.entityName, id);
     return ModalidadeGraphqlMapper.toFindOneOutputDto(result);
   }
@@ -70,7 +70,7 @@ export class ModalidadeGraphqlResolver {
     const createHandler = this.container.get<IModalidadeCreateCommandHandler>(
       IModalidadeCreateCommandHandler,
     );
-    const result = await createHandler.execute({ accessContext, dto: input });
+    const result = await createHandler.execute(accessContext, input);
     return ModalidadeGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -85,7 +85,7 @@ export class ModalidadeGraphqlResolver {
     const updateHandler = this.container.get<IModalidadeUpdateCommandHandler>(
       IModalidadeUpdateCommandHandler,
     );
-    const result = await updateHandler.execute({ accessContext, dto: input });
+    const result = await updateHandler.execute(accessContext, input);
     return ModalidadeGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -97,6 +97,6 @@ export class ModalidadeGraphqlResolver {
     const deleteHandler = this.container.get<IModalidadeDeleteCommandHandler>(
       IModalidadeDeleteCommandHandler,
     );
-    return deleteHandler.execute({ accessContext, dto: { id } });
+    return deleteHandler.execute(accessContext, { id });
   }
 }

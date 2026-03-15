@@ -43,7 +43,7 @@ export class OfertaFormacaoRestController {
     const listHandler = this.container.get<IOfertaFormacaoListQueryHandler>(
       IOfertaFormacaoListQueryHandler,
     );
-    const result = await listHandler.execute({ accessContext, dto: input });
+    const result = await listHandler.execute(accessContext, input);
     return OfertaFormacaoRestMapper.toListOutputDto(result);
   }
 
@@ -63,7 +63,7 @@ export class OfertaFormacaoRestController {
     const findOneHandler = this.container.get<IOfertaFormacaoFindOneQueryHandler>(
       IOfertaFormacaoFindOneQueryHandler,
     );
-    const result = await findOneHandler.execute({ accessContext, dto: input });
+    const result = await findOneHandler.execute(accessContext, input);
     ensureExists(result, OfertaFormacao.entityName, input.id);
     return OfertaFormacaoRestMapper.toFindOneOutputDto(result);
   }
@@ -80,7 +80,7 @@ export class OfertaFormacaoRestController {
     const createHandler = this.container.get<IOfertaFormacaoCreateCommandHandler>(
       IOfertaFormacaoCreateCommandHandler,
     );
-    const result = await createHandler.execute({ accessContext, dto: input });
+    const result = await createHandler.execute(accessContext, input);
     return OfertaFormacaoRestMapper.toFindOneOutputDto(result);
   }
 
@@ -98,7 +98,7 @@ export class OfertaFormacaoRestController {
     const updateHandler = this.container.get<IOfertaFormacaoUpdateCommandHandler>(
       IOfertaFormacaoUpdateCommandHandler,
     );
-    const result = await updateHandler.execute({ accessContext, dto: input });
+    const result = await updateHandler.execute(accessContext, input);
     return OfertaFormacaoRestMapper.toFindOneOutputDto(result);
   }
 
@@ -118,6 +118,6 @@ export class OfertaFormacaoRestController {
     const deleteHandler = this.container.get<IOfertaFormacaoDeleteCommandHandler>(
       IOfertaFormacaoDeleteCommandHandler,
     );
-    return deleteHandler.execute({ accessContext, dto: input });
+    return deleteHandler.execute(accessContext, input);
   }
 }

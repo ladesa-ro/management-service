@@ -1,10 +1,9 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente.domain";
-import {
-  type IAmbienteCreateCommand,
-  IAmbienteCreateCommandHandler,
-} from "@/modules/ambientes/ambiente/domain/commands/ambiente-create.command.handler.interface";
+import type { AmbienteCreateCommand } from "@/modules/ambientes/ambiente/domain/commands/ambiente-create.command";
+import { IAmbienteCreateCommandHandler } from "@/modules/ambientes/ambiente/domain/commands/ambiente-create.command.handler.interface";
 import { Bloco } from "@/modules/ambientes/bloco/domain/bloco.domain";
 import { IBlocoFindOneQueryHandler } from "@/modules/ambientes/bloco/domain/queries/bloco-find-one.query.handler.interface";
 import { IAmbientePermissionChecker } from "../../domain/authorization";
@@ -22,16 +21,13 @@ export class AmbienteCreateCommandHandlerImpl implements IAmbienteCreateCommandH
     private readonly blocoFindOneHandler: IBlocoFindOneQueryHandler,
   ) {}
 
-  async execute({
-    accessContext,
-    dto,
-  }: IAmbienteCreateCommand): Promise<AmbienteFindOneQueryResult> {
+  async execute(
+    accessContext: AccessContext | null,
+    dto: AmbienteCreateCommand,
+  ): Promise<AmbienteFindOneQueryResult> {
     await this.permissionChecker.ensureCanCreate(accessContext, { dto });
 
-    const bloco = await this.blocoFindOneHandler.execute({
-      accessContext,
-      dto: { id: dto.bloco.id },
-    });
+    const bloco = await this.blocoFindOneHandler.execute(accessContext, { id: dto.bloco.id });
     ensureExists(bloco, Bloco.entityName, dto.bloco.id);
 
     const domain = Ambiente.criar({

@@ -1,10 +1,9 @@
 import { v4 as uuid } from "uuid";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
-import {
-  type IPerfilSetVinculosCommand,
-  IPerfilSetVinculosCommandHandler,
-} from "@/modules/acesso/perfil/domain/commands/perfil-set-vinculos.command.handler.interface";
+import type { PerfilSetVinculosCommand } from "@/modules/acesso/perfil/domain/commands/perfil-set-vinculos.command";
+import { IPerfilSetVinculosCommandHandler } from "@/modules/acesso/perfil/domain/commands/perfil-set-vinculos.command.handler.interface";
 import { IPerfilListQueryHandler } from "@/modules/acesso/perfil/domain/queries/perfil-list.query.handler.interface";
 import { IUsuarioFindByIdSimpleQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-find-by-id-simple.query.handler.interface";
 import { Usuario } from "@/modules/acesso/usuario/domain/usuario.domain";
@@ -26,15 +25,14 @@ export class PerfilSetVinculosCommandHandlerImpl implements IPerfilSetVinculosCo
     private readonly usuarioFindByIdSimpleHandler: IUsuarioFindByIdSimpleQueryHandler,
   ) {}
 
-  async execute({ accessContext, dto }: IPerfilSetVinculosCommand): Promise<PerfilListQueryResult> {
+  async execute(
+    accessContext: AccessContext | null,
+    dto: PerfilSetVinculosCommand,
+  ): Promise<PerfilListQueryResult> {
     // Valida campus e usuário
-    const campus = await this.campusFindOneHandler.execute({
-      accessContext,
-      dto: { id: dto.campus.id },
-    });
+    const campus = await this.campusFindOneHandler.execute(accessContext, { id: dto.campus.id });
     ensureExists(campus, Campus.entityName, dto.campus.id);
-    const usuarioResult = await this.usuarioFindByIdSimpleHandler.execute({
-      accessContext,
+    const usuarioResult = await this.usuarioFindByIdSimpleHandler.execute(accessContext, {
       id: dto.usuario.id,
     });
     ensureExists(usuarioResult, Usuario.entityName, dto.usuario.id);
@@ -102,6 +100,6 @@ export class PerfilSetVinculosCommandHandlerImpl implements IPerfilSetVinculosCo
       "filter.campus.id": [`${campus.id}`],
     };
 
-    return this.perfilListHandler.execute({ accessContext, dto: filterCriteria });
+    return this.perfilListHandler.execute(accessContext, filterCriteria);
   }
 }

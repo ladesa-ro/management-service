@@ -32,8 +32,12 @@ export class UsuarioGraphqlResolver {
     const input = UsuarioGraphqlMapper.toListInput(dto);
     const selection = graphqlExtractSelection(info, "paginated");
 
+    if (input) {
+      input.selection = selection;
+    }
+
     const listHandler = this.container.get<IUsuarioListQueryHandler>(IUsuarioListQueryHandler);
-    const result = await listHandler.execute({ accessContext, dto: input, selection });
+    const result = await listHandler.execute(accessContext, input);
     return UsuarioGraphqlMapper.toListOutputDto(result);
   }
 
@@ -47,10 +51,7 @@ export class UsuarioGraphqlResolver {
     const findOneHandler = this.container.get<IUsuarioFindOneQueryHandler>(
       IUsuarioFindOneQueryHandler,
     );
-    const result = await findOneHandler.execute({
-      accessContext,
-      dto: { id, selection },
-    });
+    const result = await findOneHandler.execute(accessContext, { id, selection });
     ensureExists(result, Usuario.entityName, id);
     return UsuarioGraphqlMapper.toFindOneOutputDto(result);
   }
@@ -65,7 +66,7 @@ export class UsuarioGraphqlResolver {
     const createHandler = this.container.get<IUsuarioCreateCommandHandler>(
       IUsuarioCreateCommandHandler,
     );
-    const result = await createHandler.execute({ accessContext, dto: input as any });
+    const result = await createHandler.execute(accessContext, input as any);
     return UsuarioGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -80,7 +81,7 @@ export class UsuarioGraphqlResolver {
     const updateHandler = this.container.get<IUsuarioUpdateCommandHandler>(
       IUsuarioUpdateCommandHandler,
     );
-    const result = await updateHandler.execute({ accessContext, dto: input as any });
+    const result = await updateHandler.execute(accessContext, input as any);
     return UsuarioGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -92,6 +93,6 @@ export class UsuarioGraphqlResolver {
     const deleteHandler = this.container.get<IUsuarioDeleteCommandHandler>(
       IUsuarioDeleteCommandHandler,
     );
-    return deleteHandler.execute({ accessContext, dto: { id } });
+    return deleteHandler.execute(accessContext, { id });
   }
 }

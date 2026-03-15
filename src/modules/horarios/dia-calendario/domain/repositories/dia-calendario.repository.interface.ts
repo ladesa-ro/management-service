@@ -18,7 +18,7 @@ export interface IDiaCalendarioRepository
    * Busca um dia do calendário por ID (formato simples) - método obrigatório
    */
   findByIdSimple(
-    accessContext: AccessContext,
+    accessContext: AccessContext | null,
     id: string,
     selection?: string[],
   ): Promise<DiaCalendarioFindOneQueryResult | null>;

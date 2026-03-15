@@ -1,9 +1,7 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import {
-  type IModalidadeFindOneQuery,
-  IModalidadeFindOneQueryHandler,
-} from "@/modules/ensino/modalidade/domain/queries/modalidade-find-one.query.handler.interface";
-import type { ModalidadeFindOneQueryResult } from "../../domain/queries";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
+import { IModalidadeFindOneQueryHandler } from "@/modules/ensino/modalidade/domain/queries/modalidade-find-one.query.handler.interface";
+import type { ModalidadeFindOneQuery, ModalidadeFindOneQueryResult } from "../../domain/queries";
 import { IModalidadeRepository } from "../../domain/repositories";
 
 @DeclareImplementation()
@@ -13,11 +11,10 @@ export class ModalidadeFindOneQueryHandlerImpl implements IModalidadeFindOneQuer
     private readonly repository: IModalidadeRepository,
   ) {}
 
-  async execute({
-    accessContext,
-    dto,
-    selection,
-  }: IModalidadeFindOneQuery): Promise<ModalidadeFindOneQueryResult | null> {
-    return this.repository.findById(accessContext, dto, selection);
+  async execute(
+    accessContext: AccessContext | null,
+    dto: ModalidadeFindOneQuery,
+  ): Promise<ModalidadeFindOneQueryResult | null> {
+    return this.repository.findById(accessContext, dto, dto?.selection);
   }
 }

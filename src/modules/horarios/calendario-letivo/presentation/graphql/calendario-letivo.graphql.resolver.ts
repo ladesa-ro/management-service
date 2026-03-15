@@ -38,7 +38,7 @@ export class CalendarioLetivoGraphqlResolver {
     const listHandler = this.container.get<ICalendarioLetivoListQueryHandler>(
       ICalendarioLetivoListQueryHandler,
     );
-    const result = await listHandler.execute({ accessContext, dto: input });
+    const result = await listHandler.execute(accessContext, input);
     return CalendarioLetivoGraphqlMapper.toListOutputDto(result);
   }
 
@@ -52,7 +52,7 @@ export class CalendarioLetivoGraphqlResolver {
     const findOneHandler = this.container.get<ICalendarioLetivoFindOneQueryHandler>(
       ICalendarioLetivoFindOneQueryHandler,
     );
-    const result = await findOneHandler.execute({ accessContext, dto: { id, selection } });
+    const result = await findOneHandler.execute(accessContext, { id, selection });
     ensureExists(result, CalendarioLetivo.entityName, id);
     return CalendarioLetivoGraphqlMapper.toFindOneOutputDto(result);
   }
@@ -67,7 +67,7 @@ export class CalendarioLetivoGraphqlResolver {
     const createHandler = this.container.get<ICalendarioLetivoCreateCommandHandler>(
       ICalendarioLetivoCreateCommandHandler,
     );
-    const result = await createHandler.execute({ accessContext, dto: input });
+    const result = await createHandler.execute(accessContext, input);
     return CalendarioLetivoGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -82,7 +82,7 @@ export class CalendarioLetivoGraphqlResolver {
     const updateHandler = this.container.get<ICalendarioLetivoUpdateCommandHandler>(
       ICalendarioLetivoUpdateCommandHandler,
     );
-    const result = await updateHandler.execute({ accessContext, dto: input });
+    const result = await updateHandler.execute(accessContext, input);
     return CalendarioLetivoGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -94,6 +94,6 @@ export class CalendarioLetivoGraphqlResolver {
     const deleteHandler = this.container.get<ICalendarioLetivoDeleteCommandHandler>(
       ICalendarioLetivoDeleteCommandHandler,
     );
-    return deleteHandler.execute({ accessContext, dto: { id } });
+    return deleteHandler.execute(accessContext, { id });
   }
 }

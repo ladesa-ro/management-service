@@ -1,6 +1,7 @@
 import { v4 } from "uuid";
 import { IStorageService } from "@/domain/abstractions/storage";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import type {
   IArquivoCreateCommand,
   IArquivoCreateCommandHandler,
@@ -16,7 +17,10 @@ export class ArquivoCreateCommandHandlerImpl implements IArquivoCreateCommandHan
     private storageService: IStorageService,
   ) {}
 
-  async execute({ dto, data }: IArquivoCreateCommand): Promise<{ id: string }> {
+  async execute(
+    _accessContext: AccessContext | null,
+    { dto, data }: IArquivoCreateCommand,
+  ): Promise<{ id: string }> {
     let id: string;
 
     do {

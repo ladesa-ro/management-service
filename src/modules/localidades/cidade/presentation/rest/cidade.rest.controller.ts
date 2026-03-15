@@ -35,7 +35,7 @@ export class CidadeRestController {
   ): Promise<CidadeListOutputRestDto> {
     const listHandler = this.container.get<ICidadeListQueryHandler>(ICidadeListQueryHandler);
     const input = CidadeRestMapper.toListInput(dto);
-    const result = await listHandler.execute({ accessContext, dto: input });
+    const result = await listHandler.execute(accessContext, input);
     return CidadeRestMapper.toListOutputDto(result);
   }
 
@@ -52,7 +52,7 @@ export class CidadeRestController {
       ICidadeFindOneQueryHandler,
     );
     const input = CidadeRestMapper.toFindOneInput(params);
-    const result = await findOneHandler.execute({ accessContext, dto: input });
+    const result = await findOneHandler.execute(accessContext, input);
     ensureExists(result, Cidade.entityName, input.id);
     return CidadeRestMapper.toFindOneOutputDto(result);
   }

@@ -17,8 +17,8 @@ export interface ICampusRepository
    * Busca um campus por ID (formato simples) - método obrigatório
    */
   findByIdSimple(
-    accessContext: AccessContext,
+    accessContext: AccessContext | null,
     id: string,
-    selection?: string[] | boolean,
+    selection?: string[] | boolean | null,
   ): Promise<CampusFindOneQueryResult | null>;
 }

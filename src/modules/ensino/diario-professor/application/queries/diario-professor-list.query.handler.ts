@@ -1,9 +1,10 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import {
-  type IDiarioProfessorListQuery,
-  IDiarioProfessorListQueryHandler,
-} from "@/modules/ensino/diario-professor/domain/queries/diario-professor-list.query.handler.interface";
-import type { DiarioProfessorListQueryResult } from "../../domain/queries";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
+import { IDiarioProfessorListQueryHandler } from "@/modules/ensino/diario-professor/domain/queries/diario-professor-list.query.handler.interface";
+import type {
+  DiarioProfessorListQuery,
+  DiarioProfessorListQueryResult,
+} from "../../domain/queries";
 import { IDiarioProfessorRepository } from "../../domain/repositories";
 
 @DeclareImplementation()
@@ -13,11 +14,10 @@ export class DiarioProfessorListQueryHandlerImpl implements IDiarioProfessorList
     private readonly repository: IDiarioProfessorRepository,
   ) {}
 
-  async execute({
-    accessContext,
-    dto,
-    selection,
-  }: IDiarioProfessorListQuery): Promise<DiarioProfessorListQueryResult> {
-    return this.repository.findAll(accessContext, dto, selection);
+  async execute(
+    accessContext: AccessContext | null,
+    dto: DiarioProfessorListQuery | null,
+  ): Promise<DiarioProfessorListQueryResult> {
+    return this.repository.findAll(accessContext, dto, dto?.selection);
   }
 }

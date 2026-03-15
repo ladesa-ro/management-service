@@ -1,4 +1,5 @@
 import { DeclareImplementation } from "@/domain/dependency-injection";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import {
   type IGerarHorarioPublishTimetableRequestCommand,
   IGerarHorarioPublishTimetableRequestCommandHandler,
@@ -11,10 +12,10 @@ export class GerarHorarioPublishTimetableRequestCommandHandlerImpl
 {
   constructor(private readonly messageBrokerService: MessageBrokerService) {}
 
-  async execute({
-    request,
-    timeoutMs,
-  }: IGerarHorarioPublishTimetableRequestCommand): Promise<unknown> {
+  async execute(
+    _accessContext: AccessContext | null,
+    { request, timeoutMs }: IGerarHorarioPublishTimetableRequestCommand,
+  ): Promise<unknown> {
     return this.messageBrokerService.publishTimetableRequest(request, timeoutMs);
   }
 }

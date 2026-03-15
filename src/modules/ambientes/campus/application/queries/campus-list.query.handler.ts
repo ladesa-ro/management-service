@@ -1,9 +1,7 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import {
-  type ICampusListQuery,
-  ICampusListQueryHandler,
-} from "@/modules/ambientes/campus/domain/queries/campus-list.query.handler.interface";
-import type { CampusListQueryResult } from "../../domain/queries";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
+import { ICampusListQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-list.query.handler.interface";
+import type { CampusListQuery, CampusListQueryResult } from "../../domain/queries";
 import { ICampusRepository } from "../../domain/repositories";
 
 @DeclareImplementation()
@@ -13,11 +11,10 @@ export class CampusListQueryHandlerImpl implements ICampusListQueryHandler {
     private readonly repository: ICampusRepository,
   ) {}
 
-  async execute({
-    accessContext,
-    dto,
-    selection,
-  }: ICampusListQuery): Promise<CampusListQueryResult> {
-    return this.repository.findAll(accessContext, dto, selection);
+  async execute(
+    accessContext: AccessContext | null,
+    dto: CampusListQuery | null,
+  ): Promise<CampusListQueryResult> {
+    return this.repository.findAll(accessContext, dto, dto?.selection);
   }
 }

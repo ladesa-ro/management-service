@@ -36,7 +36,7 @@ export class TurmaGraphqlResolver {
     }
 
     const listHandler = this.container.get<ITurmaListQueryHandler>(ITurmaListQueryHandler);
-    const result = await listHandler.execute({ accessContext, dto: input });
+    const result = await listHandler.execute(accessContext, input);
     return TurmaGraphqlMapper.toListOutputDto(result);
   }
 
@@ -48,7 +48,7 @@ export class TurmaGraphqlResolver {
   ): Promise<TurmaFindOneOutputGraphQlDto> {
     const selection = graphqlExtractSelection(info);
     const findOneHandler = this.container.get<ITurmaFindOneQueryHandler>(ITurmaFindOneQueryHandler);
-    const result = await findOneHandler.execute({ accessContext, dto: { id, selection } });
+    const result = await findOneHandler.execute(accessContext, { id, selection });
     ensureExists(result, Turma.entityName, id);
     return TurmaGraphqlMapper.toFindOneOutputDto(result);
   }
@@ -63,7 +63,7 @@ export class TurmaGraphqlResolver {
     const createHandler = this.container.get<ITurmaCreateCommandHandler>(
       ITurmaCreateCommandHandler,
     );
-    const result = await createHandler.execute({ accessContext, dto: input });
+    const result = await createHandler.execute(accessContext, input);
     return TurmaGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -78,7 +78,7 @@ export class TurmaGraphqlResolver {
     const updateHandler = this.container.get<ITurmaUpdateCommandHandler>(
       ITurmaUpdateCommandHandler,
     );
-    const result = await updateHandler.execute({ accessContext, dto: input });
+    const result = await updateHandler.execute(accessContext, input);
     return TurmaGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -90,6 +90,6 @@ export class TurmaGraphqlResolver {
     const deleteHandler = this.container.get<ITurmaDeleteCommandHandler>(
       ITurmaDeleteCommandHandler,
     );
-    return deleteHandler.execute({ accessContext, dto: { id } });
+    return deleteHandler.execute(accessContext, { id });
   }
 }

@@ -58,7 +58,7 @@ export class AmbienteRestController {
   ): Promise<AmbienteListOutputRestDto> {
     const input = AmbienteRestMapper.toListInput(dto);
     const listHandler = this.container.get<IAmbienteListQueryHandler>(IAmbienteListQueryHandler);
-    const result = await listHandler.execute({ accessContext, dto: input as any });
+    const result = await listHandler.execute(accessContext, input as any);
     return AmbienteRestMapper.toListOutputDto(result as any);
   }
 
@@ -75,7 +75,7 @@ export class AmbienteRestController {
     const findOneHandler = this.container.get<IAmbienteFindOneQueryHandler>(
       IAmbienteFindOneQueryHandler,
     );
-    const result = await findOneHandler.execute({ accessContext, dto: input as any });
+    const result = await findOneHandler.execute(accessContext, input as any);
     ensureExists(result, Ambiente.entityName, input.id);
     return AmbienteRestMapper.toFindOneOutputDto(result as any);
   }
@@ -92,7 +92,7 @@ export class AmbienteRestController {
     const createHandler = this.container.get<IAmbienteCreateCommandHandler>(
       IAmbienteCreateCommandHandler,
     );
-    const result = await createHandler.execute({ accessContext, dto: input as any });
+    const result = await createHandler.execute(accessContext, input as any);
     return AmbienteRestMapper.toFindOneOutputDto(result as any);
   }
 
@@ -110,7 +110,7 @@ export class AmbienteRestController {
     const updateHandler = this.container.get<IAmbienteUpdateCommandHandler>(
       IAmbienteUpdateCommandHandler,
     );
-    const result = await updateHandler.execute({ accessContext, dto: input as any });
+    const result = await updateHandler.execute(accessContext, input as any);
     return AmbienteRestMapper.toFindOneOutputDto(result as any);
   }
 
@@ -129,7 +129,7 @@ export class AmbienteRestController {
     const getImagemCapaHandler = this.container.get<IAmbienteGetImagemCapaQueryHandler>(
       IAmbienteGetImagemCapaQueryHandler,
     );
-    return getImagemCapaHandler.execute({ accessContext, id: params.id });
+    return getImagemCapaHandler.execute(accessContext, { id: params.id });
   }
 
   @Put("/:id/imagem/capa")
@@ -159,7 +159,7 @@ export class AmbienteRestController {
     const updateImagemCapaHandler = this.container.get<IAmbienteUpdateImagemCapaCommandHandler>(
       IAmbienteUpdateImagemCapaCommandHandler,
     );
-    return updateImagemCapaHandler.execute({ accessContext, dto: params, file });
+    return updateImagemCapaHandler.execute(accessContext, { dto: params, file });
   }
 
   @Delete("/:id")
@@ -175,6 +175,6 @@ export class AmbienteRestController {
     const deleteHandler = this.container.get<IAmbienteDeleteCommandHandler>(
       IAmbienteDeleteCommandHandler,
     );
-    return deleteHandler.execute({ accessContext, dto: input as any });
+    return deleteHandler.execute(accessContext, input as any);
   }
 }

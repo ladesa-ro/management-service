@@ -35,7 +35,7 @@ export class EstadoRestController {
   ): Promise<EstadoListOutputRestDto> {
     const listHandler = this.container.get<IEstadoListQueryHandler>(IEstadoListQueryHandler);
     const input = EstadoRestMapper.toListInput(dto);
-    const result = await listHandler.execute({ accessContext, dto: input });
+    const result = await listHandler.execute(accessContext, input);
     return EstadoRestMapper.toListOutputDto(result);
   }
 
@@ -52,7 +52,7 @@ export class EstadoRestController {
       IEstadoFindOneQueryHandler,
     );
     const input = EstadoRestMapper.toFindOneInput(params);
-    const result = await findOneHandler.execute({ accessContext, dto: input });
+    const result = await findOneHandler.execute(accessContext, input);
     ensureExists(result, Estado.entityName, input.id);
     return EstadoRestMapper.toFindOneOutputDto(result);
   }

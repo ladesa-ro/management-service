@@ -1,8 +1,6 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import {
-  type IAutenticacaoWhoAmIQuery,
-  IAutenticacaoWhoAmIQueryHandler,
-} from "@/modules/acesso/autenticacao/domain/queries/autenticacao-who-am-i.query.handler.interface";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
+import { IAutenticacaoWhoAmIQueryHandler } from "@/modules/acesso/autenticacao/domain/queries/autenticacao-who-am-i.query.handler.interface";
 import { IPerfilFindAllActiveQueryHandler } from "@/modules/acesso/perfil/domain/queries/perfil-find-all-active.query.handler.interface";
 import { IUsuarioFindOneQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-find-one.query.handler.interface";
 import type { AuthWhoAmIQueryResult } from "../../domain/queries";
@@ -16,17 +14,15 @@ export class AutenticacaoWhoAmIQueryHandlerImpl implements IAutenticacaoWhoAmIQu
     private readonly perfilFindAllActiveHandler: IPerfilFindAllActiveQueryHandler,
   ) {}
 
-  async execute({ accessContext }: IAutenticacaoWhoAmIQuery): Promise<AuthWhoAmIQueryResult> {
-    const usuario = accessContext.requestActor
-      ? await this.usuarioFindOneHandler.execute({
-          accessContext,
-          dto: { id: accessContext.requestActor.id },
+  async execute(accessContext: AccessContext | null, _query: void): Promise<AuthWhoAmIQueryResult> {
+    const usuario = accessContext?.requestActor
+      ? await this.usuarioFindOneHandler.execute(accessContext, {
+          id: accessContext.requestActor.id,
         })
       : null;
 
     if (usuario) {
-      const perfisAtivos = await this.perfilFindAllActiveHandler.execute({
-        accessContext: null,
+      const perfisAtivos = await this.perfilFindAllActiveHandler.execute(null, {
         usuarioId: usuario.id,
       });
 

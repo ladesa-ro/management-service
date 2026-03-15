@@ -1,10 +1,9 @@
 import { BadRequestException, ForbiddenException } from "@nestjs/common";
 import { IIdpTokenService, IIdpUserService } from "@/domain/abstractions/identity-provider";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import {
-  type IAutenticacaoLoginCommand,
-  IAutenticacaoLoginCommandHandler,
-} from "@/modules/acesso/autenticacao/domain/commands/autenticacao-login.command.handler.interface";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
+import { IAutenticacaoLoginCommandHandler } from "@/modules/acesso/autenticacao/domain/commands/autenticacao-login.command.handler.interface";
+import type { AuthLoginCommand } from "@/modules/acesso/autenticacao/domain/commands/auth-login.command";
 import { IUsuarioFindByMatriculaQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-find-by-matricula.query.handler.interface";
 import type { AuthSessionCredentials } from "../../domain/shared";
 
@@ -19,15 +18,17 @@ export class AutenticacaoLoginCommandHandlerImpl implements IAutenticacaoLoginCo
     private readonly idpTokenService: IIdpTokenService,
   ) {}
 
-  async execute({
-    accessContext,
-    dto,
-  }: IAutenticacaoLoginCommand): Promise<AuthSessionCredentials> {
-    if (accessContext.requestActor !== null) {
+  async execute(
+    accessContext: AccessContext | null,
+    dto: AuthLoginCommand,
+  ): Promise<AuthSessionCredentials> {
+    if (accessContext?.requestActor !== null) {
       throw new BadRequestException("Você não pode usar a rota de login caso já esteja logado.");
     }
 
-    const usuario = await this.usuarioFindByMatriculaHandler.execute({ matricula: dto.matricula });
+    const usuario = await this.usuarioFindByMatriculaHandler.execute(null, {
+      matricula: dto.matricula,
+    });
     const username = await this.idpUserService.resolveUsernameByMatricula(dto.matricula);
 
     try {

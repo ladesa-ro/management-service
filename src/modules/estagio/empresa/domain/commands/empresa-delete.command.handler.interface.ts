@@ -1,10 +1,5 @@
-import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import type { ICommandHandler } from "@/modules/@shared/domain/abstractions";
+import type { EmpresaFindOneQuery } from "../queries";
 
-export type IEmpresaDeleteCommand = {
-  accessContext: AccessContext;
-  id: string;
-};
-
-export type IEmpresaDeleteCommandHandler = ICommandHandler<IEmpresaDeleteCommand, void>;
+export type IEmpresaDeleteCommandHandler = ICommandHandler<EmpresaFindOneQuery, void>;
 export const IEmpresaDeleteCommandHandler = Symbol("IEmpresaDeleteCommandHandler");

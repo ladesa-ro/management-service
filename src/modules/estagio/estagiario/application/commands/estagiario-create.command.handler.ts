@@ -1,10 +1,9 @@
 import { InternalServerErrorException } from "@nestjs/common";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ResourceNotFoundError } from "@/modules/@shared";
-import {
-  type IEstagiarioCreateCommand,
-  IEstagiarioCreateCommandHandler,
-} from "@/modules/estagio/estagiario/domain/commands/estagiario-create.command.handler.interface";
+import type { EstagiarioCreateCommand } from "@/modules/estagio/estagiario/domain/commands/estagiario-create.command";
+import { IEstagiarioCreateCommandHandler } from "@/modules/estagio/estagiario/domain/commands/estagiario-create.command.handler.interface";
 import type { EstagiarioFindOneQueryResult } from "../../domain/queries";
 import { IEstagiarioRepository } from "../../domain/repositories";
 
@@ -15,10 +14,10 @@ export class EstagiarioCreateCommandHandlerImpl implements IEstagiarioCreateComm
     private readonly repository: IEstagiarioRepository,
   ) {}
 
-  async execute({
-    accessContext,
-    dto,
-  }: IEstagiarioCreateCommand): Promise<EstagiarioFindOneQueryResult> {
+  async execute(
+    accessContext: AccessContext | null,
+    dto: EstagiarioCreateCommand,
+  ): Promise<EstagiarioFindOneQueryResult> {
     try {
       return await this.repository.create(accessContext, dto);
     } catch (error) {

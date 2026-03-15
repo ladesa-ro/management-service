@@ -46,7 +46,7 @@ export class DiarioPreferenciaAgrupamentoController {
     const listHandler = this.container.get<IDiarioPreferenciaAgrupamentoListQueryHandler>(
       IDiarioPreferenciaAgrupamentoListQueryHandler,
     );
-    const result = await listHandler.execute({ accessContext, dto: input });
+    const result = await listHandler.execute(accessContext, input);
     return DiarioPreferenciaAgrupamentoRestMapper.toListOutputDto(result);
   }
 
@@ -66,7 +66,7 @@ export class DiarioPreferenciaAgrupamentoController {
     const findOneHandler = this.container.get<IDiarioPreferenciaAgrupamentoFindOneQueryHandler>(
       IDiarioPreferenciaAgrupamentoFindOneQueryHandler,
     );
-    const result = await findOneHandler.execute({ accessContext, dto: input });
+    const result = await findOneHandler.execute(accessContext, input);
     ensureExists(result, DiarioPreferenciaAgrupamento.entityName, input.id);
     return DiarioPreferenciaAgrupamentoRestMapper.toFindOneOutputDto(result);
   }
@@ -86,7 +86,7 @@ export class DiarioPreferenciaAgrupamentoController {
     const createHandler = this.container.get<IDiarioPreferenciaAgrupamentoCreateCommandHandler>(
       IDiarioPreferenciaAgrupamentoCreateCommandHandler,
     );
-    const result = await createHandler.execute({ accessContext, dto: input });
+    const result = await createHandler.execute(accessContext, input);
     return DiarioPreferenciaAgrupamentoRestMapper.toFindOneOutputDto(result);
   }
 
@@ -107,7 +107,7 @@ export class DiarioPreferenciaAgrupamentoController {
     const updateHandler = this.container.get<IDiarioPreferenciaAgrupamentoUpdateCommandHandler>(
       IDiarioPreferenciaAgrupamentoUpdateCommandHandler,
     );
-    const result = await updateHandler.execute({ accessContext, dto: input });
+    const result = await updateHandler.execute(accessContext, input);
     return DiarioPreferenciaAgrupamentoRestMapper.toFindOneOutputDto(result);
   }
 
@@ -127,6 +127,6 @@ export class DiarioPreferenciaAgrupamentoController {
     const deleteHandler = this.container.get<IDiarioPreferenciaAgrupamentoDeleteCommandHandler>(
       IDiarioPreferenciaAgrupamentoDeleteCommandHandler,
     );
-    return deleteHandler.execute({ accessContext, dto: input });
+    return deleteHandler.execute(accessContext, input);
   }
 }

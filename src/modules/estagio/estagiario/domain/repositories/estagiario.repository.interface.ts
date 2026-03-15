@@ -16,27 +16,27 @@ export const IEstagiarioRepository = Symbol("IEstagiarioRepository");
  */
 export interface IEstagiarioRepository {
   findAll(
-    accessContext: AccessContext,
+    accessContext: AccessContext | null,
     dto: EstagiarioListQuery | null,
-    selection?: string[] | boolean,
+    selection?: string[] | boolean | null,
   ): Promise<EstagiarioListQueryResult>;
 
   findById(
     accessContext: AccessContext | null,
     dto: EstagiarioFindOneQuery,
-    selection?: string[] | boolean,
+    selection?: string[] | boolean | null,
   ): Promise<EstagiarioFindOneQueryResult | null>;
 
   create(
-    accessContext: AccessContext,
+    accessContext: AccessContext | null,
     dto: EstagiarioCreateCommand,
   ): Promise<EstagiarioFindOneQueryResult>;
 
   update(
-    accessContext: AccessContext,
+    accessContext: AccessContext | null,
     id: string,
     dto: EstagiarioUpdateCommand,
   ): Promise<EstagiarioFindOneQueryResult>;
 
-  delete(accessContext: AccessContext, id: string): Promise<void>;
+  delete(accessContext: AccessContext | null, id: string): Promise<void>;
 }

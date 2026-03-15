@@ -43,7 +43,7 @@ export class DiarioProfessorController {
     const listHandler = this.container.get<IDiarioProfessorListQueryHandler>(
       IDiarioProfessorListQueryHandler,
     );
-    const result = await listHandler.execute({ accessContext, dto: input });
+    const result = await listHandler.execute(accessContext, input);
     return DiarioProfessorRestMapper.toListOutputDto(result);
   }
 
@@ -63,7 +63,7 @@ export class DiarioProfessorController {
     const findOneHandler = this.container.get<IDiarioProfessorFindOneQueryHandler>(
       IDiarioProfessorFindOneQueryHandler,
     );
-    const result = await findOneHandler.execute({ accessContext, dto: input });
+    const result = await findOneHandler.execute(accessContext, input);
     ensureExists(result, DiarioProfessor.entityName, input.id);
     return DiarioProfessorRestMapper.toFindOneOutputDto(result);
   }
@@ -80,7 +80,7 @@ export class DiarioProfessorController {
     const createHandler = this.container.get<IDiarioProfessorCreateCommandHandler>(
       IDiarioProfessorCreateCommandHandler,
     );
-    const result = await createHandler.execute({ accessContext, dto: input });
+    const result = await createHandler.execute(accessContext, input);
     return DiarioProfessorRestMapper.toFindOneOutputDto(result);
   }
 
@@ -98,7 +98,7 @@ export class DiarioProfessorController {
     const updateHandler = this.container.get<IDiarioProfessorUpdateCommandHandler>(
       IDiarioProfessorUpdateCommandHandler,
     );
-    const result = await updateHandler.execute({ accessContext, dto: input });
+    const result = await updateHandler.execute(accessContext, input);
     return DiarioProfessorRestMapper.toFindOneOutputDto(result);
   }
 
@@ -118,6 +118,6 @@ export class DiarioProfessorController {
     const deleteHandler = this.container.get<IDiarioProfessorDeleteCommandHandler>(
       IDiarioProfessorDeleteCommandHandler,
     );
-    return deleteHandler.execute({ accessContext, dto: input });
+    return deleteHandler.execute(accessContext, input);
   }
 }

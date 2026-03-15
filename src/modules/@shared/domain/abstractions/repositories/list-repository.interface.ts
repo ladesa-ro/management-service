@@ -10,8 +10,8 @@ export interface IListRepository<ListOutputDto> {
    * Lista entidades com paginação e filtros
    */
   findAll(
-    accessContext: AccessContext,
+    accessContext: AccessContext | null,
     dto: unknown,
-    selection?: string[] | boolean,
+    selection?: string[] | boolean | null,
   ): Promise<ListOutputDto>;
 }

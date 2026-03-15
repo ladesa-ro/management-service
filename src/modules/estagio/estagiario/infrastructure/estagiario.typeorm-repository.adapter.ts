@@ -44,9 +44,9 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
   }
 
   async findAll(
-    accessContext: AccessContext,
+    accessContext: AccessContext | null,
     dto: EstagiarioListQuery | null = null,
-    selection?: string[] | boolean,
+    selection?: string[] | boolean | null,
   ): Promise<EstagiarioListQueryResult> {
     const page = dto?.page || 1;
     const limit = dto?.limit || 10;
@@ -117,7 +117,7 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
   async findById(
     accessContext: AccessContext | null,
     dto: EstagiarioFindOneQuery,
-    selection?: string[] | boolean,
+    selection?: string[] | boolean | null,
   ): Promise<EstagiarioFindOneQueryResult | null> {
     const entity = await this.repository.findOne({
       where: { id: dto.id, dateDeleted: null as any },
@@ -131,7 +131,7 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
   }
 
   async create(
-    accessContext: AccessContext,
+    accessContext: AccessContext | null,
     dto: EstagiarioCreateCommand,
   ): Promise<EstagiarioFindOneQueryResult> {
     const perfil = await this.perfilRepository.findOne({
@@ -161,7 +161,7 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
   }
 
   async update(
-    accessContext: AccessContext,
+    accessContext: AccessContext | null,
     id: string,
     dto: EstagiarioUpdateCommand,
   ): Promise<EstagiarioFindOneQueryResult> {
@@ -205,7 +205,7 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
     return EstagiarioMapper.toOutputDto(saved);
   }
 
-  async delete(accessContext: AccessContext, id: string): Promise<void> {
+  async delete(accessContext: AccessContext | null, id: string): Promise<void> {
     const entity = await this.repository.findOne({
       where: { id, dateDeleted: null as any },
     });

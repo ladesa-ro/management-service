@@ -1,4 +1,5 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import {
   type IPerfilFindAllActiveQuery,
   IPerfilFindAllActiveQueryHandler,
@@ -13,10 +14,10 @@ export class PerfilFindAllActiveQueryHandlerImpl implements IPerfilFindAllActive
     private readonly repository: IPerfilRepository,
   ) {}
 
-  async execute({
-    accessContext,
-    usuarioId,
-  }: IPerfilFindAllActiveQuery): Promise<PerfilFindOneQueryResult[]> {
+  async execute(
+    accessContext: AccessContext | null,
+    { usuarioId }: IPerfilFindAllActiveQuery,
+  ): Promise<PerfilFindOneQueryResult[]> {
     return this.repository.findAllActiveByUsuarioId(accessContext, usuarioId);
   }
 }

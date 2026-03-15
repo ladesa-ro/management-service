@@ -1,12 +1,13 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists, saveEntityImagemField } from "@/modules/@shared";
 import {
   IImagemSaveImagemCapaCommandHandler,
   type IImagemSaveImagemCapaCommandHandler as IImagemSaveImagemCapaCommandHandlerType,
 } from "@/modules/armazenamento/imagem/domain/commands";
 import {
-  type ITurmaUpdateImagemCapaCommand,
   ITurmaUpdateImagemCapaCommandHandler,
+  type TurmaUpdateImagemCapaCommand,
 } from "@/modules/ensino/turma/domain/commands/turma-update-imagem-capa.command.handler.interface";
 import { Turma } from "@/modules/ensino/turma/domain/turma.domain";
 import { ITurmaPermissionChecker } from "../../domain/authorization";
@@ -25,7 +26,10 @@ export class TurmaUpdateImagemCapaCommandHandlerImpl
     private readonly saveImagemCapaHandler: IImagemSaveImagemCapaCommandHandlerType,
   ) {}
 
-  async execute({ accessContext, dto, file }: ITurmaUpdateImagemCapaCommand): Promise<boolean> {
+  async execute(
+    accessContext: AccessContext | null,
+    { dto, file }: TurmaUpdateImagemCapaCommand,
+  ): Promise<boolean> {
     const current = await this.repository.findById(accessContext, dto);
 
     ensureExists(current, Turma.entityName, dto.id);

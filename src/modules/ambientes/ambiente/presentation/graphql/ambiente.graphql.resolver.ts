@@ -39,7 +39,7 @@ export class AmbienteGraphqlResolver {
     }
 
     const listHandler = this.container.get<IAmbienteListQueryHandler>(IAmbienteListQueryHandler);
-    const result = await listHandler.execute({ accessContext, dto: input });
+    const result = await listHandler.execute(accessContext, input);
     return AmbienteGraphqlMapper.toListOutputDto(result);
   }
 
@@ -53,7 +53,7 @@ export class AmbienteGraphqlResolver {
     const findOneHandler = this.container.get<IAmbienteFindOneQueryHandler>(
       IAmbienteFindOneQueryHandler,
     );
-    const result = await findOneHandler.execute({ accessContext, dto: { id, selection } });
+    const result = await findOneHandler.execute(accessContext, { id, selection });
     ensureExists(result, Ambiente.entityName, id);
     return AmbienteGraphqlMapper.toFindOneOutputDto(result);
   }
@@ -68,7 +68,7 @@ export class AmbienteGraphqlResolver {
     const createHandler = this.container.get<IAmbienteCreateCommandHandler>(
       IAmbienteCreateCommandHandler,
     );
-    const result = await createHandler.execute({ accessContext, dto: input });
+    const result = await createHandler.execute(accessContext, input);
     return AmbienteGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -83,7 +83,7 @@ export class AmbienteGraphqlResolver {
     const updateHandler = this.container.get<IAmbienteUpdateCommandHandler>(
       IAmbienteUpdateCommandHandler,
     );
-    const result = await updateHandler.execute({ accessContext, dto: input });
+    const result = await updateHandler.execute(accessContext, input);
     return AmbienteGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -95,6 +95,6 @@ export class AmbienteGraphqlResolver {
     const deleteHandler = this.container.get<IAmbienteDeleteCommandHandler>(
       IAmbienteDeleteCommandHandler,
     );
-    return deleteHandler.execute({ accessContext, dto: { id } });
+    return deleteHandler.execute(accessContext, { id });
   }
 }

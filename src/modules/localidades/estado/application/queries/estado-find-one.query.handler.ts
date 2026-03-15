@@ -1,9 +1,7 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import {
-  type IEstadoFindOneQuery,
-  IEstadoFindOneQueryHandler,
-} from "@/modules/localidades/estado/domain/queries/estado-find-one.query.handler.interface";
-import type { EstadoFindOneQueryResult } from "../../domain/queries";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
+import { IEstadoFindOneQueryHandler } from "@/modules/localidades/estado/domain/queries/estado-find-one.query.handler.interface";
+import type { EstadoFindOneQuery, EstadoFindOneQueryResult } from "../../domain/queries";
 import { IEstadoRepository } from "../../domain/repositories";
 
 @DeclareImplementation()
@@ -13,10 +11,10 @@ export class EstadoFindOneQueryHandlerImpl implements IEstadoFindOneQueryHandler
     private readonly repository: IEstadoRepository,
   ) {}
 
-  async execute({
-    accessContext,
-    dto,
-  }: IEstadoFindOneQuery): Promise<EstadoFindOneQueryResult | null> {
+  async execute(
+    accessContext: AccessContext | null,
+    dto: EstadoFindOneQuery,
+  ): Promise<EstadoFindOneQueryResult | null> {
     return this.repository.findById(accessContext, dto);
   }
 }

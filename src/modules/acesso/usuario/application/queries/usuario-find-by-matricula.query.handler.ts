@@ -1,4 +1,5 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import {
   type IUsuarioFindByMatriculaQuery,
   IUsuarioFindByMatriculaQueryHandler,
@@ -13,10 +14,10 @@ export class UsuarioFindByMatriculaQueryHandlerImpl implements IUsuarioFindByMat
     private readonly repository: IUsuarioRepository,
   ) {}
 
-  async execute({
-    matricula,
-    selection,
-  }: IUsuarioFindByMatriculaQuery): Promise<UsuarioFindOneQueryResult | null> {
+  async execute(
+    _accessContext: AccessContext | null,
+    { matricula, selection }: IUsuarioFindByMatriculaQuery,
+  ): Promise<UsuarioFindOneQueryResult | null> {
     return this.repository.findByMatricula(matricula, selection);
   }
 }
