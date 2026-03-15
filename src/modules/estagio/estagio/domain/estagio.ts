@@ -128,7 +128,13 @@ export class Estagio implements IEntityBaseUuid {
     this.horariosEstagio.forEach((horario, index) => {
       const prefix = `horariosEstagio[${index}]`;
       rules.requiredNumber(horario.diaSemana, `${prefix}.diaSemana`, "Dia da semana é obrigatório");
-      rules.range(horario.diaSemana, `${prefix}.diaSemana`, 0, 6, "Dia da semana deve ser entre 0 e 6");
+      rules.range(
+        horario.diaSemana,
+        `${prefix}.diaSemana`,
+        0,
+        6,
+        "Dia da semana deve ser entre 0 e 6",
+      );
       rules.timeFormat(horario.horaInicio, `${prefix}.horaInicio`, "Hora de início inválida");
       rules.timeFormat(horario.horaFim, `${prefix}.horaFim`, "Hora de fim inválida");
       rules.custom(
@@ -201,51 +207,51 @@ export class Estagio implements IEntityBaseUuid {
     return instance;
   }
 
-static load(dados: Record<string, any>): Estagio {
-  const instance = Object.create(Estagio.prototype) as Estagio;
+  static load(dados: Record<string, any>): Estagio {
+    const instance = Object.create(Estagio.prototype) as Estagio;
 
-  const fields = [
-    "id",
-    "idEmpresaFk",
-    "idEstagiarioFk",
-    "cargaHoraria",
-    "dataInicio",
-    "dataFim",
-    "status",
-    "horariosEstagio",
-    "dateCreated",
-    "dateUpdated",
-    "dateDeleted"
-  ];
+    const fields = [
+      "id",
+      "idEmpresaFk",
+      "idEstagiarioFk",
+      "cargaHoraria",
+      "dataInicio",
+      "dataFim",
+      "status",
+      "horariosEstagio",
+      "dateCreated",
+      "dateUpdated",
+      "dateDeleted",
+    ];
 
-  for (const field of fields) {
-    if (dados[field] !== undefined) {
-      (instance as any)[field] = dados[field];
+    for (const field of fields) {
+      if (dados[field] !== undefined) {
+        (instance as any)[field] = dados[field];
+      }
     }
+
+    return instance;
   }
+  update(dados: IEstagioUpdate): void {
+    const fields: (keyof IEstagioUpdate)[] = [
+      "idEmpresaFk",
+      "idEstagiarioFk",
+      "cargaHoraria",
+      "dataInicio",
+      "dataFim",
+      "status",
+      "horariosEstagio",
+    ];
 
-  return instance;
-}
-update(dados: IEstagioUpdate): void {
-  const fields: (keyof IEstagioUpdate)[] = [
-    "idEmpresaFk",
-    "idEstagiarioFk",
-    "cargaHoraria",
-    "dataInicio",
-    "dataFim",
-    "status",
-    "horariosEstagio"
-  ];
-
-  for (const field of fields) {
-    if (dados[field] !== undefined) {
-      (this as any)[field] = dados[field];
+    for (const field of fields) {
+      if (dados[field] !== undefined) {
+        (this as any)[field] = dados[field];
+      }
     }
-  }
 
-  touchUpdated(this);
-  this.validate();
-}
+    touchUpdated(this);
+    this.validate();
+  }
 
   private timeToMinutes(time: string): number {
     const [hour, minute, second] = time.split(":").map(Number);

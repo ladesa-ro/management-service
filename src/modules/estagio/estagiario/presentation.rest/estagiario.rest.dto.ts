@@ -14,11 +14,7 @@ import {
   simpleProperty,
   TransformToArray,
 } from "@/modules/@shared/presentation/rest";
-import {
-  IsArray,
-  IsOptional,
-  IsUUID,
-} from "@/modules/@shared/presentation/shared";
+import { IsArray, IsOptional, IsUUID } from "@/modules/@shared/presentation/shared";
 import { EstagiarioFieldsMixin } from "../presentation.validations/estagiario.validation-mixin";
 
 // ============================================================================

@@ -101,25 +101,37 @@ export class TurmaUpdateInputGraphQlDto {
 
 @ArgsType()
 export class TurmaListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {
-  @Field(() => [String], { nullable: true, description: "Filtro por Nome do Ambiente Padrao de Aula" })
+  @Field(() => [String], {
+    nullable: true,
+    description: "Filtro por Nome do Ambiente Padrao de Aula",
+  })
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
   filterAmbientePadraoAulaNome?: string[];
 
-  @Field(() => [String], { nullable: true, description: "Filtro por Codigo do Ambiente Padrao de Aula" })
+  @Field(() => [String], {
+    nullable: true,
+    description: "Filtro por Codigo do Ambiente Padrao de Aula",
+  })
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
   filterAmbientePadraoAulaCodigo?: string[];
 
-  @Field(() => [String], { nullable: true, description: "Filtro por Capacidade do Ambiente Padrao de Aula" })
+  @Field(() => [String], {
+    nullable: true,
+    description: "Filtro por Capacidade do Ambiente Padrao de Aula",
+  })
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
   filterAmbientePadraoAulaCapacidade?: string[];
 
-  @Field(() => [String], { nullable: true, description: "Filtro por Tipo do Ambiente Padrao de Aula" })
+  @Field(() => [String], {
+    nullable: true,
+    description: "Filtro por Tipo do Ambiente Padrao de Aula",
+  })
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
@@ -149,19 +161,28 @@ export class TurmaListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {
   @IsUUID(undefined, { each: true })
   filterCursoCampusId?: string[];
 
-  @Field(() => [String], { nullable: true, description: "Filtro por ID da Oferta de Formacao do Curso" })
+  @Field(() => [String], {
+    nullable: true,
+    description: "Filtro por ID da Oferta de Formacao do Curso",
+  })
   @IsOptional()
   @IsArray()
   @IsUUID(undefined, { each: true })
   filterCursoOfertaFormacaoId?: string[];
 
-  @Field(() => [String], { nullable: true, description: "Filtro por Nome da Oferta de Formacao do Curso" })
+  @Field(() => [String], {
+    nullable: true,
+    description: "Filtro por Nome da Oferta de Formacao do Curso",
+  })
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
   filterCursoOfertaFormacaoNome?: string[];
 
-  @Field(() => [String], { nullable: true, description: "Filtro por Slug da Oferta de Formacao do Curso" })
+  @Field(() => [String], {
+    nullable: true,
+    description: "Filtro por Slug da Oferta de Formacao do Curso",
+  })
   @IsOptional()
   @IsArray()
   @IsString({ each: true })

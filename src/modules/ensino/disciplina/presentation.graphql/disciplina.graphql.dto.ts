@@ -11,8 +11,8 @@ import {
   ObjectType,
 } from "@/modules/@shared/presentation/graphql";
 import {
-  IsInt,
   IsArray,
+  IsInt,
   IsOptional,
   IsString,
   IsUUID,

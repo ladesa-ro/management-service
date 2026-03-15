@@ -1,4 +1,11 @@
-import { IsDateString, IsEmail, IsNotEmpty, IsString, IsUUID, Length } from "@/modules/@shared/presentation/shared";
+import {
+  IsDateString,
+  IsEmail,
+  IsNotEmpty,
+  IsString,
+  IsUUID,
+  Length,
+} from "@/modules/@shared/presentation/shared";
 
 export class EstagiarioFieldsMixin {
   @IsUUID("all")

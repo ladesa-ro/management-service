@@ -1,3 +1,4 @@
+import { Type } from "class-transformer";
 import {
   IsArray,
   IsDateString,
@@ -10,7 +11,6 @@ import {
   Min,
   ValidateNested,
 } from "class-validator";
-import { Type } from "class-transformer";
 import { EstagioStatus } from "../estagio";
 
 export class HorarioEstagioInputCommand {

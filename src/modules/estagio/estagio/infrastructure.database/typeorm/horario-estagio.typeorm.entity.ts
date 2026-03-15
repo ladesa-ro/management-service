@@ -9,7 +9,11 @@ export class HorarioEstagioTypeormEntity {
   @Column({ name: "id_estagio_fk", type: "uuid", nullable: false })
   idEstagioFk!: string;
 
-  @ManyToOne(() => EstagioTypeormEntity, (estagio) => estagio.horariosEstagio, {})
+  @ManyToOne(
+    () => EstagioTypeormEntity,
+    (estagio) => estagio.horariosEstagio,
+    {},
+  )
   @JoinColumn({ name: "id_estagio_fk" })
   estagio!: Relation<EstagioTypeormEntity>;
 
