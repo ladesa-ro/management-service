@@ -30,6 +30,7 @@ export class CalendarioLetivoRestMapper {
 
   static toListInput = createListInputMapper(CalendarioLetivoListQuery, [
     "filter.id",
+    "filter.ano",
     "filter.campus.id",
     "filter.ofertaFormacao.id",
   ]);

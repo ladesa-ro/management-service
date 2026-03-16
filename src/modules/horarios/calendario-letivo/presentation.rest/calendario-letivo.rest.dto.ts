@@ -94,6 +94,17 @@ export class CalendarioLetivoListInputRestDto extends PaginatedFilterByIdRestDto
   @ApiPropertyOptional({
     type: "string",
     isArray: true,
+    description: "Filtro por ano letivo",
+  })
+  @TransformToArray()
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  "filter.ano"?: string[];
+
+  @ApiPropertyOptional({
+    type: "string",
+    isArray: true,
     description: "Filtro por ID do Campus",
   })
   @TransformToArray()

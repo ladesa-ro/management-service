@@ -32,6 +32,21 @@ import {
 } from "@/modules/ambientes/campus/presentation.rest";
 
 // ============================================================================
+// Parent Route Params
+// ============================================================================
+
+@ApiSchema({ name: "PerfilParentParamsDto" })
+export class PerfilParentParamsRestDto {
+  @ApiProperty({
+    type: "string",
+    description: "ID do usuario (uuid)",
+    format: "uuid",
+  })
+  @IsUUID()
+  usuarioId: string;
+}
+
+// ============================================================================
 // FindOne Output
 // ============================================================================
 

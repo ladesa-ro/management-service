@@ -4,6 +4,7 @@ import {
   IsBoolean as _IsBoolean,
   IsDateString as _IsDateString,
   IsEmail as _IsEmail,
+  IsEnum as _IsEnum,
   IsIn as _IsIn,
   IsInt as _IsInt,
   IsNotEmpty as _IsNotEmpty,
@@ -33,4 +34,5 @@ export const ValidateNested = mixable(_ValidateNested);
 export const MinLength = mixable(_MinLength);
 export const Min = mixable(_Min);
 export const Max = mixable(_Max);
+export const IsEnum = mixable(_IsEnum);
 export const Type = mixable(_Type);

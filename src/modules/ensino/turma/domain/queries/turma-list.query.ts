@@ -2,6 +2,7 @@ import { type IFilterAcceptableValues, PaginationQuery } from "@/domain/abstract
 
 export class TurmaListQuery extends PaginationQuery {
   "filter.id"?: IFilterAcceptableValues;
+  "filter.periodo"?: IFilterAcceptableValues;
   "filter.ambientePadraoAula.nome"?: IFilterAcceptableValues;
   "filter.ambientePadraoAula.codigo"?: IFilterAcceptableValues;
   "filter.ambientePadraoAula.capacidade"?: IFilterAcceptableValues;

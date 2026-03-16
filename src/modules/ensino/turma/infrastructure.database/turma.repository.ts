@@ -69,6 +69,7 @@ export class TurmaTypeOrmRepositoryAdapter
       searchableColumns: ["id", "periodo"],
       defaultSortBy: [["periodo", "ASC"]],
       filterableColumns: {
+        "periodo": [FilterOperator.EQ],
         "ambientePadraoAula.nome": [FilterOperator.EQ],
         "ambientePadraoAula.codigo": [FilterOperator.EQ],
         "ambientePadraoAula.capacidade": [

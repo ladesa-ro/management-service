@@ -39,12 +39,14 @@ import { IUsuarioRepository } from "@/modules/acesso/usuario/domain/repositories
 import { UsuarioTypeOrmRepositoryAdapter } from "@/modules/acesso/usuario/infrastructure.database";
 import { UsuarioGraphqlResolver } from "@/modules/acesso/usuario/presentation.graphql/usuario.graphql.resolver";
 import { UsuarioRestController } from "@/modules/acesso/usuario/presentation.rest/usuario.rest.controller";
+import { UsuarioEventoRestController } from "@/modules/acesso/usuario/presentation.rest/usuario-evento.rest.controller";
 import { ArquivoModule } from "@/modules/armazenamento/arquivo/arquivo.module";
 import { ImagemModule } from "@/modules/armazenamento/imagem/imagem.module";
+import { HorarioConsultaModule } from "@/modules/horarios/horario-consulta/horario-consulta.module";
 
 @Module({
-  imports: [IdentityProviderModule, ImagemModule, ArquivoModule],
-  controllers: [UsuarioRestController],
+  imports: [IdentityProviderModule, ImagemModule, ArquivoModule, HorarioConsultaModule],
+  controllers: [UsuarioRestController, UsuarioEventoRestController],
   providers: [
     NestJsPaginateAdapter,
     UsuarioGraphqlResolver,

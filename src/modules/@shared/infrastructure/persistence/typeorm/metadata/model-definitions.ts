@@ -220,11 +220,14 @@ defineModel("CalendarioLetivoFindOneQueryResult", [
   ...commonProperties.dated,
 ]);
 
-defineModel("DiaCalendarioFindOneQueryResult", [
+defineModel("CalendarioLetivoDiaFindOneQueryResult", [
   simpleProperty("id"),
   simpleProperty("data"),
   simpleProperty("diaLetivo"),
-  simpleProperty("fpiado"),
+  simpleProperty("feriado"),
+  simpleProperty("diaPresencial"),
+  simpleProperty("tipo"),
+  simpleProperty("extraCurricular"),
   referenceProperty("calendario", "CalendarioLetivoFindOneQueryResult"),
   ...commonProperties.dated,
 ]);

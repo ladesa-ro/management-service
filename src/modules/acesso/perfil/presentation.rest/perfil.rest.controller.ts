@@ -17,12 +17,13 @@ import {
   PerfilFindOneOutputRestDto,
   PerfilListInputRestDto,
   PerfilListOutputRestDto,
+  PerfilParentParamsRestDto,
   PerfilSetVinculosInputRestDto,
 } from "./perfil.rest.dto";
 import { PerfilRestMapper } from "./perfil.rest.mapper";
 
-@ApiTags("perfis")
-@Controller("/perfis")
+@ApiTags("usuarios")
+@Controller("/usuarios/:usuarioId/perfis")
 export class PerfilRestController {
   constructor(
     @DeclareDependency(IPerfilListQueryHandler)
@@ -34,14 +35,16 @@ export class PerfilRestController {
   ) {}
 
   @Get("/")
-  @ApiOperation({ summary: "Lista perfis", operationId: "perfilFindAll" })
+  @ApiOperation({ summary: "Lista perfis de um usuario", operationId: "perfilFindAll" })
   @ApiOkResponse({ type: PerfilListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
     @AccessContextHttp() accessContext: AccessContext,
+    @Param() parentParams: PerfilParentParamsRestDto,
     @Query() dto: PerfilListInputRestDto,
   ): Promise<PerfilListOutputRestDto> {
-    const input = PerfilRestMapper.toListInput(dto);
+    const input = PerfilRestMapper.toListInput(dto)!;
+    input["filter.usuario.id"] = [parentParams.usuarioId];
     const result = await this.listHandler.execute(accessContext, input);
     return PerfilRestMapper.toListOutputDto(result);
   }
@@ -90,9 +93,11 @@ export class PerfilRestController {
   @ApiForbiddenResponse()
   async setVinculos(
     @AccessContextHttp() accessContext: AccessContext,
+    @Param() parentParams: PerfilParentParamsRestDto,
     @Body() dto: PerfilSetVinculosInputRestDto,
   ): Promise<PerfilListOutputRestDto> {
     const input = PerfilRestMapper.toSetVinculosInput(dto);
+    input.usuario = { id: parentParams.usuarioId };
     const result = await this.setVinculosHandler.execute(accessContext, input);
     return PerfilRestMapper.toListOutputDto(result);
   }

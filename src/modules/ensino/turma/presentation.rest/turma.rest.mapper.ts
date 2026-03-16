@@ -31,6 +31,7 @@ export class TurmaRestMapper {
 
   static toListInput = createListInputMapper(TurmaListQuery, [
     "filter.id",
+    "filter.periodo",
     "filter.ambientePadraoAula.nome",
     "filter.ambientePadraoAula.codigo",
     "filter.ambientePadraoAula.capacidade",
@@ -47,6 +48,7 @@ export class TurmaRestMapper {
   static toCreateInput(dto: TurmaCreateInputRestDto): TurmaCreateCommand {
     const input = new TurmaCreateCommand();
     input.periodo = dto.periodo;
+    input.nome = dto.nome ?? null;
     input.curso = { id: dto.curso.id };
     input.ambientePadraoAula = dto.ambientePadraoAula ? { id: dto.ambientePadraoAula.id } : null;
     return input;
@@ -60,6 +62,9 @@ export class TurmaRestMapper {
     input.id = params.id;
     if (dto.periodo !== undefined) {
       input.periodo = dto.periodo;
+    }
+    if (dto.nome !== undefined) {
+      input.nome = dto.nome ?? null;
     }
     if (dto.curso !== undefined) {
       input.curso = { id: dto.curso.id };
@@ -78,6 +83,7 @@ export class TurmaRestMapper {
     const dto = new TurmaFindOneOutputRestDto();
     dto.id = output.id;
     dto.periodo = output.periodo;
+    dto.nome = output.nome ?? null;
     dto.curso = CursoRestMapper.toFindOneOutputDto(output.curso);
     dto.ambientePadraoAula = output.ambientePadraoAula
       ? AmbienteRestMapper.toFindOneOutputDto(output.ambientePadraoAula)

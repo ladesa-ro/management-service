@@ -2,4 +2,5 @@ import { type IFilterAcceptableValues, PaginationQuery } from "@/domain/abstract
 
 export class UsuarioListQuery extends PaginationQuery {
   "filter.id"?: IFilterAcceptableValues;
+  "filter.vinculos.cargo"?: IFilterAcceptableValues;
 }

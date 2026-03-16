@@ -32,10 +32,14 @@ import { ITurmaRepository } from "@/modules/ensino/turma/domain/repositories";
 import { TurmaTypeOrmRepositoryAdapter } from "@/modules/ensino/turma/infrastructure.database";
 import { TurmaGraphqlResolver } from "@/modules/ensino/turma/presentation.graphql/turma.graphql.resolver";
 import { TurmaRestController } from "@/modules/ensino/turma/presentation.rest/turma.rest.controller";
+import { TurmaHorarioAulaRestController } from "@/modules/ensino/turma/presentation.rest/turma-horario-aula.rest.controller";
+import { TurmaEventoRestController } from "@/modules/ensino/turma/presentation.rest/turma-evento.rest.controller";
+import { TurmaDiarioConfigurarRestController } from "@/modules/ensino/turma/presentation.rest/turma-diario-configurar.rest.controller";
+import { HorarioConsultaModule } from "@/modules/horarios/horario-consulta/horario-consulta.module";
 
 @Module({
-  imports: [AmbienteModule, CursoModule, ImagemModule, ArquivoModule],
-  controllers: [TurmaRestController],
+  imports: [AmbienteModule, CursoModule, ImagemModule, ArquivoModule, HorarioConsultaModule],
+  controllers: [TurmaRestController, TurmaHorarioAulaRestController, TurmaEventoRestController, TurmaDiarioConfigurarRestController],
   providers: [
     NestJsPaginateAdapter,
     TurmaGraphqlResolver,

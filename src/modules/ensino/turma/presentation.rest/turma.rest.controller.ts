@@ -26,6 +26,8 @@ import type { Express } from "express";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
+import { IHorarioConsultaQueryHandler } from "@/modules/horarios/horario-consulta";
+import { HorarioSemanalQueryParamsRestDto, HorarioSemanalOutputRestDto } from "@/modules/horarios/horario-consulta/presentation.rest";
 import { ITurmaCreateCommandHandler } from "@/modules/ensino/turma/domain/commands/turma-create.command.handler.interface";
 import { ITurmaDeleteCommandHandler } from "@/modules/ensino/turma/domain/commands/turma-delete.command.handler.interface";
 import { ITurmaUpdateCommandHandler } from "@/modules/ensino/turma/domain/commands/turma-update.command.handler.interface";
@@ -62,6 +64,8 @@ export class TurmaRestController {
     private readonly updateImagemCapaHandler: ITurmaUpdateImagemCapaCommandHandler,
     @DeclareDependency(ITurmaDeleteCommandHandler)
     private readonly deleteHandler: ITurmaDeleteCommandHandler,
+    @DeclareDependency(IHorarioConsultaQueryHandler)
+    private readonly horarioConsultaHandler: IHorarioConsultaQueryHandler,
   ) {}
 
   @Get("/")
@@ -118,6 +122,25 @@ export class TurmaRestController {
     const input = TurmaRestMapper.toUpdateInput(params, dto);
     const result = await this.updateHandler.execute(accessContext, input);
     return TurmaRestMapper.toFindOneOutputDto(result);
+  }
+
+  @Get("/:id/horario")
+  @ApiOperation({
+    summary: "Consulta horario semanal de uma turma",
+    operationId: "turmaHorarioSemanal",
+  })
+  @ApiOkResponse({ type: HorarioSemanalOutputRestDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async horarioSemanal(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: TurmaFindOneInputRestDto,
+    @Query() queryParams: HorarioSemanalQueryParamsRestDto,
+  ): Promise<HorarioSemanalOutputRestDto> {
+    return this.horarioConsultaHandler.findTurmaHorarioSemanal(accessContext, {
+      turmaId: params.id,
+      semana: queryParams.semana,
+    });
   }
 
   @Get("/:id/imagem/capa")

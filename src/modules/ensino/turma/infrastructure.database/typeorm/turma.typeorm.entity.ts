@@ -20,6 +20,9 @@ export class TurmaEntity {
   @Column({ name: "periodo", type: "text", nullable: false })
   periodo!: string;
 
+  @Column({ name: "nome", type: "text", nullable: true })
+  nome!: string | null;
+
   @ManyToOne(() => AmbienteEntity)
   @JoinColumn({ name: "id_ambiente_padrao_aula_fk" })
   ambientePadraoAula!: Relation<AmbienteEntity> | null;
