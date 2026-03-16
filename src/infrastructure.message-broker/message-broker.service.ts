@@ -17,6 +17,13 @@ export class MessageBrokerService implements IMessageBrokerService {
     private readonly messageBrokerOptions: IMessageBrokerOptions,
   ) {}
 
+  async publishTimetableRequestFireAndForget<TRequest>(request: TRequest): Promise<void> {
+    const broker = await this.messageBrokerContainerService.getBroker();
+    const queueRequest = this.messageBrokerOptions.queueTimetableRequest;
+    this.logger.log(`Publicando mensagem fire-and-forget na queue ${queueRequest}`);
+    await broker.publish(queueRequest, JSON.stringify(request));
+  }
+
   async publishTimetableRequest<TRequest, TResponse>(
     request: TRequest,
     timeoutMs = 60000,

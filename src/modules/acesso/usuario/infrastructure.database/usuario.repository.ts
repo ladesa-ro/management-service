@@ -1,3 +1,4 @@
+import { FilterOperator } from "nestjs-paginate";
 import { DataSource } from "typeorm";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
@@ -238,7 +239,12 @@ export class UsuarioTypeOrmRepositoryAdapter
         ["dateCreated", "ASC"],
         ["matricula", "ASC"],
       ],
-      filterableColumns: {},
+      relations: {
+        vinculos: true,
+      },
+      filterableColumns: {
+        "vinculos.cargo": [FilterOperator.EQ],
+      },
     };
   }
 }

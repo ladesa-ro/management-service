@@ -6,6 +6,8 @@ export enum GerarHorarioStatus {
   PENDENTE = "PENDENTE",
   SUCESSO = "SUCESSO",
   ERRO = "ERRO",
+  ACEITO = "ACEITO",
+  REJEITADO = "REJEITADO",
 }
 
 export enum GerarHorarioDuracao {

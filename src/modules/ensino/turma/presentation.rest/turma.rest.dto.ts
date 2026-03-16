@@ -54,6 +54,9 @@ export class TurmaFindOneOutputRestDto extends Mixin(EntityBaseRestDto, TurmaFie
   @ApiProperty({ type: "string", description: "Periodo da turma", minLength: 1 })
   declare periodo: string;
 
+  @ApiPropertyOptional({ type: "string", description: "Nome da turma", nullable: true })
+  declare nome: string | null;
+
   @ApiProperty({ type: () => CursoFindOneOutputRestDto, description: "Curso da turma" })
   @ValidateNested()
   @Type(() => CursoFindOneOutputRestDto)
@@ -86,6 +89,17 @@ export class TurmaFindOneOutputRestDto extends Mixin(EntityBaseRestDto, TurmaFie
 
 @ApiSchema({ name: "TurmaListInputDto" })
 export class TurmaListInputRestDto extends PaginatedFilterByIdRestDto {
+  @ApiPropertyOptional({
+    type: "string",
+    isArray: true,
+    description: "Filtro por periodo da turma",
+  })
+  @TransformToArray()
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  "filter.periodo"?: string[];
+
   @ApiPropertyOptional({
     type: "string",
     isArray: true,

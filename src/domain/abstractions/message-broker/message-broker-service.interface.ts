@@ -5,4 +5,6 @@ export interface IMessageBrokerService {
     request: TRequest,
     timeoutMs?: number,
   ): Promise<TResponse>;
+
+  publishTimetableRequestFireAndForget<TRequest>(request: TRequest): Promise<void>;
 }

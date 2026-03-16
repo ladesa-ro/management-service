@@ -37,6 +37,9 @@ export class OfertaFormacaoUpdateCommandHandlerImpl implements IOfertaFormacaoUp
     const domain = OfertaFormacao.load(current);
     domain.update({ nome: dto.nome, slug: dto.slug });
     const updateData: Partial<PersistInput<IOfertaFormacao>> = { ...domain };
+    if (has(dto, "duracaoPeriodo")) {
+      (updateData as any).duracaoPeriodo = dto.duracaoPeriodo ?? null;
+    }
     if (has(dto, "modalidade") && dto.modalidade !== undefined) {
       if (dto.modalidade) {
         const modalidade = await this.modalidadeFindOneHandler.execute(accessContext, {

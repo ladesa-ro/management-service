@@ -10,7 +10,14 @@ import {
 } from "typeorm";
 import { ModalidadeEntity } from "@/modules/ensino/modalidade/infrastructure.database/typeorm/modalidade.typeorm.entity";
 import { NivelFormacaoEntity } from "@/modules/ensino/nivel-formacao/infrastructure.database/typeorm/nivel-formacao.typeorm.entity";
-import { OfertaFormacaoNivelFormacaoEntity } from "@/modules/ensino/oferta-formacao-nivel-formacao/infrastructure.database/typeorm/oferta-formacao-nivel-formacao.typeorm.entity";
+import { OfertaFormacaoNivelFormacaoEntity } from "./oferta-formacao-nivel-formacao.typeorm.entity";
+
+export enum DuracaoPeriodo {
+  SEMESTRAL = "SEMESTRAL",
+  ANUAL = "ANUAL",
+  TRIMESTRAL = "TRIMESTRAL",
+  QUADRIMESTRAL = "QUADRIMESTRAL",
+}
 
 @Entity("oferta_formacao")
 export class OfertaFormacaoEntity {
@@ -22,6 +29,9 @@ export class OfertaFormacaoEntity {
 
   @Column({ name: "apelido", type: "text", nullable: false })
   slug!: string;
+
+  @Column({ name: "duracao_periodo", type: "text", nullable: true })
+  duracaoPeriodo!: DuracaoPeriodo | null;
 
   @ManyToOne(() => ModalidadeEntity)
   @JoinColumn({ name: "id_modalidade_fk" })

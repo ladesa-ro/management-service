@@ -9,7 +9,7 @@ import {
 } from "typeorm";
 import { AmbienteEntity } from "@/modules/ambientes/ambiente/infrastructure.database/typeorm/ambiente.typeorm.entity";
 import { ImagemEntity } from "@/modules/armazenamento/imagem/infrastructure.database/typeorm/imagem.typeorm.entity";
-import { DiarioProfessorEntity } from "@/modules/ensino/diario-professor/infrastructure.database/typeorm/diario-professor.typeorm.entity";
+import { DiarioProfessorEntity } from "./diario-professor.typeorm.entity";
 import { DisciplinaEntity } from "@/modules/ensino/disciplina/infrastructure.database/typeorm/disciplina.typeorm.entity";
 import { TurmaEntity } from "@/modules/ensino/turma/infrastructure.database/typeorm/turma.typeorm.entity";
 import { CalendarioLetivoEntity } from "@/modules/horarios/calendario-letivo/infrastructure.database/typeorm/calendario-letivo.typeorm.entity";

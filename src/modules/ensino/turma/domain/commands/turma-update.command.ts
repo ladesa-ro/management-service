@@ -4,6 +4,7 @@ import { CursoInputRef } from "@/modules/ensino/curso";
 
 export class TurmaUpdateCommand {
   periodo?: string;
+  nome?: string | null;
   curso?: CursoInputRef;
   ambientePadraoAula?: AmbienteInputRef | null;
   imagemCapa?: ImagemInputRef | null;

@@ -63,6 +63,17 @@ export class AmbienteRestController {
     private readonly deleteHandler: IAmbienteDeleteCommandHandler,
   ) {}
 
+  @Get("/disponiveis")
+  @ApiOperation({ summary: "Lista ambientes disponiveis", operationId: "ambienteListDisponiveis" })
+  @ApiOkResponse()
+  @ApiForbiddenResponse()
+  async listDisponiveis(
+    @AccessContextHttp() _accessContext: AccessContext,
+  ) {
+    // Placeholder: returns empty array
+    return { data: [] };
+  }
+
   @Get("/")
   @ApiOperation({ summary: "Lista ambientes", operationId: "ambienteFindAll" })
   @ApiOkResponse({ type: AmbienteListOutputRestDto })
@@ -74,6 +85,19 @@ export class AmbienteRestController {
     const input = AmbienteRestMapper.toListInput(dto);
     const result = await this.listHandler.execute(accessContext, input as any);
     return AmbienteRestMapper.toListOutputDto(result as any);
+  }
+
+  @Get("/:id/disponibilidade")
+  @ApiOperation({ summary: "Grade de disponibilidade de um ambiente", operationId: "ambienteGetDisponibilidade" })
+  @ApiOkResponse()
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async getDisponibilidade(
+    @AccessContextHttp() _accessContext: AccessContext,
+    @Param() params: AmbienteFindOneInputRestDto,
+  ) {
+    // Placeholder: returns empty availability grid
+    return { data: [], ambienteId: params.id };
   }
 
   @Get("/:id")

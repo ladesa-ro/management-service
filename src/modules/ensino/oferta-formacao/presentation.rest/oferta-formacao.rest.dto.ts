@@ -17,6 +17,7 @@ import {
 } from "@/modules/@shared/presentation/rest";
 import {
   IsArray,
+  IsEnum,
   IsOptional,
   IsUUID,
   Type,
@@ -26,6 +27,7 @@ import {
   ModalidadeFindOneInputRestDto,
   ModalidadeFindOneOutputRestDto,
 } from "@/modules/ensino/modalidade/presentation.rest/modalidade.rest.dto";
+import { DuracaoPeriodo } from "@/modules/ensino/oferta-formacao/infrastructure.database/typeorm/oferta-formacao.typeorm.entity";
 import { OfertaFormacaoFieldsMixin } from "@/modules/ensino/oferta-formacao/presentation.validations/oferta-formacao.validation-mixin";
 
 // ============================================================================
@@ -52,6 +54,9 @@ export class OfertaFormacaoFindOneOutputRestDto extends Mixin(
 
   @ApiProperty({ type: "string", description: "Apelido da oferta de formacao", minLength: 1 })
   declare slug: string;
+
+  @ApiPropertyOptional({ enum: DuracaoPeriodo, description: "Duracao de cada periodo", nullable: true })
+  duracaoPeriodo: DuracaoPeriodo | null;
 
   @ApiProperty({
     type: () => ModalidadeFindOneOutputRestDto,
@@ -103,6 +108,11 @@ export class OfertaFormacaoCreateInputRestDto extends OfertaFormacaoFieldsMixin 
 
   @ApiProperty({ type: "string", description: "Apelido da oferta de formacao", minLength: 1 })
   declare slug: string;
+
+  @ApiPropertyOptional({ enum: DuracaoPeriodo, description: "Duracao de cada periodo", nullable: true })
+  @IsOptional()
+  @IsEnum(DuracaoPeriodo)
+  duracaoPeriodo?: DuracaoPeriodo | null;
 
   @ApiProperty({
     type: () => ModalidadeFindOneInputRestDto,

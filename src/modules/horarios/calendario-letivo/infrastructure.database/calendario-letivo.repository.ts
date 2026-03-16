@@ -78,6 +78,7 @@ export class CalendarioLetivoTypeOrmRepositoryAdapter
       },
       defaultSortBy: [],
       filterableColumns: {
+        "ano": [FilterOperator.EQ],
         "campus.id": [FilterOperator.EQ],
         "campus.cnpj": [FilterOperator.EQ],
         "campus.razaoSocial": [FilterOperator.EQ],

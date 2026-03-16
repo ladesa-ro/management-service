@@ -167,7 +167,15 @@ export class UsuarioEnsinoOutputRestDto {
 // ============================================================================
 
 @ApiSchema({ name: "UsuarioListInputDto" })
-export class UsuarioListInputRestDto extends PaginatedFilterByIdRestDto {}
+export class UsuarioListInputRestDto extends PaginatedFilterByIdRestDto {
+  @ApiPropertyOptional({
+    type: "string",
+    description: "Filtro por cargo do vinculo (ex: professor)",
+  })
+  @IsOptional()
+  @IsString()
+  "filter.vinculos.cargo"?: string;
+}
 
 @ApiSchema({ name: "UsuarioListOutputDto" })
 export class UsuarioListOutputRestDto {
