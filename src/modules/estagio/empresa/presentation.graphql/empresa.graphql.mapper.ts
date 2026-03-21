@@ -19,7 +19,7 @@ export class EmpresaGraphqlMapper {
     if (!dto) {
       return null;
     }
-
+//
     const input = new EmpresaListQuery();
     input.page = dto.page;
     input.limit = dto.limit;
@@ -38,18 +38,19 @@ export class EmpresaGraphqlMapper {
     input.selection = selection;
     return input;
   }
-
+//
   static toCreateInput(dto: EmpresaCreateInputGraphQlDto): EmpresaCreateCommand {
     const input = new EmpresaCreateCommand();
-    input.razaoSocial = dto.razaoSocial;
-    input.nomeFantasia = dto.nomeFantasia;
-    input.cnpj = dto.cnpj;
-    input.telefone = dto.telefone;
-    input.email = dto.email;
-    input.idEnderecoFk = dto.idEnderecoFk;
+    const fields = ['razaoSocial', 'nomeFantasia', 'cnpj', 'telefone', 'email', 'idEnderecoFk'] as const;
+
+    fields.forEach(field => {
+      input[field] = dto[field];
+    });
+
     return input;
   }
 
+ //
   static toUpdateInput(
     params: { id: string },
     dto: EmpresaUpdateInputGraphQlDto,
@@ -57,38 +58,25 @@ export class EmpresaGraphqlMapper {
     const input = new EmpresaFindOneQuery() as EmpresaFindOneQuery & EmpresaUpdateCommand;
     input.id = params.id;
 
-    if (dto.razaoSocial !== undefined) {
-      input.razaoSocial = dto.razaoSocial;
-    }
-    if (dto.nomeFantasia !== undefined) {
-      input.nomeFantasia = dto.nomeFantasia;
-    }
-    if (dto.cnpj !== undefined) {
-      input.cnpj = dto.cnpj;
-    }
-    if (dto.telefone !== undefined) {
-      input.telefone = dto.telefone;
-    }
-    if (dto.email !== undefined) {
-      input.email = dto.email;
-    }
-    if (dto.idEnderecoFk !== undefined) {
-      input.idEnderecoFk = dto.idEnderecoFk;
-    }
+    const fields = ['razaoSocial', 'nomeFantasia', 'cnpj', 'telefone', 'email', 'idEnderecoFk'] as const;
+    fields.forEach(field => {
+      if (dto[field] !== undefined) {
+        input[field] = dto[field];
+      }
+    });
 
     return input;
   }
 
+  //
   static toFindOneOutputDto(output: EmpresaFindOneQueryResult): EmpresaFindOneOutputGraphQlDto {
     const dto = new EmpresaFindOneOutputGraphQlDto();
-    dto.id = output.id;
-    dto.razaoSocial = output.razaoSocial;
-    dto.nomeFantasia = output.nomeFantasia;
-    dto.cnpj = output.cnpj;
-    dto.telefone = output.telefone;
-    dto.email = output.email;
-    dto.idEnderecoFk = output.idEnderecoFk;
-    dto.ativo = output.ativo;
+    const fields = ['id', 'razaoSocial', 'nomeFantasia', 'cnpj', 'telefone', 'email', 'idEnderecoFk', 'ativo'] as const;
+
+    fields.forEach(field => {
+      (dto[field] as any) = output[field];
+    });
+
     mapDatedFields(dto, output);
     return dto;
   }
