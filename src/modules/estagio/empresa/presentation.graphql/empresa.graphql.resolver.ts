@@ -66,6 +66,7 @@ export class EmpresaGraphqlResolver {
   async create(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("input") dto: EmpresaCreateInputGraphQlDto,
+    @Info() info: GraphQLResolveInfo,
   ): Promise<EmpresaFindOneOutputGraphQlDto> {
     const input = EmpresaGraphqlMapper.toCreateInput(dto);
     const result = await this.createHandler.execute(accessContext, input);
@@ -77,6 +78,7 @@ export class EmpresaGraphqlResolver {
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Args("input") dto: EmpresaUpdateInputGraphQlDto,
+    @Info() info: GraphQLResolveInfo,
   ): Promise<EmpresaFindOneOutputGraphQlDto> {
     const input = EmpresaGraphqlMapper.toUpdateInput({ id }, dto);
     const result = await this.updateHandler.execute(accessContext, input);
