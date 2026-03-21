@@ -21,12 +21,8 @@ import {
   Type,
   ValidateNested,
 } from "@/modules/@shared/presentation/shared";
-import {
-  PerfilFindOneOutputRestDto,
-} from "@/modules/acesso/perfil/presentation.rest";
-import {
-  DiarioFindOneOutputRestDto,
-} from "./diario.rest.dto";
+import { PerfilFindOneOutputRestDto } from "@/modules/acesso/perfil/presentation.rest";
+import { DiarioFindOneOutputRestDto } from "./diario.rest.dto";
 
 // ============================================================================
 // Parent Route Params

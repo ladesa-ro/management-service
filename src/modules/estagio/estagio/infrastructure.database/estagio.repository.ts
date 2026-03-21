@@ -1,8 +1,7 @@
-import { DataSource } from "typeorm";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
-import { APP_DATA_SOURCE_TOKEN } from "@/modules/@shared/infrastructure/persistence/typeorm";
+import { IAppTypeormConnection } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { Empresa } from "@/modules/estagio/empresa/domain/empresa";
 import { createEmpresaRepository } from "@/modules/estagio/empresa/infrastructure.database/typeorm/empresa.typeorm.repository";
 import { Estagiario } from "@/modules/estagio/estagiario/domain/estagiario";
@@ -23,22 +22,25 @@ import { createEstagioRepository, createHorarioEstagioRepository, EstagioMapper 
 
 @DeclareImplementation()
 export class EstagioTypeOrmRepositoryAdapter implements IEstagioRepository {
-  constructor(@DeclareDependency(APP_DATA_SOURCE_TOKEN) private readonly dataSource: DataSource) {}
+  constructor(
+    @DeclareDependency(IAppTypeormConnection)
+    private readonly appTypeormConnection: IAppTypeormConnection,
+  ) {}
 
   private get repository() {
-    return createEstagioRepository(this.dataSource);
+    return createEstagioRepository(this.appTypeormConnection);
   }
 
   private get horarioRepository() {
-    return createHorarioEstagioRepository(this.dataSource);
+    return createHorarioEstagioRepository(this.appTypeormConnection);
   }
 
   private get empresaRepository() {
-    return createEmpresaRepository(this.dataSource);
+    return createEmpresaRepository(this.appTypeormConnection);
   }
 
   private get estagiarioRepository() {
-    return createEstagiarioRepository(this.dataSource);
+    return createEstagiarioRepository(this.appTypeormConnection);
   }
 
   async findAll(

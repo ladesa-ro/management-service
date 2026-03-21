@@ -1,5 +1,5 @@
-import type { DataSource } from "typeorm";
 import type { IRequestActor } from "@/domain/abstractions/request-actor";
+import type { IAppTypeormConnection } from "@/infrastructure.database/typeorm/conn.interface";
 import type { IAccessContext } from "../domain";
 
 /**
@@ -8,7 +8,7 @@ import type { IAccessContext } from "../domain";
  */
 export class AccessContext implements IAccessContext {
   constructor(
-    readonly dataSource: DataSource,
+    readonly appTypeormConnection: IAppTypeormConnection,
     readonly requestActor: IRequestActor | null,
   ) {}
 }

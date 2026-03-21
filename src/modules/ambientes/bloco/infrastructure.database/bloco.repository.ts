@@ -1,9 +1,8 @@
 import { FilterOperator } from "nestjs-paginate";
-import { DataSource } from "typeorm";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
-  APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
+  IAppTypeormConnection,
   type ITypeOrmPaginationConfig,
   NestJsPaginateAdapter,
   paginateConfig,
@@ -38,14 +37,15 @@ export class BlocoTypeOrmRepositoryAdapter
   protected readonly outputDtoName = "BlocoFindOneQueryResult";
 
   constructor(
-    @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
+    @DeclareDependency(IAppTypeormConnection)
+    protected readonly appTypeormConnection: IAppTypeormConnection,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();
   }
 
   protected get repository() {
-    return createBlocoRepository(this.dataSource);
+    return createBlocoRepository(this.appTypeormConnection);
   }
 
   protected getPaginateConfig(): ITypeOrmPaginationConfig<BlocoEntity> {

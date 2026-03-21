@@ -1,8 +1,7 @@
-import { DataSource } from "typeorm";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
-  APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
+  IAppTypeormConnection,
   type ITypeOrmPaginationConfig,
   NestJsPaginateAdapter,
   paginateConfig,
@@ -37,14 +36,15 @@ export class ModalidadeTypeOrmRepositoryAdapter
   protected readonly outputDtoName = "ModalidadeFindOneQueryResult";
 
   constructor(
-    @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
+    @DeclareDependency(IAppTypeormConnection)
+    protected readonly appTypeormConnection: IAppTypeormConnection,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();
   }
 
   protected get repository() {
-    return createModalidadeRepository(this.dataSource);
+    return createModalidadeRepository(this.appTypeormConnection);
   }
 
   protected getPaginateConfig(): ITypeOrmPaginationConfig<ModalidadeEntity> {

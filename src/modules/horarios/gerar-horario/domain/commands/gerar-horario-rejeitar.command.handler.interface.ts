@@ -6,7 +6,10 @@ export interface IGerarHorarioRejeitarCommand {
 }
 
 export interface IGerarHorarioRejeitarCommandHandler {
-  execute(accessContext: AccessContext | null, command: IGerarHorarioRejeitarCommand): Promise<GerarHorarioEntity>;
+  execute(
+    accessContext: AccessContext | null,
+    command: IGerarHorarioRejeitarCommand,
+  ): Promise<GerarHorarioEntity>;
 }
 
 export const IGerarHorarioRejeitarCommandHandler = Symbol("IGerarHorarioRejeitarCommandHandler");

@@ -1,21 +1,21 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
-import { APP_DATA_SOURCE_TOKEN } from "@/modules/@shared/infrastructure/persistence/typeorm";
-import { DataSource } from "typeorm";
+import { IAppTypeormConnection } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import {
-  IHorarioConsultaQueryHandler,
+  type HorarioAulaItem,
   type HorarioMescladoQuery,
+  type HorarioSemanalDia,
+  type HorarioSemanalQueryResult,
+  IHorarioConsultaQueryHandler,
   type TurmaHorarioSemanalQuery,
   type UsuarioHorarioSemanalQuery,
-  type HorarioSemanalQueryResult,
-  type HorarioSemanalDia,
-  type HorarioAulaItem,
 } from "../../domain/queries";
 
 @DeclareImplementation()
 export class HorarioConsultaQueryHandlerImpl implements IHorarioConsultaQueryHandler {
   constructor(
-    @DeclareDependency(APP_DATA_SOURCE_TOKEN) private readonly dataSource: DataSource,
+    @DeclareDependency(IAppTypeormConnection)
+    private readonly appTypeormConnection: IAppTypeormConnection,
   ) {}
 
   async findTurmaHorarioSemanal(
@@ -24,7 +24,7 @@ export class HorarioConsultaQueryHandlerImpl implements IHorarioConsultaQueryHan
   ): Promise<HorarioSemanalQueryResult> {
     const { weekStart, weekEnd } = this.getWeekRange(query.semana);
 
-    const rows = await this.dataSource.query(
+    const rows = await this.appTypeormConnection.query(
       `
       SELECT
         ca.id,
@@ -62,9 +62,10 @@ export class HorarioConsultaQueryHandlerImpl implements IHorarioConsultaQueryHan
     );
 
     const agendamentoIds = rows.map((r: Record<string, unknown>) => r.id).filter(Boolean);
-    const professoresMap = agendamentoIds.length > 0
-      ? await this.loadProfessores(agendamentoIds)
-      : new Map<string, HorarioAulaItem["professores"]>();
+    const professoresMap =
+      agendamentoIds.length > 0
+        ? await this.loadProfessores(agendamentoIds)
+        : new Map<string, HorarioAulaItem["professores"]>();
 
     return this.buildResult(weekStart, weekEnd, rows, professoresMap);
   }
@@ -75,7 +76,7 @@ export class HorarioConsultaQueryHandlerImpl implements IHorarioConsultaQueryHan
   ): Promise<HorarioSemanalQueryResult> {
     const { weekStart, weekEnd } = this.getWeekRange(query.semana);
 
-    const rows = await this.dataSource.query(
+    const rows = await this.appTypeormConnection.query(
       `
       SELECT
         ca.id,
@@ -114,9 +115,10 @@ export class HorarioConsultaQueryHandlerImpl implements IHorarioConsultaQueryHan
     );
 
     const agendamentoIds = rows.map((r: Record<string, unknown>) => r.id).filter(Boolean);
-    const professoresMap = agendamentoIds.length > 0
-      ? await this.loadProfessores(agendamentoIds)
-      : new Map<string, HorarioAulaItem["professores"]>();
+    const professoresMap =
+      agendamentoIds.length > 0
+        ? await this.loadProfessores(agendamentoIds)
+        : new Map<string, HorarioAulaItem["professores"]>();
 
     return this.buildResult(weekStart, weekEnd, rows, professoresMap);
   }
@@ -134,7 +136,7 @@ export class HorarioConsultaQueryHandlerImpl implements IHorarioConsultaQueryHan
     const placeholders = query.turmaIds.map((_, i) => `$${i + 1}`).join(",");
     const params = [...query.turmaIds, weekStart, weekEnd];
 
-    const rows = await this.dataSource.query(
+    const rows = await this.appTypeormConnection.query(
       `
       SELECT DISTINCT ON (ca.id)
         ca.id,
@@ -172,9 +174,10 @@ export class HorarioConsultaQueryHandlerImpl implements IHorarioConsultaQueryHan
     );
 
     const agendamentoIds = rows.map((r: Record<string, unknown>) => r.id).filter(Boolean);
-    const professoresMap = agendamentoIds.length > 0
-      ? await this.loadProfessores(agendamentoIds)
-      : new Map<string, HorarioAulaItem["professores"]>();
+    const professoresMap =
+      agendamentoIds.length > 0
+        ? await this.loadProfessores(agendamentoIds)
+        : new Map<string, HorarioAulaItem["professores"]>();
 
     return this.buildResult(weekStart, weekEnd, rows, professoresMap);
   }
@@ -184,7 +187,7 @@ export class HorarioConsultaQueryHandlerImpl implements IHorarioConsultaQueryHan
   ): Promise<Map<string, HorarioAulaItem["professores"]>> {
     const placeholders = agendamentoIds.map((_, i) => `$${i + 1}`).join(",");
 
-    const profRows: Array<Record<string, unknown>> = await this.dataSource.query(
+    const profRows: Array<Record<string, unknown>> = await this.appTypeormConnection.query(
       `
       SELECT
         cap.id_calendario_agendamento_fk AS agendamento_id,

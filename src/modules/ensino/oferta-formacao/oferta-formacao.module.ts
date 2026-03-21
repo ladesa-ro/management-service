@@ -7,8 +7,8 @@ import { OfertaFormacaoPermissionCheckerImpl } from "@/modules/ensino/oferta-for
 import {
   OfertaFormacaoCreateCommandHandlerImpl,
   OfertaFormacaoDeleteCommandHandlerImpl,
-  OfertaFormacaoUpdateCommandHandlerImpl,
   OfertaFormacaoNivelFormacaoBulkReplaceCommandHandlerImpl,
+  OfertaFormacaoUpdateCommandHandlerImpl,
 } from "@/modules/ensino/oferta-formacao/application/commands";
 import {
   OfertaFormacaoFindOneQueryHandlerImpl,
@@ -20,8 +20,8 @@ import { IOfertaFormacaoPermissionChecker } from "@/modules/ensino/oferta-formac
 import {
   IOfertaFormacaoCreateCommandHandler,
   IOfertaFormacaoDeleteCommandHandler,
-  IOfertaFormacaoUpdateCommandHandler,
   IOfertaFormacaoNivelFormacaoBulkReplaceCommandHandler,
+  IOfertaFormacaoUpdateCommandHandler,
 } from "@/modules/ensino/oferta-formacao/domain/commands";
 import {
   IOfertaFormacaoFindOneQueryHandler,
@@ -31,8 +31,8 @@ import {
 } from "@/modules/ensino/oferta-formacao/domain/queries";
 import { IOfertaFormacaoNivelFormacaoRepository } from "@/modules/ensino/oferta-formacao/domain/repositories";
 import {
-  OfertaFormacaoTypeOrmRepositoryAdapter,
   OfertaFormacaoNivelFormacaoTypeOrmRepositoryAdapter,
+  OfertaFormacaoTypeOrmRepositoryAdapter,
 } from "@/modules/ensino/oferta-formacao/infrastructure.database";
 import { OfertaFormacaoGraphqlResolver } from "@/modules/ensino/oferta-formacao/presentation.graphql/oferta-formacao.graphql.resolver";
 import { OfertaFormacaoRestController } from "@/modules/ensino/oferta-formacao/presentation.rest/oferta-formacao.rest.controller";
@@ -41,7 +41,11 @@ import { OfertaFormacaoPeriodoRestController } from "@/modules/ensino/oferta-for
 
 @Module({
   imports: [ModalidadeModule, NivelFormacaoModule],
-  controllers: [OfertaFormacaoRestController, OfertaFormacaoNivelFormacaoRestController, OfertaFormacaoPeriodoRestController],
+  controllers: [
+    OfertaFormacaoRestController,
+    OfertaFormacaoNivelFormacaoRestController,
+    OfertaFormacaoPeriodoRestController,
+  ],
   providers: [
     NestJsPaginateAdapter,
     { provide: IOfertaFormacaoPermissionChecker, useClass: OfertaFormacaoPermissionCheckerImpl },
@@ -76,10 +80,19 @@ import { OfertaFormacaoPeriodoRestController } from "@/modules/ensino/oferta-for
     },
 
     // OfertaFormacaoNivelFormacao Commands
-    { provide: IOfertaFormacaoNivelFormacaoBulkReplaceCommandHandler, useClass: OfertaFormacaoNivelFormacaoBulkReplaceCommandHandlerImpl },
+    {
+      provide: IOfertaFormacaoNivelFormacaoBulkReplaceCommandHandler,
+      useClass: OfertaFormacaoNivelFormacaoBulkReplaceCommandHandlerImpl,
+    },
     // OfertaFormacaoNivelFormacao Queries
-    { provide: IOfertaFormacaoNivelFormacaoListQueryHandler, useClass: OfertaFormacaoNivelFormacaoListQueryHandlerImpl },
-    { provide: IOfertaFormacaoNivelFormacaoFindOneQueryHandler, useClass: OfertaFormacaoNivelFormacaoFindOneQueryHandlerImpl },
+    {
+      provide: IOfertaFormacaoNivelFormacaoListQueryHandler,
+      useClass: OfertaFormacaoNivelFormacaoListQueryHandlerImpl,
+    },
+    {
+      provide: IOfertaFormacaoNivelFormacaoFindOneQueryHandler,
+      useClass: OfertaFormacaoNivelFormacaoFindOneQueryHandlerImpl,
+    },
   ],
   exports: [IOfertaFormacaoFindOneQueryHandler],
 })

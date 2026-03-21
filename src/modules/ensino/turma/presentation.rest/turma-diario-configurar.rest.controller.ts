@@ -1,15 +1,9 @@
 import { Body, Controller, Param, Post } from "@nestjs/common";
-import {
-  ApiCreatedResponse,
-  ApiForbiddenResponse,
-  ApiOperation,
-  ApiTags,
-} from "@nestjs/swagger";
+import { ApiCreatedResponse, ApiForbiddenResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7.js";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
-import { APP_DATA_SOURCE_TOKEN } from "@/modules/@shared/infrastructure/persistence/typeorm";
-import { DataSource } from "typeorm";
+import { IAppTypeormConnection } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { DiarioEntity } from "@/modules/ensino/diario/infrastructure.database/typeorm/diario.typeorm.entity";
 import { DiarioProfessorEntity } from "@/modules/ensino/diario/infrastructure.database/typeorm/diario-professor.typeorm.entity";
 import {
@@ -22,7 +16,8 @@ import {
 @Controller("/turmas/:turmaId/diarios")
 export class TurmaDiarioConfigurarRestController {
   constructor(
-    @DeclareDependency(APP_DATA_SOURCE_TOKEN) private readonly dataSource: DataSource,
+    @DeclareDependency(IAppTypeormConnection)
+    private readonly appTypeormConnection: IAppTypeormConnection,
   ) {}
 
   @Post("/configurar")
@@ -39,7 +34,7 @@ export class TurmaDiarioConfigurarRestController {
   ): Promise<TurmaDiarioConfigurarOutputRestDto> {
     let created = 0;
 
-    await this.dataSource.transaction(async (manager) => {
+    await this.appTypeormConnection.transaction(async (manager) => {
       const diarioRepo = manager.getRepository(DiarioEntity);
       const diarioProfessorRepo = manager.getRepository(DiarioProfessorEntity);
       const now = new Date();

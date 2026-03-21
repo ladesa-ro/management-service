@@ -1,7 +1,6 @@
-import { DataSource } from "typeorm";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/conn.interface";
 import type { ITransaction, ITransactionContext, TransactionCallback } from "@/modules/@shared";
-import { APP_DATA_SOURCE_TOKEN } from "../providers/app-data-source.provider";
 
 /**
  * Adapter TypeORM que implementa o port de transações.
@@ -12,12 +11,12 @@ import { APP_DATA_SOURCE_TOKEN } from "../providers/app-data-source.provider";
 @DeclareImplementation()
 export class TransactionTypeOrmAdapter implements ITransaction {
   constructor(
-    @DeclareDependency(APP_DATA_SOURCE_TOKEN)
-    private readonly dataSource: DataSource,
+    @DeclareDependency(IAppTypeormConnection)
+    private readonly appTypeormConnection: IAppTypeormConnection,
   ) {}
 
   async execute<T>(callback: TransactionCallback<T>): Promise<T> {
-    return this.dataSource.transaction(async (entityManager) => {
+    return this.appTypeormConnection.transaction(async (entityManager) => {
       const context: ITransactionContext = {
         databaseContext: entityManager,
       };

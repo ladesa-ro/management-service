@@ -11,8 +11,7 @@ import { DeclareDependency } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7.js";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
-import { APP_DATA_SOURCE_TOKEN } from "@/modules/@shared/infrastructure/persistence/typeorm";
-import { DataSource } from "typeorm";
+import { IAppTypeormConnection } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import {
   CalendarioAgendamentoEntity,
   CalendarioAgendamentoStatus,
@@ -32,7 +31,8 @@ import {
 @Controller("/turmas/:turmaId/eventos")
 export class TurmaEventoRestController {
   constructor(
-    @DeclareDependency(APP_DATA_SOURCE_TOKEN) private readonly dataSource: DataSource,
+    @DeclareDependency(IAppTypeormConnection)
+    private readonly appTypeormConnection: IAppTypeormConnection,
   ) {}
 
   @Get("/")
@@ -43,7 +43,7 @@ export class TurmaEventoRestController {
     @AccessContextHttp() _accessContext: AccessContext,
     @Param() parentParams: TurmaEventoParentParamsRestDto,
   ): Promise<TurmaEventoListOutputRestDto> {
-    const junctionRepo = this.dataSource.getRepository(CalendarioAgendamentoTurmaEntity);
+    const junctionRepo = this.appTypeormConnection.getRepository(CalendarioAgendamentoTurmaEntity);
 
     const junctions = await junctionRepo.find({
       where: { idTurmaFk: parentParams.turmaId },
@@ -66,8 +66,8 @@ export class TurmaEventoRestController {
     @Param() parentParams: TurmaEventoParentParamsRestDto,
     @Body() dto: TurmaEventoCreateInputRestDto,
   ): Promise<TurmaEventoFindOneOutputRestDto> {
-    const agendamentoRepo = this.dataSource.getRepository(CalendarioAgendamentoEntity);
-    const junctionRepo = this.dataSource.getRepository(CalendarioAgendamentoTurmaEntity);
+    const agendamentoRepo = this.appTypeormConnection.getRepository(CalendarioAgendamentoEntity);
+    const junctionRepo = this.appTypeormConnection.getRepository(CalendarioAgendamentoTurmaEntity);
 
     const evento = new CalendarioAgendamentoEntity();
     evento.id = generateUuidV7();
@@ -104,7 +104,7 @@ export class TurmaEventoRestController {
     @Param() params: TurmaEventoItemParamsRestDto,
     @Body() dto: TurmaEventoUpdateInputRestDto,
   ): Promise<TurmaEventoFindOneOutputRestDto> {
-    const agendamentoRepo = this.dataSource.getRepository(CalendarioAgendamentoEntity);
+    const agendamentoRepo = this.appTypeormConnection.getRepository(CalendarioAgendamentoEntity);
     const entity = await agendamentoRepo.findOneBy({ id: params.eventoId });
     ensureExists(entity, "TurmaEvento", params.eventoId);
 
@@ -130,7 +130,7 @@ export class TurmaEventoRestController {
     @AccessContextHttp() _accessContext: AccessContext,
     @Param() params: TurmaEventoItemParamsRestDto,
   ): Promise<boolean> {
-    const junctionRepo = this.dataSource.getRepository(CalendarioAgendamentoTurmaEntity);
+    const junctionRepo = this.appTypeormConnection.getRepository(CalendarioAgendamentoTurmaEntity);
 
     // Remove junction
     await junctionRepo.delete({
@@ -145,12 +145,16 @@ export class TurmaEventoRestController {
     return {
       id: entity.id,
       nome: entity.nome,
-      dataInicio: entity.dataInicio instanceof Date
-        ? entity.dataInicio.toISOString().split("T")[0]
-        : String(entity.dataInicio),
-      dataFim: entity.dataFim instanceof Date
-        ? entity.dataFim.toISOString().split("T")[0]
-        : entity.dataFim ? String(entity.dataFim) : null,
+      dataInicio:
+        entity.dataInicio instanceof Date
+          ? entity.dataInicio.toISOString().split("T")[0]
+          : String(entity.dataInicio),
+      dataFim:
+        entity.dataFim instanceof Date
+          ? entity.dataFim.toISOString().split("T")[0]
+          : entity.dataFim
+            ? String(entity.dataFim)
+            : null,
       diaInteiro: entity.diaInteiro,
       horarioInicio: entity.horarioInicio,
       horarioFim: entity.horarioFim,

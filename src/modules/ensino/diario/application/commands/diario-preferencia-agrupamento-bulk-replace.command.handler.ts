@@ -1,8 +1,7 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7.js";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
-import { APP_DATA_SOURCE_TOKEN } from "@/modules/@shared/infrastructure/persistence/typeorm";
-import { DataSource } from "typeorm";
+import { IAppTypeormConnection } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type { DiarioPreferenciaAgrupamentoBulkReplaceCommand } from "../../domain/commands/diario-preferencia-agrupamento-bulk-replace.command";
 import { IDiarioPreferenciaAgrupamentoBulkReplaceCommandHandler } from "../../domain/commands/diario-preferencia-agrupamento-bulk-replace.command.handler.interface";
 import type { DiarioPreferenciaAgrupamentoListQueryResult } from "../../domain/queries";
@@ -10,9 +9,12 @@ import { IDiarioPreferenciaAgrupamentoRepository } from "../../domain/repositori
 import { DiarioPreferenciaAgrupamentoEntity } from "../../infrastructure.database/typeorm/diario-preferencia-agrupamento.typeorm.entity";
 
 @DeclareImplementation()
-export class DiarioPreferenciaAgrupamentoBulkReplaceCommandHandlerImpl implements IDiarioPreferenciaAgrupamentoBulkReplaceCommandHandler {
+export class DiarioPreferenciaAgrupamentoBulkReplaceCommandHandlerImpl
+  implements IDiarioPreferenciaAgrupamentoBulkReplaceCommandHandler
+{
   constructor(
-    @DeclareDependency(APP_DATA_SOURCE_TOKEN) private readonly dataSource: DataSource,
+    @DeclareDependency(IAppTypeormConnection)
+    private readonly appTypeormConnection: IAppTypeormConnection,
     @DeclareDependency(IDiarioPreferenciaAgrupamentoRepository)
     private readonly repository: IDiarioPreferenciaAgrupamentoRepository,
   ) {}
@@ -21,7 +23,7 @@ export class DiarioPreferenciaAgrupamentoBulkReplaceCommandHandlerImpl implement
     accessContext: AccessContext | null,
     dto: DiarioPreferenciaAgrupamentoBulkReplaceCommand,
   ): Promise<DiarioPreferenciaAgrupamentoListQueryResult> {
-    await this.dataSource.transaction(async (manager) => {
+    await this.appTypeormConnection.transaction(async (manager) => {
       // Soft-delete all existing diario-preferencia-agrupamento entries for this diario
       await manager
         .createQueryBuilder()

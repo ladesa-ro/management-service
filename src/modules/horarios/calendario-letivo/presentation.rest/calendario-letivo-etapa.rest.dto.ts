@@ -1,7 +1,4 @@
-import {
-  ApiProperty,
-  ApiSchema,
-} from "@/modules/@shared/presentation/rest";
+import { ApiProperty, ApiSchema } from "@/modules/@shared/presentation/rest";
 import {
   IsArray,
   IsString,
@@ -19,7 +16,11 @@ export class CalendarioLetivoEtapaParentParamsRestDto {
 
 @ApiSchema({ name: "CalendarioLetivoEtapaBulkReplaceItemDto" })
 export class CalendarioLetivoEtapaBulkReplaceItemRestDto {
-  @ApiProperty({ type: "string", format: "uuid", description: "ID da etapa da oferta de formacao periodo" })
+  @ApiProperty({
+    type: "string",
+    format: "uuid",
+    description: "ID da etapa da oferta de formacao periodo",
+  })
   @IsUUID()
   ofertaFormacaoPeriodoEtapaId: string;
 

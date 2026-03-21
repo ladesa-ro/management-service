@@ -1,10 +1,5 @@
 import { Body, Controller, Get, Param, Put, Query } from "@nestjs/common";
-import {
-  ApiForbiddenResponse,
-  ApiOkResponse,
-  ApiOperation,
-  ApiTags,
-} from "@nestjs/swagger";
+import { ApiForbiddenResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { IOfertaFormacaoNivelFormacaoBulkReplaceCommandHandler } from "../domain/commands/oferta-formacao-nivel-formacao-bulk-replace.command.handler.interface";
@@ -28,7 +23,10 @@ export class OfertaFormacaoNivelFormacaoRestController {
   ) {}
 
   @Get("/")
-  @ApiOperation({ summary: "Lista niveis de formacao de uma oferta de formacao", operationId: "ofertaFormacaoNivelFormacaoFindAll" })
+  @ApiOperation({
+    summary: "Lista niveis de formacao de uma oferta de formacao",
+    operationId: "ofertaFormacaoNivelFormacaoFindAll",
+  })
   @ApiOkResponse({ type: OfertaFormacaoNivelFormacaoListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
@@ -42,7 +40,10 @@ export class OfertaFormacaoNivelFormacaoRestController {
   }
 
   @Put("/")
-  @ApiOperation({ summary: "Substitui niveis de formacao de uma oferta de formacao", operationId: "ofertaFormacaoNivelFormacaoBulkReplace" })
+  @ApiOperation({
+    summary: "Substitui niveis de formacao de uma oferta de formacao",
+    operationId: "ofertaFormacaoNivelFormacaoBulkReplace",
+  })
   @ApiOkResponse({ type: OfertaFormacaoNivelFormacaoListOutputRestDto })
   @ApiForbiddenResponse()
   async bulkReplace(

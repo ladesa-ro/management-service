@@ -55,7 +55,11 @@ export class OfertaFormacaoFindOneOutputRestDto extends Mixin(
   @ApiProperty({ type: "string", description: "Apelido da oferta de formacao", minLength: 1 })
   declare slug: string;
 
-  @ApiPropertyOptional({ enum: DuracaoPeriodo, description: "Duracao de cada periodo", nullable: true })
+  @ApiPropertyOptional({
+    enum: DuracaoPeriodo,
+    description: "Duracao de cada periodo",
+    nullable: true,
+  })
   duracaoPeriodo: DuracaoPeriodo | null;
 
   @ApiProperty({
@@ -109,7 +113,11 @@ export class OfertaFormacaoCreateInputRestDto extends OfertaFormacaoFieldsMixin 
   @ApiProperty({ type: "string", description: "Apelido da oferta de formacao", minLength: 1 })
   declare slug: string;
 
-  @ApiPropertyOptional({ enum: DuracaoPeriodo, description: "Duracao de cada periodo", nullable: true })
+  @ApiPropertyOptional({
+    enum: DuracaoPeriodo,
+    description: "Duracao de cada periodo",
+    nullable: true,
+  })
   @IsOptional()
   @IsEnum(DuracaoPeriodo)
   duracaoPeriodo?: DuracaoPeriodo | null;

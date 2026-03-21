@@ -1,14 +1,16 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
-import { ICalendarioLetivoDiaFindOneQueryHandler } from "../../domain/queries/calendario-letivo-dia-find-one.query.handler.interface";
 import type {
   CalendarioLetivoDiaFindOneQuery,
   CalendarioLetivoDiaFindOneQueryResult,
 } from "../../domain/queries";
+import { ICalendarioLetivoDiaFindOneQueryHandler } from "../../domain/queries/calendario-letivo-dia-find-one.query.handler.interface";
 import { ICalendarioLetivoDiaRepository } from "../../domain/repositories";
 
 @DeclareImplementation()
-export class CalendarioLetivoDiaFindOneQueryHandlerImpl implements ICalendarioLetivoDiaFindOneQueryHandler {
+export class CalendarioLetivoDiaFindOneQueryHandlerImpl
+  implements ICalendarioLetivoDiaFindOneQueryHandler
+{
   constructor(
     @DeclareDependency(ICalendarioLetivoDiaRepository)
     private readonly repository: ICalendarioLetivoDiaRepository,

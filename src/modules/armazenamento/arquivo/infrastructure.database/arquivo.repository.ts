@@ -1,17 +1,18 @@
 import type { SelectQueryBuilder } from "typeorm";
-import { DataSource } from "typeorm";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import { APP_DATA_SOURCE_TOKEN } from "@/modules/@shared/infrastructure/persistence/typeorm";
+import { IAppTypeormConnection } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type { IArquivoRepository } from "@/modules/armazenamento/arquivo";
 import type { ArquivoEntity } from "./typeorm/arquivo.typeorm.entity";
 import { createArquivoRepository } from "./typeorm/arquivo.typeorm.repository";
 
 @DeclareImplementation()
 export class ArquivoTypeOrmRepositoryAdapter implements IArquivoRepository {
-  constructor(@DeclareDependency(APP_DATA_SOURCE_TOKEN) private dataSource: DataSource) {}
+  constructor(
+    @DeclareDependency(IAppTypeormConnection) private appTypeormConnection: IAppTypeormConnection,
+  ) {}
 
   private get repository() {
-    return createArquivoRepository(this.dataSource);
+    return createArquivoRepository(this.appTypeormConnection);
   }
 
   createQueryBuilder(alias: string): SelectQueryBuilder<ArquivoEntity> {

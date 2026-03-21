@@ -1,29 +1,24 @@
 import { Controller, Get, HttpCode, HttpStatus, Query, Res } from "@nestjs/common";
-import {
-  ApiForbiddenResponse,
-  ApiOkResponse,
-  ApiOperation,
-  ApiPropertyOptional,
-  ApiSchema,
-  ApiTags,
-} from "@nestjs/swagger";
+import { ApiForbiddenResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
+import type { Response } from "express";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
-import { APP_DATA_SOURCE_TOKEN } from "@/modules/@shared/infrastructure/persistence/typeorm";
-import { DataSource } from "typeorm";
-import { DiarioEntity } from "@/modules/ensino/diario/infrastructure.database/typeorm/diario.typeorm.entity";
+import { IAppTypeormConnection } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { DiarioProfessorEntity } from "@/modules/ensino/diario/infrastructure.database/typeorm/diario-professor.typeorm.entity";
-import type { Response } from "express";
 
 @ApiTags("relatorios")
 @Controller("/relatorios")
 export class RelatorioRestController {
   constructor(
-    @DeclareDependency(APP_DATA_SOURCE_TOKEN) private readonly dataSource: DataSource,
+    @DeclareDependency(IAppTypeormConnection)
+    private readonly appTypeormConnection: IAppTypeormConnection,
   ) {}
 
   @Get("/aulas-ministradas")
-  @ApiOperation({ summary: "Relatorio de aulas ministradas (JSON)", operationId: "relatorioAulasMinistradas" })
+  @ApiOperation({
+    summary: "Relatorio de aulas ministradas (JSON)",
+    operationId: "relatorioAulasMinistradas",
+  })
   @ApiOkResponse()
   @ApiForbiddenResponse()
   async aulasMinistradas(
@@ -34,7 +29,7 @@ export class RelatorioRestController {
     @Query("cursoId") cursoId?: string,
     @Query("periodo") periodo?: string,
   ) {
-    const qb = this.dataSource
+    const qb = this.appTypeormConnection
       .getRepository(DiarioProfessorEntity)
       .createQueryBuilder("dp")
       .leftJoinAndSelect("dp.diario", "diario")
@@ -89,7 +84,10 @@ export class RelatorioRestController {
   }
 
   @Get("/aulas-ministradas/pdf")
-  @ApiOperation({ summary: "Relatorio de aulas ministradas (PDF)", operationId: "relatorioAulasMinistradasPdf" })
+  @ApiOperation({
+    summary: "Relatorio de aulas ministradas (PDF)",
+    operationId: "relatorioAulasMinistradasPdf",
+  })
   @ApiForbiddenResponse()
   @HttpCode(HttpStatus.NOT_IMPLEMENTED)
   async aulasMinistradsPdf(

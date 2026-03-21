@@ -1,9 +1,8 @@
 import { FilterOperator } from "nestjs-paginate";
-import { DataSource } from "typeorm";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
-  APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
+  IAppTypeormConnection,
   type ITypeOrmPaginationConfig,
   NestJsPaginateAdapter,
   paginateConfig,
@@ -33,14 +32,15 @@ export class CalendarioLetivoTypeOrmRepositoryAdapter
   protected readonly outputDtoName = "CalendarioLetivoFindOneQueryResult";
 
   constructor(
-    @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
+    @DeclareDependency(IAppTypeormConnection)
+    protected readonly appTypeormConnection: IAppTypeormConnection,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();
   }
 
   protected get repository() {
-    return createCalendarioLetivoRepository(this.dataSource);
+    return createCalendarioLetivoRepository(this.appTypeormConnection);
   }
 
   protected getPaginateConfig(): ITypeOrmPaginationConfig<CalendarioLetivoEntity> {
@@ -78,7 +78,7 @@ export class CalendarioLetivoTypeOrmRepositoryAdapter
       },
       defaultSortBy: [],
       filterableColumns: {
-        "ano": [FilterOperator.EQ],
+        ano: [FilterOperator.EQ],
         "campus.id": [FilterOperator.EQ],
         "campus.cnpj": [FilterOperator.EQ],
         "campus.razaoSocial": [FilterOperator.EQ],

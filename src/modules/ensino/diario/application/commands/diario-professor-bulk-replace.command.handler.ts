@@ -1,8 +1,7 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7.js";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
-import { APP_DATA_SOURCE_TOKEN } from "@/modules/@shared/infrastructure/persistence/typeorm";
-import { DataSource } from "typeorm";
+import { IAppTypeormConnection } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type { DiarioProfessorBulkReplaceCommand } from "../../domain/commands/diario-professor-bulk-replace.command";
 import { IDiarioProfessorBulkReplaceCommandHandler } from "../../domain/commands/diario-professor-bulk-replace.command.handler.interface";
 import type { DiarioProfessorListQueryResult } from "../../domain/queries";
@@ -10,9 +9,12 @@ import { IDiarioProfessorRepository } from "../../domain/repositories";
 import { DiarioProfessorEntity } from "../../infrastructure.database/typeorm/diario-professor.typeorm.entity";
 
 @DeclareImplementation()
-export class DiarioProfessorBulkReplaceCommandHandlerImpl implements IDiarioProfessorBulkReplaceCommandHandler {
+export class DiarioProfessorBulkReplaceCommandHandlerImpl
+  implements IDiarioProfessorBulkReplaceCommandHandler
+{
   constructor(
-    @DeclareDependency(APP_DATA_SOURCE_TOKEN) private readonly dataSource: DataSource,
+    @DeclareDependency(IAppTypeormConnection)
+    private readonly appTypeormConnection: IAppTypeormConnection,
     @DeclareDependency(IDiarioProfessorRepository)
     private readonly repository: IDiarioProfessorRepository,
   ) {}
@@ -21,7 +23,7 @@ export class DiarioProfessorBulkReplaceCommandHandlerImpl implements IDiarioProf
     accessContext: AccessContext | null,
     dto: DiarioProfessorBulkReplaceCommand,
   ): Promise<DiarioProfessorListQueryResult> {
-    await this.dataSource.transaction(async (manager) => {
+    await this.appTypeormConnection.transaction(async (manager) => {
       // Soft-delete all existing diario-professor entries for this diario
       await manager
         .createQueryBuilder()

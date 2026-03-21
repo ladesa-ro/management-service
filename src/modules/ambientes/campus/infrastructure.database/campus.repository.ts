@@ -1,9 +1,8 @@
 import { FilterOperator } from "nestjs-paginate";
-import { DataSource } from "typeorm";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
-  APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
+  IAppTypeormConnection,
   type ITypeOrmPaginationConfig,
   NestJsPaginateAdapter,
   paginateConfig,
@@ -33,14 +32,15 @@ export class CampusTypeOrmRepositoryAdapter
   protected readonly outputDtoName = "CampusFindOneQueryResult";
 
   constructor(
-    @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
+    @DeclareDependency(IAppTypeormConnection)
+    protected readonly appTypeormConnection: IAppTypeormConnection,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();
   }
 
   protected get repository() {
-    return createCampusRepository(this.dataSource);
+    return createCampusRepository(this.appTypeormConnection);
   }
 
   protected getPaginateConfig(): ITypeOrmPaginationConfig<CampusEntity> {

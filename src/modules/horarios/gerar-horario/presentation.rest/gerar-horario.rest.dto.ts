@@ -1,8 +1,4 @@
-import {
-  ApiProperty,
-  ApiPropertyOptional,
-  ApiSchema,
-} from "@/modules/@shared/presentation/rest";
+import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@/modules/@shared/presentation/rest";
 import {
   IsArray,
   IsEnum,
@@ -26,16 +22,28 @@ export class GerarHorarioCreateInputRestDto {
   @IsString()
   dataInicio: string;
 
-  @ApiPropertyOptional({ type: "string", format: "date", description: "Data termino do periodo", nullable: true })
+  @ApiPropertyOptional({
+    type: "string",
+    format: "date",
+    description: "Data termino do periodo",
+    nullable: true,
+  })
   dataTermino?: string;
 
-  @ApiPropertyOptional({ type: "string", isArray: true, description: "IDs das ofertas de formacao" })
+  @ApiPropertyOptional({
+    type: "string",
+    isArray: true,
+    description: "IDs das ofertas de formacao",
+  })
   @IsOptional()
   @IsArray()
   @IsUUID(undefined, { each: true })
   ofertaFormacaoIds?: string[];
 
-  @ApiPropertyOptional({ enum: GerarHorarioDuracao, description: "Duracao: TEMPORARIO ou PERMANENTE" })
+  @ApiPropertyOptional({
+    enum: GerarHorarioDuracao,
+    description: "Duracao: TEMPORARIO ou PERMANENTE",
+  })
   @IsOptional()
   @IsEnum(GerarHorarioDuracao)
   duracao?: GerarHorarioDuracao;
@@ -59,11 +67,16 @@ export class GerarHorarioFindOneParamsRestDto {
 @ApiSchema({ name: "GerarHorarioFindOneOutputDto" })
 export class GerarHorarioFindOneOutputRestDto {
   @ApiProperty({ type: "string" }) id: string;
-  @ApiProperty({ type: "string", enum: ["SOLICITADO", "PENDENTE", "SUCESSO", "ERRO", "ACEITO", "REJEITADO"] })
+  @ApiProperty({
+    type: "string",
+    enum: ["SOLICITADO", "PENDENTE", "SUCESSO", "ERRO", "ACEITO", "REJEITADO"],
+  })
   status: string;
   @ApiProperty({ type: "string" }) duracao: string;
   @ApiProperty({ type: "string", format: "date" }) dataInicio: string;
-  @ApiPropertyOptional({ type: "string", format: "date", nullable: true }) dataTermino: string | null;
+  @ApiPropertyOptional({ type: "string", format: "date", nullable: true }) dataTermino:
+    | string
+    | null;
   @ApiPropertyOptional({ nullable: true }) respostaGerador: Record<string, unknown> | null;
   @ApiProperty({ type: "string", format: "date-time" }) dateCreated: string;
 }

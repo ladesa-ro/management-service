@@ -32,7 +32,10 @@ export class UsuarioRestMapper {
 
   static toFindOneInput = createFindOneInputMapper(UsuarioFindOneQuery);
 
-  static toListInput = createListInputMapper(UsuarioListQuery, ["filter.id", "filter.vinculos.cargo"]);
+  static toListInput = createListInputMapper(UsuarioListQuery, [
+    "filter.id",
+    "filter.vinculos.cargo",
+  ]);
 
   static toCreateInput(dto: UsuarioCreateInputRestDto): UsuarioCreateCommand {
     const input = new UsuarioCreateCommand();

@@ -1,7 +1,6 @@
-import { DataSource } from "typeorm";
 import type { PartialEntity } from "@/domain/abstractions/entities";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import { APP_DATA_SOURCE_TOKEN } from "@/modules/@shared/infrastructure/persistence/typeorm";
+import { IAppTypeormConnection } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type { Imagem } from "@/modules/armazenamento/imagem/domain/imagem";
 import type {
   IImagemArquivoRepository,
@@ -14,7 +13,10 @@ import { createImagemRepository } from "./typeorm/imagem.typeorm.repository";
 
 @DeclareImplementation()
 export class ImagemTypeOrmRepositoryAdapter implements IImagemTransactionPort {
-  constructor(@DeclareDependency(APP_DATA_SOURCE_TOKEN) private readonly dataSource: DataSource) {}
+  constructor(
+    @DeclareDependency(IAppTypeormConnection)
+    private readonly appTypeormConnection: IAppTypeormConnection,
+  ) {}
 
   async transaction<T>(
     callback: (context: {
@@ -22,7 +24,7 @@ export class ImagemTypeOrmRepositoryAdapter implements IImagemTransactionPort {
       imagemArquivoRepository: IImagemArquivoRepository;
     }) => Promise<T>,
   ): Promise<T> {
-    return this.dataSource.transaction(async (entityManager) => {
+    return this.appTypeormConnection.transaction(async (entityManager) => {
       const imagemRepository = createImagemRepository(entityManager);
       const imagemArquivoRepository = createImagemArquivoRepository(entityManager);
 

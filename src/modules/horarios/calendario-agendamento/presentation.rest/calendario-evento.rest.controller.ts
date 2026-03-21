@@ -11,18 +11,17 @@ import { DeclareDependency } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7.js";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
-import { APP_DATA_SOURCE_TOKEN } from "@/modules/@shared/infrastructure/persistence/typeorm";
-import { DataSource, In } from "typeorm";
+import { IAppTypeormConnection } from "@/modules/@shared/infrastructure/persistence/typeorm";
+import { CalendarioAgendamentoCalendarioLetivoEntity } from "@/modules/horarios/calendario-agendamento-calendario-letivo/infrastructure.database/typeorm/calendario-agendamento-calendario-letivo.typeorm.entity";
+import { CalendarioAgendamentoModalidadeEntity } from "@/modules/horarios/calendario-agendamento-modalidade/infrastructure.database/typeorm/calendario-agendamento-modalidade.typeorm.entity";
+import { CalendarioAgendamentoOfertaFormacaoEntity } from "@/modules/horarios/calendario-agendamento-oferta-formacao/infrastructure.database/typeorm/calendario-agendamento-oferta-formacao.typeorm.entity";
+import { CalendarioAgendamentoProfessorEntity } from "@/modules/horarios/calendario-agendamento-professor/infrastructure.database/typeorm/calendario-agendamento-professor.typeorm.entity";
+import { CalendarioAgendamentoTurmaEntity } from "@/modules/horarios/calendario-agendamento-turma/infrastructure.database/typeorm/calendario-agendamento-turma.typeorm.entity";
 import {
   CalendarioAgendamentoEntity,
   CalendarioAgendamentoStatus,
   CalendarioAgendamentoTipo,
 } from "../infrastructure.database/typeorm/calendario-agendamento.typeorm.entity";
-import { CalendarioAgendamentoTurmaEntity } from "@/modules/horarios/calendario-agendamento-turma/infrastructure.database/typeorm/calendario-agendamento-turma.typeorm.entity";
-import { CalendarioAgendamentoProfessorEntity } from "@/modules/horarios/calendario-agendamento-professor/infrastructure.database/typeorm/calendario-agendamento-professor.typeorm.entity";
-import { CalendarioAgendamentoCalendarioLetivoEntity } from "@/modules/horarios/calendario-agendamento-calendario-letivo/infrastructure.database/typeorm/calendario-agendamento-calendario-letivo.typeorm.entity";
-import { CalendarioAgendamentoOfertaFormacaoEntity } from "@/modules/horarios/calendario-agendamento-oferta-formacao/infrastructure.database/typeorm/calendario-agendamento-oferta-formacao.typeorm.entity";
-import { CalendarioAgendamentoModalidadeEntity } from "@/modules/horarios/calendario-agendamento-modalidade/infrastructure.database/typeorm/calendario-agendamento-modalidade.typeorm.entity";
 import {
   CalendarioEventoCreateInputRestDto,
   CalendarioEventoFindOneOutputRestDto,
@@ -35,7 +34,8 @@ import {
 @Controller("/calendario/eventos")
 export class CalendarioEventoRestController {
   constructor(
-    @DeclareDependency(APP_DATA_SOURCE_TOKEN) private readonly dataSource: DataSource,
+    @DeclareDependency(IAppTypeormConnection)
+    private readonly appTypeormConnection: IAppTypeormConnection,
   ) {}
 
   @Get("/")
@@ -49,7 +49,7 @@ export class CalendarioEventoRestController {
     @Query("filter.ofertaFormacao.id") filterOfertaFormacaoId?: string,
     @Query("filter.periodo") filterPeriodo?: string,
   ): Promise<CalendarioEventoListOutputRestDto> {
-    const repo = this.dataSource.getRepository(CalendarioAgendamentoEntity);
+    const repo = this.appTypeormConnection.getRepository(CalendarioAgendamentoEntity);
 
     const qb = repo
       .createQueryBuilder("ca")
@@ -61,13 +61,21 @@ export class CalendarioEventoRestController {
     }
 
     if (filterTurmaId) {
-      qb.innerJoin(CalendarioAgendamentoTurmaEntity, "cat", "cat.id_calendario_agendamento_fk = ca.id")
-        .andWhere("cat.id_turma_fk = :filterTurmaId", { filterTurmaId });
+      qb.innerJoin(
+        CalendarioAgendamentoTurmaEntity,
+        "cat",
+        "cat.id_calendario_agendamento_fk = ca.id",
+      ).andWhere("cat.id_turma_fk = :filterTurmaId", { filterTurmaId });
     }
 
     if (filterOfertaFormacaoId) {
-      qb.innerJoin(CalendarioAgendamentoOfertaFormacaoEntity, "caof", "caof.id_calendario_agendamento_fk = ca.id")
-        .andWhere("caof.id_oferta_formacao_fk = :filterOfertaFormacaoId", { filterOfertaFormacaoId });
+      qb.innerJoin(
+        CalendarioAgendamentoOfertaFormacaoEntity,
+        "caof",
+        "caof.id_calendario_agendamento_fk = ca.id",
+      ).andWhere("caof.id_oferta_formacao_fk = :filterOfertaFormacaoId", {
+        filterOfertaFormacaoId,
+      });
     }
 
     const entities = await qb.getMany();
@@ -87,7 +95,7 @@ export class CalendarioEventoRestController {
     @AccessContextHttp() _accessContext: AccessContext,
     @Param() params: CalendarioEventoFindOneParamsRestDto,
   ): Promise<CalendarioEventoFindOneOutputRestDto> {
-    const repo = this.dataSource.getRepository(CalendarioAgendamentoEntity);
+    const repo = this.appTypeormConnection.getRepository(CalendarioAgendamentoEntity);
     const entity = await repo.findOneBy({ id: params.id, tipo: CalendarioAgendamentoTipo.EVENTO });
     ensureExists(entity, "CalendarioEvento", params.id);
     return this.toOutputDtoWithRelations(entity!);
@@ -114,7 +122,7 @@ export class CalendarioEventoRestController {
     entity.repeticao = dto.repeticao ?? null;
     entity.status = CalendarioAgendamentoStatus.ATIVO;
 
-    await this.dataSource.transaction(async (manager) => {
+    await this.appTypeormConnection.transaction(async (manager) => {
       await manager.save(CalendarioAgendamentoEntity, entity);
       await this.syncJunctions(manager, entity.id, dto);
     });
@@ -132,7 +140,7 @@ export class CalendarioEventoRestController {
     @Param() params: CalendarioEventoFindOneParamsRestDto,
     @Body() dto: CalendarioEventoUpdateInputRestDto,
   ): Promise<CalendarioEventoFindOneOutputRestDto> {
-    const repo = this.dataSource.getRepository(CalendarioAgendamentoEntity);
+    const repo = this.appTypeormConnection.getRepository(CalendarioAgendamentoEntity);
     const entity = await repo.findOneBy({ id: params.id, tipo: CalendarioAgendamentoTipo.EVENTO });
     ensureExists(entity, "CalendarioEvento", params.id);
 
@@ -145,7 +153,7 @@ export class CalendarioEventoRestController {
     if (dto.cor !== undefined) entity!.cor = dto.cor ?? null;
     if (dto.repeticao !== undefined) entity!.repeticao = dto.repeticao ?? null;
 
-    await this.dataSource.transaction(async (manager) => {
+    await this.appTypeormConnection.transaction(async (manager) => {
       await manager.save(CalendarioAgendamentoEntity, entity!);
       await this.syncJunctions(manager, entity!.id, dto);
     });
@@ -162,7 +170,7 @@ export class CalendarioEventoRestController {
     @AccessContextHttp() _accessContext: AccessContext,
     @Param() params: CalendarioEventoFindOneParamsRestDto,
   ): Promise<boolean> {
-    const repo = this.dataSource.getRepository(CalendarioAgendamentoEntity);
+    const repo = this.appTypeormConnection.getRepository(CalendarioAgendamentoEntity);
     const entity = await repo.findOneBy({ id: params.id, tipo: CalendarioAgendamentoTipo.EVENTO });
     ensureExists(entity, "CalendarioEvento", params.id);
     entity!.status = CalendarioAgendamentoStatus.INATIVO;
@@ -173,10 +181,18 @@ export class CalendarioEventoRestController {
   private async syncJunctions(
     manager: import("typeorm").EntityManager,
     eventoId: string,
-    dto: { turmaIds?: string[]; perfilIds?: string[]; calendarioLetivoIds?: string[]; ofertaFormacaoIds?: string[]; modalidadeIds?: string[] },
+    dto: {
+      turmaIds?: string[];
+      perfilIds?: string[];
+      calendarioLetivoIds?: string[];
+      ofertaFormacaoIds?: string[];
+      modalidadeIds?: string[];
+    },
   ) {
     if (dto.turmaIds !== undefined) {
-      await manager.delete(CalendarioAgendamentoTurmaEntity, { idCalendarioAgendamentoFk: eventoId });
+      await manager.delete(CalendarioAgendamentoTurmaEntity, {
+        idCalendarioAgendamentoFk: eventoId,
+      });
       for (const turmaId of dto.turmaIds) {
         const j = new CalendarioAgendamentoTurmaEntity();
         j.id = generateUuidV7();
@@ -189,7 +205,9 @@ export class CalendarioEventoRestController {
     }
 
     if (dto.perfilIds !== undefined) {
-      await manager.delete(CalendarioAgendamentoProfessorEntity, { idCalendarioAgendamentoFk: eventoId });
+      await manager.delete(CalendarioAgendamentoProfessorEntity, {
+        idCalendarioAgendamentoFk: eventoId,
+      });
       for (const perfilId of dto.perfilIds) {
         const j = new CalendarioAgendamentoProfessorEntity();
         j.id = generateUuidV7();
@@ -202,7 +220,9 @@ export class CalendarioEventoRestController {
     }
 
     if (dto.calendarioLetivoIds !== undefined) {
-      await manager.delete(CalendarioAgendamentoCalendarioLetivoEntity, { idCalendarioAgendamentoFk: eventoId });
+      await manager.delete(CalendarioAgendamentoCalendarioLetivoEntity, {
+        idCalendarioAgendamentoFk: eventoId,
+      });
       for (const clId of dto.calendarioLetivoIds) {
         const j = new CalendarioAgendamentoCalendarioLetivoEntity();
         j.id = generateUuidV7();
@@ -215,7 +235,9 @@ export class CalendarioEventoRestController {
     }
 
     if (dto.ofertaFormacaoIds !== undefined) {
-      await manager.delete(CalendarioAgendamentoOfertaFormacaoEntity, { idCalendarioAgendamentoFk: eventoId });
+      await manager.delete(CalendarioAgendamentoOfertaFormacaoEntity, {
+        idCalendarioAgendamentoFk: eventoId,
+      });
       for (const ofId of dto.ofertaFormacaoIds) {
         const j = new CalendarioAgendamentoOfertaFormacaoEntity();
         j.id = generateUuidV7();
@@ -228,7 +250,9 @@ export class CalendarioEventoRestController {
     }
 
     if (dto.modalidadeIds !== undefined) {
-      await manager.delete(CalendarioAgendamentoModalidadeEntity, { idCalendarioAgendamentoFk: eventoId });
+      await manager.delete(CalendarioAgendamentoModalidadeEntity, {
+        idCalendarioAgendamentoFk: eventoId,
+      });
       for (const modId of dto.modalidadeIds) {
         const j = new CalendarioAgendamentoModalidadeEntity();
         j.id = generateUuidV7();
@@ -241,16 +265,22 @@ export class CalendarioEventoRestController {
     }
   }
 
-  private async toOutputDtoWithRelations(entity: CalendarioAgendamentoEntity): Promise<CalendarioEventoFindOneOutputRestDto> {
+  private async toOutputDtoWithRelations(
+    entity: CalendarioAgendamentoEntity,
+  ): Promise<CalendarioEventoFindOneOutputRestDto> {
     const dto = new CalendarioEventoFindOneOutputRestDto();
     dto.id = entity.id;
     dto.nome = entity.nome;
-    dto.dataInicio = entity.dataInicio instanceof Date
-      ? entity.dataInicio.toISOString().split("T")[0]
-      : String(entity.dataInicio);
-    dto.dataFim = entity.dataFim instanceof Date
-      ? entity.dataFim.toISOString().split("T")[0]
-      : entity.dataFim ? String(entity.dataFim) : null;
+    dto.dataInicio =
+      entity.dataInicio instanceof Date
+        ? entity.dataInicio.toISOString().split("T")[0]
+        : String(entity.dataInicio);
+    dto.dataFim =
+      entity.dataFim instanceof Date
+        ? entity.dataFim.toISOString().split("T")[0]
+        : entity.dataFim
+          ? String(entity.dataFim)
+          : null;
     dto.diaInteiro = entity.diaInteiro;
     dto.horarioInicio = entity.horarioInicio;
     dto.horarioFim = entity.horarioFim;
@@ -259,23 +289,28 @@ export class CalendarioEventoRestController {
     dto.status = entity.status;
 
     // Load junction data
-    const turmaJunctions = await this.dataSource.getRepository(CalendarioAgendamentoTurmaEntity)
+    const turmaJunctions = await this.appTypeormConnection
+      .getRepository(CalendarioAgendamentoTurmaEntity)
       .find({ where: { idCalendarioAgendamentoFk: entity.id } });
     dto.turmaIds = turmaJunctions.map((j) => j.idTurmaFk);
 
-    const profJunctions = await this.dataSource.getRepository(CalendarioAgendamentoProfessorEntity)
+    const profJunctions = await this.appTypeormConnection
+      .getRepository(CalendarioAgendamentoProfessorEntity)
       .find({ where: { idCalendarioAgendamentoFk: entity.id } });
     dto.perfilIds = profJunctions.map((j) => j.idPerfilFk);
 
-    const clJunctions = await this.dataSource.getRepository(CalendarioAgendamentoCalendarioLetivoEntity)
+    const clJunctions = await this.appTypeormConnection
+      .getRepository(CalendarioAgendamentoCalendarioLetivoEntity)
       .find({ where: { idCalendarioAgendamentoFk: entity.id } });
     dto.calendarioLetivoIds = clJunctions.map((j) => j.idCalendarioLetivoFk);
 
-    const ofJunctions = await this.dataSource.getRepository(CalendarioAgendamentoOfertaFormacaoEntity)
+    const ofJunctions = await this.appTypeormConnection
+      .getRepository(CalendarioAgendamentoOfertaFormacaoEntity)
       .find({ where: { idCalendarioAgendamentoFk: entity.id } });
     dto.ofertaFormacaoIds = ofJunctions.map((j) => j.idOfertaFormacaoFk);
 
-    const modJunctions = await this.dataSource.getRepository(CalendarioAgendamentoModalidadeEntity)
+    const modJunctions = await this.appTypeormConnection
+      .getRepository(CalendarioAgendamentoModalidadeEntity)
       .find({ where: { idCalendarioAgendamentoFk: entity.id } });
     dto.modalidadeIds = modJunctions.map((j) => j.idModalidadeFk);
 

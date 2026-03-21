@@ -1,7 +1,10 @@
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import type { IBaseCrudRepository } from "@/modules/@shared";
 import type { ICalendarioLetivoDia } from "../calendario-letivo-dia";
-import type { CalendarioLetivoDiaFindOneQueryResult, CalendarioLetivoDiaListQueryResult } from "../queries";
+import type {
+  CalendarioLetivoDiaFindOneQueryResult,
+  CalendarioLetivoDiaListQueryResult,
+} from "../queries";
 
 export const ICalendarioLetivoDiaRepository = Symbol("ICalendarioLetivoDiaRepository");
 

@@ -1,7 +1,6 @@
-import { DataSource } from "typeorm";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/conn.interface";
 import {
-  APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
   type ITypeOrmPaginationConfig,
   NestJsPaginateAdapter,
@@ -14,14 +13,7 @@ import type {
   EstadoListQueryResult,
 } from "@/modules/localidades/estado/domain/queries";
 import type { IEstadoRepository } from "@/modules/localidades/estado/domain/repositories";
-import type { EstadoEntity } from "./typeorm/estado.typeorm.entity";
-import { createEstadoRepository } from "./typeorm/estado.typeorm.repository";
-
-/**
- * Adapter TypeORM que implementa o port de repositório de Estado.
- * Estende BaseTypeOrmRepositoryAdapter para reutilizar operações de leitura.
- * Estado é um recurso somente leitura (dados do IBGE).
- */
+import { EstadoEntity } from "./typeorm/estado.typeorm.entity";
 
 @DeclareImplementation()
 export class EstadoTypeOrmRepositoryAdapter
@@ -39,14 +31,15 @@ export class EstadoTypeOrmRepositoryAdapter
   protected readonly outputDtoName = "EstadoFindOneQueryResult";
 
   constructor(
-    @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
+    @DeclareDependency(IAppTypeormConnection)
+    protected readonly appTypeormConnection: IAppTypeormConnection,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();
   }
 
   protected get repository() {
-    return createEstadoRepository(this.dataSource);
+    return this.appTypeormConnection.getRepository(EstadoEntity).extend({});
   }
 
   protected getPaginateConfig(): ITypeOrmPaginationConfig<EstadoEntity> {

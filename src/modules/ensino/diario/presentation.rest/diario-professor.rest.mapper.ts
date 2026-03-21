@@ -1,9 +1,6 @@
 import { createListOutputMapper } from "@/modules/@shared/application/mappers";
 import { PerfilRestMapper } from "@/modules/acesso/perfil/presentation.rest";
-import {
-  DiarioProfessorBulkReplaceCommand,
-  DiarioProfessorListQuery,
-} from "../domain";
+import { DiarioProfessorBulkReplaceCommand, DiarioProfessorListQuery } from "../domain";
 import type { DiarioProfessorFindOneQueryResult } from "../domain/queries";
 import { DiarioRestMapper } from "./diario.rest.mapper";
 import {

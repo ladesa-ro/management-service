@@ -1,15 +1,15 @@
-import { DataSource } from "typeorm";
+import type { DataSource } from "typeorm";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import { APP_DATA_SOURCE_TOKEN } from "./providers/app-data-source.provider";
+import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/conn.interface";
 
 @DeclareImplementation()
 export class TypeormService {
   constructor(
-    @DeclareDependency(APP_DATA_SOURCE_TOKEN)
-    private appDataSource: DataSource,
+    @DeclareDependency(IAppTypeormConnection)
+    private appTypeormConnection: IAppTypeormConnection,
   ) {}
 
   async getAppDataSource(): Promise<DataSource> {
-    return this.appDataSource;
+    return this.appTypeormConnection as DataSource;
   }
 }

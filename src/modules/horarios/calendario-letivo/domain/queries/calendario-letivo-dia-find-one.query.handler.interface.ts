@@ -6,4 +6,6 @@ export type ICalendarioLetivoDiaFindOneQueryHandler = IQueryHandler<
   CalendarioLetivoDiaFindOneQuery,
   CalendarioLetivoDiaFindOneQueryResult | null
 >;
-export const ICalendarioLetivoDiaFindOneQueryHandler = Symbol("ICalendarioLetivoDiaFindOneQueryHandler");
+export const ICalendarioLetivoDiaFindOneQueryHandler = Symbol(
+  "ICalendarioLetivoDiaFindOneQueryHandler",
+);

@@ -1,8 +1,7 @@
-import { DataSource } from "typeorm";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
-import { APP_DATA_SOURCE_TOKEN } from "@/modules/@shared/infrastructure/persistence/typeorm";
+import { IAppTypeormConnection } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { Perfil } from "@/modules/acesso/perfil/domain/perfil";
 import { createPerfilRepository } from "@/modules/acesso/perfil/infrastructure.database/typeorm/perfil.typeorm.repository";
 import { Curso } from "@/modules/ensino/curso/domain/curso";
@@ -25,22 +24,25 @@ import { createEstagiarioRepository, EstagiarioMapper } from "./typeorm";
 
 @DeclareImplementation()
 export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository {
-  constructor(@DeclareDependency(APP_DATA_SOURCE_TOKEN) private readonly dataSource: DataSource) {}
+  constructor(
+    @DeclareDependency(IAppTypeormConnection)
+    private readonly appTypeormConnection: IAppTypeormConnection,
+  ) {}
 
   private get repository() {
-    return createEstagiarioRepository(this.dataSource);
+    return createEstagiarioRepository(this.appTypeormConnection);
   }
 
   private get perfilRepository() {
-    return createPerfilRepository(this.dataSource);
+    return createPerfilRepository(this.appTypeormConnection);
   }
 
   private get cursoRepository() {
-    return createCursoRepository(this.dataSource);
+    return createCursoRepository(this.appTypeormConnection);
   }
 
   private get turmaRepository() {
-    return createTurmaRepository(this.dataSource);
+    return createTurmaRepository(this.appTypeormConnection);
   }
 
   async findAll(

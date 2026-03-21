@@ -1,23 +1,15 @@
-// Base repository adapter
-export * from "./base-repository.adapter";
-// Repository factory utilities
-export * from "./create-repository-factory";
-export { APP_DATA_SOURCE_TOKEN } from "./providers/app-data-source.provider";
-
-// NOTE: entities.ts is NOT re-exported here to avoid loading all 35 entities
-// when importing unrelated utilities. Import directly from entities.ts if needed.
-
-// Pagination adapter and config
+export {
+  IAppTypeormConnection,
+  IAppTypeormConnection as AppTypeormConn,
+  IAppTypeormConnection as APP_DATA_SOURCE_TOKEN,
+} from "@/infrastructure.database/typeorm/conn.interface";
 export * from "../../../../../infrastructure.database/pagination";
-// Pagination types
 export * from "../../../../../infrastructure.database/pagination/interfaces/pagination-config.types";
-// Metadata registry for QbEfficientLoad
+export * from "./base-repository.adapter";
+export * from "./create-repository-factory";
 export * from "./metadata";
-// Query builder utilities
 export * from "./qb-efficient-load";
-// Transaction module
 export * from "./transaction";
-// TypeORM module and providers
 export * from "./typeorm.module";
 export * from "./typeorm.providers";
 export * from "./typeorm.service";

@@ -10,35 +10,36 @@ import { DeclareDependency } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7.js";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
-import { APP_DATA_SOURCE_TOKEN } from "@/modules/@shared/infrastructure/persistence/typeorm";
-import { DataSource } from "typeorm";
+import { IAppTypeormConnection } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { CalendarioLetivoEntity } from "../infrastructure.database/typeorm/calendario-letivo.typeorm.entity";
 import { CalendarioLetivoEtapaEntity } from "../infrastructure.database/typeorm/calendario-letivo-etapa.typeorm.entity";
-import { OfertaFormacaoPeriodoEtapaEntity } from "@/modules/ensino/oferta-formacao-periodo-etapa/infrastructure.database/typeorm/oferta-formacao-periodo-etapa.typeorm.entity";
+import { CalendarioLetivoFindOneInputRestDto } from "./calendario-letivo.rest.dto";
 import {
   CalendarioLetivoEtapaBulkReplaceInputRestDto,
-  CalendarioLetivoEtapaFindOneOutputRestDto,
   CalendarioLetivoEtapaListOutputRestDto,
   CalendarioLetivoEtapaParentParamsRestDto,
 } from "./calendario-letivo-etapa.rest.dto";
-import { CalendarioLetivoFindOneInputRestDto } from "./calendario-letivo.rest.dto";
 
 @ApiTags("calendarios-letivos")
 @Controller("/calendarios-letivos/:calendarioLetivoId/etapas")
 export class CalendarioLetivoEtapaRestController {
   constructor(
-    @DeclareDependency(APP_DATA_SOURCE_TOKEN) private readonly dataSource: DataSource,
+    @DeclareDependency(IAppTypeormConnection)
+    private readonly appTypeormConnection: IAppTypeormConnection,
   ) {}
 
   @Get("/")
-  @ApiOperation({ summary: "Lista etapas do calendario letivo", operationId: "calendarioLetivoEtapaFindAll" })
+  @ApiOperation({
+    summary: "Lista etapas do calendario letivo",
+    operationId: "calendarioLetivoEtapaFindAll",
+  })
   @ApiOkResponse({ type: CalendarioLetivoEtapaListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
     @AccessContextHttp() _accessContext: AccessContext,
     @Param() parentParams: CalendarioLetivoEtapaParentParamsRestDto,
   ): Promise<CalendarioLetivoEtapaListOutputRestDto> {
-    const repo = this.dataSource.getRepository(CalendarioLetivoEtapaEntity);
+    const repo = this.appTypeormConnection.getRepository(CalendarioLetivoEtapaEntity);
 
     const etapas = await repo.find({
       where: {
@@ -54,18 +55,23 @@ export class CalendarioLetivoEtapaRestController {
         id: e.id,
         ofertaFormacaoPeriodoEtapaId: e.idOfertaFormacaoPeriodoEtapaFk,
         nomeEtapa: e.ofertaFormacaoPeriodoEtapa?.nome ?? "",
-        dataInicio: e.dataInicio instanceof Date
-          ? e.dataInicio.toISOString().split("T")[0]
-          : String(e.dataInicio),
-        dataTermino: e.dataTermino instanceof Date
-          ? e.dataTermino.toISOString().split("T")[0]
-          : String(e.dataTermino),
+        dataInicio:
+          e.dataInicio instanceof Date
+            ? e.dataInicio.toISOString().split("T")[0]
+            : String(e.dataInicio),
+        dataTermino:
+          e.dataTermino instanceof Date
+            ? e.dataTermino.toISOString().split("T")[0]
+            : String(e.dataTermino),
       })),
     };
   }
 
   @Put("/")
-  @ApiOperation({ summary: "Substitui datas das etapas do calendario letivo", operationId: "calendarioLetivoEtapaBulkReplace" })
+  @ApiOperation({
+    summary: "Substitui datas das etapas do calendario letivo",
+    operationId: "calendarioLetivoEtapaBulkReplace",
+  })
   @ApiOkResponse({ type: CalendarioLetivoEtapaListOutputRestDto })
   @ApiForbiddenResponse()
   async bulkReplace(
@@ -75,7 +81,7 @@ export class CalendarioLetivoEtapaRestController {
   ): Promise<CalendarioLetivoEtapaListOutputRestDto> {
     const calendarioLetivoId = parentParams.calendarioLetivoId;
 
-    await this.dataSource.transaction(async (manager) => {
+    await this.appTypeormConnection.transaction(async (manager) => {
       const repo = manager.getRepository(CalendarioLetivoEtapaEntity);
 
       // Soft-delete existing
@@ -83,7 +89,9 @@ export class CalendarioLetivoEtapaRestController {
         .createQueryBuilder()
         .update(CalendarioLetivoEtapaEntity)
         .set({ dateDeleted: new Date() })
-        .where("id_calendario_letivo_fk = :calendarioLetivoId AND date_deleted IS NULL", { calendarioLetivoId })
+        .where("id_calendario_letivo_fk = :calendarioLetivoId AND date_deleted IS NULL", {
+          calendarioLetivoId,
+        })
         .execute();
 
       // Insert new
@@ -113,11 +121,15 @@ export class CalendarioLetivoEtapaRestController {
 @Controller("/calendarios-letivos")
 export class CalendarioLetivoDesativarRestController {
   constructor(
-    @DeclareDependency(APP_DATA_SOURCE_TOKEN) private readonly dataSource: DataSource,
+    @DeclareDependency(IAppTypeormConnection)
+    private readonly appTypeormConnection: IAppTypeormConnection,
   ) {}
 
   @Post("/:id/desativar")
-  @ApiOperation({ summary: "Desativa um calendario letivo (sem excluir)", operationId: "calendarioLetivoDesativar" })
+  @ApiOperation({
+    summary: "Desativa um calendario letivo (sem excluir)",
+    operationId: "calendarioLetivoDesativar",
+  })
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -125,7 +137,7 @@ export class CalendarioLetivoDesativarRestController {
     @AccessContextHttp() _accessContext: AccessContext,
     @Param() params: CalendarioLetivoFindOneInputRestDto,
   ): Promise<boolean> {
-    const repo = this.dataSource.getRepository(CalendarioLetivoEntity);
+    const repo = this.appTypeormConnection.getRepository(CalendarioLetivoEntity);
     const entity = await repo.findOneBy({ id: params.id });
     ensureExists(entity, "CalendarioLetivo", params.id);
 

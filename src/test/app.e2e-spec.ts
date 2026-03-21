@@ -3,7 +3,7 @@ import { Test, TestingModule } from "@nestjs/testing";
 import request from "supertest";
 import { afterAll, beforeAll, describe, it } from "vitest";
 import { IRuntimeOptions as IRuntimeOptionsToken } from "@/infrastructure.config/options/runtime/runtime-options.interface";
-import { APP_DATA_SOURCE_TOKEN } from "@/modules/@shared/infrastructure/persistence/typeorm/providers/app-data-source.provider";
+import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/conn.interface";
 import { AppController } from "@/server/nest/app.controller";
 import { AppService } from "@/server/nest/app.service";
 
@@ -53,7 +53,7 @@ describe("AppController (e2e)", () => {
           useValue: mockRuntimeOptions,
         },
         {
-          provide: APP_DATA_SOURCE_TOKEN,
+          provide: IAppTypeormConnection,
           useValue: mockDataSource,
         },
       ],

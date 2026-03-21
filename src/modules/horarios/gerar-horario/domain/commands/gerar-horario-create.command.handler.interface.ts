@@ -7,7 +7,10 @@ export interface IGerarHorarioCreateCommand {
 }
 
 export interface IGerarHorarioCreateCommandHandler {
-  execute(accessContext: AccessContext | null, command: IGerarHorarioCreateCommand): Promise<GerarHorarioEntity>;
+  execute(
+    accessContext: AccessContext | null,
+    command: IGerarHorarioCreateCommand,
+  ): Promise<GerarHorarioEntity>;
 }
 
 export const IGerarHorarioCreateCommandHandler = Symbol("IGerarHorarioCreateCommandHandler");

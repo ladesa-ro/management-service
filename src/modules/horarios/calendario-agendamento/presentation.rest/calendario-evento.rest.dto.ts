@@ -1,8 +1,4 @@
-import {
-  ApiProperty,
-  ApiPropertyOptional,
-  ApiSchema,
-} from "@/modules/@shared/presentation/rest";
+import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@/modules/@shared/presentation/rest";
 import {
   IsArray,
   IsBoolean,
@@ -44,41 +40,69 @@ export class CalendarioEventoCreateInputRestDto {
   @IsString()
   horarioFim?: string;
 
-  @ApiPropertyOptional({ type: "string", description: "Cor do evento para exibicao", nullable: true })
+  @ApiPropertyOptional({
+    type: "string",
+    description: "Cor do evento para exibicao",
+    nullable: true,
+  })
   @IsOptional()
   @IsString()
   cor?: string;
 
-  @ApiPropertyOptional({ type: "string", description: "Regra de repeticao (iCalendar RRULE)", nullable: true })
+  @ApiPropertyOptional({
+    type: "string",
+    description: "Regra de repeticao (iCalendar RRULE)",
+    nullable: true,
+  })
   @IsOptional()
   @IsString()
   repeticao?: string;
 
-  @ApiPropertyOptional({ type: "string", isArray: true, description: "IDs das turmas participantes" })
+  @ApiPropertyOptional({
+    type: "string",
+    isArray: true,
+    description: "IDs das turmas participantes",
+  })
   @IsOptional()
   @IsArray()
   @IsUUID(undefined, { each: true })
   turmaIds?: string[];
 
-  @ApiPropertyOptional({ type: "string", isArray: true, description: "IDs dos perfis (professores) participantes" })
+  @ApiPropertyOptional({
+    type: "string",
+    isArray: true,
+    description: "IDs dos perfis (professores) participantes",
+  })
   @IsOptional()
   @IsArray()
   @IsUUID(undefined, { each: true })
   perfilIds?: string[];
 
-  @ApiPropertyOptional({ type: "string", isArray: true, description: "IDs dos calendarios letivos vinculados" })
+  @ApiPropertyOptional({
+    type: "string",
+    isArray: true,
+    description: "IDs dos calendarios letivos vinculados",
+  })
   @IsOptional()
   @IsArray()
   @IsUUID(undefined, { each: true })
   calendarioLetivoIds?: string[];
 
-  @ApiPropertyOptional({ type: "string", isArray: true, description: "IDs das ofertas de formacao vinculadas" })
+  @ApiPropertyOptional({
+    type: "string",
+    isArray: true,
+    description: "IDs das ofertas de formacao vinculadas",
+  })
   @IsOptional()
   @IsArray()
   @IsUUID(undefined, { each: true })
   ofertaFormacaoIds?: string[];
 
-  @ApiPropertyOptional({ type: "string", isArray: true, description: "IDs das modalidades vinculadas" })
+  @ApiPropertyOptional({
+    type: "string",
+    isArray: true,
+    description: "IDs das modalidades vinculadas",
+  })
   @IsOptional()
   @IsArray()
   @IsUUID(undefined, { each: true })
@@ -92,32 +116,71 @@ export class CalendarioEventoCreateInputRestDto {
 @ApiSchema({ name: "CalendarioEventoUpdateInputDto" })
 export class CalendarioEventoUpdateInputRestDto {
   @ApiPropertyOptional({ type: "string" }) @IsOptional() @IsString() nome?: string;
-  @ApiPropertyOptional({ type: "string", format: "date" }) @IsOptional() @IsString() dataInicio?: string;
-  @ApiPropertyOptional({ type: "string", format: "date", nullable: true }) @IsOptional() @IsString() dataFim?: string;
+  @ApiPropertyOptional({ type: "string", format: "date" })
+  @IsOptional()
+  @IsString()
+  dataInicio?: string;
+  @ApiPropertyOptional({ type: "string", format: "date", nullable: true })
+  @IsOptional()
+  @IsString()
+  dataFim?: string;
   @ApiPropertyOptional({ type: "boolean" }) @IsOptional() @IsBoolean() diaInteiro?: boolean;
   @ApiPropertyOptional({ type: "string" }) @IsOptional() @IsString() horarioInicio?: string;
   @ApiPropertyOptional({ type: "string" }) @IsOptional() @IsString() horarioFim?: string;
   @ApiPropertyOptional({ type: "string", nullable: true }) @IsOptional() @IsString() cor?: string;
-  @ApiPropertyOptional({ type: "string", nullable: true }) @IsOptional() @IsString() repeticao?: string;
+  @ApiPropertyOptional({ type: "string", nullable: true })
+  @IsOptional()
+  @IsString()
+  repeticao?: string;
 
-  @ApiPropertyOptional({ type: "string", isArray: true, description: "IDs das turmas participantes" })
-  @IsOptional() @IsArray() @IsUUID(undefined, { each: true })
+  @ApiPropertyOptional({
+    type: "string",
+    isArray: true,
+    description: "IDs das turmas participantes",
+  })
+  @IsOptional()
+  @IsArray()
+  @IsUUID(undefined, { each: true })
   turmaIds?: string[];
 
-  @ApiPropertyOptional({ type: "string", isArray: true, description: "IDs dos perfis (professores) participantes" })
-  @IsOptional() @IsArray() @IsUUID(undefined, { each: true })
+  @ApiPropertyOptional({
+    type: "string",
+    isArray: true,
+    description: "IDs dos perfis (professores) participantes",
+  })
+  @IsOptional()
+  @IsArray()
+  @IsUUID(undefined, { each: true })
   perfilIds?: string[];
 
-  @ApiPropertyOptional({ type: "string", isArray: true, description: "IDs dos calendarios letivos vinculados" })
-  @IsOptional() @IsArray() @IsUUID(undefined, { each: true })
+  @ApiPropertyOptional({
+    type: "string",
+    isArray: true,
+    description: "IDs dos calendarios letivos vinculados",
+  })
+  @IsOptional()
+  @IsArray()
+  @IsUUID(undefined, { each: true })
   calendarioLetivoIds?: string[];
 
-  @ApiPropertyOptional({ type: "string", isArray: true, description: "IDs das ofertas de formacao vinculadas" })
-  @IsOptional() @IsArray() @IsUUID(undefined, { each: true })
+  @ApiPropertyOptional({
+    type: "string",
+    isArray: true,
+    description: "IDs das ofertas de formacao vinculadas",
+  })
+  @IsOptional()
+  @IsArray()
+  @IsUUID(undefined, { each: true })
   ofertaFormacaoIds?: string[];
 
-  @ApiPropertyOptional({ type: "string", isArray: true, description: "IDs das modalidades vinculadas" })
-  @IsOptional() @IsArray() @IsUUID(undefined, { each: true })
+  @ApiPropertyOptional({
+    type: "string",
+    isArray: true,
+    description: "IDs das modalidades vinculadas",
+  })
+  @IsOptional()
+  @IsArray()
+  @IsUUID(undefined, { each: true })
   modalidadeIds?: string[];
 }
 

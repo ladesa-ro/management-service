@@ -1,5 +1,4 @@
 import { Column, Entity, OneToMany, PrimaryColumn, type Relation } from "typeorm";
-
 import { CidadeEntity } from "@/modules/localidades/cidade/infrastructure.database/typeorm/cidade.typeorm.entity";
 
 @Entity("base_estado")

@@ -1,10 +1,5 @@
 import { Controller, Get, Query } from "@nestjs/common";
-import {
-  ApiForbiddenResponse,
-  ApiOkResponse,
-  ApiOperation,
-  ApiTags,
-} from "@nestjs/swagger";
+import { ApiForbiddenResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { IHorarioConsultaQueryHandler } from "../domain/queries";
@@ -32,9 +27,15 @@ export class HorarioConsultaRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Query() params: HorarioMescladoQueryParamsRestDto,
   ): Promise<HorarioSemanalOutputRestDto> {
-    const turmaIds = params.ids.split(",").map((id) => id.trim()).filter(Boolean);
+    const turmaIds = params.ids
+      .split(",")
+      .map((id) => id.trim())
+      .filter(Boolean);
     const professorIds = params.professorIds
-      ? params.professorIds.split(",").map((id) => id.trim()).filter(Boolean)
+      ? params.professorIds
+          .split(",")
+          .map((id) => id.trim())
+          .filter(Boolean)
       : undefined;
     return this.queryHandler.findHorarioMesclado(accessContext, {
       semana: params.semana,

@@ -5,19 +5,22 @@ import {
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7.js";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
-import { APP_DATA_SOURCE_TOKEN } from "@/modules/@shared/infrastructure/persistence/typeorm";
-import { DataSource } from "typeorm";
-import type { IGerarHorarioCreateCommand, IGerarHorarioCreateCommandHandler } from "../../domain/commands/gerar-horario-create.command.handler.interface";
+import { IAppTypeormConnection } from "@/modules/@shared/infrastructure/persistence/typeorm";
+import type {
+  IGerarHorarioCreateCommand,
+  IGerarHorarioCreateCommandHandler,
+} from "../../domain/commands/gerar-horario-create.command.handler.interface";
 import {
-  GerarHorarioEntity,
   GerarHorarioDuracao,
+  GerarHorarioEntity,
   GerarHorarioStatus,
 } from "../../infrastructure.database/typeorm/gerar-horario.typeorm.entity";
 
 @DeclareImplementation()
 export class GerarHorarioCreateCommandHandlerImpl implements IGerarHorarioCreateCommandHandler {
   constructor(
-    @DeclareDependency(APP_DATA_SOURCE_TOKEN) private readonly dataSource: DataSource,
+    @DeclareDependency(IAppTypeormConnection)
+    private readonly appTypeormConnection: IAppTypeormConnection,
     @DeclareDependency(IMessageBrokerServiceToken)
     private readonly messageBrokerService: IMessageBrokerService,
   ) {}
@@ -26,7 +29,7 @@ export class GerarHorarioCreateCommandHandlerImpl implements IGerarHorarioCreate
     _accessContext: AccessContext | null,
     command: IGerarHorarioCreateCommand,
   ): Promise<GerarHorarioEntity> {
-    const repo = this.dataSource.getRepository(GerarHorarioEntity);
+    const repo = this.appTypeormConnection.getRepository(GerarHorarioEntity);
 
     const entity = new GerarHorarioEntity();
     entity.id = generateUuidV7();

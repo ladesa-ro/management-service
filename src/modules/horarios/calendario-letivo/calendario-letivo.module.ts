@@ -7,41 +7,49 @@ import { CalendarioLetivoPermissionCheckerImpl } from "@/modules/horarios/calend
 import {
   CalendarioLetivoCreateCommandHandlerImpl,
   CalendarioLetivoDeleteCommandHandlerImpl,
-  CalendarioLetivoUpdateCommandHandlerImpl,
   CalendarioLetivoDiaUpdateCommandHandlerImpl,
+  CalendarioLetivoUpdateCommandHandlerImpl,
 } from "@/modules/horarios/calendario-letivo/application/commands";
 import {
-  CalendarioLetivoFindOneQueryHandlerImpl,
-  CalendarioLetivoListQueryHandlerImpl,
   CalendarioLetivoDiaFindOneQueryHandlerImpl,
   CalendarioLetivoDiaListQueryHandlerImpl,
+  CalendarioLetivoFindOneQueryHandlerImpl,
+  CalendarioLetivoListQueryHandlerImpl,
 } from "@/modules/horarios/calendario-letivo/application/queries";
 import { ICalendarioLetivoPermissionChecker } from "@/modules/horarios/calendario-letivo/domain/authorization";
 import {
   ICalendarioLetivoCreateCommandHandler,
   ICalendarioLetivoDeleteCommandHandler,
-  ICalendarioLetivoUpdateCommandHandler,
   ICalendarioLetivoDiaUpdateCommandHandler,
+  ICalendarioLetivoUpdateCommandHandler,
 } from "@/modules/horarios/calendario-letivo/domain/commands";
 import {
-  ICalendarioLetivoFindOneQueryHandler,
-  ICalendarioLetivoListQueryHandler,
   ICalendarioLetivoDiaFindOneQueryHandler,
   ICalendarioLetivoDiaListQueryHandler,
+  ICalendarioLetivoFindOneQueryHandler,
+  ICalendarioLetivoListQueryHandler,
 } from "@/modules/horarios/calendario-letivo/domain/queries";
 import { ICalendarioLetivoDiaRepository } from "@/modules/horarios/calendario-letivo/domain/repositories";
 import {
-  CalendarioLetivoTypeOrmRepositoryAdapter,
   CalendarioLetivoDiaTypeOrmRepositoryAdapter,
+  CalendarioLetivoTypeOrmRepositoryAdapter,
 } from "@/modules/horarios/calendario-letivo/infrastructure.database";
 import { CalendarioLetivoGraphqlResolver } from "@/modules/horarios/calendario-letivo/presentation.graphql/calendario-letivo.graphql.resolver";
 import { CalendarioLetivoRestController } from "@/modules/horarios/calendario-letivo/presentation.rest/calendario-letivo.rest.controller";
 import { CalendarioLetivoDiaRestController } from "@/modules/horarios/calendario-letivo/presentation.rest/calendario-letivo-dia.rest.controller";
-import { CalendarioLetivoEtapaRestController, CalendarioLetivoDesativarRestController } from "@/modules/horarios/calendario-letivo/presentation.rest/calendario-letivo-etapa.rest.controller";
+import {
+  CalendarioLetivoDesativarRestController,
+  CalendarioLetivoEtapaRestController,
+} from "@/modules/horarios/calendario-letivo/presentation.rest/calendario-letivo-etapa.rest.controller";
 
 @Module({
   imports: [CampusModule, OfertaFormacaoModule],
-  controllers: [CalendarioLetivoRestController, CalendarioLetivoDiaRestController, CalendarioLetivoEtapaRestController, CalendarioLetivoDesativarRestController],
+  controllers: [
+    CalendarioLetivoRestController,
+    CalendarioLetivoDiaRestController,
+    CalendarioLetivoEtapaRestController,
+    CalendarioLetivoDesativarRestController,
+  ],
   providers: [
     NestJsPaginateAdapter,
     CalendarioLetivoGraphqlResolver,
@@ -84,8 +92,14 @@ import { CalendarioLetivoEtapaRestController, CalendarioLetivoDesativarRestContr
       useClass: CalendarioLetivoDiaUpdateCommandHandlerImpl,
     },
     // Calendario Letivo Dia Queries
-    { provide: ICalendarioLetivoDiaListQueryHandler, useClass: CalendarioLetivoDiaListQueryHandlerImpl },
-    { provide: ICalendarioLetivoDiaFindOneQueryHandler, useClass: CalendarioLetivoDiaFindOneQueryHandlerImpl },
+    {
+      provide: ICalendarioLetivoDiaListQueryHandler,
+      useClass: CalendarioLetivoDiaListQueryHandlerImpl,
+    },
+    {
+      provide: ICalendarioLetivoDiaFindOneQueryHandler,
+      useClass: CalendarioLetivoDiaFindOneQueryHandlerImpl,
+    },
   ],
   exports: [ICalendarioLetivoFindOneQueryHandler],
 })

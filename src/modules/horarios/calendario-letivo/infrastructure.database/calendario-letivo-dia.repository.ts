@@ -1,10 +1,9 @@
 import { FilterOperator } from "nestjs-paginate";
-import { DataSource } from "typeorm";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import {
-  APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
+  IAppTypeormConnection,
   type ITypeOrmPaginationConfig,
   NestJsPaginateAdapter,
   paginateConfig,
@@ -34,14 +33,15 @@ export class CalendarioLetivoDiaTypeOrmRepositoryAdapter
   protected readonly outputDtoName = "CalendarioLetivoDiaFindOneQueryResult";
 
   constructor(
-    @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
+    @DeclareDependency(IAppTypeormConnection)
+    protected readonly appTypeormConnection: IAppTypeormConnection,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();
   }
 
   protected get repository() {
-    return createCalendarioLetivoDiaRepository(this.dataSource);
+    return createCalendarioLetivoDiaRepository(this.appTypeormConnection);
   }
 
   protected getPaginateConfig(): ITypeOrmPaginationConfig<CalendarioLetivoDiaEntity> {
@@ -106,7 +106,9 @@ export class CalendarioLetivoDiaTypeOrmRepositoryAdapter
     return this.findById(accessContext, { id }, selection);
   }
 
-  private mapEntityToOutput(entity: CalendarioLetivoDiaEntity): CalendarioLetivoDiaFindOneQueryResult {
+  private mapEntityToOutput(
+    entity: CalendarioLetivoDiaEntity,
+  ): CalendarioLetivoDiaFindOneQueryResult {
     return {
       id: entity.id,
       data: entity.data as any,

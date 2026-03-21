@@ -1,10 +1,9 @@
 import { FilterOperator } from "nestjs-paginate";
 import type { SelectQueryBuilder } from "typeorm";
-import { DataSource } from "typeorm";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
-  APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
+  IAppTypeormConnection,
   type ITypeOrmPaginationConfig,
   NestJsPaginateAdapter,
   paginateConfig,
@@ -39,14 +38,15 @@ export class DiarioPreferenciaAgrupamentoTypeOrmRepositoryAdapter
   protected readonly outputDtoName = "DiarioPreferenciaAgrupamentoFindOneQueryResult";
 
   constructor(
-    @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
+    @DeclareDependency(IAppTypeormConnection)
+    protected readonly appTypeormConnection: IAppTypeormConnection,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();
   }
 
   protected get repository() {
-    return createDiarioPreferenciaAgrupamentoRepository(this.dataSource);
+    return createDiarioPreferenciaAgrupamentoRepository(this.appTypeormConnection);
   }
 
   /**

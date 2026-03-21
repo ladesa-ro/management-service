@@ -26,17 +26,8 @@ import { DeclareDependency } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7.js";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
-import { APP_DATA_SOURCE_TOKEN } from "@/modules/@shared/infrastructure/persistence/typeorm";
-import { DataSource } from "typeorm";
+import { IAppTypeormConnection } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { PerfilEntity } from "@/modules/acesso/perfil/infrastructure.database/typeorm/perfil.typeorm.entity";
-import {
-  CalendarioAgendamentoEntity,
-  CalendarioAgendamentoStatus,
-  CalendarioAgendamentoTipo,
-} from "@/modules/horarios/calendario-agendamento/infrastructure.database/typeorm/calendario-agendamento.typeorm.entity";
-import { CalendarioAgendamentoProfessorEntity } from "@/modules/horarios/calendario-agendamento-professor/infrastructure.database/typeorm/calendario-agendamento-professor.typeorm.entity";
-import { IHorarioConsultaQueryHandler } from "@/modules/horarios/horario-consulta";
-import { HorarioSemanalQueryParamsRestDto, HorarioSemanalOutputRestDto } from "@/modules/horarios/horario-consulta/presentation.rest";
 import { IUsuarioCreateCommandHandler } from "@/modules/acesso/usuario/domain/commands/usuario-create.command.handler.interface";
 import { IUsuarioDeleteCommandHandler } from "@/modules/acesso/usuario/domain/commands/usuario-delete.command.handler.interface";
 import { IUsuarioUpdateCommandHandler } from "@/modules/acesso/usuario/domain/commands/usuario-update.command.handler.interface";
@@ -48,6 +39,17 @@ import { IUsuarioGetImagemCapaQueryHandler } from "@/modules/acesso/usuario/doma
 import { IUsuarioGetImagemPerfilQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-get-imagem-perfil.query.handler.interface";
 import { IUsuarioListQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-list.query.handler.interface";
 import { Usuario } from "@/modules/acesso/usuario/domain/usuario";
+import {
+  CalendarioAgendamentoEntity,
+  CalendarioAgendamentoStatus,
+  CalendarioAgendamentoTipo,
+} from "@/modules/horarios/calendario-agendamento/infrastructure.database/typeorm/calendario-agendamento.typeorm.entity";
+import { CalendarioAgendamentoProfessorEntity } from "@/modules/horarios/calendario-agendamento-professor/infrastructure.database/typeorm/calendario-agendamento-professor.typeorm.entity";
+import { IHorarioConsultaQueryHandler } from "@/modules/horarios/horario-consulta";
+import {
+  HorarioSemanalOutputRestDto,
+  HorarioSemanalQueryParamsRestDto,
+} from "@/modules/horarios/horario-consulta/presentation.rest";
 import {
   UsuarioCreateInputRestDto,
   UsuarioEnsinoOutputRestDto,
@@ -85,7 +87,8 @@ export class UsuarioRestController {
     private readonly deleteHandler: IUsuarioDeleteCommandHandler,
     @DeclareDependency(IHorarioConsultaQueryHandler)
     private readonly horarioConsultaHandler: IHorarioConsultaQueryHandler,
-    @DeclareDependency(APP_DATA_SOURCE_TOKEN) private readonly dataSource: DataSource,
+    @DeclareDependency(IAppTypeormConnection)
+    private readonly appTypeormConnection: IAppTypeormConnection,
   ) {}
 
   @Get("/")
@@ -193,8 +196,10 @@ export class UsuarioRestController {
     @Param() params: UsuarioFindOneInputRestDto,
     @Query("campusId") campusId: string,
   ): Promise<Record<string, unknown>> {
-    const perfilRepo = this.dataSource.getRepository(PerfilEntity);
-    const junctionRepo = this.dataSource.getRepository(CalendarioAgendamentoProfessorEntity);
+    const perfilRepo = this.appTypeormConnection.getRepository(PerfilEntity);
+    const junctionRepo = this.appTypeormConnection.getRepository(
+      CalendarioAgendamentoProfessorEntity,
+    );
 
     // Find perfis for this usuario on the specified campus
     const where: Record<string, unknown> = { usuario: { id: params.id } };
@@ -214,15 +219,25 @@ export class UsuarioRestController {
       .leftJoinAndSelect("cap.calendarioAgendamento", "ca")
       .where("cap.id_perfil_fk IN (:...perfilIds)", { perfilIds })
       .andWhere("ca.tipo = :tipo", { tipo: CalendarioAgendamentoTipo.INDISPONIBILIDADE })
-      .andWhere("(ca.status IS NULL OR ca.status != :inativo)", { inativo: CalendarioAgendamentoStatus.INATIVO })
+      .andWhere("(ca.status IS NULL OR ca.status != :inativo)", {
+        inativo: CalendarioAgendamentoStatus.INATIVO,
+      })
       .getMany();
 
     const disponibilidade = junctions.map((j) => {
       const ca = j.calendarioAgendamento;
       return {
         id: ca.id,
-        dataInicio: ca.dataInicio instanceof Date ? ca.dataInicio.toISOString().split("T")[0] : String(ca.dataInicio),
-        dataFim: ca.dataFim instanceof Date ? ca.dataFim.toISOString().split("T")[0] : ca.dataFim ? String(ca.dataFim) : null,
+        dataInicio:
+          ca.dataInicio instanceof Date
+            ? ca.dataInicio.toISOString().split("T")[0]
+            : String(ca.dataInicio),
+        dataFim:
+          ca.dataFim instanceof Date
+            ? ca.dataFim.toISOString().split("T")[0]
+            : ca.dataFim
+              ? String(ca.dataFim)
+              : null,
         diaInteiro: ca.diaInteiro,
         horarioInicio: ca.horarioInicio,
         horarioFim: ca.horarioFim,
@@ -245,9 +260,18 @@ export class UsuarioRestController {
     @AccessContextHttp() _accessContext: AccessContext,
     @Param() params: UsuarioFindOneInputRestDto,
     @Query("campusId") campusId: string,
-    @Body() body: { indisponibilidades: Array<{ dataInicio: string; dataFim?: string; diaInteiro: boolean; horarioInicio?: string; horarioFim?: string; repeticao?: string }> },
+    @Body() body: {
+      indisponibilidades: Array<{
+        dataInicio: string;
+        dataFim?: string;
+        diaInteiro: boolean;
+        horarioInicio?: string;
+        horarioFim?: string;
+        repeticao?: string;
+      }>;
+    },
   ): Promise<Record<string, unknown>> {
-    const perfilRepo = this.dataSource.getRepository(PerfilEntity);
+    const perfilRepo = this.appTypeormConnection.getRepository(PerfilEntity);
 
     // Find perfil for this usuario on this campus
     const where: Record<string, unknown> = { usuario: { id: params.id } };
@@ -259,7 +283,7 @@ export class UsuarioRestController {
       return { usuarioId: params.id, campusId, ok: false, error: "Perfil not found" };
     }
 
-    await this.dataSource.transaction(async (manager) => {
+    await this.appTypeormConnection.transaction(async (manager) => {
       const junctionRepo = manager.getRepository(CalendarioAgendamentoProfessorEntity);
       const agendamentoRepo = manager.getRepository(CalendarioAgendamentoEntity);
 

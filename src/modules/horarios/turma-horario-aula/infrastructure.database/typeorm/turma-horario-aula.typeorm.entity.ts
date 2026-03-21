@@ -1,6 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, type Relation } from "typeorm";
-import { HorarioAulaEntity } from "@/modules/horarios/horario-aula/infrastructure.database/typeorm/horario-aula.typeorm.entity";
 import { TurmaEntity } from "@/modules/ensino/turma/infrastructure.database/typeorm/turma.typeorm.entity";
+import { HorarioAulaEntity } from "@/modules/horarios/horario-aula/infrastructure.database/typeorm/horario-aula.typeorm.entity";
 
 @Entity("turma_horario_aula")
 export class TurmaHorarioAulaEntity {

@@ -1,6 +1,7 @@
 import { map } from "lodash";
-import type { DataSource, DeepPartial, Repository } from "typeorm";
+import type { DeepPartial, Repository } from "typeorm";
 import type { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
+import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/conn.interface";
 import type { IPaginationCriteria } from "@/modules/@shared";
 import type { ITypeOrmPaginationConfig } from "../../../../../infrastructure.database/pagination/interfaces/pagination-config.types";
 import { QbEfficientLoad } from "./qb-efficient-load";
@@ -66,7 +67,7 @@ export abstract class BaseTypeOrmRepositoryAdapter<
   /**
    * Acesso ao DataSource
    */
-  protected abstract readonly dataSource: DataSource;
+  protected abstract readonly appTypeormConnection: IAppTypeormConnection;
   /**
    * Adapter de paginação (pode ser undefined para recursos sem listagem)
    */

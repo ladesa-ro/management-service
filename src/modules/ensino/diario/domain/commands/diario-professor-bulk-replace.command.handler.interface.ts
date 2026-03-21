@@ -6,4 +6,6 @@ export type IDiarioProfessorBulkReplaceCommandHandler = ICommandHandler<
   DiarioProfessorBulkReplaceCommand,
   DiarioProfessorListQueryResult
 >;
-export const IDiarioProfessorBulkReplaceCommandHandler = Symbol("IDiarioProfessorBulkReplaceCommandHandler");
+export const IDiarioProfessorBulkReplaceCommandHandler = Symbol(
+  "IDiarioProfessorBulkReplaceCommandHandler",
+);

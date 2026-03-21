@@ -1,6 +1,6 @@
-import { appDataSourceProvider } from "./providers/app-data-source.provider";
+import { AppTypeormConnectionProvider } from "@/infrastructure.database/typeorm/conn.provider";
 
 export const typeormProviders = [
   // ...
-  appDataSourceProvider,
+  AppTypeormConnectionProvider,
 ];

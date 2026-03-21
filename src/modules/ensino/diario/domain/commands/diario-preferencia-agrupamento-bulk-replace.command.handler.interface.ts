@@ -6,4 +6,6 @@ export type IDiarioPreferenciaAgrupamentoBulkReplaceCommandHandler = ICommandHan
   DiarioPreferenciaAgrupamentoBulkReplaceCommand,
   DiarioPreferenciaAgrupamentoListQueryResult
 >;
-export const IDiarioPreferenciaAgrupamentoBulkReplaceCommandHandler = Symbol("IDiarioPreferenciaAgrupamentoBulkReplaceCommandHandler");
+export const IDiarioPreferenciaAgrupamentoBulkReplaceCommandHandler = Symbol(
+  "IDiarioPreferenciaAgrupamentoBulkReplaceCommandHandler",
+);

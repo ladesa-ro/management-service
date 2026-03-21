@@ -1,10 +1,10 @@
 import { createListOutputMapper, mapDatedFields } from "@/modules/@shared/application/mappers";
-import { DiarioRestMapper } from "./diario.rest.mapper";
 import {
   DiarioPreferenciaAgrupamentoBulkReplaceCommand,
   DiarioPreferenciaAgrupamentoListQuery,
 } from "../domain";
 import type { DiarioPreferenciaAgrupamentoFindOneQueryResult } from "../domain/queries";
+import { DiarioRestMapper } from "./diario.rest.mapper";
 import {
   DiarioPreferenciaAgrupamentoBulkReplaceInputRestDto,
   DiarioPreferenciaAgrupamentoFindOneOutputRestDto,

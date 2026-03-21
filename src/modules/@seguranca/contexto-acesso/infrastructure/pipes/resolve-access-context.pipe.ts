@@ -1,8 +1,7 @@
 import type { PipeTransform } from "@nestjs/common";
-import { DataSource } from "typeorm";
 import type { IRequestActor } from "@/domain/abstractions/request-actor";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import { APP_DATA_SOURCE_TOKEN } from "@/modules/@shared/infrastructure/persistence/typeorm";
+import { IAppTypeormConnection } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { AccessContext } from "../access-context";
 
 /**
@@ -13,11 +12,11 @@ import { AccessContext } from "../access-context";
 @DeclareImplementation()
 export class ResolveAccessContextPipe implements PipeTransform {
   constructor(
-    @DeclareDependency(APP_DATA_SOURCE_TOKEN)
-    private readonly dataSource: DataSource,
+    @DeclareDependency(IAppTypeormConnection)
+    private readonly appTypeormConnection: IAppTypeormConnection,
   ) {}
 
   async transform(requestActor: IRequestActor | null): Promise<AccessContext> {
-    return new AccessContext(this.dataSource, requestActor ?? null);
+    return new AccessContext(this.appTypeormConnection, requestActor ?? null);
   }
 }

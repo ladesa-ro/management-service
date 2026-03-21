@@ -1,15 +1,20 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists, type PersistInput } from "@/modules/@shared";
+import { ICalendarioLetivoPermissionChecker } from "../../domain/authorization";
 import { CalendarioLetivoDia, type ICalendarioLetivoDia } from "../../domain/calendario-letivo-dia";
 import type { CalendarioLetivoDiaUpdateCommand } from "../../domain/commands/calendario-letivo-dia-update.command";
 import { ICalendarioLetivoDiaUpdateCommandHandler } from "../../domain/commands/calendario-letivo-dia-update.command.handler.interface";
-import { ICalendarioLetivoPermissionChecker } from "../../domain/authorization";
-import type { CalendarioLetivoDiaFindOneQuery, CalendarioLetivoDiaFindOneQueryResult } from "../../domain/queries";
+import type {
+  CalendarioLetivoDiaFindOneQuery,
+  CalendarioLetivoDiaFindOneQueryResult,
+} from "../../domain/queries";
 import { ICalendarioLetivoDiaRepository } from "../../domain/repositories";
 
 @DeclareImplementation()
-export class CalendarioLetivoDiaUpdateCommandHandlerImpl implements ICalendarioLetivoDiaUpdateCommandHandler {
+export class CalendarioLetivoDiaUpdateCommandHandlerImpl
+  implements ICalendarioLetivoDiaUpdateCommandHandler
+{
   constructor(
     @DeclareDependency(ICalendarioLetivoDiaRepository)
     private readonly repository: ICalendarioLetivoDiaRepository,

@@ -1,8 +1,7 @@
-import { DataSource } from "typeorm";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
-import { APP_DATA_SOURCE_TOKEN } from "@/modules/@shared/infrastructure/persistence/typeorm";
+import { IAppTypeormConnection } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
   EmpresaCreateCommand,
   EmpresaUpdateCommand,
@@ -21,14 +20,17 @@ import { createEmpresaRepository, EmpresaMapper } from "./typeorm";
 
 @DeclareImplementation()
 export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
-  constructor(@DeclareDependency(APP_DATA_SOURCE_TOKEN) private readonly dataSource: DataSource) {}
+  constructor(
+    @DeclareDependency(IAppTypeormConnection)
+    private readonly appTypeormConnection: IAppTypeormConnection,
+  ) {}
 
   private get repository() {
-    return createEmpresaRepository(this.dataSource);
+    return createEmpresaRepository(this.appTypeormConnection);
   }
 
   private get enderecoRepository() {
-    return createEnderecoRepository(this.dataSource);
+    return createEnderecoRepository(this.appTypeormConnection);
   }
 
   async findAll(

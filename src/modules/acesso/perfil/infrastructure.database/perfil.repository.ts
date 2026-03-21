@@ -1,11 +1,10 @@
 import { FilterOperator } from "nestjs-paginate";
 import type { DeepPartial } from "typeorm";
-import { DataSource } from "typeorm";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { IPaginationCriteria, IPaginationResult } from "@/modules/@shared";
 import {
-  APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
+  IAppTypeormConnection,
   type ITypeOrmPaginationConfig,
   NestJsPaginateAdapter,
   paginateConfig,
@@ -37,14 +36,15 @@ export class PerfilTypeOrmRepositoryAdapter
   protected readonly outputDtoName = "PerfilFindOneQueryResult";
 
   constructor(
-    @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
+    @DeclareDependency(IAppTypeormConnection)
+    protected readonly appTypeormConnection: IAppTypeormConnection,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();
   }
 
   protected get repository() {
-    return createPerfilRepository(this.dataSource);
+    return createPerfilRepository(this.appTypeormConnection);
   }
 
   async findAllActiveByUsuarioId(

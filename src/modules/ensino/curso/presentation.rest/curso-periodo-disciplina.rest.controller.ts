@@ -1,15 +1,9 @@
 import { Body, Controller, Get, Param, Put } from "@nestjs/common";
-import {
-  ApiForbiddenResponse,
-  ApiOkResponse,
-  ApiOperation,
-  ApiTags,
-} from "@nestjs/swagger";
+import { ApiForbiddenResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7.js";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
-import { APP_DATA_SOURCE_TOKEN } from "@/modules/@shared/infrastructure/persistence/typeorm";
-import { DataSource } from "typeorm";
+import { IAppTypeormConnection } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { CursoPeriodoDisciplinaEntity } from "../infrastructure.database/typeorm/curso-periodo-disciplina.typeorm.entity";
 import {
   CursoPeriodoDisciplinaBulkReplaceInputRestDto,
@@ -22,18 +16,22 @@ import {
 @Controller("/cursos/:cursoId/disciplinas-por-periodo")
 export class CursoPeriodoDisciplinaRestController {
   constructor(
-    @DeclareDependency(APP_DATA_SOURCE_TOKEN) private readonly dataSource: DataSource,
+    @DeclareDependency(IAppTypeormConnection)
+    private readonly appTypeormConnection: IAppTypeormConnection,
   ) {}
 
   @Get("/")
-  @ApiOperation({ summary: "Lista disciplinas por periodo de um curso", operationId: "cursoDisciplinasPorPeriodoFindAll" })
+  @ApiOperation({
+    summary: "Lista disciplinas por periodo de um curso",
+    operationId: "cursoDisciplinasPorPeriodoFindAll",
+  })
   @ApiOkResponse({ type: CursoPeriodoDisciplinaListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
     @AccessContextHttp() _accessContext: AccessContext,
     @Param() parentParams: CursoPeriodoDisciplinaParentParamsRestDto,
   ): Promise<CursoPeriodoDisciplinaListOutputRestDto> {
-    const repo = this.dataSource.getRepository(CursoPeriodoDisciplinaEntity);
+    const repo = this.appTypeormConnection.getRepository(CursoPeriodoDisciplinaEntity);
 
     const entries = await repo.find({
       where: { idCursoFk: parentParams.cursoId },
@@ -64,7 +62,10 @@ export class CursoPeriodoDisciplinaRestController {
   }
 
   @Put("/")
-  @ApiOperation({ summary: "Substitui disciplinas por periodo de um curso", operationId: "cursoDisciplinasPorPeriodoBulkReplace" })
+  @ApiOperation({
+    summary: "Substitui disciplinas por periodo de um curso",
+    operationId: "cursoDisciplinasPorPeriodoBulkReplace",
+  })
   @ApiOkResponse({ type: CursoPeriodoDisciplinaListOutputRestDto })
   @ApiForbiddenResponse()
   async bulkReplace(
@@ -74,7 +75,7 @@ export class CursoPeriodoDisciplinaRestController {
   ): Promise<CursoPeriodoDisciplinaListOutputRestDto> {
     const cursoId = parentParams.cursoId;
 
-    await this.dataSource.transaction(async (manager) => {
+    await this.appTypeormConnection.transaction(async (manager) => {
       const repo = manager.getRepository(CursoPeriodoDisciplinaEntity);
 
       // Delete existing

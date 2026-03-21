@@ -1,10 +1,10 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
-import { IOfertaFormacaoNivelFormacaoFindOneQueryHandler } from "../../domain/queries/oferta-formacao-nivel-formacao-find-one.query.handler.interface";
 import type {
   OfertaFormacaoNivelFormacaoFindOneQuery,
   OfertaFormacaoNivelFormacaoFindOneQueryResult,
 } from "../../domain/queries";
+import { IOfertaFormacaoNivelFormacaoFindOneQueryHandler } from "../../domain/queries/oferta-formacao-nivel-formacao-find-one.query.handler.interface";
 import { IOfertaFormacaoNivelFormacaoRepository } from "../../domain/repositories";
 
 @DeclareImplementation()

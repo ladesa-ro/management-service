@@ -1,4 +1,3 @@
-import { Mixin } from "ts-mixer";
 import {
   EntityBaseRestDto,
   PaginatedFilterByIdRestDto,

@@ -67,9 +67,7 @@ export class AmbienteRestController {
   @ApiOperation({ summary: "Lista ambientes disponiveis", operationId: "ambienteListDisponiveis" })
   @ApiOkResponse()
   @ApiForbiddenResponse()
-  async listDisponiveis(
-    @AccessContextHttp() _accessContext: AccessContext,
-  ) {
+  async listDisponiveis(@AccessContextHttp() _accessContext: AccessContext) {
     // Placeholder: returns empty array
     return { data: [] };
   }
@@ -88,7 +86,10 @@ export class AmbienteRestController {
   }
 
   @Get("/:id/disponibilidade")
-  @ApiOperation({ summary: "Grade de disponibilidade de um ambiente", operationId: "ambienteGetDisponibilidade" })
+  @ApiOperation({
+    summary: "Grade de disponibilidade de um ambiente",
+    operationId: "ambienteGetDisponibilidade",
+  })
   @ApiOkResponse()
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()

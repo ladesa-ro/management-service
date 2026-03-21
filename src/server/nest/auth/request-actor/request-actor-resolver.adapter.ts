@@ -1,10 +1,9 @@
 import { ForbiddenException } from "@nestjs/common";
 import { pick } from "lodash";
-import { DataSource } from "typeorm";
 import { IIdentityProvider } from "@/domain/abstractions/identity-provider";
 import type { IRequestActor, IRequestActorResolver } from "@/domain/abstractions/request-actor";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import { APP_DATA_SOURCE_TOKEN } from "@/modules/@shared/infrastructure/persistence/typeorm";
+import { IAppTypeormConnection } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { createUsuarioRepository } from "@/modules/acesso/usuario/infrastructure.database/typeorm/usuario.typeorm.repository";
 
 @DeclareImplementation()
@@ -12,12 +11,12 @@ export class RequestActorResolverAdapter implements IRequestActorResolver {
   constructor(
     @DeclareDependency(IIdentityProvider)
     private readonly identityProvider: IIdentityProvider,
-    @DeclareDependency(APP_DATA_SOURCE_TOKEN)
-    private readonly dataSource: DataSource,
+    @DeclareDependency(IAppTypeormConnection)
+    private readonly appTypeormConnection: IAppTypeormConnection,
   ) {}
 
   private get usuarioRepository() {
-    return createUsuarioRepository(this.dataSource);
+    return createUsuarioRepository(this.appTypeormConnection);
   }
 
   async resolveFromAccessToken(accessToken?: string): Promise<IRequestActor> {

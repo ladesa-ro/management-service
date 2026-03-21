@@ -1,14 +1,5 @@
-import {
-  ApiProperty,
-  ApiPropertyOptional,
-  ApiSchema,
-} from "@/modules/@shared/presentation/rest";
-import {
-  IsOptional,
-  IsString,
-  IsUUID,
-  IsArray,
-} from "@/modules/@shared/presentation/shared";
+import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@/modules/@shared/presentation/rest";
+import { IsOptional, IsString } from "@/modules/@shared/presentation/shared";
 
 // ============================================================================
 // Query Params
@@ -18,7 +9,8 @@ import {
 export class HorarioSemanalQueryParamsRestDto {
   @ApiProperty({
     type: "string",
-    description: "Data da semana desejada (YYYY-MM-DD). Qualquer dia da semana; a API calcula seg-dom.",
+    description:
+      "Data da semana desejada (YYYY-MM-DD). Qualquer dia da semana; a API calcula seg-dom.",
     format: "date",
   })
   @IsString()
@@ -63,7 +55,8 @@ export class HorarioAulaItemTurmaRestDto {
 @ApiSchema({ name: "HorarioAulaItemDiarioDto" })
 export class HorarioAulaItemDiarioRestDto {
   @ApiProperty({ type: "string" }) id: string;
-  @ApiProperty({ type: () => HorarioAulaItemDisciplinaRestDto }) disciplina: HorarioAulaItemDisciplinaRestDto;
+  @ApiProperty({ type: () => HorarioAulaItemDisciplinaRestDto })
+  disciplina: HorarioAulaItemDisciplinaRestDto;
   @ApiProperty({ type: () => HorarioAulaItemTurmaRestDto }) turma: HorarioAulaItemTurmaRestDto;
 }
 
@@ -82,8 +75,10 @@ export class HorarioAulaItemProfessorPerfilRestDto {
 @ApiSchema({ name: "HorarioAulaItemProfessorDto" })
 export class HorarioAulaItemProfessorRestDto {
   @ApiProperty({ type: "string" }) id: string;
-  @ApiProperty({ type: () => HorarioAulaItemProfessorPerfilRestDto }) perfil: HorarioAulaItemProfessorPerfilRestDto;
-  @ApiProperty({ type: () => HorarioAulaItemProfessorUsuarioRestDto }) usuario: HorarioAulaItemProfessorUsuarioRestDto;
+  @ApiProperty({ type: () => HorarioAulaItemProfessorPerfilRestDto })
+  perfil: HorarioAulaItemProfessorPerfilRestDto;
+  @ApiProperty({ type: () => HorarioAulaItemProfessorUsuarioRestDto })
+  usuario: HorarioAulaItemProfessorUsuarioRestDto;
 }
 
 @ApiSchema({ name: "HorarioAulaItemAmbienteDto" })
@@ -102,9 +97,12 @@ export class HorarioAulaItemRestDto {
   @ApiProperty({ type: "string" }) horarioFim: string;
   @ApiPropertyOptional({ type: "string", nullable: true }) nome: string | null;
   @ApiPropertyOptional({ type: "string", nullable: true }) cor: string | null;
-  @ApiPropertyOptional({ type: () => HorarioAulaItemDiarioRestDto, nullable: true }) diario: HorarioAulaItemDiarioRestDto | null;
-  @ApiProperty({ type: () => [HorarioAulaItemProfessorRestDto] }) professores: HorarioAulaItemProfessorRestDto[];
-  @ApiPropertyOptional({ type: () => HorarioAulaItemAmbienteRestDto, nullable: true }) ambiente: HorarioAulaItemAmbienteRestDto | null;
+  @ApiPropertyOptional({ type: () => HorarioAulaItemDiarioRestDto, nullable: true })
+  diario: HorarioAulaItemDiarioRestDto | null;
+  @ApiProperty({ type: () => [HorarioAulaItemProfessorRestDto] })
+  professores: HorarioAulaItemProfessorRestDto[];
+  @ApiPropertyOptional({ type: () => HorarioAulaItemAmbienteRestDto, nullable: true })
+  ambiente: HorarioAulaItemAmbienteRestDto | null;
 }
 
 @ApiSchema({ name: "HorarioSemanalDiaDto" })

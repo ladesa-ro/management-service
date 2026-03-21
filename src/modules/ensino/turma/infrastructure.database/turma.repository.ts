@@ -1,9 +1,8 @@
 import { FilterOperator } from "nestjs-paginate";
-import { DataSource } from "typeorm";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
-  APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
+  IAppTypeormConnection,
   type ITypeOrmPaginationConfig,
   NestJsPaginateAdapter,
   paginateConfig,
@@ -33,14 +32,15 @@ export class TurmaTypeOrmRepositoryAdapter
   protected readonly outputDtoName = "TurmaFindOneQueryResult";
 
   constructor(
-    @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
+    @DeclareDependency(IAppTypeormConnection)
+    protected readonly appTypeormConnection: IAppTypeormConnection,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();
   }
 
   protected get repository() {
-    return createTurmaRepository(this.dataSource);
+    return createTurmaRepository(this.appTypeormConnection);
   }
 
   protected getPaginateConfig(): ITypeOrmPaginationConfig<TurmaEntity> {
@@ -69,7 +69,7 @@ export class TurmaTypeOrmRepositoryAdapter
       searchableColumns: ["id", "periodo"],
       defaultSortBy: [["periodo", "ASC"]],
       filterableColumns: {
-        "periodo": [FilterOperator.EQ],
+        periodo: [FilterOperator.EQ],
         "ambientePadraoAula.nome": [FilterOperator.EQ],
         "ambientePadraoAula.codigo": [FilterOperator.EQ],
         "ambientePadraoAula.capacidade": [

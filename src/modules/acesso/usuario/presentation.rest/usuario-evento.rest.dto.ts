@@ -1,14 +1,5 @@
-import {
-  ApiProperty,
-  ApiPropertyOptional,
-  ApiSchema,
-} from "@/modules/@shared/presentation/rest";
-import {
-  IsBoolean,
-  IsOptional,
-  IsString,
-  IsUUID,
-} from "@/modules/@shared/presentation/shared";
+import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@/modules/@shared/presentation/rest";
+import { IsBoolean, IsOptional, IsString, IsUUID } from "@/modules/@shared/presentation/shared";
 
 @ApiSchema({ name: "UsuarioEventoParentParamsDto" })
 export class UsuarioEventoParentParamsRestDto {
@@ -34,42 +25,68 @@ export class UsuarioEventoCreateInputRestDto {
   @IsString()
   nome: string;
 
-  @ApiProperty({ type: "string", format: "date" }) @IsString()
+  @ApiProperty({ type: "string", format: "date" })
+  @IsString()
   dataInicio: string;
 
-  @ApiPropertyOptional({ type: "string", format: "date", nullable: true }) @IsOptional() @IsString()
+  @ApiPropertyOptional({ type: "string", format: "date", nullable: true })
+  @IsOptional()
+  @IsString()
   dataFim?: string;
 
-  @ApiProperty({ type: "boolean" }) @IsBoolean()
+  @ApiProperty({ type: "boolean" })
+  @IsBoolean()
   diaInteiro: boolean;
 
-  @ApiPropertyOptional({ type: "string" }) @IsOptional() @IsString()
+  @ApiPropertyOptional({ type: "string" })
+  @IsOptional()
+  @IsString()
   horarioInicio?: string;
 
-  @ApiPropertyOptional({ type: "string" }) @IsOptional() @IsString()
+  @ApiPropertyOptional({ type: "string" })
+  @IsOptional()
+  @IsString()
   horarioFim?: string;
 
-  @ApiPropertyOptional({ type: "string", nullable: true }) @IsOptional() @IsString()
+  @ApiPropertyOptional({ type: "string", nullable: true })
+  @IsOptional()
+  @IsString()
   cor?: string;
 
-  @ApiPropertyOptional({ type: "string", nullable: true }) @IsOptional() @IsString()
+  @ApiPropertyOptional({ type: "string", nullable: true })
+  @IsOptional()
+  @IsString()
   repeticao?: string;
 
-  @ApiPropertyOptional({ type: "string", enum: ["EVENTO", "INDISPONIBILIDADE"], description: "Tipo: EVENTO (atividade) ou INDISPONIBILIDADE" })
-  @IsOptional() @IsString()
+  @ApiPropertyOptional({
+    type: "string",
+    enum: ["EVENTO", "INDISPONIBILIDADE"],
+    description: "Tipo: EVENTO (atividade) ou INDISPONIBILIDADE",
+  })
+  @IsOptional()
+  @IsString()
   tipo?: string;
 }
 
 @ApiSchema({ name: "UsuarioEventoUpdateInputDto" })
 export class UsuarioEventoUpdateInputRestDto {
   @ApiPropertyOptional({ type: "string" }) @IsOptional() @IsString() nome?: string;
-  @ApiPropertyOptional({ type: "string", format: "date" }) @IsOptional() @IsString() dataInicio?: string;
-  @ApiPropertyOptional({ type: "string", format: "date", nullable: true }) @IsOptional() @IsString() dataFim?: string;
+  @ApiPropertyOptional({ type: "string", format: "date" })
+  @IsOptional()
+  @IsString()
+  dataInicio?: string;
+  @ApiPropertyOptional({ type: "string", format: "date", nullable: true })
+  @IsOptional()
+  @IsString()
+  dataFim?: string;
   @ApiPropertyOptional({ type: "boolean" }) @IsOptional() @IsBoolean() diaInteiro?: boolean;
   @ApiPropertyOptional({ type: "string" }) @IsOptional() @IsString() horarioInicio?: string;
   @ApiPropertyOptional({ type: "string" }) @IsOptional() @IsString() horarioFim?: string;
   @ApiPropertyOptional({ type: "string", nullable: true }) @IsOptional() @IsString() cor?: string;
-  @ApiPropertyOptional({ type: "string", nullable: true }) @IsOptional() @IsString() repeticao?: string;
+  @ApiPropertyOptional({ type: "string", nullable: true })
+  @IsOptional()
+  @IsString()
+  repeticao?: string;
 }
 
 @ApiSchema({ name: "UsuarioEventoFindOneOutputDto" })

@@ -1,21 +1,14 @@
 import { Body, Controller, Get, Param, Put } from "@nestjs/common";
-import {
-  ApiForbiddenResponse,
-  ApiOkResponse,
-  ApiOperation,
-  ApiTags,
-} from "@nestjs/swagger";
+import { ApiForbiddenResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7.js";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
-import { APP_DATA_SOURCE_TOKEN } from "@/modules/@shared/infrastructure/persistence/typeorm";
-import { DataSource } from "typeorm";
+import { IAppTypeormConnection } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { OfertaFormacaoPeriodoEntity } from "@/modules/ensino/oferta-formacao-periodo/infrastructure.database/typeorm/oferta-formacao-periodo.typeorm.entity";
 import { OfertaFormacaoPeriodoEtapaEntity } from "@/modules/ensino/oferta-formacao-periodo-etapa/infrastructure.database/typeorm/oferta-formacao-periodo-etapa.typeorm.entity";
 import {
   OfertaFormacaoPeriodoBulkReplaceInputRestDto,
   OfertaFormacaoPeriodoFindOneOutputRestDto,
-  OfertaFormacaoPeriodoEtapaOutputRestDto,
   OfertaFormacaoPeriodoListOutputRestDto,
   OfertaFormacaoPeriodoParentParamsRestDto,
 } from "./oferta-formacao-periodo.rest.dto";
@@ -24,19 +17,23 @@ import {
 @Controller("/ofertas-formacoes/:ofertaFormacaoId/periodos")
 export class OfertaFormacaoPeriodoRestController {
   constructor(
-    @DeclareDependency(APP_DATA_SOURCE_TOKEN) private readonly dataSource: DataSource,
+    @DeclareDependency(IAppTypeormConnection)
+    private readonly appTypeormConnection: IAppTypeormConnection,
   ) {}
 
   @Get("/")
-  @ApiOperation({ summary: "Lista periodos de uma oferta de formacao", operationId: "ofertaFormacaoPeriodoFindAll" })
+  @ApiOperation({
+    summary: "Lista periodos de uma oferta de formacao",
+    operationId: "ofertaFormacaoPeriodoFindAll",
+  })
   @ApiOkResponse({ type: OfertaFormacaoPeriodoListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
     @AccessContextHttp() _accessContext: AccessContext,
     @Param() parentParams: OfertaFormacaoPeriodoParentParamsRestDto,
   ): Promise<OfertaFormacaoPeriodoListOutputRestDto> {
-    const periodoRepo = this.dataSource.getRepository(OfertaFormacaoPeriodoEntity);
-    const etapaRepo = this.dataSource.getRepository(OfertaFormacaoPeriodoEtapaEntity);
+    const periodoRepo = this.appTypeormConnection.getRepository(OfertaFormacaoPeriodoEntity);
+    const etapaRepo = this.appTypeormConnection.getRepository(OfertaFormacaoPeriodoEtapaEntity);
 
     const periodos = await periodoRepo.find({
       where: { idOfertaFormacaoFk: parentParams.ofertaFormacaoId },
@@ -65,7 +62,10 @@ export class OfertaFormacaoPeriodoRestController {
   }
 
   @Put("/")
-  @ApiOperation({ summary: "Substitui periodos e etapas de uma oferta de formacao", operationId: "ofertaFormacaoPeriodoBulkReplace" })
+  @ApiOperation({
+    summary: "Substitui periodos e etapas de uma oferta de formacao",
+    operationId: "ofertaFormacaoPeriodoBulkReplace",
+  })
   @ApiOkResponse({ type: OfertaFormacaoPeriodoListOutputRestDto })
   @ApiForbiddenResponse()
   async bulkReplace(
@@ -75,7 +75,7 @@ export class OfertaFormacaoPeriodoRestController {
   ): Promise<OfertaFormacaoPeriodoListOutputRestDto> {
     const ofertaFormacaoId = parentParams.ofertaFormacaoId;
 
-    await this.dataSource.transaction(async (manager) => {
+    await this.appTypeormConnection.transaction(async (manager) => {
       const periodoRepo = manager.getRepository(OfertaFormacaoPeriodoEntity);
       const etapaRepo = manager.getRepository(OfertaFormacaoPeriodoEtapaEntity);
 

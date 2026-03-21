@@ -1,6 +1,7 @@
 import { Module } from "@nestjs/common";
 import { AppConfigModule } from "@/infrastructure.config";
 import { AutenticacaoModule } from "@/modules/acesso/autenticacao/autenticacao.module";
+import { NotificacaoModule } from "@/modules/acesso/notificacao/notificacao.module";
 import { PerfilModule } from "@/modules/acesso/perfil/perfil.module";
 import { UsuarioModule } from "@/modules/acesso/usuario/usuario.module";
 import { AmbienteModule } from "@/modules/ambientes/ambiente/ambiente.module";
@@ -22,15 +23,14 @@ import { EstagioModule } from "@/modules/estagio/estagio/estagio.module";
 import { CalendarioAgendamentoModule } from "@/modules/horarios/calendario-agendamento/calendario-agendamento.module";
 import { CalendarioLetivoModule } from "@/modules/horarios/calendario-letivo/calendario-letivo.module";
 import { GerarHorarioModule } from "@/modules/horarios/gerar-horario/gerar-horario.module";
-import { HorarioEdicaoModule } from "@/modules/horarios/horario-edicao/horario-edicao.module";
-import { HorarioConsultaModule } from "@/modules/horarios/horario-consulta/horario-consulta.module";
-import { CidadeModule } from "@/modules/localidades/cidade/cidade.module";
-import { EnderecoModule } from "@/modules/localidades/endereco/endereco.module";
-import { NotificacaoModule } from "@/modules/acesso/notificacao/notificacao.module";
-import { EstadoModule } from "@/modules/localidades/estado/estado.module";
-import { RelatorioModule } from "@/modules/horarios/relatorio/relatorio.module";
 import { HorarioAulaModule } from "@/modules/horarios/horario-aula/horario-aula.module";
 import { HorarioAulaConfiguracaoModule } from "@/modules/horarios/horario-aula-configuracao/horario-aula-configuracao.module";
+import { HorarioConsultaModule } from "@/modules/horarios/horario-consulta/horario-consulta.module";
+import { HorarioEdicaoModule } from "@/modules/horarios/horario-edicao/horario-edicao.module";
+import { RelatorioModule } from "@/modules/horarios/relatorio/relatorio.module";
+import { CidadeModule } from "@/modules/localidades/cidade/cidade.module";
+import { EnderecoModule } from "@/modules/localidades/endereco/endereco.module";
+import { EstadoModule } from "@/modules/localidades/estado/estado.module";
 
 @Module({
   imports: [

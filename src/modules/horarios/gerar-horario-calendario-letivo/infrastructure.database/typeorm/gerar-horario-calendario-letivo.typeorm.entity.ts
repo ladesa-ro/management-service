@@ -1,6 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, type Relation } from "typeorm";
-import { GerarHorarioEntity } from "@/modules/horarios/gerar-horario/infrastructure.database/typeorm/gerar-horario.typeorm.entity";
 import { CalendarioLetivoEntity } from "@/modules/horarios/calendario-letivo/infrastructure.database/typeorm/calendario-letivo.typeorm.entity";
+import { GerarHorarioEntity } from "@/modules/horarios/gerar-horario/infrastructure.database/typeorm/gerar-horario.typeorm.entity";
 
 @Entity("gerar_horario_calendario_letivo")
 export class GerarHorarioCalendarioLetivoEntity {

@@ -1,8 +1,7 @@
 import type { IEntityBaseUuid } from "@/domain/abstractions/entities";
 import type { IdUuid, ScalarDateTimeString } from "@/domain/abstractions/scalars";
-import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7.js";
-import type { CalendarioLetivo, ICalendarioLetivo } from "./calendario-letivo";
 import { createValidator, throwIfInvalid, touchUpdated } from "@/utils/validation-utils.js";
+import type { CalendarioLetivo, ICalendarioLetivo } from "./calendario-letivo";
 
 export const TIPO_CALENDARIO_LETIVO_DIA_VALUES = [
   "Aula Presencial",

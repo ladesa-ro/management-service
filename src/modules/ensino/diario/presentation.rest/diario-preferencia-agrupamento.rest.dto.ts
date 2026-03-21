@@ -25,10 +25,8 @@ import {
   Type,
   ValidateNested,
 } from "@/modules/@shared/presentation/shared";
-import {
-  DiarioFindOneOutputRestDto,
-} from "./diario.rest.dto";
 import { DiarioPreferenciaAgrupamentoFieldsMixin } from "@/modules/ensino/diario/presentation.validations/diario-preferencia-agrupamento.validation-mixin";
+import { DiarioFindOneOutputRestDto } from "./diario.rest.dto";
 
 // ============================================================================
 // Parent Route Params

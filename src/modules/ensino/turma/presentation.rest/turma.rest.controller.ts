@@ -26,8 +26,6 @@ import type { Express } from "express";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
-import { IHorarioConsultaQueryHandler } from "@/modules/horarios/horario-consulta";
-import { HorarioSemanalQueryParamsRestDto, HorarioSemanalOutputRestDto } from "@/modules/horarios/horario-consulta/presentation.rest";
 import { ITurmaCreateCommandHandler } from "@/modules/ensino/turma/domain/commands/turma-create.command.handler.interface";
 import { ITurmaDeleteCommandHandler } from "@/modules/ensino/turma/domain/commands/turma-delete.command.handler.interface";
 import { ITurmaUpdateCommandHandler } from "@/modules/ensino/turma/domain/commands/turma-update.command.handler.interface";
@@ -36,6 +34,11 @@ import { ITurmaFindOneQueryHandler } from "@/modules/ensino/turma/domain/queries
 import { ITurmaGetImagemCapaQueryHandler } from "@/modules/ensino/turma/domain/queries/turma-get-imagem-capa.query.handler.interface";
 import { ITurmaListQueryHandler } from "@/modules/ensino/turma/domain/queries/turma-list.query.handler.interface";
 import { Turma } from "@/modules/ensino/turma/domain/turma";
+import { IHorarioConsultaQueryHandler } from "@/modules/horarios/horario-consulta";
+import {
+  HorarioSemanalOutputRestDto,
+  HorarioSemanalQueryParamsRestDto,
+} from "@/modules/horarios/horario-consulta/presentation.rest";
 import {
   TurmaCreateInputRestDto,
   TurmaFindOneInputRestDto,

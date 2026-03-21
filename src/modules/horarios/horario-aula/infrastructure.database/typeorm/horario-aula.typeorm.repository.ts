@@ -1,4 +1,7 @@
-import { createRepositoryFactory, IRepositoryFactoryOutput } from "@/infrastructure.database/typeorm/repositories/create-repository-factory";
+import {
+  createRepositoryFactory,
+  IRepositoryFactoryOutput,
+} from "@/infrastructure.database/typeorm/repositories/create-repository-factory";
 import { HorarioAulaEntity } from "./horario-aula.typeorm.entity";
 
 export const createHorarioAulaRepository = createRepositoryFactory((ds) => {

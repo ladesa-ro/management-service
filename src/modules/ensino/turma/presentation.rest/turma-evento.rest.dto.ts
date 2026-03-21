@@ -1,14 +1,5 @@
-import {
-  ApiProperty,
-  ApiPropertyOptional,
-  ApiSchema,
-} from "@/modules/@shared/presentation/rest";
-import {
-  IsBoolean,
-  IsOptional,
-  IsString,
-  IsUUID,
-} from "@/modules/@shared/presentation/shared";
+import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@/modules/@shared/presentation/rest";
+import { IsBoolean, IsOptional, IsString, IsUUID } from "@/modules/@shared/presentation/shared";
 
 // ============================================================================
 // Parent Route Params
@@ -46,23 +37,33 @@ export class TurmaEventoCreateInputRestDto {
   @IsString()
   dataInicio: string;
 
-  @ApiPropertyOptional({ type: "string", format: "date", nullable: true }) @IsOptional() @IsString()
+  @ApiPropertyOptional({ type: "string", format: "date", nullable: true })
+  @IsOptional()
+  @IsString()
   dataFim?: string;
 
   @ApiProperty({ type: "boolean", description: "Evento ocupa o dia inteiro" })
   @IsBoolean()
   diaInteiro: boolean;
 
-  @ApiPropertyOptional({ type: "string" }) @IsOptional() @IsString()
+  @ApiPropertyOptional({ type: "string" })
+  @IsOptional()
+  @IsString()
   horarioInicio?: string;
 
-  @ApiPropertyOptional({ type: "string" }) @IsOptional() @IsString()
+  @ApiPropertyOptional({ type: "string" })
+  @IsOptional()
+  @IsString()
   horarioFim?: string;
 
-  @ApiPropertyOptional({ type: "string", nullable: true }) @IsOptional() @IsString()
+  @ApiPropertyOptional({ type: "string", nullable: true })
+  @IsOptional()
+  @IsString()
   cor?: string;
 
-  @ApiPropertyOptional({ type: "string", nullable: true }) @IsOptional() @IsString()
+  @ApiPropertyOptional({ type: "string", nullable: true })
+  @IsOptional()
+  @IsString()
   repeticao?: string;
 }
 
@@ -73,13 +74,22 @@ export class TurmaEventoCreateInputRestDto {
 @ApiSchema({ name: "TurmaEventoUpdateInputDto" })
 export class TurmaEventoUpdateInputRestDto {
   @ApiPropertyOptional({ type: "string" }) @IsOptional() @IsString() nome?: string;
-  @ApiPropertyOptional({ type: "string", format: "date" }) @IsOptional() @IsString() dataInicio?: string;
-  @ApiPropertyOptional({ type: "string", format: "date", nullable: true }) @IsOptional() @IsString() dataFim?: string;
+  @ApiPropertyOptional({ type: "string", format: "date" })
+  @IsOptional()
+  @IsString()
+  dataInicio?: string;
+  @ApiPropertyOptional({ type: "string", format: "date", nullable: true })
+  @IsOptional()
+  @IsString()
+  dataFim?: string;
   @ApiPropertyOptional({ type: "boolean" }) @IsOptional() @IsBoolean() diaInteiro?: boolean;
   @ApiPropertyOptional({ type: "string" }) @IsOptional() @IsString() horarioInicio?: string;
   @ApiPropertyOptional({ type: "string" }) @IsOptional() @IsString() horarioFim?: string;
   @ApiPropertyOptional({ type: "string", nullable: true }) @IsOptional() @IsString() cor?: string;
-  @ApiPropertyOptional({ type: "string", nullable: true }) @IsOptional() @IsString() repeticao?: string;
+  @ApiPropertyOptional({ type: "string", nullable: true })
+  @IsOptional()
+  @IsString()
+  repeticao?: string;
 }
 
 // ============================================================================

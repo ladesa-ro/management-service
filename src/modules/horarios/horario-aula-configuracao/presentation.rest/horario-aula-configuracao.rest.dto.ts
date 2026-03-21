@@ -1,14 +1,5 @@
-import {
-  ApiProperty,
-  ApiPropertyOptional,
-  ApiSchema,
-} from "@/modules/@shared/presentation/rest";
-import {
-  IsBoolean,
-  IsOptional,
-  IsString,
-  IsUUID,
-} from "@/modules/@shared/presentation/shared";
+import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@/modules/@shared/presentation/rest";
+import { IsBoolean, IsOptional, IsString, IsUUID } from "@/modules/@shared/presentation/shared";
 
 @ApiSchema({ name: "HorarioAulaConfiguracaoCreateInputDto" })
 export class HorarioAulaConfiguracaoCreateInputRestDto {
@@ -16,7 +7,12 @@ export class HorarioAulaConfiguracaoCreateInputRestDto {
   @IsString()
   dataInicio: string;
 
-  @ApiPropertyOptional({ type: "string", format: "date", nullable: true, description: "Data fim da configuracao" })
+  @ApiPropertyOptional({
+    type: "string",
+    format: "date",
+    nullable: true,
+    description: "Data fim da configuracao",
+  })
   @IsOptional()
   @IsString()
   dataFim?: string;
@@ -32,10 +28,19 @@ export class HorarioAulaConfiguracaoCreateInputRestDto {
 
 @ApiSchema({ name: "HorarioAulaConfiguracaoUpdateInputDto" })
 export class HorarioAulaConfiguracaoUpdateInputRestDto {
-  @ApiPropertyOptional({ type: "string", format: "date" }) @IsOptional() @IsString() dataInicio?: string;
-  @ApiPropertyOptional({ type: "string", format: "date", nullable: true }) @IsOptional() @IsString() dataFim?: string;
+  @ApiPropertyOptional({ type: "string", format: "date" })
+  @IsOptional()
+  @IsString()
+  dataInicio?: string;
+  @ApiPropertyOptional({ type: "string", format: "date", nullable: true })
+  @IsOptional()
+  @IsString()
+  dataFim?: string;
   @ApiPropertyOptional({ type: "boolean" }) @IsOptional() @IsBoolean() ativo?: boolean;
-  @ApiPropertyOptional({ type: "string", format: "uuid" }) @IsOptional() @IsUUID() campusId?: string;
+  @ApiPropertyOptional({ type: "string", format: "uuid" })
+  @IsOptional()
+  @IsUUID()
+  campusId?: string;
 }
 
 @ApiSchema({ name: "HorarioAulaConfiguracaoFindOneParamsDto" })

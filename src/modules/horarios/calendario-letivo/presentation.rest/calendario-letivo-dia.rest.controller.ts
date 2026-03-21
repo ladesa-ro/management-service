@@ -36,7 +36,10 @@ export class CalendarioLetivoDiaRestController {
   ) {}
 
   @Get("/")
-  @ApiOperation({ summary: "Lista dias de um calendario letivo", operationId: "calendarioLetivoDiaFindAll" })
+  @ApiOperation({
+    summary: "Lista dias de um calendario letivo",
+    operationId: "calendarioLetivoDiaFindAll",
+  })
   @ApiOkResponse({ type: CalendarioLetivoDiaListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
@@ -68,7 +71,10 @@ export class CalendarioLetivoDiaRestController {
   }
 
   @Patch("/:data")
-  @ApiOperation({ summary: "Atualiza um dia de calendario", operationId: "calendarioLetivoDiaUpdate" })
+  @ApiOperation({
+    summary: "Atualiza um dia de calendario",
+    operationId: "calendarioLetivoDiaUpdate",
+  })
   @ApiOkResponse({ type: CalendarioLetivoDiaFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()

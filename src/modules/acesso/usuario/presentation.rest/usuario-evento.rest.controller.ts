@@ -11,15 +11,14 @@ import { DeclareDependency } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7.js";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
-import { APP_DATA_SOURCE_TOKEN } from "@/modules/@shared/infrastructure/persistence/typeorm";
-import { DataSource } from "typeorm";
+import { IAppTypeormConnection } from "@/modules/@shared/infrastructure/persistence/typeorm";
+import { PerfilEntity } from "@/modules/acesso/perfil/infrastructure.database/typeorm/perfil.typeorm.entity";
 import {
   CalendarioAgendamentoEntity,
   CalendarioAgendamentoStatus,
   CalendarioAgendamentoTipo,
 } from "@/modules/horarios/calendario-agendamento/infrastructure.database/typeorm/calendario-agendamento.typeorm.entity";
 import { CalendarioAgendamentoProfessorEntity } from "@/modules/horarios/calendario-agendamento-professor/infrastructure.database/typeorm/calendario-agendamento-professor.typeorm.entity";
-import { PerfilEntity } from "@/modules/acesso/perfil/infrastructure.database/typeorm/perfil.typeorm.entity";
 import {
   UsuarioEventoCreateInputRestDto,
   UsuarioEventoFindOneOutputRestDto,
@@ -33,27 +32,33 @@ import {
 @Controller("/usuarios/:id/eventos")
 export class UsuarioEventoRestController {
   constructor(
-    @DeclareDependency(APP_DATA_SOURCE_TOKEN) private readonly dataSource: DataSource,
+    @DeclareDependency(IAppTypeormConnection)
+    private readonly appTypeormConnection: IAppTypeormConnection,
   ) {}
 
   private async findPerfilIdForUsuario(usuarioId: string): Promise<string | null> {
-    const perfilRepo = this.dataSource.getRepository(PerfilEntity);
+    const perfilRepo = this.appTypeormConnection.getRepository(PerfilEntity);
     const perfil = await perfilRepo.findOneBy({ usuario: { id: usuarioId } as any });
     return perfil?.id ?? null;
   }
 
   @Get("/")
-  @ApiOperation({ summary: "Lista eventos/agenda do usuario (professor)", operationId: "usuarioEventoFindAll" })
+  @ApiOperation({
+    summary: "Lista eventos/agenda do usuario (professor)",
+    operationId: "usuarioEventoFindAll",
+  })
   @ApiOkResponse({ type: UsuarioEventoListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
     @AccessContextHttp() _accessContext: AccessContext,
     @Param() parentParams: UsuarioEventoParentParamsRestDto,
   ): Promise<UsuarioEventoListOutputRestDto> {
-    const junctionRepo = this.dataSource.getRepository(CalendarioAgendamentoProfessorEntity);
+    const junctionRepo = this.appTypeormConnection.getRepository(
+      CalendarioAgendamentoProfessorEntity,
+    );
 
     // Find all perfils for this usuario
-    const perfilRepo = this.dataSource.getRepository(PerfilEntity);
+    const perfilRepo = this.appTypeormConnection.getRepository(PerfilEntity);
     const perfis = await perfilRepo.find({
       where: { usuario: { id: parentParams.id } as any },
     });
@@ -77,7 +82,10 @@ export class UsuarioEventoRestController {
   }
 
   @Post("/")
-  @ApiOperation({ summary: "Cria evento/indisponibilidade escopado ao usuario", operationId: "usuarioEventoCreate" })
+  @ApiOperation({
+    summary: "Cria evento/indisponibilidade escopado ao usuario",
+    operationId: "usuarioEventoCreate",
+  })
   @ApiCreatedResponse({ type: UsuarioEventoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   async create(
@@ -85,8 +93,10 @@ export class UsuarioEventoRestController {
     @Param() parentParams: UsuarioEventoParentParamsRestDto,
     @Body() dto: UsuarioEventoCreateInputRestDto,
   ): Promise<UsuarioEventoFindOneOutputRestDto> {
-    const agendamentoRepo = this.dataSource.getRepository(CalendarioAgendamentoEntity);
-    const junctionRepo = this.dataSource.getRepository(CalendarioAgendamentoProfessorEntity);
+    const agendamentoRepo = this.appTypeormConnection.getRepository(CalendarioAgendamentoEntity);
+    const junctionRepo = this.appTypeormConnection.getRepository(
+      CalendarioAgendamentoProfessorEntity,
+    );
 
     // Resolve perfil for this usuario
     const perfilId = await this.findPerfilIdForUsuario(parentParams.id);
@@ -95,9 +105,10 @@ export class UsuarioEventoRestController {
       // For now, use the usuario ID as a fallback
     }
 
-    const tipo = dto.tipo === "INDISPONIBILIDADE"
-      ? CalendarioAgendamentoTipo.INDISPONIBILIDADE
-      : CalendarioAgendamentoTipo.EVENTO;
+    const tipo =
+      dto.tipo === "INDISPONIBILIDADE"
+        ? CalendarioAgendamentoTipo.INDISPONIBILIDADE
+        : CalendarioAgendamentoTipo.EVENTO;
 
     const evento = new CalendarioAgendamentoEntity();
     evento.id = generateUuidV7();
@@ -136,7 +147,7 @@ export class UsuarioEventoRestController {
     @Param() params: UsuarioEventoItemParamsRestDto,
     @Body() dto: UsuarioEventoUpdateInputRestDto,
   ): Promise<UsuarioEventoFindOneOutputRestDto> {
-    const agendamentoRepo = this.dataSource.getRepository(CalendarioAgendamentoEntity);
+    const agendamentoRepo = this.appTypeormConnection.getRepository(CalendarioAgendamentoEntity);
     const entity = await agendamentoRepo.findOneBy({ id: params.eventoId });
     ensureExists(entity, "UsuarioEvento", params.eventoId);
 
@@ -162,10 +173,12 @@ export class UsuarioEventoRestController {
     @AccessContextHttp() _accessContext: AccessContext,
     @Param() params: UsuarioEventoItemParamsRestDto,
   ): Promise<boolean> {
-    const junctionRepo = this.dataSource.getRepository(CalendarioAgendamentoProfessorEntity);
+    const junctionRepo = this.appTypeormConnection.getRepository(
+      CalendarioAgendamentoProfessorEntity,
+    );
 
     // Find and remove junction entries for this event associated with the user's perfils
-    const perfilRepo = this.dataSource.getRepository(PerfilEntity);
+    const perfilRepo = this.appTypeormConnection.getRepository(PerfilEntity);
     const perfis = await perfilRepo.find({
       where: { usuario: { id: params.id } as any },
     });
@@ -185,12 +198,16 @@ export class UsuarioEventoRestController {
       id: entity.id,
       nome: entity.nome,
       tipo: entity.tipo,
-      dataInicio: entity.dataInicio instanceof Date
-        ? entity.dataInicio.toISOString().split("T")[0]
-        : String(entity.dataInicio),
-      dataFim: entity.dataFim instanceof Date
-        ? entity.dataFim.toISOString().split("T")[0]
-        : entity.dataFim ? String(entity.dataFim) : null,
+      dataInicio:
+        entity.dataInicio instanceof Date
+          ? entity.dataInicio.toISOString().split("T")[0]
+          : String(entity.dataInicio),
+      dataFim:
+        entity.dataFim instanceof Date
+          ? entity.dataFim.toISOString().split("T")[0]
+          : entity.dataFim
+            ? String(entity.dataFim)
+            : null,
       diaInteiro: entity.diaInteiro,
       horarioInicio: entity.horarioInicio,
       horarioFim: entity.horarioFim,

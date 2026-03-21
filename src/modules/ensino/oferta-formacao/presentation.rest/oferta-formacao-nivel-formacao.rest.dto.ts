@@ -20,12 +20,8 @@ import {
   Type,
   ValidateNested,
 } from "@/modules/@shared/presentation/shared";
-import {
-  NivelFormacaoFindOneOutputRestDto,
-} from "@/modules/ensino/nivel-formacao/presentation.rest";
-import {
-  OfertaFormacaoFindOneOutputRestDto,
-} from "./oferta-formacao.rest.dto";
+import { NivelFormacaoFindOneOutputRestDto } from "@/modules/ensino/nivel-formacao/presentation.rest";
+import { OfertaFormacaoFindOneOutputRestDto } from "./oferta-formacao.rest.dto";
 
 // ============================================================================
 // Parent Route Params
@@ -65,7 +61,10 @@ export class OfertaFormacaoNivelFormacaoFindOneOutputRestDto extends EntityBaseR
   @Type(() => NivelFormacaoFindOneOutputRestDto)
   nivelFormacao: NivelFormacaoFindOneOutputRestDto;
 
-  @ApiProperty({ type: () => OfertaFormacaoFindOneOutputRestDto, description: "Oferta de formacao vinculada" })
+  @ApiProperty({
+    type: () => OfertaFormacaoFindOneOutputRestDto,
+    description: "Oferta de formacao vinculada",
+  })
   @ValidateNested()
   @Type(() => OfertaFormacaoFindOneOutputRestDto)
   ofertaFormacao: OfertaFormacaoFindOneOutputRestDto;

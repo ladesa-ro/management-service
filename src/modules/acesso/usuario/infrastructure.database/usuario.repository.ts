@@ -1,9 +1,8 @@
 import { FilterOperator } from "nestjs-paginate";
-import { DataSource } from "typeorm";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
-  APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
+  IAppTypeormConnection,
   type ITypeOrmPaginationConfig,
   NestJsPaginateAdapter,
   paginateConfig,
@@ -37,14 +36,15 @@ export class UsuarioTypeOrmRepositoryAdapter
   protected readonly outputDtoName = "UsuarioFindOneQueryResult";
 
   constructor(
-    @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
+    @DeclareDependency(IAppTypeormConnection)
+    protected readonly appTypeormConnection: IAppTypeormConnection,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();
   }
 
   protected get repository() {
-    return createUsuarioRepository(this.dataSource);
+    return createUsuarioRepository(this.appTypeormConnection);
   }
 
   async findByMatricula(
@@ -120,7 +120,7 @@ export class UsuarioTypeOrmRepositoryAdapter
       }>;
     }>;
   }> {
-    const disciplinas = await createDisciplinaRepository(this.dataSource).find({
+    const disciplinas = await createDisciplinaRepository(this.appTypeormConnection).find({
       where: {
         diarios: {
           ativo: true,
@@ -160,7 +160,7 @@ export class UsuarioTypeOrmRepositoryAdapter
         cursos: [],
       };
 
-      const cursos = await createCursoRepository(this.dataSource).find({
+      const cursos = await createCursoRepository(this.appTypeormConnection).find({
         where: {
           turmas: {
             diarios: {
@@ -192,7 +192,7 @@ export class UsuarioTypeOrmRepositoryAdapter
           turmas: [],
         };
 
-        const turmas = await createTurmaRepository(this.dataSource).find({
+        const turmas = await createTurmaRepository(this.appTypeormConnection).find({
           where: [
             {
               curso: {

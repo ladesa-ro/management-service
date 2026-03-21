@@ -1,8 +1,8 @@
 import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import {
-  EstadoFindOneQueryHandlerImpl,
-  EstadoListQueryHandlerImpl,
+  EstadoFindOneQueryHandler,
+  EstadoListQueryHandler,
 } from "@/modules/localidades/estado/application/queries";
 import {
   IEstadoFindOneQueryHandler,
@@ -24,8 +24,8 @@ import { EstadoRestController } from "@/modules/localidades/estado/presentation.
       useClass: EstadoTypeOrmRepositoryAdapter,
     },
     // Queries
-    { provide: IEstadoListQueryHandler, useClass: EstadoListQueryHandlerImpl },
-    { provide: IEstadoFindOneQueryHandler, useClass: EstadoFindOneQueryHandlerImpl },
+    { provide: IEstadoListQueryHandler, useClass: EstadoListQueryHandler },
+    { provide: IEstadoFindOneQueryHandler, useClass: EstadoFindOneQueryHandler },
   ],
   exports: [],
 })

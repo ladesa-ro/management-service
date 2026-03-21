@@ -6,44 +6,48 @@ import { DiarioPermissionCheckerImpl } from "@/modules/ensino/diario/application
 import {
   DiarioCreateCommandHandlerImpl,
   DiarioDeleteCommandHandlerImpl,
-  DiarioUpdateCommandHandlerImpl,
-  DiarioProfessorBulkReplaceCommandHandlerImpl,
   DiarioPreferenciaAgrupamentoBulkReplaceCommandHandlerImpl,
+  DiarioProfessorBulkReplaceCommandHandlerImpl,
+  DiarioUpdateCommandHandlerImpl,
 } from "@/modules/ensino/diario/application/commands";
 import {
   DiarioFindOneQueryHandlerImpl,
   DiarioListQueryHandlerImpl,
-  DiarioProfessorFindOneQueryHandlerImpl,
-  DiarioProfessorListQueryHandlerImpl,
   DiarioPreferenciaAgrupamentoFindOneQueryHandlerImpl,
   DiarioPreferenciaAgrupamentoListQueryHandlerImpl,
+  DiarioProfessorFindOneQueryHandlerImpl,
+  DiarioProfessorListQueryHandlerImpl,
 } from "@/modules/ensino/diario/application/queries";
 import { IDiarioPermissionChecker } from "@/modules/ensino/diario/domain/authorization";
 import {
   IDiarioCreateCommandHandler,
   IDiarioDeleteCommandHandler,
-  IDiarioUpdateCommandHandler,
-  IDiarioProfessorBulkReplaceCommandHandler,
   IDiarioPreferenciaAgrupamentoBulkReplaceCommandHandler,
+  IDiarioProfessorBulkReplaceCommandHandler,
+  IDiarioUpdateCommandHandler,
 } from "@/modules/ensino/diario/domain/commands";
 import {
   IDiarioFindOneQueryHandler,
   IDiarioListQueryHandler,
-  IDiarioProfessorFindOneQueryHandler,
-  IDiarioProfessorListQueryHandler,
   IDiarioPreferenciaAgrupamentoFindOneQueryHandler,
   IDiarioPreferenciaAgrupamentoListQueryHandler,
+  IDiarioProfessorFindOneQueryHandler,
+  IDiarioProfessorListQueryHandler,
 } from "@/modules/ensino/diario/domain/queries";
-import { IDiarioRepository, IDiarioProfessorRepository, IDiarioPreferenciaAgrupamentoRepository } from "@/modules/ensino/diario/domain/repositories";
 import {
-  DiarioTypeOrmRepositoryAdapter,
-  DiarioProfessorTypeOrmRepositoryAdapter,
+  IDiarioPreferenciaAgrupamentoRepository,
+  IDiarioProfessorRepository,
+  IDiarioRepository,
+} from "@/modules/ensino/diario/domain/repositories";
+import {
   DiarioPreferenciaAgrupamentoTypeOrmRepositoryAdapter,
+  DiarioProfessorTypeOrmRepositoryAdapter,
+  DiarioTypeOrmRepositoryAdapter,
 } from "@/modules/ensino/diario/infrastructure.database";
 import { DiarioGraphqlResolver } from "@/modules/ensino/diario/presentation.graphql/diario.graphql.resolver";
 import { DiarioRestController } from "@/modules/ensino/diario/presentation.rest/diario.rest.controller";
-import { DiarioProfessorRestController } from "@/modules/ensino/diario/presentation.rest/diario-professor.rest.controller";
 import { DiarioPreferenciaAgrupamentoRestController } from "@/modules/ensino/diario/presentation.rest/diario-preferencia-agrupamento.rest.controller";
+import { DiarioProfessorRestController } from "@/modules/ensino/diario/presentation.rest/diario-professor.rest.controller";
 import { DisciplinaModule } from "@/modules/ensino/disciplina/disciplina.module";
 import { TurmaModule } from "@/modules/ensino/turma/turma.module";
 import { CalendarioLetivoModule } from "@/modules/horarios/calendario-letivo/calendario-letivo.module";
@@ -53,7 +57,11 @@ import { CalendarioLetivoModule } from "@/modules/horarios/calendario-letivo/cal
  */
 @Module({
   imports: [CalendarioLetivoModule, TurmaModule, AmbienteModule, DisciplinaModule, PerfilModule],
-  controllers: [DiarioRestController, DiarioProfessorRestController, DiarioPreferenciaAgrupamentoRestController],
+  controllers: [
+    DiarioRestController,
+    DiarioProfessorRestController,
+    DiarioPreferenciaAgrupamentoRestController,
+  ],
   providers: [
     NestJsPaginateAdapter,
     DiarioGraphqlResolver,
@@ -80,16 +88,31 @@ import { CalendarioLetivoModule } from "@/modules/horarios/calendario-letivo/cal
     { provide: IDiarioFindOneQueryHandler, useClass: DiarioFindOneQueryHandlerImpl },
 
     // DiarioProfessor Commands
-    { provide: IDiarioProfessorBulkReplaceCommandHandler, useClass: DiarioProfessorBulkReplaceCommandHandlerImpl },
+    {
+      provide: IDiarioProfessorBulkReplaceCommandHandler,
+      useClass: DiarioProfessorBulkReplaceCommandHandlerImpl,
+    },
     // DiarioProfessor Queries
     { provide: IDiarioProfessorListQueryHandler, useClass: DiarioProfessorListQueryHandlerImpl },
-    { provide: IDiarioProfessorFindOneQueryHandler, useClass: DiarioProfessorFindOneQueryHandlerImpl },
+    {
+      provide: IDiarioProfessorFindOneQueryHandler,
+      useClass: DiarioProfessorFindOneQueryHandlerImpl,
+    },
 
     // DiarioPreferenciaAgrupamento Commands
-    { provide: IDiarioPreferenciaAgrupamentoBulkReplaceCommandHandler, useClass: DiarioPreferenciaAgrupamentoBulkReplaceCommandHandlerImpl },
+    {
+      provide: IDiarioPreferenciaAgrupamentoBulkReplaceCommandHandler,
+      useClass: DiarioPreferenciaAgrupamentoBulkReplaceCommandHandlerImpl,
+    },
     // DiarioPreferenciaAgrupamento Queries
-    { provide: IDiarioPreferenciaAgrupamentoListQueryHandler, useClass: DiarioPreferenciaAgrupamentoListQueryHandlerImpl },
-    { provide: IDiarioPreferenciaAgrupamentoFindOneQueryHandler, useClass: DiarioPreferenciaAgrupamentoFindOneQueryHandlerImpl },
+    {
+      provide: IDiarioPreferenciaAgrupamentoListQueryHandler,
+      useClass: DiarioPreferenciaAgrupamentoListQueryHandlerImpl,
+    },
+    {
+      provide: IDiarioPreferenciaAgrupamentoFindOneQueryHandler,
+      useClass: DiarioPreferenciaAgrupamentoFindOneQueryHandlerImpl,
+    },
   ],
   exports: [IDiarioFindOneQueryHandler],
 })

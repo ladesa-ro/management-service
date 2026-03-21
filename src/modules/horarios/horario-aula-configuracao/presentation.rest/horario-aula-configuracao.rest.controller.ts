@@ -11,8 +11,7 @@ import { DeclareDependency } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7.js";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
-import { APP_DATA_SOURCE_TOKEN } from "@/modules/@shared/infrastructure/persistence/typeorm";
-import { DataSource } from "typeorm";
+import { IAppTypeormConnection } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { HorarioAulaConfiguracaoEntity } from "../infrastructure.database/typeorm/horario-aula-configuracao.typeorm.entity";
 import {
   HorarioAulaConfiguracaoCreateInputRestDto,
@@ -26,18 +25,22 @@ import {
 @Controller("/horarios-aula-configuracoes")
 export class HorarioAulaConfiguracaoRestController {
   constructor(
-    @DeclareDependency(APP_DATA_SOURCE_TOKEN) private readonly dataSource: DataSource,
+    @DeclareDependency(IAppTypeormConnection)
+    private readonly appTypeormConnection: IAppTypeormConnection,
   ) {}
 
   @Get("/")
-  @ApiOperation({ summary: "Lista configuracoes de horario de aula", operationId: "horarioAulaConfiguracaoFindAll" })
+  @ApiOperation({
+    summary: "Lista configuracoes de horario de aula",
+    operationId: "horarioAulaConfiguracaoFindAll",
+  })
   @ApiOkResponse({ type: HorarioAulaConfiguracaoListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
     @AccessContextHttp() _accessContext: AccessContext,
     @Query("campusId") campusId?: string,
   ): Promise<HorarioAulaConfiguracaoListOutputRestDto> {
-    const repo = this.dataSource.getRepository(HorarioAulaConfiguracaoEntity);
+    const repo = this.appTypeormConnection.getRepository(HorarioAulaConfiguracaoEntity);
 
     const where: Record<string, unknown> = {};
     if (campusId) {
@@ -55,7 +58,10 @@ export class HorarioAulaConfiguracaoRestController {
   }
 
   @Get("/:id")
-  @ApiOperation({ summary: "Busca uma configuracao de horario de aula por ID", operationId: "horarioAulaConfiguracaoFindById" })
+  @ApiOperation({
+    summary: "Busca uma configuracao de horario de aula por ID",
+    operationId: "horarioAulaConfiguracaoFindById",
+  })
   @ApiOkResponse({ type: HorarioAulaConfiguracaoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -63,21 +69,24 @@ export class HorarioAulaConfiguracaoRestController {
     @AccessContextHttp() _accessContext: AccessContext,
     @Param() params: HorarioAulaConfiguracaoFindOneParamsRestDto,
   ): Promise<HorarioAulaConfiguracaoFindOneOutputRestDto> {
-    const repo = this.dataSource.getRepository(HorarioAulaConfiguracaoEntity);
+    const repo = this.appTypeormConnection.getRepository(HorarioAulaConfiguracaoEntity);
     const entity = await repo.findOneBy({ id: params.id });
     ensureExists(entity, "HorarioAulaConfiguracao", params.id);
     return this.toOutputDto(entity!);
   }
 
   @Post("/")
-  @ApiOperation({ summary: "Cria uma configuracao de horario de aula", operationId: "horarioAulaConfiguracaoCreate" })
+  @ApiOperation({
+    summary: "Cria uma configuracao de horario de aula",
+    operationId: "horarioAulaConfiguracaoCreate",
+  })
   @ApiCreatedResponse({ type: HorarioAulaConfiguracaoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   async create(
     @AccessContextHttp() _accessContext: AccessContext,
     @Body() dto: HorarioAulaConfiguracaoCreateInputRestDto,
   ): Promise<HorarioAulaConfiguracaoFindOneOutputRestDto> {
-    const repo = this.dataSource.getRepository(HorarioAulaConfiguracaoEntity);
+    const repo = this.appTypeormConnection.getRepository(HorarioAulaConfiguracaoEntity);
     const entity = new HorarioAulaConfiguracaoEntity();
     entity.id = generateUuidV7();
     entity.dataInicio = new Date(dto.dataInicio);
@@ -90,7 +99,10 @@ export class HorarioAulaConfiguracaoRestController {
   }
 
   @Patch("/:id")
-  @ApiOperation({ summary: "Atualiza uma configuracao de horario de aula", operationId: "horarioAulaConfiguracaoUpdate" })
+  @ApiOperation({
+    summary: "Atualiza uma configuracao de horario de aula",
+    operationId: "horarioAulaConfiguracaoUpdate",
+  })
   @ApiOkResponse({ type: HorarioAulaConfiguracaoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -99,7 +111,7 @@ export class HorarioAulaConfiguracaoRestController {
     @Param() params: HorarioAulaConfiguracaoFindOneParamsRestDto,
     @Body() dto: HorarioAulaConfiguracaoUpdateInputRestDto,
   ): Promise<HorarioAulaConfiguracaoFindOneOutputRestDto> {
-    const repo = this.dataSource.getRepository(HorarioAulaConfiguracaoEntity);
+    const repo = this.appTypeormConnection.getRepository(HorarioAulaConfiguracaoEntity);
     const entity = await repo.findOneBy({ id: params.id });
     ensureExists(entity, "HorarioAulaConfiguracao", params.id);
 
@@ -113,7 +125,10 @@ export class HorarioAulaConfiguracaoRestController {
   }
 
   @Delete("/:id")
-  @ApiOperation({ summary: "Remove uma configuracao de horario de aula", operationId: "horarioAulaConfiguracaoDelete" })
+  @ApiOperation({
+    summary: "Remove uma configuracao de horario de aula",
+    operationId: "horarioAulaConfiguracaoDelete",
+  })
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -121,14 +136,16 @@ export class HorarioAulaConfiguracaoRestController {
     @AccessContextHttp() _accessContext: AccessContext,
     @Param() params: HorarioAulaConfiguracaoFindOneParamsRestDto,
   ): Promise<boolean> {
-    const repo = this.dataSource.getRepository(HorarioAulaConfiguracaoEntity);
+    const repo = this.appTypeormConnection.getRepository(HorarioAulaConfiguracaoEntity);
     const entity = await repo.findOneBy({ id: params.id });
     ensureExists(entity, "HorarioAulaConfiguracao", params.id);
     await repo.remove(entity!);
     return true;
   }
 
-  private toOutputDto(entity: HorarioAulaConfiguracaoEntity): HorarioAulaConfiguracaoFindOneOutputRestDto {
+  private toOutputDto(
+    entity: HorarioAulaConfiguracaoEntity,
+  ): HorarioAulaConfiguracaoFindOneOutputRestDto {
     const formatDate = (d: Date | null) => {
       if (!d) return null;
       return d instanceof Date ? d.toISOString().split("T")[0] : String(d);

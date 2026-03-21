@@ -1,6 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, type Relation } from "typeorm";
-import { CursoEntity } from "./curso.typeorm.entity";
 import { DisciplinaEntity } from "@/modules/ensino/disciplina/infrastructure.database/typeorm/disciplina.typeorm.entity";
+import { CursoEntity } from "./curso.typeorm.entity";
 
 @Entity("curso_periodo_disciplina")
 export class CursoPeriodoDisciplinaEntity {

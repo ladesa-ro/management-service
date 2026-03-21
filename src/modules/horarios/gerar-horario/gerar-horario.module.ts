@@ -1,16 +1,16 @@
 import { Module } from "@nestjs/common";
 import { MessageBrokerModule } from "@/infrastructure.message-broker";
 import {
-  GerarHorarioPublishTimetableRequestCommandHandlerImpl,
-  GerarHorarioCreateCommandHandlerImpl,
   GerarHorarioAceitarCommandHandlerImpl,
+  GerarHorarioCreateCommandHandlerImpl,
+  GerarHorarioPublishTimetableRequestCommandHandlerImpl,
   GerarHorarioRejeitarCommandHandlerImpl,
 } from "@/modules/horarios/gerar-horario/application/commands";
 import { GerarHorarioFindOneQueryHandlerImpl } from "@/modules/horarios/gerar-horario/application/queries";
 import {
-  IGerarHorarioPublishTimetableRequestCommandHandler,
-  IGerarHorarioCreateCommandHandler,
   IGerarHorarioAceitarCommandHandler,
+  IGerarHorarioCreateCommandHandler,
+  IGerarHorarioPublishTimetableRequestCommandHandler,
   IGerarHorarioRejeitarCommandHandler,
 } from "@/modules/horarios/gerar-horario/domain/commands";
 import { IGerarHorarioFindOneQueryHandler } from "@/modules/horarios/gerar-horario/domain/queries";

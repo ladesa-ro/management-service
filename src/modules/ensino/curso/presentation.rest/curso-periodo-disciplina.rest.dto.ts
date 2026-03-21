@@ -1,8 +1,4 @@
-import {
-  ApiProperty,
-  ApiPropertyOptional,
-  ApiSchema,
-} from "@/modules/@shared/presentation/rest";
+import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@/modules/@shared/presentation/rest";
 import {
   IsArray,
   IsInt,
@@ -40,7 +36,10 @@ export class CursoPeriodoDisciplinaPeriodoItemRestDto {
   @Min(1)
   numeroPeriodo: number;
 
-  @ApiProperty({ type: () => [CursoPeriodoDisciplinaItemRestDto], description: "Disciplinas do periodo" })
+  @ApiProperty({
+    type: () => [CursoPeriodoDisciplinaItemRestDto],
+    description: "Disciplinas do periodo",
+  })
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => CursoPeriodoDisciplinaItemRestDto)

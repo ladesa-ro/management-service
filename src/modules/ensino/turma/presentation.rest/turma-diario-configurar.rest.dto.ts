@@ -1,14 +1,5 @@
-import {
-  ApiProperty,
-  ApiPropertyOptional,
-  ApiSchema,
-} from "@/modules/@shared/presentation/rest";
-import {
-  IsArray,
-  IsUUID,
-  Type,
-  ValidateNested,
-} from "@/modules/@shared/presentation/shared";
+import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@/modules/@shared/presentation/rest";
+import { IsArray, IsUUID, Type, ValidateNested } from "@/modules/@shared/presentation/shared";
 
 @ApiSchema({ name: "TurmaDiarioConfigurarParamsDto" })
 export class TurmaDiarioConfigurarParamsRestDto {
@@ -23,7 +14,11 @@ export class TurmaDiarioConfigurarItemRestDto {
   @IsUUID()
   disciplinaId: string;
 
-  @ApiPropertyOptional({ type: "string", isArray: true, description: "IDs dos professores (perfis)" })
+  @ApiPropertyOptional({
+    type: "string",
+    isArray: true,
+    description: "IDs dos professores (perfis)",
+  })
   @IsArray()
   @IsUUID(undefined, { each: true })
   professorPerfilIds: string[];
@@ -35,7 +30,10 @@ export class TurmaDiarioConfigurarInputRestDto {
   @IsUUID()
   calendarioLetivoId: string;
 
-  @ApiProperty({ type: () => [TurmaDiarioConfigurarItemRestDto], description: "Configuracao de disciplinas" })
+  @ApiProperty({
+    type: () => [TurmaDiarioConfigurarItemRestDto],
+    description: "Configuracao de disciplinas",
+  })
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => TurmaDiarioConfigurarItemRestDto)
