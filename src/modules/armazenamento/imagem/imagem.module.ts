@@ -12,7 +12,7 @@ import {
 import { IImagemGetLatestArquivoIdQueryHandler } from "@/modules/armazenamento/imagem/domain/queries";
 import {
   IImagemArquivoRepository,
-  IMAGEM_ITransaction,
+  IImagemRepository,
 } from "@/modules/armazenamento/imagem/domain/repositories";
 import { ImagemTypeOrmRepositoryAdapter } from "@/modules/armazenamento/imagem/infrastructure.database";
 import { ImagemArquivoTypeOrmRepositoryAdapter } from "@/modules/armazenamento/imagem-arquivo/infrastructure.database";
@@ -23,7 +23,7 @@ import { ImagemArquivoTypeOrmRepositoryAdapter } from "@/modules/armazenamento/i
   controllers: [],
   providers: [
     {
-      provide: IMAGEM_ITransaction,
+      provide: IImagemRepository,
       useClass: ImagemTypeOrmRepositoryAdapter,
     },
     {

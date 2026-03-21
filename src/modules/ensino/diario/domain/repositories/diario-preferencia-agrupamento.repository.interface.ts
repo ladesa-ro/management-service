@@ -37,4 +37,22 @@ export interface IDiarioPreferenciaAgrupamentoRepository
    * Cria um QueryBuilder para a entidade.
    */
   createQueryBuilder(alias: string): SelectQueryBuilder<DiarioPreferenciaAgrupamentoEntity>;
+
+  /**
+   * Soft-delete todos os registros de preferência de agrupamento de um diário
+   */
+  softDeleteByDiarioId(diarioId: string): Promise<void>;
+
+  /**
+   * Cria múltiplas entradas em batch
+   */
+  bulkCreate(
+    entries: Array<{
+      diarioId: string;
+      dataInicio: string;
+      dataFim?: string | null;
+      diaSemanaIso: number;
+      aulasSeguidas: number;
+    }>,
+  ): Promise<void>;
 }

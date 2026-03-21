@@ -2,11 +2,14 @@ import { BadRequestException } from "@nestjs/common";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
-import { IAppTypeormConnection } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
   IGerarHorarioAceitarCommand,
   IGerarHorarioAceitarCommandHandler,
 } from "../../domain/commands/gerar-horario-aceitar.command.handler.interface";
+import {
+  IGerarHorarioRepository,
+  type IGerarHorarioRepository as IGerarHorarioRepositoryType,
+} from "../../domain/repositories/gerar-horario.repository.interface";
 import {
   GerarHorarioDuracao,
   GerarHorarioEntity,
@@ -16,16 +19,15 @@ import {
 @DeclareImplementation()
 export class GerarHorarioAceitarCommandHandlerImpl implements IGerarHorarioAceitarCommandHandler {
   constructor(
-    @DeclareDependency(IAppTypeormConnection)
-    private readonly appTypeormConnection: IAppTypeormConnection,
+    @DeclareDependency(IGerarHorarioRepository)
+    private readonly gerarHorarioRepository: IGerarHorarioRepositoryType,
   ) {}
 
   async execute(
     _accessContext: AccessContext | null,
     command: IGerarHorarioAceitarCommand,
   ): Promise<GerarHorarioEntity> {
-    const repo = this.appTypeormConnection.getRepository(GerarHorarioEntity);
-    const entity = await repo.findOneBy({ id: command.id });
+    const entity = await this.gerarHorarioRepository.findOneBy({ id: command.id });
     ensureExists(entity, "GerarHorario", command.id);
 
     if (entity!.status !== GerarHorarioStatus.SUCESSO) {
@@ -36,7 +38,7 @@ export class GerarHorarioAceitarCommandHandlerImpl implements IGerarHorarioAceit
 
     entity!.status = GerarHorarioStatus.ACEITO;
     entity!.duracao = GerarHorarioDuracao.PERMANENTE;
-    await repo.save(entity!);
+    await this.gerarHorarioRepository.save(entity!);
 
     return entity!;
   }

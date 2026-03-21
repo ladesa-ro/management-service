@@ -1,6 +1,6 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
-import { IAppTypeormConnection } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import {
   type HorarioAulaItem,
   type HorarioMescladoQuery,

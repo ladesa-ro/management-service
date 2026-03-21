@@ -1,9 +1,9 @@
 import type { PartialEntity } from "@/domain/abstractions/entities";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import { IAppTypeormConnection } from "@/modules/@shared/infrastructure/persistence/typeorm";
+import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import type { IImagemArquivoRepository } from "@/modules/armazenamento/imagem/domain/repositories";
 import type { ImagemArquivo } from "@/modules/armazenamento/imagem-arquivo/domain/imagem-arquivo";
-import { createImagemArquivoRepository } from "./typeorm/imagem-arquivo.typeorm.repository";
+import { ImagemArquivoEntity } from "./typeorm/imagem-arquivo.typeorm.entity";
 
 @DeclareImplementation()
 export class ImagemArquivoTypeOrmRepositoryAdapter implements IImagemArquivoRepository {
@@ -13,20 +13,19 @@ export class ImagemArquivoTypeOrmRepositoryAdapter implements IImagemArquivoRepo
   ) {}
 
   create(): ImagemArquivo {
-    return createImagemArquivoRepository(
-      this.appTypeormConnection,
-    ).create() as unknown as ImagemArquivo;
+    return this.appTypeormConnection
+      .getRepository(ImagemArquivoEntity)
+      .create() as unknown as ImagemArquivo;
   }
 
   merge(imagemArquivo: ImagemArquivo, data: PartialEntity<ImagemArquivo>): void {
-    createImagemArquivoRepository(this.appTypeormConnection).merge(
-      imagemArquivo as any,
-      data as any,
-    );
+    this.appTypeormConnection
+      .getRepository(ImagemArquivoEntity)
+      .merge(imagemArquivo as any, data as any);
   }
 
   async findLatestArquivoIdForImagem(imagemId: string): Promise<string | null> {
-    const versao = await createImagemArquivoRepository(this.appTypeormConnection).findOne({
+    const versao = await this.appTypeormConnection.getRepository(ImagemArquivoEntity).findOne({
       where: { imagem: { id: imagemId } },
       relations: { arquivo: true },
       order: { dateCreated: "DESC" },

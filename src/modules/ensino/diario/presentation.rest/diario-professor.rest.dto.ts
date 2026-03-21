@@ -45,12 +45,12 @@ export class DiarioProfessorParentParamsRestDto {
 
 @ApiSchema({ name: "DiarioProfessorFindOneOutputDto" })
 @RegisterModel({
-  name: "DiarioProfessorFindOneOutputDto",
+  name: "DiarioProfessorFindOneQueryResult",
   properties: [
     simpleProperty("id"),
     simpleProperty("situacao"),
-    referenceProperty("perfil", "PerfilFindOneOutputDto"),
-    referenceProperty("diario", "DiarioFindOneOutputDto"),
+    referenceProperty("perfil", "PerfilFindOneQueryResult"),
+    referenceProperty("diario", "DiarioFindOneQueryResult"),
     ...commonProperties.dated,
   ],
 })

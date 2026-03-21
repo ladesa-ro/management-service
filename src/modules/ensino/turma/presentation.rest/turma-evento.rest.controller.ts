@@ -8,16 +8,9 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { DeclareDependency } from "@/domain/dependency-injection";
-import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7.js";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
-import { ensureExists } from "@/modules/@shared";
-import { IAppTypeormConnection } from "@/modules/@shared/infrastructure/persistence/typeorm";
-import {
-  CalendarioAgendamentoEntity,
-  CalendarioAgendamentoStatus,
-  CalendarioAgendamentoTipo,
-} from "@/modules/horarios/calendario-agendamento/infrastructure.database/typeorm/calendario-agendamento.typeorm.entity";
-import { CalendarioAgendamentoTurmaEntity } from "@/modules/horarios/calendario-agendamento-turma/infrastructure.database/typeorm/calendario-agendamento-turma.typeorm.entity";
+import { CalendarioAgendamentoEntity } from "@/modules/horarios/calendario-agendamento/infrastructure.database/typeorm/calendario-agendamento.typeorm.entity";
+import { ITurmaEventoRepository } from "../domain/repositories";
 import {
   TurmaEventoCreateInputRestDto,
   TurmaEventoFindOneOutputRestDto,
@@ -31,8 +24,8 @@ import {
 @Controller("/turmas/:turmaId/eventos")
 export class TurmaEventoRestController {
   constructor(
-    @DeclareDependency(IAppTypeormConnection)
-    private readonly appTypeormConnection: IAppTypeormConnection,
+    @DeclareDependency(ITurmaEventoRepository)
+    private readonly turmaEventoRepository: ITurmaEventoRepository,
   ) {}
 
   @Get("/")
@@ -43,17 +36,10 @@ export class TurmaEventoRestController {
     @AccessContextHttp() _accessContext: AccessContext,
     @Param() parentParams: TurmaEventoParentParamsRestDto,
   ): Promise<TurmaEventoListOutputRestDto> {
-    const junctionRepo = this.appTypeormConnection.getRepository(CalendarioAgendamentoTurmaEntity);
-
-    const junctions = await junctionRepo.find({
-      where: { idTurmaFk: parentParams.turmaId },
-      relations: ["calendarioAgendamento"],
-    });
+    const eventos = await this.turmaEventoRepository.findEventosByTurmaId(parentParams.turmaId);
 
     return {
-      data: junctions
-        .filter((j) => j.calendarioAgendamento?.status !== CalendarioAgendamentoStatus.INATIVO)
-        .map((j) => this.toOutputDto(j.calendarioAgendamento)),
+      data: eventos.map((e) => this.toOutputDto(e)),
     };
   }
 
@@ -66,30 +52,16 @@ export class TurmaEventoRestController {
     @Param() parentParams: TurmaEventoParentParamsRestDto,
     @Body() dto: TurmaEventoCreateInputRestDto,
   ): Promise<TurmaEventoFindOneOutputRestDto> {
-    const agendamentoRepo = this.appTypeormConnection.getRepository(CalendarioAgendamentoEntity);
-    const junctionRepo = this.appTypeormConnection.getRepository(CalendarioAgendamentoTurmaEntity);
-
-    const evento = new CalendarioAgendamentoEntity();
-    evento.id = generateUuidV7();
-    evento.tipo = CalendarioAgendamentoTipo.EVENTO;
-    evento.nome = dto.nome;
-    evento.dataInicio = new Date(dto.dataInicio);
-    evento.dataFim = dto.dataFim ? new Date(dto.dataFim) : null;
-    evento.diaInteiro = dto.diaInteiro;
-    evento.horarioInicio = dto.horarioInicio ?? "00:00:00";
-    evento.horarioFim = dto.horarioFim ?? "23:59:59";
-    evento.cor = dto.cor ?? null;
-    evento.repeticao = dto.repeticao ?? null;
-    evento.status = CalendarioAgendamentoStatus.ATIVO;
-    await agendamentoRepo.save(evento);
-
-    const junction = new CalendarioAgendamentoTurmaEntity();
-    junction.id = generateUuidV7();
-    junction.idTurmaFk = parentParams.turmaId;
-    junction.idCalendarioAgendamentoFk = evento.id;
-    (junction as any).turma = { id: parentParams.turmaId };
-    (junction as any).calendarioAgendamento = { id: evento.id };
-    await junctionRepo.save(junction);
+    const evento = await this.turmaEventoRepository.createEvento(parentParams.turmaId, {
+      nome: dto.nome,
+      dataInicio: new Date(dto.dataInicio),
+      dataFim: dto.dataFim ? new Date(dto.dataFim) : null,
+      diaInteiro: dto.diaInteiro,
+      horarioInicio: dto.horarioInicio ?? "00:00:00",
+      horarioFim: dto.horarioFim ?? "23:59:59",
+      cor: dto.cor ?? null,
+      repeticao: dto.repeticao ?? null,
+    });
 
     return this.toOutputDto(evento);
   }
@@ -104,21 +76,18 @@ export class TurmaEventoRestController {
     @Param() params: TurmaEventoItemParamsRestDto,
     @Body() dto: TurmaEventoUpdateInputRestDto,
   ): Promise<TurmaEventoFindOneOutputRestDto> {
-    const agendamentoRepo = this.appTypeormConnection.getRepository(CalendarioAgendamentoEntity);
-    const entity = await agendamentoRepo.findOneBy({ id: params.eventoId });
-    ensureExists(entity, "TurmaEvento", params.eventoId);
+    const entity = await this.turmaEventoRepository.updateEvento(params.eventoId, {
+      nome: dto.nome,
+      dataInicio: dto.dataInicio,
+      dataFim: dto.dataFim,
+      diaInteiro: dto.diaInteiro,
+      horarioInicio: dto.horarioInicio,
+      horarioFim: dto.horarioFim,
+      cor: dto.cor,
+      repeticao: dto.repeticao,
+    });
 
-    if (dto.nome !== undefined) entity!.nome = dto.nome;
-    if (dto.dataInicio !== undefined) entity!.dataInicio = new Date(dto.dataInicio);
-    if (dto.dataFim !== undefined) entity!.dataFim = dto.dataFim ? new Date(dto.dataFim) : null;
-    if (dto.diaInteiro !== undefined) entity!.diaInteiro = dto.diaInteiro;
-    if (dto.horarioInicio !== undefined) entity!.horarioInicio = dto.horarioInicio;
-    if (dto.horarioFim !== undefined) entity!.horarioFim = dto.horarioFim;
-    if (dto.cor !== undefined) entity!.cor = dto.cor ?? null;
-    if (dto.repeticao !== undefined) entity!.repeticao = dto.repeticao ?? null;
-
-    await agendamentoRepo.save(entity!);
-    return this.toOutputDto(entity!);
+    return this.toOutputDto(entity);
   }
 
   @Delete("/:eventoId")
@@ -130,14 +99,7 @@ export class TurmaEventoRestController {
     @AccessContextHttp() _accessContext: AccessContext,
     @Param() params: TurmaEventoItemParamsRestDto,
   ): Promise<boolean> {
-    const junctionRepo = this.appTypeormConnection.getRepository(CalendarioAgendamentoTurmaEntity);
-
-    // Remove junction
-    await junctionRepo.delete({
-      idTurmaFk: params.turmaId,
-      idCalendarioAgendamentoFk: params.eventoId,
-    });
-
+    await this.turmaEventoRepository.deleteEventoForTurma(params.eventoId, params.turmaId);
     return true;
   }
 

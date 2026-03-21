@@ -1,89 +1,119 @@
 import { FilterOperator } from "nestjs-paginate";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import type { ITypeOrmPaginationConfig } from "@/modules/@shared/infrastructure/persistence/typeorm";
+import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
+import { paginateConfig } from "@/infrastructure.database/pagination/config/paginate-config";
+import type { ITypeOrmPaginationConfig } from "@/infrastructure.database/pagination/interfaces/pagination-config.types";
+import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import {
-  BaseTypeOrmRepositoryAdapter,
-  IAppTypeormConnection,
-  NestJsPaginateAdapter,
-} from "@/modules/@shared/infrastructure/persistence/typeorm";
+  typeormCreate,
+  typeormFindAll,
+  typeormFindById,
+  typeormSoftDeleteById,
+  typeormUpdate,
+} from "@/infrastructure.database/typeorm/helpers/typeorm-repository-helpers";
 import type {
-  AmbienteFindOneQuery as AmbienteFindOneQuery,
-  AmbienteFindOneQueryResult as AmbienteFindOneQueryResult,
-  AmbienteListQuery as AmbienteListQuery,
-  AmbienteListQueryResult as AmbienteListQueryResult,
-} from "@/modules/ambientes/ambiente";
+  AmbienteFindOneQuery,
+  AmbienteFindOneQueryResult,
+  AmbienteListQuery,
+  AmbienteListQueryResult,
+} from "@/modules/ambientes/ambiente/domain/queries";
 import type { IAmbienteRepository } from "@/modules/ambientes/ambiente/domain/repositories";
-import type { AmbienteEntity } from "./typeorm/ambiente.typeorm.entity";
-import { createAmbienteRepository } from "./typeorm/ambiente.typeorm.repository";
+import { AmbienteEntity } from "./typeorm/ambiente.typeorm.entity";
 
-/**
- * Adapter TypeORM que implementa o port de repositório de Ambiente.
- * Estende BaseTypeOrmRepositoryAdapter para reutilizar operações CRUD comuns.
- */
+const config = {
+  alias: "ambiente",
+  outputDtoName: "AmbienteFindOneQueryResult",
+} as const;
+
+const ambientePaginateConfig: ITypeOrmPaginationConfig<AmbienteEntity> = {
+  ...paginateConfig,
+  select: [
+    "id",
+    "nome",
+    "descricao",
+    "codigo",
+    "capacidade",
+    "tipo",
+    "dateCreated",
+    "bloco.id",
+    "bloco.campus.id",
+  ],
+  relations: {
+    bloco: {
+      campus: true,
+    },
+  },
+  sortableColumns: [
+    "nome",
+    "descricao",
+    "codigo",
+    "capacidade",
+    "tipo",
+    "dateCreated",
+    "bloco.id",
+    "bloco.campus.id",
+  ],
+  searchableColumns: ["id", "nome", "descricao", "codigo", "capacidade", "tipo"],
+  defaultSortBy: [
+    ["nome", "ASC"],
+    ["dateCreated", "ASC"],
+  ],
+  filterableColumns: {
+    "bloco.id": [FilterOperator.EQ],
+    "bloco.campus.id": [FilterOperator.EQ],
+  },
+};
 
 @DeclareImplementation()
-export class AmbienteTypeOrmRepositoryAdapter
-  extends BaseTypeOrmRepositoryAdapter<
-    AmbienteEntity,
-    AmbienteListQuery,
-    AmbienteListQueryResult,
-    AmbienteFindOneQuery,
-    AmbienteFindOneQueryResult
-  >
-  implements IAmbienteRepository
-{
-  protected readonly alias = "ambiente";
-  protected readonly outputDtoName = "AmbienteFindOneQueryResult";
-
+export class AmbienteTypeOrmRepositoryAdapter implements IAmbienteRepository {
   constructor(
     @DeclareDependency(IAppTypeormConnection)
-    protected readonly appTypeormConnection: IAppTypeormConnection,
-    protected readonly paginationAdapter: NestJsPaginateAdapter,
+    private readonly appTypeormConnection: IAppTypeormConnection,
+    private readonly paginationAdapter: NestJsPaginateAdapter,
+  ) {}
+
+  findAll(
+    accessContext: unknown,
+    dto: AmbienteListQuery | null = null,
+    selection?: string[] | boolean | null,
   ) {
-    super();
+    return typeormFindAll<AmbienteEntity, AmbienteListQuery, AmbienteListQueryResult>(
+      this.appTypeormConnection,
+      AmbienteEntity,
+      { ...config, paginateConfig: ambientePaginateConfig },
+      this.paginationAdapter,
+      dto,
+      selection,
+    );
   }
 
-  protected get repository() {
-    return createAmbienteRepository(this.appTypeormConnection);
+  findById(
+    accessContext: unknown,
+    dto: AmbienteFindOneQuery,
+    selection?: string[] | boolean | null,
+  ) {
+    return typeormFindById<AmbienteEntity, AmbienteFindOneQuery, AmbienteFindOneQueryResult>(
+      this.appTypeormConnection,
+      AmbienteEntity,
+      config,
+      dto,
+      selection,
+    );
   }
 
-  protected getPaginateConfig(): ITypeOrmPaginationConfig<AmbienteEntity> {
-    return {
-      select: [
-        "id",
-        "nome",
-        "descricao",
-        "codigo",
-        "capacidade",
-        "tipo",
-        "dateCreated",
-        "bloco.id",
-        "bloco.campus.id",
-      ],
-      relations: {
-        bloco: {
-          campus: true,
-        },
-      },
-      sortableColumns: [
-        "nome",
-        "descricao",
-        "codigo",
-        "capacidade",
-        "tipo",
-        "dateCreated",
-        "bloco.id",
-        "bloco.campus.id",
-      ],
-      searchableColumns: ["id", "nome", "descricao", "codigo", "capacidade", "tipo"],
-      defaultSortBy: [
-        ["nome", "ASC"],
-        ["dateCreated", "ASC"],
-      ],
-      filterableColumns: {
-        "bloco.id": [FilterOperator.EQ],
-        "bloco.campus.id": [FilterOperator.EQ],
-      },
-    };
+  findByIdSimple(accessContext: unknown, id: string, selection?: string[] | boolean | null) {
+    return this.findById(accessContext, { id } as AmbienteFindOneQuery, selection);
+  }
+
+  create(data: Record<string, any>) {
+    return typeormCreate(this.appTypeormConnection, AmbienteEntity, data);
+  }
+
+  update(id: string | number, data: Record<string, any>) {
+    return typeormUpdate(this.appTypeormConnection, AmbienteEntity, id, data);
+  }
+
+  softDeleteById(id: string) {
+    return typeormSoftDeleteById(this.appTypeormConnection, AmbienteEntity, config.alias, id);
   }
 }

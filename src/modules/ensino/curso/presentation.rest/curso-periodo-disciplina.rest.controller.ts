@@ -3,7 +3,7 @@ import { ApiForbiddenResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nes
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7.js";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
-import { IAppTypeormConnection } from "@/modules/@shared/infrastructure/persistence/typeorm";
+import { ICursoPeriodoDisciplinaRepository } from "../domain/repositories";
 import { CursoPeriodoDisciplinaEntity } from "../infrastructure.database/typeorm/curso-periodo-disciplina.typeorm.entity";
 import {
   CursoPeriodoDisciplinaBulkReplaceInputRestDto,
@@ -16,8 +16,8 @@ import {
 @Controller("/cursos/:cursoId/disciplinas-por-periodo")
 export class CursoPeriodoDisciplinaRestController {
   constructor(
-    @DeclareDependency(IAppTypeormConnection)
-    private readonly appTypeormConnection: IAppTypeormConnection,
+    @DeclareDependency(ICursoPeriodoDisciplinaRepository)
+    private readonly cursoPeriodoDisciplinaRepository: ICursoPeriodoDisciplinaRepository,
   ) {}
 
   @Get("/")
@@ -31,13 +31,7 @@ export class CursoPeriodoDisciplinaRestController {
     @AccessContextHttp() _accessContext: AccessContext,
     @Param() parentParams: CursoPeriodoDisciplinaParentParamsRestDto,
   ): Promise<CursoPeriodoDisciplinaListOutputRestDto> {
-    const repo = this.appTypeormConnection.getRepository(CursoPeriodoDisciplinaEntity);
-
-    const entries = await repo.find({
-      where: { idCursoFk: parentParams.cursoId },
-      relations: ["disciplina"],
-      order: { numeroPeriodo: "ASC" },
-    });
+    const entries = await this.cursoPeriodoDisciplinaRepository.findByCursoId(parentParams.cursoId);
 
     // Group by periodo
     const periodoMap = new Map<number, CursoPeriodoDisciplinaOutputPeriodoRestDto>();
@@ -51,7 +45,7 @@ export class CursoPeriodoDisciplinaRestController {
       periodo.disciplinas.push({
         id: entry.id,
         disciplinaId: entry.idDisciplinaFk,
-        disciplinaNome: (entry.disciplina as any)?.nome ?? null,
+        disciplinaNome: entry.disciplina?.nome ?? null,
         cargaHoraria: entry.cargaHoraria,
       });
     }
@@ -75,27 +69,19 @@ export class CursoPeriodoDisciplinaRestController {
   ): Promise<CursoPeriodoDisciplinaListOutputRestDto> {
     const cursoId = parentParams.cursoId;
 
-    await this.appTypeormConnection.transaction(async (manager) => {
-      const repo = manager.getRepository(CursoPeriodoDisciplinaEntity);
+    await this.cursoPeriodoDisciplinaRepository.deleteByCursoId(cursoId);
 
-      // Delete existing
-      await repo.delete({ idCursoFk: cursoId });
-
-      // Insert new
-      for (const periodoItem of dto.periodos) {
-        for (const discItem of periodoItem.disciplinas) {
-          const entity = new CursoPeriodoDisciplinaEntity();
-          entity.id = generateUuidV7();
-          entity.idCursoFk = cursoId;
-          entity.numeroPeriodo = periodoItem.numeroPeriodo;
-          entity.idDisciplinaFk = discItem.disciplinaId;
-          entity.cargaHoraria = discItem.cargaHoraria ?? null;
-          (entity as any).curso = { id: cursoId };
-          (entity as any).disciplina = { id: discItem.disciplinaId };
-          await manager.save(CursoPeriodoDisciplinaEntity, entity);
-        }
+    for (const periodoItem of dto.periodos) {
+      for (const discItem of periodoItem.disciplinas) {
+        const entity = new CursoPeriodoDisciplinaEntity();
+        entity.id = generateUuidV7();
+        entity.idCursoFk = cursoId;
+        entity.numeroPeriodo = periodoItem.numeroPeriodo;
+        entity.idDisciplinaFk = discItem.disciplinaId;
+        entity.cargaHoraria = discItem.cargaHoraria ?? null;
+        await this.cursoPeriodoDisciplinaRepository.save(entity);
       }
-    });
+    }
 
     return this.findAll(_accessContext, parentParams);
   }

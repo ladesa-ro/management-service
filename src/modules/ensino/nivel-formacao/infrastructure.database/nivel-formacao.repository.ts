@@ -1,11 +1,15 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
+import { paginateConfig } from "@/infrastructure.database/pagination/config/paginate-config";
+import type { ITypeOrmPaginationConfig } from "@/infrastructure.database/pagination/interfaces/pagination-config.types";
+import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import {
-  BaseTypeOrmRepositoryAdapter,
-  IAppTypeormConnection,
-  type ITypeOrmPaginationConfig,
-  NestJsPaginateAdapter,
-  paginateConfig,
-} from "@/modules/@shared/infrastructure/persistence/typeorm";
+  typeormCreate,
+  typeormFindAll,
+  typeormFindById,
+  typeormSoftDeleteById,
+  typeormUpdate,
+} from "@/infrastructure.database/typeorm/helpers/typeorm-repository-helpers";
 import type {
   INivelFormacaoRepository,
   NivelFormacaoFindOneQuery,
@@ -13,46 +17,78 @@ import type {
   NivelFormacaoListQuery,
   NivelFormacaoListQueryResult,
 } from "@/modules/ensino/nivel-formacao";
-import type { NivelFormacaoEntity } from "./typeorm/nivel-formacao.typeorm.entity";
-import { createNivelFormacaoRepository } from "./typeorm/nivel-formacao.typeorm.repository";
+import { NivelFormacaoEntity } from "./typeorm/nivel-formacao.typeorm.entity";
+
+const config = {
+  alias: "nivel_formacao",
+  outputDtoName: "NivelFormacaoFindOneQueryResult",
+  hasSoftDelete: true,
+} as const;
+
+const nivelFormacaoPaginateConfig: ITypeOrmPaginationConfig<NivelFormacaoEntity> = {
+  ...paginateConfig,
+  select: ["id", "slug", "dateCreated"],
+  sortableColumns: ["slug", "dateCreated"],
+  searchableColumns: ["id", "slug"],
+  defaultSortBy: [
+    ["slug", "ASC"],
+    ["dateCreated", "ASC"],
+  ],
+  filterableColumns: {},
+};
 
 @DeclareImplementation()
-export class NivelFormacaoTypeOrmRepositoryAdapter
-  extends BaseTypeOrmRepositoryAdapter<
-    NivelFormacaoEntity,
-    NivelFormacaoListQuery,
-    NivelFormacaoListQueryResult,
-    NivelFormacaoFindOneQuery,
-    NivelFormacaoFindOneQueryResult
-  >
-  implements INivelFormacaoRepository
-{
-  protected readonly alias = "nivel_formacao";
-  protected readonly outputDtoName = "NivelFormacaoFindOneQueryResult";
-
+export class NivelFormacaoTypeOrmRepositoryAdapter implements INivelFormacaoRepository {
   constructor(
     @DeclareDependency(IAppTypeormConnection)
-    protected readonly appTypeormConnection: IAppTypeormConnection,
-    protected readonly paginationAdapter: NestJsPaginateAdapter,
+    private readonly appTypeormConnection: IAppTypeormConnection,
+    private readonly paginationAdapter: NestJsPaginateAdapter,
+  ) {}
+
+  findAll(
+    accessContext: unknown,
+    dto: NivelFormacaoListQuery | null = null,
+    selection?: string[] | boolean | null,
   ) {
-    super();
+    return typeormFindAll<
+      NivelFormacaoEntity,
+      NivelFormacaoListQuery,
+      NivelFormacaoListQueryResult
+    >(
+      this.appTypeormConnection,
+      NivelFormacaoEntity,
+      { ...config, paginateConfig: nivelFormacaoPaginateConfig },
+      this.paginationAdapter,
+      dto,
+      selection,
+    );
   }
 
-  protected get repository() {
-    return createNivelFormacaoRepository(this.appTypeormConnection);
+  findById(
+    accessContext: unknown,
+    dto: NivelFormacaoFindOneQuery,
+    selection?: string[] | boolean | null,
+  ) {
+    return typeormFindById<
+      NivelFormacaoEntity,
+      NivelFormacaoFindOneQuery,
+      NivelFormacaoFindOneQueryResult
+    >(this.appTypeormConnection, NivelFormacaoEntity, config, dto, selection);
   }
 
-  protected getPaginateConfig(): ITypeOrmPaginationConfig<NivelFormacaoEntity> {
-    return {
-      ...paginateConfig,
-      select: ["id", "slug", "dateCreated"],
-      sortableColumns: ["slug", "dateCreated"],
-      searchableColumns: ["id", "slug"],
-      defaultSortBy: [
-        ["slug", "ASC"],
-        ["dateCreated", "ASC"],
-      ],
-      filterableColumns: {},
-    };
+  findByIdSimple(accessContext: unknown, id: string, selection?: string[] | boolean | null) {
+    return this.findById(accessContext, { id } as NivelFormacaoFindOneQuery, selection);
+  }
+
+  create(data: Record<string, any>) {
+    return typeormCreate(this.appTypeormConnection, NivelFormacaoEntity, data);
+  }
+
+  update(id: string | number, data: Record<string, any>) {
+    return typeormUpdate(this.appTypeormConnection, NivelFormacaoEntity, id, data);
+  }
+
+  softDeleteById(id: string) {
+    return typeormSoftDeleteById(this.appTypeormConnection, NivelFormacaoEntity, config.alias, id);
   }
 }

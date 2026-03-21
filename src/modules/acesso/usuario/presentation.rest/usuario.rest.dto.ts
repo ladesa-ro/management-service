@@ -31,15 +31,15 @@ import { ImagemFindOneOutputRestDto } from "@/modules/ambientes/bloco/presentati
 
 @ApiSchema({ name: "UsuarioFindOneOutputDto" })
 @RegisterModel({
-  name: "UsuarioFindOneOutputDto",
+  name: "UsuarioFindOneQueryResult",
   properties: [
     simpleProperty("id"),
     simpleProperty("nome", { nullable: true }),
     simpleProperty("matricula", { nullable: true }),
     simpleProperty("email", { nullable: true }),
     simpleProperty("isSuperUser"),
-    referenceProperty("imagemCapa", "ImagemFindOneOutputDto", { nullable: true }),
-    referenceProperty("imagemPerfil", "ImagemFindOneOutputDto", { nullable: true }),
+    referenceProperty("imagemCapa", "ImagemFindOneQueryResult", { nullable: true }),
+    referenceProperty("imagemPerfil", "ImagemFindOneQueryResult", { nullable: true }),
     ...commonProperties.dated,
   ],
 })

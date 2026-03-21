@@ -3,7 +3,7 @@ import { ApiForbiddenResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nes
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7.js";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
-import { IAppTypeormConnection } from "@/modules/@shared/infrastructure/persistence/typeorm";
+import { ITurmaHorarioAulaRepository } from "@/modules/horarios/turma-horario-aula/domain/repositories";
 import { TurmaHorarioAulaEntity } from "@/modules/horarios/turma-horario-aula/infrastructure.database/typeorm/turma-horario-aula.typeorm.entity";
 import {
   TurmaHorarioAulaBulkReplaceInputRestDto,
@@ -15,8 +15,8 @@ import {
 @Controller("/turmas/:turmaId/horarios-aula")
 export class TurmaHorarioAulaRestController {
   constructor(
-    @DeclareDependency(IAppTypeormConnection)
-    private readonly appTypeormConnection: IAppTypeormConnection,
+    @DeclareDependency(ITurmaHorarioAulaRepository)
+    private readonly turmaHorarioAulaRepository: ITurmaHorarioAulaRepository,
   ) {}
 
   @Get("/")
@@ -30,12 +30,7 @@ export class TurmaHorarioAulaRestController {
     @AccessContextHttp() _accessContext: AccessContext,
     @Param() parentParams: TurmaHorarioAulaParentParamsRestDto,
   ): Promise<TurmaHorarioAulaListOutputRestDto> {
-    const repo = this.appTypeormConnection.getRepository(TurmaHorarioAulaEntity);
-
-    const entries = await repo.find({
-      where: { idTurmaFk: parentParams.turmaId },
-      relations: ["horarioAula"],
-    });
+    const entries = await this.turmaHorarioAulaRepository.findByTurmaId(parentParams.turmaId);
 
     return {
       data: entries.map((e) => ({
@@ -59,23 +54,15 @@ export class TurmaHorarioAulaRestController {
     @Param() parentParams: TurmaHorarioAulaParentParamsRestDto,
     @Body() dto: TurmaHorarioAulaBulkReplaceInputRestDto,
   ): Promise<TurmaHorarioAulaListOutputRestDto> {
-    await this.appTypeormConnection.transaction(async (manager) => {
-      const repo = manager.getRepository(TurmaHorarioAulaEntity);
+    await this.turmaHorarioAulaRepository.deleteByTurmaId(parentParams.turmaId);
 
-      // Delete existing selections
-      await repo.delete({ idTurmaFk: parentParams.turmaId });
-
-      // Insert new selections
-      for (const horarioAulaId of dto.horarioAulaIds) {
-        const entity = new TurmaHorarioAulaEntity();
-        entity.id = generateUuidV7();
-        entity.idTurmaFk = parentParams.turmaId;
-        entity.idHorarioAulaFk = horarioAulaId;
-        (entity as any).turma = { id: parentParams.turmaId };
-        (entity as any).horarioAula = { id: horarioAulaId };
-        await manager.save(TurmaHorarioAulaEntity, entity);
-      }
-    });
+    for (const horarioAulaId of dto.horarioAulaIds) {
+      const entity = new TurmaHorarioAulaEntity();
+      entity.id = generateUuidV7();
+      entity.idTurmaFk = parentParams.turmaId;
+      entity.idHorarioAulaFk = horarioAulaId;
+      await this.turmaHorarioAulaRepository.save(entity);
+    }
 
     return this.findAll(_accessContext, parentParams);
   }

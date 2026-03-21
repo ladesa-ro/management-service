@@ -27,11 +27,11 @@ import { EstadoFindOneOutputRestDto } from "@/modules/localidades/estado/present
 
 @ApiSchema({ name: "CidadeFindOneOutputDto" })
 @RegisterModel({
-  name: "CidadeFindOneOutputDto",
+  name: "CidadeFindOneQueryResult",
   properties: [
     simpleProperty("id"),
     simpleProperty("nome"),
-    referenceProperty("estado", "EstadoFindOneOutputDto"),
+    referenceProperty("estado", "EstadoFindOneQueryResult"),
   ],
 })
 export class CidadeFindOneOutputRestDto {

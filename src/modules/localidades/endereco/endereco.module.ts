@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
+import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
 import { EnderecoCreateOrUpdateCommandHandlerImpl } from "@/modules/localidades/endereco/application/commands";
 import { EnderecoFindOneQueryHandlerImpl } from "@/modules/localidades/endereco/application/queries";
 import { IEnderecoCreateOrUpdateCommandHandler } from "@/modules/localidades/endereco/domain/commands";

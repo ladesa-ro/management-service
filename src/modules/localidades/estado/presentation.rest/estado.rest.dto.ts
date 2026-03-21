@@ -16,7 +16,7 @@ import { IsInt, IsString, Type } from "@/modules/@shared/presentation/shared";
 
 @ApiSchema({ name: "EstadoFindOneOutputDto" })
 @RegisterModel({
-  name: "EstadoFindOneOutputDto",
+  name: "EstadoFindOneQueryResult",
   properties: [simpleProperty("id"), simpleProperty("nome"), simpleProperty("sigla")],
 })
 export class EstadoFindOneOutputRestDto {

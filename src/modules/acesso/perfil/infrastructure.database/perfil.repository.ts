@@ -1,15 +1,19 @@
 import { FilterOperator } from "nestjs-paginate";
 import type { DeepPartial } from "typeorm";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import type { IPaginationCriteria, IPaginationResult } from "@/modules/@shared";
+import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
+import { paginateConfig } from "@/infrastructure.database/pagination/config/paginate-config";
+import type { ITypeOrmPaginationConfig } from "@/infrastructure.database/pagination/interfaces/pagination-config.types";
+import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
+import { QbEfficientLoad } from "@/infrastructure.database/typeorm/helpers/qb-efficient-load";
 import {
-  BaseTypeOrmRepositoryAdapter,
-  IAppTypeormConnection,
-  type ITypeOrmPaginationConfig,
-  NestJsPaginateAdapter,
-  paginateConfig,
-  QbEfficientLoad,
-} from "@/modules/@shared/infrastructure/persistence/typeorm";
+  typeormCreate,
+  typeormFindAll,
+  typeormFindById,
+  typeormSoftDeleteById,
+  typeormUpdate,
+} from "@/infrastructure.database/typeorm/helpers/typeorm-repository-helpers";
+import type { IPaginationCriteria, IPaginationResult } from "@/modules/@shared";
 import type {
   PerfilFindOneQuery,
   PerfilFindOneQueryResult,
@@ -18,80 +22,124 @@ import type {
 } from "@/modules/acesso/perfil/domain/queries";
 import type { IPerfilRepository } from "@/modules/acesso/perfil/domain/repositories";
 import type { UsuarioEntity } from "@/modules/acesso/usuario/infrastructure.database";
-import type { PerfilEntity } from "./typeorm/perfil.typeorm.entity";
-import { createPerfilRepository } from "./typeorm/perfil.typeorm.repository";
+import { PerfilEntity } from "./typeorm/perfil.typeorm.entity";
+
+const config = {
+  alias: "vinculo",
+  outputDtoName: "PerfilFindOneQueryResult",
+  hasSoftDelete: true,
+} as const;
+
+const perfilPaginateConfig: ITypeOrmPaginationConfig<PerfilEntity> = {
+  ...paginateConfig,
+  relations: {
+    campus: true,
+    usuario: true,
+  },
+  select: [
+    "id",
+    "ativo",
+    "cargo",
+    "usuario.nome",
+    "campus.id",
+    "campus.nomeFantasia",
+    "campus.razaoSocial",
+    "campus.apelido",
+    "campus.cnpj",
+    "usuario.id",
+    "usuario.matricula",
+    "usuario.email",
+    "dateCreated",
+  ],
+  searchableColumns: ["cargo"],
+  filterableColumns: {
+    ativo: [FilterOperator.EQ],
+    cargo: [FilterOperator.EQ],
+    "campus.id": [FilterOperator.EQ],
+    "usuario.id": [FilterOperator.EQ],
+  },
+};
 
 @DeclareImplementation()
-export class PerfilTypeOrmRepositoryAdapter
-  extends BaseTypeOrmRepositoryAdapter<
-    PerfilEntity,
-    PerfilListQuery,
-    PerfilListQueryResult,
-    PerfilFindOneQuery,
-    PerfilFindOneQueryResult
-  >
-  implements IPerfilRepository
-{
-  protected readonly alias = "vinculo";
-  protected readonly outputDtoName = "PerfilFindOneQueryResult";
-
+export class PerfilTypeOrmRepositoryAdapter implements IPerfilRepository {
   constructor(
     @DeclareDependency(IAppTypeormConnection)
-    protected readonly appTypeormConnection: IAppTypeormConnection,
-    protected readonly paginationAdapter: NestJsPaginateAdapter,
+    private readonly appTypeormConnection: IAppTypeormConnection,
+    private readonly paginationAdapter: NestJsPaginateAdapter,
+  ) {}
+
+  findAll(
+    accessContext: unknown,
+    dto: PerfilListQuery | null = null,
+    selection?: string[] | boolean | null,
   ) {
-    super();
+    return typeormFindAll<PerfilEntity, PerfilListQuery, PerfilListQueryResult>(
+      this.appTypeormConnection,
+      PerfilEntity,
+      { ...config, paginateConfig: perfilPaginateConfig },
+      this.paginationAdapter,
+      dto,
+      selection,
+    );
   }
 
-  protected get repository() {
-    return createPerfilRepository(this.appTypeormConnection);
+  findById(accessContext: unknown, dto: PerfilFindOneQuery, selection?: string[] | boolean | null) {
+    return typeormFindById<PerfilEntity, PerfilFindOneQuery, PerfilFindOneQueryResult>(
+      this.appTypeormConnection,
+      PerfilEntity,
+      config,
+      dto,
+      selection,
+    );
+  }
+
+  findByIdSimple(accessContext: unknown, id: string, selection?: string[] | boolean | null) {
+    return this.findById(accessContext, { id } as PerfilFindOneQuery, selection);
   }
 
   async findAllActiveByUsuarioId(
     _accessContext: unknown,
     usuarioId: UsuarioEntity["id"],
   ): Promise<PerfilFindOneQueryResult[]> {
-    const qb = this.repository.createQueryBuilder(this.alias);
+    const repo = this.appTypeormConnection.getRepository(PerfilEntity);
+    const qb = repo.createQueryBuilder(config.alias);
 
-    qb.innerJoin(`${this.alias}.usuario`, "usuario");
+    qb.innerJoin(`${config.alias}.usuario`, "usuario");
     qb.where("usuario.id = :usuarioId", { usuarioId });
-    qb.andWhere(`${this.alias}.ativo = :ativo`, { ativo: true });
+    qb.andWhere(`${config.alias}.ativo = :ativo`, { ativo: true });
+    qb.andWhere(`${config.alias}.dateDeleted IS NULL`);
 
-    if (this.hasSoftDelete) {
-      qb.andWhere(`${this.alias}.dateDeleted IS NULL`);
-    }
-
-    QbEfficientLoad(this.outputDtoName, qb, this.alias);
+    QbEfficientLoad(config.outputDtoName, qb, config.alias);
 
     const vinculos = await qb.getMany();
 
     return vinculos as unknown as PerfilFindOneQueryResult[];
   }
 
-  // Métodos específicos do Perfil que não estão na classe base
-
   async findPaginated(
     _accessContext: unknown,
     criteria: IPaginationCriteria | null,
-    config: ITypeOrmPaginationConfig<PerfilFindOneQueryResult>,
+    paginateConfigOverride: ITypeOrmPaginationConfig<PerfilFindOneQueryResult>,
     selection?: string[] | boolean | null,
   ): Promise<IPaginationResult<PerfilFindOneQueryResult>> {
-    const qb = this.repository.createQueryBuilder(this.alias);
+    const repo = this.appTypeormConnection.getRepository(PerfilEntity);
+    const qb = repo.createQueryBuilder(config.alias);
 
-    QbEfficientLoad(this.outputDtoName, qb, this.alias, selection);
+    QbEfficientLoad(config.outputDtoName, qb, config.alias, selection);
 
-    if (this.hasSoftDelete) {
-      qb.andWhere(`${this.alias}.dateDeleted IS NULL`);
-    }
+    qb.andWhere(`${config.alias}.dateDeleted IS NULL`);
 
-    return this.paginationAdapter.paginate(qb, criteria, config) as unknown as Promise<
-      IPaginationResult<PerfilFindOneQueryResult>
-    >;
+    return this.paginationAdapter.paginate(
+      qb,
+      criteria,
+      paginateConfigOverride,
+    ) as unknown as Promise<IPaginationResult<PerfilFindOneQueryResult>>;
   }
 
   async saveMany(perfis: DeepPartial<PerfilEntity>[]): Promise<void> {
+    const repo = this.appTypeormConnection.getRepository(PerfilEntity);
     for (const perfil of perfis) {
-      await this.repository.save(perfil);
+      await repo.save(perfil);
     }
   }
 
@@ -99,13 +147,14 @@ export class PerfilTypeOrmRepositoryAdapter
     usuarioId: string,
     campusId: string,
   ): Promise<PerfilFindOneQueryResult[]> {
-    const vinculos = await this.repository
-      .createQueryBuilder(this.alias)
-      .innerJoin(`${this.alias}.campus`, "campus")
-      .innerJoin(`${this.alias}.usuario`, "usuario")
+    const repo = this.appTypeormConnection.getRepository(PerfilEntity);
+    const vinculos = await repo
+      .createQueryBuilder(config.alias)
+      .innerJoin(`${config.alias}.campus`, "campus")
+      .innerJoin(`${config.alias}.usuario`, "usuario")
       .andWhere("campus.id = :campusId", { campusId })
       .andWhere("usuario.id = :usuarioId", { usuarioId })
-      .select([this.alias, "campus", "usuario"])
+      .select([config.alias, "campus", "usuario"])
       .getMany();
 
     return vinculos as unknown as PerfilFindOneQueryResult[];
@@ -114,8 +163,9 @@ export class PerfilTypeOrmRepositoryAdapter
   async deactivateByIds(ids: string[]): Promise<void> {
     if (ids.length === 0) return;
 
-    await this.repository
-      .createQueryBuilder(this.alias)
+    const repo = this.appTypeormConnection.getRepository(PerfilEntity);
+    await repo
+      .createQueryBuilder(config.alias)
       .update()
       .set({
         ativo: false,
@@ -125,35 +175,15 @@ export class PerfilTypeOrmRepositoryAdapter
       .execute();
   }
 
-  protected getPaginateConfig(): ITypeOrmPaginationConfig<PerfilEntity> {
-    return {
-      ...paginateConfig,
-      relations: {
-        campus: true,
-        usuario: true,
-      },
-      select: [
-        "id",
-        "ativo",
-        "cargo",
-        "usuario.nome",
-        "campus.id",
-        "campus.nomeFantasia",
-        "campus.razaoSocial",
-        "campus.apelido",
-        "campus.cnpj",
-        "usuario.id",
-        "usuario.matricula",
-        "usuario.email",
-        "dateCreated",
-      ],
-      searchableColumns: ["cargo"],
-      filterableColumns: {
-        ativo: [FilterOperator.EQ],
-        cargo: [FilterOperator.EQ],
-        "campus.id": [FilterOperator.EQ],
-        "usuario.id": [FilterOperator.EQ],
-      },
-    };
+  create(data: Record<string, any>) {
+    return typeormCreate(this.appTypeormConnection, PerfilEntity, data);
+  }
+
+  update(id: string | number, data: Record<string, any>) {
+    return typeormUpdate(this.appTypeormConnection, PerfilEntity, id, data);
+  }
+
+  softDeleteById(id: string) {
+    return typeormSoftDeleteById(this.appTypeormConnection, PerfilEntity, config.alias, id);
   }
 }

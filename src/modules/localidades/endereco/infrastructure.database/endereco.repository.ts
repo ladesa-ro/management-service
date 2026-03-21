@@ -1,50 +1,92 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
+import { paginateConfig } from "@/infrastructure.database/pagination/config/paginate-config";
+import type { ITypeOrmPaginationConfig } from "@/infrastructure.database/pagination/interfaces/pagination-config.types";
+import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import {
-  BaseTypeOrmRepositoryAdapter,
-  IAppTypeormConnection,
-  type ITypeOrmPaginationConfig,
-  NestJsPaginateAdapter,
-  paginateConfig,
-} from "@/modules/@shared/infrastructure/persistence/typeorm";
+  typeormCreate,
+  typeormFindAll,
+  typeormFindById,
+  typeormSoftDeleteById,
+  typeormUpdate,
+} from "@/infrastructure.database/typeorm/helpers/typeorm-repository-helpers";
 import type {
   EnderecoFindOneQuery,
   EnderecoFindOneQueryResult,
   EnderecoListQuery,
   EnderecoListQueryResult,
-  IEnderecoRepository,
-} from "@/modules/localidades/endereco";
-import type { EnderecoEntity } from "@/modules/localidades/endereco/infrastructure.database/typeorm";
-import { createEnderecoRepository } from "./typeorm/endereco.typeorm.repository";
+} from "@/modules/localidades/endereco/domain/queries";
+import type { IEnderecoRepository } from "@/modules/localidades/endereco/domain/repositories";
+import { EnderecoEntity } from "./typeorm/endereco.typeorm.entity";
+
+const config = {
+  alias: "endereco",
+  outputDtoName: "EnderecoFindOneQueryResult",
+} as const;
+
+const enderecoPaginateConfig: ITypeOrmPaginationConfig<EnderecoEntity> = {
+  ...paginateConfig,
+  select: ["id", "cep", "logradouro", "numero", "bairro", "dateCreated"],
+  relations: {
+    cidade: {
+      estado: true,
+    },
+  },
+  sortableColumns: ["cep", "logradouro", "dateCreated"],
+  searchableColumns: ["id", "cep", "logradouro", "bairro"],
+  defaultSortBy: [
+    ["logradouro", "ASC"],
+    ["dateCreated", "ASC"],
+  ],
+  filterableColumns: {
+    "cidade.id": true,
+  },
+};
 
 @DeclareImplementation()
-export class EnderecoTypeOrmRepositoryAdapter
-  extends BaseTypeOrmRepositoryAdapter<
-    EnderecoEntity,
-    EnderecoListQuery,
-    EnderecoListQueryResult,
-    EnderecoFindOneQuery,
-    EnderecoFindOneQueryResult
-  >
-  implements IEnderecoRepository
-{
-  protected readonly alias = "endereco";
-  protected readonly outputDtoName = "EnderecoFindOneQueryResult";
-
+export class EnderecoTypeOrmRepositoryAdapter implements IEnderecoRepository {
   constructor(
     @DeclareDependency(IAppTypeormConnection)
-    protected readonly appTypeormConnection: IAppTypeormConnection,
-    protected readonly paginationAdapter: NestJsPaginateAdapter,
+    private readonly appTypeormConnection: IAppTypeormConnection,
+    private readonly paginationAdapter: NestJsPaginateAdapter,
+  ) {}
+
+  findAll(
+    accessContext: unknown,
+    dto: EnderecoListQuery | null = null,
+    selection?: string[] | boolean | null,
   ) {
-    super();
+    return typeormFindAll<EnderecoEntity, EnderecoListQuery, EnderecoListQueryResult>(
+      this.appTypeormConnection,
+      EnderecoEntity,
+      { ...config, paginateConfig: enderecoPaginateConfig },
+      this.paginationAdapter,
+      dto,
+      selection,
+    );
   }
 
-  protected get repository() {
-    return createEnderecoRepository(this.appTypeormConnection);
+  findById(
+    accessContext: unknown,
+    dto: EnderecoFindOneQuery,
+    selection?: string[] | boolean | null,
+  ) {
+    return typeormFindById<EnderecoEntity, EnderecoFindOneQuery, EnderecoFindOneQueryResult>(
+      this.appTypeormConnection,
+      EnderecoEntity,
+      config,
+      dto,
+      selection,
+    );
   }
 
-  // Custom method for internal lookup
+  findByIdSimple(accessContext: unknown, id: string, selection?: string[] | boolean | null) {
+    return this.findById(accessContext, { id } as EnderecoFindOneQuery, selection);
+  }
+
   async findOneById(id: string): Promise<EnderecoFindOneQueryResult | null> {
-    const endereco = await this.repository.findOne({
+    const repo = this.appTypeormConnection.getRepository(EnderecoEntity);
+    const endereco = await repo.findOne({
       where: { id },
       relations: ["cidade", "cidade.estado"],
     });
@@ -53,27 +95,19 @@ export class EnderecoTypeOrmRepositoryAdapter
   }
 
   async exists(id: string): Promise<boolean> {
-    return this.repository.exists({ where: { id } });
+    const repo = this.appTypeormConnection.getRepository(EnderecoEntity);
+    return repo.exists({ where: { id } });
   }
 
-  protected getPaginateConfig(): ITypeOrmPaginationConfig<EnderecoEntity> {
-    return {
-      ...paginateConfig,
-      select: ["id", "cep", "logradouro", "numero", "bairro", "dateCreated"],
-      relations: {
-        cidade: {
-          estado: true,
-        },
-      },
-      sortableColumns: ["cep", "logradouro", "dateCreated"],
-      searchableColumns: ["id", "cep", "logradouro", "bairro"],
-      defaultSortBy: [
-        ["logradouro", "ASC"],
-        ["dateCreated", "ASC"],
-      ],
-      filterableColumns: {
-        "cidade.id": true,
-      },
-    };
+  create(data: Record<string, any>) {
+    return typeormCreate(this.appTypeormConnection, EnderecoEntity, data);
+  }
+
+  update(id: string | number, data: Record<string, any>) {
+    return typeormUpdate(this.appTypeormConnection, EnderecoEntity, id, data);
+  }
+
+  softDeleteById(id: string) {
+    return typeormSoftDeleteById(this.appTypeormConnection, EnderecoEntity, config.alias, id);
   }
 }

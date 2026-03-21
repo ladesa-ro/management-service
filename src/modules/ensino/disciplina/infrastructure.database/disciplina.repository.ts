@@ -1,12 +1,16 @@
 import { FilterOperator, FilterSuffix } from "nestjs-paginate";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
+import { paginateConfig } from "@/infrastructure.database/pagination/config/paginate-config";
+import type { ITypeOrmPaginationConfig } from "@/infrastructure.database/pagination/interfaces/pagination-config.types";
+import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import {
-  BaseTypeOrmRepositoryAdapter,
-  IAppTypeormConnection,
-  type ITypeOrmPaginationConfig,
-  NestJsPaginateAdapter,
-  paginateConfig,
-} from "@/modules/@shared/infrastructure/persistence/typeorm";
+  typeormCreate,
+  typeormFindAll,
+  typeormFindById,
+  typeormSoftDeleteById,
+  typeormUpdate,
+} from "@/infrastructure.database/typeorm/helpers/typeorm-repository-helpers";
 import type {
   DisciplinaFindOneQuery,
   DisciplinaFindOneQueryResult,
@@ -14,46 +18,76 @@ import type {
   DisciplinaListQueryResult,
 } from "@/modules/ensino/disciplina/domain/queries";
 import type { IDisciplinaRepository } from "@/modules/ensino/disciplina/domain/repositories";
-import type { DisciplinaEntity } from "./typeorm/disciplina.typeorm.entity";
-import { createDisciplinaRepository } from "./typeorm/disciplina.typeorm.repository";
+import { DisciplinaEntity } from "./typeorm/disciplina.typeorm.entity";
+
+const config = {
+  alias: "disciplina",
+  outputDtoName: "DisciplinaFindOneQueryResult",
+  hasSoftDelete: true,
+} as const;
+
+const disciplinaPaginateConfig: ITypeOrmPaginationConfig<DisciplinaEntity> = {
+  ...paginateConfig,
+  relations: { diarios: true },
+  select: ["id", "nome", "nomeAbreviado", "cargaHoraria"],
+  sortableColumns: ["nome", "cargaHoraria"],
+  searchableColumns: ["id", "nome", "nomeAbreviado", "cargaHoraria"],
+  defaultSortBy: [["nome", "ASC"]],
+  filterableColumns: {
+    "diarios.id": [FilterOperator.EQ, FilterOperator.NULL, FilterSuffix.NOT],
+  },
+};
 
 @DeclareImplementation()
-export class DisciplinaTypeOrmRepositoryAdapter
-  extends BaseTypeOrmRepositoryAdapter<
-    DisciplinaEntity,
-    DisciplinaListQuery,
-    DisciplinaListQueryResult,
-    DisciplinaFindOneQuery,
-    DisciplinaFindOneQueryResult
-  >
-  implements IDisciplinaRepository
-{
-  protected readonly alias = "disciplina";
-  protected readonly outputDtoName = "DisciplinaFindOneQueryResult";
-
+export class DisciplinaTypeOrmRepositoryAdapter implements IDisciplinaRepository {
   constructor(
     @DeclareDependency(IAppTypeormConnection)
-    protected readonly appTypeormConnection: IAppTypeormConnection,
-    protected readonly paginationAdapter: NestJsPaginateAdapter,
+    private readonly appTypeormConnection: IAppTypeormConnection,
+    private readonly paginationAdapter: NestJsPaginateAdapter,
+  ) {}
+
+  findAll(
+    accessContext: unknown,
+    dto: DisciplinaListQuery | null = null,
+    selection?: string[] | boolean | null,
   ) {
-    super();
+    return typeormFindAll<DisciplinaEntity, DisciplinaListQuery, DisciplinaListQueryResult>(
+      this.appTypeormConnection,
+      DisciplinaEntity,
+      { ...config, paginateConfig: disciplinaPaginateConfig },
+      this.paginationAdapter,
+      dto,
+      selection,
+    );
   }
 
-  protected get repository() {
-    return createDisciplinaRepository(this.appTypeormConnection);
+  findById(
+    accessContext: unknown,
+    dto: DisciplinaFindOneQuery,
+    selection?: string[] | boolean | null,
+  ) {
+    return typeormFindById<DisciplinaEntity, DisciplinaFindOneQuery, DisciplinaFindOneQueryResult>(
+      this.appTypeormConnection,
+      DisciplinaEntity,
+      config,
+      dto,
+      selection,
+    );
   }
 
-  protected getPaginateConfig(): ITypeOrmPaginationConfig<DisciplinaEntity> {
-    return {
-      ...paginateConfig,
-      relations: { diarios: true },
-      select: ["id", "nome", "nomeAbreviado", "cargaHoraria"],
-      sortableColumns: ["nome", "cargaHoraria"],
-      searchableColumns: ["id", "nome", "nomeAbreviado", "cargaHoraria"],
-      defaultSortBy: [["nome", "ASC"]],
-      filterableColumns: {
-        "diarios.id": [FilterOperator.EQ, FilterOperator.NULL, FilterSuffix.NOT],
-      },
-    };
+  findByIdSimple(accessContext: unknown, id: string, selection?: string[] | boolean | null) {
+    return this.findById(accessContext, { id } as DisciplinaFindOneQuery, selection);
+  }
+
+  create(data: Record<string, any>) {
+    return typeormCreate(this.appTypeormConnection, DisciplinaEntity, data);
+  }
+
+  update(id: string | number, data: Record<string, any>) {
+    return typeormUpdate(this.appTypeormConnection, DisciplinaEntity, id, data);
+  }
+
+  softDeleteById(id: string) {
+    return typeormSoftDeleteById(this.appTypeormConnection, DisciplinaEntity, config.alias, id);
   }
 }

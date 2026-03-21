@@ -11,7 +11,7 @@ import { DeclareDependency } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7.js";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
-import { IAppTypeormConnection } from "@/modules/@shared/infrastructure/persistence/typeorm";
+import { IHorarioAulaRepository } from "../domain/repositories";
 import { HorarioAulaEntity } from "../infrastructure.database/typeorm/horario-aula.typeorm.entity";
 import {
   HorarioAulaCreateInputRestDto,
@@ -25,8 +25,8 @@ import {
 @Controller("/horarios-aula")
 export class HorarioAulaRestController {
   constructor(
-    @DeclareDependency(IAppTypeormConnection)
-    private readonly appTypeormConnection: IAppTypeormConnection,
+    @DeclareDependency(IHorarioAulaRepository)
+    private readonly repository: IHorarioAulaRepository,
   ) {}
 
   @Get("/")
@@ -40,17 +40,12 @@ export class HorarioAulaRestController {
     @AccessContextHttp() _accessContext: AccessContext,
     @Query("configuracaoId") configuracaoId?: string,
   ): Promise<HorarioAulaListOutputRestDto> {
-    const repo = this.appTypeormConnection.getRepository(HorarioAulaEntity);
-
     const where: Record<string, unknown> = {};
     if (configuracaoId) {
       where.idHorarioAulaConfiguracaoFk = configuracaoId;
     }
 
-    const entities = await repo.find({
-      where,
-      order: { inicio: "ASC" },
-    });
+    const entities = await this.repository.findAll(where);
 
     return {
       data: entities.map((e) => this.toOutputDto(e)),
@@ -66,8 +61,7 @@ export class HorarioAulaRestController {
     @AccessContextHttp() _accessContext: AccessContext,
     @Param() params: HorarioAulaFindOneParamsRestDto,
   ): Promise<HorarioAulaFindOneOutputRestDto> {
-    const repo = this.appTypeormConnection.getRepository(HorarioAulaEntity);
-    const entity = await repo.findOneBy({ id: params.id });
+    const entity = await this.repository.findById(params.id);
     ensureExists(entity, "HorarioAula", params.id);
     return this.toOutputDto(entity!);
   }
@@ -80,14 +74,13 @@ export class HorarioAulaRestController {
     @AccessContextHttp() _accessContext: AccessContext,
     @Body() dto: HorarioAulaCreateInputRestDto,
   ): Promise<HorarioAulaFindOneOutputRestDto> {
-    const repo = this.appTypeormConnection.getRepository(HorarioAulaEntity);
     const entity = new HorarioAulaEntity();
     entity.id = generateUuidV7();
     entity.inicio = dto.inicio;
     entity.fim = dto.fim;
     entity.idHorarioAulaConfiguracaoFk = dto.horarioAulaConfiguracaoId;
     (entity as any).horarioAulaConfiguracao = { id: dto.horarioAulaConfiguracaoId };
-    await repo.save(entity);
+    await this.repository.save(entity);
     return this.toOutputDto(entity);
   }
 
@@ -101,8 +94,7 @@ export class HorarioAulaRestController {
     @Param() params: HorarioAulaFindOneParamsRestDto,
     @Body() dto: HorarioAulaUpdateInputRestDto,
   ): Promise<HorarioAulaFindOneOutputRestDto> {
-    const repo = this.appTypeormConnection.getRepository(HorarioAulaEntity);
-    const entity = await repo.findOneBy({ id: params.id });
+    const entity = await this.repository.findById(params.id);
     ensureExists(entity, "HorarioAula", params.id);
 
     if (dto.inicio !== undefined) entity!.inicio = dto.inicio;
@@ -111,7 +103,7 @@ export class HorarioAulaRestController {
       entity!.idHorarioAulaConfiguracaoFk = dto.horarioAulaConfiguracaoId;
     }
 
-    await repo.save(entity!);
+    await this.repository.save(entity!);
     return this.toOutputDto(entity!);
   }
 
@@ -124,10 +116,9 @@ export class HorarioAulaRestController {
     @AccessContextHttp() _accessContext: AccessContext,
     @Param() params: HorarioAulaFindOneParamsRestDto,
   ): Promise<boolean> {
-    const repo = this.appTypeormConnection.getRepository(HorarioAulaEntity);
-    const entity = await repo.findOneBy({ id: params.id });
+    const entity = await this.repository.findById(params.id);
     ensureExists(entity, "HorarioAula", params.id);
-    await repo.remove(entity!);
+    await this.repository.remove(entity!);
     return true;
   }
 

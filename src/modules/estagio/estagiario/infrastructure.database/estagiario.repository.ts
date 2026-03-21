@@ -1,13 +1,13 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
-import { IAppTypeormConnection } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { Perfil } from "@/modules/acesso/perfil/domain/perfil";
-import { createPerfilRepository } from "@/modules/acesso/perfil/infrastructure.database/typeorm/perfil.typeorm.repository";
+import { PerfilEntity } from "@/modules/acesso/perfil/infrastructure.database/typeorm/perfil.typeorm.entity";
 import { Curso } from "@/modules/ensino/curso/domain/curso";
-import { createCursoRepository } from "@/modules/ensino/curso/infrastructure.database/typeorm/curso.typeorm.repository";
+import { CursoEntity } from "@/modules/ensino/curso/infrastructure.database/typeorm/curso.typeorm.entity";
 import { Turma } from "@/modules/ensino/turma/domain/turma";
-import { createTurmaRepository } from "@/modules/ensino/turma/infrastructure.database/typeorm/turma.typeorm.repository";
+import { TurmaEntity } from "@/modules/ensino/turma/infrastructure.database/typeorm/turma.typeorm.entity";
 import type {
   EstagiarioCreateCommand,
   EstagiarioUpdateCommand,
@@ -20,7 +20,7 @@ import type {
   EstagiarioListQueryResult,
 } from "@/modules/estagio/estagiario/domain/queries";
 import type { IEstagiarioRepository } from "@/modules/estagio/estagiario/domain/repositories";
-import { createEstagiarioRepository, EstagiarioMapper } from "./typeorm";
+import { EstagiarioMapper, EstagiarioTypeormEntity } from "./typeorm";
 
 @DeclareImplementation()
 export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository {
@@ -30,19 +30,22 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
   ) {}
 
   private get repository() {
-    return createEstagiarioRepository(this.appTypeormConnection);
+    return this.appTypeormConnection.getRepository(EstagiarioTypeormEntity);
   }
 
+  // cross-module: uses TypeORM directly for existence check (PerfilEntity)
   private get perfilRepository() {
-    return createPerfilRepository(this.appTypeormConnection);
+    return this.appTypeormConnection.getRepository(PerfilEntity);
   }
 
+  // cross-module: uses TypeORM directly for existence check (CursoEntity)
   private get cursoRepository() {
-    return createCursoRepository(this.appTypeormConnection);
+    return this.appTypeormConnection.getRepository(CursoEntity);
   }
 
+  // cross-module: uses TypeORM directly for existence check (TurmaEntity)
   private get turmaRepository() {
-    return createTurmaRepository(this.appTypeormConnection);
+    return this.appTypeormConnection.getRepository(TurmaEntity);
   }
 
   async findAll(

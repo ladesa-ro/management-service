@@ -1,12 +1,16 @@
 import { FilterOperator } from "nestjs-paginate";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
+import { paginateConfig } from "@/infrastructure.database/pagination/config/paginate-config";
+import type { ITypeOrmPaginationConfig } from "@/infrastructure.database/pagination/interfaces/pagination-config.types";
+import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import {
-  BaseTypeOrmRepositoryAdapter,
-  IAppTypeormConnection,
-  type ITypeOrmPaginationConfig,
-  NestJsPaginateAdapter,
-  paginateConfig,
-} from "@/modules/@shared/infrastructure/persistence/typeorm";
+  typeormCreate,
+  typeormFindAll,
+  typeormFindById,
+  typeormSoftDeleteById,
+  typeormUpdate,
+} from "@/infrastructure.database/typeorm/helpers/typeorm-repository-helpers";
 import type {
   CalendarioLetivoFindOneQuery,
   CalendarioLetivoFindOneQueryResult,
@@ -14,79 +18,116 @@ import type {
   CalendarioLetivoListQueryResult,
   ICalendarioLetivoRepository,
 } from "@/modules/horarios/calendario-letivo";
-import type { CalendarioLetivoEntity } from "./typeorm/calendario-letivo.typeorm.entity";
-import { createCalendarioLetivoRepository } from "./typeorm/calendario-letivo.typeorm.repository";
+import { CalendarioLetivoEntity } from "./typeorm/calendario-letivo.typeorm.entity";
+
+const config = {
+  alias: "calendario_letivo",
+  outputDtoName: "CalendarioLetivoFindOneQueryResult",
+  hasSoftDelete: true,
+} as const;
+
+const calendarioLetivoPaginateConfig: ITypeOrmPaginationConfig<CalendarioLetivoEntity> = {
+  ...paginateConfig,
+  select: [
+    "id",
+    "nome",
+    "ano",
+    "campus",
+    "ofertaFormacao",
+    "campus.id",
+    "campus.cnpj",
+    "campus.razaoSocial",
+    "campus.nomeFantasia",
+    "ofertaFormacao.id",
+    "ofertaFormacao.nome",
+    "ofertaFormacao.slug",
+  ],
+  sortableColumns: [
+    "nome",
+    "ano",
+    "campus.id",
+    "campus.cnpj",
+    "campus.razaoSocial",
+    "campus.nomeFantasia",
+    "ofertaFormacao.id",
+    "ofertaFormacao.nome",
+    "ofertaFormacao.slug",
+  ],
+  searchableColumns: ["id", "nome", "ano", "campus", "ofertaFormacao"],
+  relations: {
+    campus: true,
+    ofertaFormacao: true,
+  },
+  defaultSortBy: [],
+  filterableColumns: {
+    ano: [FilterOperator.EQ],
+    "campus.id": [FilterOperator.EQ],
+    "campus.cnpj": [FilterOperator.EQ],
+    "campus.razaoSocial": [FilterOperator.EQ],
+    "campus.nomeFantasia": [FilterOperator.EQ],
+    "ofertaFormacao.id": [FilterOperator.EQ],
+    "ofertaFormacao.nome": [FilterOperator.EQ],
+    "ofertaFormacao.slug": [FilterOperator.EQ],
+  },
+};
 
 @DeclareImplementation()
-export class CalendarioLetivoTypeOrmRepositoryAdapter
-  extends BaseTypeOrmRepositoryAdapter<
-    CalendarioLetivoEntity,
-    CalendarioLetivoListQuery,
-    CalendarioLetivoListQueryResult,
-    CalendarioLetivoFindOneQuery,
-    CalendarioLetivoFindOneQueryResult
-  >
-  implements ICalendarioLetivoRepository
-{
-  protected readonly alias = "calendario_letivo";
-  protected readonly outputDtoName = "CalendarioLetivoFindOneQueryResult";
-
+export class CalendarioLetivoTypeOrmRepositoryAdapter implements ICalendarioLetivoRepository {
   constructor(
     @DeclareDependency(IAppTypeormConnection)
-    protected readonly appTypeormConnection: IAppTypeormConnection,
-    protected readonly paginationAdapter: NestJsPaginateAdapter,
+    private readonly appTypeormConnection: IAppTypeormConnection,
+    private readonly paginationAdapter: NestJsPaginateAdapter,
+  ) {}
+
+  findAll(
+    accessContext: unknown,
+    dto: CalendarioLetivoListQuery | null = null,
+    selection?: string[] | boolean | null,
   ) {
-    super();
+    return typeormFindAll<
+      CalendarioLetivoEntity,
+      CalendarioLetivoListQuery,
+      CalendarioLetivoListQueryResult
+    >(
+      this.appTypeormConnection,
+      CalendarioLetivoEntity,
+      { ...config, paginateConfig: calendarioLetivoPaginateConfig },
+      this.paginationAdapter,
+      dto,
+      selection,
+    );
   }
 
-  protected get repository() {
-    return createCalendarioLetivoRepository(this.appTypeormConnection);
+  findById(
+    accessContext: unknown,
+    dto: CalendarioLetivoFindOneQuery,
+    selection?: string[] | boolean | null,
+  ) {
+    return typeormFindById<
+      CalendarioLetivoEntity,
+      CalendarioLetivoFindOneQuery,
+      CalendarioLetivoFindOneQueryResult
+    >(this.appTypeormConnection, CalendarioLetivoEntity, config, dto, selection);
   }
 
-  protected getPaginateConfig(): ITypeOrmPaginationConfig<CalendarioLetivoEntity> {
-    return {
-      ...paginateConfig,
-      select: [
-        "id",
-        "nome",
-        "ano",
-        "campus",
-        "ofertaFormacao",
-        "campus.id",
-        "campus.cnpj",
-        "campus.razaoSocial",
-        "campus.nomeFantasia",
-        "ofertaFormacao.id",
-        "ofertaFormacao.nome",
-        "ofertaFormacao.slug",
-      ],
-      sortableColumns: [
-        "nome",
-        "ano",
-        "campus.id",
-        "campus.cnpj",
-        "campus.razaoSocial",
-        "campus.nomeFantasia",
-        "ofertaFormacao.id",
-        "ofertaFormacao.nome",
-        "ofertaFormacao.slug",
-      ],
-      searchableColumns: ["id", "nome", "ano", "campus", "ofertaFormacao"],
-      relations: {
-        campus: true,
-        ofertaFormacao: true,
-      },
-      defaultSortBy: [],
-      filterableColumns: {
-        ano: [FilterOperator.EQ],
-        "campus.id": [FilterOperator.EQ],
-        "campus.cnpj": [FilterOperator.EQ],
-        "campus.razaoSocial": [FilterOperator.EQ],
-        "campus.nomeFantasia": [FilterOperator.EQ],
-        "ofertaFormacao.id": [FilterOperator.EQ],
-        "ofertaFormacao.nome": [FilterOperator.EQ],
-        "ofertaFormacao.slug": [FilterOperator.EQ],
-      },
-    };
+  findByIdSimple(accessContext: unknown, id: string, selection?: string[] | boolean | null) {
+    return this.findById(accessContext, { id } as CalendarioLetivoFindOneQuery, selection);
+  }
+
+  create(data: Record<string, any>) {
+    return typeormCreate(this.appTypeormConnection, CalendarioLetivoEntity, data);
+  }
+
+  update(id: string | number, data: Record<string, any>) {
+    return typeormUpdate(this.appTypeormConnection, CalendarioLetivoEntity, id, data);
+  }
+
+  softDeleteById(id: string) {
+    return typeormSoftDeleteById(
+      this.appTypeormConnection,
+      CalendarioLetivoEntity,
+      config.alias,
+      id,
+    );
   }
 }

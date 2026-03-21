@@ -8,17 +8,9 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { DeclareDependency } from "@/domain/dependency-injection";
-import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7.js";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
-import { IAppTypeormConnection } from "@/modules/@shared/infrastructure/persistence/typeorm";
-import { PerfilEntity } from "@/modules/acesso/perfil/infrastructure.database/typeorm/perfil.typeorm.entity";
-import {
-  CalendarioAgendamentoEntity,
-  CalendarioAgendamentoStatus,
-  CalendarioAgendamentoTipo,
-} from "@/modules/horarios/calendario-agendamento/infrastructure.database/typeorm/calendario-agendamento.typeorm.entity";
-import { CalendarioAgendamentoProfessorEntity } from "@/modules/horarios/calendario-agendamento-professor/infrastructure.database/typeorm/calendario-agendamento-professor.typeorm.entity";
+import { IUsuarioEventoRepository } from "@/modules/acesso/usuario/domain/repositories/usuario-evento.repository.interface";
 import {
   UsuarioEventoCreateInputRestDto,
   UsuarioEventoFindOneOutputRestDto,
@@ -32,15 +24,9 @@ import {
 @Controller("/usuarios/:id/eventos")
 export class UsuarioEventoRestController {
   constructor(
-    @DeclareDependency(IAppTypeormConnection)
-    private readonly appTypeormConnection: IAppTypeormConnection,
+    @DeclareDependency(IUsuarioEventoRepository)
+    private readonly eventoRepository: IUsuarioEventoRepository,
   ) {}
-
-  private async findPerfilIdForUsuario(usuarioId: string): Promise<string | null> {
-    const perfilRepo = this.appTypeormConnection.getRepository(PerfilEntity);
-    const perfil = await perfilRepo.findOneBy({ usuario: { id: usuarioId } as any });
-    return perfil?.id ?? null;
-  }
 
   @Get("/")
   @ApiOperation({
@@ -53,32 +39,15 @@ export class UsuarioEventoRestController {
     @AccessContextHttp() _accessContext: AccessContext,
     @Param() parentParams: UsuarioEventoParentParamsRestDto,
   ): Promise<UsuarioEventoListOutputRestDto> {
-    const junctionRepo = this.appTypeormConnection.getRepository(
-      CalendarioAgendamentoProfessorEntity,
-    );
-
-    // Find all perfils for this usuario
-    const perfilRepo = this.appTypeormConnection.getRepository(PerfilEntity);
-    const perfis = await perfilRepo.find({
-      where: { usuario: { id: parentParams.id } as any },
-    });
-    const perfilIds = perfis.map((p) => p.id);
+    const perfilIds = await this.eventoRepository.findPerfilIdsByUsuario(parentParams.id);
 
     if (perfilIds.length === 0) {
       return { data: [] };
     }
 
-    const junctions = await junctionRepo
-      .createQueryBuilder("cap")
-      .leftJoinAndSelect("cap.calendarioAgendamento", "ca")
-      .where("cap.id_perfil_fk IN (:...perfilIds)", { perfilIds })
-      .getMany();
+    const data = await this.eventoRepository.findEventosByPerfilIds(perfilIds);
 
-    return {
-      data: junctions
-        .filter((j) => j.calendarioAgendamento?.status !== CalendarioAgendamentoStatus.INATIVO)
-        .map((j) => this.toOutputDto(j.calendarioAgendamento)),
-    };
+    return { data };
   }
 
   @Post("/")
@@ -93,48 +62,19 @@ export class UsuarioEventoRestController {
     @Param() parentParams: UsuarioEventoParentParamsRestDto,
     @Body() dto: UsuarioEventoCreateInputRestDto,
   ): Promise<UsuarioEventoFindOneOutputRestDto> {
-    const agendamentoRepo = this.appTypeormConnection.getRepository(CalendarioAgendamentoEntity);
-    const junctionRepo = this.appTypeormConnection.getRepository(
-      CalendarioAgendamentoProfessorEntity,
-    );
+    const perfilId = await this.eventoRepository.findPerfilIdByUsuario(parentParams.id);
 
-    // Resolve perfil for this usuario
-    const perfilId = await this.findPerfilIdForUsuario(parentParams.id);
-    if (!perfilId) {
-      // Create the event anyway, linking will happen when perfil exists
-      // For now, use the usuario ID as a fallback
-    }
-
-    const tipo =
-      dto.tipo === "INDISPONIBILIDADE"
-        ? CalendarioAgendamentoTipo.INDISPONIBILIDADE
-        : CalendarioAgendamentoTipo.EVENTO;
-
-    const evento = new CalendarioAgendamentoEntity();
-    evento.id = generateUuidV7();
-    evento.tipo = tipo;
-    evento.nome = dto.nome;
-    evento.dataInicio = new Date(dto.dataInicio);
-    evento.dataFim = dto.dataFim ? new Date(dto.dataFim) : null;
-    evento.diaInteiro = dto.diaInteiro;
-    evento.horarioInicio = dto.horarioInicio ?? "00:00:00";
-    evento.horarioFim = dto.horarioFim ?? "23:59:59";
-    evento.cor = dto.cor ?? null;
-    evento.repeticao = dto.repeticao ?? null;
-    evento.status = CalendarioAgendamentoStatus.ATIVO;
-    await agendamentoRepo.save(evento);
-
-    if (perfilId) {
-      const junction = new CalendarioAgendamentoProfessorEntity();
-      junction.id = generateUuidV7();
-      junction.idPerfilFk = perfilId;
-      junction.idCalendarioAgendamentoFk = evento.id;
-      (junction as any).perfil = { id: perfilId };
-      (junction as any).calendarioAgendamento = { id: evento.id };
-      await junctionRepo.save(junction);
-    }
-
-    return this.toOutputDto(evento);
+    return this.eventoRepository.createEvento(perfilId, {
+      nome: dto.nome,
+      tipo: dto.tipo,
+      dataInicio: dto.dataInicio,
+      dataFim: dto.dataFim,
+      diaInteiro: dto.diaInteiro,
+      horarioInicio: dto.horarioInicio,
+      horarioFim: dto.horarioFim,
+      cor: dto.cor,
+      repeticao: dto.repeticao,
+    });
   }
 
   @Patch("/:eventoId")
@@ -147,21 +87,20 @@ export class UsuarioEventoRestController {
     @Param() params: UsuarioEventoItemParamsRestDto,
     @Body() dto: UsuarioEventoUpdateInputRestDto,
   ): Promise<UsuarioEventoFindOneOutputRestDto> {
-    const agendamentoRepo = this.appTypeormConnection.getRepository(CalendarioAgendamentoEntity);
-    const entity = await agendamentoRepo.findOneBy({ id: params.eventoId });
-    ensureExists(entity, "UsuarioEvento", params.eventoId);
+    const result = await this.eventoRepository.updateEvento(params.eventoId, {
+      nome: dto.nome,
+      dataInicio: dto.dataInicio,
+      dataFim: dto.dataFim,
+      diaInteiro: dto.diaInteiro,
+      horarioInicio: dto.horarioInicio,
+      horarioFim: dto.horarioFim,
+      cor: dto.cor,
+      repeticao: dto.repeticao,
+    });
 
-    if (dto.nome !== undefined) entity!.nome = dto.nome;
-    if (dto.dataInicio !== undefined) entity!.dataInicio = new Date(dto.dataInicio);
-    if (dto.dataFim !== undefined) entity!.dataFim = dto.dataFim ? new Date(dto.dataFim) : null;
-    if (dto.diaInteiro !== undefined) entity!.diaInteiro = dto.diaInteiro;
-    if (dto.horarioInicio !== undefined) entity!.horarioInicio = dto.horarioInicio;
-    if (dto.horarioFim !== undefined) entity!.horarioFim = dto.horarioFim;
-    if (dto.cor !== undefined) entity!.cor = dto.cor ?? null;
-    if (dto.repeticao !== undefined) entity!.repeticao = dto.repeticao ?? null;
+    ensureExists(result, "UsuarioEvento", params.eventoId);
 
-    await agendamentoRepo.save(entity!);
-    return this.toOutputDto(entity!);
+    return result!;
   }
 
   @Delete("/:eventoId")
@@ -173,47 +112,7 @@ export class UsuarioEventoRestController {
     @AccessContextHttp() _accessContext: AccessContext,
     @Param() params: UsuarioEventoItemParamsRestDto,
   ): Promise<boolean> {
-    const junctionRepo = this.appTypeormConnection.getRepository(
-      CalendarioAgendamentoProfessorEntity,
-    );
-
-    // Find and remove junction entries for this event associated with the user's perfils
-    const perfilRepo = this.appTypeormConnection.getRepository(PerfilEntity);
-    const perfis = await perfilRepo.find({
-      where: { usuario: { id: params.id } as any },
-    });
-
-    for (const perfil of perfis) {
-      await junctionRepo.delete({
-        idPerfilFk: perfil.id,
-        idCalendarioAgendamentoFk: params.eventoId,
-      });
-    }
-
+    await this.eventoRepository.deleteEventoForUsuario(params.id, params.eventoId);
     return true;
-  }
-
-  private toOutputDto(entity: CalendarioAgendamentoEntity): UsuarioEventoFindOneOutputRestDto {
-    return {
-      id: entity.id,
-      nome: entity.nome,
-      tipo: entity.tipo,
-      dataInicio:
-        entity.dataInicio instanceof Date
-          ? entity.dataInicio.toISOString().split("T")[0]
-          : String(entity.dataInicio),
-      dataFim:
-        entity.dataFim instanceof Date
-          ? entity.dataFim.toISOString().split("T")[0]
-          : entity.dataFim
-            ? String(entity.dataFim)
-            : null,
-      diaInteiro: entity.diaInteiro,
-      horarioInicio: entity.horarioInicio,
-      horarioFim: entity.horarioFim,
-      cor: entity.cor,
-      repeticao: entity.repeticao,
-      status: entity.status,
-    };
   }
 }

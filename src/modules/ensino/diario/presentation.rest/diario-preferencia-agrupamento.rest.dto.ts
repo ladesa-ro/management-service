@@ -49,14 +49,14 @@ export class DiarioPreferenciaAgrupamentoParentParamsRestDto {
 
 @ApiSchema({ name: "DiarioPreferenciaAgrupamentoFindOneOutputDto" })
 @RegisterModel({
-  name: "DiarioPreferenciaAgrupamentoFindOneOutputDto",
+  name: "DiarioPreferenciaAgrupamentoFindOneQueryResult",
   properties: [
     simpleProperty("id"),
     simpleProperty("dataInicio"),
     simpleProperty("dataFim", { nullable: true }),
     simpleProperty("diaSemanaIso"),
     simpleProperty("aulasSeguidas"),
-    referenceProperty("diario", "DiarioFindOneOutputDto"),
+    referenceProperty("diario", "DiarioFindOneQueryResult"),
     ...commonProperties.dated,
   ],
 })

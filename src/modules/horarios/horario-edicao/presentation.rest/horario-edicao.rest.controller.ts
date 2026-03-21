@@ -20,16 +20,10 @@ import { DeclareDependency } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7.js";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
-import { IAppTypeormConnection } from "@/modules/@shared/infrastructure/persistence/typeorm";
-import {
-  CalendarioAgendamentoEntity,
-  CalendarioAgendamentoStatus,
-  CalendarioAgendamentoTipo,
-} from "@/modules/horarios/calendario-agendamento/infrastructure.database/typeorm/calendario-agendamento.typeorm.entity";
-import {
-  HorarioEdicaoMudancaEntity,
-  HorarioEdicaoMudancaTipoOperacao,
-} from "../infrastructure.database/typeorm/horario-edicao-mudanca.typeorm.entity";
+import { IHorarioEdicaoApplicator } from "../domain/repositories/horario-edicao-applicator.interface";
+import { IHorarioEdicaoMudancaRepository } from "../domain/repositories/horario-edicao-mudanca.repository.interface";
+import { IHorarioEdicaoSessaoRepository } from "../domain/repositories/horario-edicao-sessao.repository.interface";
+import { HorarioEdicaoMudancaEntity } from "../infrastructure.database/typeorm/horario-edicao-mudanca.typeorm.entity";
 import {
   HorarioEdicaoSessaoEntity,
   HorarioEdicaoSessaoStatus,
@@ -45,8 +39,12 @@ import {
 @Controller("/horarios/edicao")
 export class HorarioEdicaoRestController {
   constructor(
-    @DeclareDependency(IAppTypeormConnection)
-    private readonly appTypeormConnection: IAppTypeormConnection,
+    @DeclareDependency(IHorarioEdicaoSessaoRepository)
+    private readonly sessaoRepository: IHorarioEdicaoSessaoRepository,
+    @DeclareDependency(IHorarioEdicaoMudancaRepository)
+    private readonly mudancaRepository: IHorarioEdicaoMudancaRepository,
+    @DeclareDependency(IHorarioEdicaoApplicator)
+    private readonly horarioEdicaoApplicator: IHorarioEdicaoApplicator,
   ) {}
 
   private toSessaoOutput(entity: HorarioEdicaoSessaoEntity): HorarioEdicaoSessaoOutputRestDto {
@@ -81,8 +79,6 @@ export class HorarioEdicaoRestController {
   async create(
     @AccessContextHttp() accessContext: AccessContext,
   ): Promise<HorarioEdicaoSessaoOutputRestDto> {
-    const repo = this.appTypeormConnection.getRepository(HorarioEdicaoSessaoEntity);
-
     const entity = new HorarioEdicaoSessaoEntity();
     entity.id = generateUuidV7();
     entity.status = HorarioEdicaoSessaoStatus.ABERTA;
@@ -90,7 +86,7 @@ export class HorarioEdicaoRestController {
     entity.dateCreated = new Date();
     entity.dateUpdated = new Date();
 
-    await repo.save(entity);
+    await this.sessaoRepository.save(entity);
 
     return this.toSessaoOutput(entity);
   }
@@ -109,10 +105,7 @@ export class HorarioEdicaoRestController {
     @Param() params: HorarioEdicaoSessaoParamsRestDto,
     @Body() dto: HorarioEdicaoMudancaInputRestDto,
   ): Promise<HorarioEdicaoMudancaOutputRestDto> {
-    const sessaoRepo = this.appTypeormConnection.getRepository(HorarioEdicaoSessaoEntity);
-    const mudancaRepo = this.appTypeormConnection.getRepository(HorarioEdicaoMudancaEntity);
-
-    const sessao = await sessaoRepo.findOneBy({ id: params.sessaoId });
+    const sessao = await this.sessaoRepository.findById(params.sessaoId);
     ensureExists(sessao, "HorarioEdicaoSessao", params.sessaoId);
 
     if (sessao!.status !== HorarioEdicaoSessaoStatus.ABERTA) {
@@ -129,11 +122,11 @@ export class HorarioEdicaoRestController {
     mudanca.dados = dto.dados;
     mudanca.dateCreated = new Date();
 
-    await mudancaRepo.save(mudanca);
+    await this.mudancaRepository.save(mudanca);
 
     // Update sessao dateUpdated
     sessao!.dateUpdated = new Date();
-    await sessaoRepo.save(sessao!);
+    await this.sessaoRepository.save(sessao!);
 
     return this.toMudancaOutput(mudanca);
   }
@@ -151,9 +144,7 @@ export class HorarioEdicaoRestController {
     @AccessContextHttp() _accessContext: AccessContext,
     @Param() params: HorarioEdicaoSessaoParamsRestDto,
   ): Promise<HorarioEdicaoSessaoOutputRestDto> {
-    const repo = this.appTypeormConnection.getRepository(HorarioEdicaoSessaoEntity);
-
-    const sessao = await repo.findOneBy({ id: params.sessaoId });
+    const sessao = await this.sessaoRepository.findById(params.sessaoId);
     ensureExists(sessao, "HorarioEdicaoSessao", params.sessaoId);
 
     if (sessao!.status !== HorarioEdicaoSessaoStatus.ABERTA) {
@@ -162,76 +153,14 @@ export class HorarioEdicaoRestController {
       );
     }
 
-    // Apply recorded changes to calendario_agendamento in a transaction
-    await this.appTypeormConnection.transaction(async (manager) => {
-      const mudancaRepo = manager.getRepository(HorarioEdicaoMudancaEntity);
-      const agendamentoRepo = manager.getRepository(CalendarioAgendamentoEntity);
+    // Apply recorded changes to calendario_agendamento
+    const mudancas = await this.mudancaRepository.findBySessaoId(params.sessaoId);
+    await this.horarioEdicaoApplicator.applyMudancas(mudancas);
 
-      const mudancas = await mudancaRepo.find({
-        where: { idSessaoFk: params.sessaoId },
-        order: { dateCreated: "ASC" },
-      });
-
-      for (const mudanca of mudancas) {
-        const dados = mudanca.dados;
-
-        switch (mudanca.tipoOperacao) {
-          case HorarioEdicaoMudancaTipoOperacao.CRIAR: {
-            const agendamento = new CalendarioAgendamentoEntity();
-            agendamento.id = generateUuidV7();
-            agendamento.tipo =
-              (dados.tipo as CalendarioAgendamentoTipo) ?? CalendarioAgendamentoTipo.AULA;
-            agendamento.nome = (dados.nome as string) ?? null;
-            agendamento.dataInicio = new Date(dados.dataInicio as string);
-            agendamento.dataFim = dados.dataFim ? new Date(dados.dataFim as string) : null;
-            agendamento.diaInteiro = (dados.diaInteiro as boolean) ?? false;
-            agendamento.horarioInicio = (dados.horarioInicio as string) ?? "00:00:00";
-            agendamento.horarioFim = (dados.horarioFim as string) ?? "23:59:59";
-            agendamento.repeticao = (dados.repeticao as string) ?? null;
-            agendamento.cor = (dados.cor as string) ?? null;
-            agendamento.status = CalendarioAgendamentoStatus.ATIVO;
-            await agendamentoRepo.save(agendamento);
-            break;
-          }
-
-          case HorarioEdicaoMudancaTipoOperacao.MOVER: {
-            if (!mudanca.idCalendarioAgendamentoFk) break;
-            const existing = await agendamentoRepo.findOneBy({
-              id: mudanca.idCalendarioAgendamentoFk,
-            });
-            if (!existing) break;
-
-            if (dados.dataInicio !== undefined)
-              existing.dataInicio = new Date(dados.dataInicio as string);
-            if (dados.dataFim !== undefined)
-              existing.dataFim = dados.dataFim ? new Date(dados.dataFim as string) : null;
-            if (dados.horarioInicio !== undefined)
-              existing.horarioInicio = dados.horarioInicio as string;
-            if (dados.horarioFim !== undefined) existing.horarioFim = dados.horarioFim as string;
-            if (dados.nome !== undefined) existing.nome = dados.nome as string;
-            if (dados.diaInteiro !== undefined) existing.diaInteiro = dados.diaInteiro as boolean;
-            await agendamentoRepo.save(existing);
-            break;
-          }
-
-          case HorarioEdicaoMudancaTipoOperacao.REMOVER: {
-            if (!mudanca.idCalendarioAgendamentoFk) break;
-            const toRemove = await agendamentoRepo.findOneBy({
-              id: mudanca.idCalendarioAgendamentoFk,
-            });
-            if (!toRemove) break;
-            toRemove.status = CalendarioAgendamentoStatus.INATIVO;
-            await agendamentoRepo.save(toRemove);
-            break;
-          }
-        }
-      }
-
-      // Mark session as saved
-      sessao!.status = HorarioEdicaoSessaoStatus.SALVA;
-      sessao!.dateUpdated = new Date();
-      await manager.save(HorarioEdicaoSessaoEntity, sessao!);
-    });
+    // Mark session as saved
+    sessao!.status = HorarioEdicaoSessaoStatus.SALVA;
+    sessao!.dateUpdated = new Date();
+    await this.sessaoRepository.save(sessao!);
 
     return this.toSessaoOutput(sessao!);
   }
@@ -249,9 +178,7 @@ export class HorarioEdicaoRestController {
     @AccessContextHttp() _accessContext: AccessContext,
     @Param() params: HorarioEdicaoSessaoParamsRestDto,
   ): Promise<HorarioEdicaoSessaoOutputRestDto> {
-    const repo = this.appTypeormConnection.getRepository(HorarioEdicaoSessaoEntity);
-
-    const sessao = await repo.findOneBy({ id: params.sessaoId });
+    const sessao = await this.sessaoRepository.findById(params.sessaoId);
     ensureExists(sessao, "HorarioEdicaoSessao", params.sessaoId);
 
     if (sessao!.status !== HorarioEdicaoSessaoStatus.ABERTA) {
@@ -262,7 +189,7 @@ export class HorarioEdicaoRestController {
 
     sessao!.status = HorarioEdicaoSessaoStatus.CANCELADA;
     sessao!.dateUpdated = new Date();
-    await repo.save(sessao!);
+    await this.sessaoRepository.save(sessao!);
 
     return this.toSessaoOutput(sessao!);
   }

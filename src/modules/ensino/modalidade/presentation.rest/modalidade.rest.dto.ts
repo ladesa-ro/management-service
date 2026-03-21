@@ -21,7 +21,7 @@ import { ModalidadeFieldsMixin } from "../presentation.validations/modalidade.va
 
 @ApiSchema({ name: "ModalidadeFindOneOutputDto" })
 @RegisterModel({
-  name: "ModalidadeFindOneOutputDto",
+  name: "ModalidadeFindOneQueryResult",
   properties: [
     simpleProperty("id"),
     simpleProperty("nome"),

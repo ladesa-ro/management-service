@@ -39,14 +39,14 @@ import {
 
 @ApiSchema({ name: "CursoFindOneOutputDto" })
 @RegisterModel({
-  name: "CursoFindOneOutputDto",
+  name: "CursoFindOneQueryResult",
   properties: [
     simpleProperty("id"),
     simpleProperty("nome"),
     simpleProperty("nomeAbreviado"),
-    referenceProperty("campus", "CampusFindOneOutputDto"),
-    referenceProperty("ofertaFormacao", "OfertaFormacaoFindOneOutputDto"),
-    referenceProperty("imagemCapa", "ImagemFindOneOutputDto", { nullable: true }),
+    referenceProperty("campus", "CampusFindOneQueryResult"),
+    referenceProperty("ofertaFormacao", "OfertaFormacaoFindOneQueryResult"),
+    referenceProperty("imagemCapa", "ImagemFindOneQueryResult", { nullable: true }),
     ...commonProperties.dated,
   ],
 })

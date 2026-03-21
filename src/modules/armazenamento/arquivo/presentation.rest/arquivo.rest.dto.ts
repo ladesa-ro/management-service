@@ -27,7 +27,7 @@ import {
 
 @ApiSchema({ name: "ArquivoFindOneOutputDto" })
 @RegisterModel({
-  name: "ArquivoFindOneOutputDto",
+  name: "ArquivoFindOneQueryResult",
   properties: [
     simpleProperty("id"),
     simpleProperty("name"),

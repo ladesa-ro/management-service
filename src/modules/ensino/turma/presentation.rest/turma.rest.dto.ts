@@ -40,13 +40,13 @@ import { TurmaFieldsMixin } from "@/modules/ensino/turma/presentation.validation
 
 @ApiSchema({ name: "TurmaFindOneOutputDto" })
 @RegisterModel({
-  name: "TurmaFindOneOutputDto",
+  name: "TurmaFindOneQueryResult",
   properties: [
     simpleProperty("id"),
     simpleProperty("periodo"),
-    referenceProperty("curso", "CursoFindOneOutputDto"),
-    referenceProperty("ambientePadraoAula", "AmbienteFindOneOutputDto", { nullable: true }),
-    referenceProperty("imagemCapa", "ImagemFindOneOutputDto", { nullable: true }),
+    referenceProperty("curso", "CursoFindOneQueryResult"),
+    referenceProperty("ambientePadraoAula", "AmbienteFindOneQueryResult", { nullable: true }),
+    referenceProperty("imagemCapa", "ImagemFindOneQueryResult", { nullable: true }),
     ...commonProperties.dated,
   ],
 })

@@ -21,7 +21,7 @@ import { NivelFormacaoFieldsMixin } from "@/modules/ensino/nivel-formacao/presen
 
 @ApiSchema({ name: "NivelFormacaoFindOneOutputDto" })
 @RegisterModel({
-  name: "NivelFormacaoFindOneOutputDto",
+  name: "NivelFormacaoFindOneQueryResult",
   properties: [simpleProperty("id"), simpleProperty("slug"), ...commonProperties.dated],
 })
 export class NivelFormacaoFindOneOutputRestDto extends Mixin(

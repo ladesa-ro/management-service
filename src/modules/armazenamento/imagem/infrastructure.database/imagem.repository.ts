@@ -1,61 +1,29 @@
 import type { PartialEntity } from "@/domain/abstractions/entities";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import { IAppTypeormConnection } from "@/modules/@shared/infrastructure/persistence/typeorm";
+import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import type { Imagem } from "@/modules/armazenamento/imagem/domain/imagem";
-import type {
-  IImagemArquivoRepository,
-  IImagemRepository,
-  IImagemTransactionPort,
-} from "@/modules/armazenamento/imagem/domain/repositories";
-import type { ImagemArquivo } from "@/modules/armazenamento/imagem-arquivo/domain/imagem-arquivo";
-import { createImagemArquivoRepository } from "@/modules/armazenamento/imagem-arquivo/infrastructure.database/typeorm/imagem-arquivo.typeorm.repository";
-import { createImagemRepository } from "./typeorm/imagem.typeorm.repository";
+import type { IImagemRepository } from "@/modules/armazenamento/imagem/domain/repositories";
+import { ImagemEntity } from "./typeorm/imagem.typeorm.entity";
 
 @DeclareImplementation()
-export class ImagemTypeOrmRepositoryAdapter implements IImagemTransactionPort {
+export class ImagemTypeOrmRepositoryAdapter implements IImagemRepository {
   constructor(
     @DeclareDependency(IAppTypeormConnection)
     private readonly appTypeormConnection: IAppTypeormConnection,
   ) {}
 
-  async transaction<T>(
-    callback: (context: {
-      imagemRepository: IImagemRepository;
-      imagemArquivoRepository: IImagemArquivoRepository;
-    }) => Promise<T>,
-  ): Promise<T> {
-    return this.appTypeormConnection.transaction(async (entityManager) => {
-      const imagemRepository = createImagemRepository(entityManager);
-      const imagemArquivoRepository = createImagemArquivoRepository(entityManager);
+  create(): Imagem {
+    const repo = this.appTypeormConnection.getRepository(ImagemEntity);
+    return repo.create() as unknown as Imagem;
+  }
 
-      const imagemRepoAdapter: IImagemRepository = {
-        create: () => imagemRepository.create() as unknown as Imagem,
-        merge: (imagem: Imagem, data: PartialEntity<Imagem>) => {
-          imagemRepository.merge(imagem as any, data as any);
-        },
-        save: (imagem: PartialEntity<Imagem>) =>
-          imagemRepository.save(imagem as any) as Promise<Imagem>,
-      };
+  merge(entity: Imagem, data: PartialEntity<Imagem>): void {
+    const repo = this.appTypeormConnection.getRepository(ImagemEntity);
+    repo.merge(entity as any, data as any);
+  }
 
-      const imagemArquivoRepoAdapter: IImagemArquivoRepository = {
-        create: () => imagemArquivoRepository.create() as unknown as ImagemArquivo,
-        merge: (imagemArquivo: ImagemArquivo, data: PartialEntity<ImagemArquivo>) => {
-          imagemArquivoRepository.merge(imagemArquivo as any, data as any);
-        },
-        findLatestArquivoIdForImagem: async (imagemId: string) => {
-          const versao = await imagemArquivoRepository.findOne({
-            where: { imagem: { id: imagemId } },
-            relations: { arquivo: true },
-            order: { dateCreated: "DESC" },
-          });
-          return versao?.arquivo?.id ?? null;
-        },
-      };
-
-      return callback({
-        imagemRepository: imagemRepoAdapter,
-        imagemArquivoRepository: imagemArquivoRepoAdapter,
-      });
-    });
+  async save(entity: PartialEntity<Imagem>): Promise<Imagem> {
+    const repo = this.appTypeormConnection.getRepository(ImagemEntity);
+    return repo.save(entity as any) as Promise<Imagem>;
   }
 }

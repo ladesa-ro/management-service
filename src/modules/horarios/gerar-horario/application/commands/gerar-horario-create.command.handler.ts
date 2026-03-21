@@ -5,11 +5,14 @@ import {
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7.js";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
-import { IAppTypeormConnection } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
   IGerarHorarioCreateCommand,
   IGerarHorarioCreateCommandHandler,
 } from "../../domain/commands/gerar-horario-create.command.handler.interface";
+import {
+  IGerarHorarioRepository,
+  type IGerarHorarioRepository as IGerarHorarioRepositoryType,
+} from "../../domain/repositories/gerar-horario.repository.interface";
 import {
   GerarHorarioDuracao,
   GerarHorarioEntity,
@@ -19,8 +22,8 @@ import {
 @DeclareImplementation()
 export class GerarHorarioCreateCommandHandlerImpl implements IGerarHorarioCreateCommandHandler {
   constructor(
-    @DeclareDependency(IAppTypeormConnection)
-    private readonly appTypeormConnection: IAppTypeormConnection,
+    @DeclareDependency(IGerarHorarioRepository)
+    private readonly gerarHorarioRepository: IGerarHorarioRepositoryType,
     @DeclareDependency(IMessageBrokerServiceToken)
     private readonly messageBrokerService: IMessageBrokerService,
   ) {}
@@ -29,8 +32,6 @@ export class GerarHorarioCreateCommandHandlerImpl implements IGerarHorarioCreate
     _accessContext: AccessContext | null,
     command: IGerarHorarioCreateCommand,
   ): Promise<GerarHorarioEntity> {
-    const repo = this.appTypeormConnection.getRepository(GerarHorarioEntity);
-
     const entity = new GerarHorarioEntity();
     entity.id = generateUuidV7();
     entity.status = GerarHorarioStatus.SOLICITADO;
@@ -41,7 +42,7 @@ export class GerarHorarioCreateCommandHandlerImpl implements IGerarHorarioCreate
     entity.respostaGerador = null;
     entity.dateCreated = new Date();
 
-    await repo.save(entity);
+    await this.gerarHorarioRepository.save(entity);
 
     // Fire-and-forget: publish to timetable generator queue
     // TODO: Build proper GenerateRequest from DB data
@@ -61,7 +62,7 @@ export class GerarHorarioCreateCommandHandlerImpl implements IGerarHorarioCreate
     // Update status to PENDENTE after publishing
     entity.status = GerarHorarioStatus.PENDENTE;
     entity.requisicaoGerador = request;
-    await repo.save(entity);
+    await this.gerarHorarioRepository.save(entity);
 
     return entity;
   }

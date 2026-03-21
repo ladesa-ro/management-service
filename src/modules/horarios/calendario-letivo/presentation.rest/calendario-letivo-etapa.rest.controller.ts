@@ -9,9 +9,8 @@ import {
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7.js";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
-import { ensureExists } from "@/modules/@shared";
-import { IAppTypeormConnection } from "@/modules/@shared/infrastructure/persistence/typeorm";
-import { CalendarioLetivoEntity } from "../infrastructure.database/typeorm/calendario-letivo.typeorm.entity";
+import { ICalendarioLetivoRepository } from "../domain/repositories/calendario-letivo.repository.interface";
+import { ICalendarioLetivoEtapaRepository } from "../domain/repositories/calendario-letivo-etapa.repository.interface";
 import { CalendarioLetivoEtapaEntity } from "../infrastructure.database/typeorm/calendario-letivo-etapa.typeorm.entity";
 import { CalendarioLetivoFindOneInputRestDto } from "./calendario-letivo.rest.dto";
 import {
@@ -24,8 +23,8 @@ import {
 @Controller("/calendarios-letivos/:calendarioLetivoId/etapas")
 export class CalendarioLetivoEtapaRestController {
   constructor(
-    @DeclareDependency(IAppTypeormConnection)
-    private readonly appTypeormConnection: IAppTypeormConnection,
+    @DeclareDependency(ICalendarioLetivoEtapaRepository)
+    private readonly etapaRepository: ICalendarioLetivoEtapaRepository,
   ) {}
 
   @Get("/")
@@ -39,16 +38,9 @@ export class CalendarioLetivoEtapaRestController {
     @AccessContextHttp() _accessContext: AccessContext,
     @Param() parentParams: CalendarioLetivoEtapaParentParamsRestDto,
   ): Promise<CalendarioLetivoEtapaListOutputRestDto> {
-    const repo = this.appTypeormConnection.getRepository(CalendarioLetivoEtapaEntity);
-
-    const etapas = await repo.find({
-      where: {
-        idCalendarioLetivoFk: parentParams.calendarioLetivoId,
-        dateDeleted: null as any,
-      },
-      relations: ["ofertaFormacaoPeriodoEtapa"],
-      order: { dataInicio: "ASC" },
-    });
+    const etapas = await this.etapaRepository.findByCalendarioLetivoId(
+      parentParams.calendarioLetivoId,
+    );
 
     return {
       data: etapas.map((e) => ({
@@ -81,36 +73,29 @@ export class CalendarioLetivoEtapaRestController {
   ): Promise<CalendarioLetivoEtapaListOutputRestDto> {
     const calendarioLetivoId = parentParams.calendarioLetivoId;
 
-    await this.appTypeormConnection.transaction(async (manager) => {
-      const repo = manager.getRepository(CalendarioLetivoEtapaEntity);
+    // Soft-delete existing
+    await this.etapaRepository.softDeleteByCalendarioLetivoId(calendarioLetivoId);
 
-      // Soft-delete existing
-      await repo
-        .createQueryBuilder()
-        .update(CalendarioLetivoEtapaEntity)
-        .set({ dateDeleted: new Date() })
-        .where("id_calendario_letivo_fk = :calendarioLetivoId AND date_deleted IS NULL", {
-          calendarioLetivoId,
-        })
-        .execute();
-
-      // Insert new
-      const now = new Date();
-      for (const item of dto.etapas) {
-        const entity = new CalendarioLetivoEtapaEntity();
-        entity.id = generateUuidV7();
-        entity.idCalendarioLetivoFk = calendarioLetivoId;
-        entity.idOfertaFormacaoPeriodoEtapaFk = item.ofertaFormacaoPeriodoEtapaId;
-        entity.dataInicio = new Date(item.dataInicio);
-        entity.dataTermino = new Date(item.dataTermino);
-        entity.dateCreated = now;
-        entity.dateUpdated = now;
-        entity.dateDeleted = null;
-        (entity as any).calendarioLetivo = { id: calendarioLetivoId };
-        (entity as any).ofertaFormacaoPeriodoEtapa = { id: item.ofertaFormacaoPeriodoEtapaId };
-        await manager.save(CalendarioLetivoEtapaEntity, entity);
-      }
-    });
+    // Insert new
+    const now = new Date();
+    for (const item of dto.etapas) {
+      const entity = new CalendarioLetivoEtapaEntity();
+      entity.id = generateUuidV7();
+      entity.idCalendarioLetivoFk = calendarioLetivoId;
+      entity.idOfertaFormacaoPeriodoEtapaFk = item.ofertaFormacaoPeriodoEtapaId;
+      entity.dataInicio = new Date(item.dataInicio);
+      entity.dataTermino = new Date(item.dataTermino);
+      entity.dateCreated = now;
+      entity.dateUpdated = now;
+      entity.dateDeleted = null;
+      entity.calendarioLetivo = {
+        id: calendarioLetivoId,
+      } as CalendarioLetivoEtapaEntity["calendarioLetivo"];
+      entity.ofertaFormacaoPeriodoEtapa = {
+        id: item.ofertaFormacaoPeriodoEtapaId,
+      } as CalendarioLetivoEtapaEntity["ofertaFormacaoPeriodoEtapa"];
+      await this.etapaRepository.save(entity);
+    }
 
     return this.findAll(_accessContext, parentParams);
   }
@@ -121,8 +106,8 @@ export class CalendarioLetivoEtapaRestController {
 @Controller("/calendarios-letivos")
 export class CalendarioLetivoDesativarRestController {
   constructor(
-    @DeclareDependency(IAppTypeormConnection)
-    private readonly appTypeormConnection: IAppTypeormConnection,
+    @DeclareDependency(ICalendarioLetivoRepository)
+    private readonly calendarioLetivoRepository: ICalendarioLetivoRepository,
   ) {}
 
   @Post("/:id/desativar")
@@ -137,15 +122,7 @@ export class CalendarioLetivoDesativarRestController {
     @AccessContextHttp() _accessContext: AccessContext,
     @Param() params: CalendarioLetivoFindOneInputRestDto,
   ): Promise<boolean> {
-    const repo = this.appTypeormConnection.getRepository(CalendarioLetivoEntity);
-    const entity = await repo.findOneBy({ id: params.id });
-    ensureExists(entity, "CalendarioLetivo", params.id);
-
-    // Soft-delete (desativar)
-    entity!.dateDeleted = new Date();
-    entity!.dateUpdated = new Date();
-    await repo.save(entity!);
-
+    await this.calendarioLetivoRepository.softDeleteById(params.id);
     return true;
   }
 }

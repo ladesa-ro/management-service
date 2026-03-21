@@ -55,15 +55,15 @@ export class CalendarioLetivoFindOneInputRestDto {
 
 @ApiSchema({ name: "DiarioFindOneOutputDto" })
 @RegisterModel({
-  name: "DiarioFindOneOutputDto",
+  name: "DiarioFindOneQueryResult",
   properties: [
     simpleProperty("id"),
     simpleProperty("ativo"),
-    referenceProperty("calendarioLetivo", "CalendarioLetivoFindOneOutputDto"),
-    referenceProperty("turma", "TurmaFindOneOutputDto"),
-    referenceProperty("disciplina", "DisciplinaFindOneOutputDto"),
-    referenceProperty("ambientePadrao", "AmbienteFindOneOutputDto", { nullable: true }),
-    referenceProperty("imagemCapa", "ImagemFindOneOutputDto", { nullable: true }),
+    referenceProperty("calendarioLetivo", "CalendarioLetivoFindOneQueryResult"),
+    referenceProperty("turma", "TurmaFindOneQueryResult"),
+    referenceProperty("disciplina", "DisciplinaFindOneQueryResult"),
+    referenceProperty("ambientePadrao", "AmbienteFindOneQueryResult", { nullable: true }),
+    referenceProperty("imagemCapa", "ImagemFindOneQueryResult", { nullable: true }),
     ...commonProperties.dated,
   ],
 })

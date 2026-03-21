@@ -9,8 +9,8 @@ import type {
   IImagemSaveImageCommandHandler,
 } from "@/modules/armazenamento/imagem/domain/commands/imagem-save-image.command.handler.interface";
 import {
-  type IImagemTransactionPort,
-  IMAGEM_ITransaction,
+  IImagemArquivoRepository,
+  IImagemRepository,
 } from "@/modules/armazenamento/imagem/domain/repositories";
 
 @DeclareImplementation()
@@ -18,8 +18,10 @@ export class ImagemSaveImageCommandHandlerImpl implements IImagemSaveImageComman
   constructor(
     @DeclareDependency(IArquivoCreateCommandHandler)
     private readonly arquivoCreateHandler: IArquivoCreateCommandHandler,
-    @DeclareDependency(IMAGEM_ITransaction)
-    private readonly imagemTransactionPort: IImagemTransactionPort,
+    @DeclareDependency(IImagemRepository)
+    private readonly imagemRepository: IImagemRepository,
+    @DeclareDependency(IImagemArquivoRepository)
+    private readonly imagemArquivoRepository: IImagemArquivoRepository,
   ) {}
 
   async execute(
@@ -49,66 +51,64 @@ export class ImagemSaveImageCommandHandlerImpl implements IImagemSaveImageComman
 
     // ===============================================
 
-    return await this.imagemTransactionPort
-      .transaction(async ({ imagemRepository, imagemArquivoRepository }) => {
-        const imagem = imagemRepository.create();
+    try {
+      const imagem = this.imagemRepository.create();
 
-        imagemRepository.merge(imagem, {
-          id: generateUuidV7(),
-          versoes: [],
-        });
+      this.imagemRepository.merge(imagem, {
+        id: generateUuidV7(),
+        versoes: [],
+      });
 
-        for (const transform of options.transforms) {
-          let mimeType: string;
-          const transformImage = originalImage.clone().keepMetadata();
+      for (const transform of options.transforms) {
+        let mimeType: string;
+        const transformImage = originalImage.clone().keepMetadata();
 
-          if (transform.outputAs === "jpeg") {
-            transformImage.jpeg();
-            mimeType = "image/jpeg";
-          } else {
-            throw new TypeError("Invalid transform.outputAs");
-          }
-
-          const transformedOutput = await transformImage.toBuffer({
-            resolveWithObject: true,
-          });
-
-          const arquivo = await this.arquivoCreateHandler.execute(null, {
-            dto: { name, mimeType },
-            data: transformedOutput.data,
-          });
-
-          const versao = imagemArquivoRepository.create();
-
-          imagemArquivoRepository.merge(versao, {
-            mimeType,
-            formato: transform.outputAs,
-
-            largura: metadata.width,
-            altura: metadata.height,
-
-            arquivo: {
-              id: arquivo.id,
-            },
-            imagem: {
-              id: imagem.id,
-            },
-          });
-
-          imagem.versoes.push(versao);
+        if (transform.outputAs === "jpeg") {
+          transformImage.jpeg();
+          mimeType = "image/jpeg";
+        } else {
+          throw new TypeError("Invalid transform.outputAs");
         }
 
-        await imagemRepository.save(imagem);
+        const transformedOutput = await transformImage.toBuffer({
+          resolveWithObject: true,
+        });
 
-        return {
+        const arquivo = await this.arquivoCreateHandler.execute(null, {
+          dto: { name, mimeType },
+          data: transformedOutput.data,
+        });
+
+        const versao = this.imagemArquivoRepository.create();
+
+        this.imagemArquivoRepository.merge(versao, {
+          mimeType,
+          formato: transform.outputAs,
+
+          largura: metadata.width,
+          altura: metadata.height,
+
+          arquivo: {
+            id: arquivo.id,
+          },
           imagem: {
             id: imagem.id,
           },
-        };
-      })
-      .catch((err) => {
-        console.error(err);
-        throw new ServiceUnavailableException();
-      });
+        });
+
+        imagem.versoes.push(versao);
+      }
+
+      await this.imagemRepository.save(imagem);
+
+      return {
+        imagem: {
+          id: imagem.id,
+        },
+      };
+    } catch (err) {
+      console.error(err);
+      throw new ServiceUnavailableException();
+    }
   }
 }

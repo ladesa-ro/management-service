@@ -41,13 +41,13 @@ import {
 
 @ApiSchema({ name: "CalendarioLetivoFindOneOutputDto" })
 @RegisterModel({
-  name: "CalendarioLetivoFindOneOutputDto",
+  name: "CalendarioLetivoFindOneQueryResult",
   properties: [
     simpleProperty("id"),
     simpleProperty("nome"),
     simpleProperty("ano"),
-    referenceProperty("campus", "CampusFindOneOutputDto"),
-    referenceProperty("ofertaFormacao", "OfertaFormacaoFindOneOutputDto"),
+    referenceProperty("campus", "CampusFindOneQueryResult"),
+    referenceProperty("ofertaFormacao", "OfertaFormacaoFindOneQueryResult"),
     ...commonProperties.dated,
   ],
 })

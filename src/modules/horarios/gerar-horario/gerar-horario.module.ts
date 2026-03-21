@@ -14,12 +14,19 @@ import {
   IGerarHorarioRejeitarCommandHandler,
 } from "@/modules/horarios/gerar-horario/domain/commands";
 import { IGerarHorarioFindOneQueryHandler } from "@/modules/horarios/gerar-horario/domain/queries";
+import { IGerarHorarioRepository } from "@/modules/horarios/gerar-horario/domain/repositories";
+import { GerarHorarioTypeOrmRepositoryAdapter } from "@/modules/horarios/gerar-horario/infrastructure.database";
 import { GerarHorarioRestController } from "@/modules/horarios/gerar-horario/presentation.rest";
 
 @Module({
   imports: [MessageBrokerModule],
   controllers: [GerarHorarioRestController],
   providers: [
+    // Repositories
+    {
+      provide: IGerarHorarioRepository,
+      useClass: GerarHorarioTypeOrmRepositoryAdapter,
+    },
     // Commands
     {
       provide: IGerarHorarioPublishTimetableRequestCommandHandler,

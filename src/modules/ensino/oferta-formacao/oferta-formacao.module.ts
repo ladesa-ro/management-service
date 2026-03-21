@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
+import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
 import { ModalidadeModule } from "@/modules/ensino/modalidade/modalidade.module";
 import { NivelFormacaoModule } from "@/modules/ensino/nivel-formacao/nivel-formacao.module";
 import { IOfertaFormacaoRepository } from "@/modules/ensino/oferta-formacao";
@@ -38,6 +38,10 @@ import { OfertaFormacaoGraphqlResolver } from "@/modules/ensino/oferta-formacao/
 import { OfertaFormacaoRestController } from "@/modules/ensino/oferta-formacao/presentation.rest/oferta-formacao.rest.controller";
 import { OfertaFormacaoNivelFormacaoRestController } from "@/modules/ensino/oferta-formacao/presentation.rest/oferta-formacao-nivel-formacao.rest.controller";
 import { OfertaFormacaoPeriodoRestController } from "@/modules/ensino/oferta-formacao/presentation.rest/oferta-formacao-periodo.rest.controller";
+import { IOfertaFormacaoPeriodoRepository } from "@/modules/ensino/oferta-formacao-periodo/domain/repositories";
+import { OfertaFormacaoPeriodoTypeOrmRepositoryAdapter } from "@/modules/ensino/oferta-formacao-periodo/infrastructure.database";
+import { IOfertaFormacaoPeriodoEtapaRepository } from "@/modules/ensino/oferta-formacao-periodo-etapa/domain/repositories";
+import { OfertaFormacaoPeriodoEtapaTypeOrmRepositoryAdapter } from "@/modules/ensino/oferta-formacao-periodo-etapa/infrastructure.database";
 
 @Module({
   imports: [ModalidadeModule, NivelFormacaoModule],
@@ -57,6 +61,14 @@ import { OfertaFormacaoPeriodoRestController } from "@/modules/ensino/oferta-for
     {
       provide: IOfertaFormacaoNivelFormacaoRepository,
       useClass: OfertaFormacaoNivelFormacaoTypeOrmRepositoryAdapter,
+    },
+    {
+      provide: IOfertaFormacaoPeriodoRepository,
+      useClass: OfertaFormacaoPeriodoTypeOrmRepositoryAdapter,
+    },
+    {
+      provide: IOfertaFormacaoPeriodoEtapaRepository,
+      useClass: OfertaFormacaoPeriodoEtapaTypeOrmRepositoryAdapter,
     },
 
     // OfertaFormacao Commands

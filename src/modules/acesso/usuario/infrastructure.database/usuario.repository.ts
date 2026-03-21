@@ -1,13 +1,17 @@
 import { FilterOperator } from "nestjs-paginate";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
+import { paginateConfig } from "@/infrastructure.database/pagination/config/paginate-config";
+import type { ITypeOrmPaginationConfig } from "@/infrastructure.database/pagination/interfaces/pagination-config.types";
+import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
+import { QbEfficientLoad } from "@/infrastructure.database/typeorm/helpers/qb-efficient-load";
 import {
-  BaseTypeOrmRepositoryAdapter,
-  IAppTypeormConnection,
-  type ITypeOrmPaginationConfig,
-  NestJsPaginateAdapter,
-  paginateConfig,
-  QbEfficientLoad,
-} from "@/modules/@shared/infrastructure/persistence/typeorm";
+  typeormCreate,
+  typeormFindAll,
+  typeormFindById,
+  typeormSoftDeleteById,
+  typeormUpdate,
+} from "@/infrastructure.database/typeorm/helpers/typeorm-repository-helpers";
 import type {
   IUsuarioRepository,
   UsuarioFindOneQuery,
@@ -15,70 +19,101 @@ import type {
   UsuarioListQuery,
   UsuarioListQueryResult,
 } from "@/modules/acesso/usuario";
-import { createCursoRepository } from "@/modules/ensino/curso/infrastructure.database/typeorm/curso.typeorm.repository";
-import { createDisciplinaRepository } from "@/modules/ensino/disciplina/infrastructure.database/typeorm/disciplina.typeorm.repository";
-import { createTurmaRepository } from "@/modules/ensino/turma/infrastructure.database/typeorm/turma.typeorm.repository";
-import type { UsuarioEntity } from "./typeorm/usuario.typeorm.entity";
-import { createUsuarioRepository } from "./typeorm/usuario.typeorm.repository";
+import { CursoEntity } from "@/modules/ensino/curso/infrastructure.database/typeorm/curso.typeorm.entity";
+import { DisciplinaEntity } from "@/modules/ensino/disciplina/infrastructure.database/typeorm/disciplina.typeorm.entity";
+import { TurmaEntity } from "@/modules/ensino/turma/infrastructure.database/typeorm/turma.typeorm.entity";
+import { UsuarioEntity } from "./typeorm/usuario.typeorm.entity";
+
+const config = {
+  alias: "usuario",
+  outputDtoName: "UsuarioFindOneQueryResult",
+  hasSoftDelete: true,
+} as const;
+
+const usuarioPaginateConfig: ITypeOrmPaginationConfig<UsuarioEntity> = {
+  ...paginateConfig,
+  select: ["id", "nome", "matricula", "email", "dateCreated"],
+  sortableColumns: ["nome", "matricula", "email", "dateCreated"],
+  searchableColumns: ["id", "nome", "matricula", "email"],
+  defaultSortBy: [
+    ["nome", "ASC"],
+    ["dateCreated", "ASC"],
+    ["matricula", "ASC"],
+  ],
+  relations: {
+    vinculos: true,
+  },
+  filterableColumns: {
+    "vinculos.cargo": [FilterOperator.EQ],
+  },
+};
 
 @DeclareImplementation()
-export class UsuarioTypeOrmRepositoryAdapter
-  extends BaseTypeOrmRepositoryAdapter<
-    UsuarioEntity,
-    UsuarioListQuery,
-    UsuarioListQueryResult,
-    UsuarioFindOneQuery,
-    UsuarioFindOneQueryResult
-  >
-  implements IUsuarioRepository
-{
-  protected readonly alias = "usuario";
-  protected readonly outputDtoName = "UsuarioFindOneQueryResult";
-
+export class UsuarioTypeOrmRepositoryAdapter implements IUsuarioRepository {
   constructor(
     @DeclareDependency(IAppTypeormConnection)
-    protected readonly appTypeormConnection: IAppTypeormConnection,
-    protected readonly paginationAdapter: NestJsPaginateAdapter,
+    private readonly appTypeormConnection: IAppTypeormConnection,
+    private readonly paginationAdapter: NestJsPaginateAdapter,
+  ) {}
+
+  findAll(
+    accessContext: unknown,
+    dto: UsuarioListQuery | null = null,
+    selection?: string[] | boolean | null,
   ) {
-    super();
+    return typeormFindAll<UsuarioEntity, UsuarioListQuery, UsuarioListQueryResult>(
+      this.appTypeormConnection,
+      UsuarioEntity,
+      { ...config, paginateConfig: usuarioPaginateConfig },
+      this.paginationAdapter,
+      dto,
+      selection,
+    );
   }
 
-  protected get repository() {
-    return createUsuarioRepository(this.appTypeormConnection);
+  findById(
+    accessContext: unknown,
+    dto: UsuarioFindOneQuery,
+    selection?: string[] | boolean | null,
+  ) {
+    return typeormFindById<UsuarioEntity, UsuarioFindOneQuery, UsuarioFindOneQueryResult>(
+      this.appTypeormConnection,
+      UsuarioEntity,
+      config,
+      dto,
+      selection,
+    );
+  }
+
+  findByIdSimple(accessContext: unknown, id: string, selection?: string[] | boolean | null) {
+    return this.findById(accessContext, { id } as UsuarioFindOneQuery, selection);
   }
 
   async findByMatricula(
     matricula: string,
     selection?: string[] | boolean | null,
   ): Promise<UsuarioFindOneQueryResult | null> {
-    const qb = this.repository.createQueryBuilder(this.alias);
+    const repo = this.appTypeormConnection.getRepository(UsuarioEntity);
+    const qb = repo.createQueryBuilder(config.alias);
 
-    qb.andWhere(`${this.alias}.matricula = :matricula`, {
-      matricula: matricula,
-    });
-
+    qb.andWhere(`${config.alias}.matricula = :matricula`, { matricula });
     qb.select([]);
-    QbEfficientLoad(this.outputDtoName, qb, this.alias, selection);
+    QbEfficientLoad(config.outputDtoName, qb, config.alias, selection);
 
-    const usuario = await qb.getOne();
-
-    return usuario as UsuarioFindOneQueryResult | null;
+    return (await qb.getOne()) as UsuarioFindOneQueryResult | null;
   }
-
-  // Métodos específicos do Usuario que não estão na classe base
 
   async isMatriculaAvailable(
     matricula: string,
     excludeUsuarioId?: string | null,
   ): Promise<boolean> {
-    const qb = this.repository.createQueryBuilder(this.alias);
+    const repo = this.appTypeormConnection.getRepository(UsuarioEntity);
+    const qb = repo.createQueryBuilder(config.alias);
 
-    qb.where(`${this.alias}.matricula = :matricula`, {
-      matricula: matricula,
-    });
+    qb.where(`${config.alias}.matricula = :matricula`, { matricula });
 
     if (excludeUsuarioId) {
-      qb.andWhere(`${this.alias}.id <> :excludeUsuarioId`, { excludeUsuarioId });
+      qb.andWhere(`${config.alias}.id <> :excludeUsuarioId`, { excludeUsuarioId });
       qb.limit(1);
     }
 
@@ -87,12 +122,13 @@ export class UsuarioTypeOrmRepositoryAdapter
   }
 
   async isEmailAvailable(email: string, excludeUsuarioId?: string | null): Promise<boolean> {
-    const qb = this.repository.createQueryBuilder(this.alias);
+    const repo = this.appTypeormConnection.getRepository(UsuarioEntity);
+    const qb = repo.createQueryBuilder(config.alias);
 
-    qb.where(`${this.alias}.email = :email`, { email: email });
+    qb.where(`${config.alias}.email = :email`, { email });
 
     if (excludeUsuarioId) {
-      qb.andWhere(`${this.alias}.id <> :excludeUsuarioId`, { excludeUsuarioId });
+      qb.andWhere(`${config.alias}.id <> :excludeUsuarioId`, { excludeUsuarioId });
       qb.limit(1);
     }
 
@@ -101,14 +137,16 @@ export class UsuarioTypeOrmRepositoryAdapter
   }
 
   async resolveProperty<Property extends string>(id: string, property: Property): Promise<unknown> {
-    const qb = this.repository.createQueryBuilder(this.alias);
-    qb.select(`${this.alias}.${property}`);
-    qb.where(`${this.alias}.id = :usuarioId`, { usuarioId: id });
+    const repo = this.appTypeormConnection.getRepository(UsuarioEntity);
+    const qb = repo.createQueryBuilder(config.alias);
+    qb.select(`${config.alias}.${property}`);
+    qb.where(`${config.alias}.id = :usuarioId`, { usuarioId: id });
 
     const usuario = await qb.getOneOrFail();
     return usuario[property as keyof UsuarioEntity];
   }
 
+  // cross-module: uses TypeORM directly for join query (DisciplinaEntity, CursoEntity, TurmaEntity)
   async findUsuarioEnsino(usuarioId: string): Promise<{
     disciplinas: Array<{
       disciplina: any;
@@ -120,7 +158,7 @@ export class UsuarioTypeOrmRepositoryAdapter
       }>;
     }>;
   }> {
-    const disciplinas = await createDisciplinaRepository(this.appTypeormConnection).find({
+    const disciplinas = await this.appTypeormConnection.getRepository(DisciplinaEntity).find({
       where: {
         diarios: {
           ativo: true,
@@ -160,7 +198,7 @@ export class UsuarioTypeOrmRepositoryAdapter
         cursos: [],
       };
 
-      const cursos = await createCursoRepository(this.appTypeormConnection).find({
+      const cursos = await this.appTypeormConnection.getRepository(CursoEntity).find({
         where: {
           turmas: {
             diarios: {
@@ -192,7 +230,7 @@ export class UsuarioTypeOrmRepositoryAdapter
           turmas: [],
         };
 
-        const turmas = await createTurmaRepository(this.appTypeormConnection).find({
+        const turmas = await this.appTypeormConnection.getRepository(TurmaEntity).find({
           where: [
             {
               curso: {
@@ -228,23 +266,15 @@ export class UsuarioTypeOrmRepositoryAdapter
     return { disciplinas: result };
   }
 
-  protected getPaginateConfig(): ITypeOrmPaginationConfig<UsuarioEntity> {
-    return {
-      ...paginateConfig,
-      select: ["id", "nome", "matricula", "email", "dateCreated"],
-      sortableColumns: ["nome", "matricula", "email", "dateCreated"],
-      searchableColumns: ["id", "nome", "matricula", "email"],
-      defaultSortBy: [
-        ["nome", "ASC"],
-        ["dateCreated", "ASC"],
-        ["matricula", "ASC"],
-      ],
-      relations: {
-        vinculos: true,
-      },
-      filterableColumns: {
-        "vinculos.cargo": [FilterOperator.EQ],
-      },
-    };
+  create(data: Record<string, any>) {
+    return typeormCreate(this.appTypeormConnection, UsuarioEntity, data);
+  }
+
+  update(id: string | number, data: Record<string, any>) {
+    return typeormUpdate(this.appTypeormConnection, UsuarioEntity, id, data);
+  }
+
+  softDeleteById(id: string) {
+    return typeormSoftDeleteById(this.appTypeormConnection, UsuarioEntity, config.alias, id);
   }
 }

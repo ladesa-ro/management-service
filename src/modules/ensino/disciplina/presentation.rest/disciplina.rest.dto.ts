@@ -31,13 +31,13 @@ import { DisciplinaFieldsMixin } from "../presentation.validations/disciplina.va
 
 @ApiSchema({ name: "DisciplinaFindOneOutputDto" })
 @RegisterModel({
-  name: "DisciplinaFindOneOutputDto",
+  name: "DisciplinaFindOneQueryResult",
   properties: [
     simpleProperty("id"),
     simpleProperty("nome"),
     simpleProperty("nomeAbreviado"),
     simpleProperty("cargaHoraria"),
-    referenceProperty("imagemCapa", "ImagemFindOneOutputDto", { nullable: true }),
+    referenceProperty("imagemCapa", "ImagemFindOneQueryResult", { nullable: true }),
     ...commonProperties.dated,
   ],
 })

@@ -1,7 +1,7 @@
 import type { PipeTransform } from "@nestjs/common";
 import type { IRequestActor } from "@/domain/abstractions/request-actor";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import { IAppTypeormConnection } from "@/modules/@shared/infrastructure/persistence/typeorm";
+import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import { AccessContext } from "../access-context";
 
 /**

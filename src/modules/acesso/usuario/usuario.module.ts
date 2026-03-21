@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
+import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
 import { IdentityProviderModule } from "@/infrastructure.identity-provider/identity-provider.module";
-import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { UsuarioPermissionCheckerImpl } from "@/modules/acesso/usuario/application/authorization";
 import {
   UsuarioCreateCommandHandlerImpl,
@@ -35,8 +35,16 @@ import {
   IUsuarioGetImagemPerfilQueryHandler,
   IUsuarioListQueryHandler,
 } from "@/modules/acesso/usuario/domain/queries";
-import { IUsuarioRepository } from "@/modules/acesso/usuario/domain/repositories";
-import { UsuarioTypeOrmRepositoryAdapter } from "@/modules/acesso/usuario/infrastructure.database";
+import {
+  IUsuarioDisponibilidadeRepository,
+  IUsuarioEventoRepository,
+  IUsuarioRepository,
+} from "@/modules/acesso/usuario/domain/repositories";
+import {
+  UsuarioDisponibilidadeTypeOrmRepositoryAdapter,
+  UsuarioEventoTypeOrmRepositoryAdapter,
+  UsuarioTypeOrmRepositoryAdapter,
+} from "@/modules/acesso/usuario/infrastructure.database";
 import { UsuarioGraphqlResolver } from "@/modules/acesso/usuario/presentation.graphql/usuario.graphql.resolver";
 import { UsuarioRestController } from "@/modules/acesso/usuario/presentation.rest/usuario.rest.controller";
 import { UsuarioEventoRestController } from "@/modules/acesso/usuario/presentation.rest/usuario-evento.rest.controller";
@@ -57,6 +65,14 @@ import { HorarioConsultaModule } from "@/modules/horarios/horario-consulta/horar
     {
       provide: IUsuarioRepository,
       useClass: UsuarioTypeOrmRepositoryAdapter,
+    },
+    {
+      provide: IUsuarioDisponibilidadeRepository,
+      useClass: UsuarioDisponibilidadeTypeOrmRepositoryAdapter,
+    },
+    {
+      provide: IUsuarioEventoRepository,
+      useClass: UsuarioEventoTypeOrmRepositoryAdapter,
     },
 
     // Commands

@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
+import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
 import { NivelFormacaoPermissionCheckerImpl } from "@/modules/ensino/nivel-formacao/application/authorization";
 import {
   NivelFormacaoCreateCommandHandlerImpl,

@@ -22,4 +22,20 @@ export interface IDiarioProfessorRepository
     id: string,
     selection?: string[] | boolean | null,
   ): Promise<DiarioProfessorFindOneQueryResult | null>;
+
+  /**
+   * Soft-delete todos os diário-professor de um diário
+   */
+  softDeleteByDiarioId(diarioId: string): Promise<void>;
+
+  /**
+   * Cria múltiplas entradas de diário-professor em batch
+   */
+  bulkCreate(
+    entries: Array<{
+      situacao: boolean;
+      diarioId: string;
+      perfilId: string;
+    }>,
+  ): Promise<void>;
 }

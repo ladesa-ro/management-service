@@ -43,7 +43,7 @@ export class ImagemFindOneFromImagemArquivoOutputRestDto {
 
 @ApiSchema({ name: "ImagemArquivoFindOneOutputDto" })
 @RegisterModel({
-  name: "ImagemArquivoFindOneOutputDto",
+  name: "ImagemArquivoFindOneQueryResult",
   properties: [
     simpleProperty("id"),
     simpleProperty("largura"),

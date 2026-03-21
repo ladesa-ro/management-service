@@ -35,20 +35,3 @@ export interface IImagemArquivoRepository {
    */
   findLatestArquivoIdForImagem(imagemId: string): Promise<string | null>;
 }
-
-/**
- * Token de injecao para a porta de transacao de Imagem
- */
-export const IMAGEM_ITransaction = Symbol("IImagemTransactionPort");
-
-/**
- * Port de saida para operacoes de transacao de Imagem
- */
-export interface IImagemTransactionPort {
-  transaction<T>(
-    callback: (context: {
-      imagemRepository: IImagemRepository;
-      imagemArquivoRepository: IImagemArquivoRepository;
-    }) => Promise<T>,
-  ): Promise<T>;
-}

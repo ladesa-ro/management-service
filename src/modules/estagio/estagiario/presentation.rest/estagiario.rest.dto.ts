@@ -23,7 +23,7 @@ import { EstagiarioFieldsMixin } from "../presentation.validations/estagiario.va
 
 @ApiSchema({ name: "EstagiarioFindOneOutputDto" })
 @RegisterModel({
-  name: "EstagiarioFindOneOutputDto",
+  name: "EstagiarioFindOneQueryResult",
   properties: [
     simpleProperty("id"),
     simpleProperty("idPerfilFk"),

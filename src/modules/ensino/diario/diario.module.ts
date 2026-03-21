@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
+import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
 import { PerfilModule } from "@/modules/acesso/perfil/perfil.module";
 import { AmbienteModule } from "@/modules/ambientes/ambiente/ambiente.module";
 import { DiarioPermissionCheckerImpl } from "@/modules/ensino/diario/application/authorization";

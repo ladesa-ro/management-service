@@ -1,7 +1,7 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
-import { IAppTypeormConnection } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
   EmpresaCreateCommand,
   EmpresaUpdateCommand,
@@ -15,8 +15,8 @@ import type {
 } from "@/modules/estagio/empresa/domain/queries";
 import type { IEmpresaRepository } from "@/modules/estagio/empresa/domain/repositories";
 import { Endereco } from "@/modules/localidades/endereco/domain/endereco";
-import { createEnderecoRepository } from "@/modules/localidades/endereco/infrastructure.database/typeorm/endereco.typeorm.repository";
-import { createEmpresaRepository, EmpresaMapper } from "./typeorm";
+import { EnderecoEntity } from "@/modules/localidades/endereco/infrastructure.database/typeorm/endereco.typeorm.entity";
+import { EmpresaMapper, EmpresaTypeormEntity } from "./typeorm";
 
 @DeclareImplementation()
 export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
@@ -26,11 +26,12 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
   ) {}
 
   private get repository() {
-    return createEmpresaRepository(this.appTypeormConnection);
+    return this.appTypeormConnection.getRepository(EmpresaTypeormEntity);
   }
 
+  // cross-module: uses TypeORM directly for existence check (EnderecoEntity)
   private get enderecoRepository() {
-    return createEnderecoRepository(this.appTypeormConnection);
+    return this.appTypeormConnection.getRepository(EnderecoEntity);
   }
 
   async findAll(

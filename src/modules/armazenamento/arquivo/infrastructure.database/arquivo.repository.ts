@@ -1,9 +1,8 @@
 import type { SelectQueryBuilder } from "typeorm";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import { IAppTypeormConnection } from "@/modules/@shared/infrastructure/persistence/typeorm";
+import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import type { IArquivoRepository } from "@/modules/armazenamento/arquivo";
-import type { ArquivoEntity } from "./typeorm/arquivo.typeorm.entity";
-import { createArquivoRepository } from "./typeorm/arquivo.typeorm.repository";
+import { ArquivoEntity } from "./typeorm/arquivo.typeorm.entity";
 
 @DeclareImplementation()
 export class ArquivoTypeOrmRepositoryAdapter implements IArquivoRepository {
@@ -12,7 +11,7 @@ export class ArquivoTypeOrmRepositoryAdapter implements IArquivoRepository {
   ) {}
 
   private get repository() {
-    return createArquivoRepository(this.appTypeormConnection);
+    return this.appTypeormConnection.getRepository(ArquivoEntity);
   }
 
   createQueryBuilder(alias: string): SelectQueryBuilder<ArquivoEntity> {

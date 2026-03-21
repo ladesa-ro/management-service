@@ -1,5 +1,5 @@
 import type { IRequestActor } from "@/domain/abstractions/request-actor";
-import type { IAppTypeormConnection } from "@/infrastructure.database/typeorm/conn.interface";
+import type { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import type { IAccessContext } from "../domain";
 
 /**

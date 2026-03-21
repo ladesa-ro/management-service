@@ -52,13 +52,13 @@ export class PerfilParentParamsRestDto {
 
 @ApiSchema({ name: "PerfilFindOneOutputDto" })
 @RegisterModel({
-  name: "PerfilFindOneOutputDto",
+  name: "PerfilFindOneQueryResult",
   properties: [
     simpleProperty("id"),
     simpleProperty("ativo"),
     simpleProperty("cargo"),
-    referenceProperty("campus", "CampusFindOneOutputDto"),
-    referenceProperty("usuario", "UsuarioFindOneOutputDto"),
+    referenceProperty("campus", "CampusFindOneQueryResult"),
+    referenceProperty("usuario", "UsuarioFindOneQueryResult"),
     ...commonProperties.dated,
   ],
 })

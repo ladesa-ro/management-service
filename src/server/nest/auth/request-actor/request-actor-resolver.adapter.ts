@@ -3,8 +3,8 @@ import { pick } from "lodash";
 import { IIdentityProvider } from "@/domain/abstractions/identity-provider";
 import type { IRequestActor, IRequestActorResolver } from "@/domain/abstractions/request-actor";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import { IAppTypeormConnection } from "@/modules/@shared/infrastructure/persistence/typeorm";
-import { createUsuarioRepository } from "@/modules/acesso/usuario/infrastructure.database/typeorm/usuario.typeorm.repository";
+import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
+import { UsuarioEntity } from "@/modules/acesso/usuario/infrastructure.database/typeorm/usuario.typeorm.entity";
 
 @DeclareImplementation()
 export class RequestActorResolverAdapter implements IRequestActorResolver {
@@ -16,7 +16,7 @@ export class RequestActorResolverAdapter implements IRequestActorResolver {
   ) {}
 
   private get usuarioRepository() {
-    return createUsuarioRepository(this.appTypeormConnection);
+    return this.appTypeormConnection.getRepository(UsuarioEntity);
   }
 
   async resolveFromAccessToken(accessToken?: string): Promise<IRequestActor> {

@@ -29,7 +29,7 @@ import { ImagemArquivoFindOneFromImagemOutputRestDto } from "@/modules/armazenam
 
 @ApiSchema({ name: "ImagemFindOneOutputDto" })
 @RegisterModel({
-  name: "ImagemFindOneOutputDto",
+  name: "ImagemFindOneQueryResult",
   properties: [
     simpleProperty("id"),
     simpleProperty("descricao"),

@@ -20,4 +20,13 @@ export interface IOfertaFormacaoNivelFormacaoRepository
     IOfertaFormacaoNivelFormacao,
     OfertaFormacaoNivelFormacaoListQueryResult,
     OfertaFormacaoNivelFormacaoFindOneQueryResult
-  > {}
+  > {
+  softDeleteByOfertaFormacaoId(ofertaFormacaoId: string): Promise<void>;
+
+  bulkCreate(
+    entries: Array<{
+      ofertaFormacaoId: string;
+      nivelFormacaoId: string;
+    }>,
+  ): Promise<void>;
+}

@@ -1,9 +1,13 @@
 import { Module } from "@nestjs/common";
-import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
+import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
 import { CampusModule } from "@/modules/ambientes/campus/campus.module";
 import { ArquivoModule } from "@/modules/armazenamento/arquivo/arquivo.module";
 import { ImagemModule } from "@/modules/armazenamento/imagem/imagem.module";
-import { ICursoPermissionChecker, ICursoRepository } from "@/modules/ensino/curso";
+import {
+  ICursoPeriodoDisciplinaRepository,
+  ICursoPermissionChecker,
+  ICursoRepository,
+} from "@/modules/ensino/curso";
 import { CursoPermissionCheckerImpl } from "@/modules/ensino/curso/application/authorization";
 import {
   CursoCreateCommandHandlerImpl,
@@ -27,7 +31,10 @@ import {
   ICursoGetImagemCapaQueryHandler,
   ICursoListQueryHandler,
 } from "@/modules/ensino/curso/domain/queries";
-import { CursoTypeOrmRepositoryAdapter } from "@/modules/ensino/curso/infrastructure.database";
+import {
+  CursoPeriodoDisciplinaTypeOrmRepositoryAdapter,
+  CursoTypeOrmRepositoryAdapter,
+} from "@/modules/ensino/curso/infrastructure.database";
 import { CursoGraphqlResolver } from "@/modules/ensino/curso/presentation.graphql/curso.graphql.resolver";
 import { CursoRestController } from "@/modules/ensino/curso/presentation.rest/curso.rest.controller";
 import { CursoPeriodoDisciplinaRestController } from "@/modules/ensino/curso/presentation.rest/curso-periodo-disciplina.rest.controller";
@@ -42,6 +49,10 @@ import { OfertaFormacaoModule } from "@/modules/ensino/oferta-formacao/oferta-fo
     {
       provide: ICursoRepository,
       useClass: CursoTypeOrmRepositoryAdapter,
+    },
+    {
+      provide: ICursoPeriodoDisciplinaRepository,
+      useClass: CursoPeriodoDisciplinaTypeOrmRepositoryAdapter,
     },
     { provide: ICursoPermissionChecker, useClass: CursoPermissionCheckerImpl },
 

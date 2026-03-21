@@ -44,11 +44,11 @@ export class OfertaFormacaoNivelFormacaoParentParamsRestDto {
 
 @ApiSchema({ name: "OfertaFormacaoNivelFormacaoFindOneOutputDto" })
 @RegisterModel({
-  name: "OfertaFormacaoNivelFormacaoFindOneOutputDto",
+  name: "OfertaFormacaoNivelFormacaoFindOneQueryResult",
   properties: [
     simpleProperty("id"),
-    referenceProperty("nivelFormacao", "NivelFormacaoFindOneOutputDto"),
-    referenceProperty("ofertaFormacao", "OfertaFormacaoFindOneOutputDto"),
+    referenceProperty("nivelFormacao", "NivelFormacaoFindOneQueryResult"),
+    referenceProperty("ofertaFormacao", "OfertaFormacaoFindOneQueryResult"),
     ...commonProperties.dated,
   ],
 })

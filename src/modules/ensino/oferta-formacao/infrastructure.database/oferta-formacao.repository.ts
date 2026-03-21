@@ -1,12 +1,16 @@
 import { FilterOperator } from "nestjs-paginate";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
+import { paginateConfig } from "@/infrastructure.database/pagination/config/paginate-config";
+import type { ITypeOrmPaginationConfig } from "@/infrastructure.database/pagination/interfaces/pagination-config.types";
+import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import {
-  BaseTypeOrmRepositoryAdapter,
-  IAppTypeormConnection,
-  type ITypeOrmPaginationConfig,
-  NestJsPaginateAdapter,
-  paginateConfig,
-} from "@/modules/@shared/infrastructure/persistence/typeorm";
+  typeormCreate,
+  typeormFindAll,
+  typeormFindById,
+  typeormSoftDeleteById,
+  typeormUpdate,
+} from "@/infrastructure.database/typeorm/helpers/typeorm-repository-helpers";
 import type {
   OfertaFormacaoFindOneQuery,
   OfertaFormacaoFindOneQueryResult,
@@ -14,51 +18,83 @@ import type {
   OfertaFormacaoListQueryResult,
 } from "@/modules/ensino/oferta-formacao";
 import type { IOfertaFormacaoRepository } from "@/modules/ensino/oferta-formacao/domain/repositories";
-import type { OfertaFormacaoEntity } from "./typeorm/oferta-formacao.typeorm.entity";
-import { createOfertaFormacaoRepository } from "./typeorm/oferta-formacao.typeorm.repository";
+import { OfertaFormacaoEntity } from "./typeorm/oferta-formacao.typeorm.entity";
+
+const config = {
+  alias: "oferta_formacao",
+  outputDtoName: "OfertaFormacaoFindOneQueryResult",
+  hasSoftDelete: true,
+} as const;
+
+const ofertaFormacaoPaginateConfig: ITypeOrmPaginationConfig<OfertaFormacaoEntity> = {
+  ...paginateConfig,
+  select: ["id", "nome", "slug", "dateCreated"],
+  relations: {
+    modalidade: true,
+  },
+  sortableColumns: ["nome", "slug", "dateCreated"],
+  searchableColumns: ["id", "nome", "slug"],
+  defaultSortBy: [
+    ["nome", "ASC"],
+    ["dateCreated", "ASC"],
+  ],
+  filterableColumns: {
+    "modalidade.id": [FilterOperator.EQ],
+  },
+};
 
 @DeclareImplementation()
-export class OfertaFormacaoTypeOrmRepositoryAdapter
-  extends BaseTypeOrmRepositoryAdapter<
-    OfertaFormacaoEntity,
-    OfertaFormacaoListQuery,
-    OfertaFormacaoListQueryResult,
-    OfertaFormacaoFindOneQuery,
-    OfertaFormacaoFindOneQueryResult
-  >
-  implements IOfertaFormacaoRepository
-{
-  protected readonly alias = "oferta_formacao";
-  protected readonly outputDtoName = "OfertaFormacaoFindOneQueryResult";
-
+export class OfertaFormacaoTypeOrmRepositoryAdapter implements IOfertaFormacaoRepository {
   constructor(
     @DeclareDependency(IAppTypeormConnection)
-    protected readonly appTypeormConnection: IAppTypeormConnection,
-    protected readonly paginationAdapter: NestJsPaginateAdapter,
+    private readonly appTypeormConnection: IAppTypeormConnection,
+    private readonly paginationAdapter: NestJsPaginateAdapter,
+  ) {}
+
+  findAll(
+    accessContext: unknown,
+    dto: OfertaFormacaoListQuery | null = null,
+    selection?: string[] | boolean | null,
   ) {
-    super();
+    return typeormFindAll<
+      OfertaFormacaoEntity,
+      OfertaFormacaoListQuery,
+      OfertaFormacaoListQueryResult
+    >(
+      this.appTypeormConnection,
+      OfertaFormacaoEntity,
+      { ...config, paginateConfig: ofertaFormacaoPaginateConfig },
+      this.paginationAdapter,
+      dto,
+      selection,
+    );
   }
 
-  protected get repository() {
-    return createOfertaFormacaoRepository(this.appTypeormConnection);
+  findById(
+    accessContext: unknown,
+    dto: OfertaFormacaoFindOneQuery,
+    selection?: string[] | boolean | null,
+  ) {
+    return typeormFindById<
+      OfertaFormacaoEntity,
+      OfertaFormacaoFindOneQuery,
+      OfertaFormacaoFindOneQueryResult
+    >(this.appTypeormConnection, OfertaFormacaoEntity, config, dto, selection);
   }
 
-  protected getPaginateConfig(): ITypeOrmPaginationConfig<OfertaFormacaoEntity> {
-    return {
-      ...paginateConfig,
-      select: ["id", "nome", "slug", "dateCreated"],
-      relations: {
-        modalidade: true,
-      },
-      sortableColumns: ["nome", "slug", "dateCreated"],
-      searchableColumns: ["id", "nome", "slug"],
-      defaultSortBy: [
-        ["nome", "ASC"],
-        ["dateCreated", "ASC"],
-      ],
-      filterableColumns: {
-        "modalidade.id": [FilterOperator.EQ],
-      },
-    };
+  findByIdSimple(accessContext: unknown, id: string, selection?: string[] | boolean | null) {
+    return this.findById(accessContext, { id } as OfertaFormacaoFindOneQuery, selection);
+  }
+
+  create(data: Record<string, any>) {
+    return typeormCreate(this.appTypeormConnection, OfertaFormacaoEntity, data);
+  }
+
+  update(id: string | number, data: Record<string, any>) {
+    return typeormUpdate(this.appTypeormConnection, OfertaFormacaoEntity, id, data);
+  }
+
+  softDeleteById(id: string) {
+    return typeormSoftDeleteById(this.appTypeormConnection, OfertaFormacaoEntity, config.alias, id);
   }
 }

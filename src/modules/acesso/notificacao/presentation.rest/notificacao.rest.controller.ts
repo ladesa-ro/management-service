@@ -9,15 +9,17 @@ import {
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
-import { IAppTypeormConnection } from "@/modules/@shared/infrastructure/persistence/typeorm";
-import { NotificacaoEntity } from "../infrastructure.database/typeorm/notificacao.typeorm.entity";
+import {
+  INotificacaoRepository,
+  type INotificacaoRepository as INotificacaoRepositoryType,
+} from "../domain/repositories/notificacao.repository.interface";
 
 @ApiTags("notificacoes")
 @Controller("/notificacoes")
 export class NotificacaoRestController {
   constructor(
-    @DeclareDependency(IAppTypeormConnection)
-    private readonly appTypeormConnection: IAppTypeormConnection,
+    @DeclareDependency(INotificacaoRepository)
+    private readonly notificacaoRepository: INotificacaoRepositoryType,
   ) {}
 
   @Get("/")
@@ -28,8 +30,7 @@ export class NotificacaoRestController {
   @ApiOkResponse()
   @ApiForbiddenResponse()
   async findAll(@AccessContextHttp() _accessContext: AccessContext) {
-    const repo = this.appTypeormConnection.getRepository(NotificacaoEntity);
-    const entities = await repo.find({
+    const entities = await this.notificacaoRepository.find({
       order: { dateCreated: "DESC" },
     });
     return {
@@ -52,8 +53,7 @@ export class NotificacaoRestController {
   @ApiOkResponse()
   @ApiForbiddenResponse()
   async contagemNaoLidas(@AccessContextHttp() _accessContext: AccessContext) {
-    const repo = this.appTypeormConnection.getRepository(NotificacaoEntity);
-    const count = await repo.count({ where: { lida: false } });
+    const count = await this.notificacaoRepository.count({ where: { lida: false } });
     return { count };
   }
 
@@ -63,11 +63,10 @@ export class NotificacaoRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async marcarLida(@AccessContextHttp() _accessContext: AccessContext, @Param("id") id: string) {
-    const repo = this.appTypeormConnection.getRepository(NotificacaoEntity);
-    const entity = await repo.findOneBy({ id });
+    const entity = await this.notificacaoRepository.findOneBy({ id });
     ensureExists(entity, "Notificacao", id);
     entity!.lida = true;
-    await repo.save(entity!);
+    await this.notificacaoRepository.save(entity!);
     return { success: true };
   }
 }

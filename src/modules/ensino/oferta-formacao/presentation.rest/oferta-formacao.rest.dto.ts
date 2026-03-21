@@ -36,12 +36,12 @@ import { OfertaFormacaoFieldsMixin } from "@/modules/ensino/oferta-formacao/pres
 
 @ApiSchema({ name: "OfertaFormacaoFindOneOutputDto" })
 @RegisterModel({
-  name: "OfertaFormacaoFindOneOutputDto",
+  name: "OfertaFormacaoFindOneQueryResult",
   properties: [
     simpleProperty("id"),
     simpleProperty("nome"),
     simpleProperty("slug"),
-    referenceProperty("modalidade", "ModalidadeFindOneOutputDto"),
+    referenceProperty("modalidade", "ModalidadeFindOneQueryResult"),
     ...commonProperties.dated,
   ],
 })

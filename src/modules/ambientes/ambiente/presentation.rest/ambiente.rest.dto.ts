@@ -37,7 +37,7 @@ import { AmbienteFieldsMixin } from "../presentation.validations/ambiente.valida
 
 @ApiSchema({ name: "AmbienteFindOneOutputDto" })
 @RegisterModel({
-  name: "AmbienteFindOneOutputDto",
+  name: "AmbienteFindOneQueryResult",
   properties: [
     simpleProperty("id"),
     simpleProperty("nome"),
@@ -45,8 +45,8 @@ import { AmbienteFieldsMixin } from "../presentation.validations/ambiente.valida
     simpleProperty("codigo"),
     simpleProperty("capacidade", { nullable: true }),
     simpleProperty("tipo", { nullable: true }),
-    referenceProperty("bloco", "BlocoFindOneOutputDto"),
-    referenceProperty("imagemCapa", "ImagemFindOneOutputDto", { nullable: true }),
+    referenceProperty("bloco", "BlocoFindOneQueryResult"),
+    referenceProperty("imagemCapa", "ImagemFindOneQueryResult", { nullable: true }),
     ...commonProperties.dated,
   ],
 })

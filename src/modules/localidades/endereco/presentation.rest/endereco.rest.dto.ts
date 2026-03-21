@@ -22,7 +22,7 @@ import { EnderecoFieldsMixin } from "../presentation.validations/endereco.valida
 
 @ApiSchema({ name: "EnderecoFindOneOutputDto" })
 @RegisterModel({
-  name: "EnderecoFindOneOutputDto",
+  name: "EnderecoFindOneQueryResult",
   properties: [
     simpleProperty("id"),
     simpleProperty("cep"),
@@ -31,7 +31,7 @@ import { EnderecoFieldsMixin } from "../presentation.validations/endereco.valida
     simpleProperty("bairro"),
     simpleProperty("complemento", { nullable: true }),
     simpleProperty("pontoReferencia", { nullable: true }),
-    referenceProperty("cidade", "CidadeFindOneOutputDto"),
+    referenceProperty("cidade", "CidadeFindOneQueryResult"),
     ...commonProperties.dated,
   ],
 })

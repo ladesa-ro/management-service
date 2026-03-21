@@ -26,14 +26,14 @@ import { CampusFieldsMixin } from "../presentation.validations/campus.validation
 
 @ApiSchema({ name: "CampusFindOneOutputDto" })
 @RegisterModel({
-  name: "CampusFindOneOutputDto",
+  name: "CampusFindOneQueryResult",
   properties: [
     simpleProperty("id"),
     simpleProperty("nomeFantasia"),
     simpleProperty("razaoSocial"),
     simpleProperty("apelido"),
     simpleProperty("cnpj"),
-    referenceProperty("endereco", "EnderecoFindOneOutputDto"),
+    referenceProperty("endereco", "EnderecoFindOneQueryResult"),
     ...commonProperties.dated,
   ],
 })

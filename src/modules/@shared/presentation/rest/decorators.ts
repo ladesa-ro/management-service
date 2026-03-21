@@ -3,7 +3,7 @@ import {
   ApiPropertyOptional as _ApiPropertyOptional,
   ApiSchema as _ApiSchema,
 } from "@nestjs/swagger";
-import { RegisterModel as _RegisterModel } from "@/modules/@shared/infrastructure/persistence/typeorm/metadata";
+import { RegisterModel as _RegisterModel } from "@/infrastructure.database/typeorm/metadata/model-registry";
 import { TransformToArray as _TransformToArray } from "@/modules/@shared/infrastructure/presentation/rest/dtos/to-array.transform";
 import { mixable } from "../mixable";
 
@@ -19,4 +19,4 @@ export {
   commonProperties,
   referenceProperty,
   simpleProperty,
-} from "@/modules/@shared/infrastructure/persistence/typeorm/metadata";
+} from "@/infrastructure.database/typeorm/metadata/model-registry";

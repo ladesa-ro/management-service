@@ -3,7 +3,7 @@ import { Test, TestingModule } from "@nestjs/testing";
 import request from "supertest";
 import { afterAll, beforeAll, describe, it } from "vitest";
 import { IRuntimeOptions as IRuntimeOptionsToken } from "@/infrastructure.config/options/runtime/runtime-options.interface";
-import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/conn.interface";
+import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import { AppController } from "@/server/nest/app.controller";
 import { AppService } from "@/server/nest/app.service";
 

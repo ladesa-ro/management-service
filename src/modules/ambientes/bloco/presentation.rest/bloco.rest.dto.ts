@@ -97,13 +97,13 @@ export class ImagemFindOneOutputRestDto extends EntityBaseRestDto {
 
 @ApiSchema({ name: "BlocoFindOneOutputDto" })
 @RegisterModel({
-  name: "BlocoFindOneOutputDto",
+  name: "BlocoFindOneQueryResult",
   properties: [
     simpleProperty("id"),
     simpleProperty("nome"),
     simpleProperty("codigo"),
-    referenceProperty("campus", "CampusFindOneOutputDto"),
-    referenceProperty("imagemCapa", "ImagemFindOneOutputDto", { nullable: true }),
+    referenceProperty("campus", "CampusFindOneQueryResult"),
+    referenceProperty("imagemCapa", "ImagemFindOneQueryResult", { nullable: true }),
     ...commonProperties.dated,
   ],
 })

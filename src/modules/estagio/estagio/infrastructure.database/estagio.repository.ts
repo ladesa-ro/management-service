@@ -1,11 +1,11 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
-import { IAppTypeormConnection } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { Empresa } from "@/modules/estagio/empresa/domain/empresa";
-import { createEmpresaRepository } from "@/modules/estagio/empresa/infrastructure.database/typeorm/empresa.typeorm.repository";
+import { EmpresaTypeormEntity } from "@/modules/estagio/empresa/infrastructure.database/typeorm/empresa.typeorm.entity";
 import { Estagiario } from "@/modules/estagio/estagiario/domain/estagiario";
-import { createEstagiarioRepository } from "@/modules/estagio/estagiario/infrastructure.database/typeorm/estagiario.typeorm.repository";
+import { EstagiarioTypeormEntity } from "@/modules/estagio/estagiario/infrastructure.database/typeorm/estagiario.typeorm.entity";
 import type {
   EstagioCreateCommand,
   EstagioUpdateCommand,
@@ -18,7 +18,7 @@ import type {
   EstagioListQueryResult,
 } from "@/modules/estagio/estagio/domain/queries";
 import type { IEstagioRepository } from "@/modules/estagio/estagio/domain/repositories";
-import { createEstagioRepository, createHorarioEstagioRepository, EstagioMapper } from "./typeorm";
+import { EstagioMapper, EstagioTypeormEntity, HorarioEstagioTypeormEntity } from "./typeorm";
 
 @DeclareImplementation()
 export class EstagioTypeOrmRepositoryAdapter implements IEstagioRepository {
@@ -28,19 +28,21 @@ export class EstagioTypeOrmRepositoryAdapter implements IEstagioRepository {
   ) {}
 
   private get repository() {
-    return createEstagioRepository(this.appTypeormConnection);
+    return this.appTypeormConnection.getRepository(EstagioTypeormEntity);
   }
 
   private get horarioRepository() {
-    return createHorarioEstagioRepository(this.appTypeormConnection);
+    return this.appTypeormConnection.getRepository(HorarioEstagioTypeormEntity);
   }
 
+  // cross-module: uses TypeORM directly for existence check (EmpresaTypeormEntity)
   private get empresaRepository() {
-    return createEmpresaRepository(this.appTypeormConnection);
+    return this.appTypeormConnection.getRepository(EmpresaTypeormEntity);
   }
 
+  // cross-module: uses TypeORM directly for existence check (EstagiarioTypeormEntity)
   private get estagiarioRepository() {
-    return createEstagiarioRepository(this.appTypeormConnection);
+    return this.appTypeormConnection.getRepository(EstagiarioTypeormEntity);
   }
 
   async findAll(

@@ -11,7 +11,7 @@ import { DeclareDependency } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7.js";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
-import { IAppTypeormConnection } from "@/modules/@shared/infrastructure/persistence/typeorm";
+import { IHorarioAulaConfiguracaoRepository } from "../domain/repositories";
 import { HorarioAulaConfiguracaoEntity } from "../infrastructure.database/typeorm/horario-aula-configuracao.typeorm.entity";
 import {
   HorarioAulaConfiguracaoCreateInputRestDto,
@@ -25,8 +25,8 @@ import {
 @Controller("/horarios-aula-configuracoes")
 export class HorarioAulaConfiguracaoRestController {
   constructor(
-    @DeclareDependency(IAppTypeormConnection)
-    private readonly appTypeormConnection: IAppTypeormConnection,
+    @DeclareDependency(IHorarioAulaConfiguracaoRepository)
+    private readonly repository: IHorarioAulaConfiguracaoRepository,
   ) {}
 
   @Get("/")
@@ -40,17 +40,12 @@ export class HorarioAulaConfiguracaoRestController {
     @AccessContextHttp() _accessContext: AccessContext,
     @Query("campusId") campusId?: string,
   ): Promise<HorarioAulaConfiguracaoListOutputRestDto> {
-    const repo = this.appTypeormConnection.getRepository(HorarioAulaConfiguracaoEntity);
-
     const where: Record<string, unknown> = {};
     if (campusId) {
       where.idCampusFk = campusId;
     }
 
-    const entities = await repo.find({
-      where,
-      order: { dataInicio: "ASC" },
-    });
+    const entities = await this.repository.findAll(where);
 
     return {
       data: entities.map((e) => this.toOutputDto(e)),
@@ -69,8 +64,7 @@ export class HorarioAulaConfiguracaoRestController {
     @AccessContextHttp() _accessContext: AccessContext,
     @Param() params: HorarioAulaConfiguracaoFindOneParamsRestDto,
   ): Promise<HorarioAulaConfiguracaoFindOneOutputRestDto> {
-    const repo = this.appTypeormConnection.getRepository(HorarioAulaConfiguracaoEntity);
-    const entity = await repo.findOneBy({ id: params.id });
+    const entity = await this.repository.findById(params.id);
     ensureExists(entity, "HorarioAulaConfiguracao", params.id);
     return this.toOutputDto(entity!);
   }
@@ -86,7 +80,6 @@ export class HorarioAulaConfiguracaoRestController {
     @AccessContextHttp() _accessContext: AccessContext,
     @Body() dto: HorarioAulaConfiguracaoCreateInputRestDto,
   ): Promise<HorarioAulaConfiguracaoFindOneOutputRestDto> {
-    const repo = this.appTypeormConnection.getRepository(HorarioAulaConfiguracaoEntity);
     const entity = new HorarioAulaConfiguracaoEntity();
     entity.id = generateUuidV7();
     entity.dataInicio = new Date(dto.dataInicio);
@@ -94,7 +87,7 @@ export class HorarioAulaConfiguracaoRestController {
     entity.ativo = dto.ativo;
     entity.idCampusFk = dto.campusId;
     (entity as any).campus = { id: dto.campusId };
-    await repo.save(entity);
+    await this.repository.save(entity);
     return this.toOutputDto(entity);
   }
 
@@ -111,8 +104,7 @@ export class HorarioAulaConfiguracaoRestController {
     @Param() params: HorarioAulaConfiguracaoFindOneParamsRestDto,
     @Body() dto: HorarioAulaConfiguracaoUpdateInputRestDto,
   ): Promise<HorarioAulaConfiguracaoFindOneOutputRestDto> {
-    const repo = this.appTypeormConnection.getRepository(HorarioAulaConfiguracaoEntity);
-    const entity = await repo.findOneBy({ id: params.id });
+    const entity = await this.repository.findById(params.id);
     ensureExists(entity, "HorarioAulaConfiguracao", params.id);
 
     if (dto.dataInicio !== undefined) entity!.dataInicio = new Date(dto.dataInicio);
@@ -120,7 +112,7 @@ export class HorarioAulaConfiguracaoRestController {
     if (dto.ativo !== undefined) entity!.ativo = dto.ativo;
     if (dto.campusId !== undefined) entity!.idCampusFk = dto.campusId;
 
-    await repo.save(entity!);
+    await this.repository.save(entity!);
     return this.toOutputDto(entity!);
   }
 
@@ -136,10 +128,9 @@ export class HorarioAulaConfiguracaoRestController {
     @AccessContextHttp() _accessContext: AccessContext,
     @Param() params: HorarioAulaConfiguracaoFindOneParamsRestDto,
   ): Promise<boolean> {
-    const repo = this.appTypeormConnection.getRepository(HorarioAulaConfiguracaoEntity);
-    const entity = await repo.findOneBy({ id: params.id });
+    const entity = await this.repository.findById(params.id);
     ensureExists(entity, "HorarioAulaConfiguracao", params.id);
-    await repo.remove(entity!);
+    await this.repository.remove(entity!);
     return true;
   }
 

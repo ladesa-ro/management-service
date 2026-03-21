@@ -23,7 +23,7 @@ import { EmpresaFieldsMixin } from "../presentation.validations/empresa.validati
 
 @ApiSchema({ name: "EmpresaFindOneOutputDto" })
 @RegisterModel({
-  name: "EmpresaFindOneOutputDto",
+  name: "EmpresaFindOneQueryResult",
   properties: [
     simpleProperty("id"),
     simpleProperty("razaoSocial"),

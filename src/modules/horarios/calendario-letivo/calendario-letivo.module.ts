@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
+import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
 import { CampusModule } from "@/modules/ambientes/campus/campus.module";
 import { OfertaFormacaoModule } from "@/modules/ensino/oferta-formacao/oferta-formacao.module";
 import { ICalendarioLetivoRepository } from "@/modules/horarios/calendario-letivo";
@@ -29,9 +29,13 @@ import {
   ICalendarioLetivoFindOneQueryHandler,
   ICalendarioLetivoListQueryHandler,
 } from "@/modules/horarios/calendario-letivo/domain/queries";
-import { ICalendarioLetivoDiaRepository } from "@/modules/horarios/calendario-letivo/domain/repositories";
+import {
+  ICalendarioLetivoDiaRepository,
+  ICalendarioLetivoEtapaRepository,
+} from "@/modules/horarios/calendario-letivo/domain/repositories";
 import {
   CalendarioLetivoDiaTypeOrmRepositoryAdapter,
+  CalendarioLetivoEtapaTypeOrmRepositoryAdapter,
   CalendarioLetivoTypeOrmRepositoryAdapter,
 } from "@/modules/horarios/calendario-letivo/infrastructure.database";
 import { CalendarioLetivoGraphqlResolver } from "@/modules/horarios/calendario-letivo/presentation.graphql/calendario-letivo.graphql.resolver";
@@ -64,6 +68,10 @@ import {
     {
       provide: ICalendarioLetivoDiaRepository,
       useClass: CalendarioLetivoDiaTypeOrmRepositoryAdapter,
+    },
+    {
+      provide: ICalendarioLetivoEtapaRepository,
+      useClass: CalendarioLetivoEtapaTypeOrmRepositoryAdapter,
     },
 
     // Calendario Letivo Commands

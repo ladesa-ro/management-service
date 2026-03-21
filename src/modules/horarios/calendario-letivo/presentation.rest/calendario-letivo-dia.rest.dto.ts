@@ -67,7 +67,7 @@ export class CalendarioLetivoDiaFindByDataParamsRestDto extends CalendarioLetivo
 
 @ApiSchema({ name: "CalendarioLetivoDiaFindOneOutputDto" })
 @RegisterModel({
-  name: "CalendarioLetivoDiaFindOneOutputDto",
+  name: "CalendarioLetivoDiaFindOneQueryResult",
   properties: [
     simpleProperty("id"),
     simpleProperty("data"),
@@ -76,7 +76,7 @@ export class CalendarioLetivoDiaFindByDataParamsRestDto extends CalendarioLetivo
     simpleProperty("tipo"),
     simpleProperty("feriado", { nullable: true }),
     simpleProperty("extraCurricular"),
-    referenceProperty("calendario", "CalendarioLetivoFindOneOutputDto"),
+    referenceProperty("calendario", "CalendarioLetivoFindOneQueryResult"),
     ...commonProperties.dated,
   ],
 })
