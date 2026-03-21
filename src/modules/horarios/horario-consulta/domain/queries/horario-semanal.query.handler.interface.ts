@@ -6,6 +6,8 @@ import type {
 } from "./horario-semanal.query";
 import type { HorarioSemanalQueryResult } from "./horario-semanal.query.result";
 
+export const IHorarioConsultaQueryHandler = Symbol("IHorarioConsultaQueryHandler");
+
 export interface IHorarioConsultaQueryHandler {
   findTurmaHorarioSemanal(
     accessContext: AccessContext | null,
@@ -22,5 +24,3 @@ export interface IHorarioConsultaQueryHandler {
     query: HorarioMescladoQuery,
   ): Promise<HorarioSemanalQueryResult>;
 }
-
-export const IHorarioConsultaQueryHandler = Symbol("IHorarioConsultaQueryHandler");

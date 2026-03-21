@@ -5,10 +5,11 @@ export type IGerarHorarioPublishTimetableRequestCommand<TRequest = unknown> = {
   timeoutMs?: number;
 };
 
+export const IGerarHorarioPublishTimetableRequestCommandHandler = Symbol(
+  "IGerarHorarioPublishTimetableRequestCommandHandler",
+);
+
 export type IGerarHorarioPublishTimetableRequestCommandHandler = ICommandHandler<
   IGerarHorarioPublishTimetableRequestCommand,
   unknown
 >;
-export const IGerarHorarioPublishTimetableRequestCommandHandler = Symbol(
-  "IGerarHorarioPublishTimetableRequestCommandHandler",
-);

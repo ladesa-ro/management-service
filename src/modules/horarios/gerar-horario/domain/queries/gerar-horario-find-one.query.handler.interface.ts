@@ -5,11 +5,11 @@ export interface IGerarHorarioFindOneQuery {
   id: string;
 }
 
+export const IGerarHorarioFindOneQueryHandler = Symbol("IGerarHorarioFindOneQueryHandler");
+
 export interface IGerarHorarioFindOneQueryHandler {
   execute(
     accessContext: AccessContext | null,
     query: IGerarHorarioFindOneQuery,
   ): Promise<GerarHorarioEntity | null>;
 }
-
-export const IGerarHorarioFindOneQueryHandler = Symbol("IGerarHorarioFindOneQueryHandler");

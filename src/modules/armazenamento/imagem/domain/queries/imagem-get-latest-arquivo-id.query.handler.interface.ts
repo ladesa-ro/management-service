@@ -4,10 +4,11 @@ export type IImagemGetLatestArquivoIdQuery = {
   imagemId: string;
 };
 
+export const IImagemGetLatestArquivoIdQueryHandler = Symbol(
+  "IImagemGetLatestArquivoIdQueryHandler",
+);
+
 export type IImagemGetLatestArquivoIdQueryHandler = IQueryHandler<
   IImagemGetLatestArquivoIdQuery,
   string | null
 >;
-export const IImagemGetLatestArquivoIdQueryHandler = Symbol(
-  "IImagemGetLatestArquivoIdQueryHandler",
-);

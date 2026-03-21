@@ -6,11 +6,11 @@ export interface IGerarHorarioCreateCommand {
   dataTermino?: string;
 }
 
+export const IGerarHorarioCreateCommandHandler = Symbol("IGerarHorarioCreateCommandHandler");
+
 export interface IGerarHorarioCreateCommandHandler {
   execute(
     accessContext: AccessContext | null,
     command: IGerarHorarioCreateCommand,
   ): Promise<GerarHorarioEntity>;
 }
-
-export const IGerarHorarioCreateCommandHandler = Symbol("IGerarHorarioCreateCommandHandler");

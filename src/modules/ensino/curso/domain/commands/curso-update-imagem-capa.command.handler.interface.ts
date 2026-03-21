@@ -6,8 +6,9 @@ export type CursoUpdateImagemCapaCommand = {
   file: Express.Multer.File;
 };
 
+export const ICursoUpdateImagemCapaCommandHandler = Symbol("ICursoUpdateImagemCapaCommandHandler");
+
 export type ICursoUpdateImagemCapaCommandHandler = ICommandHandler<
   CursoUpdateImagemCapaCommand,
   boolean
 >;
-export const ICursoUpdateImagemCapaCommandHandler = Symbol("ICursoUpdateImagemCapaCommandHandler");

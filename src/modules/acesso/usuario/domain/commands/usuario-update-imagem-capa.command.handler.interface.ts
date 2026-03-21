@@ -6,10 +6,11 @@ export type UsuarioUpdateImagemCapaCommand = {
   file: Express.Multer.File;
 };
 
+export const IUsuarioUpdateImagemCapaCommandHandler = Symbol(
+  "IUsuarioUpdateImagemCapaCommandHandler",
+);
+
 export type IUsuarioUpdateImagemCapaCommandHandler = ICommandHandler<
   UsuarioUpdateImagemCapaCommand,
   boolean
 >;
-export const IUsuarioUpdateImagemCapaCommandHandler = Symbol(
-  "IUsuarioUpdateImagemCapaCommandHandler",
-);

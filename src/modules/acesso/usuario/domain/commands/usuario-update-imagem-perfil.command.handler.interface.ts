@@ -6,10 +6,11 @@ export type UsuarioUpdateImagemPerfilCommand = {
   file: Express.Multer.File;
 };
 
+export const IUsuarioUpdateImagemPerfilCommandHandler = Symbol(
+  "IUsuarioUpdateImagemPerfilCommandHandler",
+);
+
 export type IUsuarioUpdateImagemPerfilCommandHandler = ICommandHandler<
   UsuarioUpdateImagemPerfilCommand,
   boolean
 >;
-export const IUsuarioUpdateImagemPerfilCommandHandler = Symbol(
-  "IUsuarioUpdateImagemPerfilCommandHandler",
-);

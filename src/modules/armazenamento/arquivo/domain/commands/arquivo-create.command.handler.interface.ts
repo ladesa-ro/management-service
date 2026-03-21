@@ -6,5 +6,6 @@ export type IArquivoCreateCommand = {
   data: NodeJS.ArrayBufferView | Readable;
 };
 
-export type IArquivoCreateCommandHandler = ICommandHandler<IArquivoCreateCommand, { id: string }>;
 export const IArquivoCreateCommandHandler = Symbol("IArquivoCreateCommandHandler");
+
+export type IArquivoCreateCommandHandler = ICommandHandler<IArquivoCreateCommand, { id: string }>;

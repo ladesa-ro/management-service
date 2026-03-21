@@ -9,9 +9,9 @@ export interface ITokenSet {
   scope: string | null;
 }
 
+export const IIdpTokenService = Symbol("IIdpTokenService");
+
 export interface IIdpTokenService {
   passwordGrant(username: string, password: string): Promise<ITokenSet>;
   refreshGrant(refreshToken: string): Promise<ITokenSet>;
 }
-
-export const IIdpTokenService = Symbol("IIdpTokenService");

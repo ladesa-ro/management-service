@@ -6,10 +6,11 @@ export type DisciplinaUpdateImagemCapaCommand = {
   file: Express.Multer.File;
 };
 
+export const IDisciplinaUpdateImagemCapaCommandHandler = Symbol(
+  "IDisciplinaUpdateImagemCapaCommandHandler",
+);
+
 export type IDisciplinaUpdateImagemCapaCommandHandler = ICommandHandler<
   DisciplinaUpdateImagemCapaCommand,
   boolean
 >;
-export const IDisciplinaUpdateImagemCapaCommandHandler = Symbol(
-  "IDisciplinaUpdateImagemCapaCommandHandler",
-);

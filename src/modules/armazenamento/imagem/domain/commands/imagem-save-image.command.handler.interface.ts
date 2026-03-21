@@ -16,8 +16,9 @@ export type IImagemSaveImageCommand = {
   options: ISaveImageOptions;
 };
 
+export const IImagemSaveImageCommandHandler = Symbol("IImagemSaveImageCommandHandler");
+
 export type IImagemSaveImageCommandHandler = ICommandHandler<
   IImagemSaveImageCommand,
   { imagem: { id: string } }
 >;
-export const IImagemSaveImageCommandHandler = Symbol("IImagemSaveImageCommandHandler");

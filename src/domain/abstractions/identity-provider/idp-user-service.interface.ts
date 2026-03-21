@@ -1,3 +1,5 @@
+export const IIdpUserService = Symbol("IIdpUserService");
+
 export interface IIdpUserService {
   // Busca
   resolveUsernameByMatricula(matricula: string): Promise<string | undefined>;
@@ -15,5 +17,3 @@ export interface IIdpUserService {
   setInitialPassword(matricula: string, password: string): Promise<void>;
   sendPasswordResetEmail(email: string): Promise<boolean>;
 }
-
-export const IIdpUserService = Symbol("IIdpUserService");

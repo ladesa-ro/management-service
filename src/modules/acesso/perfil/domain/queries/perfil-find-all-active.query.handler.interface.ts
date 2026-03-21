@@ -5,8 +5,9 @@ export type IPerfilFindAllActiveQuery = {
   usuarioId: string;
 };
 
+export const IPerfilFindAllActiveQueryHandler = Symbol("IPerfilFindAllActiveQueryHandler");
+
 export type IPerfilFindAllActiveQueryHandler = IQueryHandler<
   IPerfilFindAllActiveQuery,
   PerfilFindOneQueryResult[]
 >;
-export const IPerfilFindAllActiveQueryHandler = Symbol("IPerfilFindAllActiveQueryHandler");

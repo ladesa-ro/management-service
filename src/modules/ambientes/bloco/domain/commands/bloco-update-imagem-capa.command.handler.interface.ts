@@ -6,8 +6,9 @@ export type BlocoUpdateImagemCapaCommand = {
   file: Express.Multer.File;
 };
 
+export const IBlocoUpdateImagemCapaCommandHandler = Symbol("IBlocoUpdateImagemCapaCommandHandler");
+
 export type IBlocoUpdateImagemCapaCommandHandler = ICommandHandler<
   BlocoUpdateImagemCapaCommand,
   boolean
 >;
-export const IBlocoUpdateImagemCapaCommandHandler = Symbol("IBlocoUpdateImagemCapaCommandHandler");

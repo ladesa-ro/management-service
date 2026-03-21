@@ -6,8 +6,9 @@ export type TurmaUpdateImagemCapaCommand = {
   file: Express.Multer.File;
 };
 
+export const ITurmaUpdateImagemCapaCommandHandler = Symbol("ITurmaUpdateImagemCapaCommandHandler");
+
 export type ITurmaUpdateImagemCapaCommandHandler = ICommandHandler<
   TurmaUpdateImagemCapaCommand,
   boolean
 >;
-export const ITurmaUpdateImagemCapaCommandHandler = Symbol("ITurmaUpdateImagemCapaCommandHandler");

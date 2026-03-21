@@ -5,10 +5,11 @@ export type IEnderecoCreateOrUpdateCommand = {
   dto: EnderecoInputCommand;
 };
 
+export const IEnderecoCreateOrUpdateCommandHandler = Symbol(
+  "IEnderecoCreateOrUpdateCommandHandler",
+);
+
 export type IEnderecoCreateOrUpdateCommandHandler = ICommandHandler<
   IEnderecoCreateOrUpdateCommand,
   { id: string | number }
 >;
-export const IEnderecoCreateOrUpdateCommandHandler = Symbol(
-  "IEnderecoCreateOrUpdateCommandHandler",
-);
