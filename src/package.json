@@ -96,6 +96,7 @@
     "typeorm:generate": "commands/typeorm-generate",
     "migration:revert": "commands/migration-revert",
     "migration:run": "commands/migration-run",
+    "db:reset": "commands/db-reset",
     "code:check": "commands/code-check",
     "code:check:format": "commands/code-check-format",
     "code:check:lint": "commands/code-check-lint",

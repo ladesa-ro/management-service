@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+DATASOURCE="infrastructure.database/data-sources/entrypoints/migration.data-source.ts"
+
+# Drop all tables
+bun x --bun typeorm -d "$DATASOURCE" schema:drop
+
+# Run all migrations
+bun x --bun typeorm -d "$DATASOURCE" migration:run

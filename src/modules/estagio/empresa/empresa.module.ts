@@ -19,8 +19,8 @@ import {
 } from "@/modules/estagio/empresa/domain/queries";
 import { IEmpresaRepository } from "@/modules/estagio/empresa/domain/repositories";
 import { EmpresaTypeOrmRepositoryAdapter } from "@/modules/estagio/empresa/infrastructure.database";
-import { EmpresaGraphqlResolver } from "./presentation.graphql";
 import { EmpresaRestController } from "@/modules/estagio/empresa/presentation.rest/empresa.rest.controller";
+import { EmpresaGraphqlResolver } from "./presentation.graphql";
 
 @Module({
   imports: [],
