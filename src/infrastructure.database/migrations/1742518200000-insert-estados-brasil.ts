@@ -30,7 +30,7 @@ const allEstados = [
   { id: 53, sigla: "DF", nome: "Distrito Federal" },
 ];
 
-export class InsertEstadosBrasil1700000000010 implements MigrationInterface {
+export class InsertEstadosBrasil1742518200000 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     for (const estado of allEstados) {
       await queryRunner.query(

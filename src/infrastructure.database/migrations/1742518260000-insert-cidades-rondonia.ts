@@ -55,7 +55,7 @@ const allCidades = [
   { id: 1101807, nome: "Vale do Paraíso", estado: { id: 11 } },
 ];
 
-export class InsertCidadesRondonia1700000000011 implements MigrationInterface {
+export class InsertCidadesRondonia1742518260000 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     for (const cidade of allCidades) {
       await queryRunner.query(
