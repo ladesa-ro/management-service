@@ -6,6 +6,7 @@ import type {
   ImagemArquivo,
 } from "@/modules/armazenamento/imagem-arquivo/domain/imagem-arquivo";
 import { zodValidate } from "@/shared/validation/index";
+import { getNowISO } from "@/utils/date";
 import { ImagemCreateSchema, ImagemSchema, ImagemUpdateSchema } from "./imagem.schemas";
 
 interface IImagemLoadInput {
@@ -46,8 +47,8 @@ export class Imagem implements IEntityBaseUuid {
     instance.id = generateUuidV7();
     instance.descricao = parsed.descricao?.trim() || null;
     instance.versoes = [];
-    instance.dateCreated = new Date().toISOString();
-    instance.dateUpdated = new Date().toISOString();
+    instance.dateCreated = getNowISO();
+    instance.dateUpdated = getNowISO();
     instance.dateDeleted = null;
 
     return instance;
@@ -73,7 +74,7 @@ export class Imagem implements IEntityBaseUuid {
 
     if (parsed.descricao !== undefined) this.descricao = parsed.descricao?.trim() || null;
 
-    this.dateUpdated = new Date().toISOString();
+    this.dateUpdated = getNowISO();
     zodValidate(Imagem.entityName, ImagemSchema, this);
   }
 

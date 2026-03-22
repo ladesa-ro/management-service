@@ -1,6 +1,7 @@
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { Estagiario } from "@/modules/estagio/estagiario/domain/estagiario";
 import type { EstagiarioFindOneQueryResult } from "@/modules/estagio/estagiario/domain/queries";
+import { getNowISO } from "@/utils/date";
 import { EstagiarioTypeormEntity } from "./estagiario.typeorm.entity";
 
 /**
@@ -18,7 +19,7 @@ export class EstagiarioMapper {
     };
 
     const formatDateToDateString = (date: Date | string | null | undefined): string => {
-      if (!date) return new Date().toISOString();
+      if (!date) return getNowISO();
       if (typeof date === "string") return date;
       return (date as Date).toISOString();
     };
@@ -66,7 +67,7 @@ export class EstagiarioMapper {
    */
   static toOutputDto(entity: EstagiarioTypeormEntity): EstagiarioFindOneQueryResult {
     const formatDateToISOString = (date: Date | string | null | undefined): string => {
-      if (!date) return new Date().toISOString();
+      if (!date) return getNowISO();
       if (typeof date === "string") return date;
       return (date as Date).toISOString();
     };

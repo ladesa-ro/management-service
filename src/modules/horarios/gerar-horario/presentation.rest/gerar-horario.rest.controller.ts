@@ -10,7 +10,7 @@ import {
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
-import { AccessContextHttp } from "@/server/access-context";
+import { AccessContextHttp } from "@/server/nest/access-context";
 import {
   GerarHorarioAceitarCommandMetadata,
   IGerarHorarioAceitarCommandHandler,

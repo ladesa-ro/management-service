@@ -25,7 +25,7 @@ import {
   IModalidadeListQueryHandler,
   ModalidadeListQueryMetadata,
 } from "@/modules/ensino/modalidade/domain/queries/modalidade-list.query.handler.interface";
-import { AccessContextGraphQL } from "@/server/access-context";
+import { AccessContextGraphQL } from "@/server/nest/access-context";
 import {
   ModalidadeCreateInputGraphQlDto,
   ModalidadeFindOneOutputGraphQlDto,

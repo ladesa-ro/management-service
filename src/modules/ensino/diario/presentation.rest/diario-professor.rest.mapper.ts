@@ -1,5 +1,6 @@
 import { PerfilRestMapper } from "@/modules/acesso/perfil/presentation.rest";
 import { createListOutputMapper } from "@/shared/mapping";
+import { getNow } from "@/utils/date";
 import { DiarioProfessorBulkReplaceCommand, DiarioProfessorListQuery } from "../domain";
 import type { DiarioProfessorFindOneQueryResult } from "../domain/queries";
 import { DiarioRestMapper } from "./diario.rest.mapper";
@@ -49,8 +50,8 @@ export class DiarioProfessorRestMapper {
     dto.situacao = output.situacao;
     dto.perfil = PerfilRestMapper.toFindOneOutputDto(output.perfil);
     dto.diario = DiarioRestMapper.toFindOneOutputDto(output.diario);
-    dto.dateCreated = output.dateCreated ? new Date(output.dateCreated) : new Date();
-    dto.dateUpdated = output.dateUpdated ? new Date(output.dateUpdated) : new Date();
+    dto.dateCreated = output.dateCreated ? new Date(output.dateCreated) : getNow();
+    dto.dateUpdated = output.dateUpdated ? new Date(output.dateUpdated) : getNow();
     dto.dateDeleted = output.dateDeleted ? new Date(output.dateDeleted) : null;
     return dto;
   }

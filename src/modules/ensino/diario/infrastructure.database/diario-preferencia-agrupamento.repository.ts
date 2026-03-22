@@ -21,6 +21,7 @@ import type {
   DiarioPreferenciaAgrupamentoListQueryResult,
 } from "@/modules/ensino/diario";
 import type { IDiarioPreferenciaAgrupamentoRepository } from "@/modules/ensino/diario/domain/repositories";
+import { getNow } from "@/utils/date";
 import { DiarioPreferenciaAgrupamentoEntity } from "./typeorm/diario-preferencia-agrupamento.typeorm.entity";
 
 const config = {
@@ -34,7 +35,6 @@ const diarioPreferenciaAgrupamentoPaginateConfig: ITypeOrmPaginationConfig<Diari
     ...paginateConfig,
     relations: {
       diario: true,
-      intervaloDeTempo: true,
     },
     select: [
       "id",
@@ -44,18 +44,8 @@ const diarioPreferenciaAgrupamentoPaginateConfig: ITypeOrmPaginationConfig<Diari
       "dataFim",
       "diario.id",
       "diario.ativo",
-      "intervaloDeTempo.id",
-      "intervaloDeTempo.periodoInicio",
-      "intervaloDeTempo.periodoFim",
     ],
-    sortableColumns: [
-      "diaSemanaIso",
-      "aulasSeguidas",
-      "dataInicio",
-      "dataFim",
-      "diario.id",
-      "intervaloDeTempo.id",
-    ],
+    sortableColumns: ["diaSemanaIso", "aulasSeguidas", "dataInicio", "dataFim", "diario.id"],
     searchableColumns: ["id", "diaSemanaIso", "aulasSeguidas", "dataInicio", "dataFim"],
     defaultSortBy: [],
     filterableColumns: {
@@ -147,7 +137,7 @@ export class DiarioPreferenciaAgrupamentoTypeOrmRepositoryAdapter
       .getRepository(DiarioPreferenciaAgrupamentoEntity)
       .createQueryBuilder()
       .update(DiarioPreferenciaAgrupamentoEntity)
-      .set({ dateDeleted: new Date() })
+      .set({ dateDeleted: getNow() })
       .where("id_diario_fk = :diarioId AND date_deleted IS NULL", { diarioId })
       .execute();
   }
@@ -164,7 +154,7 @@ export class DiarioPreferenciaAgrupamentoTypeOrmRepositoryAdapter
     if (entries.length === 0) return;
 
     const repo = this.appTypeormConnection.getRepository(DiarioPreferenciaAgrupamentoEntity);
-    const now = new Date();
+    const now = getNow();
     const entities = entries.map((p) => {
       const entity = new DiarioPreferenciaAgrupamentoEntity();
       entity.id = generateUuidV7();

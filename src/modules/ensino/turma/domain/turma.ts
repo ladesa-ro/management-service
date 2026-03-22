@@ -2,6 +2,7 @@ import type { z } from "zod";
 import type { IdUuid, ScalarDateTimeString } from "@/domain/abstractions/scalars";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { zodValidate } from "@/shared/validation/index";
+import { getNowISO } from "@/utils/date";
 import { TurmaCreateSchema, TurmaSchema, TurmaUpdateSchema } from "./turma.schemas";
 
 export type ITurma = z.infer<typeof TurmaSchema>;
@@ -30,8 +31,8 @@ export class Turma {
     instance.curso = parsed.curso;
     instance.ambientePadraoAula = parsed.ambientePadraoAula ?? null;
     instance.imagemCapa = parsed.imagemCapa ?? null;
-    instance.dateCreated = new Date().toISOString();
-    instance.dateUpdated = new Date().toISOString();
+    instance.dateCreated = getNowISO();
+    instance.dateUpdated = getNowISO();
     instance.dateDeleted = null;
 
     return instance;
@@ -63,7 +64,7 @@ export class Turma {
       this.ambientePadraoAula = parsed.ambientePadraoAula ?? null;
     if (parsed.imagemCapa !== undefined) this.imagemCapa = parsed.imagemCapa ?? null;
 
-    this.dateUpdated = new Date().toISOString();
+    this.dateUpdated = getNowISO();
 
     zodValidate(Turma.entityName, TurmaSchema, this);
   }

@@ -2,6 +2,7 @@ import type { z } from "zod";
 import type { IdUuid, ScalarDateTimeString } from "@/domain/abstractions/scalars";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { zodValidate } from "@/shared/validation/index";
+import { getNowISO } from "@/utils/date";
 import { CampusCreateSchema, CampusSchema, CampusUpdateSchema } from "./campus.schemas";
 
 export type ICampus = z.infer<typeof CampusSchema>;
@@ -31,8 +32,8 @@ export class Campus {
     instance.razaoSocial = parsed.razaoSocial;
     instance.apelido = parsed.apelido;
     instance.cnpj = parsed.cnpj;
-    instance.dateCreated = new Date().toISOString();
-    instance.dateUpdated = new Date().toISOString();
+    instance.dateCreated = getNowISO();
+    instance.dateUpdated = getNowISO();
     instance.dateDeleted = null;
 
     return instance;
@@ -64,7 +65,7 @@ export class Campus {
     if (parsed.apelido !== undefined) this.apelido = parsed.apelido;
     if (parsed.cnpj !== undefined) this.cnpj = parsed.cnpj;
 
-    this.dateUpdated = new Date().toISOString();
+    this.dateUpdated = getNowISO();
 
     zodValidate(Campus.entityName, CampusSchema, this);
   }

@@ -13,7 +13,7 @@ import {
   EstadoListQueryMetadata,
   IEstadoListQueryHandler,
 } from "@/modules/localidades/estado/domain/queries/estado-list.query.handler.interface";
-import { AccessContextGraphQL } from "@/server/access-context";
+import { AccessContextGraphQL } from "@/server/nest/access-context";
 import {
   EstadoFindOneOutputGraphQlDto,
   EstadoListInputGraphQlDto,

@@ -1,6 +1,7 @@
 import type { IdUuid, ScalarDateTimeString } from "@/domain/abstractions/scalars";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { zodValidate } from "@/shared/validation/index";
+import { getNowISO } from "@/utils/date";
 import {
   OfertaFormacaoNivelFormacaoCreateSchema,
   OfertaFormacaoNivelFormacaoSchema,
@@ -32,8 +33,8 @@ export class OfertaFormacaoNivelFormacao {
     instance.id = generateUuidV7();
     instance.nivelFormacao = parsed.nivelFormacao;
     instance.ofertaFormacao = parsed.ofertaFormacao;
-    instance.dateCreated = new Date().toISOString();
-    instance.dateUpdated = new Date().toISOString();
+    instance.dateCreated = getNowISO();
+    instance.dateUpdated = getNowISO();
     instance.dateDeleted = null;
 
     return instance;

@@ -5,6 +5,7 @@ import {
 } from "@/domain/abstractions/message-broker";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
+import { getNow } from "@/utils/date";
 import type {
   IGerarHorarioCreateCommand,
   IGerarHorarioCreateCommandHandler,
@@ -40,7 +41,7 @@ export class GerarHorarioCreateCommandHandlerImpl implements IGerarHorarioCreate
       dataTermino: command.dataTermino ? new Date(command.dataTermino) : null,
       requisicaoGerador: null,
       respostaGerador: null,
-      dateCreated: new Date(),
+      dateCreated: getNow(),
     };
 
     await this.gerarHorarioRepository.save(entity);

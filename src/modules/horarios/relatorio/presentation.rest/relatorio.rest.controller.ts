@@ -3,7 +3,7 @@ import { ApiForbiddenResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nes
 import type { Response } from "express";
 import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
-import { AccessContextHttp } from "@/server/access-context";
+import { AccessContextHttp } from "@/server/nest/access-context";
 import { IRelatorioRepository } from "../domain/repositories";
 
 @ApiTags("relatorios")

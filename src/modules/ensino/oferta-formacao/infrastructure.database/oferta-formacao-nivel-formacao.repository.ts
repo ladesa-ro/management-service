@@ -20,6 +20,7 @@ import type {
   OfertaFormacaoNivelFormacaoListQuery,
   OfertaFormacaoNivelFormacaoListQueryResult,
 } from "@/modules/ensino/oferta-formacao";
+import { getNow } from "@/utils/date";
 import { OfertaFormacaoNivelFormacaoEntity } from "./typeorm/oferta-formacao-nivel-formacao.typeorm.entity";
 
 const config = {
@@ -123,7 +124,7 @@ export class OfertaFormacaoNivelFormacaoTypeOrmRepositoryAdapter
       .getRepository(OfertaFormacaoNivelFormacaoEntity)
       .createQueryBuilder()
       .update(OfertaFormacaoNivelFormacaoEntity)
-      .set({ dateDeleted: new Date() })
+      .set({ dateDeleted: getNow() })
       .where("id_oferta_formacao_fk = :ofertaFormacaoId AND date_deleted IS NULL", {
         ofertaFormacaoId,
       })
@@ -136,7 +137,7 @@ export class OfertaFormacaoNivelFormacaoTypeOrmRepositoryAdapter
     if (entries.length === 0) return;
 
     const repo = this.appTypeormConnection.getRepository(OfertaFormacaoNivelFormacaoEntity);
-    const now = new Date();
+    const now = getNow();
     const entities = entries.map((n) => {
       const entity = new OfertaFormacaoNivelFormacaoEntity();
       entity.id = generateUuidV7();

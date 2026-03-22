@@ -19,6 +19,7 @@ import type {
   EstagioListQueryResult,
 } from "@/modules/estagio/estagio/domain/queries";
 import type { IEstagioRepository } from "@/modules/estagio/estagio/domain/repositories";
+import { getNow } from "@/utils/date";
 import { EstagioMapper, EstagioTypeormEntity, HorarioEstagioTypeormEntity } from "./typeorm";
 
 @DeclareImplementation()
@@ -212,7 +213,7 @@ export class EstagioTypeOrmRepositoryAdapter implements IEstagioRepository {
     await this.repository.save(updated);
 
     if (dto.horariosEstagio !== undefined) {
-      const now = new Date();
+      const now = getNow();
       await this.horarioRepository.update(
         { estagio: { id }, dateDeleted: IsNull() },
         { dateDeleted: now, dateUpdated: now },
@@ -243,7 +244,7 @@ export class EstagioTypeOrmRepositoryAdapter implements IEstagioRepository {
 
     ensureExists(entity, Estagio.entityName, id);
 
-    const now = new Date();
+    const now = getNow();
     entity.dateDeleted = now;
     await this.repository.save(entity);
 

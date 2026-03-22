@@ -25,7 +25,7 @@ import {
   CampusListQueryMetadata,
   ICampusListQueryHandler,
 } from "@/modules/ambientes/campus/domain/queries/campus-list.query.handler.interface";
-import { AccessContextGraphQL } from "@/server/access-context";
+import { AccessContextGraphQL } from "@/server/nest/access-context";
 import {
   CampusCreateInputGraphQlDto,
   CampusFindOneOutputGraphQlDto,

@@ -13,6 +13,7 @@ import {
   createListOutputMapper,
   mapDatedFields,
 } from "@/shared/mapping";
+import { getNow } from "@/utils/date";
 import {
   BlocoCreateInputRestDto,
   BlocoFindOneInputRestDto,
@@ -87,8 +88,8 @@ export class BlocoRestMapper {
       versaoDto.arquivo = { id: v.arquivo?.id };
       return versaoDto;
     });
-    dto.dateCreated = output.dateCreated ? new Date(output.dateCreated) : new Date();
-    dto.dateUpdated = output.dateUpdated ? new Date(output.dateUpdated) : new Date();
+    dto.dateCreated = output.dateCreated ? new Date(output.dateCreated) : getNow();
+    dto.dateUpdated = output.dateUpdated ? new Date(output.dateUpdated) : getNow();
     dto.dateDeleted = output.dateDeleted ? new Date(output.dateDeleted) : null;
     return dto;
   }

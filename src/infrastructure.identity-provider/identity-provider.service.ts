@@ -5,6 +5,7 @@ import type { IntrospectionResponse } from "openid-client";
 import { tokenIntrospection } from "openid-client";
 import type { IIdentityProvider, IIdentityResponse } from "@/domain/abstractions/identity-provider";
 import { DeclareImplementation } from "@/domain/dependency-injection";
+import { getNowTime } from "@/utils/date";
 import { JwksRsaClientService } from "./jwks/jwks-rsa-client.service";
 import { OpenidConnectService } from "./openid-connect/openid-connect.service";
 
@@ -57,7 +58,7 @@ export class IdentityProviderService implements IIdentityProvider {
 
       if (decoded && exp) {
         this.#cache.set(accessToken, identityResponse, {
-          ttl: Math.max(exp / 1000 - new Date().getTime(), 1),
+          ttl: Math.max(exp / 1000 - getNowTime(), 1),
         });
       } else {
         this.#cache.set(accessToken, identityResponse, {

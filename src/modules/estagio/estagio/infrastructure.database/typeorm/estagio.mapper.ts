@@ -2,6 +2,7 @@ import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import type { IHorarioEstagio } from "@/modules/estagio/estagio/domain/estagio";
 import { Estagio } from "@/modules/estagio/estagio/domain/estagio";
 import type { EstagioFindOneQueryResult } from "@/modules/estagio/estagio/domain/queries";
+import { getNow, getNowISO } from "@/utils/date";
 import { EstagioTypeormEntity } from "./estagio.typeorm.entity";
 import { HorarioEstagioTypeormEntity } from "./horario-estagio.typeorm.entity";
 
@@ -70,15 +71,15 @@ export class EstagioMapper {
     entity.diaSemana = horario.diaSemana;
     entity.horaInicio = horario.horaInicio;
     entity.horaFim = horario.horaFim;
-    entity.dateCreated = new Date();
-    entity.dateUpdated = new Date();
+    entity.dateCreated = getNow();
+    entity.dateUpdated = getNow();
     entity.dateDeleted = null;
     return entity;
   }
 
   static toOutputDto(entity: EstagioTypeormEntity): EstagioFindOneQueryResult {
     const formatDateToISOString = (date: Date | string | null | undefined): string => {
-      if (!date) return new Date().toISOString();
+      if (!date) return getNowISO();
       if (typeof date === "string") return date;
       return date.toISOString();
     };

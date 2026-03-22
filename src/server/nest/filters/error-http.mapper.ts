@@ -5,6 +5,7 @@ import {
   type ValidationErrorDetail,
 } from "@/application/errors";
 import { DomainError, DomainErrorCode } from "@/domain/errors";
+import { getNowISO } from "@/utils/date";
 
 /**
  * Resposta HTTP padronizada para erros.
@@ -78,7 +79,7 @@ export function buildHttpErrorResponse(
     statusCode,
     code: error.code,
     message: error.message,
-    timestamp: new Date().toISOString(),
+    timestamp: getNowISO(),
     path,
   };
 

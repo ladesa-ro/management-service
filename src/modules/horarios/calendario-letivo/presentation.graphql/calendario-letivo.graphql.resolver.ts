@@ -25,7 +25,7 @@ import {
   CalendarioLetivoListQueryMetadata,
   ICalendarioLetivoListQueryHandler,
 } from "@/modules/horarios/calendario-letivo/domain/queries/calendario-letivo-list.query.handler.interface";
-import { AccessContextGraphQL } from "@/server/access-context";
+import { AccessContextGraphQL } from "@/server/nest/access-context";
 import {
   CalendarioLetivoCreateInputGraphQlDto,
   CalendarioLetivoFindOneOutputGraphQlDto,

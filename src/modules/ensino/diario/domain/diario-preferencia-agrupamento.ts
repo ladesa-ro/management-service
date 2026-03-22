@@ -3,6 +3,7 @@ import type { IdUuid, ScalarDateTimeString } from "@/domain/abstractions/scalars
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import type { IDiario } from "@/modules/ensino/diario/domain/diario";
 import { zodValidate } from "@/shared/validation/index";
+import { getNowISO } from "@/utils/date";
 import {
   DiarioPreferenciaAgrupamentoCreateSchema,
   DiarioPreferenciaAgrupamentoSchema,
@@ -64,8 +65,8 @@ export class DiarioPreferenciaAgrupamento implements IEntityBaseUuid {
     instance.dataFim = parsed.dataFim ?? null;
     instance.diaSemanaIso = parsed.diaSemanaIso;
     instance.aulasSeguidas = parsed.aulasSeguidas;
-    instance.dateCreated = new Date().toISOString();
-    instance.dateUpdated = new Date().toISOString();
+    instance.dateCreated = getNowISO();
+    instance.dateUpdated = getNowISO();
     instance.dateDeleted = null;
 
     return instance;
@@ -99,7 +100,7 @@ export class DiarioPreferenciaAgrupamento implements IEntityBaseUuid {
     if (parsed.diaSemanaIso !== undefined) this.diaSemanaIso = parsed.diaSemanaIso;
     if (parsed.aulasSeguidas !== undefined) this.aulasSeguidas = parsed.aulasSeguidas;
 
-    this.dateUpdated = new Date().toISOString();
+    this.dateUpdated = getNowISO();
     zodValidate(DiarioPreferenciaAgrupamento.entityName, DiarioPreferenciaAgrupamentoSchema, this);
   }
 }

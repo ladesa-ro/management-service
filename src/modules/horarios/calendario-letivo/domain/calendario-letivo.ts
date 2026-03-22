@@ -4,6 +4,7 @@ import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import type { ICampus } from "@/modules/ambientes/campus";
 import type { IOfertaFormacao } from "@/modules/ensino/oferta-formacao";
 import { zodValidate } from "@/shared/validation/index";
+import { getNowISO } from "@/utils/date";
 import {
   CalendarioLetivoCreateSchema,
   CalendarioLetivoUpdateSchema,
@@ -53,8 +54,8 @@ export class CalendarioLetivo implements IEntityBaseUuid {
     instance.nome = parsed.nome;
     instance.ano = parsed.ano;
     instance.ofertaFormacao = null;
-    instance.dateCreated = new Date().toISOString();
-    instance.dateUpdated = new Date().toISOString();
+    instance.dateCreated = getNowISO();
+    instance.dateUpdated = getNowISO();
     instance.dateDeleted = null;
 
     return instance;
@@ -79,6 +80,6 @@ export class CalendarioLetivo implements IEntityBaseUuid {
     if (parsed.nome !== undefined) this.nome = parsed.nome;
     if (parsed.ano !== undefined) this.ano = parsed.ano;
 
-    this.dateUpdated = new Date().toISOString();
+    this.dateUpdated = getNowISO();
   }
 }

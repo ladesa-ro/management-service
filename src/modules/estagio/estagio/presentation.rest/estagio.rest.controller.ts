@@ -32,7 +32,7 @@ import {
   EstagioListQueryMetadata,
   IEstagioListQueryHandler,
 } from "@/modules/estagio/estagio/domain/queries/estagio-list.query.handler.interface";
-import { AccessContextHttp } from "@/server/access-context";
+import { AccessContextHttp } from "@/server/nest/access-context";
 import {
   EstagioCreateInputRestDto,
   EstagioFindOneInputRestDto,

@@ -2,6 +2,7 @@ import type { z } from "zod";
 import type { IdUuid, ScalarDateTimeString } from "@/domain/abstractions/scalars";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { zodValidate } from "@/shared/validation/index";
+import { getNowISO } from "@/utils/date";
 import {
   NivelFormacaoCreateSchema,
   NivelFormacaoSchema,
@@ -28,8 +29,8 @@ export class NivelFormacao {
 
     instance.id = generateUuidV7();
     instance.slug = parsed.slug;
-    instance.dateCreated = new Date().toISOString();
-    instance.dateUpdated = new Date().toISOString();
+    instance.dateCreated = getNowISO();
+    instance.dateUpdated = getNowISO();
     instance.dateDeleted = null;
 
     return instance;
@@ -54,7 +55,7 @@ export class NivelFormacao {
 
     if (parsed.slug !== undefined) this.slug = parsed.slug;
 
-    this.dateUpdated = new Date().toISOString();
+    this.dateUpdated = getNowISO();
 
     zodValidate(NivelFormacao.entityName, NivelFormacaoSchema, this);
   }

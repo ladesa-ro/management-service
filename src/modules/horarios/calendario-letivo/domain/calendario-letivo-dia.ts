@@ -1,6 +1,7 @@
 import type { IEntityBaseUuid } from "@/domain/abstractions/entities";
 import type { IdUuid, ScalarDateTimeString } from "@/domain/abstractions/scalars";
 import { zodValidate } from "@/shared/validation/index";
+import { getNowISO } from "@/utils/date";
 import type { CalendarioLetivo, ICalendarioLetivo } from "./calendario-letivo";
 import {
   CalendarioLetivoDiaSchema,
@@ -82,7 +83,7 @@ export class CalendarioLetivoDia implements IEntityBaseUuid {
     if (parsed.diaPresencial !== undefined) this.diaPresencial = parsed.diaPresencial;
     if (parsed.extraCurricular !== undefined) this.extraCurricular = parsed.extraCurricular;
 
-    this.dateUpdated = new Date().toISOString();
+    this.dateUpdated = getNowISO();
     zodValidate(CalendarioLetivoDia.entityName, CalendarioLetivoDiaSchema, this);
   }
 }

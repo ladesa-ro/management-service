@@ -3,7 +3,7 @@ import { PassportStrategy } from "@nestjs/passport";
 import { Strategy } from "passport-http-bearer";
 import { IRequestActorResolver } from "@/domain/abstractions/request-actor";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import { AuthStrategy } from "../types/auth-strategy.types";
+import { AuthStrategy } from "./auth-strategy.types";
 
 @DeclareImplementation()
 export class AccessTokenStrategyAdapter extends PassportStrategy(

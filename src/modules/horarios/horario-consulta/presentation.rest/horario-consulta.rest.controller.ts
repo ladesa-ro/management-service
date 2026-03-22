@@ -2,7 +2,7 @@ import { Controller, Get, Query } from "@nestjs/common";
 import { ApiForbiddenResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
-import { AccessContextHttp } from "@/server/access-context";
+import { AccessContextHttp } from "@/server/nest/access-context";
 import { HorarioMescladoQueryMetadata, IHorarioConsultaQueryHandler } from "../domain/queries";
 import {
   HorarioMescladoQueryParamsRestDto,

@@ -2,6 +2,7 @@ import type { z } from "zod";
 import type { IdUuid, ScalarDateTimeString } from "@/domain/abstractions/scalars";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { zodValidate } from "@/shared/validation/index";
+import { getNowISO } from "@/utils/date";
 import {
   DisciplinaCreateSchema,
   DisciplinaSchema,
@@ -34,8 +35,8 @@ export class Disciplina {
     instance.nomeAbreviado = parsed.nomeAbreviado;
     instance.cargaHoraria = parsed.cargaHoraria;
     instance.imagemCapa = parsed.imagemCapa ?? null;
-    instance.dateCreated = new Date().toISOString();
-    instance.dateUpdated = new Date().toISOString();
+    instance.dateCreated = getNowISO();
+    instance.dateUpdated = getNowISO();
     instance.dateDeleted = null;
 
     return instance;
@@ -66,7 +67,7 @@ export class Disciplina {
     if (parsed.cargaHoraria !== undefined) this.cargaHoraria = parsed.cargaHoraria;
     if (parsed.imagemCapa !== undefined) this.imagemCapa = parsed.imagemCapa ?? null;
 
-    this.dateUpdated = new Date().toISOString();
+    this.dateUpdated = getNowISO();
 
     zodValidate(Disciplina.entityName, DisciplinaSchema, this);
   }

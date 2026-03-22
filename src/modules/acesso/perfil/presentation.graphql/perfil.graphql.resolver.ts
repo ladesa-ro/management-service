@@ -15,7 +15,7 @@ import {
   IPerfilListQueryHandler,
   PerfilListQueryMetadata,
 } from "@/modules/acesso/perfil/domain/queries/perfil-list.query.handler.interface";
-import { AccessContextGraphQL } from "@/server/access-context";
+import { AccessContextGraphQL } from "@/server/nest/access-context";
 import {
   PerfilFindOneOutputGraphQlDto,
   PerfilListInputGraphQlDto,

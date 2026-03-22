@@ -55,7 +55,7 @@ import {
   CursoListQueryMetadata,
   ICursoListQueryHandler,
 } from "@/modules/ensino/curso/domain/queries/curso-list.query.handler.interface";
-import { AccessContextHttp } from "@/server/access-context";
+import { AccessContextHttp } from "@/server/nest/access-context";
 import {
   CursoCreateInputRestDto,
   CursoFindOneInputRestDto,

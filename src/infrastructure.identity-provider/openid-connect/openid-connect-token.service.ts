@@ -1,6 +1,7 @@
 import * as client from "openid-client";
 import type { IIdpTokenService, ITokenSet } from "@/domain/abstractions/identity-provider";
 import { DeclareImplementation } from "@/domain/dependency-injection";
+import { getNowTime } from "@/utils/date";
 import { OpenidConnectService } from "./openid-connect.service";
 
 @DeclareImplementation()
@@ -34,7 +35,9 @@ export class OpenidConnectTokenService implements IIdpTokenService {
       id_token: tokenset.id_token ?? null,
       refresh_token: tokenset.refresh_token ?? null,
       expires_in: tokenset.expires_in ?? null,
-      expires_at: tokenset.expires_in ? new Date(Date.now() + tokenset.expires_in).getTime() : null,
+      expires_at: tokenset.expires_in
+        ? new Date(getNowTime() + tokenset.expires_in).getTime()
+        : null,
       session_state: (tokenset.session_state as string) ?? null,
       scope: tokenset.scope ?? null,
     };

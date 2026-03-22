@@ -1,5 +1,6 @@
 import { NivelFormacaoRestMapper } from "@/modules/ensino/nivel-formacao/presentation.rest";
 import { createListOutputMapper } from "@/shared/mapping";
+import { getNow } from "@/utils/date";
 import {
   OfertaFormacaoNivelFormacaoBulkReplaceCommand,
   OfertaFormacaoNivelFormacaoListQuery,
@@ -49,8 +50,8 @@ export class OfertaFormacaoNivelFormacaoRestMapper {
     dto.id = output.id;
     dto.nivelFormacao = NivelFormacaoRestMapper.toFindOneOutputDto(output.nivelFormacao);
     dto.ofertaFormacao = OfertaFormacaoRestMapper.toFindOneOutputDto(output.ofertaFormacao);
-    dto.dateCreated = output.dateCreated ? new Date(output.dateCreated) : new Date();
-    dto.dateUpdated = output.dateUpdated ? new Date(output.dateUpdated) : new Date();
+    dto.dateCreated = output.dateCreated ? new Date(output.dateCreated) : getNow();
+    dto.dateUpdated = output.dateUpdated ? new Date(output.dateUpdated) : getNow();
     dto.dateDeleted = output.dateDeleted ? new Date(output.dateDeleted) : null;
     return dto;
   }

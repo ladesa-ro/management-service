@@ -25,7 +25,7 @@ import {
   AmbienteListQueryMetadata,
   IAmbienteListQueryHandler,
 } from "@/modules/ambientes/ambiente/domain/queries/ambiente-list.query.handler.interface";
-import { AccessContextGraphQL } from "@/server/access-context";
+import { AccessContextGraphQL } from "@/server/nest/access-context";
 import {
   AmbienteCreateInputGraphQlDto,
   AmbienteFindOneOutputGraphQlDto,

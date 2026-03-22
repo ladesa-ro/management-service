@@ -6,7 +6,7 @@ import { DeclareDependency } from "@/domain/dependency-injection";
 import { graphqlExtractSelection } from "@/infrastructure.graphql";
 import { Endereco } from "@/modules/localidades/endereco/domain/endereco";
 import { IEnderecoFindOneQueryHandler } from "@/modules/localidades/endereco/domain/queries/endereco-find-one.query.handler.interface";
-import { AccessContextGraphQL } from "@/server/access-context";
+import { AccessContextGraphQL } from "@/server/nest/access-context";
 import { EnderecoFindOneOutputGraphQlDto } from "./endereco.graphql.dto";
 import { EnderecoGraphqlMapper } from "./endereco.graphql.mapper";
 

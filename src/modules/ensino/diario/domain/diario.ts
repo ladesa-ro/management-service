@@ -7,6 +7,7 @@ import type { IDisciplina } from "@/modules/ensino/disciplina/domain/disciplina"
 import type { ITurma } from "@/modules/ensino/turma/domain/turma";
 import type { ICalendarioLetivo } from "@/modules/horarios/calendario-letivo";
 import { zodValidate } from "@/shared/validation/index";
+import { getNowISO } from "@/utils/date";
 import { DiarioCreateSchema, DiarioUpdateSchema } from "./diario.schemas";
 
 export interface IDiario extends IEntityBaseUuid {
@@ -59,8 +60,8 @@ export class Diario implements IEntityBaseUuid {
     instance.ativo = parsed.ativo;
     instance.ambientePadrao = null;
     instance.imagemCapa = null;
-    instance.dateCreated = new Date().toISOString();
-    instance.dateUpdated = new Date().toISOString();
+    instance.dateCreated = getNowISO();
+    instance.dateUpdated = getNowISO();
     instance.dateDeleted = null;
 
     return instance;
@@ -86,7 +87,7 @@ export class Diario implements IEntityBaseUuid {
 
     if (parsed.ativo !== undefined) this.ativo = parsed.ativo;
 
-    this.dateUpdated = new Date().toISOString();
+    this.dateUpdated = getNowISO();
   }
 
   isAtivo(): boolean {
@@ -95,11 +96,11 @@ export class Diario implements IEntityBaseUuid {
 
   ativar(): void {
     this.ativo = true;
-    this.dateUpdated = new Date().toISOString();
+    this.dateUpdated = getNowISO();
   }
 
   desativar(): void {
     this.ativo = false;
-    this.dateUpdated = new Date().toISOString();
+    this.dateUpdated = getNowISO();
   }
 }

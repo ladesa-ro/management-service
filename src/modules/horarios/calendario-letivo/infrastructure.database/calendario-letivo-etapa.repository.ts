@@ -2,6 +2,7 @@ import { IsNull } from "typeorm";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import type { ICalendarioLetivoEtapaRepository } from "@/modules/horarios/calendario-letivo/domain/repositories";
+import { getNow } from "@/utils/date";
 import { CalendarioLetivoEtapaEntity } from "./typeorm/calendario-letivo-etapa.typeorm.entity";
 
 @DeclareImplementation()
@@ -32,7 +33,7 @@ export class CalendarioLetivoEtapaTypeOrmRepositoryAdapter
     await repo
       .createQueryBuilder()
       .update(CalendarioLetivoEtapaEntity)
-      .set({ dateDeleted: new Date() })
+      .set({ dateDeleted: getNow() })
       .where("id_calendario_letivo_fk = :calendarioLetivoId AND date_deleted IS NULL", {
         calendarioLetivoId,
       })

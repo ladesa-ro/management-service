@@ -2,6 +2,7 @@ import type { z } from "zod";
 import type { IdUuid, ScalarDateTimeString } from "@/domain/abstractions/scalars";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { zodValidate } from "@/shared/validation/index";
+import { getNowISO } from "@/utils/date";
 import { AmbienteCreateSchema, AmbienteSchema, AmbienteUpdateSchema } from "./ambiente.schemas";
 
 export type IAmbiente = z.infer<typeof AmbienteSchema>;
@@ -35,8 +36,8 @@ export class Ambiente {
     instance.capacidade = parsed.capacidade ?? null;
     instance.tipo = parsed.tipo ?? null;
     instance.imagemCapa = null;
-    instance.dateCreated = new Date().toISOString();
-    instance.dateUpdated = new Date().toISOString();
+    instance.dateCreated = getNowISO();
+    instance.dateUpdated = getNowISO();
     instance.dateDeleted = null;
 
     return instance;
@@ -71,7 +72,7 @@ export class Ambiente {
     if (parsed.capacidade !== undefined) this.capacidade = parsed.capacidade ?? null;
     if (parsed.tipo !== undefined) this.tipo = parsed.tipo ?? null;
 
-    this.dateUpdated = new Date().toISOString();
+    this.dateUpdated = getNowISO();
 
     zodValidate(Ambiente.entityName, AmbienteSchema, this);
   }

@@ -1,4 +1,5 @@
 import { createListOutputMapper } from "@/shared/mapping";
+import { getNow } from "@/utils/date";
 import {
   CalendarioLetivoDiaFindOneQuery,
   CalendarioLetivoDiaListQuery,
@@ -68,8 +69,8 @@ export class CalendarioLetivoDiaRestMapper {
     dto.tipo = output.tipo as TipoCalendarioLetivoDia;
     dto.extraCurricular = output.extraCurricular;
     dto.calendario = CalendarioLetivoRestMapper.toFindOneOutputDto(output.calendario);
-    dto.dateCreated = output.dateCreated ? new Date(output.dateCreated) : new Date();
-    dto.dateUpdated = output.dateUpdated ? new Date(output.dateUpdated) : new Date();
+    dto.dateCreated = output.dateCreated ? new Date(output.dateCreated) : getNow();
+    dto.dateUpdated = output.dateUpdated ? new Date(output.dateUpdated) : getNow();
     dto.dateDeleted = output.dateDeleted ? new Date(output.dateDeleted) : null;
     return dto;
   }

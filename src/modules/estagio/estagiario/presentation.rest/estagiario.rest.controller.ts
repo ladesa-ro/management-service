@@ -31,7 +31,7 @@ import {
   EstagiarioListQueryMetadata,
   IEstagiarioListQueryHandler,
 } from "@/modules/estagio/estagiario/domain/queries/estagiario-list.query.handler.interface";
-import { AccessContextHttp } from "@/server/access-context";
+import { AccessContextHttp } from "@/server/nest/access-context";
 import {
   EstagiarioCreateInputRestDto,
   EstagiarioFindOneInputRestDto,

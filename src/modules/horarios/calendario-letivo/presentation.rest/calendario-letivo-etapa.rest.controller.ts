@@ -9,7 +9,8 @@ import {
 import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
-import { AccessContextHttp } from "@/server/access-context";
+import { AccessContextHttp } from "@/server/nest/access-context";
+import { getNow } from "@/utils/date";
 import {
   CalendarioLetivoDesativarCommandMetadata,
   CalendarioLetivoEtapaBulkReplaceCommandMetadata,
@@ -76,7 +77,7 @@ export class CalendarioLetivoEtapaRestController {
     await this.etapaRepository.softDeleteByCalendarioLetivoId(calendarioLetivoId);
 
     // Insert new
-    const now = new Date();
+    const now = getNow();
     for (const item of dto.etapas) {
       await this.etapaRepository.save({
         id: generateUuidV7(),

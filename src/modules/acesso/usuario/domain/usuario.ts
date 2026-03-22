@@ -2,6 +2,7 @@ import type { IdUuid, ScalarDateTimeString } from "@/domain/abstractions/scalars
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import type { IImagem } from "@/modules/armazenamento/imagem/domain/imagem";
 import { zodValidate } from "@/shared/validation/index";
+import { getNowISO } from "@/utils/date";
 import { UsuarioCreateSchema, UsuarioSchema, UsuarioUpdateSchema } from "./usuario.schemas";
 
 export interface IUsuario {
@@ -45,8 +46,8 @@ export class Usuario {
     instance.isSuperUser = false;
     instance.imagemCapa = null;
     instance.imagemPerfil = null;
-    instance.dateCreated = new Date().toISOString();
-    instance.dateUpdated = new Date().toISOString();
+    instance.dateCreated = getNowISO();
+    instance.dateUpdated = getNowISO();
     instance.dateDeleted = null;
 
     return instance;
@@ -78,7 +79,7 @@ export class Usuario {
     if (parsed.matricula !== undefined) this.matricula = parsed.matricula?.trim() || null;
     if (parsed.email !== undefined) this.email = parsed.email?.trim() || null;
 
-    this.dateUpdated = new Date().toISOString();
+    this.dateUpdated = getNowISO();
 
     zodValidate(Usuario.entityName, UsuarioSchema, this);
   }

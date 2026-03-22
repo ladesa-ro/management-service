@@ -25,7 +25,7 @@ import {
   UsuarioListQueryMetadata,
 } from "@/modules/acesso/usuario/domain/queries/usuario-list.query.handler.interface";
 import { Usuario } from "@/modules/acesso/usuario/domain/usuario";
-import { AccessContextGraphQL } from "@/server/access-context";
+import { AccessContextGraphQL } from "@/server/nest/access-context";
 import {
   UsuarioCreateInputGraphQlDto,
   UsuarioFindOneOutputGraphQlDto,

@@ -25,7 +25,7 @@ import {
   DisciplinaListQueryMetadata,
   IDisciplinaListQueryHandler,
 } from "@/modules/ensino/disciplina/domain/queries/disciplina-list.query.handler.interface";
-import { AccessContextGraphQL } from "@/server/access-context";
+import { AccessContextGraphQL } from "@/server/nest/access-context";
 import {
   DisciplinaCreateInputGraphQlDto,
   DisciplinaFindOneOutputGraphQlDto,

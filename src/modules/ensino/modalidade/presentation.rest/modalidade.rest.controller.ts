@@ -31,7 +31,7 @@ import {
   IModalidadeListQueryHandler,
   ModalidadeListQueryMetadata,
 } from "@/modules/ensino/modalidade/domain/queries/modalidade-list.query.handler.interface";
-import { AccessContextHttp } from "@/server/access-context";
+import { AccessContextHttp } from "@/server/nest/access-context";
 import {
   ModalidadeCreateInputRestDto,
   ModalidadeFindOneInputRestDto,

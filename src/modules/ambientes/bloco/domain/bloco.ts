@@ -2,6 +2,7 @@ import type { z } from "zod";
 import type { IdUuid, ScalarDateTimeString } from "@/domain/abstractions/scalars";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { zodValidate } from "@/shared/validation/index";
+import { getNowISO } from "@/utils/date";
 import { BlocoCreateSchema, BlocoSchema, BlocoUpdateSchema } from "./bloco.schemas";
 
 export type IBloco = z.infer<typeof BlocoSchema>;
@@ -29,8 +30,8 @@ export class Bloco {
     instance.nome = parsed.nome;
     instance.codigo = parsed.codigo;
     instance.imagemCapa = null;
-    instance.dateCreated = new Date().toISOString();
-    instance.dateUpdated = new Date().toISOString();
+    instance.dateCreated = getNowISO();
+    instance.dateUpdated = getNowISO();
     instance.dateDeleted = null;
 
     return instance;
@@ -59,7 +60,7 @@ export class Bloco {
     if (parsed.nome !== undefined) this.nome = parsed.nome;
     if (parsed.codigo !== undefined) this.codigo = parsed.codigo;
 
-    this.dateUpdated = new Date().toISOString();
+    this.dateUpdated = getNowISO();
 
     zodValidate(Bloco.entityName, BlocoSchema, this);
   }

@@ -8,6 +8,7 @@ import {
 import type { Request, Response } from "express";
 import type { ILoggerPort } from "@/domain/abstractions/logging";
 import { ILoggerPort as ILoggerPortToken } from "@/domain/abstractions/logging";
+import { getNowISO } from "@/utils/date";
 import type { HttpErrorResponse } from "./error-http.mapper";
 import { getHttpStatusName } from "./utils";
 
@@ -46,7 +47,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       statusCode: status,
       code: `HTTP.${getHttpStatusName(status)}`,
       message: typeof exceptionResponse === "string" ? exceptionResponse : exception.message,
-      timestamp: new Date().toISOString(),
+      timestamp: getNowISO(),
       path: request.url,
     };
 
@@ -67,7 +68,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       statusCode: 500,
       code: "HTTP.INTERNAL_SERVER_ERROR",
       message: "Ocorreu um erro interno. Tente novamente mais tarde.",
-      timestamp: new Date().toISOString(),
+      timestamp: getNowISO(),
       path: request.url,
     };
 

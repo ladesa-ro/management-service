@@ -22,7 +22,7 @@ import {
   IPerfilListQueryHandler,
   PerfilListQueryMetadata,
 } from "@/modules/acesso/perfil/domain/queries/perfil-list.query.handler.interface";
-import { AccessContextHttp } from "@/server/access-context";
+import { AccessContextHttp } from "@/server/nest/access-context";
 import {
   PerfilFindOneInputRestDto,
   PerfilFindOneOutputRestDto,

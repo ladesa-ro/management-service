@@ -25,7 +25,7 @@ import {
   DiarioListQueryMetadata,
   IDiarioListQueryHandler,
 } from "@/modules/ensino/diario/domain/queries/diario-list.query.handler.interface";
-import { AccessContextGraphQL } from "@/server/access-context";
+import { AccessContextGraphQL } from "@/server/nest/access-context";
 import {
   DiarioCreateInputGraphQlDto,
   DiarioFindOneOutputGraphQlDto,

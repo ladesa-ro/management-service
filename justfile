@@ -92,6 +92,11 @@ shell-root:
     just start
     just _shell "root"
 
+# Executa um comando arbitrário dentro do container
+exec *ARGS:
+    {{COMMAND_COMPOSE_SERVICE}} exec -u {{COMPOSE_SERVICE_USER}} -w {{SHELL_WORKING_DIR}} {{COMPOSE_SERVICE_APP}} \
+        bash -c "{{ARGS}}"
+
 # Receita interna para abrir shell
 [private]
 _shell user:

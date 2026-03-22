@@ -2,6 +2,7 @@ import type { ObjectUuidRef } from "@/domain/abstractions";
 import type { IdUuid, ScalarDateTimeString } from "@/domain/abstractions/scalars";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { zodValidate } from "@/shared/validation/index";
+import { getNowISO } from "@/utils/date";
 import { EstagioCreateSchema, EstagioSchema, EstagioUpdateSchema } from "./estagio.schemas";
 
 export enum EstagioStatus {
@@ -65,8 +66,8 @@ export class Estagio {
     instance.dataFim = parsed.dataFim ?? null;
     instance.status = (parsed.status ?? EstagioStatus.ABERTA) as EstagioStatus;
     instance.horariosEstagio = parsed.horariosEstagio ?? [];
-    instance.dateCreated = new Date().toISOString();
-    instance.dateUpdated = new Date().toISOString();
+    instance.dateCreated = getNowISO();
+    instance.dateUpdated = getNowISO();
     instance.dateDeleted = null;
 
     return instance;
@@ -103,7 +104,7 @@ export class Estagio {
     if (parsed.status !== undefined) this.status = parsed.status as EstagioStatus;
     if (parsed.horariosEstagio !== undefined) this.horariosEstagio = parsed.horariosEstagio;
 
-    this.dateUpdated = new Date().toISOString();
+    this.dateUpdated = getNowISO();
 
     zodValidate(Estagio.entityName, EstagioSchema, this);
   }

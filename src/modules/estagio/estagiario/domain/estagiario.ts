@@ -2,6 +2,7 @@ import type { ObjectUuidRef } from "@/domain/abstractions";
 import type { IdUuid, ScalarDateTimeString } from "@/domain/abstractions/scalars";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { zodValidate } from "@/shared/validation/index";
+import { getNowISO } from "@/utils/date";
 import {
   EstagiarioCreateSchema,
   EstagiarioSchema,
@@ -54,8 +55,8 @@ export class Estagiario {
     instance.telefone = parsed.telefone;
     instance.emailInstitucional = parsed.emailInstitucional ?? null;
     instance.dataNascimento = parsed.dataNascimento;
-    instance.dateCreated = new Date().toISOString();
-    instance.dateUpdated = new Date().toISOString();
+    instance.dateCreated = getNowISO();
+    instance.dateUpdated = getNowISO();
     instance.dateDeleted = null;
 
     return instance;
@@ -91,7 +92,7 @@ export class Estagiario {
       this.emailInstitucional = parsed.emailInstitucional ?? null;
     if (parsed.dataNascimento !== undefined) this.dataNascimento = parsed.dataNascimento;
 
-    this.dateUpdated = new Date().toISOString();
+    this.dateUpdated = getNowISO();
 
     zodValidate(Estagiario.entityName, EstagiarioSchema, this);
   }

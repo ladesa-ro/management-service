@@ -4,6 +4,7 @@ import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import type { IPerfil } from "@/modules/acesso/perfil";
 import type { IDiario } from "@/modules/ensino/diario/domain/diario";
 import { zodValidate } from "@/shared/validation/index";
+import { getNowISO } from "@/utils/date";
 import {
   DiarioProfessorCreateSchema,
   DiarioProfessorUpdateSchema,
@@ -47,8 +48,8 @@ export class DiarioProfessor implements IEntityBaseUuid {
 
     instance.id = generateUuidV7();
     instance.situacao = parsed.situacao;
-    instance.dateCreated = new Date().toISOString();
-    instance.dateUpdated = new Date().toISOString();
+    instance.dateCreated = getNowISO();
+    instance.dateUpdated = getNowISO();
     instance.dateDeleted = null;
 
     return instance;
@@ -71,6 +72,6 @@ export class DiarioProfessor implements IEntityBaseUuid {
 
     if (parsed.situacao !== undefined) this.situacao = parsed.situacao;
 
-    this.dateUpdated = new Date().toISOString();
+    this.dateUpdated = getNowISO();
   }
 }

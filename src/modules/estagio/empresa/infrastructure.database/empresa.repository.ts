@@ -17,6 +17,7 @@ import type {
 import type { IEmpresaRepository } from "@/modules/estagio/empresa/domain/repositories";
 import { Endereco } from "@/modules/localidades/endereco/domain/endereco";
 import { EnderecoEntity } from "@/modules/localidades/endereco/infrastructure.database/typeorm/endereco.typeorm.entity";
+import { getNow } from "@/utils/date";
 import { EmpresaMapper, EmpresaTypeormEntity } from "./typeorm";
 
 @DeclareImplementation()
@@ -189,7 +190,7 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
 
     ensureExists(entity, Empresa.entityName, id);
 
-    entity.dateDeleted = new Date();
+    entity.dateDeleted = getNow();
     await this.repository.save(entity);
   }
 }

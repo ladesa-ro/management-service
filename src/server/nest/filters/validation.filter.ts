@@ -5,6 +5,7 @@ import {
   type ExceptionFilter,
 } from "@nestjs/common";
 import type { Response } from "express";
+import { getNowISO } from "@/utils/date";
 import type { HttpErrorResponse } from "./error-http.mapper";
 import { buildValidationMessage, extractZodErrors } from "./utils";
 
@@ -29,7 +30,7 @@ export class ValidationExceptionFilter implements ExceptionFilter {
         statusCode: 400,
         code: "HTTP.BAD_REQUEST",
         message: exception.message,
-        timestamp: new Date().toISOString(),
+        timestamp: getNowISO(),
         path: request.url,
       };
       response.status(400).json(errorResponse);
@@ -40,7 +41,7 @@ export class ValidationExceptionFilter implements ExceptionFilter {
       statusCode: 422,
       code: "APP.VALIDATION",
       message: buildValidationMessage(details),
-      timestamp: new Date().toISOString(),
+      timestamp: getNowISO(),
       path: request.url,
       details,
     };

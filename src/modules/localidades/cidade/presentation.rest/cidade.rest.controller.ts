@@ -18,7 +18,7 @@ import {
   CidadeListQueryMetadata,
   ICidadeListQueryHandler,
 } from "@/modules/localidades/cidade/domain/queries/cidade-list.query.handler.interface";
-import { AccessContextHttp } from "@/server/access-context";
+import { AccessContextHttp } from "@/server/nest/access-context";
 import {
   CidadeFindOneInputRestDto,
   CidadeFindOneOutputRestDto,

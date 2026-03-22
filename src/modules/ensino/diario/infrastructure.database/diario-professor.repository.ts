@@ -20,6 +20,7 @@ import type {
   DiarioProfessorListQueryResult,
 } from "@/modules/ensino/diario/domain/queries";
 import type { IDiarioProfessorRepository } from "@/modules/ensino/diario/domain/repositories";
+import { getNow } from "@/utils/date";
 import { DiarioProfessorEntity } from "./typeorm/diario-professor.typeorm.entity";
 
 const config = {
@@ -42,9 +43,9 @@ const diarioProfessorPaginateConfig: ITypeOrmPaginationConfig<DiarioProfessorEnt
   searchableColumns: ["id", "situacao", "diario.id", "perfil.campus.id", "perfil.usuario.id"],
   defaultSortBy: [],
   filterableColumns: {
-    "perfil.usuario.id": FilterOperator.EQ,
-    "perfil.id": FilterOperator.EQ,
-    "diario.id": FilterOperator.EQ,
+    "perfil.usuario.id": [FilterOperator.EQ],
+    "perfil.id": [FilterOperator.EQ],
+    "diario.id": [FilterOperator.EQ],
   },
 };
 
@@ -117,7 +118,7 @@ export class DiarioProfessorTypeOrmRepositoryAdapter implements IDiarioProfessor
       .getRepository(DiarioProfessorEntity)
       .createQueryBuilder()
       .update(DiarioProfessorEntity)
-      .set({ dateDeleted: new Date() })
+      .set({ dateDeleted: getNow() })
       .where("id_diario_fk = :diarioId AND date_deleted IS NULL", { diarioId })
       .execute();
   }
@@ -128,7 +129,7 @@ export class DiarioProfessorTypeOrmRepositoryAdapter implements IDiarioProfessor
     if (entries.length === 0) return;
 
     const repo = this.appTypeormConnection.getRepository(DiarioProfessorEntity);
-    const now = new Date();
+    const now = getNow();
     const entities = entries.map((p) => {
       const entity = new DiarioProfessorEntity();
       entity.id = generateUuidV7();

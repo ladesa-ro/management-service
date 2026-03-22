@@ -31,7 +31,7 @@ import {
   DiarioListQueryMetadata,
   IDiarioListQueryHandler,
 } from "@/modules/ensino/diario/domain/queries/diario-list.query.handler.interface";
-import { AccessContextHttp } from "@/server/access-context";
+import { AccessContextHttp } from "@/server/nest/access-context";
 import {
   DiarioCreateInputRestDto,
   DiarioFindOneInputRestDto,

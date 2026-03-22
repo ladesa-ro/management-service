@@ -3,6 +3,7 @@ import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import type { IUsuario } from "@/modules/acesso/usuario";
 import type { ICampus } from "@/modules/ambientes/campus";
 import { zodValidate } from "@/shared/validation/index";
+import { getNowISO } from "@/utils/date";
 import { PerfilCreateSchema, PerfilSchema, PerfilUpdateSchema } from "./perfil.schemas";
 
 export interface IPerfil {
@@ -38,8 +39,8 @@ export class Perfil {
     instance.id = generateUuidV7();
     instance.cargo = parsed.cargo;
     instance.ativo = true;
-    instance.dateCreated = new Date().toISOString();
-    instance.dateUpdated = new Date().toISOString();
+    instance.dateCreated = getNowISO();
+    instance.dateUpdated = getNowISO();
     instance.dateDeleted = null;
 
     return instance;
@@ -68,7 +69,7 @@ export class Perfil {
     if (parsed.ativo !== undefined) this.ativo = parsed.ativo;
     if (parsed.cargo !== undefined) this.cargo = parsed.cargo;
 
-    this.dateUpdated = new Date().toISOString();
+    this.dateUpdated = getNowISO();
 
     zodValidate(Perfil.entityName, PerfilSchema, this);
   }
@@ -91,11 +92,11 @@ export class Perfil {
 
   ativar(): void {
     this.ativo = true;
-    this.dateUpdated = new Date().toISOString();
+    this.dateUpdated = getNowISO();
   }
 
   desativar(): void {
     this.ativo = false;
-    this.dateUpdated = new Date().toISOString();
+    this.dateUpdated = getNowISO();
   }
 }

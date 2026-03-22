@@ -18,7 +18,7 @@ import {
   EstadoListQueryMetadata,
   IEstadoListQueryHandler,
 } from "@/modules/localidades/estado/domain/queries/estado-list.query.handler.interface";
-import { AccessContextHttp } from "@/server/access-context";
+import { AccessContextHttp } from "@/server/nest/access-context";
 import {
   EstadoFindOneInputRestDto,
   EstadoFindOneOutputRestDto,

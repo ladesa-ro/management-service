@@ -7,7 +7,7 @@ import {
   CursoDisciplinasPorPeriodoBulkReplaceCommandMetadata,
   CursoDisciplinasPorPeriodoFindAllQueryMetadata,
 } from "@/modules/ensino/curso/domain/queries/curso-periodo-disciplina.query.metadata";
-import { AccessContextHttp } from "@/server/access-context";
+import { AccessContextHttp } from "@/server/nest/access-context";
 import { ICursoPeriodoDisciplinaRepository } from "../domain/repositories";
 import {
   CursoPeriodoDisciplinaBulkReplaceInputRestDto,

@@ -8,7 +8,7 @@ import {
   TurmaHorarioAulaBulkReplaceCommandMetadata,
   TurmaHorarioAulaFindAllQueryMetadata,
 } from "@/modules/horarios/turma-horario-aula/domain/turma-horario-aula.query.metadata";
-import { AccessContextHttp } from "@/server/access-context";
+import { AccessContextHttp } from "@/server/nest/access-context";
 import {
   TurmaHorarioAulaBulkReplaceInputRestDto,
   TurmaHorarioAulaListOutputRestDto,

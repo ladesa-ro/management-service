@@ -13,7 +13,7 @@ import {
   CidadeListQueryMetadata,
   ICidadeListQueryHandler,
 } from "@/modules/localidades/cidade/domain/queries/cidade-list.query.handler.interface";
-import { AccessContextGraphQL } from "@/server/access-context";
+import { AccessContextGraphQL } from "@/server/nest/access-context";
 import {
   CidadeFindOneOutputGraphQlDto,
   CidadeListInputGraphQlDto,

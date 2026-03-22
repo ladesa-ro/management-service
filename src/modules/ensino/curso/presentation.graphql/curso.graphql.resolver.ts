@@ -25,7 +25,7 @@ import {
   CursoListQueryMetadata,
   ICursoListQueryHandler,
 } from "@/modules/ensino/curso/domain/queries/curso-list.query.handler.interface";
-import { AccessContextGraphQL } from "@/server/access-context";
+import { AccessContextGraphQL } from "@/server/nest/access-context";
 import {
   CursoCreateInputGraphQlDto,
   CursoFindOneOutputGraphQlDto,

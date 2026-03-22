@@ -3,7 +3,7 @@ import { APP_FILTER, APP_INTERCEPTOR } from "@nestjs/core";
 import { ContainerModule } from "@/infrastructure.dependency-injection";
 import { LoggingModule, RequestLoggingInterceptor } from "@/infrastructure.logging";
 import { InfrastructureModule } from "@/infrastructure.module";
-import { AccessContextCoreModule } from "@/server/access-context";
+import { AccessContextCoreModule } from "@/server/nest/access-context";
 import { AppController } from "@/server/nest/app.controller";
 import { AppService } from "@/server/nest/app.service";
 import {

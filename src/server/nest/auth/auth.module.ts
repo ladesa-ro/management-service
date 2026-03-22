@@ -3,11 +3,11 @@ import { APP_GUARD } from "@nestjs/core";
 import { PassportModule } from "@nestjs/passport";
 import { IRequestActorResolver } from "@/domain/abstractions/request-actor";
 import { IdentityProviderModule } from "@/infrastructure.identity-provider/identity-provider.module";
-import { AccessTokenStrategyAdapter } from "./passport/access-token-strategy.adapter";
-import { AuthGuardAdapter } from "./passport/auth-guard.adapter";
-import { AuthSerializerAdapter } from "./passport/auth-serializer.adapter";
-import { RequestActorResolverAdapter } from "./request-actor/request-actor-resolver.adapter";
-import { AuthStrategy } from "./types/auth-strategy.types";
+import { AccessTokenStrategyAdapter } from "./access-token-strategy.adapter";
+import { AuthGuardAdapter } from "./auth-guard.adapter";
+import { AuthSerializerAdapter } from "./auth-serializer.adapter";
+import { AuthStrategy } from "./auth-strategy.types";
+import { RequestActorResolverAdapter } from "./request-actor-resolver.adapter";
 
 @Module({
   imports: [

@@ -55,7 +55,7 @@ import {
   BlocoListQueryMetadata,
   IBlocoListQueryHandler,
 } from "@/modules/ambientes/bloco/domain/queries/bloco-list.query.handler.interface";
-import { AccessContextHttp } from "@/server/access-context";
+import { AccessContextHttp } from "@/server/nest/access-context";
 import {
   BlocoCreateInputRestDto,
   BlocoFindOneInputRestDto,

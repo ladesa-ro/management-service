@@ -64,7 +64,7 @@ import {
   HorarioSemanalOutputRestDto,
   HorarioSemanalQueryParamsRestDto,
 } from "@/modules/horarios/horario-consulta/presentation.rest";
-import { AccessContextHttp } from "@/server/access-context";
+import { AccessContextHttp } from "@/server/nest/access-context";
 import {
   TurmaCreateInputRestDto,
   TurmaFindOneInputRestDto,

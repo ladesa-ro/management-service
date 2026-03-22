@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { IAccessContext } from "./access-context.types";
+import type { IAccessContext } from "@/domain/abstractions";
 
 describe("IAccessContext", () => {
   const createMockAccessContext = (

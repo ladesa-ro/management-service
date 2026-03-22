@@ -31,7 +31,7 @@ import {
   CampusListQueryMetadata,
   ICampusListQueryHandler,
 } from "@/modules/ambientes/campus/domain/queries/campus-list.query.handler.interface";
-import { AccessContextHttp } from "@/server/access-context";
+import { AccessContextHttp } from "@/server/nest/access-context";
 import {
   CampusCreateInputRestDto,
   CampusFindOneInputRestDto,

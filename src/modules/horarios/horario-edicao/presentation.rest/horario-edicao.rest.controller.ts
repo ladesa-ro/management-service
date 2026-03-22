@@ -20,7 +20,8 @@ import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
-import { AccessContextHttp } from "@/server/access-context";
+import { AccessContextHttp } from "@/server/nest/access-context";
+import { getNow } from "@/utils/date";
 import {
   HorarioEdicaoApplyChangeCommandMetadata,
   HorarioEdicaoCancelarCommandMetadata,
@@ -87,8 +88,8 @@ export class HorarioEdicaoRestController {
       id: generateUuidV7(),
       status: HorarioEdicaoSessaoStatus.ABERTA,
       usuario: { id: accessContext.requestActor?.id ?? "" },
-      dateCreated: new Date(),
-      dateUpdated: new Date(),
+      dateCreated: getNow(),
+      dateUpdated: getNow(),
     };
 
     const saved = await this.sessaoRepository.save(entity);
@@ -124,13 +125,13 @@ export class HorarioEdicaoRestController {
         : null,
       tipoOperacao: dto.tipoOperacao,
       dados: dto.dados,
-      dateCreated: new Date(),
+      dateCreated: getNow(),
     };
 
     await this.mudancaRepository.save(mudanca);
 
     // Update sessao dateUpdated
-    sessao.dateUpdated = new Date();
+    sessao.dateUpdated = getNow();
     await this.sessaoRepository.save(sessao);
 
     return this.toMudancaOutput(mudanca);
@@ -161,7 +162,7 @@ export class HorarioEdicaoRestController {
 
     // Mark session as saved
     sessao.status = HorarioEdicaoSessaoStatus.SALVA;
-    sessao.dateUpdated = new Date();
+    sessao.dateUpdated = getNow();
     await this.sessaoRepository.save(sessao);
 
     return this.toSessaoOutput(sessao);
@@ -187,7 +188,7 @@ export class HorarioEdicaoRestController {
     }
 
     sessao.status = HorarioEdicaoSessaoStatus.CANCELADA;
-    sessao.dateUpdated = new Date();
+    sessao.dateUpdated = getNow();
     await this.sessaoRepository.save(sessao);
 
     return this.toSessaoOutput(sessao);

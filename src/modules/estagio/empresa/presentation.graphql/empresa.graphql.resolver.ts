@@ -25,7 +25,7 @@ import {
   EmpresaListQueryMetadata,
   IEmpresaListQueryHandler,
 } from "@/modules/estagio/empresa/domain/queries/empresa-list.query.handler.interface";
-import { AccessContextGraphQL } from "@/server/access-context";
+import { AccessContextGraphQL } from "@/server/nest/access-context";
 import {
   EmpresaCreateInputGraphQlDto,
   EmpresaFindOneOutputGraphQlDto,

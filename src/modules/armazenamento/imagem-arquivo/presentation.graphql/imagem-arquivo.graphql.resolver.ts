@@ -13,7 +13,7 @@ import {
   IImagemArquivoListQueryHandler,
   ImagemArquivoListQueryMetadata,
 } from "@/modules/armazenamento/imagem-arquivo/domain/queries/imagem-arquivo-list.query.handler.interface";
-import { AccessContextGraphQL } from "@/server/access-context";
+import { AccessContextGraphQL } from "@/server/nest/access-context";
 import {
   ImagemArquivoFindOneOutputGraphQlDto,
   ImagemArquivoListInputGraphQlDto,

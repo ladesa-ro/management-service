@@ -3,8 +3,8 @@ import { Reflector } from "@nestjs/core";
 import { GqlExecutionContext } from "@nestjs/graphql";
 import { AuthGuard } from "@nestjs/passport";
 import { DeclareImplementation } from "@/domain/dependency-injection";
-import { NEEDS_AUTH_KEY } from "../decorators/auth-decorators";
-import { AuthStrategy } from "../types/auth-strategy.types";
+import { NEEDS_AUTH_KEY } from "./auth-decorators";
+import { AuthStrategy } from "./auth-strategy.types";
 
 @DeclareImplementation()
 export class AuthGuardAdapter extends AuthGuard(AuthStrategy.ACCESS_TOKEN) {

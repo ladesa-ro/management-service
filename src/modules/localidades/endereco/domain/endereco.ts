@@ -2,6 +2,7 @@ import type { z } from "zod";
 import type { IdUuid, ScalarDateTimeString } from "@/domain/abstractions/scalars";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { zodValidate } from "@/shared/validation/index";
+import { getNowISO } from "@/utils/date";
 import { EnderecoCreateSchema, EnderecoSchema, EnderecoUpdateSchema } from "./endereco.schemas";
 
 export type IEndereco = z.infer<typeof EnderecoSchema>;
@@ -36,8 +37,8 @@ export class Endereco {
     instance.complemento = parsed.complemento ?? null;
     instance.pontoReferencia = parsed.pontoReferencia ?? null;
     instance.cidade = parsed.cidade;
-    instance.dateCreated = new Date().toISOString();
-    instance.dateUpdated = new Date().toISOString();
+    instance.dateCreated = getNowISO();
+    instance.dateUpdated = getNowISO();
     instance.dateDeleted = null;
 
     return instance;
@@ -73,7 +74,7 @@ export class Endereco {
     if (parsed.complemento !== undefined) this.complemento = parsed.complemento ?? null;
     if (parsed.pontoReferencia !== undefined) this.pontoReferencia = parsed.pontoReferencia ?? null;
     if (parsed.cidade !== undefined) this.cidade = parsed.cidade;
-    this.dateUpdated = new Date().toISOString();
+    this.dateUpdated = getNowISO();
 
     zodValidate(Endereco.entityName, EnderecoSchema, this);
   }

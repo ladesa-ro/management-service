@@ -21,6 +21,7 @@ import type {
   EstagiarioListQueryResult,
 } from "@/modules/estagio/estagiario/domain/queries";
 import type { IEstagiarioRepository } from "@/modules/estagio/estagiario/domain/repositories";
+import { getNow } from "@/utils/date";
 import { EstagiarioMapper, EstagiarioTypeormEntity } from "./typeorm";
 
 @DeclareImplementation()
@@ -218,7 +219,7 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
 
     ensureExists(entity, Estagiario.entityName, id);
 
-    entity.dateDeleted = new Date();
+    entity.dateDeleted = getNow();
     await this.repository.save(entity);
   }
 }

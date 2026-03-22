@@ -4,7 +4,7 @@ import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { IDiarioConfigurarRepository } from "@/modules/ensino/turma/domain/repositories";
-import { AccessContextHttp } from "@/server/access-context";
+import { AccessContextHttp } from "@/server/nest/access-context";
 import {
   TurmaDiarioConfigurarInputRestDto,
   TurmaDiarioConfigurarOutputRestDto,

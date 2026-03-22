@@ -4,6 +4,7 @@ import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { type Arquivo, type IArquivo } from "@/modules/armazenamento/arquivo/domain/arquivo";
 import { type IImagem, type Imagem } from "@/modules/armazenamento/imagem/domain/imagem";
 import { zodValidate } from "@/shared/validation/index";
+import { getNowISO } from "@/utils/date";
 import {
   ImagemArquivoCreateSchema,
   ImagemArquivoSchema,
@@ -67,8 +68,8 @@ export class ImagemArquivo implements IEntityBaseUuid {
     instance.altura = parsed.altura;
     instance.formato = parsed.formato;
     instance.mimeType = parsed.mimeType;
-    instance.dateCreated = new Date().toISOString();
-    instance.dateUpdated = new Date().toISOString();
+    instance.dateCreated = getNowISO();
+    instance.dateUpdated = getNowISO();
     instance.dateDeleted = null;
 
     return instance;
@@ -101,7 +102,7 @@ export class ImagemArquivo implements IEntityBaseUuid {
     if (parsed.formato !== undefined) this.formato = parsed.formato;
     if (parsed.mimeType !== undefined) this.mimeType = parsed.mimeType;
 
-    this.dateUpdated = new Date().toISOString();
+    this.dateUpdated = getNowISO();
     zodValidate(ImagemArquivo.entityName, ImagemArquivoSchema, this);
   }
 }
