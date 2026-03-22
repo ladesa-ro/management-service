@@ -61,11 +61,6 @@ services:
       - "5672:5672"
       - "15672:15672"
 
-  chart-db:
-    image: ghcr.io/chartdb/chartdb:latest
-    ports:
-      - "8099:80"
-
 networks:
   ladesa-net:
 
