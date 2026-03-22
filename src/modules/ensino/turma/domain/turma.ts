@@ -1,83 +1,71 @@
-import type { IEntityBaseUuid } from "@/domain/abstractions/entities";
+import type { z } from "zod";
 import type { IdUuid, ScalarDateTimeString } from "@/domain/abstractions/scalars";
-import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7.js";
-import type { IAmbiente } from "@/modules/ambientes/ambiente";
-import type { IImagem } from "@/modules/armazenamento/imagem/domain/imagem";
-import type { ICurso } from "@/modules/ensino/curso";
-import { createValidator, throwIfInvalid, touchUpdated } from "@/utils/validation-utils.js";
+import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
+import { zodValidate } from "@/shared/validation/index";
+import { turmaCreateSchema, turmaSchema, turmaUpdateSchema } from "./turma.schemas";
 
-export interface ITurma extends IEntityBaseUuid {
-  periodo: string;
-  ambientePadraoAula: IAmbiente | null;
-  curso: ICurso;
-  imagemCapa: IImagem | null;
-}
+export type ITurma = z.infer<typeof turmaSchema>;
 
-export interface ITurmaCreate {
-  periodo: string;
-  curso: { id: IdUuid };
-  ambientePadraoAula?: { id: IdUuid } | null;
-}
-
-export interface ITurmaUpdate {
-  periodo?: string;
-  curso?: { id: IdUuid };
-  ambientePadraoAula?: { id: IdUuid } | null;
-}
-
-export class Turma implements IEntityBaseUuid {
+export class Turma {
   static readonly entityName = "Turma";
 
   id!: IdUuid;
   periodo!: string;
-  ambientePadraoAula!: IAmbiente | null;
-  curso!: ICurso;
-  imagemCapa!: IImagem | null;
+  curso!: { id: string };
+  ambientePadraoAula!: { id: string } | null;
+  imagemCapa!: { id: string } | null;
   dateCreated!: ScalarDateTimeString;
   dateUpdated!: ScalarDateTimeString;
   dateDeleted!: ScalarDateTimeString | null;
 
-  constructor(dados: { periodo: string }) {
-    this.id = generateUuidV7();
-    this.periodo = dados.periodo;
-    this.ambientePadraoAula = null;
-    this.imagemCapa = null;
-    this.dateCreated = new Date().toISOString();
+  private constructor() {}
+
+  static create(dados: unknown): Turma {
+    const parsed = zodValidate(Turma.entityName, turmaCreateSchema, dados);
+
+    const instance = new Turma();
+
+    instance.id = generateUuidV7();
+    instance.periodo = parsed.periodo;
+    instance.curso = parsed.curso;
+    instance.ambientePadraoAula = parsed.ambientePadraoAula ?? null;
+    instance.imagemCapa = parsed.imagemCapa ?? null;
+    instance.dateCreated = new Date().toISOString();
+    instance.dateUpdated = new Date().toISOString();
+    instance.dateDeleted = null;
+
+    return instance;
+  }
+
+  static load(dados: unknown): Turma {
+    const parsed = zodValidate(Turma.entityName, turmaSchema, dados);
+
+    const instance = new Turma();
+
+    instance.id = parsed.id;
+    instance.periodo = parsed.periodo;
+    instance.curso = parsed.curso;
+    instance.ambientePadraoAula = parsed.ambientePadraoAula;
+    instance.imagemCapa = parsed.imagemCapa;
+    instance.dateCreated = parsed.dateCreated;
+    instance.dateUpdated = parsed.dateUpdated;
+    instance.dateDeleted = parsed.dateDeleted;
+
+    return instance;
+  }
+
+  update(dados: unknown): void {
+    const parsed = zodValidate(Turma.entityName, turmaUpdateSchema, dados);
+
+    if (parsed.periodo !== undefined) this.periodo = parsed.periodo;
+    if (parsed.curso !== undefined) this.curso = parsed.curso;
+    if (parsed.ambientePadraoAula !== undefined)
+      this.ambientePadraoAula = parsed.ambientePadraoAula ?? null;
+    if (parsed.imagemCapa !== undefined) this.imagemCapa = parsed.imagemCapa ?? null;
+
     this.dateUpdated = new Date().toISOString();
-    this.dateDeleted = null;
-  }
 
-  validate(): void {
-    const { result, rules } = createValidator("Turma");
-    rules.required(this.periodo, "periodo");
-    rules.minLength(this.periodo, "periodo", 1);
-    throwIfInvalid("Turma", result);
-  }
-
-  static create(dados: ITurmaCreate, validar: boolean = true): Turma {
-    const instance = new Turma({ periodo: dados.periodo });
-    if (validar) instance.validate();
-    return instance;
-  }
-
-  static load(dados: Record<string, any>): Turma {
-    const instance = Object.create(Turma.prototype) as Turma;
-    if (dados.id !== undefined) instance.id = dados.id;
-    if (dados.periodo !== undefined) instance.periodo = dados.periodo;
-    if (dados.ambientePadraoAula !== undefined)
-      instance.ambientePadraoAula = dados.ambientePadraoAula;
-    if (dados.curso !== undefined) instance.curso = dados.curso;
-    if (dados.imagemCapa !== undefined) instance.imagemCapa = dados.imagemCapa;
-    if (dados.dateCreated !== undefined) instance.dateCreated = dados.dateCreated;
-    if (dados.dateUpdated !== undefined) instance.dateUpdated = dados.dateUpdated;
-    if (dados.dateDeleted !== undefined) instance.dateDeleted = dados.dateDeleted;
-    return instance;
-  }
-
-  update(dados: ITurmaUpdate): void {
-    if (dados.periodo !== undefined) this.periodo = dados.periodo;
-    touchUpdated(this);
-    this.validate();
+    zodValidate(Turma.entityName, turmaSchema, this);
   }
 
   temAmbientePadraoAula(): boolean {

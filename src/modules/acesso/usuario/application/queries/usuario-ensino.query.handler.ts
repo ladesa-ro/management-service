@@ -1,6 +1,6 @@
+import { ensureExists } from "@/application/errors";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
-import { ensureExists } from "@/modules/@shared";
 import { IUsuarioEnsinoQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-ensino.query.handler.interface";
 import { Usuario } from "@/modules/acesso/usuario/domain/usuario";
 import type { UsuarioEnsinoQueryResult, UsuarioFindOneQuery } from "../../domain/queries";

@@ -1,14 +1,18 @@
 import {
-  PaginatedFilterByStringIdRestDto,
-  PaginationMetaRestDto,
-} from "@/modules/@shared/infrastructure/presentation/rest/dtos";
+  estadoFindOneInputSchema,
+  estadoNomeSchema,
+  estadoPaginationInputSchema,
+  estadoSiglaSchema,
+} from "@/modules/localidades/estado/domain/estado.schemas";
+import { zodApiProperty } from "@/shared/presentation";
 import {
   ApiProperty,
+  ApiPropertyOptional,
   ApiSchema,
   RegisterModel,
   simpleProperty,
-} from "@/modules/@shared/presentation/rest";
-import { IsInt, IsString, Type } from "@/modules/@shared/presentation/shared";
+} from "@/shared/presentation/rest";
+import { PaginationMetaRestDto } from "@/shared/presentation/rest/dtos";
 
 // ============================================================================
 // FindOne Output
@@ -21,15 +25,12 @@ import { IsInt, IsString, Type } from "@/modules/@shared/presentation/shared";
 })
 export class EstadoFindOneOutputRestDto {
   @ApiProperty({ type: "integer", description: "Identificador do registro (numerico)" })
-  @IsInt()
   id: number;
 
-  @ApiProperty({ type: "string", description: "Nome oficial do estado" })
-  @IsString()
+  @ApiProperty(zodApiProperty(estadoNomeSchema, { description: "Nome oficial do estado" }))
   nome: string;
 
-  @ApiProperty({ type: "string", description: "Sigla do estado" })
-  @IsString()
+  @ApiProperty(zodApiProperty(estadoSiglaSchema, { description: "Sigla do estado" }))
   sigla: string;
 }
 
@@ -38,7 +39,38 @@ export class EstadoFindOneOutputRestDto {
 // ============================================================================
 
 @ApiSchema({ name: "EstadoListInputDto" })
-export class EstadoListInputRestDto extends PaginatedFilterByStringIdRestDto {}
+export class EstadoListInputRestDto {
+  static schema = estadoPaginationInputSchema;
+
+  [key: string]: string | number | string[] | null | undefined;
+
+  @ApiPropertyOptional({
+    type: "integer",
+    description: "Pagina de consulta",
+    minimum: 1,
+    default: 1,
+  })
+  page?: number = 1;
+
+  @ApiPropertyOptional({
+    type: "integer",
+    description: "Limite da quantidade de resultados por pagina",
+    minimum: 1,
+  })
+  limit?: number;
+
+  @ApiPropertyOptional({ type: "string", description: "Busca textual" })
+  search?: string;
+
+  @ApiPropertyOptional({ description: "Ordenacao (ex: nome:ASC)", isArray: true, type: "string" })
+  sortBy?: string[];
+
+  @ApiPropertyOptional({ description: "Seleção de campos", isArray: true, type: "string" })
+  selection?: string[];
+
+  @ApiPropertyOptional({ description: "Filtro por ID", type: "string", isArray: true })
+  "filter.id"?: string[];
+}
 
 @ApiSchema({ name: "EstadoListOutputDto" })
 export class EstadoListOutputRestDto {
@@ -55,8 +87,8 @@ export class EstadoListOutputRestDto {
 
 @ApiSchema({ name: "EstadoFindOneInputDto" })
 export class EstadoFindOneInputRestDto {
+  static schema = estadoFindOneInputSchema;
+
   @ApiProperty({ type: "integer", description: "Identificador do registro (numerico)" })
-  @Type(() => Number)
-  @IsInt()
   id: number;
 }

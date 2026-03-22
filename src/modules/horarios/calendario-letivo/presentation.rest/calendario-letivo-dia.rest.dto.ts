@@ -1,9 +1,4 @@
 import {
-  EntityBaseRestDto,
-  PaginatedFilterByIdRestDto,
-  PaginationMetaRestDto,
-} from "@/modules/@shared/infrastructure/presentation/rest/dtos";
-import {
   ApiProperty,
   ApiPropertyOptional,
   ApiSchema,
@@ -12,17 +7,12 @@ import {
   referenceProperty,
   simpleProperty,
   TransformToArray,
-} from "@/modules/@shared/presentation/rest";
+} from "@/shared/presentation/rest";
 import {
-  IsArray,
-  IsBoolean,
-  IsIn,
-  IsOptional,
-  IsString,
-  IsUUID,
-  Type,
-  ValidateNested,
-} from "@/modules/@shared/presentation/shared";
+  EntityBaseRestDto,
+  PaginatedFilterByIdRestDto,
+  PaginationMetaRestDto,
+} from "@/shared/presentation/rest/dtos";
 import {
   TIPO_CALENDARIO_LETIVO_DIA_VALUES,
   type TipoCalendarioLetivoDia,
@@ -42,7 +32,6 @@ export class CalendarioLetivoDiaParentParamsRestDto {
     description: "ID do calendario letivo (uuid)",
     format: "uuid",
   })
-  @IsUUID()
   calendarioLetivoId: string;
 }
 
@@ -57,7 +46,6 @@ export class CalendarioLetivoDiaFindByDataParamsRestDto extends CalendarioLetivo
     description: "Data do dia no calendario (YYYY-MM-DD)",
     format: "date",
   })
-  @IsString()
   data: string;
 }
 
@@ -95,7 +83,6 @@ export class CalendarioLetivoDiaFindOneOutputRestDto extends EntityBaseRestDto {
     description: "Tipo do dia (presencial, feriado, sabado, etc.)",
     enum: TIPO_CALENDARIO_LETIVO_DIA_VALUES,
   })
-  @IsIn(TIPO_CALENDARIO_LETIVO_DIA_VALUES)
   tipo: TipoCalendarioLetivoDia;
 
   @ApiPropertyOptional({
@@ -112,8 +99,6 @@ export class CalendarioLetivoDiaFindOneOutputRestDto extends EntityBaseRestDto {
     type: () => CalendarioLetivoFindOneOutputRestDto,
     description: "Calendario letivo ao qual o dia pertence",
   })
-  @ValidateNested()
-  @Type(() => CalendarioLetivoFindOneOutputRestDto)
   calendario: CalendarioLetivoFindOneOutputRestDto;
 }
 
@@ -129,9 +114,6 @@ export class CalendarioLetivoDiaListInputRestDto extends PaginatedFilterByIdRest
     description: "Filtro por nome do Calendario",
   })
   @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
   "filter.calendario.nome"?: string[];
 
   @ApiPropertyOptional({
@@ -140,9 +122,6 @@ export class CalendarioLetivoDiaListInputRestDto extends PaginatedFilterByIdRest
     description: "Filtro por ano do Calendario",
   })
   @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
   "filter.calendario.ano"?: string[];
 }
 
@@ -165,13 +144,9 @@ export class CalendarioLetivoDiaListOutputRestDto {
 @ApiSchema({ name: "CalendarioLetivoDiaUpdateInputDto" })
 export class CalendarioLetivoDiaUpdateInputRestDto {
   @ApiPropertyOptional({ type: "boolean", description: "Indica se o dia e letivo" })
-  @IsOptional()
-  @IsBoolean()
   diaLetivo?: boolean;
 
   @ApiPropertyOptional({ type: "boolean", description: "Indica se o dia e presencial" })
-  @IsOptional()
-  @IsBoolean()
   diaPresencial?: boolean;
 
   @ApiPropertyOptional({
@@ -179,8 +154,6 @@ export class CalendarioLetivoDiaUpdateInputRestDto {
     description: "Tipo do dia (presencial, feriado, sabado, etc.)",
     enum: TIPO_CALENDARIO_LETIVO_DIA_VALUES,
   })
-  @IsOptional()
-  @IsIn(TIPO_CALENDARIO_LETIVO_DIA_VALUES)
   tipo?: TipoCalendarioLetivoDia;
 
   @ApiPropertyOptional({
@@ -188,12 +161,8 @@ export class CalendarioLetivoDiaUpdateInputRestDto {
     description: "Nome do feriado (ou null se nao for)",
     nullable: true,
   })
-  @IsOptional()
-  @IsString()
   feriado?: string | null;
 
   @ApiPropertyOptional({ type: "boolean", description: "Indica se o dia e extracurricular" })
-  @IsOptional()
-  @IsBoolean()
   extraCurricular?: boolean;
 }

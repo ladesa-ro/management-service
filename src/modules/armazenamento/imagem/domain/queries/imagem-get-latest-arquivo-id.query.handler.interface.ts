@@ -1,4 +1,4 @@
-import type { IQueryHandler } from "@/modules/@shared/domain/abstractions";
+import type { IQueryHandler } from "@/domain/abstractions";
 
 export type IImagemGetLatestArquivoIdQuery = {
   imagemId: string;

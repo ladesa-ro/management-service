@@ -1,4 +1,4 @@
-import type { IPermissionChecker } from "@/modules/@shared";
+import type { IPermissionChecker } from "@/domain/abstractions";
 export const IOfertaFormacaoPermissionChecker = Symbol("IOfertaFormacaoPermissionChecker");
 
 export type IOfertaFormacaoPermissionChecker = IPermissionChecker;

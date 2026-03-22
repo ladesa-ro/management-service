@@ -1,6 +1,6 @@
+import { ensureExists } from "@/application/errors";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
-import { ensureExists } from "@/modules/@shared";
 import { IUsuarioDeleteCommandHandler } from "@/modules/acesso/usuario/domain/commands/usuario-delete.command.handler.interface";
 import type { UsuarioFindOneQuery } from "@/modules/acesso/usuario/domain/queries";
 import { Usuario } from "@/modules/acesso/usuario/domain/usuario";

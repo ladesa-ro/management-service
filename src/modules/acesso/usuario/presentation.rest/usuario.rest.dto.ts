@@ -1,29 +1,24 @@
-import { Mixin } from "ts-mixer";
 import {
-  EntityBaseRestDto,
-  PaginatedFilterByIdRestDto,
-  PaginationMetaRestDto,
-} from "@/modules/@shared/infrastructure/presentation/rest/dtos";
+  usuarioCreateSchema,
+  usuarioFindOneInputSchema,
+  usuarioPaginationInputSchema,
+  usuarioUpdateSchema,
+} from "@/modules/acesso/usuario/domain/usuario.schemas";
+import { ImagemFindOneOutputRestDto } from "@/modules/ambientes/bloco/presentation.rest";
 import {
   ApiProperty,
   ApiPropertyOptional,
   ApiSchema,
   commonProperties,
-  PartialType,
   RegisterModel,
   referenceProperty,
   simpleProperty,
-} from "@/modules/@shared/presentation/rest";
+} from "@/shared/presentation/rest";
 import {
-  IsBoolean,
-  IsOptional,
-  IsString,
-  IsUUID,
-  Type,
-  ValidateNested,
-} from "@/modules/@shared/presentation/shared";
-import { UsuarioFieldsMixin } from "@/modules/acesso/usuario/presentation.validations/usuario.validation-mixin";
-import { ImagemFindOneOutputRestDto } from "@/modules/ambientes/bloco/presentation.rest";
+  EntityBaseRestDto,
+  PaginatedFilterByIdRestDto,
+  PaginationMetaRestDto,
+} from "@/shared/presentation/rest/dtos";
 
 // ============================================================================
 // FindOne Output
@@ -43,14 +38,14 @@ import { ImagemFindOneOutputRestDto } from "@/modules/ambientes/bloco/presentati
     ...commonProperties.dated,
   ],
 })
-export class UsuarioFindOneOutputRestDto extends Mixin(EntityBaseRestDto, UsuarioFieldsMixin) {
+export class UsuarioFindOneOutputRestDto extends EntityBaseRestDto {
   @ApiPropertyOptional({
     type: "string",
     description: "Nome do usuario",
     nullable: true,
     minLength: 1,
   })
-  declare nome: string | null;
+  nome: string | null;
 
   @ApiPropertyOptional({
     type: "string",
@@ -58,7 +53,7 @@ export class UsuarioFindOneOutputRestDto extends Mixin(EntityBaseRestDto, Usuari
     nullable: true,
     minLength: 1,
   })
-  declare matricula: string | null;
+  matricula: string | null;
 
   @ApiPropertyOptional({
     type: "string",
@@ -66,10 +61,9 @@ export class UsuarioFindOneOutputRestDto extends Mixin(EntityBaseRestDto, Usuari
     nullable: true,
     format: "email",
   })
-  declare email: string | null;
+  email: string | null;
 
   @ApiProperty({ type: "boolean", description: "Diz que o usuario tem poderes de administrador" })
-  @IsBoolean()
   isSuperUser: boolean;
 
   @ApiPropertyOptional({
@@ -77,9 +71,6 @@ export class UsuarioFindOneOutputRestDto extends Mixin(EntityBaseRestDto, Usuari
     description: "Imagem de capa do usuario",
     nullable: true,
   })
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => ImagemFindOneOutputRestDto)
   imagemCapa: ImagemFindOneOutputRestDto | null;
 
   @ApiPropertyOptional({
@@ -87,9 +78,6 @@ export class UsuarioFindOneOutputRestDto extends Mixin(EntityBaseRestDto, Usuari
     description: "Imagem de perfil do usuario",
     nullable: true,
   })
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => ImagemFindOneOutputRestDto)
   imagemPerfil: ImagemFindOneOutputRestDto | null;
 }
 
@@ -100,65 +88,51 @@ export class UsuarioFindOneOutputRestDto extends Mixin(EntityBaseRestDto, Usuari
 @ApiSchema({ name: "UsuarioEnsinoTurmaRefDto" })
 export class UsuarioEnsinoTurmaRefRestDto {
   @ApiProperty({ type: "string", description: "ID da turma", format: "uuid" })
-  @IsUUID()
   id: string;
 
   @ApiProperty({ type: "string", description: "Periodo da turma" })
-  @IsString()
   periodo: string;
 }
 
 @ApiSchema({ name: "UsuarioEnsinoCursoRefDto" })
 export class UsuarioEnsinoCursoRefRestDto {
   @ApiProperty({ type: "string", description: "ID do curso", format: "uuid" })
-  @IsUUID()
   id: string;
 
   @ApiProperty({ type: "string", description: "Nome do curso" })
-  @IsString()
   nome: string;
 
   @ApiProperty({
     description: "Turmas do curso onde o usuario leciona",
     type: () => [UsuarioEnsinoTurmaRefRestDto],
   })
-  @ValidateNested({ each: true })
-  @Type(() => UsuarioEnsinoTurmaRefRestDto)
   turmas: UsuarioEnsinoTurmaRefRestDto[];
 }
 
 @ApiSchema({ name: "UsuarioEnsinoDisciplinaRefDto" })
 export class UsuarioEnsinoDisciplinaRefRestDto {
   @ApiProperty({ type: "string", description: "ID da disciplina", format: "uuid" })
-  @IsUUID()
   id: string;
 
   @ApiProperty({ type: "string", description: "Nome da disciplina" })
-  @IsString()
   nome: string;
 
   @ApiProperty({
     description: "Cursos onde o usuario leciona esta disciplina",
     type: () => [UsuarioEnsinoCursoRefRestDto],
   })
-  @ValidateNested({ each: true })
-  @Type(() => UsuarioEnsinoCursoRefRestDto)
   cursos: UsuarioEnsinoCursoRefRestDto[];
 }
 
 @ApiSchema({ name: "UsuarioEnsinoOutputDto" })
 export class UsuarioEnsinoOutputRestDto {
   @ApiProperty({ description: "Dados do usuario", type: () => UsuarioFindOneOutputRestDto })
-  @ValidateNested()
-  @Type(() => UsuarioFindOneOutputRestDto)
   usuario: UsuarioFindOneOutputRestDto;
 
   @ApiProperty({
     description: "Disciplinas onde o usuario leciona (com cursos e turmas)",
     type: () => [UsuarioEnsinoDisciplinaRefRestDto],
   })
-  @ValidateNested({ each: true })
-  @Type(() => UsuarioEnsinoDisciplinaRefRestDto)
   disciplinas: UsuarioEnsinoDisciplinaRefRestDto[];
 }
 
@@ -168,12 +142,12 @@ export class UsuarioEnsinoOutputRestDto {
 
 @ApiSchema({ name: "UsuarioListInputDto" })
 export class UsuarioListInputRestDto extends PaginatedFilterByIdRestDto {
+  static schema = usuarioPaginationInputSchema;
+
   @ApiPropertyOptional({
     type: "string",
     description: "Filtro por cargo do vinculo (ex: professor)",
   })
-  @IsOptional()
-  @IsString()
   "filter.vinculos.cargo"?: string;
 }
 
@@ -191,14 +165,16 @@ export class UsuarioListOutputRestDto {
 // ============================================================================
 
 @ApiSchema({ name: "UsuarioCreateInputDto" })
-export class UsuarioCreateInputRestDto extends UsuarioFieldsMixin {
+export class UsuarioCreateInputRestDto {
+  static schema = usuarioCreateSchema;
+
   @ApiPropertyOptional({
     type: "string",
     description: "Nome do usuario",
     nullable: true,
     minLength: 1,
   })
-  declare nome?: string | null;
+  nome?: string | null;
 
   @ApiPropertyOptional({
     type: "string",
@@ -206,7 +182,7 @@ export class UsuarioCreateInputRestDto extends UsuarioFieldsMixin {
     nullable: true,
     minLength: 1,
   })
-  declare matricula?: string | null;
+  matricula?: string | null;
 
   @ApiPropertyOptional({
     type: "string",
@@ -214,11 +190,37 @@ export class UsuarioCreateInputRestDto extends UsuarioFieldsMixin {
     nullable: true,
     format: "email",
   })
-  declare email?: string | null;
+  email?: string | null;
 }
 
 @ApiSchema({ name: "UsuarioUpdateInputDto" })
-export class UsuarioUpdateInputRestDto extends PartialType(UsuarioCreateInputRestDto) {}
+export class UsuarioUpdateInputRestDto {
+  static schema = usuarioUpdateSchema;
+
+  @ApiPropertyOptional({
+    type: "string",
+    description: "Nome do usuario",
+    nullable: true,
+    minLength: 1,
+  })
+  nome?: string | null;
+
+  @ApiPropertyOptional({
+    type: "string",
+    description: "Matrícula do usuário",
+    nullable: true,
+    minLength: 1,
+  })
+  matricula?: string | null;
+
+  @ApiPropertyOptional({
+    type: "string",
+    description: "E-mail do usuario",
+    nullable: true,
+    format: "email",
+  })
+  email?: string | null;
+}
 
 // ============================================================================
 // FindOne Input (for path params)
@@ -226,11 +228,12 @@ export class UsuarioUpdateInputRestDto extends PartialType(UsuarioCreateInputRes
 
 @ApiSchema({ name: "UsuarioFindOneInputDto" })
 export class UsuarioFindOneInputRestDto {
+  static schema = usuarioFindOneInputSchema;
+
   @ApiProperty({
     type: "string",
     description: "Identificador do registro (uuid)",
     format: "uuid",
   })
-  @IsUUID()
   id: string;
 }

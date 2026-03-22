@@ -1,11 +1,4 @@
-import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@/modules/@shared/presentation/rest";
-import {
-  IsArray,
-  IsEnum,
-  IsOptional,
-  IsString,
-  IsUUID,
-} from "@/modules/@shared/presentation/shared";
+import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@/shared/presentation/rest";
 
 export enum GerarHorarioDuracao {
   TEMPORARIO = "TEMPORARIO",
@@ -19,7 +12,6 @@ export enum GerarHorarioDuracao {
 @ApiSchema({ name: "GerarHorarioCreateInputDto" })
 export class GerarHorarioCreateInputRestDto {
   @ApiProperty({ type: "string", format: "date", description: "Data inicio do periodo" })
-  @IsString()
   dataInicio: string;
 
   @ApiPropertyOptional({
@@ -35,17 +27,12 @@ export class GerarHorarioCreateInputRestDto {
     isArray: true,
     description: "IDs das ofertas de formacao",
   })
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
   ofertaFormacaoIds?: string[];
 
   @ApiPropertyOptional({
     enum: GerarHorarioDuracao,
     description: "Duracao: TEMPORARIO ou PERMANENTE",
   })
-  @IsOptional()
-  @IsEnum(GerarHorarioDuracao)
   duracao?: GerarHorarioDuracao;
 }
 
@@ -56,7 +43,6 @@ export class GerarHorarioCreateInputRestDto {
 @ApiSchema({ name: "GerarHorarioFindOneParamsDto" })
 export class GerarHorarioFindOneParamsRestDto {
   @ApiProperty({ type: "string", format: "uuid", description: "ID da solicitacao" })
-  @IsUUID()
   id: string;
 }
 

@@ -1,4 +1,3 @@
-import { createListOutputMapper, mapDatedFields } from "@/modules/@shared/application/mappers";
 import {
   CampusCreateCommand,
   CampusFindOneQuery,
@@ -7,6 +6,7 @@ import {
   CampusUpdateCommand,
 } from "@/modules/ambientes/campus";
 import { EnderecoGraphqlMapper } from "@/modules/localidades/endereco/presentation.graphql/endereco.graphql.mapper";
+import { createListOutputMapper, mapDatedFields } from "@/shared/mapping";
 import {
   CampusCreateInputGraphQlDto,
   CampusFindOneOutputGraphQlDto,

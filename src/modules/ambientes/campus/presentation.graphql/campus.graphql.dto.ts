@@ -1,20 +1,14 @@
-import {
-  EntityBaseGraphQlDto,
-  PaginatedFilterByIdGraphQlDto,
-  PaginationMetaGraphQlDto,
-} from "@/modules/@shared/infrastructure/graphql/dtos";
-import { ArgsType, Field, InputType, ObjectType } from "@/modules/@shared/presentation/graphql";
-import {
-  IsOptional,
-  IsString,
-  MinLength,
-  ValidateNested,
-} from "@/modules/@shared/presentation/shared";
+import { EntityBaseGraphQlDto, PaginationMetaGraphQlDto } from "@/infrastructure.graphql/dtos";
 import {
   EnderecoFindOneOutputGraphQlDto,
   EnderecoInputGraphQlDto,
 } from "@/modules/localidades/endereco/presentation.graphql/endereco.graphql.dto";
-import { CampusFieldsMixin } from "../presentation.validations/campus.validation-mixin";
+import { ArgsType, Field, InputType, ObjectType } from "@/shared/presentation/graphql";
+import {
+  campusGraphqlListInputSchema,
+  campusInputCreateSchema,
+  campusInputUpdateSchema,
+} from "../domain/campus.schemas";
 
 // ============================================================================
 // FindOne Output
@@ -34,14 +28,14 @@ export class CampusFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
 // ============================================================================
 
 @InputType("CampusCreateInputDto")
-export class CampusCreateInputGraphQlDto extends CampusFieldsMixin {
-  @Field(() => String) declare nomeFantasia: string;
-  @Field(() => String) declare razaoSocial: string;
-  @Field(() => String) declare apelido: string;
-  @Field(() => String) declare cnpj: string;
-  @Field(() => EnderecoInputGraphQlDto)
-  @ValidateNested()
-  endereco: EnderecoInputGraphQlDto;
+export class CampusCreateInputGraphQlDto {
+  static schema = campusInputCreateSchema;
+
+  @Field(() => String) nomeFantasia: string;
+  @Field(() => String) razaoSocial: string;
+  @Field(() => String) apelido: string;
+  @Field(() => String) cnpj: string;
+  @Field(() => EnderecoInputGraphQlDto) endereco: EnderecoInputGraphQlDto;
 }
 
 // ============================================================================
@@ -50,30 +44,13 @@ export class CampusCreateInputGraphQlDto extends CampusFieldsMixin {
 
 @InputType("CampusUpdateInputDto")
 export class CampusUpdateInputGraphQlDto {
-  @Field(() => String, { nullable: true })
-  @IsOptional()
-  @IsString()
-  @MinLength(1)
-  nomeFantasia?: string;
-  @Field(() => String, { nullable: true })
-  @IsOptional()
-  @IsString()
-  @MinLength(1)
-  razaoSocial?: string;
-  @Field(() => String, { nullable: true })
-  @IsOptional()
-  @IsString()
-  @MinLength(1)
-  apelido?: string;
-  @Field(() => String, { nullable: true })
-  @IsOptional()
-  @IsString()
-  @MinLength(1)
-  cnpj?: string;
-  @Field(() => EnderecoInputGraphQlDto, { nullable: true })
-  @IsOptional()
-  @ValidateNested()
-  endereco?: EnderecoInputGraphQlDto;
+  static schema = campusInputUpdateSchema;
+
+  @Field(() => String, { nullable: true }) nomeFantasia?: string;
+  @Field(() => String, { nullable: true }) razaoSocial?: string;
+  @Field(() => String, { nullable: true }) apelido?: string;
+  @Field(() => String, { nullable: true }) cnpj?: string;
+  @Field(() => EnderecoInputGraphQlDto, { nullable: true }) endereco?: EnderecoInputGraphQlDto;
 }
 
 // ============================================================================
@@ -81,7 +58,16 @@ export class CampusUpdateInputGraphQlDto {
 // ============================================================================
 
 @ArgsType()
-export class CampusListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {}
+export class CampusListInputGraphQlDto {
+  static schema = campusGraphqlListInputSchema;
+
+  @Field(() => Number, { nullable: true, defaultValue: 1 }) page?: number = 1;
+  @Field(() => Number, { nullable: true }) limit?: number;
+  @Field(() => String, { nullable: true }) search?: string;
+  @Field(() => [String], { nullable: true }) sortBy?: string[];
+  @Field(() => [String], { nullable: true }) selection?: string[];
+  @Field(() => [String], { nullable: true, description: "Filtro por ID" }) filterId?: string[];
+}
 
 // ============================================================================
 // List Output

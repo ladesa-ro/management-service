@@ -1,8 +1,4 @@
-import {
-  EntityBaseRestDto,
-  PaginatedFilterByIdRestDto,
-  PaginationMetaRestDto,
-} from "@/modules/@shared/infrastructure/presentation/rest/dtos";
+import { NivelFormacaoFindOneOutputRestDto } from "@/modules/ensino/nivel-formacao/presentation.rest";
 import {
   ApiProperty,
   ApiPropertyOptional,
@@ -12,15 +8,12 @@ import {
   referenceProperty,
   simpleProperty,
   TransformToArray,
-} from "@/modules/@shared/presentation/rest";
+} from "@/shared/presentation/rest";
 import {
-  IsArray,
-  IsOptional,
-  IsUUID,
-  Type,
-  ValidateNested,
-} from "@/modules/@shared/presentation/shared";
-import { NivelFormacaoFindOneOutputRestDto } from "@/modules/ensino/nivel-formacao/presentation.rest";
+  EntityBaseRestDto,
+  PaginatedFilterByIdRestDto,
+  PaginationMetaRestDto,
+} from "@/shared/presentation/rest/dtos";
 import { OfertaFormacaoFindOneOutputRestDto } from "./oferta-formacao.rest.dto";
 
 // ============================================================================
@@ -34,7 +27,6 @@ export class OfertaFormacaoNivelFormacaoParentParamsRestDto {
     description: "ID da oferta de formacao (uuid)",
     format: "uuid",
   })
-  @IsUUID()
   ofertaFormacaoId: string;
 }
 
@@ -57,16 +49,12 @@ export class OfertaFormacaoNivelFormacaoFindOneOutputRestDto extends EntityBaseR
     type: () => NivelFormacaoFindOneOutputRestDto,
     description: "Nivel de formacao vinculado",
   })
-  @ValidateNested()
-  @Type(() => NivelFormacaoFindOneOutputRestDto)
   nivelFormacao: NivelFormacaoFindOneOutputRestDto;
 
   @ApiProperty({
     type: () => OfertaFormacaoFindOneOutputRestDto,
     description: "Oferta de formacao vinculada",
   })
-  @ValidateNested()
-  @Type(() => OfertaFormacaoFindOneOutputRestDto)
   ofertaFormacao: OfertaFormacaoFindOneOutputRestDto;
 }
 
@@ -82,9 +70,6 @@ export class OfertaFormacaoNivelFormacaoListInputRestDto extends PaginatedFilter
     description: "Filtro por ID do Nivel de Formacao",
   })
   @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
   "filter.nivelFormacao.id"?: string[];
 }
 
@@ -107,7 +92,6 @@ export class OfertaFormacaoNivelFormacaoListOutputRestDto {
 @ApiSchema({ name: "OfertaFormacaoNivelFormacaoBulkReplaceItemDto" })
 export class OfertaFormacaoNivelFormacaoBulkReplaceItemRestDto {
   @ApiProperty({ type: "string", description: "ID do nivel de formacao (uuid)", format: "uuid" })
-  @IsUUID()
   nivelFormacaoId: string;
 }
 
@@ -117,8 +101,5 @@ export class OfertaFormacaoNivelFormacaoBulkReplaceInputRestDto {
     type: () => [OfertaFormacaoNivelFormacaoBulkReplaceItemRestDto],
     description: "Lista de niveis de formacao para vincular a oferta de formacao",
   })
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => OfertaFormacaoNivelFormacaoBulkReplaceItemRestDto)
   niveis: OfertaFormacaoNivelFormacaoBulkReplaceItemRestDto[];
 }

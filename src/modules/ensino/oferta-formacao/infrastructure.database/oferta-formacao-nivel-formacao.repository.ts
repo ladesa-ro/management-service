@@ -1,6 +1,6 @@
 import { FilterOperator } from "nestjs-paginate";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7.js";
+import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
 import { paginateConfig } from "@/infrastructure.database/pagination/config/paginate-config";
 import type { ITypeOrmPaginationConfig } from "@/infrastructure.database/pagination/interfaces/pagination-config.types";

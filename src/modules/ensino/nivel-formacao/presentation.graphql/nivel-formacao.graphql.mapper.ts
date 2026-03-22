@@ -1,4 +1,3 @@
-import { createListOutputMapper, mapDatedFields } from "@/modules/@shared/application/mappers";
 import {
   NivelFormacaoCreateCommand,
   NivelFormacaoFindOneQuery,
@@ -6,6 +5,7 @@ import {
   NivelFormacaoListQuery,
   NivelFormacaoUpdateCommand,
 } from "@/modules/ensino/nivel-formacao";
+import { createListOutputMapper, mapDatedFields } from "@/shared/mapping";
 import {
   NivelFormacaoCreateInputGraphQlDto,
   NivelFormacaoFindOneOutputGraphQlDto,

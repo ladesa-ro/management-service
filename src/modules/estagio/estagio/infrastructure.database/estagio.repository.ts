@@ -1,7 +1,7 @@
+import { ensureExists } from "@/application/errors";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
-import { ensureExists } from "@/modules/@shared";
 import { Empresa } from "@/modules/estagio/empresa/domain/empresa";
 import { EmpresaTypeormEntity } from "@/modules/estagio/empresa/infrastructure.database/typeorm/empresa.typeorm.entity";
 import { Estagiario } from "@/modules/estagio/estagiario/domain/estagiario";

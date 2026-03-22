@@ -1,14 +1,14 @@
 import {
-  createFindOneInputMapper,
-  createListInputMapper,
-  createListOutputMapper,
-  mapDatedFields,
-} from "@/modules/@shared/application/mappers";
-import {
   ImagemFindOneQuery,
   ImagemFindOneQueryResult,
   ImagemListQuery,
 } from "@/modules/armazenamento/imagem";
+import {
+  createFindOneInputMapper,
+  createListInputMapper,
+  createListOutputMapper,
+  mapDatedFields,
+} from "@/shared/mapping";
 import { ImagemFindOneOutputRestDto, ImagemListOutputRestDto } from "./imagem.rest.dto";
 
 export class ImagemRestMapper {

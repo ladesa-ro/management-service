@@ -1,9 +1,3 @@
-import { Mixin } from "ts-mixer";
-import {
-  EntityBaseRestDto,
-  PaginatedFilterByIdRestDto,
-  PaginationMetaRestDto,
-} from "@/modules/@shared/infrastructure/presentation/rest/dtos";
 import {
   ApiProperty,
   ApiSchema,
@@ -11,9 +5,17 @@ import {
   PartialType,
   RegisterModel,
   simpleProperty,
-} from "@/modules/@shared/presentation/rest";
-import { IsUUID } from "@/modules/@shared/presentation/shared";
-import { NivelFormacaoFieldsMixin } from "@/modules/ensino/nivel-formacao/presentation.validations/nivel-formacao.validation-mixin";
+} from "@/shared/presentation/rest";
+import {
+  EntityBaseRestDto,
+  PaginatedFilterByIdRestDto,
+  PaginationMetaRestDto,
+} from "@/shared/presentation/rest/dtos";
+import {
+  nivelFormacaoCreateSchema,
+  nivelFormacaoFindOneInputSchema,
+  nivelFormacaoPaginationInputSchema,
+} from "../domain/nivel-formacao.schemas";
 
 // ============================================================================
 // FindOne Output
@@ -24,12 +26,9 @@ import { NivelFormacaoFieldsMixin } from "@/modules/ensino/nivel-formacao/presen
   name: "NivelFormacaoFindOneQueryResult",
   properties: [simpleProperty("id"), simpleProperty("slug"), ...commonProperties.dated],
 })
-export class NivelFormacaoFindOneOutputRestDto extends Mixin(
-  EntityBaseRestDto,
-  NivelFormacaoFieldsMixin,
-) {
+export class NivelFormacaoFindOneOutputRestDto extends EntityBaseRestDto {
   @ApiProperty({ type: "string", description: "Apelido do nivel de formacao", minLength: 1 })
-  declare slug: string;
+  slug: string;
 }
 
 // ============================================================================
@@ -37,7 +36,9 @@ export class NivelFormacaoFindOneOutputRestDto extends Mixin(
 // ============================================================================
 
 @ApiSchema({ name: "NivelFormacaoListInputDto" })
-export class NivelFormacaoListInputRestDto extends PaginatedFilterByIdRestDto {}
+export class NivelFormacaoListInputRestDto extends PaginatedFilterByIdRestDto {
+  static schema = nivelFormacaoPaginationInputSchema;
+}
 
 @ApiSchema({ name: "NivelFormacaoListOutputDto" })
 export class NivelFormacaoListOutputRestDto {
@@ -56,9 +57,11 @@ export class NivelFormacaoListOutputRestDto {
 // ============================================================================
 
 @ApiSchema({ name: "NivelFormacaoCreateInputDto" })
-export class NivelFormacaoCreateInputRestDto extends NivelFormacaoFieldsMixin {
+export class NivelFormacaoCreateInputRestDto {
+  static readonly schema = nivelFormacaoCreateSchema;
+
   @ApiProperty({ type: "string", description: "Apelido do nivel de formacao", minLength: 1 })
-  declare slug: string;
+  slug: string;
 }
 
 @ApiSchema({ name: "NivelFormacaoUpdateInputDto" })
@@ -70,11 +73,12 @@ export class NivelFormacaoUpdateInputRestDto extends PartialType(NivelFormacaoCr
 
 @ApiSchema({ name: "NivelFormacaoFindOneInputDto" })
 export class NivelFormacaoFindOneInputRestDto {
+  static readonly schema = nivelFormacaoFindOneInputSchema;
+
   @ApiProperty({
     type: "string",
     description: "Identificador do registro (uuid)",
     format: "uuid",
   })
-  @IsUUID()
   id: string;
 }

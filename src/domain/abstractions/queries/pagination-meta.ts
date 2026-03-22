@@ -1,4 +1,4 @@
-import type { IPaginationMeta } from "@/modules/@shared/application/pagination";
+import type { IPaginationMeta } from "@/application/pagination";
 
 /**
  * Metadados de paginação

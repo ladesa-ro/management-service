@@ -1,4 +1,4 @@
-import type { IPaginationResult } from "@/modules/@shared/application/pagination";
+import type { IPaginationResult } from "@/application/pagination";
 import { PaginationMeta } from "./pagination-meta";
 
 /**

@@ -2,18 +2,14 @@ import {
   EntityBaseGraphQlDto,
   PaginatedFilterByIdGraphQlDto,
   PaginationMetaGraphQlDto,
-} from "@/modules/@shared/infrastructure/graphql/dtos";
-import { ArgsType, Field, InputType, ObjectType } from "@/modules/@shared/presentation/graphql";
-import {
-  IsArray,
-  IsOptional,
-  IsString,
-  IsUUID,
-  MinLength,
-  ValidateNested,
-} from "@/modules/@shared/presentation/shared";
+} from "@/infrastructure.graphql/dtos";
 import { ModalidadeFindOneOutputGraphQlDto } from "@/modules/ensino/modalidade/presentation.graphql/modalidade.graphql.dto";
-import { OfertaFormacaoFieldsMixin } from "@/modules/ensino/oferta-formacao/presentation.validations/oferta-formacao.validation-mixin";
+import { ArgsType, Field, InputType, ObjectType } from "@/shared/presentation/graphql";
+import {
+  ofertaFormacaoCreateSchema,
+  ofertaFormacaoGraphqlListInputSchema,
+  ofertaFormacaoUpdateSchema,
+} from "../domain/oferta-formacao.schemas";
 
 // ============================================================================
 // FindOne Output
@@ -33,15 +29,16 @@ export class OfertaFormacaoFindOneOutputGraphQlDto extends EntityBaseGraphQlDto 
 
 @InputType("OfertaFormacaoModalidadeRefInputDto")
 export class OfertaFormacaoModalidadeRefInputGraphQlDto {
-  @Field(() => String) @IsString() id: string;
+  @Field(() => String) id: string;
 }
 
 @InputType("OfertaFormacaoCreateInputDto")
-export class OfertaFormacaoCreateInputGraphQlDto extends OfertaFormacaoFieldsMixin {
-  @Field(() => String) declare nome: string;
-  @Field(() => String) declare slug: string;
+export class OfertaFormacaoCreateInputGraphQlDto {
+  static readonly schema = ofertaFormacaoCreateSchema;
+
+  @Field(() => String) nome: string;
+  @Field(() => String) slug: string;
   @Field(() => OfertaFormacaoModalidadeRefInputGraphQlDto)
-  @ValidateNested()
   modalidade: OfertaFormacaoModalidadeRefInputGraphQlDto;
 }
 
@@ -51,19 +48,13 @@ export class OfertaFormacaoCreateInputGraphQlDto extends OfertaFormacaoFieldsMix
 
 @InputType("OfertaFormacaoUpdateInputDto")
 export class OfertaFormacaoUpdateInputGraphQlDto {
+  static readonly schema = ofertaFormacaoUpdateSchema;
+
   @Field(() => String, { nullable: true })
-  @IsOptional()
-  @IsString()
-  @MinLength(1)
   nome?: string;
   @Field(() => String, { nullable: true })
-  @IsOptional()
-  @IsString()
-  @MinLength(1)
   slug?: string;
   @Field(() => OfertaFormacaoModalidadeRefInputGraphQlDto, { nullable: true })
-  @IsOptional()
-  @ValidateNested()
   modalidade?: OfertaFormacaoModalidadeRefInputGraphQlDto;
 }
 
@@ -73,10 +64,9 @@ export class OfertaFormacaoUpdateInputGraphQlDto {
 
 @ArgsType()
 export class OfertaFormacaoListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {
+  static schema = ofertaFormacaoGraphqlListInputSchema;
+
   @Field(() => [String], { nullable: true, description: "Filtro por ID da Modalidade" })
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
   filterModalidadeId?: string[];
 }
 

@@ -1,4 +1,4 @@
-import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7.js";
+import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { Empresa } from "@/modules/estagio/empresa/domain/empresa";
 import type { EmpresaFindOneQueryResult } from "@/modules/estagio/empresa/domain/queries";
 import { EmpresaTypeormEntity } from "./empresa.typeorm.entity";

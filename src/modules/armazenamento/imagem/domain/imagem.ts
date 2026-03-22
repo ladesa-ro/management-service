@@ -1,11 +1,12 @@
 import type { IEntityBaseUuid } from "@/domain/abstractions/entities";
 import type { IdUuid, ScalarDateTimeString } from "@/domain/abstractions/scalars";
-import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7.js";
+import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import type {
   IImagemArquivo,
   ImagemArquivo,
 } from "@/modules/armazenamento/imagem-arquivo/domain/imagem-arquivo";
-import { createValidator, throwIfInvalid, touchUpdated } from "@/utils/validation-utils.js";
+import { zodValidate } from "@/shared/validation/index";
+import { imagemCreateSchema, imagemSchema, imagemUpdateSchema } from "./imagem.schemas";
 
 export interface IImagem extends IEntityBaseUuid {
   descricao: string | null;
@@ -30,41 +31,45 @@ export class Imagem implements IEntityBaseUuid {
   dateUpdated!: ScalarDateTimeString;
   dateDeleted!: ScalarDateTimeString | null;
 
-  constructor(dados: { descricao?: string | null }) {
-    this.id = generateUuidV7();
-    this.descricao = dados.descricao?.trim() || null;
-    this.versoes = [];
-    this.dateCreated = new Date().toISOString();
+  private constructor() {}
+
+  static create(dados: IImagemCreate): Imagem {
+    const parsed = zodValidate(Imagem.entityName, imagemCreateSchema, dados);
+
+    const instance = new Imagem();
+
+    instance.id = generateUuidV7();
+    instance.descricao = parsed.descricao?.trim() || null;
+    instance.versoes = [];
+    instance.dateCreated = new Date().toISOString();
+    instance.dateUpdated = new Date().toISOString();
+    instance.dateDeleted = null;
+
+    return instance;
+  }
+
+  static load(dados: unknown): Imagem {
+    const parsed = zodValidate(Imagem.entityName, imagemSchema, dados);
+
+    const instance = new Imagem();
+
+    instance.id = parsed.id;
+    instance.descricao = parsed.descricao;
+    instance.versoes = (dados as any)?.versoes ?? [];
+    instance.dateCreated = parsed.dateCreated;
+    instance.dateUpdated = parsed.dateUpdated;
+    instance.dateDeleted = parsed.dateDeleted;
+
+    return instance;
+  }
+
+  update(dados: unknown): void {
+    const parsed = zodValidate(Imagem.entityName, imagemUpdateSchema, dados);
+
+    if (parsed.descricao !== undefined) this.descricao = parsed.descricao?.trim() || null;
+
     this.dateUpdated = new Date().toISOString();
-    this.dateDeleted = null;
-  }
-
-  validate(): void {
-    const { result } = createValidator("Imagem");
-    throwIfInvalid("Imagem", result);
-  }
-
-  static create(dados: IImagemCreate, validar: boolean = true): Imagem {
-    const instance = new Imagem(dados);
-    if (validar) instance.validate();
-    return instance;
-  }
-
-  static load(dados: Record<string, any>): Imagem {
-    const instance = Object.create(Imagem.prototype) as Imagem;
-    if (dados.id !== undefined) instance.id = dados.id;
-    if (dados.descricao !== undefined) instance.descricao = dados.descricao;
-    if (dados.versoes !== undefined) instance.versoes = dados.versoes;
-    if (dados.dateCreated !== undefined) instance.dateCreated = dados.dateCreated;
-    if (dados.dateUpdated !== undefined) instance.dateUpdated = dados.dateUpdated;
-    if (dados.dateDeleted !== undefined) instance.dateDeleted = dados.dateDeleted;
-    return instance;
-  }
-
-  update(dados: IImagemUpdate): void {
-    if (dados.descricao !== undefined) this.descricao = dados.descricao?.trim() || null;
-    touchUpdated(this);
-    this.validate();
+    zodValidate(Imagem.entityName, imagemSchema, this);
   }
 
   temDescricao(): boolean {

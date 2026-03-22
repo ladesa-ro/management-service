@@ -1,7 +1,8 @@
 import { get } from "lodash";
+import { ensureExists } from "@/application/errors";
+import type { PersistInput } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
-import { ensureExists, type PersistInput } from "@/modules/@shared";
 import { Campus, type ICampus } from "@/modules/ambientes/campus/domain/campus";
 import type { CampusUpdateCommand } from "@/modules/ambientes/campus/domain/commands/campus-update.command";
 import { ICampusUpdateCommandHandler } from "@/modules/ambientes/campus/domain/commands/campus-update.command.handler.interface";

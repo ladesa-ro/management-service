@@ -1,6 +1,6 @@
+import { ensureExists } from "@/application/errors";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
-import { ensureExists } from "@/modules/@shared";
 import type { DisciplinaUpdateCommand } from "@/modules/ensino/disciplina/domain/commands/disciplina-update.command";
 import { IDisciplinaUpdateCommandHandler } from "@/modules/ensino/disciplina/domain/commands/disciplina-update.command.handler.interface";
 import { Disciplina } from "@/modules/ensino/disciplina/domain/disciplina";

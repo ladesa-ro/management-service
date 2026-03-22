@@ -1,4 +1,4 @@
-import type { IQueryHandler } from "@/modules/@shared/domain/abstractions";
+import type { IQueryHandler } from "@/domain/abstractions";
 import type { EstadoListQuery } from "./estado-list.query";
 import type { EstadoListQueryResult } from "./estado-list.query.result";
 

@@ -1,4 +1,4 @@
-import type { IQueryHandler } from "@/modules/@shared/domain/abstractions";
+import type { IQueryHandler } from "@/domain/abstractions";
 import type { TurmaFindOneQuery } from "./turma-find-one.query";
 import type { TurmaFindOneQueryResult } from "./turma-find-one.query.result";
 

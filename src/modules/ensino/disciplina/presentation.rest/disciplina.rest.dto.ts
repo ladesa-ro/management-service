@@ -1,9 +1,4 @@
-import { Mixin } from "ts-mixer";
-import {
-  EntityBaseRestDto,
-  PaginatedFilterByIdRestDto,
-  PaginationMetaRestDto,
-} from "@/modules/@shared/infrastructure/presentation/rest/dtos";
+import { ImagemFindOneOutputRestDto } from "@/modules/ambientes/bloco/presentation.rest";
 import {
   ApiProperty,
   ApiPropertyOptional,
@@ -14,16 +9,17 @@ import {
   referenceProperty,
   simpleProperty,
   TransformToArray,
-} from "@/modules/@shared/presentation/rest";
+} from "@/shared/presentation/rest";
 import {
-  IsArray,
-  IsOptional,
-  IsUUID,
-  Type,
-  ValidateNested,
-} from "@/modules/@shared/presentation/shared";
-import { ImagemFindOneOutputRestDto } from "@/modules/ambientes/bloco/presentation.rest";
-import { DisciplinaFieldsMixin } from "../presentation.validations/disciplina.validation-mixin";
+  EntityBaseRestDto,
+  PaginatedFilterByIdRestDto,
+  PaginationMetaRestDto,
+} from "@/shared/presentation/rest/dtos";
+import {
+  disciplinaCreateSchema,
+  disciplinaFindOneInputSchema,
+  disciplinaPaginationInputSchema,
+} from "../domain/disciplina.schemas";
 
 // ============================================================================
 // FindOne Output
@@ -41,27 +37,21 @@ import { DisciplinaFieldsMixin } from "../presentation.validations/disciplina.va
     ...commonProperties.dated,
   ],
 })
-export class DisciplinaFindOneOutputRestDto extends Mixin(
-  EntityBaseRestDto,
-  DisciplinaFieldsMixin,
-) {
+export class DisciplinaFindOneOutputRestDto extends EntityBaseRestDto {
   @ApiProperty({ type: "string", description: "Nome da disciplina", minLength: 1 })
-  declare nome: string;
+  nome: string;
 
   @ApiProperty({ type: "string", description: "Nome abreviado da disciplina", minLength: 1 })
-  declare nomeAbreviado: string;
+  nomeAbreviado: string;
 
   @ApiProperty({ type: "integer", description: "Carga horaria da disciplina", minimum: 1 })
-  declare cargaHoraria: number;
+  cargaHoraria: number;
 
   @ApiPropertyOptional({
     type: () => ImagemFindOneOutputRestDto,
     description: "Imagem de capa da disciplina",
     nullable: true,
   })
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => ImagemFindOneOutputRestDto)
   imagemCapa: ImagemFindOneOutputRestDto | null;
 }
 
@@ -71,15 +61,14 @@ export class DisciplinaFindOneOutputRestDto extends Mixin(
 
 @ApiSchema({ name: "DisciplinaListInputDto" })
 export class DisciplinaListInputRestDto extends PaginatedFilterByIdRestDto {
+  static schema = disciplinaPaginationInputSchema;
+
   @ApiPropertyOptional({
     type: "string",
     isArray: true,
     description: "Filtro por ID dos Diarios",
   })
   @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
   "filter.diarios.id"?: string[];
 }
 
@@ -100,15 +89,17 @@ export class DisciplinaListOutputRestDto {
 // ============================================================================
 
 @ApiSchema({ name: "DisciplinaCreateInputDto" })
-export class DisciplinaCreateInputRestDto extends DisciplinaFieldsMixin {
+export class DisciplinaCreateInputRestDto {
+  static readonly schema = disciplinaCreateSchema;
+
   @ApiProperty({ type: "string", description: "Nome da disciplina", minLength: 1 })
-  declare nome: string;
+  nome: string;
 
   @ApiProperty({ type: "string", description: "Nome abreviado da disciplina", minLength: 1 })
-  declare nomeAbreviado: string;
+  nomeAbreviado: string;
 
   @ApiProperty({ type: "integer", description: "Carga horaria da disciplina", minimum: 1 })
-  declare cargaHoraria: number;
+  cargaHoraria: number;
 }
 
 @ApiSchema({ name: "DisciplinaUpdateInputDto" })
@@ -120,11 +111,12 @@ export class DisciplinaUpdateInputRestDto extends PartialType(DisciplinaCreateIn
 
 @ApiSchema({ name: "DisciplinaFindOneInputDto" })
 export class DisciplinaFindOneInputRestDto {
+  static readonly schema = disciplinaFindOneInputSchema;
+
   @ApiProperty({
     type: "string",
     description: "Identificador do registro (uuid)",
     format: "uuid",
   })
-  @IsUUID()
   id: string;
 }

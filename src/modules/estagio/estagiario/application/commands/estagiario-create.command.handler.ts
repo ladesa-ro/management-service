@@ -1,7 +1,7 @@
 import { InternalServerErrorException } from "@nestjs/common";
+import { ResourceNotFoundError } from "@/application/errors";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
-import { ResourceNotFoundError } from "@/modules/@shared";
 import type { EstagiarioCreateCommand } from "@/modules/estagio/estagiario/domain/commands/estagiario-create.command";
 import { IEstagiarioCreateCommandHandler } from "@/modules/estagio/estagiario/domain/commands/estagiario-create.command.handler.interface";
 import type { EstagiarioFindOneQueryResult } from "../../domain/queries";

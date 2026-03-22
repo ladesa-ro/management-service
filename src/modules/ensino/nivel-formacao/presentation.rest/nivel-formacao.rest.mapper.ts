@@ -1,16 +1,16 @@
 import {
-  createFindOneInputMapper,
-  createListInputMapper,
-  createListOutputMapper,
-  mapDatedFields,
-} from "@/modules/@shared/application/mappers";
-import {
   NivelFormacaoCreateCommand,
   NivelFormacaoFindOneQuery,
   NivelFormacaoFindOneQueryResult,
   NivelFormacaoListQuery,
   NivelFormacaoUpdateCommand,
 } from "@/modules/ensino/nivel-formacao";
+import {
+  createFindOneInputMapper,
+  createListInputMapper,
+  createListOutputMapper,
+  mapDatedFields,
+} from "@/shared/mapping";
 import {
   NivelFormacaoCreateInputRestDto,
   NivelFormacaoFindOneOutputRestDto,

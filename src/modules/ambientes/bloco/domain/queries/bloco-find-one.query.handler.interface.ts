@@ -1,4 +1,4 @@
-import type { IQueryHandler } from "@/modules/@shared/domain/abstractions";
+import type { IQueryHandler } from "@/domain/abstractions";
 import type { BlocoFindOneQuery } from "./bloco-find-one.query";
 import type { BlocoFindOneQueryResult } from "./bloco-find-one.query.result";
 

@@ -1,21 +1,16 @@
-import type { IEntityBaseUuid } from "@/domain/abstractions/entities";
+import type { z } from "zod";
 import type { IdUuid, ScalarDateTimeString } from "@/domain/abstractions/scalars";
-import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7.js";
-import { createValidator, throwIfInvalid, touchUpdated } from "@/utils/validation-utils.js";
+import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
+import { zodValidate } from "@/shared/validation/index";
+import {
+  nivelFormacaoCreateSchema,
+  nivelFormacaoSchema,
+  nivelFormacaoUpdateSchema,
+} from "./nivel-formacao.schemas";
 
-export interface INivelFormacao extends IEntityBaseUuid {
-  slug: string;
-}
+export type INivelFormacao = z.infer<typeof nivelFormacaoSchema>;
 
-export interface INivelFormacaoCreate {
-  slug: string;
-}
-
-export interface INivelFormacaoUpdate {
-  slug?: string;
-}
-
-export class NivelFormacao implements IEntityBaseUuid {
+export class NivelFormacao {
   static readonly entityName = "NivelFormacao";
 
   id!: IdUuid;
@@ -24,40 +19,43 @@ export class NivelFormacao implements IEntityBaseUuid {
   dateUpdated!: ScalarDateTimeString;
   dateDeleted!: ScalarDateTimeString | null;
 
-  constructor(dados: { slug: string }) {
-    this.id = generateUuidV7();
-    this.slug = dados.slug;
-    this.dateCreated = new Date().toISOString();
+  private constructor() {}
+
+  static create(dados: unknown): NivelFormacao {
+    const parsed = zodValidate(NivelFormacao.entityName, nivelFormacaoCreateSchema, dados);
+
+    const instance = new NivelFormacao();
+
+    instance.id = generateUuidV7();
+    instance.slug = parsed.slug;
+    instance.dateCreated = new Date().toISOString();
+    instance.dateUpdated = new Date().toISOString();
+    instance.dateDeleted = null;
+
+    return instance;
+  }
+
+  static load(dados: unknown): NivelFormacao {
+    const parsed = zodValidate(NivelFormacao.entityName, nivelFormacaoSchema, dados);
+
+    const instance = new NivelFormacao();
+
+    instance.id = parsed.id;
+    instance.slug = parsed.slug;
+    instance.dateCreated = parsed.dateCreated;
+    instance.dateUpdated = parsed.dateUpdated;
+    instance.dateDeleted = parsed.dateDeleted;
+
+    return instance;
+  }
+
+  update(dados: unknown): void {
+    const parsed = zodValidate(NivelFormacao.entityName, nivelFormacaoUpdateSchema, dados);
+
+    if (parsed.slug !== undefined) this.slug = parsed.slug;
+
     this.dateUpdated = new Date().toISOString();
-    this.dateDeleted = null;
-  }
 
-  validate(): void {
-    const { result, rules } = createValidator("NivelFormacao");
-    rules.required(this.slug, "slug");
-    rules.slug(this.slug, "slug");
-    throwIfInvalid("NivelFormacao", result);
-  }
-
-  static create(dados: INivelFormacaoCreate, validar: boolean = true): NivelFormacao {
-    const instance = new NivelFormacao(dados);
-    if (validar) instance.validate();
-    return instance;
-  }
-
-  static load(dados: Record<string, any>): NivelFormacao {
-    const instance = Object.create(NivelFormacao.prototype) as NivelFormacao;
-    if (dados.id !== undefined) instance.id = dados.id;
-    if (dados.slug !== undefined) instance.slug = dados.slug;
-    if (dados.dateCreated !== undefined) instance.dateCreated = dados.dateCreated;
-    if (dados.dateUpdated !== undefined) instance.dateUpdated = dados.dateUpdated;
-    if (dados.dateDeleted !== undefined) instance.dateDeleted = dados.dateDeleted;
-    return instance;
-  }
-
-  update(dados: INivelFormacaoUpdate): void {
-    if (dados.slug !== undefined) this.slug = dados.slug;
-    touchUpdated(this);
-    this.validate();
+    zodValidate(NivelFormacao.entityName, nivelFormacaoSchema, this);
   }
 }

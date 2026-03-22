@@ -7,7 +7,7 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { DeclareDependency } from "@/domain/dependency-injection";
-import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7.js";
+import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { ICalendarioLetivoRepository } from "../domain/repositories/calendario-letivo.repository.interface";
 import { ICalendarioLetivoEtapaRepository } from "../domain/repositories/calendario-letivo-etapa.repository.interface";

@@ -1,4 +1,4 @@
-import type { IQueryHandler } from "@/modules/@shared/domain/abstractions";
+import type { IQueryHandler } from "@/domain/abstractions";
 import type { CalendarioLetivoFindOneQuery } from "./calendario-letivo-find-one.query";
 import type { CalendarioLetivoFindOneQueryResult } from "./calendario-letivo-find-one.query.result";
 

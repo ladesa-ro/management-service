@@ -1,4 +1,3 @@
-import { createListOutputMapper, mapDatedFields } from "@/modules/@shared/application/mappers";
 import { AmbienteGraphqlMapper } from "@/modules/ambientes/ambiente/presentation.graphql/ambiente.graphql.mapper";
 import { CursoGraphqlMapper } from "@/modules/ensino/curso/presentation.graphql/curso.graphql.mapper";
 import {
@@ -8,6 +7,7 @@ import {
   TurmaListQuery,
   TurmaUpdateCommand,
 } from "@/modules/ensino/turma";
+import { createListOutputMapper, mapDatedFields } from "@/shared/mapping";
 import {
   TurmaCreateInputGraphQlDto,
   TurmaFindOneOutputGraphQlDto,

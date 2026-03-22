@@ -1,37 +1,22 @@
 import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@nestjs/swagger";
-import { Type } from "class-transformer";
-import {
-  IsArray,
-  IsDateString,
-  IsEnum,
-  IsInt,
-  IsOptional,
-  IsUUID,
-  Matches,
-  Max,
-  Min,
-  ValidateNested,
-} from "class-validator";
-import {
-  PaginationInputRestDto,
-  UuidParamRestDto,
-} from "@/modules/@shared/infrastructure/presentation/rest/dtos";
 import { EstagioStatus } from "@/modules/estagio/estagio/domain/estagio";
+import {
+  estagioCreateSchema,
+  estagioFindOneInputSchema,
+  estagioPaginationInputSchema,
+  estagioUpdateSchema,
+} from "@/modules/estagio/estagio/domain/estagio.schemas";
+import { PaginationInputRestDto, UuidParamRestDto } from "@/shared/presentation/rest/dtos";
 
 @ApiSchema({ name: "HorarioEstagioInputDto" })
 export class HorarioEstagioInputRestDto {
   @ApiProperty({ type: "number", minimum: 0, maximum: 6 })
-  @IsInt()
-  @Min(0)
-  @Max(6)
   diaSemana!: number;
 
   @ApiProperty({ type: "string", example: "08:00" })
-  @Matches(/^([01]\d|2[0-3]):([0-5]\d)(:([0-5]\d))?$/)
   horaInicio!: string;
 
   @ApiProperty({ type: "string", example: "12:00" })
-  @Matches(/^([01]\d|2[0-3]):([0-5]\d)(:([0-5]\d))?$/)
   horaFim!: string;
 }
 
@@ -43,8 +28,9 @@ export class HorarioEstagioOutputRestDto extends HorarioEstagioInputRestDto {
 
 @ApiSchema({ name: "EstagioCreateInputDto" })
 export class EstagioCreateInputRestDto {
+  static schema = estagioCreateSchema;
+
   @ApiProperty({ type: "string", format: "uuid", description: "ID da empresa" })
-  @IsUUID("all")
   idEmpresaFk!: string;
 
   @ApiPropertyOptional({
@@ -52,28 +38,18 @@ export class EstagioCreateInputRestDto {
     format: "uuid",
     description: "ID do estagiário (opcional enquanto a vaga estiver aberta)",
   })
-  @IsUUID("all")
-  @IsOptional()
   idEstagiarioFk?: string;
 
   @ApiProperty({ type: "number", description: "Carga horária semanal", minimum: 1 })
-  @IsInt()
-  @Min(1)
   cargaHoraria!: number;
 
   @ApiPropertyOptional({ type: "string", format: "date" })
-  @IsDateString()
-  @IsOptional()
   dataInicio?: string;
 
   @ApiPropertyOptional({ type: "string", format: "date", nullable: true })
-  @IsDateString()
-  @IsOptional()
   dataFim?: string | null;
 
   @ApiPropertyOptional({ enum: EstagioStatus, enumName: "EstagioStatus" })
-  @IsEnum(EstagioStatus)
-  @IsOptional()
   status?: EstagioStatus;
 
   @ApiPropertyOptional({
@@ -83,44 +59,29 @@ export class EstagioCreateInputRestDto {
       { diaSemana: 3, horaInicio: "13:00", horaFim: "17:00" },
     ],
   })
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => HorarioEstagioInputRestDto)
-  @IsOptional()
   horariosEstagio?: HorarioEstagioInputRestDto[];
 }
 
 @ApiSchema({ name: "EstagioUpdateInputDto" })
 export class EstagioUpdateInputRestDto {
+  static schema = estagioUpdateSchema;
+
   @ApiPropertyOptional({ type: "string", format: "uuid" })
-  @IsUUID("all")
-  @IsOptional()
   idEmpresaFk?: string;
 
   @ApiPropertyOptional({ type: "string", format: "uuid" })
-  @IsUUID("all")
-  @IsOptional()
   idEstagiarioFk?: string;
 
   @ApiPropertyOptional({ type: "number", minimum: 1 })
-  @IsInt()
-  @Min(1)
-  @IsOptional()
   cargaHoraria?: number;
 
   @ApiPropertyOptional({ type: "string", format: "date" })
-  @IsDateString()
-  @IsOptional()
   dataInicio?: string;
 
   @ApiPropertyOptional({ type: "string", format: "date", nullable: true })
-  @IsDateString()
-  @IsOptional()
   dataFim?: string | null;
 
   @ApiPropertyOptional({ enum: EstagioStatus, enumName: "EstagioStatus" })
-  @IsEnum(EstagioStatus)
-  @IsOptional()
   status?: EstagioStatus;
 
   @ApiPropertyOptional({
@@ -130,24 +91,22 @@ export class EstagioUpdateInputRestDto {
       { diaSemana: 3, horaInicio: "13:00", horaFim: "17:00" },
     ],
   })
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => HorarioEstagioInputRestDto)
-  @IsOptional()
   horariosEstagio?: HorarioEstagioInputRestDto[];
 }
 
 @ApiSchema({ name: "EstagioFindOneInputDto" })
-export class EstagioFindOneInputRestDto extends UuidParamRestDto {}
+export class EstagioFindOneInputRestDto extends UuidParamRestDto {
+  static schema = estagioFindOneInputSchema;
+}
 
 @ApiSchema({ name: "EstagioListInputDto" })
 export class EstagioListInputRestDto extends PaginationInputRestDto {
+  static schema = estagioPaginationInputSchema;
+
   @ApiPropertyOptional({ type: "string", format: "uuid", description: "Filtro por empresa" })
-  @IsOptional()
   "filter.idEmpresaFk"?: string | string[];
 
   @ApiPropertyOptional({ type: "string", format: "uuid", description: "Filtro por estagiário" })
-  @IsOptional()
   "filter.idEstagiarioFk"?: string | string[];
 
   @ApiPropertyOptional({
@@ -155,7 +114,6 @@ export class EstagioListInputRestDto extends PaginationInputRestDto {
     enum: EstagioStatus,
     description: "Filtro por status (string ou array)",
   })
-  @IsOptional()
   "filter.status"?: EstagioStatus | EstagioStatus[];
 }
 

@@ -1,6 +1,6 @@
-import { mapDatedFields } from "@/modules/@shared/application/mappers";
 import { CidadeRestMapper } from "@/modules/localidades/cidade/presentation.rest/cidade.rest.mapper";
 import { EnderecoCreateCommand, EnderecoFindOneQueryResult } from "@/modules/localidades/endereco";
+import { mapDatedFields } from "@/shared/mapping";
 import { EnderecoFindOneOutputRestDto, EnderecoInputRestDto } from "./endereco.rest.dto";
 
 export class EnderecoRestMapper {

@@ -1,11 +1,10 @@
-import { EntityBaseGraphQlDto } from "@/modules/@shared/infrastructure/graphql/dtos";
-import { Field, InputType, Int, ObjectType } from "@/modules/@shared/presentation/graphql";
-import { ValidateNested } from "@/modules/@shared/presentation/shared";
+import { EntityBaseGraphQlDto } from "@/infrastructure.graphql/dtos";
 import {
   CidadeFindOneInputGraphQlDto,
   CidadeFindOneOutputGraphQlDto,
 } from "@/modules/localidades/cidade/presentation.graphql/cidade.graphql.dto";
-import { EnderecoFieldsMixin } from "../presentation.validations/endereco.validation-mixin";
+import { enderecoInputSchema } from "@/modules/localidades/endereco/domain/endereco.schemas";
+import { Field, InputType, Int, ObjectType } from "@/shared/presentation/graphql";
 
 // ============================================================================
 // FindOne Output
@@ -27,7 +26,9 @@ export class EnderecoFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
 // ============================================================================
 
 @InputType("EnderecoInputDto")
-export class EnderecoInputGraphQlDto extends EnderecoFieldsMixin {
+export class EnderecoInputGraphQlDto {
+  static schema = enderecoInputSchema;
+
   @Field(() => String) declare cep: string;
   @Field(() => String) declare logradouro: string;
   @Field(() => Int) declare numero: number;
@@ -35,6 +36,5 @@ export class EnderecoInputGraphQlDto extends EnderecoFieldsMixin {
   @Field(() => String, { nullable: true }) declare complemento: string | null;
   @Field(() => String, { nullable: true }) declare pontoReferencia: string | null;
   @Field(() => CidadeFindOneInputGraphQlDto)
-  @ValidateNested()
   cidade: CidadeFindOneInputGraphQlDto;
 }

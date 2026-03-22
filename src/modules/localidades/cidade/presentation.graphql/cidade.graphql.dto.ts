@@ -1,30 +1,18 @@
+import { PaginationMetaGraphQlDto } from "@/infrastructure.graphql/dtos";
 import {
-  EntityIdIntGraphQlDto,
-  PaginatedFilterByIdGraphQlDto,
-  PaginationMetaGraphQlDto,
-} from "@/modules/@shared/infrastructure/graphql/dtos";
-import {
-  ArgsType,
-  Field,
-  InputType,
-  Int,
-  ObjectType,
-} from "@/modules/@shared/presentation/graphql";
-import {
-  IsArray,
-  IsInt,
-  IsOptional,
-  IsString,
-  IsUUID,
-} from "@/modules/@shared/presentation/shared";
+  cidadeFindOneInputSchema,
+  cidadeGraphqlListInputSchema,
+} from "@/modules/localidades/cidade/domain/cidade.schemas";
 import { EstadoFindOneOutputGraphQlDto } from "@/modules/localidades/estado/presentation.graphql/estado.graphql.dto";
+import { ArgsType, Field, InputType, Int, ObjectType } from "@/shared/presentation/graphql";
 
 // ============================================================================
 // FindOne Output
 // ============================================================================
 
 @ObjectType("CidadeFindOneOutputDto")
-export class CidadeFindOneOutputGraphQlDto extends EntityIdIntGraphQlDto {
+export class CidadeFindOneOutputGraphQlDto {
+  @Field(() => Int) id: number;
   @Field(() => String) nome: string;
   @Field(() => EstadoFindOneOutputGraphQlDto) estado: EstadoFindOneOutputGraphQlDto;
 }
@@ -35,7 +23,9 @@ export class CidadeFindOneOutputGraphQlDto extends EntityIdIntGraphQlDto {
 
 @InputType("CidadeFindOneInputDto")
 export class CidadeFindOneInputGraphQlDto {
-  @Field(() => Int) @IsInt() id: number;
+  static schema = cidadeFindOneInputSchema;
+
+  @Field(() => Int) id: number;
 }
 
 // ============================================================================
@@ -43,23 +33,34 @@ export class CidadeFindOneInputGraphQlDto {
 // ============================================================================
 
 @ArgsType()
-export class CidadeListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {
+export class CidadeListInputGraphQlDto {
+  static schema = cidadeGraphqlListInputSchema;
+
+  @Field(() => Int, { nullable: true, defaultValue: 1 })
+  page?: number = 1;
+
+  @Field(() => Int, { nullable: true })
+  limit?: number;
+
+  @Field(() => String, { nullable: true })
+  search?: string;
+
+  @Field(() => [String], { nullable: true })
+  sortBy?: string[];
+
+  @Field(() => [String], { nullable: true })
+  selection?: string[];
+
+  @Field(() => [String], { nullable: true, description: "Filtro por ID" })
+  filterId?: string[];
+
   @Field(() => [String], { nullable: true, description: "Filtro por ID do Estado" })
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
   filterEstadoId?: string[];
 
   @Field(() => [String], { nullable: true, description: "Filtro por nome do Estado" })
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
   filterEstadoNome?: string[];
 
   @Field(() => [String], { nullable: true, description: "Filtro por sigla do Estado" })
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
   filterEstadoSigla?: string[];
 }
 

@@ -1,6 +1,6 @@
+import { ensureExists } from "@/application/errors";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
-import { ensureExists } from "@/modules/@shared";
 import { IDisciplinaDeleteCommandHandler } from "@/modules/ensino/disciplina/domain/commands/disciplina-delete.command.handler.interface";
 import { Disciplina } from "@/modules/ensino/disciplina/domain/disciplina";
 import type { DisciplinaFindOneQuery } from "@/modules/ensino/disciplina/domain/queries";

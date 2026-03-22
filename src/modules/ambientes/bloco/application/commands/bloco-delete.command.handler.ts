@@ -1,6 +1,6 @@
+import { ensureExists } from "@/application/errors";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
-import { ensureExists } from "@/modules/@shared";
 import { Bloco } from "@/modules/ambientes/bloco/domain/bloco";
 import { IBlocoDeleteCommandHandler } from "@/modules/ambientes/bloco/domain/commands/bloco-delete.command.handler.interface";
 import type { BlocoFindOneQuery } from "@/modules/ambientes/bloco/domain/queries";

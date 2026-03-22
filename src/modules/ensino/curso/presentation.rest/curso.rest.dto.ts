@@ -1,9 +1,6 @@
-import { Mixin } from "ts-mixer";
-import {
-  EntityBaseRestDto,
-  PaginatedFilterByIdRestDto,
-  PaginationMetaRestDto,
-} from "@/modules/@shared/infrastructure/presentation/rest/dtos";
+import { ImagemFindOneOutputRestDto } from "@/modules/ambientes/bloco/presentation.rest";
+import { CampusFindOneOutputRestDto } from "@/modules/ambientes/campus/presentation.rest";
+import { OfertaFormacaoFindOneOutputRestDto } from "@/modules/ensino/oferta-formacao/presentation.rest";
 import {
   ApiProperty,
   ApiPropertyOptional,
@@ -14,24 +11,17 @@ import {
   referenceProperty,
   simpleProperty,
   TransformToArray,
-} from "@/modules/@shared/presentation/rest";
+} from "@/shared/presentation/rest";
 import {
-  IsArray,
-  IsOptional,
-  IsUUID,
-  Type,
-  ValidateNested,
-} from "@/modules/@shared/presentation/shared";
-import { ImagemFindOneOutputRestDto } from "@/modules/ambientes/bloco/presentation.rest";
+  EntityBaseRestDto,
+  PaginatedFilterByIdRestDto,
+  PaginationMetaRestDto,
+} from "@/shared/presentation/rest/dtos";
 import {
-  CampusFindOneInputRestDto,
-  CampusFindOneOutputRestDto,
-} from "@/modules/ambientes/campus/presentation.rest";
-import { CursoFieldsMixin } from "@/modules/ensino/curso/presentation.validations/curso.validation-mixin";
-import {
-  OfertaFormacaoFindOneInputRestDto,
-  OfertaFormacaoFindOneOutputRestDto,
-} from "@/modules/ensino/oferta-formacao/presentation.rest";
+  cursoCreateSchema,
+  cursoFindOneInputSchema,
+  cursoPaginationInputSchema,
+} from "../domain/curso.schemas";
 
 // ============================================================================
 // FindOne Output
@@ -50,27 +40,23 @@ import {
     ...commonProperties.dated,
   ],
 })
-export class CursoFindOneOutputRestDto extends Mixin(EntityBaseRestDto, CursoFieldsMixin) {
+export class CursoFindOneOutputRestDto extends EntityBaseRestDto {
   @ApiProperty({ type: "string", description: "Nome do curso", minLength: 1 })
-  declare nome: string;
+  nome: string;
 
   @ApiProperty({ type: "string", description: "Nome abreviado do curso", minLength: 1 })
-  declare nomeAbreviado: string;
+  nomeAbreviado: string;
 
   @ApiProperty({
     type: () => CampusFindOneOutputRestDto,
     description: "Campus que o curso pertence",
   })
-  @ValidateNested()
-  @Type(() => CampusFindOneOutputRestDto)
   campus: CampusFindOneOutputRestDto;
 
   @ApiProperty({
     type: () => OfertaFormacaoFindOneOutputRestDto,
     description: "Oferta de formacao do curso",
   })
-  @ValidateNested()
-  @Type(() => OfertaFormacaoFindOneOutputRestDto)
   ofertaFormacao: OfertaFormacaoFindOneOutputRestDto;
 
   @ApiPropertyOptional({
@@ -78,9 +64,6 @@ export class CursoFindOneOutputRestDto extends Mixin(EntityBaseRestDto, CursoFie
     description: "Imagem de capa do curso",
     nullable: true,
   })
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => ImagemFindOneOutputRestDto)
   imagemCapa: ImagemFindOneOutputRestDto | null;
 }
 
@@ -90,15 +73,14 @@ export class CursoFindOneOutputRestDto extends Mixin(EntityBaseRestDto, CursoFie
 
 @ApiSchema({ name: "CursoListInputDto" })
 export class CursoListInputRestDto extends PaginatedFilterByIdRestDto {
+  static schema = cursoPaginationInputSchema;
+
   @ApiPropertyOptional({
     type: "string",
     isArray: true,
     description: "Filtro por ID do Campus",
   })
   @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
   "filter.campus.id"?: string[];
 
   @ApiPropertyOptional({
@@ -107,9 +89,6 @@ export class CursoListInputRestDto extends PaginatedFilterByIdRestDto {
     description: "Filtro por ID da Oferta de Formacao",
   })
   @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
   "filter.ofertaFormacao.id"?: string[];
 }
 
@@ -127,28 +106,28 @@ export class CursoListOutputRestDto {
 // ============================================================================
 
 @ApiSchema({ name: "CursoCreateInputDto" })
-export class CursoCreateInputRestDto extends CursoFieldsMixin {
+export class CursoCreateInputRestDto {
+  static readonly schema = cursoCreateSchema;
+
   @ApiProperty({ type: "string", description: "Nome do curso", minLength: 1 })
-  declare nome: string;
+  nome: string;
 
   @ApiProperty({ type: "string", description: "Nome abreviado do curso", minLength: 1 })
-  declare nomeAbreviado: string;
+  nomeAbreviado: string;
 
   @ApiProperty({
-    type: () => CampusFindOneInputRestDto,
+    type: "object",
     description: "Campus que o curso pertence",
+    properties: { id: { type: "string", format: "uuid" } },
   })
-  @ValidateNested()
-  @Type(() => CampusFindOneInputRestDto)
-  campus: CampusFindOneInputRestDto;
+  campus: { id: string };
 
   @ApiProperty({
-    type: () => OfertaFormacaoFindOneInputRestDto,
+    type: "object",
     description: "Oferta de formacao do curso",
+    properties: { id: { type: "string", format: "uuid" } },
   })
-  @ValidateNested()
-  @Type(() => OfertaFormacaoFindOneInputRestDto)
-  ofertaFormacao: OfertaFormacaoFindOneInputRestDto;
+  ofertaFormacao: { id: string };
 }
 
 @ApiSchema({ name: "CursoUpdateInputDto" })
@@ -160,11 +139,12 @@ export class CursoUpdateInputRestDto extends PartialType(CursoCreateInputRestDto
 
 @ApiSchema({ name: "CursoFindOneInputDto" })
 export class CursoFindOneInputRestDto {
+  static readonly schema = cursoFindOneInputSchema;
+
   @ApiProperty({
     type: "string",
     description: "Identificador do registro (uuid)",
     format: "uuid",
   })
-  @IsUUID()
   id: string;
 }

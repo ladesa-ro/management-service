@@ -1,5 +1,11 @@
-import { Mixin } from "ts-mixer";
-import { EntityBaseRestDto } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
+import {
+  CidadeFindOneInputRestDto,
+  CidadeFindOneOutputRestDto,
+} from "@/modules/localidades/cidade/presentation.rest/cidade.rest.dto";
+import {
+  enderecoFindOneInputSchema,
+  enderecoInputSchema,
+} from "@/modules/localidades/endereco/domain/endereco.schemas";
 import {
   ApiProperty,
   ApiPropertyOptional,
@@ -8,13 +14,8 @@ import {
   RegisterModel,
   referenceProperty,
   simpleProperty,
-} from "@/modules/@shared/presentation/rest";
-import { IsUUID, Type, ValidateNested } from "@/modules/@shared/presentation/shared";
-import {
-  CidadeFindOneInputRestDto,
-  CidadeFindOneOutputRestDto,
-} from "@/modules/localidades/cidade/presentation.rest/cidade.rest.dto";
-import { EnderecoFieldsMixin } from "../presentation.validations/endereco.validation-mixin";
+} from "@/shared/presentation/rest";
+import { EntityBaseRestDto } from "@/shared/presentation/rest/dtos";
 
 // ============================================================================
 // FindOne Output
@@ -35,7 +36,7 @@ import { EnderecoFieldsMixin } from "../presentation.validations/endereco.valida
     ...commonProperties.dated,
   ],
 })
-export class EnderecoFindOneOutputRestDto extends Mixin(EntityBaseRestDto, EnderecoFieldsMixin) {
+export class EnderecoFindOneOutputRestDto extends EntityBaseRestDto {
   @ApiProperty({ type: "string", description: "Codigo postal (CEP)" })
   declare cep: string;
 
@@ -55,8 +56,6 @@ export class EnderecoFindOneOutputRestDto extends Mixin(EntityBaseRestDto, Ender
   declare pontoReferencia: string | null;
 
   @ApiProperty({ type: () => CidadeFindOneOutputRestDto, description: "Cidade" })
-  @ValidateNested()
-  @Type(() => CidadeFindOneOutputRestDto)
   cidade: CidadeFindOneOutputRestDto;
 }
 
@@ -65,7 +64,9 @@ export class EnderecoFindOneOutputRestDto extends Mixin(EntityBaseRestDto, Ender
 // ============================================================================
 
 @ApiSchema({ name: "EnderecoInputDto" })
-export class EnderecoInputRestDto extends EnderecoFieldsMixin {
+export class EnderecoInputRestDto {
+  static schema = enderecoInputSchema;
+
   @ApiProperty({ type: "string", description: "Codigo postal (CEP)" })
   declare cep: string;
 
@@ -85,8 +86,6 @@ export class EnderecoInputRestDto extends EnderecoFieldsMixin {
   declare pontoReferencia: string | null;
 
   @ApiProperty({ type: () => CidadeFindOneInputRestDto, description: "Cidade" })
-  @ValidateNested()
-  @Type(() => CidadeFindOneInputRestDto)
   cidade: CidadeFindOneInputRestDto;
 }
 
@@ -96,11 +95,12 @@ export class EnderecoInputRestDto extends EnderecoFieldsMixin {
 
 @ApiSchema({ name: "EnderecoFindOneInputDto" })
 export class EnderecoFindOneInputRestDto {
+  static schema = enderecoFindOneInputSchema;
+
   @ApiProperty({
     type: "string",
     description: "Identificador do registro (uuid)",
     format: "uuid",
   })
-  @IsUUID()
   id: string;
 }

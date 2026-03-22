@@ -1,7 +1,11 @@
 import type { IEntityBaseUuid } from "@/domain/abstractions/entities";
 import type { IdUuid, ScalarDateTimeString } from "@/domain/abstractions/scalars";
-import { createValidator, throwIfInvalid, touchUpdated } from "@/utils/validation-utils.js";
+import { zodValidate } from "@/shared/validation/index";
 import type { CalendarioLetivo, ICalendarioLetivo } from "./calendario-letivo";
+import {
+  calendarioLetivoDiaSchema,
+  calendarioLetivoDiaUpdateSchema,
+} from "./calendario-letivo-dia.schemas";
 
 export const TIPO_CALENDARIO_LETIVO_DIA_VALUES = [
   "Aula Presencial",
@@ -48,14 +52,6 @@ export class CalendarioLetivoDia implements IEntityBaseUuid {
   dateUpdated!: ScalarDateTimeString;
   dateDeleted!: ScalarDateTimeString | null;
 
-  validate(): void {
-    const { result, rules } = createValidator("CalendarioLetivoDia");
-    rules.required(this.data, "data");
-    rules.dateFormat(this.data, "data");
-    rules.required(this.tipo, "tipo");
-    throwIfInvalid("CalendarioLetivoDia", result);
-  }
-
   static load(dados: Record<string, any>): CalendarioLetivoDia {
     const instance = Object.create(CalendarioLetivoDia.prototype) as CalendarioLetivoDia;
     if (dados.id !== undefined) instance.id = dados.id;
@@ -72,14 +68,21 @@ export class CalendarioLetivoDia implements IEntityBaseUuid {
     return instance;
   }
 
-  update(dados: ICalendarioLetivoDiaUpdate): void {
-    if (dados.data !== undefined) this.data = dados.data;
-    if (dados.tipo !== undefined) this.tipo = dados.tipo;
-    if (dados.diaLetivo !== undefined) this.diaLetivo = dados.diaLetivo;
-    if (dados.feriado !== undefined) this.feriado = dados.feriado;
-    if (dados.diaPresencial !== undefined) this.diaPresencial = dados.diaPresencial;
-    if (dados.extraCurricular !== undefined) this.extraCurricular = dados.extraCurricular;
-    touchUpdated(this);
-    this.validate();
+  update(dados: unknown): void {
+    const parsed = zodValidate(
+      CalendarioLetivoDia.entityName,
+      calendarioLetivoDiaUpdateSchema,
+      dados,
+    );
+
+    if (parsed.data !== undefined) this.data = parsed.data;
+    if (parsed.tipo !== undefined) this.tipo = parsed.tipo;
+    if (parsed.diaLetivo !== undefined) this.diaLetivo = parsed.diaLetivo;
+    if (parsed.feriado !== undefined) this.feriado = parsed.feriado;
+    if (parsed.diaPresencial !== undefined) this.diaPresencial = parsed.diaPresencial;
+    if (parsed.extraCurricular !== undefined) this.extraCurricular = parsed.extraCurricular;
+
+    this.dateUpdated = new Date().toISOString();
+    zodValidate(CalendarioLetivoDia.entityName, calendarioLetivoDiaSchema, this);
   }
 }

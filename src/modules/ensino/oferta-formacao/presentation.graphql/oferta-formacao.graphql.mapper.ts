@@ -1,4 +1,3 @@
-import { createListOutputMapper, mapDatedFields } from "@/modules/@shared/application/mappers";
 import { ModalidadeGraphqlMapper } from "@/modules/ensino/modalidade/presentation.graphql/modalidade.graphql.mapper";
 import {
   OfertaFormacaoCreateCommand,
@@ -7,6 +6,7 @@ import {
   OfertaFormacaoListQuery,
   OfertaFormacaoUpdateCommand,
 } from "@/modules/ensino/oferta-formacao";
+import { createListOutputMapper, mapDatedFields } from "@/shared/mapping";
 import {
   OfertaFormacaoCreateInputGraphQlDto,
   OfertaFormacaoFindOneOutputGraphQlDto,

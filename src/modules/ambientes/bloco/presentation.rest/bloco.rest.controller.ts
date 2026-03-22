@@ -22,9 +22,9 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
+import { ensureExists } from "@/application/errors";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
-import { ensureExists } from "@/modules/@shared";
 import { Bloco } from "@/modules/ambientes/bloco/domain/bloco";
 import { IBlocoCreateCommandHandler } from "@/modules/ambientes/bloco/domain/commands/bloco-create.command.handler.interface";
 import { IBlocoDeleteCommandHandler } from "@/modules/ambientes/bloco/domain/commands/bloco-delete.command.handler.interface";

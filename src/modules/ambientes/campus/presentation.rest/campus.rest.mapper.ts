@@ -1,10 +1,4 @@
 import {
-  createFindOneInputMapper,
-  createListInputMapper,
-  createListOutputMapper,
-  mapDatedFields,
-} from "@/modules/@shared/application/mappers";
-import {
   CampusCreateCommand,
   CampusFindOneQuery,
   CampusFindOneQueryResult,
@@ -12,6 +6,12 @@ import {
   CampusUpdateCommand,
 } from "@/modules/ambientes/campus";
 import { EnderecoRestMapper } from "@/modules/localidades/endereco/presentation.rest";
+import {
+  createFindOneInputMapper,
+  createListInputMapper,
+  createListOutputMapper,
+  mapDatedFields,
+} from "@/shared/mapping";
 import {
   CampusCreateInputRestDto,
   CampusFindOneInputRestDto,

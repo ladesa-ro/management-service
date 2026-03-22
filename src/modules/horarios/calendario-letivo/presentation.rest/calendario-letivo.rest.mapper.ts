@@ -1,9 +1,3 @@
-import {
-  createFindOneInputMapper,
-  createListInputMapper,
-  createListOutputMapper,
-  mapDatedFields,
-} from "@/modules/@shared/application/mappers";
 import { CampusRestMapper } from "@/modules/ambientes/campus/presentation.rest";
 import { OfertaFormacaoRestMapper } from "@/modules/ensino/oferta-formacao/presentation.rest";
 import {
@@ -13,6 +7,12 @@ import {
   CalendarioLetivoListQuery,
   CalendarioLetivoUpdateCommand,
 } from "@/modules/horarios/calendario-letivo";
+import {
+  createFindOneInputMapper,
+  createListInputMapper,
+  createListOutputMapper,
+  mapDatedFields,
+} from "@/shared/mapping";
 import {
   CalendarioLetivoCreateInputRestDto,
   CalendarioLetivoFindOneInputRestDto,

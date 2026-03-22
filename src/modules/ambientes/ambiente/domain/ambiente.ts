@@ -1,37 +1,12 @@
-import type { IEntityBaseUuid } from "@/domain/abstractions/entities";
+import type { z } from "zod";
 import type { IdUuid, ScalarDateTimeString } from "@/domain/abstractions/scalars";
-import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7.js";
-import type { IBloco } from "@/modules/ambientes/bloco";
-import { createValidator, throwIfInvalid, touchUpdated } from "@/utils/validation-utils.js";
+import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
+import { zodValidate } from "@/shared/validation/index";
+import { ambienteCreateSchema, ambienteSchema, ambienteUpdateSchema } from "./ambiente.schemas";
 
-export interface IAmbiente extends IEntityBaseUuid {
-  nome: string;
-  descricao: string | null;
-  codigo: string;
-  capacidade: number | null;
-  tipo: string | null;
-  bloco: IBloco;
-  imagemCapa: { id: IdUuid } | null;
-}
+export type IAmbiente = z.infer<typeof ambienteSchema>;
 
-export interface IAmbienteCreate {
-  nome: string;
-  descricao?: string | null;
-  codigo: string;
-  capacidade?: number | null;
-  tipo?: string | null;
-  bloco: { id: IdUuid };
-}
-
-export interface IAmbienteUpdate {
-  nome?: string;
-  descricao?: string | null;
-  codigo?: string;
-  capacidade?: number | null;
-  tipo?: string | null;
-}
-
-export class Ambiente implements IEntityBaseUuid {
+export class Ambiente {
   static readonly entityName = "Ambiente";
 
   id!: IdUuid;
@@ -40,73 +15,64 @@ export class Ambiente implements IEntityBaseUuid {
   codigo!: string;
   capacidade!: number | null;
   tipo!: string | null;
-  bloco!: IBloco;
+  bloco!: IAmbiente["bloco"];
   imagemCapa!: { id: string } | null;
   dateCreated!: ScalarDateTimeString;
   dateUpdated!: ScalarDateTimeString;
   dateDeleted!: ScalarDateTimeString | null;
 
-  constructor(dados: {
-    nome: string;
-    descricao?: string | null;
-    codigo: string;
-    capacidade: number;
-    tipo: string;
-  }) {
-    this.id = generateUuidV7();
-    this.nome = dados.nome;
-    this.descricao = dados.descricao ?? null;
-    this.codigo = dados.codigo;
-    this.capacidade = dados.capacidade;
-    this.tipo = dados.tipo;
-    this.imagemCapa = null;
-    this.dateCreated = new Date().toISOString();
+  private constructor() {}
+
+  static create(dados: unknown): Ambiente {
+    const parsed = zodValidate(Ambiente.entityName, ambienteCreateSchema, dados);
+
+    const instance = new Ambiente();
+
+    instance.id = generateUuidV7();
+    instance.nome = parsed.nome;
+    instance.descricao = parsed.descricao ?? null;
+    instance.codigo = parsed.codigo;
+    instance.capacidade = parsed.capacidade ?? null;
+    instance.tipo = parsed.tipo ?? null;
+    instance.imagemCapa = null;
+    instance.dateCreated = new Date().toISOString();
+    instance.dateUpdated = new Date().toISOString();
+    instance.dateDeleted = null;
+
+    return instance;
+  }
+
+  static load(dados: unknown): Ambiente {
+    const parsed = zodValidate(Ambiente.entityName, ambienteSchema, dados);
+
+    const instance = new Ambiente();
+
+    instance.id = parsed.id;
+    instance.nome = parsed.nome;
+    instance.descricao = parsed.descricao;
+    instance.codigo = parsed.codigo;
+    instance.capacidade = parsed.capacidade;
+    instance.tipo = parsed.tipo;
+    instance.bloco = parsed.bloco;
+    instance.imagemCapa = parsed.imagemCapa;
+    instance.dateCreated = parsed.dateCreated;
+    instance.dateUpdated = parsed.dateUpdated;
+    instance.dateDeleted = parsed.dateDeleted;
+
+    return instance;
+  }
+
+  update(dados: unknown): void {
+    const parsed = zodValidate(Ambiente.entityName, ambienteUpdateSchema, dados);
+
+    if (parsed.nome !== undefined) this.nome = parsed.nome;
+    if (parsed.descricao !== undefined) this.descricao = parsed.descricao ?? null;
+    if (parsed.codigo !== undefined) this.codigo = parsed.codigo;
+    if (parsed.capacidade !== undefined) this.capacidade = parsed.capacidade ?? null;
+    if (parsed.tipo !== undefined) this.tipo = parsed.tipo ?? null;
+
     this.dateUpdated = new Date().toISOString();
-    this.dateDeleted = null;
-  }
 
-  validate(): void {
-    const { result, rules } = createValidator("Ambiente");
-    rules.required(this.nome, "nome");
-    rules.minLength(this.nome, "nome", 1);
-    rules.required(this.codigo, "codigo");
-    rules.minLength(this.codigo, "codigo", 1);
-    throwIfInvalid("Ambiente", result);
-  }
-
-  static create(dados: IAmbienteCreate, validar: boolean = true): Ambiente {
-    const instance = new Ambiente({
-      ...dados,
-      capacidade: dados.capacidade ?? 0,
-      tipo: dados.tipo ?? "",
-    });
-    if (validar) instance.validate();
-    return instance;
-  }
-
-  static load(dados: Record<string, any>): Ambiente {
-    const instance = Object.create(Ambiente.prototype) as Ambiente;
-    if (dados.id !== undefined) instance.id = dados.id;
-    if (dados.nome !== undefined) instance.nome = dados.nome;
-    if (dados.descricao !== undefined) instance.descricao = dados.descricao;
-    if (dados.codigo !== undefined) instance.codigo = dados.codigo;
-    if (dados.capacidade !== undefined) instance.capacidade = dados.capacidade;
-    if (dados.tipo !== undefined) instance.tipo = dados.tipo;
-    if (dados.bloco !== undefined) instance.bloco = dados.bloco;
-    if (dados.imagemCapa !== undefined) instance.imagemCapa = dados.imagemCapa;
-    if (dados.dateCreated !== undefined) instance.dateCreated = dados.dateCreated;
-    if (dados.dateUpdated !== undefined) instance.dateUpdated = dados.dateUpdated;
-    if (dados.dateDeleted !== undefined) instance.dateDeleted = dados.dateDeleted;
-    return instance;
-  }
-
-  update(dados: IAmbienteUpdate): void {
-    if (dados.nome !== undefined) this.nome = dados.nome;
-    if (dados.descricao !== undefined) this.descricao = dados.descricao;
-    if (dados.codigo !== undefined) this.codigo = dados.codigo;
-    if (dados.capacidade !== undefined) this.capacidade = dados.capacidade;
-    if (dados.tipo !== undefined) this.tipo = dados.tipo;
-    touchUpdated(this);
-    this.validate();
+    zodValidate(Ambiente.entityName, ambienteSchema, this);
   }
 }

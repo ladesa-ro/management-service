@@ -1,7 +1,7 @@
 import { InternalServerErrorException } from "@nestjs/common";
+import { ResourceNotFoundError } from "@/application/errors";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
-import { ResourceNotFoundError } from "@/modules/@shared";
 import type { EmpresaCreateCommand } from "@/modules/estagio/empresa/domain/commands/empresa-create.command";
 import { IEmpresaCreateCommandHandler } from "@/modules/estagio/empresa/domain/commands/empresa-create.command.handler.interface";
 import type { EmpresaFindOneQueryResult } from "../../domain/queries";

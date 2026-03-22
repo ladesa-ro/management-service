@@ -1,11 +1,4 @@
 import {
-  createFindOneInputMapper,
-  createListInputMapper,
-  createListOutputMapper,
-  mapDatedFields,
-  mapFieldsIfDefined,
-} from "@/modules/@shared/application/mappers";
-import {
   EstagiarioCreateCommand,
   EstagiarioUpdateCommand,
 } from "@/modules/estagio/estagiario/domain/commands";
@@ -14,6 +7,13 @@ import {
   type EstagiarioFindOneQueryResult,
   EstagiarioListQuery,
 } from "@/modules/estagio/estagiario/domain/queries";
+import {
+  createFindOneInputMapper,
+  createListInputMapper,
+  createListOutputMapper,
+  mapDatedFields,
+  mapFieldsIfDefined,
+} from "@/shared/mapping";
 import {
   EstagiarioCreateInputRestDto,
   EstagiarioFindOneInputRestDto,

@@ -1,9 +1,3 @@
-import {
-  createFindOneInputMapper,
-  createListInputMapper,
-  createListOutputMapper,
-  mapDatedFields,
-} from "@/modules/@shared/application/mappers";
 import type { UsuarioEnsinoQueryResult } from "@/modules/acesso/usuario";
 import {
   UsuarioCreateCommand,
@@ -13,6 +7,12 @@ import {
   UsuarioUpdateCommand,
 } from "@/modules/acesso/usuario";
 import { BlocoRestMapper } from "@/modules/ambientes/bloco/presentation.rest";
+import {
+  createFindOneInputMapper,
+  createListInputMapper,
+  createListOutputMapper,
+  mapDatedFields,
+} from "@/shared/mapping";
 import {
   UsuarioCreateInputRestDto,
   UsuarioEnsinoCursoRefRestDto,

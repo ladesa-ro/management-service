@@ -1,11 +1,10 @@
 import {
   ApplicationError,
   ApplicationErrorCode,
-  DomainError,
-  DomainErrorCode,
   ValidationError,
   type ValidationErrorDetail,
-} from "@/modules/@shared";
+} from "@/application/errors";
+import { DomainError, DomainErrorCode } from "@/domain/errors";
 
 /**
  * Resposta HTTP padronizada para erros.

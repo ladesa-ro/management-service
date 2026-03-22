@@ -1,5 +1,5 @@
+import type { IBaseCrudRepository } from "@/domain/abstractions";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
-import type { IBaseCrudRepository } from "@/modules/@shared";
 import type { ICampus } from "@/modules/ambientes/campus";
 import type { CampusFindOneQueryResult, CampusListQueryResult } from "../queries";
 /**

@@ -1,4 +1,4 @@
-import { createListOutputMapper } from "@/modules/@shared/application/mappers";
+import { createListOutputMapper } from "@/shared/mapping";
 import {
   CalendarioLetivoDiaFindOneQuery,
   CalendarioLetivoDiaListQuery,

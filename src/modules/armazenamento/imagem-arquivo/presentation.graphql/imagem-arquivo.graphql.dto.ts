@@ -2,8 +2,9 @@ import {
   EntityBaseGraphQlDto,
   PaginatedFilterByIdGraphQlDto,
   PaginationMetaGraphQlDto,
-} from "@/modules/@shared/infrastructure/graphql/dtos";
-import { ArgsType, Field, ID, Int, ObjectType } from "@/modules/@shared/presentation/graphql";
+} from "@/infrastructure.graphql/dtos";
+import { imagemArquivoGraphqlListInputSchema } from "@/modules/armazenamento/imagem-arquivo/domain/imagem-arquivo.schemas";
+import { ArgsType, Field, ID, Int, ObjectType } from "@/shared/presentation/graphql";
 
 // ============================================================================
 // Arquivo nested output for GraphQL
@@ -74,7 +75,9 @@ export class ImagemArquivoFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
 // ============================================================================
 
 @ArgsType()
-export class ImagemArquivoListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {}
+export class ImagemArquivoListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {
+  static schema = imagemArquivoGraphqlListInputSchema;
+}
 
 // ============================================================================
 // List Output

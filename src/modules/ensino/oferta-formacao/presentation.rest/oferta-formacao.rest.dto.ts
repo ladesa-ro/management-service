@@ -1,9 +1,5 @@
-import { Mixin } from "ts-mixer";
-import {
-  EntityBaseRestDto,
-  PaginatedFilterByIdRestDto,
-  PaginationMetaRestDto,
-} from "@/modules/@shared/infrastructure/presentation/rest/dtos";
+import { ModalidadeFindOneOutputRestDto } from "@/modules/ensino/modalidade/presentation.rest/modalidade.rest.dto";
+import { DuracaoPeriodo } from "@/modules/ensino/oferta-formacao/infrastructure.database/typeorm/oferta-formacao.typeorm.entity";
 import {
   ApiProperty,
   ApiPropertyOptional,
@@ -14,21 +10,17 @@ import {
   referenceProperty,
   simpleProperty,
   TransformToArray,
-} from "@/modules/@shared/presentation/rest";
+} from "@/shared/presentation/rest";
 import {
-  IsArray,
-  IsEnum,
-  IsOptional,
-  IsUUID,
-  Type,
-  ValidateNested,
-} from "@/modules/@shared/presentation/shared";
+  EntityBaseRestDto,
+  PaginatedFilterByIdRestDto,
+  PaginationMetaRestDto,
+} from "@/shared/presentation/rest/dtos";
 import {
-  ModalidadeFindOneInputRestDto,
-  ModalidadeFindOneOutputRestDto,
-} from "@/modules/ensino/modalidade/presentation.rest/modalidade.rest.dto";
-import { DuracaoPeriodo } from "@/modules/ensino/oferta-formacao/infrastructure.database/typeorm/oferta-formacao.typeorm.entity";
-import { OfertaFormacaoFieldsMixin } from "@/modules/ensino/oferta-formacao/presentation.validations/oferta-formacao.validation-mixin";
+  ofertaFormacaoCreateSchema,
+  ofertaFormacaoFindOneInputSchema,
+  ofertaFormacaoPaginationInputSchema,
+} from "../domain/oferta-formacao.schemas";
 
 // ============================================================================
 // FindOne Output
@@ -45,15 +37,12 @@ import { OfertaFormacaoFieldsMixin } from "@/modules/ensino/oferta-formacao/pres
     ...commonProperties.dated,
   ],
 })
-export class OfertaFormacaoFindOneOutputRestDto extends Mixin(
-  EntityBaseRestDto,
-  OfertaFormacaoFieldsMixin,
-) {
+export class OfertaFormacaoFindOneOutputRestDto extends EntityBaseRestDto {
   @ApiProperty({ type: "string", description: "Nome da oferta de formacao", minLength: 1 })
-  declare nome: string;
+  nome: string;
 
   @ApiProperty({ type: "string", description: "Apelido da oferta de formacao", minLength: 1 })
-  declare slug: string;
+  slug: string;
 
   @ApiPropertyOptional({
     enum: DuracaoPeriodo,
@@ -66,8 +55,6 @@ export class OfertaFormacaoFindOneOutputRestDto extends Mixin(
     type: () => ModalidadeFindOneOutputRestDto,
     description: "Modalidade da oferta de formacao",
   })
-  @ValidateNested()
-  @Type(() => ModalidadeFindOneOutputRestDto)
   modalidade: ModalidadeFindOneOutputRestDto;
 }
 
@@ -77,15 +64,14 @@ export class OfertaFormacaoFindOneOutputRestDto extends Mixin(
 
 @ApiSchema({ name: "OfertaFormacaoListInputDto" })
 export class OfertaFormacaoListInputRestDto extends PaginatedFilterByIdRestDto {
+  static schema = ofertaFormacaoPaginationInputSchema;
+
   @ApiPropertyOptional({
     type: "string",
     isArray: true,
     description: "Filtro por ID da Modalidade",
   })
   @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
   "filter.modalidade.id"?: string[];
 }
 
@@ -106,29 +92,28 @@ export class OfertaFormacaoListOutputRestDto {
 // ============================================================================
 
 @ApiSchema({ name: "OfertaFormacaoCreateInputDto" })
-export class OfertaFormacaoCreateInputRestDto extends OfertaFormacaoFieldsMixin {
+export class OfertaFormacaoCreateInputRestDto {
+  static readonly schema = ofertaFormacaoCreateSchema;
+
   @ApiProperty({ type: "string", description: "Nome da oferta de formacao", minLength: 1 })
-  declare nome: string;
+  nome: string;
 
   @ApiProperty({ type: "string", description: "Apelido da oferta de formacao", minLength: 1 })
-  declare slug: string;
+  slug: string;
 
   @ApiPropertyOptional({
     enum: DuracaoPeriodo,
     description: "Duracao de cada periodo",
     nullable: true,
   })
-  @IsOptional()
-  @IsEnum(DuracaoPeriodo)
   duracaoPeriodo?: DuracaoPeriodo | null;
 
   @ApiProperty({
-    type: () => ModalidadeFindOneInputRestDto,
+    type: "object",
     description: "Modalidade da oferta de formacao",
+    properties: { id: { type: "string", format: "uuid" } },
   })
-  @ValidateNested()
-  @Type(() => ModalidadeFindOneInputRestDto)
-  modalidade: ModalidadeFindOneInputRestDto;
+  modalidade: { id: string };
 }
 
 @ApiSchema({ name: "OfertaFormacaoUpdateInputDto" })
@@ -142,11 +127,12 @@ export class OfertaFormacaoUpdateInputRestDto extends PartialType(
 
 @ApiSchema({ name: "OfertaFormacaoFindOneInputDto" })
 export class OfertaFormacaoFindOneInputRestDto {
+  static readonly schema = ofertaFormacaoFindOneInputSchema;
+
   @ApiProperty({
     type: "string",
     description: "Identificador do registro (uuid)",
     format: "uuid",
   })
-  @IsUUID()
   id: string;
 }

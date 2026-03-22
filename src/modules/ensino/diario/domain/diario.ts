@@ -1,12 +1,13 @@
 import type { IEntityBaseUuid } from "@/domain/abstractions/entities";
 import type { IdUuid, ScalarDateTimeString } from "@/domain/abstractions/scalars";
-import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7.js";
+import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import type { IAmbiente } from "@/modules/ambientes/ambiente";
 import type { IImagem } from "@/modules/armazenamento/imagem/domain/imagem";
 import type { IDisciplina } from "@/modules/ensino/disciplina/domain/disciplina";
 import type { ITurma } from "@/modules/ensino/turma/domain/turma";
 import type { ICalendarioLetivo } from "@/modules/horarios/calendario-letivo";
-import { createValidator, throwIfInvalid, touchUpdated } from "@/utils/validation-utils.js";
+import { zodValidate } from "@/shared/validation/index";
+import { diarioCreateSchema, diarioUpdateSchema } from "./diario.schemas";
 
 export interface IDiario extends IEntityBaseUuid {
   ativo: boolean;
@@ -47,24 +48,21 @@ export class Diario implements IEntityBaseUuid {
   dateUpdated!: ScalarDateTimeString;
   dateDeleted!: ScalarDateTimeString | null;
 
-  constructor(dados: { ativo?: boolean }) {
-    this.id = generateUuidV7();
-    this.ativo = dados.ativo ?? true;
-    this.ambientePadrao = null;
-    this.imagemCapa = null;
-    this.dateCreated = new Date().toISOString();
-    this.dateUpdated = new Date().toISOString();
-    this.dateDeleted = null;
-  }
+  private constructor() {}
 
-  validate(): void {
-    const { result } = createValidator("Diario");
-    throwIfInvalid("Diario", result);
-  }
+  static create(dados: IDiarioCreate): Diario {
+    const parsed = zodValidate(Diario.entityName, diarioCreateSchema, dados);
 
-  static create(dados: IDiarioCreate, validar: boolean = true): Diario {
-    const instance = new Diario(dados);
-    if (validar) instance.validate();
+    const instance = new Diario();
+
+    instance.id = generateUuidV7();
+    instance.ativo = parsed.ativo;
+    instance.ambientePadrao = null;
+    instance.imagemCapa = null;
+    instance.dateCreated = new Date().toISOString();
+    instance.dateUpdated = new Date().toISOString();
+    instance.dateDeleted = null;
+
     return instance;
   }
 
@@ -83,10 +81,12 @@ export class Diario implements IEntityBaseUuid {
     return instance;
   }
 
-  update(dados: IDiarioUpdate): void {
-    if (dados.ativo !== undefined) this.ativo = dados.ativo;
-    touchUpdated(this);
-    this.validate();
+  update(dados: unknown): void {
+    const parsed = zodValidate(Diario.entityName, diarioUpdateSchema, dados);
+
+    if (parsed.ativo !== undefined) this.ativo = parsed.ativo;
+
+    this.dateUpdated = new Date().toISOString();
   }
 
   isAtivo(): boolean {
@@ -95,11 +95,11 @@ export class Diario implements IEntityBaseUuid {
 
   ativar(): void {
     this.ativo = true;
-    touchUpdated(this);
+    this.dateUpdated = new Date().toISOString();
   }
 
   desativar(): void {
     this.ativo = false;
-    touchUpdated(this);
+    this.dateUpdated = new Date().toISOString();
   }
 }

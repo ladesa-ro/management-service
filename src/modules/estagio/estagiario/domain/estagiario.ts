@@ -1,37 +1,27 @@
-import type { IEntityBaseUuid } from "@/domain/abstractions/entities";
 import type { IdUuid, ScalarDateTimeString } from "@/domain/abstractions/scalars";
-import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7.js";
-import { createValidator, throwIfInvalid, touchUpdated } from "@/utils/validation-utils.js";
+import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
+import { zodValidate } from "@/shared/validation/index";
+import {
+  estagiarioCreateSchema,
+  estagiarioSchema,
+  estagiarioUpdateSchema,
+} from "./estagiario.schemas";
 
-export interface IEstagiario extends IEntityBaseUuid {
+export interface IEstagiario {
+  id: string;
   idPerfilFk: string;
   idCursoFk: string;
   idTurmaFk: string;
   telefone: string;
-  emailInstitucional?: string | null;
+  emailInstitucional: string | null;
   dataNascimento: string;
   ativo?: boolean;
+  dateCreated: string;
+  dateUpdated: string;
+  dateDeleted: string | null;
 }
 
-export interface IEstagiarioCreate {
-  idPerfilFk: string;
-  idCursoFk: string;
-  idTurmaFk: string;
-  telefone: string;
-  emailInstitucional?: string;
-  dataNascimento: string;
-}
-
-export interface IEstagiarioUpdate {
-  idPerfilFk?: string;
-  idCursoFk?: string;
-  idTurmaFk?: string;
-  telefone?: string;
-  emailInstitucional?: string;
-  dataNascimento?: string;
-}
-
-export class Estagiario implements IEntityBaseUuid {
+export class Estagiario {
   static readonly entityName = "Estagiario";
 
   id!: IdUuid;
@@ -45,83 +35,63 @@ export class Estagiario implements IEntityBaseUuid {
   dateUpdated!: ScalarDateTimeString;
   dateDeleted!: ScalarDateTimeString | null;
 
-  constructor(dados: {
-    idPerfilFk: string;
-    idCursoFk: string;
-    idTurmaFk: string;
-    telefone: string;
-    emailInstitucional?: string;
-    dataNascimento: string;
-  }) {
-    this.id = generateUuidV7();
-    this.idPerfilFk = dados.idPerfilFk;
-    this.idCursoFk = dados.idCursoFk;
-    this.idTurmaFk = dados.idTurmaFk;
-    this.telefone = dados.telefone;
-    this.emailInstitucional = dados.emailInstitucional ?? null;
-    this.dataNascimento = dados.dataNascimento;
-    this.dateCreated = new Date().toISOString();
-    this.dateUpdated = new Date().toISOString();
-    this.dateDeleted = null;
-  }
+  private constructor() {}
 
   get ativo(): boolean {
     return this.dateDeleted === null;
   }
 
-  validate(): void {
-    const { result, rules } = createValidator("Estagiario");
-    rules.required(this.idPerfilFk, "idPerfilFk", "Perfil do estagiario e obrigatorio");
-    rules.required(this.idCursoFk, "idCursoFk", "Curso do estagiario e obrigatorio");
-    rules.required(this.idTurmaFk, "idTurmaFk", "Turma do estagiario e obrigatoria");
-    rules.required(this.telefone, "telefone", "Telefone do estagiario e obrigatorio");
-    rules.maxLength(this.telefone, "telefone", 15, "Telefone deve ter no maximo 15 caracteres");
-    rules.required(
-      this.dataNascimento,
-      "dataNascimento",
-      "Data de nascimento do estagiario e obrigatoria",
-    );
-    rules.custom(
-      this.dataNascimento,
-      "dataNascimento",
-      (v) => !isNaN(new Date(v).getTime()),
-      "Data de nascimento invalida",
-      "date",
-    );
-    throwIfInvalid("Estagiario", result);
-  }
+  static create(dados: unknown): Estagiario {
+    const parsed = zodValidate(Estagiario.entityName, estagiarioCreateSchema, dados);
 
-  static create(dados: IEstagiarioCreate, validar: boolean = true): Estagiario {
-    const instance = new Estagiario(dados);
-    if (validar) instance.validate();
+    const instance = new Estagiario();
+
+    instance.id = generateUuidV7();
+    instance.idPerfilFk = parsed.idPerfilFk;
+    instance.idCursoFk = parsed.idCursoFk;
+    instance.idTurmaFk = parsed.idTurmaFk;
+    instance.telefone = parsed.telefone;
+    instance.emailInstitucional = parsed.emailInstitucional ?? null;
+    instance.dataNascimento = parsed.dataNascimento;
+    instance.dateCreated = new Date().toISOString();
+    instance.dateUpdated = new Date().toISOString();
+    instance.dateDeleted = null;
+
     return instance;
   }
 
-  static load(dados: Record<string, any>): Estagiario {
-    const instance = Object.create(Estagiario.prototype) as Estagiario;
-    if (dados.id !== undefined) instance.id = dados.id;
-    if (dados.idPerfilFk !== undefined) instance.idPerfilFk = dados.idPerfilFk;
-    if (dados.idCursoFk !== undefined) instance.idCursoFk = dados.idCursoFk;
-    if (dados.idTurmaFk !== undefined) instance.idTurmaFk = dados.idTurmaFk;
-    if (dados.telefone !== undefined) instance.telefone = dados.telefone;
-    if (dados.emailInstitucional !== undefined)
-      instance.emailInstitucional = dados.emailInstitucional;
-    if (dados.dataNascimento !== undefined) instance.dataNascimento = dados.dataNascimento;
-    if (dados.dateCreated !== undefined) instance.dateCreated = dados.dateCreated;
-    if (dados.dateUpdated !== undefined) instance.dateUpdated = dados.dateUpdated;
-    if (dados.dateDeleted !== undefined) instance.dateDeleted = dados.dateDeleted;
+  static load(dados: unknown): Estagiario {
+    const parsed = zodValidate(Estagiario.entityName, estagiarioSchema, dados);
+
+    const instance = new Estagiario();
+
+    instance.id = parsed.id;
+    instance.idPerfilFk = parsed.idPerfilFk;
+    instance.idCursoFk = parsed.idCursoFk;
+    instance.idTurmaFk = parsed.idTurmaFk;
+    instance.telefone = parsed.telefone;
+    instance.emailInstitucional = parsed.emailInstitucional;
+    instance.dataNascimento = parsed.dataNascimento;
+    instance.dateCreated = parsed.dateCreated;
+    instance.dateUpdated = parsed.dateUpdated;
+    instance.dateDeleted = parsed.dateDeleted;
+
     return instance;
   }
 
-  update(dados: IEstagiarioUpdate): void {
-    if (dados.idPerfilFk !== undefined) this.idPerfilFk = dados.idPerfilFk;
-    if (dados.idCursoFk !== undefined) this.idCursoFk = dados.idCursoFk;
-    if (dados.idTurmaFk !== undefined) this.idTurmaFk = dados.idTurmaFk;
-    if (dados.telefone !== undefined) this.telefone = dados.telefone;
-    if (dados.emailInstitucional !== undefined)
-      this.emailInstitucional = dados.emailInstitucional ?? null;
-    if (dados.dataNascimento !== undefined) this.dataNascimento = dados.dataNascimento;
-    touchUpdated(this);
-    this.validate();
+  update(dados: unknown): void {
+    const parsed = zodValidate(Estagiario.entityName, estagiarioUpdateSchema, dados);
+
+    if (parsed.idPerfilFk !== undefined) this.idPerfilFk = parsed.idPerfilFk;
+    if (parsed.idCursoFk !== undefined) this.idCursoFk = parsed.idCursoFk;
+    if (parsed.idTurmaFk !== undefined) this.idTurmaFk = parsed.idTurmaFk;
+    if (parsed.telefone !== undefined) this.telefone = parsed.telefone;
+    if (parsed.emailInstitucional !== undefined)
+      this.emailInstitucional = parsed.emailInstitucional ?? null;
+    if (parsed.dataNascimento !== undefined) this.dataNascimento = parsed.dataNascimento;
+
+    this.dateUpdated = new Date().toISOString();
+
+    zodValidate(Estagiario.entityName, estagiarioSchema, this);
   }
 }

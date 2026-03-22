@@ -1,7 +1,8 @@
 import { has } from "lodash";
+import { ensureExists } from "@/application/errors";
+import type { PersistInput } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
-import { ensureExists, type PersistInput } from "@/modules/@shared";
 import { Campus } from "@/modules/ambientes/campus/domain/campus";
 import { ICampusFindOneQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-find-one.query.handler.interface";
 import type { CursoUpdateCommand } from "@/modules/ensino/curso/domain/commands/curso-update.command";

@@ -6,9 +6,9 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
+import { ensureExists } from "@/application/errors";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
-import { ensureExists } from "@/modules/@shared";
 import { Cidade } from "@/modules/localidades/cidade/domain/cidade";
 import { ICidadeFindOneQueryHandler } from "@/modules/localidades/cidade/domain/queries/cidade-find-one.query.handler.interface";
 import { ICidadeListQueryHandler } from "@/modules/localidades/cidade/domain/queries/cidade-list.query.handler.interface";

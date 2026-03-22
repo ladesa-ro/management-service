@@ -2,26 +2,14 @@ import {
   EntityBaseGraphQlDto,
   PaginatedFilterByIdGraphQlDto,
   PaginationMetaGraphQlDto,
-} from "@/modules/@shared/infrastructure/graphql/dtos";
-import {
-  ArgsType,
-  Field,
-  InputType,
-  Int,
-  ObjectType,
-} from "@/modules/@shared/presentation/graphql";
-import {
-  IsArray,
-  IsInt,
-  IsOptional,
-  IsString,
-  IsUUID,
-  Min,
-  MinLength,
-  ValidateNested,
-} from "@/modules/@shared/presentation/shared";
+} from "@/infrastructure.graphql/dtos";
 import { ImagemFindOneOutputGraphQlDto } from "@/modules/armazenamento/imagem-arquivo/presentation.graphql/imagem-arquivo.graphql.dto";
-import { DisciplinaFieldsMixin } from "../presentation.validations/disciplina.validation-mixin";
+import { ArgsType, Field, InputType, Int, ObjectType } from "@/shared/presentation/graphql";
+import {
+  disciplinaCreateSchema,
+  disciplinaGraphqlListInputSchema,
+  disciplinaUpdateSchema,
+} from "../domain/disciplina.schemas";
 
 // ============================================================================
 // FindOne Output
@@ -42,17 +30,17 @@ export class DisciplinaFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
 
 @InputType("DisciplinaImagemCapaRefInputDto")
 export class DisciplinaImagemCapaRefInputGraphQlDto {
-  @Field(() => String) @IsString() id: string;
+  @Field(() => String) id: string;
 }
 
 @InputType("DisciplinaCreateInputDto")
-export class DisciplinaCreateInputGraphQlDto extends DisciplinaFieldsMixin {
-  @Field(() => String) declare nome: string;
-  @Field(() => String) declare nomeAbreviado: string;
-  @Field(() => Int) declare cargaHoraria: number;
+export class DisciplinaCreateInputGraphQlDto {
+  static readonly schema = disciplinaCreateSchema;
+
+  @Field(() => String) nome: string;
+  @Field(() => String) nomeAbreviado: string;
+  @Field(() => Int) cargaHoraria: number;
   @Field(() => DisciplinaImagemCapaRefInputGraphQlDto, { nullable: true })
-  @IsOptional()
-  @ValidateNested()
   imagemCapa?: DisciplinaImagemCapaRefInputGraphQlDto | null;
 }
 
@@ -62,24 +50,15 @@ export class DisciplinaCreateInputGraphQlDto extends DisciplinaFieldsMixin {
 
 @InputType("DisciplinaUpdateInputDto")
 export class DisciplinaUpdateInputGraphQlDto {
+  static readonly schema = disciplinaUpdateSchema;
+
   @Field(() => String, { nullable: true })
-  @IsOptional()
-  @IsString()
-  @MinLength(1)
   nome?: string;
   @Field(() => String, { nullable: true })
-  @IsOptional()
-  @IsString()
-  @MinLength(1)
   nomeAbreviado?: string;
   @Field(() => Int, { nullable: true })
-  @IsOptional()
-  @IsInt()
-  @Min(1)
   cargaHoraria?: number;
   @Field(() => DisciplinaImagemCapaRefInputGraphQlDto, { nullable: true })
-  @IsOptional()
-  @ValidateNested()
   imagemCapa?: DisciplinaImagemCapaRefInputGraphQlDto | null;
 }
 
@@ -89,10 +68,9 @@ export class DisciplinaUpdateInputGraphQlDto {
 
 @ArgsType()
 export class DisciplinaListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {
+  static schema = disciplinaGraphqlListInputSchema;
+
   @Field(() => [String], { nullable: true, description: "Filtro por ID dos Diários" })
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
   filterDiariosId?: string[];
 }
 

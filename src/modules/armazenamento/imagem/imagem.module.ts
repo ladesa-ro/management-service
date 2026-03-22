@@ -1,5 +1,6 @@
 import { Global, Module } from "@nestjs/common";
 import { ArquivoModule } from "@/modules/armazenamento/arquivo/arquivo.module";
+import "@/modules/armazenamento/imagem/presentation.rest/imagem.rest.dto";
 import {
   ImagemSaveImageCommandHandlerImpl,
   ImagemSaveImagemCapaCommandHandlerImpl,

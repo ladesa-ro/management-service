@@ -1,5 +1,5 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7.js";
+import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import { CalendarioAgendamentoCalendarioLetivoEntity } from "@/modules/horarios/calendario-agendamento-calendario-letivo/infrastructure.database/typeorm/calendario-agendamento-calendario-letivo.typeorm.entity";
 import { CalendarioAgendamentoModalidadeEntity } from "@/modules/horarios/calendario-agendamento-modalidade/infrastructure.database/typeorm/calendario-agendamento-modalidade.typeorm.entity";

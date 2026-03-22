@@ -1,8 +1,10 @@
+import { ArquivoFindOneOutputRestDto } from "@/modules/armazenamento/arquivo/presentation.rest/arquivo.rest.dto";
 import {
-  EntityBaseRestDto,
-  PaginatedFilterByIdRestDto,
-  PaginationMetaRestDto,
-} from "@/modules/@shared/infrastructure/presentation/rest/dtos";
+  imagemArquivoCreateSchema,
+  imagemArquivoFindOneInputSchema,
+  imagemArquivoPaginationInputSchema,
+  imagemArquivoUpdateSchema,
+} from "@/modules/armazenamento/imagem-arquivo/domain/imagem-arquivo.schemas";
 import {
   ApiProperty,
   ApiSchema,
@@ -10,17 +12,12 @@ import {
   PartialType,
   RegisterModel,
   simpleProperty,
-} from "@/modules/@shared/presentation/rest";
+} from "@/shared/presentation/rest";
 import {
-  IsInt,
-  IsString,
-  IsUUID,
-  Min,
-  MinLength,
-  Type,
-  ValidateNested,
-} from "@/modules/@shared/presentation/shared";
-import { ArquivoFindOneOutputRestDto } from "@/modules/armazenamento/arquivo/presentation.rest/arquivo.rest.dto";
+  EntityBaseRestDto,
+  PaginatedFilterByIdRestDto,
+  PaginationMetaRestDto,
+} from "@/shared/presentation/rest/dtos";
 
 // ============================================================================
 // Nested DTOs
@@ -33,7 +30,6 @@ export class ImagemFindOneFromImagemArquivoOutputRestDto {
     description: "Identificador do registro (uuid)",
     format: "uuid",
   })
-  @IsUUID()
   id: string;
 }
 
@@ -57,33 +53,21 @@ export class ImagemFindOneFromImagemArquivoOutputRestDto {
 })
 export class ImagemArquivoFindOneOutputRestDto extends EntityBaseRestDto {
   @ApiProperty({ type: "integer", description: "Largura da imagem" })
-  @IsInt()
-  @Min(0)
   largura: number;
 
   @ApiProperty({ type: "integer", description: "Altura da imagem" })
-  @IsInt()
-  @Min(0)
   altura: number;
 
   @ApiProperty({ type: "string", description: "Formato da imagem", minLength: 1 })
-  @IsString()
-  @MinLength(1)
   formato: string;
 
   @ApiProperty({ type: "string", description: "Mime-type da imagem", minLength: 1 })
-  @IsString()
-  @MinLength(1)
   mimeType: string;
 
   @ApiProperty({ description: "Imagem", type: () => ImagemFindOneFromImagemArquivoOutputRestDto })
-  @ValidateNested()
-  @Type(() => ImagemFindOneFromImagemArquivoOutputRestDto)
   imagem: ImagemFindOneFromImagemArquivoOutputRestDto;
 
   @ApiProperty({ description: "Arquivo", type: () => ArquivoFindOneOutputRestDto })
-  @ValidateNested()
-  @Type(() => ArquivoFindOneOutputRestDto)
   arquivo: ArquivoFindOneOutputRestDto;
 }
 
@@ -94,28 +78,18 @@ export class ImagemArquivoFindOneOutputRestDto extends EntityBaseRestDto {
 @ApiSchema({ name: "ImagemArquivoFindOneFromImagemOutputDto" })
 export class ImagemArquivoFindOneFromImagemOutputRestDto extends EntityBaseRestDto {
   @ApiProperty({ type: "integer", description: "Largura da imagem" })
-  @IsInt()
-  @Min(0)
   largura: number;
 
   @ApiProperty({ type: "integer", description: "Altura da imagem" })
-  @IsInt()
-  @Min(0)
   altura: number;
 
   @ApiProperty({ type: "string", description: "Formato da imagem", minLength: 1 })
-  @IsString()
-  @MinLength(1)
   formato: string;
 
   @ApiProperty({ type: "string", description: "Mime-type da imagem", minLength: 1 })
-  @IsString()
-  @MinLength(1)
   mimeType: string;
 
   @ApiProperty({ description: "Arquivo", type: () => ArquivoFindOneOutputRestDto })
-  @ValidateNested()
-  @Type(() => ArquivoFindOneOutputRestDto)
   arquivo: ArquivoFindOneOutputRestDto;
 }
 
@@ -124,7 +98,9 @@ export class ImagemArquivoFindOneFromImagemOutputRestDto extends EntityBaseRestD
 // ============================================================================
 
 @ApiSchema({ name: "ImagemArquivoListInputDto" })
-export class ImagemArquivoListInputRestDto extends PaginatedFilterByIdRestDto {}
+export class ImagemArquivoListInputRestDto extends PaginatedFilterByIdRestDto {
+  static schema = imagemArquivoPaginationInputSchema;
+}
 
 @ApiSchema({ name: "ImagemArquivoListOutputDto" })
 export class ImagemArquivoListOutputRestDto {
@@ -144,37 +120,31 @@ export class ImagemArquivoListOutputRestDto {
 
 @ApiSchema({ name: "ImagemArquivoCreateInputDto" })
 export class ImagemArquivoCreateInputRestDto {
+  static schema = imagemArquivoCreateSchema;
+
   @ApiProperty({ type: "integer", description: "Largura da imagem" })
-  @IsInt()
-  @Min(0)
   largura: number;
 
   @ApiProperty({ type: "integer", description: "Altura da imagem" })
-  @IsInt()
-  @Min(0)
   altura: number;
 
   @ApiProperty({ type: "string", description: "Formato da imagem", minLength: 1 })
-  @IsString()
-  @MinLength(1)
   formato: string;
 
   @ApiProperty({ type: "string", description: "Mime-type da imagem", minLength: 1 })
-  @IsString()
-  @MinLength(1)
   mimeType: string;
 
   @ApiProperty({ type: "string", description: "ID da imagem", format: "uuid" })
-  @IsUUID()
   imagemId: string;
 
   @ApiProperty({ type: "string", description: "ID do arquivo", format: "uuid" })
-  @IsUUID()
   arquivoId: string;
 }
 
 @ApiSchema({ name: "ImagemArquivoUpdateInputDto" })
-export class ImagemArquivoUpdateInputRestDto extends PartialType(ImagemArquivoCreateInputRestDto) {}
+export class ImagemArquivoUpdateInputRestDto extends PartialType(ImagemArquivoCreateInputRestDto) {
+  static schema = imagemArquivoUpdateSchema;
+}
 
 // ============================================================================
 // FindOne Input (for path params)
@@ -182,11 +152,12 @@ export class ImagemArquivoUpdateInputRestDto extends PartialType(ImagemArquivoCr
 
 @ApiSchema({ name: "ImagemArquivoFindOneInputDto" })
 export class ImagemArquivoFindOneInputRestDto {
+  static schema = imagemArquivoFindOneInputSchema;
+
   @ApiProperty({
     type: "string",
     description: "Identificador do registro (uuid)",
     format: "uuid",
   })
-  @IsUUID()
   id: string;
 }

@@ -1,4 +1,3 @@
-import { createListOutputMapper, mapDatedFields } from "@/modules/@shared/application/mappers";
 import {
   ModalidadeCreateCommand,
   ModalidadeFindOneQuery,
@@ -6,6 +5,7 @@ import {
   ModalidadeListQuery,
   ModalidadeUpdateCommand,
 } from "@/modules/ensino/modalidade";
+import { createListOutputMapper, mapDatedFields } from "@/shared/mapping";
 import {
   ModalidadeCreateInputGraphQlDto,
   ModalidadeFindOneOutputGraphQlDto,

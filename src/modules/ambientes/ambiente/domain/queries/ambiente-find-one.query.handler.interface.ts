@@ -1,4 +1,4 @@
-import type { IQueryHandler } from "@/modules/@shared/domain/abstractions";
+import type { IQueryHandler } from "@/domain/abstractions";
 import type { AmbienteFindOneQuery } from "./ambiente-find-one.query";
 import type { AmbienteFindOneQueryResult } from "./ambiente-find-one.query.result";
 

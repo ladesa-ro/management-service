@@ -1,4 +1,4 @@
-import type { IBaseCrudRepository } from "@/modules/@shared";
+import type { IBaseCrudRepository } from "@/domain/abstractions";
 import type { IDisciplina } from "@/modules/ensino/disciplina";
 import type { DisciplinaFindOneQueryResult, DisciplinaListQueryResult } from "../queries";
 /**

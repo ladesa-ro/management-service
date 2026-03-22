@@ -1,9 +1,3 @@
-import { Mixin } from "ts-mixer";
-import {
-  EntityBaseRestDto,
-  PaginatedFilterByIdRestDto,
-  PaginationMetaRestDto,
-} from "@/modules/@shared/infrastructure/presentation/rest/dtos";
 import {
   ApiProperty,
   ApiPropertyOptional,
@@ -13,19 +7,12 @@ import {
   referenceProperty,
   simpleProperty,
   TransformToArray,
-} from "@/modules/@shared/presentation/rest";
+} from "@/shared/presentation/rest";
 import {
-  IsArray,
-  IsDateString,
-  IsInt,
-  IsOptional,
-  IsUUID,
-  Max,
-  Min,
-  Type,
-  ValidateNested,
-} from "@/modules/@shared/presentation/shared";
-import { DiarioPreferenciaAgrupamentoFieldsMixin } from "@/modules/ensino/diario/presentation.validations/diario-preferencia-agrupamento.validation-mixin";
+  EntityBaseRestDto,
+  PaginatedFilterByIdRestDto,
+  PaginationMetaRestDto,
+} from "@/shared/presentation/rest/dtos";
 import { DiarioFindOneOutputRestDto } from "./diario.rest.dto";
 
 // ============================================================================
@@ -39,7 +26,6 @@ export class DiarioPreferenciaAgrupamentoParentParamsRestDto {
     description: "ID do diario (uuid)",
     format: "uuid",
   })
-  @IsUUID()
   diarioId: string;
 }
 
@@ -60,22 +46,19 @@ export class DiarioPreferenciaAgrupamentoParentParamsRestDto {
     ...commonProperties.dated,
   ],
 })
-export class DiarioPreferenciaAgrupamentoFindOneOutputRestDto extends Mixin(
-  EntityBaseRestDto,
-  DiarioPreferenciaAgrupamentoFieldsMixin,
-) {
+export class DiarioPreferenciaAgrupamentoFindOneOutputRestDto extends EntityBaseRestDto {
   @ApiProperty({
     type: "string",
     description: "Inicio da vigencia da preferencia de agrupamento",
   })
-  declare dataInicio: string;
+  dataInicio: string;
 
   @ApiPropertyOptional({
     type: "string",
     description: "Fim da vigencia da preferencia de agrupamento",
     nullable: true,
   })
-  declare dataFim: string | null;
+  dataFim: string | null;
 
   @ApiProperty({
     type: "integer",
@@ -83,14 +66,12 @@ export class DiarioPreferenciaAgrupamentoFindOneOutputRestDto extends Mixin(
     minimum: 1,
     maximum: 7,
   })
-  declare diaSemanaIso: number;
+  diaSemanaIso: number;
 
   @ApiProperty({ type: "integer", description: "Quantidade de aulas seguidas", minimum: 1 })
-  declare aulasSeguidas: number;
+  aulasSeguidas: number;
 
   @ApiProperty({ type: () => DiarioFindOneOutputRestDto, description: "Diario vinculado" })
-  @ValidateNested()
-  @Type(() => DiarioFindOneOutputRestDto)
   diario: DiarioFindOneOutputRestDto;
 }
 
@@ -106,9 +87,6 @@ export class DiarioPreferenciaAgrupamentoListInputRestDto extends PaginatedFilte
     description: "Filtro por ID do Diario",
   })
   @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
   "filter.diario.id"?: string[];
 }
 
@@ -134,7 +112,6 @@ export class DiarioPreferenciaAgrupamentoBulkReplaceItemRestDto {
     type: "string",
     description: "Inicio da vigencia da preferencia de agrupamento",
   })
-  @IsDateString()
   dataInicio: string;
 
   @ApiPropertyOptional({
@@ -142,8 +119,6 @@ export class DiarioPreferenciaAgrupamentoBulkReplaceItemRestDto {
     description: "Fim da vigencia da preferencia de agrupamento",
     nullable: true,
   })
-  @IsOptional()
-  @IsDateString()
   dataFim?: string | null;
 
   @ApiProperty({
@@ -152,14 +127,9 @@ export class DiarioPreferenciaAgrupamentoBulkReplaceItemRestDto {
     minimum: 1,
     maximum: 7,
   })
-  @IsInt()
-  @Min(1)
-  @Max(7)
   diaSemanaIso: number;
 
   @ApiProperty({ type: "integer", description: "Quantidade de aulas seguidas", minimum: 1 })
-  @IsInt()
-  @Min(1)
   aulasSeguidas: number;
 }
 
@@ -169,8 +139,5 @@ export class DiarioPreferenciaAgrupamentoBulkReplaceInputRestDto {
     type: () => [DiarioPreferenciaAgrupamentoBulkReplaceItemRestDto],
     description: "Lista de preferencias de agrupamento para vincular ao diario",
   })
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => DiarioPreferenciaAgrupamentoBulkReplaceItemRestDto)
   preferenciasAgrupamento: DiarioPreferenciaAgrupamentoBulkReplaceItemRestDto[];
 }

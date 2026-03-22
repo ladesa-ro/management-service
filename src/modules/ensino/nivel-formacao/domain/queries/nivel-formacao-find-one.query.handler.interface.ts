@@ -1,4 +1,4 @@
-import type { IQueryHandler } from "@/modules/@shared/domain/abstractions";
+import type { IQueryHandler } from "@/domain/abstractions";
 import type { NivelFormacaoFindOneQuery } from "./nivel-formacao-find-one.query";
 import type { NivelFormacaoFindOneQueryResult } from "./nivel-formacao-find-one.query.result";
 

@@ -1,17 +1,17 @@
 import {
-  createListInputMapper,
-  createListOutputMapper,
-} from "@/modules/@shared/application/mappers";
-import {
   EstadoFindOneQuery,
   EstadoFindOneQueryResult,
   EstadoListQuery,
 } from "@/modules/localidades/estado";
+import { createListInputMapper, createListOutputMapper } from "@/shared/mapping";
+import { createMapping } from "@/shared/mapping/index";
 import {
   EstadoFindOneInputRestDto,
   EstadoFindOneOutputRestDto,
   EstadoListOutputRestDto,
 } from "./estado.rest.dto";
+
+const outputMapping = createMapping(["id", "nome", "sigla"]);
 
 export class EstadoRestMapper {
   // ============================================================================
@@ -31,11 +31,7 @@ export class EstadoRestMapper {
   // ============================================================================
 
   static toFindOneOutputDto(output: EstadoFindOneQueryResult): EstadoFindOneOutputRestDto {
-    const dto = new EstadoFindOneOutputRestDto();
-    dto.id = output.id;
-    dto.nome = output.nome;
-    dto.sigla = output.sigla;
-    return dto;
+    return outputMapping.map<EstadoFindOneOutputRestDto>(output);
   }
 
   static toListOutputDto = createListOutputMapper(

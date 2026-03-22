@@ -1,6 +1,6 @@
+import { ensureExists } from "@/application/errors";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
-import { ensureExists } from "@/modules/@shared";
 import { Modalidade } from "@/modules/ensino/modalidade/domain/modalidade";
 import { IModalidadeFindOneQueryHandler } from "@/modules/ensino/modalidade/domain/queries/modalidade-find-one.query.handler.interface";
 import type { OfertaFormacaoCreateCommand } from "@/modules/ensino/oferta-formacao/domain/commands/oferta-formacao-create.command";

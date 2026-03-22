@@ -1,9 +1,4 @@
 import {
-  createFindOneInputMapper,
-  createListOutputMapper,
-  mapDatedFields,
-} from "@/modules/@shared/application/mappers";
-import {
   AmbienteCreateCommand,
   AmbienteFindOneQuery,
   AmbienteFindOneQueryResult,
@@ -11,6 +6,7 @@ import {
   AmbienteUpdateCommand,
 } from "@/modules/ambientes/ambiente";
 import { BlocoGraphqlMapper } from "@/modules/ambientes/bloco/presentation.graphql/bloco.graphql.mapper";
+import { createFindOneInputMapper, createListOutputMapper, mapDatedFields } from "@/shared/mapping";
 import {
   AmbienteCreateInputGraphQlDto,
   AmbienteFindOneOutputGraphQlDto,

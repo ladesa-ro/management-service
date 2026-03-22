@@ -1,4 +1,4 @@
-import type { IQueryHandler } from "@/modules/@shared/domain/abstractions";
+import type { IQueryHandler } from "@/domain/abstractions";
 import type { DiarioFindOneQuery } from "./diario-find-one.query";
 import type { DiarioFindOneQueryResult } from "./diario-find-one.query.result";
 

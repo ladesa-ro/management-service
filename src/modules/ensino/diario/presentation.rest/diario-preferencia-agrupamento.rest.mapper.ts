@@ -1,4 +1,4 @@
-import { createListOutputMapper, mapDatedFields } from "@/modules/@shared/application/mappers";
+import { createListOutputMapper, mapDatedFields } from "@/shared/mapping";
 import {
   DiarioPreferenciaAgrupamentoBulkReplaceCommand,
   DiarioPreferenciaAgrupamentoListQuery,

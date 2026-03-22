@@ -1,5 +1,4 @@
-import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@/modules/@shared/presentation/rest";
-import { IsOptional, IsString } from "@/modules/@shared/presentation/shared";
+import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@/shared/presentation/rest";
 
 // ============================================================================
 // Query Params
@@ -13,7 +12,6 @@ export class HorarioSemanalQueryParamsRestDto {
       "Data da semana desejada (YYYY-MM-DD). Qualquer dia da semana; a API calcula seg-dom.",
     format: "date",
   })
-  @IsString()
   semana: string;
 }
 
@@ -23,15 +21,12 @@ export class HorarioMescladoQueryParamsRestDto extends HorarioSemanalQueryParams
     type: "string",
     description: "IDs das turmas, separados por virgula",
   })
-  @IsString()
   ids: string;
 
   @ApiPropertyOptional({
     type: "string",
     description: "IDs dos professores (perfil), separados por virgula",
   })
-  @IsOptional()
-  @IsString()
   professorIds?: string;
 }
 

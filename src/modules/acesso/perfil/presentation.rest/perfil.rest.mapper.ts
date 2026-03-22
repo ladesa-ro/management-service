@@ -1,10 +1,4 @@
 import {
-  createFindOneInputMapper,
-  createListInputMapper,
-  createListOutputMapper,
-  mapDatedFields,
-} from "@/modules/@shared/application/mappers";
-import {
   PerfilFindOneQuery,
   PerfilFindOneQueryResult,
   PerfilListQuery,
@@ -12,6 +6,12 @@ import {
 } from "@/modules/acesso/perfil";
 import { UsuarioRestMapper } from "@/modules/acesso/usuario/presentation.rest";
 import { CampusRestMapper } from "@/modules/ambientes/campus/presentation.rest";
+import {
+  createFindOneInputMapper,
+  createListInputMapper,
+  createListOutputMapper,
+  mapDatedFields,
+} from "@/shared/mapping";
 import {
   PerfilFindOneOutputRestDto,
   PerfilListOutputRestDto,

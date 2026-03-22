@@ -1,4 +1,3 @@
-import { createListOutputMapper, mapDatedFields } from "@/modules/@shared/application/mappers";
 import {
   EmpresaCreateCommand,
   EmpresaFindOneQuery,
@@ -6,6 +5,7 @@ import {
   EmpresaListQuery,
   EmpresaUpdateCommand,
 } from "@/modules/estagio/empresa";
+import { createListOutputMapper, mapDatedFields } from "@/shared/mapping";
 import {
   EmpresaCreateInputGraphQlDto,
   EmpresaFindOneOutputGraphQlDto,

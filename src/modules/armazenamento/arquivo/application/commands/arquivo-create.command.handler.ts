@@ -1,6 +1,6 @@
 import { IStorageService } from "@/domain/abstractions/storage";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7.js";
+import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import type {
   IArquivoCreateCommand,

@@ -1,4 +1,4 @@
-import type { IQueryHandler } from "@/modules/@shared/domain/abstractions";
+import type { IQueryHandler } from "@/domain/abstractions";
 import type { OfertaFormacaoListQuery } from "./oferta-formacao-list.query";
 import type { OfertaFormacaoListQueryResult } from "./oferta-formacao-list.query.result";
 

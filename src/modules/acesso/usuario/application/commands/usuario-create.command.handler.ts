@@ -1,8 +1,8 @@
 import { InternalServerErrorException } from "@nestjs/common";
+import { ensureExists, ValidationFailedException } from "@/application/errors";
 import { IIdpUserService } from "@/domain/abstractions/identity-provider";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
-import { ensureExists, ValidationFailedException } from "@/modules/@shared";
 import type { UsuarioCreateCommand } from "@/modules/acesso/usuario/domain/commands/usuario-create.command";
 import { IUsuarioCreateCommandHandler } from "@/modules/acesso/usuario/domain/commands/usuario-create.command.handler.interface";
 import { Usuario } from "@/modules/acesso/usuario/domain/usuario";

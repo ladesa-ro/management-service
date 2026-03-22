@@ -1,4 +1,4 @@
-import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7.js";
+import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import type { IHorarioEstagio } from "@/modules/estagio/estagio/domain/estagio";
 import { Estagio } from "@/modules/estagio/estagio/domain/estagio";
 import type { EstagioFindOneQueryResult } from "@/modules/estagio/estagio/domain/queries";

@@ -2,10 +2,13 @@ import {
   EntityBaseGraphQlDto,
   PaginatedFilterByIdGraphQlDto,
   PaginationMetaGraphQlDto,
-} from "@/modules/@shared/infrastructure/graphql/dtos";
-import { ArgsType, Field, InputType, ObjectType } from "@/modules/@shared/presentation/graphql";
-import { IsOptional, IsString, MinLength } from "@/modules/@shared/presentation/shared";
-import { NivelFormacaoFieldsMixin } from "@/modules/ensino/nivel-formacao/presentation.validations/nivel-formacao.validation-mixin";
+} from "@/infrastructure.graphql/dtos";
+import { ArgsType, Field, InputType, ObjectType } from "@/shared/presentation/graphql";
+import {
+  nivelFormacaoCreateSchema,
+  nivelFormacaoGraphqlListInputSchema,
+  nivelFormacaoUpdateSchema,
+} from "../domain/nivel-formacao.schemas";
 
 // ============================================================================
 // FindOne Output
@@ -21,8 +24,10 @@ export class NivelFormacaoFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
 // ============================================================================
 
 @InputType("NivelFormacaoCreateInputDto")
-export class NivelFormacaoCreateInputGraphQlDto extends NivelFormacaoFieldsMixin {
-  @Field(() => String) declare slug: string;
+export class NivelFormacaoCreateInputGraphQlDto {
+  static readonly schema = nivelFormacaoCreateSchema;
+
+  @Field(() => String) slug: string;
 }
 
 // ============================================================================
@@ -31,10 +36,9 @@ export class NivelFormacaoCreateInputGraphQlDto extends NivelFormacaoFieldsMixin
 
 @InputType("NivelFormacaoUpdateInputDto")
 export class NivelFormacaoUpdateInputGraphQlDto {
+  static readonly schema = nivelFormacaoUpdateSchema;
+
   @Field(() => String, { nullable: true })
-  @IsOptional()
-  @IsString()
-  @MinLength(1)
   slug?: string;
 }
 
@@ -43,7 +47,9 @@ export class NivelFormacaoUpdateInputGraphQlDto {
 // ============================================================================
 
 @ArgsType()
-export class NivelFormacaoListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {}
+export class NivelFormacaoListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {
+  static schema = nivelFormacaoGraphqlListInputSchema;
+}
 
 // ============================================================================
 // List Output

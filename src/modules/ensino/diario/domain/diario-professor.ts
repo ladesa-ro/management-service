@@ -1,9 +1,13 @@
 import type { IEntityBaseUuid } from "@/domain/abstractions/entities";
 import type { IdUuid, ScalarDateTimeString } from "@/domain/abstractions/scalars";
-import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7.js";
+import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import type { IPerfil } from "@/modules/acesso/perfil";
 import type { IDiario } from "@/modules/ensino/diario/domain/diario";
-import { createValidator, throwIfInvalid, touchUpdated } from "@/utils/validation-utils.js";
+import { zodValidate } from "@/shared/validation/index";
+import {
+  diarioProfessorCreateSchema,
+  diarioProfessorUpdateSchema,
+} from "./diario-professor.schemas";
 
 export interface IDiarioProfessor extends IEntityBaseUuid {
   situacao: boolean;
@@ -34,22 +38,19 @@ export class DiarioProfessor implements IEntityBaseUuid {
   dateUpdated!: ScalarDateTimeString;
   dateDeleted!: ScalarDateTimeString | null;
 
-  constructor(dados: { situacao: boolean }) {
-    this.id = generateUuidV7();
-    this.situacao = dados.situacao;
-    this.dateCreated = new Date().toISOString();
-    this.dateUpdated = new Date().toISOString();
-    this.dateDeleted = null;
-  }
+  private constructor() {}
 
-  validate(): void {
-    const { result } = createValidator("DiarioProfessor");
-    throwIfInvalid("DiarioProfessor", result);
-  }
+  static create(dados: IDiarioProfessorCreate): DiarioProfessor {
+    const parsed = zodValidate(DiarioProfessor.entityName, diarioProfessorCreateSchema, dados);
 
-  static create(dados: IDiarioProfessorCreate, validar: boolean = true): DiarioProfessor {
-    const instance = new DiarioProfessor(dados);
-    if (validar) instance.validate();
+    const instance = new DiarioProfessor();
+
+    instance.id = generateUuidV7();
+    instance.situacao = parsed.situacao;
+    instance.dateCreated = new Date().toISOString();
+    instance.dateUpdated = new Date().toISOString();
+    instance.dateDeleted = null;
+
     return instance;
   }
 
@@ -65,9 +66,11 @@ export class DiarioProfessor implements IEntityBaseUuid {
     return instance;
   }
 
-  update(dados: IDiarioProfessorUpdate): void {
-    if (dados.situacao !== undefined) this.situacao = dados.situacao;
-    touchUpdated(this);
-    this.validate();
+  update(dados: unknown): void {
+    const parsed = zodValidate(DiarioProfessor.entityName, diarioProfessorUpdateSchema, dados);
+
+    if (parsed.situacao !== undefined) this.situacao = parsed.situacao;
+
+    this.dateUpdated = new Date().toISOString();
   }
 }

@@ -1,9 +1,10 @@
 import type { Readable } from "node:stream";
 import { ForbiddenException, ServiceUnavailableException, StreamableFile } from "@nestjs/common";
+import { ensureExists } from "@/application/errors";
 import { IStorageService } from "@/domain/abstractions/storage";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { isValidUuid } from "@/domain/validation";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
-import { ensureExists, isValidUuid } from "@/modules/@shared";
 import { UsuarioEntity } from "@/modules/acesso/usuario/infrastructure.database";
 import { Arquivo } from "@/modules/armazenamento/arquivo/domain/arquivo";
 import type {

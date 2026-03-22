@@ -1,21 +1,23 @@
-import { Mixin } from "ts-mixer";
 import {
-  EntityBaseRestDto,
-  PaginatedFilterByIdRestDto,
-  PaginationMetaRestDto,
-} from "@/modules/@shared/infrastructure/presentation/rest/dtos";
+  empresaCreateSchema,
+  empresaFindOneInputSchema,
+  empresaPaginationInputSchema,
+  empresaUpdateSchema,
+} from "@/modules/estagio/empresa/domain/empresa.schemas";
 import {
   ApiProperty,
   ApiPropertyOptional,
   ApiSchema,
   commonProperties,
-  PartialType,
   RegisterModel,
   simpleProperty,
   TransformToArray,
-} from "@/modules/@shared/presentation/rest";
-import { IsArray, IsOptional, IsString, IsUUID } from "@/modules/@shared/presentation/shared";
-import { EmpresaFieldsMixin } from "../presentation.validations/empresa.validation-mixin";
+} from "@/shared/presentation/rest";
+import {
+  EntityBaseRestDto,
+  PaginatedFilterByIdRestDto,
+  PaginationMetaRestDto,
+} from "@/shared/presentation/rest/dtos";
 
 // ============================================================================
 // FindOne Output
@@ -36,28 +38,28 @@ import { EmpresaFieldsMixin } from "../presentation.validations/empresa.validati
     ...commonProperties.dated,
   ],
 })
-export class EmpresaFindOneOutputRestDto extends Mixin(EntityBaseRestDto, EmpresaFieldsMixin) {
+export class EmpresaFindOneOutputRestDto extends EntityBaseRestDto {
   @ApiProperty({ type: "string", description: "Razão social da empresa", minLength: 1 })
-  declare razaoSocial: string;
+  razaoSocial: string;
 
   @ApiProperty({ type: "string", description: "Nome fantasia da empresa", minLength: 1 })
-  declare nomeFantasia: string;
+  nomeFantasia: string;
 
   @ApiProperty({ type: "string", description: "CNPJ sem pontuação", minLength: 14, maxLength: 14 })
-  declare cnpj: string;
+  cnpj: string;
 
   @ApiProperty({ type: "string", description: "Telefone da empresa", minLength: 1, maxLength: 15 })
-  declare telefone: string;
+  telefone: string;
 
   @ApiProperty({ type: "string", description: "E-mail da empresa" })
-  declare email: string;
+  email: string;
 
   @ApiProperty({
     type: "string",
     format: "uuid",
     description: "ID do endereço vinculado à empresa",
   })
-  declare idEnderecoFk: string;
+  idEnderecoFk: string;
 
   @ApiProperty({ type: "boolean", description: "Se a empresa está ativa" })
   ativo: boolean;
@@ -69,18 +71,14 @@ export class EmpresaFindOneOutputRestDto extends Mixin(EntityBaseRestDto, Empres
 
 @ApiSchema({ name: "EmpresaListInputDto" })
 export class EmpresaListInputRestDto extends PaginatedFilterByIdRestDto {
+  static schema = empresaPaginationInputSchema;
+
   @ApiPropertyOptional({ type: "string", description: "Filtro por CNPJ", isArray: true })
   @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
   "filter.cnpj"?: string[];
 
   @ApiPropertyOptional({ type: "string", description: "Filtro por nome fantasia", isArray: true })
   @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
   "filter.nomeFantasia"?: string[];
 
   @ApiPropertyOptional({
@@ -90,9 +88,6 @@ export class EmpresaListInputRestDto extends PaginatedFilterByIdRestDto {
     isArray: true,
   })
   @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
   "filter.idEnderecoFk"?: string[];
 }
 
@@ -110,32 +105,68 @@ export class EmpresaListOutputRestDto {
 // ============================================================================
 
 @ApiSchema({ name: "EmpresaCreateInputDto" })
-export class EmpresaCreateInputRestDto extends EmpresaFieldsMixin {
+export class EmpresaCreateInputRestDto {
+  static schema = empresaCreateSchema;
+
   @ApiProperty({ type: "string", description: "Razão social da empresa", minLength: 1 })
-  declare razaoSocial: string;
+  razaoSocial: string;
 
   @ApiProperty({ type: "string", description: "Nome fantasia da empresa", minLength: 1 })
-  declare nomeFantasia: string;
+  nomeFantasia: string;
 
   @ApiProperty({ type: "string", description: "CNPJ sem pontuação", minLength: 14, maxLength: 14 })
-  declare cnpj: string;
+  cnpj: string;
 
   @ApiProperty({ type: "string", description: "Telefone da empresa", minLength: 1, maxLength: 15 })
-  declare telefone: string;
+  telefone: string;
 
   @ApiProperty({ type: "string", description: "E-mail da empresa" })
-  declare email: string;
+  email: string;
 
   @ApiProperty({
     type: "string",
     format: "uuid",
     description: "ID do endereço vinculado à empresa",
   })
-  declare idEnderecoFk: string;
+  idEnderecoFk: string;
 }
 
 @ApiSchema({ name: "EmpresaUpdateInputDto" })
-export class EmpresaUpdateInputRestDto extends PartialType(EmpresaCreateInputRestDto) {}
+export class EmpresaUpdateInputRestDto {
+  static schema = empresaUpdateSchema;
+
+  @ApiPropertyOptional({ type: "string", description: "Razão social da empresa", minLength: 1 })
+  razaoSocial?: string;
+
+  @ApiPropertyOptional({ type: "string", description: "Nome fantasia da empresa", minLength: 1 })
+  nomeFantasia?: string;
+
+  @ApiPropertyOptional({
+    type: "string",
+    description: "CNPJ sem pontuação",
+    minLength: 14,
+    maxLength: 14,
+  })
+  cnpj?: string;
+
+  @ApiPropertyOptional({
+    type: "string",
+    description: "Telefone da empresa",
+    minLength: 1,
+    maxLength: 15,
+  })
+  telefone?: string;
+
+  @ApiPropertyOptional({ type: "string", description: "E-mail da empresa" })
+  email?: string;
+
+  @ApiPropertyOptional({
+    type: "string",
+    format: "uuid",
+    description: "ID do endereço vinculado à empresa",
+  })
+  idEnderecoFk?: string;
+}
 
 // ============================================================================
 // FindOne Input (for path params)
@@ -143,11 +174,12 @@ export class EmpresaUpdateInputRestDto extends PartialType(EmpresaCreateInputRes
 
 @ApiSchema({ name: "EmpresaFindOneInputDto" })
 export class EmpresaFindOneInputRestDto {
+  static schema = empresaFindOneInputSchema;
+
   @ApiProperty({
     type: "string",
     description: "Identificador do registro (uuid)",
     format: "uuid",
   })
-  @IsUUID()
   id: string;
 }

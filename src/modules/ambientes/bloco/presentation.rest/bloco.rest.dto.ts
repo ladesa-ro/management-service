@@ -1,33 +1,20 @@
-import { Mixin } from "ts-mixer";
-import {
-  EntityBaseRestDto,
-  PaginatedFilterByIdRestDto,
-  PaginationMetaRestDto,
-} from "@/modules/@shared/infrastructure/presentation/rest/dtos";
+import { CampusFindOneOutputRestDto } from "@/modules/ambientes/campus/presentation.rest";
 import {
   ApiProperty,
   ApiPropertyOptional,
   ApiSchema,
   commonProperties,
-  PartialType,
   RegisterModel,
   referenceProperty,
   simpleProperty,
-  TransformToArray,
-} from "@/modules/@shared/presentation/rest";
+} from "@/shared/presentation/rest";
+import { EntityBaseRestDto, PaginationMetaRestDto } from "@/shared/presentation/rest/dtos";
 import {
-  IsArray,
-  IsOptional,
-  IsString,
-  IsUUID,
-  Type,
-  ValidateNested,
-} from "@/modules/@shared/presentation/shared";
-import {
-  CampusFindOneInputRestDto,
-  CampusFindOneOutputRestDto,
-} from "@/modules/ambientes/campus/presentation.rest";
-import { BlocoFieldsMixin } from "../presentation.validations/bloco.validation-mixin";
+  blocoFindOneInputSchema,
+  blocoInputCreateSchema,
+  blocoInputUpdateSchema,
+  blocoPaginationInputSchema,
+} from "../domain/bloco.schemas";
 
 // ============================================================================
 // Imagem Stub DTOs (forward reference until imagem module has DTOs)
@@ -40,7 +27,6 @@ export class ArquivoFindOneOutputFromBlocoRestDto {
     description: "Identificador do registro (uuid)",
     format: "uuid",
   })
-  @IsUUID()
   id: string;
 }
 
@@ -51,7 +37,6 @@ export class ImagemArquivoFindOneFromImagemOutputRestDto {
     description: "Identificador do registro (uuid)",
     format: "uuid",
   })
-  @IsUUID()
   id: string;
 
   @ApiProperty({ type: "integer", description: "Largura da imagem" })
@@ -61,33 +46,24 @@ export class ImagemArquivoFindOneFromImagemOutputRestDto {
   altura: number | null;
 
   @ApiProperty({ type: "string", description: "Formato da imagem" })
-  @IsString()
   formato: string | null;
 
   @ApiProperty({ type: "string", description: "Mime-type da imagem" })
-  @IsString()
   mimeType: string | null;
 
   @ApiProperty({ description: "Arquivo", type: () => ArquivoFindOneOutputFromBlocoRestDto })
-  @ValidateNested()
-  @Type(() => ArquivoFindOneOutputFromBlocoRestDto)
   arquivo: ArquivoFindOneOutputFromBlocoRestDto;
 }
 
 @ApiSchema({ name: "ImagemFindOneOutputFromBlocoDto" })
 export class ImagemFindOneOutputRestDto extends EntityBaseRestDto {
   @ApiPropertyOptional({ type: "string", description: "Descricao da imagem", nullable: true })
-  @IsOptional()
-  @IsString()
   descricao: string | null;
 
   @ApiProperty({
     description: "Versoes da imagem",
     type: () => [ImagemArquivoFindOneFromImagemOutputRestDto],
   })
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => ImagemArquivoFindOneFromImagemOutputRestDto)
   versoes: ImagemArquivoFindOneFromImagemOutputRestDto[];
 }
 
@@ -107,16 +83,14 @@ export class ImagemFindOneOutputRestDto extends EntityBaseRestDto {
     ...commonProperties.dated,
   ],
 })
-export class BlocoFindOneOutputRestDto extends Mixin(EntityBaseRestDto, BlocoFieldsMixin) {
+export class BlocoFindOneOutputRestDto extends EntityBaseRestDto {
   @ApiProperty({ type: "string", description: "Nome do bloco", minLength: 1 })
-  declare nome: string;
+  nome: string;
 
   @ApiProperty({ type: "string", description: "Codigo do bloco", minLength: 1 })
-  declare codigo: string;
+  codigo: string;
 
   @ApiProperty({ type: () => CampusFindOneOutputRestDto, description: "Campus do bloco" })
-  @ValidateNested()
-  @Type(() => CampusFindOneOutputRestDto)
   campus: CampusFindOneOutputRestDto;
 
   @ApiPropertyOptional({
@@ -124,9 +98,6 @@ export class BlocoFindOneOutputRestDto extends Mixin(EntityBaseRestDto, BlocoFie
     description: "Imagem de capa do bloco",
     nullable: true,
   })
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => ImagemFindOneOutputRestDto)
   imagemCapa: ImagemFindOneOutputRestDto | null;
 }
 
@@ -135,16 +106,43 @@ export class BlocoFindOneOutputRestDto extends Mixin(EntityBaseRestDto, BlocoFie
 // ============================================================================
 
 @ApiSchema({ name: "BlocoListInputDto" })
-export class BlocoListInputRestDto extends PaginatedFilterByIdRestDto {
+export class BlocoListInputRestDto {
+  static schema = blocoPaginationInputSchema;
+
+  [key: string]: string | number | string[] | null | undefined;
+
+  @ApiPropertyOptional({
+    type: "integer",
+    description: "Pagina de consulta",
+    minimum: 1,
+    default: 1,
+  })
+  page?: number = 1;
+
+  @ApiPropertyOptional({
+    type: "integer",
+    description: "Limite da quantidade de resultados por pagina",
+    minimum: 1,
+  })
+  limit?: number;
+
+  @ApiPropertyOptional({ type: "string", description: "Busca textual" })
+  search?: string;
+
+  @ApiPropertyOptional({ description: "Ordenacao (ex: nome:ASC)", isArray: true, type: "string" })
+  sortBy?: string[];
+
+  @ApiPropertyOptional({ description: "Seleção de campos", isArray: true, type: "string" })
+  selection?: string[];
+
+  @ApiPropertyOptional({ description: "Filtro por ID", type: "string", isArray: true })
+  "filter.id"?: string[];
+
   @ApiPropertyOptional({
     description: "Filtro por ID de Campus",
     type: "string",
     isArray: true,
   })
-  @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
   "filter.campus.id"?: string[];
 }
 
@@ -161,22 +159,43 @@ export class BlocoListOutputRestDto {
 // Create/Update Input
 // ============================================================================
 
+@ApiSchema({ name: "BlocoCampusRefInputDto" })
+export class BlocoCampusRefInputRestDto {
+  @ApiProperty({
+    type: "string",
+    description: "Identificador do campus (uuid)",
+    format: "uuid",
+  })
+  id: string;
+}
+
 @ApiSchema({ name: "BlocoCreateInputDto" })
-export class BlocoCreateInputRestDto extends BlocoFieldsMixin {
+export class BlocoCreateInputRestDto {
+  static schema = blocoInputCreateSchema;
+
   @ApiProperty({ type: "string", description: "Nome do bloco", minLength: 1 })
-  declare nome: string;
+  nome: string;
 
   @ApiProperty({ type: "string", description: "Codigo do bloco", minLength: 1 })
-  declare codigo: string;
+  codigo: string;
 
-  @ApiProperty({ type: () => CampusFindOneInputRestDto, description: "Campus do bloco" })
-  @ValidateNested()
-  @Type(() => CampusFindOneInputRestDto)
-  campus: CampusFindOneInputRestDto;
+  @ApiProperty({ type: () => BlocoCampusRefInputRestDto, description: "Campus do bloco" })
+  campus: BlocoCampusRefInputRestDto;
 }
 
 @ApiSchema({ name: "BlocoUpdateInputDto" })
-export class BlocoUpdateInputRestDto extends PartialType(BlocoCreateInputRestDto) {}
+export class BlocoUpdateInputRestDto {
+  static schema = blocoInputUpdateSchema;
+
+  @ApiPropertyOptional({ type: "string", description: "Nome do bloco", minLength: 1 })
+  nome?: string;
+
+  @ApiPropertyOptional({ type: "string", description: "Codigo do bloco", minLength: 1 })
+  codigo?: string;
+
+  @ApiPropertyOptional({ type: () => BlocoCampusRefInputRestDto, description: "Campus do bloco" })
+  campus?: BlocoCampusRefInputRestDto;
+}
 
 // ============================================================================
 // FindOne Input (for path params)
@@ -184,11 +203,12 @@ export class BlocoUpdateInputRestDto extends PartialType(BlocoCreateInputRestDto
 
 @ApiSchema({ name: "BlocoFindOneInputDto" })
 export class BlocoFindOneInputRestDto {
+  static schema = blocoFindOneInputSchema;
+
   @ApiProperty({
     type: "string",
     description: "Identificador do registro (uuid)",
     format: "uuid",
   })
-  @IsUUID()
   id: string;
 }

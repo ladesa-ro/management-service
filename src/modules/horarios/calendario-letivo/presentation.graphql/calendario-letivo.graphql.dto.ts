@@ -2,25 +2,15 @@ import {
   EntityBaseGraphQlDto,
   PaginatedFilterByIdGraphQlDto,
   PaginationMetaGraphQlDto,
-} from "@/modules/@shared/infrastructure/graphql/dtos";
-import {
-  ArgsType,
-  Field,
-  InputType,
-  Int,
-  ObjectType,
-} from "@/modules/@shared/presentation/graphql";
-import {
-  IsArray,
-  IsInt,
-  IsOptional,
-  IsString,
-  IsUUID,
-  MinLength,
-  ValidateNested,
-} from "@/modules/@shared/presentation/shared";
+} from "@/infrastructure.graphql/dtos";
 import { CampusFindOneOutputGraphQlDto } from "@/modules/ambientes/campus/presentation.graphql/campus.graphql.dto";
 import { OfertaFormacaoFindOneOutputGraphQlDto } from "@/modules/ensino/oferta-formacao/presentation.graphql/oferta-formacao.graphql.dto";
+import {
+  calendarioLetivoCreateSchema,
+  calendarioLetivoGraphqlListInputSchema,
+  calendarioLetivoUpdateSchema,
+} from "@/modules/horarios/calendario-letivo/domain/calendario-letivo.schemas";
+import { ArgsType, Field, InputType, Int, ObjectType } from "@/shared/presentation/graphql";
 
 // ============================================================================
 // FindOne Output
@@ -41,12 +31,12 @@ export class CalendarioLetivoFindOneOutputGraphQlDto extends EntityBaseGraphQlDt
 
 @InputType("CalendarioLetivoCampusRefInputDto")
 export class CalendarioLetivoCampusRefInputGraphQlDto {
-  @Field(() => String) @IsString() id: string;
+  @Field(() => String) id: string;
 }
 
 @InputType("CalendarioLetivoOfertaFormacaoRefInputDto")
 export class CalendarioLetivoOfertaFormacaoRefInputGraphQlDto {
-  @Field(() => String) @IsString() id: string;
+  @Field(() => String) id: string;
 }
 
 // ============================================================================
@@ -55,13 +45,13 @@ export class CalendarioLetivoOfertaFormacaoRefInputGraphQlDto {
 
 @InputType("CalendarioLetivoCreateInputDto")
 export class CalendarioLetivoCreateInputGraphQlDto {
-  @Field(() => String) @IsString() @MinLength(1) nome: string;
-  @Field(() => Int) @IsInt() ano: number;
+  static schema = calendarioLetivoCreateSchema;
+
+  @Field(() => String) nome: string;
+  @Field(() => Int) ano: number;
   @Field(() => CalendarioLetivoCampusRefInputGraphQlDto)
-  @ValidateNested()
   campus: CalendarioLetivoCampusRefInputGraphQlDto;
   @Field(() => CalendarioLetivoOfertaFormacaoRefInputGraphQlDto)
-  @ValidateNested()
   ofertaFormacao: CalendarioLetivoOfertaFormacaoRefInputGraphQlDto;
 }
 
@@ -71,22 +61,15 @@ export class CalendarioLetivoCreateInputGraphQlDto {
 
 @InputType("CalendarioLetivoUpdateInputDto")
 export class CalendarioLetivoUpdateInputGraphQlDto {
+  static schema = calendarioLetivoUpdateSchema;
+
   @Field(() => String, { nullable: true })
-  @IsOptional()
-  @IsString()
-  @MinLength(1)
   nome?: string;
   @Field(() => Int, { nullable: true })
-  @IsOptional()
-  @IsInt()
   ano?: number;
   @Field(() => CalendarioLetivoCampusRefInputGraphQlDto, { nullable: true })
-  @IsOptional()
-  @ValidateNested()
   campus?: CalendarioLetivoCampusRefInputGraphQlDto;
   @Field(() => CalendarioLetivoOfertaFormacaoRefInputGraphQlDto, { nullable: true })
-  @IsOptional()
-  @ValidateNested()
   ofertaFormacao?: CalendarioLetivoOfertaFormacaoRefInputGraphQlDto;
 }
 
@@ -96,16 +79,12 @@ export class CalendarioLetivoUpdateInputGraphQlDto {
 
 @ArgsType()
 export class CalendarioLetivoListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {
+  static schema = calendarioLetivoGraphqlListInputSchema;
+
   @Field(() => [String], { nullable: true, description: "Filtro por ID do Campus" })
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
   filterCampusId?: string[];
 
   @Field(() => [String], { nullable: true, description: "Filtro por ID da Oferta de Formacao" })
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
   filterOfertaFormacaoId?: string[];
 }
 

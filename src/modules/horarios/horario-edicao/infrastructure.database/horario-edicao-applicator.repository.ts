@@ -1,5 +1,5 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7.js";
+import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { ICalendarioAgendamentoRepository } from "@/modules/horarios/calendario-agendamento/domain/repositories/calendario-agendamento.repository.interface";
 import {
   CalendarioAgendamentoEntity,

@@ -1,91 +1,74 @@
-import type { IEntityBaseUuid } from "@/domain/abstractions/entities";
+import type { z } from "zod";
 import type { IdUuid, ScalarDateTimeString } from "@/domain/abstractions/scalars";
-import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7.js";
-import type { IImagem } from "@/modules/armazenamento/imagem/domain/imagem";
-import { createValidator, throwIfInvalid, touchUpdated } from "@/utils/validation-utils.js";
+import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
+import { zodValidate } from "@/shared/validation/index";
+import {
+  disciplinaCreateSchema,
+  disciplinaSchema,
+  disciplinaUpdateSchema,
+} from "./disciplina.schemas";
 
-export interface IDisciplina extends IEntityBaseUuid {
-  nome: string;
-  nomeAbreviado: string;
-  cargaHoraria: number;
-  imagemCapa: IImagem | null;
-}
+export type IDisciplina = z.infer<typeof disciplinaSchema>;
 
-export interface IDisciplinaCreate {
-  nome: string;
-  nomeAbreviado: string;
-  cargaHoraria: number;
-}
-
-export interface IDisciplinaUpdate {
-  nome?: string;
-  nomeAbreviado?: string;
-  cargaHoraria?: number;
-}
-
-export class Disciplina implements IEntityBaseUuid {
+export class Disciplina {
   static readonly entityName = "Disciplina";
 
   id!: IdUuid;
   nome!: string;
   nomeAbreviado!: string;
   cargaHoraria!: number;
-  imagemCapa!: IImagem | null;
+  imagemCapa!: { id: string } | null;
   dateCreated!: ScalarDateTimeString;
   dateUpdated!: ScalarDateTimeString;
   dateDeleted!: ScalarDateTimeString | null;
 
-  constructor(dados: { nome: string; nomeAbreviado: string; cargaHoraria: number }) {
-    this.id = generateUuidV7();
-    this.nome = dados.nome;
-    this.nomeAbreviado = dados.nomeAbreviado;
-    this.cargaHoraria = dados.cargaHoraria;
-    this.imagemCapa = null;
-    this.dateCreated = new Date().toISOString();
+  private constructor() {}
+
+  static create(dados: unknown): Disciplina {
+    const parsed = zodValidate(Disciplina.entityName, disciplinaCreateSchema, dados);
+
+    const instance = new Disciplina();
+
+    instance.id = generateUuidV7();
+    instance.nome = parsed.nome;
+    instance.nomeAbreviado = parsed.nomeAbreviado;
+    instance.cargaHoraria = parsed.cargaHoraria;
+    instance.imagemCapa = parsed.imagemCapa ?? null;
+    instance.dateCreated = new Date().toISOString();
+    instance.dateUpdated = new Date().toISOString();
+    instance.dateDeleted = null;
+
+    return instance;
+  }
+
+  static load(dados: unknown): Disciplina {
+    const parsed = zodValidate(Disciplina.entityName, disciplinaSchema, dados);
+
+    const instance = new Disciplina();
+
+    instance.id = parsed.id;
+    instance.nome = parsed.nome;
+    instance.nomeAbreviado = parsed.nomeAbreviado;
+    instance.cargaHoraria = parsed.cargaHoraria;
+    instance.imagemCapa = parsed.imagemCapa;
+    instance.dateCreated = parsed.dateCreated;
+    instance.dateUpdated = parsed.dateUpdated;
+    instance.dateDeleted = parsed.dateDeleted;
+
+    return instance;
+  }
+
+  update(dados: unknown): void {
+    const parsed = zodValidate(Disciplina.entityName, disciplinaUpdateSchema, dados);
+
+    if (parsed.nome !== undefined) this.nome = parsed.nome;
+    if (parsed.nomeAbreviado !== undefined) this.nomeAbreviado = parsed.nomeAbreviado;
+    if (parsed.cargaHoraria !== undefined) this.cargaHoraria = parsed.cargaHoraria;
+    if (parsed.imagemCapa !== undefined) this.imagemCapa = parsed.imagemCapa ?? null;
+
     this.dateUpdated = new Date().toISOString();
-    this.dateDeleted = null;
-  }
 
-  validate(): void {
-    const { result, rules } = createValidator("Disciplina");
-    rules.required(this.nome, "nome");
-    rules.minLength(this.nome, "nome", 1);
-    rules.required(this.nomeAbreviado, "nomeAbreviado");
-    rules.minLength(this.nomeAbreviado, "nomeAbreviado", 1);
-    rules.requiredNumber(this.cargaHoraria, "cargaHoraria");
-    rules.min(this.cargaHoraria, "cargaHoraria", 1);
-    throwIfInvalid("Disciplina", result);
-  }
-
-  static create(dados: IDisciplinaCreate, validar: boolean = true): Disciplina {
-    const instance = new Disciplina({
-      nome: dados.nome?.trim() ?? "",
-      nomeAbreviado: dados.nomeAbreviado?.trim() ?? "",
-      cargaHoraria: dados.cargaHoraria ?? 0,
-    });
-    if (validar) instance.validate();
-    return instance;
-  }
-
-  static load(dados: Record<string, any>): Disciplina {
-    const instance = Object.create(Disciplina.prototype) as Disciplina;
-    if (dados.id !== undefined) instance.id = dados.id;
-    if (dados.nome !== undefined) instance.nome = dados.nome;
-    if (dados.nomeAbreviado !== undefined) instance.nomeAbreviado = dados.nomeAbreviado;
-    if (dados.cargaHoraria !== undefined) instance.cargaHoraria = dados.cargaHoraria;
-    if (dados.imagemCapa !== undefined) instance.imagemCapa = dados.imagemCapa;
-    if (dados.dateCreated !== undefined) instance.dateCreated = dados.dateCreated;
-    if (dados.dateUpdated !== undefined) instance.dateUpdated = dados.dateUpdated;
-    if (dados.dateDeleted !== undefined) instance.dateDeleted = dados.dateDeleted;
-    return instance;
-  }
-
-  update(dados: IDisciplinaUpdate): void {
-    if (dados.nome !== undefined) this.nome = dados.nome?.trim() ?? "";
-    if (dados.nomeAbreviado !== undefined) this.nomeAbreviado = dados.nomeAbreviado?.trim() ?? "";
-    if (dados.cargaHoraria !== undefined) this.cargaHoraria = dados.cargaHoraria ?? 0;
-    touchUpdated(this);
-    this.validate();
+    zodValidate(Disciplina.entityName, disciplinaSchema, this);
   }
 
   temImagemCapa(): boolean {

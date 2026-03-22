@@ -1,9 +1,3 @@
-import { Mixin } from "ts-mixer";
-import {
-  EntityBaseRestDto,
-  PaginatedFilterByIdRestDto,
-  PaginationMetaRestDto,
-} from "@/modules/@shared/infrastructure/presentation/rest/dtos";
 import {
   ApiProperty,
   ApiSchema,
@@ -11,9 +5,17 @@ import {
   PartialType,
   RegisterModel,
   simpleProperty,
-} from "@/modules/@shared/presentation/rest";
-import { IsUUID } from "@/modules/@shared/presentation/shared";
-import { ModalidadeFieldsMixin } from "../presentation.validations/modalidade.validation-mixin";
+} from "@/shared/presentation/rest";
+import {
+  EntityBaseRestDto,
+  PaginatedFilterByIdRestDto,
+  PaginationMetaRestDto,
+} from "@/shared/presentation/rest/dtos";
+import {
+  modalidadeCreateSchema,
+  modalidadeFindOneInputSchema,
+  modalidadePaginationInputSchema,
+} from "../domain/modalidade.schemas";
 
 // ============================================================================
 // FindOne Output
@@ -29,15 +31,12 @@ import { ModalidadeFieldsMixin } from "../presentation.validations/modalidade.va
     ...commonProperties.dated,
   ],
 })
-export class ModalidadeFindOneOutputRestDto extends Mixin(
-  EntityBaseRestDto,
-  ModalidadeFieldsMixin,
-) {
+export class ModalidadeFindOneOutputRestDto extends EntityBaseRestDto {
   @ApiProperty({ type: "string", description: "Nome da modalidade", minLength: 1 })
-  declare nome: string;
+  nome: string;
 
   @ApiProperty({ type: "string", description: "Apelido da modalidade", minLength: 1 })
-  declare slug: string;
+  slug: string;
 }
 
 // ============================================================================
@@ -45,7 +44,9 @@ export class ModalidadeFindOneOutputRestDto extends Mixin(
 // ============================================================================
 
 @ApiSchema({ name: "ModalidadeListInputDto" })
-export class ModalidadeListInputRestDto extends PaginatedFilterByIdRestDto {}
+export class ModalidadeListInputRestDto extends PaginatedFilterByIdRestDto {
+  static schema = modalidadePaginationInputSchema;
+}
 
 @ApiSchema({ name: "ModalidadeListOutputDto" })
 export class ModalidadeListOutputRestDto {
@@ -64,12 +65,14 @@ export class ModalidadeListOutputRestDto {
 // ============================================================================
 
 @ApiSchema({ name: "ModalidadeCreateInputDto" })
-export class ModalidadeCreateInputRestDto extends ModalidadeFieldsMixin {
+export class ModalidadeCreateInputRestDto {
+  static readonly schema = modalidadeCreateSchema;
+
   @ApiProperty({ type: "string", description: "Nome da modalidade", minLength: 1 })
-  declare nome: string;
+  nome: string;
 
   @ApiProperty({ type: "string", description: "Apelido da modalidade", minLength: 1 })
-  declare slug: string;
+  slug: string;
 }
 
 @ApiSchema({ name: "ModalidadeUpdateInputDto" })
@@ -81,11 +84,12 @@ export class ModalidadeUpdateInputRestDto extends PartialType(ModalidadeCreateIn
 
 @ApiSchema({ name: "ModalidadeFindOneInputDto" })
 export class ModalidadeFindOneInputRestDto {
+  static readonly schema = modalidadeFindOneInputSchema;
+
   @ApiProperty({
     type: "string",
     description: "Identificador do registro (uuid)",
     format: "uuid",
   })
-  @IsUUID()
   id: string;
 }

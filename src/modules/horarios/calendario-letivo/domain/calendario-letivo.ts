@@ -1,9 +1,13 @@
 import type { IEntityBaseUuid } from "@/domain/abstractions/entities";
 import type { IdUuid, ScalarDateTimeString } from "@/domain/abstractions/scalars";
-import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7.js";
+import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import type { ICampus } from "@/modules/ambientes/campus";
 import type { IOfertaFormacao } from "@/modules/ensino/oferta-formacao";
-import { createValidator, throwIfInvalid, touchUpdated } from "@/utils/validation-utils.js";
+import { zodValidate } from "@/shared/validation/index";
+import {
+  calendarioLetivoCreateSchema,
+  calendarioLetivoUpdateSchema,
+} from "./calendario-letivo.schemas";
 
 export interface ICalendarioLetivo extends IEntityBaseUuid {
   nome: string;
@@ -38,27 +42,21 @@ export class CalendarioLetivo implements IEntityBaseUuid {
   dateUpdated!: ScalarDateTimeString;
   dateDeleted!: ScalarDateTimeString | null;
 
-  constructor(dados: { nome: string; ano: number }) {
-    this.id = generateUuidV7();
-    this.nome = dados.nome;
-    this.ano = dados.ano;
-    this.dateCreated = new Date().toISOString();
-    this.dateUpdated = new Date().toISOString();
-    this.dateDeleted = null;
-  }
+  private constructor() {}
 
-  validate(): void {
-    const { result, rules } = createValidator("CalendarioLetivo");
-    rules.required(this.nome, "nome");
-    rules.minLength(this.nome, "nome", 1);
-    rules.requiredNumber(this.ano, "ano");
-    rules.min(this.ano, "ano", 1);
-    throwIfInvalid("CalendarioLetivo", result);
-  }
+  static create(dados: ICalendarioLetivoCreate): CalendarioLetivo {
+    const parsed = zodValidate(CalendarioLetivo.entityName, calendarioLetivoCreateSchema, dados);
 
-  static create(dados: ICalendarioLetivoCreate, validar: boolean = true): CalendarioLetivo {
-    const instance = new CalendarioLetivo(dados);
-    if (validar) instance.validate();
+    const instance = new CalendarioLetivo();
+
+    instance.id = generateUuidV7();
+    instance.nome = parsed.nome;
+    instance.ano = parsed.ano;
+    instance.ofertaFormacao = null;
+    instance.dateCreated = new Date().toISOString();
+    instance.dateUpdated = new Date().toISOString();
+    instance.dateDeleted = null;
+
     return instance;
   }
 
@@ -75,10 +73,12 @@ export class CalendarioLetivo implements IEntityBaseUuid {
     return instance;
   }
 
-  update(dados: ICalendarioLetivoUpdate): void {
-    if (dados.nome !== undefined) this.nome = dados.nome;
-    if (dados.ano !== undefined) this.ano = dados.ano;
-    touchUpdated(this);
-    this.validate();
+  update(dados: unknown): void {
+    const parsed = zodValidate(CalendarioLetivo.entityName, calendarioLetivoUpdateSchema, dados);
+
+    if (parsed.nome !== undefined) this.nome = parsed.nome;
+    if (parsed.ano !== undefined) this.ano = parsed.ano;
+
+    this.dateUpdated = new Date().toISOString();
   }
 }

@@ -1,4 +1,4 @@
-import type { IQueryHandler } from "@/modules/@shared/domain/abstractions";
+import type { IQueryHandler } from "@/domain/abstractions";
 import type { CidadeFindOneQuery } from "./cidade-find-one.query";
 import type { CidadeFindOneQueryResult } from "./cidade-find-one.query.result";
 

@@ -1,8 +1,16 @@
 import {
-  EntityBaseRestDto,
-  PaginatedFilterByIdRestDto,
-  PaginationMetaRestDto,
-} from "@/modules/@shared/infrastructure/presentation/rest/dtos";
+  perfilFindOneInputSchema,
+  perfilPaginationInputSchema,
+  perfilSetVinculosInputSchema,
+} from "@/modules/acesso/perfil/domain/perfil.schemas";
+import {
+  UsuarioFindOneInputRestDto,
+  UsuarioFindOneOutputRestDto,
+} from "@/modules/acesso/usuario/presentation.rest";
+import {
+  CampusFindOneInputRestDto,
+  CampusFindOneOutputRestDto,
+} from "@/modules/ambientes/campus/presentation.rest";
 import {
   ApiProperty,
   ApiPropertyOptional,
@@ -12,24 +20,12 @@ import {
   referenceProperty,
   simpleProperty,
   TransformToArray,
-} from "@/modules/@shared/presentation/rest";
+} from "@/shared/presentation/rest";
 import {
-  IsArray,
-  IsBoolean,
-  IsOptional,
-  IsString,
-  IsUUID,
-  Type,
-  ValidateNested,
-} from "@/modules/@shared/presentation/shared";
-import {
-  UsuarioFindOneInputRestDto,
-  UsuarioFindOneOutputRestDto,
-} from "@/modules/acesso/usuario/presentation.rest";
-import {
-  CampusFindOneInputRestDto,
-  CampusFindOneOutputRestDto,
-} from "@/modules/ambientes/campus/presentation.rest";
+  EntityBaseRestDto,
+  PaginatedFilterByIdRestDto,
+  PaginationMetaRestDto,
+} from "@/shared/presentation/rest/dtos";
 
 // ============================================================================
 // Parent Route Params
@@ -42,7 +38,6 @@ export class PerfilParentParamsRestDto {
     description: "ID do usuario (uuid)",
     format: "uuid",
   })
-  @IsUUID()
   usuarioId: string;
 }
 
@@ -64,27 +59,21 @@ export class PerfilParentParamsRestDto {
 })
 export class PerfilFindOneOutputRestDto extends EntityBaseRestDto {
   @ApiProperty({ type: "boolean", description: "Indica se o vinculo esta ativo" })
-  @IsBoolean()
   ativo: boolean;
 
   @ApiProperty({ type: "string", description: "Cargo do usuario no vinculo" })
-  @IsString()
   cargo: string;
 
   @ApiProperty({
     type: () => CampusFindOneOutputRestDto,
     description: "Campus associado ao vinculo",
   })
-  @ValidateNested()
-  @Type(() => CampusFindOneOutputRestDto)
   campus: CampusFindOneOutputRestDto;
 
   @ApiProperty({
     type: () => UsuarioFindOneOutputRestDto,
     description: "Usuario associado ao vinculo",
   })
-  @ValidateNested()
-  @Type(() => UsuarioFindOneOutputRestDto)
   usuario: UsuarioFindOneOutputRestDto;
 }
 
@@ -94,15 +83,14 @@ export class PerfilFindOneOutputRestDto extends EntityBaseRestDto {
 
 @ApiSchema({ name: "PerfilListInputDto" })
 export class PerfilListInputRestDto extends PaginatedFilterByIdRestDto {
+  static schema = perfilPaginationInputSchema;
+
   @ApiPropertyOptional({
     type: "string",
     isArray: true,
     description: "Filtro por ativo",
   })
   @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
   "filter.ativo"?: string[];
 
   @ApiPropertyOptional({
@@ -111,9 +99,6 @@ export class PerfilListInputRestDto extends PaginatedFilterByIdRestDto {
     description: "Filtro por cargo",
   })
   @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
   "filter.cargo"?: string[];
 
   @ApiPropertyOptional({
@@ -122,9 +107,6 @@ export class PerfilListInputRestDto extends PaginatedFilterByIdRestDto {
     description: "Filtro por ID do Campus",
   })
   @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
   "filter.campus.id"?: string[];
 
   @ApiPropertyOptional({
@@ -133,9 +115,6 @@ export class PerfilListInputRestDto extends PaginatedFilterByIdRestDto {
     description: "Filtro por ID do Usuario",
   })
   @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
   "filter.usuario.id"?: string[];
 }
 
@@ -154,30 +133,26 @@ export class PerfilListOutputRestDto {
 
 @ApiSchema({ name: "PerfilSetVinculosInputDto" })
 export class PerfilSetVinculosInputRestDto {
+  static schema = perfilSetVinculosInputSchema;
+
   @ApiProperty({
     type: "string",
     isArray: true,
     description: "Lista de cargos que o usuario tera no campus",
     example: ["professor", "coordenador"],
   })
-  @IsArray()
-  @IsString({ each: true })
   cargos: string[];
 
   @ApiProperty({
     type: () => CampusFindOneInputRestDto,
     description: "Campus onde os vinculos serao definidos",
   })
-  @ValidateNested()
-  @Type(() => CampusFindOneInputRestDto)
   campus: CampusFindOneInputRestDto;
 
   @ApiProperty({
     type: () => UsuarioFindOneInputRestDto,
     description: "Usuario que recebera os vinculos",
   })
-  @ValidateNested()
-  @Type(() => UsuarioFindOneInputRestDto)
   usuario: UsuarioFindOneInputRestDto;
 }
 
@@ -187,11 +162,12 @@ export class PerfilSetVinculosInputRestDto {
 
 @ApiSchema({ name: "PerfilFindOneInputDto" })
 export class PerfilFindOneInputRestDto {
+  static schema = perfilFindOneInputSchema;
+
   @ApiProperty({
     type: "string",
     description: "Identificador do registro (uuid)",
     format: "uuid",
   })
-  @IsUUID()
   id: string;
 }

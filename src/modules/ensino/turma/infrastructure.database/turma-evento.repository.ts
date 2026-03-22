@@ -1,7 +1,7 @@
+import { ensureExists } from "@/application/errors";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7.js";
+import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
-import { ensureExists } from "@/modules/@shared";
 import { ICalendarioAgendamentoRepository } from "@/modules/horarios/calendario-agendamento/domain/repositories/calendario-agendamento.repository.interface";
 import {
   CalendarioAgendamentoEntity,

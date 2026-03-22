@@ -1,15 +1,11 @@
 import {
-  createFindOneInputMapper,
-  createListOutputMapper,
-  mapDatedFields,
-} from "@/modules/@shared/application/mappers";
-import {
   UsuarioCreateCommand,
   UsuarioFindOneQuery,
   UsuarioFindOneQueryResult,
   UsuarioListQuery,
   UsuarioUpdateCommand,
 } from "@/modules/acesso/usuario";
+import { createFindOneInputMapper, createListOutputMapper, mapDatedFields } from "@/shared/mapping";
 import {
   UsuarioCreateInputGraphQlDto,
   UsuarioFindOneOutputGraphQlDto,

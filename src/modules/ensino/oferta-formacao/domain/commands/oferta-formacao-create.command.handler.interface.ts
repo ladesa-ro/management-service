@@ -1,4 +1,4 @@
-import type { ICommandHandler } from "@/modules/@shared/domain/abstractions";
+import type { ICommandHandler } from "@/domain/abstractions";
 import type { OfertaFormacaoFindOneQueryResult } from "../queries";
 import type { OfertaFormacaoCreateCommand } from "./oferta-formacao-create.command";
 

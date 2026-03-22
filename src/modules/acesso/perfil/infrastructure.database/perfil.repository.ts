@@ -1,5 +1,6 @@
 import { FilterOperator } from "nestjs-paginate";
 import type { DeepPartial } from "typeorm";
+import type { IPaginationCriteria, IPaginationResult } from "@/application/pagination";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
 import { paginateConfig } from "@/infrastructure.database/pagination/config/paginate-config";
@@ -13,7 +14,6 @@ import {
   typeormSoftDeleteById,
   typeormUpdate,
 } from "@/infrastructure.database/typeorm/helpers/typeorm-repository-helpers";
-import type { IPaginationCriteria, IPaginationResult } from "@/modules/@shared";
 import type {
   PerfilFindOneQuery,
   PerfilFindOneQueryResult,

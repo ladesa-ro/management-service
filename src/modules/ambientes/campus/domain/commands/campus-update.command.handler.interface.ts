@@ -1,4 +1,4 @@
-import type { ICommandHandler } from "@/modules/@shared/domain/abstractions";
+import type { ICommandHandler } from "@/domain/abstractions";
 import type { CampusFindOneQuery, CampusFindOneQueryResult } from "../queries";
 import type { CampusUpdateCommand } from "./campus-update.command";
 

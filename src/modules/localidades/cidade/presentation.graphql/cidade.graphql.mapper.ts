@@ -1,32 +1,38 @@
-import { createListOutputMapper } from "@/modules/@shared/application/mappers";
 import {
   CidadeFindOneQuery,
   CidadeFindOneQueryResult,
   CidadeListQuery,
 } from "@/modules/localidades/cidade";
 import { EstadoGraphqlMapper } from "@/modules/localidades/estado/presentation.graphql/estado.graphql.mapper";
+import { createListOutputMapper } from "@/shared/mapping";
+import { createMapping, mapFilterCase } from "@/shared/mapping/index";
 import {
   CidadeFindOneOutputGraphQlDto,
   CidadeListInputGraphQlDto,
   CidadeListOutputGraphQlDto,
 } from "./cidade.graphql.dto";
 
+const outputMapping = createMapping([
+  "id",
+  "nome",
+  ["estado", "estado", (estado) => EstadoGraphqlMapper.toFindOneOutputDto(estado)],
+]);
+
+const listInputMapping = createMapping([
+  "page",
+  "limit",
+  "search",
+  "sortBy",
+  mapFilterCase("filter.id"),
+  mapFilterCase("filter.estado.id"),
+  mapFilterCase("filter.estado.nome"),
+  mapFilterCase("filter.estado.sigla"),
+]);
+
 export class CidadeGraphqlMapper {
   static toListInput(dto: CidadeListInputGraphQlDto | null): CidadeListQuery | null {
-    if (!dto) {
-      return null;
-    }
-
-    const input = new CidadeListQuery();
-    input.page = dto.page;
-    input.limit = dto.limit;
-    input.search = dto.search;
-    input.sortBy = dto.sortBy;
-    input["filter.id"] = dto.filterId;
-    input["filter.estado.id"] = dto.filterEstadoId;
-    input["filter.estado.nome"] = dto.filterEstadoNome;
-    input["filter.estado.sigla"] = dto.filterEstadoSigla;
-    return input;
+    if (!dto) return null;
+    return listInputMapping.mapDefined<CidadeListQuery>(dto);
   }
 
   static toFindOneInput(id: number, selection?: string[]): CidadeFindOneQuery {
@@ -37,11 +43,7 @@ export class CidadeGraphqlMapper {
   }
 
   static toFindOneOutputDto(output: CidadeFindOneQueryResult): CidadeFindOneOutputGraphQlDto {
-    const dto = new CidadeFindOneOutputGraphQlDto();
-    dto.id = output.id;
-    dto.nome = output.nome;
-    dto.estado = EstadoGraphqlMapper.toFindOneOutputDto(output.estado);
-    return dto;
+    return outputMapping.map<CidadeFindOneOutputGraphQlDto>(output);
   }
 
   static toListOutputDto = createListOutputMapper(

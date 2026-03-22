@@ -1,21 +1,10 @@
+import type { z } from "zod";
 import type { IdNumeric } from "@/domain/abstractions/scalars";
 import type { IEstado } from "@/modules/localidades/estado";
-import { createValidator, throwIfInvalid } from "@/utils/validation-utils.js";
+import { zodValidate } from "@/shared/validation/index";
+import { cidadeCreateSchema, cidadeSchema, cidadeUpdateSchema } from "./cidade.schemas";
 
-export interface ICidade {
-  id: IdNumeric;
-  nome: string;
-  estado: IEstado;
-}
-
-export interface ICidadeCreate {
-  id: IdNumeric;
-  nome: string;
-}
-
-export interface ICidadeUpdate {
-  nome?: string;
-}
+export type ICidade = z.infer<typeof cidadeSchema> & { estado: IEstado };
 
 export class Cidade {
   static readonly entityName = "Cidade";
@@ -24,35 +13,40 @@ export class Cidade {
   nome!: string;
   estado!: IEstado;
 
-  constructor(dados: { id: IdNumeric; nome: string }) {
-    this.id = dados.id;
-    this.nome = dados.nome;
-  }
+  private constructor() {}
 
-  validate(): void {
-    const { result, rules } = createValidator("Cidade");
-    rules.required(this.nome, "nome");
-    rules.minLength(this.nome, "nome", 1);
-    throwIfInvalid("Cidade", result);
-  }
+  static create(dados: unknown): Cidade {
+    const parsed = zodValidate(Cidade.entityName, cidadeCreateSchema, dados);
 
-  static create(dados: ICidadeCreate, validar: boolean = true): Cidade {
-    const instance = new Cidade(dados);
-    if (validar) instance.validate();
+    const instance = new Cidade();
+
+    instance.id = parsed.id;
+    instance.nome = parsed.nome;
+
     return instance;
   }
 
-  static load(dados: Record<string, any>): Cidade {
-    const instance = Object.create(Cidade.prototype) as Cidade;
-    if (dados.id !== undefined) instance.id = dados.id;
-    if (dados.nome !== undefined) instance.nome = dados.nome;
-    if (dados.estado !== undefined) instance.estado = dados.estado;
+  static load(dados: unknown): Cidade {
+    const parsed = zodValidate(Cidade.entityName, cidadeSchema, dados);
+
+    const instance = new Cidade();
+
+    instance.id = parsed.id;
+    instance.nome = parsed.nome;
+
+    if ((dados as any)?.estado !== undefined) {
+      instance.estado = (dados as any).estado;
+    }
+
     return instance;
   }
 
-  update(dados: ICidadeUpdate): void {
-    if (dados.nome !== undefined) this.nome = dados.nome;
-    this.validate();
+  update(dados: unknown): void {
+    const parsed = zodValidate(Cidade.entityName, cidadeUpdateSchema, dados);
+
+    if (parsed.nome !== undefined) this.nome = parsed.nome;
+
+    zodValidate(Cidade.entityName, cidadeSchema, this);
   }
 
   getNomeCompleto(): string {

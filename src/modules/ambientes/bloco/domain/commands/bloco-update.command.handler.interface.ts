@@ -1,4 +1,4 @@
-import type { ICommandHandler } from "@/modules/@shared/domain/abstractions";
+import type { ICommandHandler } from "@/domain/abstractions";
 import type { BlocoFindOneQuery, BlocoFindOneQueryResult } from "../queries";
 import type { BlocoUpdateCommand } from "./bloco-update.command";
 

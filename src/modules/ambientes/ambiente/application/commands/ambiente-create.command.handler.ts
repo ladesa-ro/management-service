@@ -1,6 +1,6 @@
+import { ensureExists } from "@/application/errors";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
-import { ensureExists } from "@/modules/@shared";
 import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente";
 import type { AmbienteCreateCommand } from "@/modules/ambientes/ambiente/domain/commands/ambiente-create.command";
 import { IAmbienteCreateCommandHandler } from "@/modules/ambientes/ambiente/domain/commands/ambiente-create.command.handler.interface";

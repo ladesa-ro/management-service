@@ -1,4 +1,4 @@
-import type { ICommandHandler } from "@/modules/@shared/domain/abstractions";
+import type { ICommandHandler } from "@/domain/abstractions";
 import type { PerfilListQueryResult } from "../queries";
 import type { PerfilSetVinculosCommand } from "./perfil-set-vinculos.command";
 

@@ -1,7 +1,7 @@
 import { BadRequestException } from "@nestjs/common";
+import { ensureExists } from "@/application/errors";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
-import { ensureExists } from "@/modules/@shared";
 import type {
   IGerarHorarioRejeitarCommand,
   IGerarHorarioRejeitarCommandHandler,

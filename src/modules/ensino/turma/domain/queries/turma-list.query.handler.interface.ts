@@ -1,4 +1,4 @@
-import type { IQueryHandler } from "@/modules/@shared/domain/abstractions";
+import type { IQueryHandler } from "@/domain/abstractions";
 import type { TurmaListQuery } from "./turma-list.query";
 import type { TurmaListQueryResult } from "./turma-list.query.result";
 

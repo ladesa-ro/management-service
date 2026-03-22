@@ -1,14 +1,4 @@
-import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@/modules/@shared/presentation/rest";
-import {
-  IsArray,
-  IsInt,
-  IsOptional,
-  IsString,
-  IsUUID,
-  Min,
-  Type,
-  ValidateNested,
-} from "@/modules/@shared/presentation/shared";
+import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@/shared/presentation/rest";
 
 // ============================================================================
 // Parent Route Params
@@ -21,7 +11,6 @@ export class OfertaFormacaoPeriodoParentParamsRestDto {
     description: "ID da oferta de formacao (uuid)",
     format: "uuid",
   })
-  @IsUUID()
   ofertaFormacaoId: string;
 }
 
@@ -32,12 +21,9 @@ export class OfertaFormacaoPeriodoParentParamsRestDto {
 @ApiSchema({ name: "OfertaFormacaoPeriodoEtapaItemDto" })
 export class OfertaFormacaoPeriodoEtapaItemRestDto {
   @ApiProperty({ type: "string", description: "Nome da etapa" })
-  @IsString()
   nome: string;
 
   @ApiPropertyOptional({ type: "string", description: "Cor da etapa" })
-  @IsOptional()
-  @IsString()
   cor?: string;
 }
 
@@ -48,18 +34,12 @@ export class OfertaFormacaoPeriodoEtapaItemRestDto {
 @ApiSchema({ name: "OfertaFormacaoPeriodoBulkReplaceItemDto" })
 export class OfertaFormacaoPeriodoBulkReplaceItemRestDto {
   @ApiProperty({ type: "integer", description: "Numero do periodo", minimum: 1 })
-  @IsInt()
-  @Min(1)
   numeroPeriodo: number;
 
   @ApiPropertyOptional({
     type: () => [OfertaFormacaoPeriodoEtapaItemRestDto],
     description: "Etapas do periodo",
   })
-  @IsOptional()
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => OfertaFormacaoPeriodoEtapaItemRestDto)
   etapas?: OfertaFormacaoPeriodoEtapaItemRestDto[];
 }
 
@@ -73,9 +53,6 @@ export class OfertaFormacaoPeriodoBulkReplaceInputRestDto {
     type: () => [OfertaFormacaoPeriodoBulkReplaceItemRestDto],
     description: "Lista de periodos com suas etapas",
   })
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => OfertaFormacaoPeriodoBulkReplaceItemRestDto)
   periodos: OfertaFormacaoPeriodoBulkReplaceItemRestDto[];
 }
 

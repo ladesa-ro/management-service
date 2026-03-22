@@ -1,9 +1,9 @@
 import { ServiceUnavailableException } from "@nestjs/common";
 import { has } from "lodash";
+import { ensureExists, ValidationFailedException } from "@/application/errors";
 import { IIdpUserService } from "@/domain/abstractions/identity-provider";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
-import { ensureExists, ValidationFailedException } from "@/modules/@shared";
 import type { UsuarioUpdateCommand } from "@/modules/acesso/usuario/domain/commands/usuario-update.command";
 import { IUsuarioUpdateCommandHandler } from "@/modules/acesso/usuario/domain/commands/usuario-update.command.handler.interface";
 import type { UsuarioFindOneQuery } from "@/modules/acesso/usuario/domain/queries";

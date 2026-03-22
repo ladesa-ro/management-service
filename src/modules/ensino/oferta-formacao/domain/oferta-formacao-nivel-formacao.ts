@@ -1,57 +1,60 @@
-import type { IEntityBaseUuid } from "@/domain/abstractions/entities";
 import type { IdUuid, ScalarDateTimeString } from "@/domain/abstractions/scalars";
-import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7.js";
-import type { INivelFormacao } from "@/modules/ensino/nivel-formacao/domain/nivel-formacao";
-import type { IOfertaFormacao } from "@/modules/ensino/oferta-formacao/domain/oferta-formacao";
+import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
+import { zodValidate } from "@/shared/validation/index";
+import {
+  ofertaFormacaoNivelFormacaoCreateSchema,
+  ofertaFormacaoNivelFormacaoSchema,
+} from "./oferta-formacao-nivel-formacao.schemas";
 
-export interface IOfertaFormacaoNivelFormacao extends IEntityBaseUuid {
-  nivelFormacao: INivelFormacao;
-  ofertaFormacao: IOfertaFormacao;
-}
+export type IOfertaFormacaoNivelFormacao = OfertaFormacaoNivelFormacao;
 
-export interface IOfertaFormacaoNivelFormacaoCreate {
-  nivelFormacao: { id: IdUuid };
-  ofertaFormacao: { id: IdUuid };
-}
-
-export class OfertaFormacaoNivelFormacao implements IEntityBaseUuid {
+export class OfertaFormacaoNivelFormacao {
   static readonly entityName = "OfertaFormacaoNivelFormacao";
 
   id!: IdUuid;
-  nivelFormacao!: INivelFormacao;
-  ofertaFormacao!: IOfertaFormacao;
+  nivelFormacao!: { id: string };
+  ofertaFormacao!: { id: string };
   dateCreated!: ScalarDateTimeString;
   dateUpdated!: ScalarDateTimeString;
   dateDeleted!: ScalarDateTimeString | null;
 
-  constructor() {
-    this.id = generateUuidV7();
-    this.dateCreated = new Date().toISOString();
-    this.dateUpdated = new Date().toISOString();
-    this.dateDeleted = null;
-  }
+  private constructor() {}
 
-  validate(): void {}
+  static create(dados: unknown): OfertaFormacaoNivelFormacao {
+    const parsed = zodValidate(
+      OfertaFormacaoNivelFormacao.entityName,
+      ofertaFormacaoNivelFormacaoCreateSchema,
+      dados,
+    );
 
-  static create(
-    _dados: IOfertaFormacaoNivelFormacaoCreate,
-    validar: boolean = true,
-  ): OfertaFormacaoNivelFormacao {
     const instance = new OfertaFormacaoNivelFormacao();
-    if (validar) instance.validate();
+
+    instance.id = generateUuidV7();
+    instance.nivelFormacao = parsed.nivelFormacao;
+    instance.ofertaFormacao = parsed.ofertaFormacao;
+    instance.dateCreated = new Date().toISOString();
+    instance.dateUpdated = new Date().toISOString();
+    instance.dateDeleted = null;
+
     return instance;
   }
 
-  static load(dados: Record<string, any>): OfertaFormacaoNivelFormacao {
-    const instance = Object.create(
-      OfertaFormacaoNivelFormacao.prototype,
-    ) as OfertaFormacaoNivelFormacao;
-    if (dados.id !== undefined) instance.id = dados.id;
-    if (dados.nivelFormacao !== undefined) instance.nivelFormacao = dados.nivelFormacao;
-    if (dados.ofertaFormacao !== undefined) instance.ofertaFormacao = dados.ofertaFormacao;
-    if (dados.dateCreated !== undefined) instance.dateCreated = dados.dateCreated;
-    if (dados.dateUpdated !== undefined) instance.dateUpdated = dados.dateUpdated;
-    if (dados.dateDeleted !== undefined) instance.dateDeleted = dados.dateDeleted;
+  static load(dados: unknown): OfertaFormacaoNivelFormacao {
+    const parsed = zodValidate(
+      OfertaFormacaoNivelFormacao.entityName,
+      ofertaFormacaoNivelFormacaoSchema,
+      dados,
+    );
+
+    const instance = new OfertaFormacaoNivelFormacao();
+
+    instance.id = parsed.id;
+    instance.nivelFormacao = parsed.nivelFormacao;
+    instance.ofertaFormacao = parsed.ofertaFormacao;
+    instance.dateCreated = parsed.dateCreated;
+    instance.dateUpdated = parsed.dateUpdated;
+    instance.dateDeleted = parsed.dateDeleted;
+
     return instance;
   }
 }

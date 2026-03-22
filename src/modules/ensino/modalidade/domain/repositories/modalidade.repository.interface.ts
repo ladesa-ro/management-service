@@ -1,4 +1,4 @@
-import type { IBaseCrudRepository } from "@/modules/@shared";
+import type { IBaseCrudRepository } from "@/domain/abstractions";
 import {
   type IModalidade,
   ModalidadeFindOneQueryResult,

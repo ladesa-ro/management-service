@@ -1,9 +1,10 @@
-import type { IEntityBaseUuid } from "@/domain/abstractions/entities";
 import type { IdUuid, ScalarDateTimeString } from "@/domain/abstractions/scalars";
-import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7.js";
-import { createValidator, throwIfInvalid, touchUpdated } from "@/utils/validation-utils.js";
+import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
+import { zodValidate } from "@/shared/validation/index";
+import { empresaCreateSchema, empresaSchema, empresaUpdateSchema } from "./empresa.schemas";
 
-export interface IEmpresa extends IEntityBaseUuid {
+export interface IEmpresa {
+  id: string;
   razaoSocial: string;
   nomeFantasia: string;
   cnpj: string;
@@ -11,27 +12,12 @@ export interface IEmpresa extends IEntityBaseUuid {
   email: string;
   idEnderecoFk: string;
   ativo?: boolean;
+  dateCreated: string;
+  dateUpdated: string;
+  dateDeleted: string | null;
 }
 
-export interface IEmpresaCreate {
-  razaoSocial: string;
-  nomeFantasia: string;
-  cnpj: string;
-  telefone: string;
-  email: string;
-  idEnderecoFk: string;
-}
-
-export interface IEmpresaUpdate {
-  razaoSocial?: string;
-  nomeFantasia?: string;
-  cnpj?: string;
-  telefone?: string;
-  email?: string;
-  idEnderecoFk?: string;
-}
-
-export class Empresa implements IEntityBaseUuid {
+export class Empresa {
   static readonly entityName = "Empresa";
 
   id!: IdUuid;
@@ -45,77 +31,63 @@ export class Empresa implements IEntityBaseUuid {
   dateUpdated!: ScalarDateTimeString;
   dateDeleted!: ScalarDateTimeString | null;
 
-  constructor(dados: {
-    razaoSocial: string;
-    nomeFantasia: string;
-    cnpj: string;
-    telefone: string;
-    email: string;
-    idEnderecoFk: string;
-  }) {
-    this.id = generateUuidV7();
-    this.razaoSocial = dados.razaoSocial;
-    this.nomeFantasia = dados.nomeFantasia;
-    this.cnpj = dados.cnpj;
-    this.telefone = dados.telefone;
-    this.email = dados.email;
-    this.idEnderecoFk = dados.idEnderecoFk;
-    this.dateCreated = new Date().toISOString();
-    this.dateUpdated = new Date().toISOString();
-    this.dateDeleted = null;
-  }
+  private constructor() {}
 
   get ativo(): boolean {
     return this.dateDeleted === null;
   }
 
-  validate(): void {
-    const { result, rules } = createValidator("Empresa");
-    rules.required(this.razaoSocial, "razaoSocial", "Razao social da empresa e obrigatoria");
-    rules.required(this.nomeFantasia, "nomeFantasia", "Nome fantasia da empresa e obrigatorio");
-    rules.required(this.cnpj, "cnpj", "CNPJ da empresa e obrigatorio");
-    rules.required(this.telefone, "telefone", "Telefone da empresa e obrigatorio");
-    rules.required(this.email, "email", "Email da empresa e obrigatorio");
-    rules.required(this.idEnderecoFk, "idEnderecoFk", "Endereco da empresa e obrigatorio");
-    rules.custom(this.cnpj, "cnpj", (v) => this.validarCNPJ(v), "CNPJ invalido", "cnpj");
-    throwIfInvalid("Empresa", result);
-  }
+  static create(dados: unknown): Empresa {
+    const parsed = zodValidate(Empresa.entityName, empresaCreateSchema, dados);
 
-  private validarCNPJ(cnpj: string): boolean {
-    const cnpjLimpo = cnpj.replace(/\D/g, "");
-    return cnpjLimpo.length === 14;
-  }
+    const instance = new Empresa();
 
-  static create(dados: IEmpresaCreate, validar: boolean = true): Empresa {
-    const instance = new Empresa(dados);
-    if (validar) instance.validate();
+    instance.id = generateUuidV7();
+    instance.razaoSocial = parsed.razaoSocial;
+    instance.nomeFantasia = parsed.nomeFantasia;
+    instance.cnpj = parsed.cnpj;
+    instance.telefone = parsed.telefone;
+    instance.email = parsed.email;
+    instance.idEnderecoFk = parsed.idEnderecoFk;
+    instance.dateCreated = new Date().toISOString();
+    instance.dateUpdated = new Date().toISOString();
+    instance.dateDeleted = null;
+
     return instance;
   }
 
-  static load(dados: Record<string, any>): Empresa {
-    const instance = Object.create(Empresa.prototype) as Empresa;
-    if (dados.id !== undefined) instance.id = dados.id;
-    if (dados.razaoSocial !== undefined) instance.razaoSocial = dados.razaoSocial;
-    if (dados.nomeFantasia !== undefined) instance.nomeFantasia = dados.nomeFantasia;
-    if (dados.cnpj !== undefined) instance.cnpj = dados.cnpj;
-    if (dados.telefone !== undefined) instance.telefone = dados.telefone;
-    if (dados.email !== undefined) instance.email = dados.email;
-    if (dados.idEnderecoFk !== undefined) instance.idEnderecoFk = dados.idEnderecoFk;
-    if (dados.dateCreated !== undefined) instance.dateCreated = dados.dateCreated;
-    if (dados.dateUpdated !== undefined) instance.dateUpdated = dados.dateUpdated;
-    if (dados.dateDeleted !== undefined) instance.dateDeleted = dados.dateDeleted;
+  static load(dados: unknown): Empresa {
+    const parsed = zodValidate(Empresa.entityName, empresaSchema, dados);
+
+    const instance = new Empresa();
+
+    instance.id = parsed.id;
+    instance.razaoSocial = parsed.razaoSocial;
+    instance.nomeFantasia = parsed.nomeFantasia;
+    instance.cnpj = parsed.cnpj;
+    instance.telefone = parsed.telefone;
+    instance.email = parsed.email;
+    instance.idEnderecoFk = parsed.idEnderecoFk;
+    instance.dateCreated = parsed.dateCreated;
+    instance.dateUpdated = parsed.dateUpdated;
+    instance.dateDeleted = parsed.dateDeleted;
+
     return instance;
   }
 
-  update(dados: IEmpresaUpdate): void {
-    if (dados.razaoSocial !== undefined) this.razaoSocial = dados.razaoSocial;
-    if (dados.nomeFantasia !== undefined) this.nomeFantasia = dados.nomeFantasia;
-    if (dados.cnpj !== undefined) this.cnpj = dados.cnpj;
-    if (dados.telefone !== undefined) this.telefone = dados.telefone;
-    if (dados.email !== undefined) this.email = dados.email;
-    if (dados.idEnderecoFk !== undefined) this.idEnderecoFk = dados.idEnderecoFk;
-    touchUpdated(this);
-    this.validate();
+  update(dados: unknown): void {
+    const parsed = zodValidate(Empresa.entityName, empresaUpdateSchema, dados);
+
+    if (parsed.razaoSocial !== undefined) this.razaoSocial = parsed.razaoSocial;
+    if (parsed.nomeFantasia !== undefined) this.nomeFantasia = parsed.nomeFantasia;
+    if (parsed.cnpj !== undefined) this.cnpj = parsed.cnpj;
+    if (parsed.telefone !== undefined) this.telefone = parsed.telefone;
+    if (parsed.email !== undefined) this.email = parsed.email;
+    if (parsed.idEnderecoFk !== undefined) this.idEnderecoFk = parsed.idEnderecoFk;
+
+    this.dateUpdated = new Date().toISOString();
+
+    zodValidate(Empresa.entityName, empresaSchema, this);
   }
 
   temRazaoSocial(): boolean {

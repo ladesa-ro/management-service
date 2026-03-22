@@ -1,9 +1,3 @@
-import {
-  createFindOneInputMapper,
-  createListInputMapper,
-  createListOutputMapper,
-  mapDatedFields,
-} from "@/modules/@shared/application/mappers";
 import { BlocoRestMapper } from "@/modules/ambientes/bloco/presentation.rest";
 import {
   DisciplinaCreateCommand,
@@ -12,6 +6,12 @@ import {
   DisciplinaListQuery,
   DisciplinaUpdateCommand,
 } from "@/modules/ensino/disciplina";
+import {
+  createFindOneInputMapper,
+  createListInputMapper,
+  createListOutputMapper,
+  mapDatedFields,
+} from "@/shared/mapping";
 import {
   DisciplinaCreateInputRestDto,
   DisciplinaFindOneInputRestDto,

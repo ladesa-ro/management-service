@@ -1,8 +1,10 @@
 import {
-  EntityBaseRestDto,
-  PaginatedFilterByIdRestDto,
-  PaginationMetaRestDto,
-} from "@/modules/@shared/infrastructure/presentation/rest/dtos";
+  imagemCreateSchema,
+  imagemFindOneInputSchema,
+  imagemPaginationInputSchema,
+  imagemUpdateSchema,
+} from "@/modules/armazenamento/imagem/domain/imagem.schemas";
+import { ImagemArquivoFindOneFromImagemOutputRestDto } from "@/modules/armazenamento/imagem-arquivo/presentation.rest";
 import {
   ApiProperty,
   ApiPropertyOptional,
@@ -11,17 +13,12 @@ import {
   PartialType,
   RegisterModel,
   simpleProperty,
-} from "@/modules/@shared/presentation/rest";
+} from "@/shared/presentation/rest";
 import {
-  IsArray,
-  IsOptional,
-  IsString,
-  IsUUID,
-  MinLength,
-  Type,
-  ValidateNested,
-} from "@/modules/@shared/presentation/shared";
-import { ImagemArquivoFindOneFromImagemOutputRestDto } from "@/modules/armazenamento/imagem-arquivo/presentation.rest";
+  EntityBaseRestDto,
+  PaginatedFilterByIdRestDto,
+  PaginationMetaRestDto,
+} from "@/shared/presentation/rest/dtos";
 
 // ============================================================================
 // FindOne Output
@@ -44,18 +41,12 @@ export class ImagemFindOneOutputRestDto extends EntityBaseRestDto {
     nullable: true,
     minLength: 1,
   })
-  @IsOptional()
-  @IsString()
-  @MinLength(1)
   descricao: string | null;
 
   @ApiProperty({
     description: "Versões da imagem",
     type: () => [ImagemArquivoFindOneFromImagemOutputRestDto],
   })
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => ImagemArquivoFindOneFromImagemOutputRestDto)
   versoes: ImagemArquivoFindOneFromImagemOutputRestDto[];
 }
 
@@ -64,7 +55,9 @@ export class ImagemFindOneOutputRestDto extends EntityBaseRestDto {
 // ============================================================================
 
 @ApiSchema({ name: "ImagemListInputDto" })
-export class ImagemListInputRestDto extends PaginatedFilterByIdRestDto {}
+export class ImagemListInputRestDto extends PaginatedFilterByIdRestDto {
+  static schema = imagemPaginationInputSchema;
+}
 
 @ApiSchema({ name: "ImagemListOutputDto" })
 export class ImagemListOutputRestDto {
@@ -81,20 +74,21 @@ export class ImagemListOutputRestDto {
 
 @ApiSchema({ name: "ImagemCreateInputDto" })
 export class ImagemCreateInputRestDto {
+  static schema = imagemCreateSchema;
+
   @ApiPropertyOptional({
     type: "string",
     description: "Descrição da imagem",
     nullable: true,
     minLength: 1,
   })
-  @IsOptional()
-  @IsString()
-  @MinLength(1)
   descricao?: string | null;
 }
 
 @ApiSchema({ name: "ImagemUpdateInputDto" })
-export class ImagemUpdateInputRestDto extends PartialType(ImagemCreateInputRestDto) {}
+export class ImagemUpdateInputRestDto extends PartialType(ImagemCreateInputRestDto) {
+  static schema = imagemUpdateSchema;
+}
 
 // ============================================================================
 // FindOne Input (for path params)
@@ -102,11 +96,12 @@ export class ImagemUpdateInputRestDto extends PartialType(ImagemCreateInputRestD
 
 @ApiSchema({ name: "ImagemFindOneInputDto" })
 export class ImagemFindOneInputRestDto {
+  static schema = imagemFindOneInputSchema;
+
   @ApiProperty({
     type: "string",
     description: "Identificador do registro (uuid)",
     format: "uuid",
   })
-  @IsUUID()
   id: string;
 }

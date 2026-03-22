@@ -1,8 +1,9 @@
 import {
-  EntityBaseRestDto,
-  PaginatedFilterByIdRestDto,
-  PaginationMetaRestDto,
-} from "@/modules/@shared/infrastructure/presentation/rest/dtos";
+  arquivoCreateSchema,
+  arquivoFindOneInputSchema,
+  arquivoPaginationInputSchema,
+  arquivoUpdateSchema,
+} from "@/modules/armazenamento/arquivo/domain/arquivo.schemas";
 import {
   ApiProperty,
   ApiPropertyOptional,
@@ -11,15 +12,12 @@ import {
   PartialType,
   RegisterModel,
   simpleProperty,
-} from "@/modules/@shared/presentation/rest";
+} from "@/shared/presentation/rest";
 import {
-  IsInt,
-  IsOptional,
-  IsString,
-  IsUUID,
-  Min,
-  MinLength,
-} from "@/modules/@shared/presentation/shared";
+  EntityBaseRestDto,
+  PaginatedFilterByIdRestDto,
+  PaginationMetaRestDto,
+} from "@/shared/presentation/rest/dtos";
 
 // ============================================================================
 // FindOne Output
@@ -44,9 +42,6 @@ export class ArquivoFindOneOutputRestDto extends EntityBaseRestDto {
     nullable: true,
     minLength: 1,
   })
-  @IsOptional()
-  @IsString()
-  @MinLength(1)
   name: string | null;
 
   @ApiPropertyOptional({
@@ -55,9 +50,6 @@ export class ArquivoFindOneOutputRestDto extends EntityBaseRestDto {
     nullable: true,
     minLength: 1,
   })
-  @IsOptional()
-  @IsString()
-  @MinLength(1)
   mimeType: string | null;
 
   @ApiPropertyOptional({
@@ -65,9 +57,6 @@ export class ArquivoFindOneOutputRestDto extends EntityBaseRestDto {
     description: "Tamanho do arquivo (em bytes)",
     nullable: true,
   })
-  @IsOptional()
-  @IsInt()
-  @Min(0)
   sizeBytes: number | null;
 
   @ApiProperty({
@@ -75,8 +64,6 @@ export class ArquivoFindOneOutputRestDto extends EntityBaseRestDto {
     description: "Estratégia de armazenamento do conteúdo",
     minLength: 1,
   })
-  @IsString()
-  @MinLength(1)
   storageType: string;
 }
 
@@ -85,7 +72,9 @@ export class ArquivoFindOneOutputRestDto extends EntityBaseRestDto {
 // ============================================================================
 
 @ApiSchema({ name: "ArquivoListInputDto" })
-export class ArquivoListInputRestDto extends PaginatedFilterByIdRestDto {}
+export class ArquivoListInputRestDto extends PaginatedFilterByIdRestDto {
+  static schema = arquivoPaginationInputSchema;
+}
 
 @ApiSchema({ name: "ArquivoListOutputDto" })
 export class ArquivoListOutputRestDto {
@@ -102,15 +91,14 @@ export class ArquivoListOutputRestDto {
 
 @ApiSchema({ name: "ArquivoCreateInputDto" })
 export class ArquivoCreateInputRestDto {
+  static schema = arquivoCreateSchema;
+
   @ApiPropertyOptional({
     type: "string",
     description: "Nome do arquivo",
     nullable: true,
     minLength: 1,
   })
-  @IsOptional()
-  @IsString()
-  @MinLength(1)
   name?: string | null;
 
   @ApiPropertyOptional({
@@ -119,9 +107,6 @@ export class ArquivoCreateInputRestDto {
     nullable: true,
     minLength: 1,
   })
-  @IsOptional()
-  @IsString()
-  @MinLength(1)
   mimeType?: string | null;
 
   @ApiPropertyOptional({
@@ -129,9 +114,6 @@ export class ArquivoCreateInputRestDto {
     description: "Tamanho do arquivo (em bytes)",
     nullable: true,
   })
-  @IsOptional()
-  @IsInt()
-  @Min(0)
   sizeBytes?: number | null;
 
   @ApiProperty({
@@ -139,13 +121,13 @@ export class ArquivoCreateInputRestDto {
     description: "Estratégia de armazenamento do conteúdo",
     minLength: 1,
   })
-  @IsString()
-  @MinLength(1)
   storageType: string;
 }
 
 @ApiSchema({ name: "ArquivoUpdateInputDto" })
-export class ArquivoUpdateInputRestDto extends PartialType(ArquivoCreateInputRestDto) {}
+export class ArquivoUpdateInputRestDto extends PartialType(ArquivoCreateInputRestDto) {
+  static schema = arquivoUpdateSchema;
+}
 
 // ============================================================================
 // FindOne Input (for path params)
@@ -153,12 +135,13 @@ export class ArquivoUpdateInputRestDto extends PartialType(ArquivoCreateInputRes
 
 @ApiSchema({ name: "ArquivoFindOneInputDto" })
 export class ArquivoFindOneInputRestDto {
+  static schema = arquivoFindOneInputSchema;
+
   @ApiProperty({
     type: "string",
     description: "Identificador do registro (uuid)",
     format: "uuid",
   })
-  @IsUUID()
   id: string;
 }
 
@@ -173,12 +156,8 @@ export class ArquivoGetFileQueryInputRestDto {
     description: "ID do recurso de acesso (uuid)",
     format: "uuid",
   })
-  @IsOptional()
-  @IsUUID()
   "acesso.recurso.id"?: string;
 
   @ApiPropertyOptional({ type: "string", description: "Nome do recurso de acesso" })
-  @IsOptional()
-  @IsString()
   "acesso.recurso.nome"?: string;
 }

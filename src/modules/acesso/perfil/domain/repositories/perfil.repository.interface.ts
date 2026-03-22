@@ -1,5 +1,5 @@
+import type { IPersistRepository } from "@/domain/abstractions";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
-import type { IPersistRepository } from "@/modules/@shared";
 import type {
   PerfilFindOneQuery,
   PerfilFindOneQueryResult,

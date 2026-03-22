@@ -6,14 +6,23 @@ export class CreateTableBaseEstado1742515440000 implements MigrationInterface {
       new Table({
         name: "base_estado",
         columns: [
-          { name: "id", type: "int", isPrimary: true },
-          { name: "sigla", type: "text", isNullable: false },
-          { name: "nome", type: "text", isNullable: false },
+          {
+            name: "id",
+            type: "int",
+            isPrimary: true,
+          },
+          {
+            name: "sigla",
+            type: "text",
+            isNullable: false,
+          },
+          {
+            name: "nome",
+            type: "text",
+            isNullable: false,
+          },
         ],
       }),
-    );
-    await queryRunner.query(
-      `COMMENT ON TABLE "base_estado" IS 'ID e predefinido com base na numeracao IBGE dos Estados Brasileiros'`,
     );
   }
 

@@ -1,4 +1,4 @@
-import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7.js";
+import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { Estagiario } from "@/modules/estagio/estagiario/domain/estagiario";
 import type { EstagiarioFindOneQueryResult } from "@/modules/estagio/estagiario/domain/queries";
 import { EstagiarioTypeormEntity } from "./estagiario.typeorm.entity";

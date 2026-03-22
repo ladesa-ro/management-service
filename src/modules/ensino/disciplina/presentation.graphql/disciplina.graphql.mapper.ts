@@ -1,4 +1,3 @@
-import { createListOutputMapper, mapDatedFields } from "@/modules/@shared/application/mappers";
 import {
   DisciplinaCreateCommand,
   DisciplinaFindOneQuery,
@@ -6,6 +5,7 @@ import {
   DisciplinaListQuery,
   DisciplinaUpdateCommand,
 } from "@/modules/ensino/disciplina";
+import { createListOutputMapper, mapDatedFields } from "@/shared/mapping";
 import {
   DisciplinaCreateInputGraphQlDto,
   DisciplinaFindOneOutputGraphQlDto,

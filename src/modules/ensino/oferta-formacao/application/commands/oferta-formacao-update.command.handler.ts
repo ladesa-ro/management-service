@@ -1,7 +1,8 @@
 import { has } from "lodash";
+import { ensureExists } from "@/application/errors";
+import type { PersistInput } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
-import { ensureExists, type PersistInput } from "@/modules/@shared";
 import { Modalidade } from "@/modules/ensino/modalidade/domain/modalidade";
 import { IModalidadeFindOneQueryHandler } from "@/modules/ensino/modalidade/domain/queries/modalidade-find-one.query.handler.interface";
 import type { OfertaFormacaoUpdateCommand } from "@/modules/ensino/oferta-formacao/domain/commands/oferta-formacao-update.command";

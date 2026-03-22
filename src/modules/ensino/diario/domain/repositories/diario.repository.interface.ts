@@ -1,4 +1,4 @@
-import type { IBaseCrudRepository } from "@/modules/@shared";
+import type { IBaseCrudRepository } from "@/domain/abstractions";
 import type { IDiario } from "@/modules/ensino/diario";
 import type { DiarioFindOneQueryResult, DiarioListQueryResult } from "../queries";
 /**

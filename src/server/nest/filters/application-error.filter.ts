@@ -1,6 +1,7 @@
 import { type ArgumentsHost, Catch, type ExceptionFilter } from "@nestjs/common";
 import type { Request, Response } from "express";
-import { ApplicationError, DomainError } from "@/modules/@shared";
+import { ApplicationError } from "@/application/errors";
+import { DomainError } from "@/domain/errors";
 import { buildHttpErrorResponse } from "./error-http.mapper";
 
 /**

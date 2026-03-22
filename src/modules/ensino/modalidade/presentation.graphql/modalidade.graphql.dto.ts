@@ -2,10 +2,13 @@ import {
   EntityBaseGraphQlDto,
   PaginatedFilterByIdGraphQlDto,
   PaginationMetaGraphQlDto,
-} from "@/modules/@shared/infrastructure/graphql/dtos";
-import { ArgsType, Field, InputType, ObjectType } from "@/modules/@shared/presentation/graphql";
-import { IsOptional, IsString, MinLength } from "@/modules/@shared/presentation/shared";
-import { ModalidadeFieldsMixin } from "../presentation.validations/modalidade.validation-mixin";
+} from "@/infrastructure.graphql/dtos";
+import { ArgsType, Field, InputType, ObjectType } from "@/shared/presentation/graphql";
+import {
+  modalidadeCreateSchema,
+  modalidadeGraphqlListInputSchema,
+  modalidadeUpdateSchema,
+} from "../domain/modalidade.schemas";
 
 // ============================================================================
 // FindOne Output
@@ -22,9 +25,11 @@ export class ModalidadeFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
 // ============================================================================
 
 @InputType("ModalidadeCreateInputDto")
-export class ModalidadeCreateInputGraphQlDto extends ModalidadeFieldsMixin {
-  @Field(() => String) declare nome: string;
-  @Field(() => String) declare slug: string;
+export class ModalidadeCreateInputGraphQlDto {
+  static readonly schema = modalidadeCreateSchema;
+
+  @Field(() => String) nome: string;
+  @Field(() => String) slug: string;
 }
 
 // ============================================================================
@@ -33,15 +38,11 @@ export class ModalidadeCreateInputGraphQlDto extends ModalidadeFieldsMixin {
 
 @InputType("ModalidadeUpdateInputDto")
 export class ModalidadeUpdateInputGraphQlDto {
+  static readonly schema = modalidadeUpdateSchema;
+
   @Field(() => String, { nullable: true })
-  @IsOptional()
-  @IsString()
-  @MinLength(1)
   nome?: string;
   @Field(() => String, { nullable: true })
-  @IsOptional()
-  @IsString()
-  @MinLength(1)
   slug?: string;
 }
 
@@ -50,7 +51,9 @@ export class ModalidadeUpdateInputGraphQlDto {
 // ============================================================================
 
 @ArgsType()
-export class ModalidadeListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {}
+export class ModalidadeListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {
+  static schema = modalidadeGraphqlListInputSchema;
+}
 
 // ============================================================================
 // List Output

@@ -1,28 +1,30 @@
-import { createListOutputMapper } from "@/modules/@shared/application/mappers";
 import {
   EstadoFindOneQuery,
   EstadoFindOneQueryResult,
   EstadoListQuery,
 } from "@/modules/localidades/estado";
+import { createListOutputMapper } from "@/shared/mapping";
+import { createMapping, mapFilterCase } from "@/shared/mapping/index";
 import {
   EstadoFindOneOutputGraphQlDto,
   EstadoListInputGraphQlDto,
   EstadoListOutputGraphQlDto,
 } from "./estado.graphql.dto";
 
+const outputMapping = createMapping(["id", "nome", "sigla"]);
+
+const listInputMapping = createMapping([
+  "page",
+  "limit",
+  "search",
+  "sortBy",
+  mapFilterCase("filter.id"),
+]);
+
 export class EstadoGraphqlMapper {
   static toListInput(dto: EstadoListInputGraphQlDto | null): EstadoListQuery | null {
-    if (!dto) {
-      return null;
-    }
-
-    const input = new EstadoListQuery();
-    input.page = dto.page;
-    input.limit = dto.limit;
-    input.search = dto.search;
-    input.sortBy = dto.sortBy;
-    input["filter.id"] = dto.filterId;
-    return input;
+    if (!dto) return null;
+    return listInputMapping.mapDefined<EstadoListQuery>(dto);
   }
 
   static toFindOneInput(id: number, selection?: string[]): EstadoFindOneQuery {
@@ -33,11 +35,7 @@ export class EstadoGraphqlMapper {
   }
 
   static toFindOneOutputDto(output: EstadoFindOneQueryResult): EstadoFindOneOutputGraphQlDto {
-    const dto = new EstadoFindOneOutputGraphQlDto();
-    dto.id = output.id;
-    dto.nome = output.nome;
-    dto.sigla = output.sigla;
-    return dto;
+    return outputMapping.map<EstadoFindOneOutputGraphQlDto>(output);
   }
 
   static toListOutputDto = createListOutputMapper(

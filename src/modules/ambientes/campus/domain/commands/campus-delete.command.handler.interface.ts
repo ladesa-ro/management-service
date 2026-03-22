@@ -1,4 +1,4 @@
-import type { ICommandHandler } from "@/modules/@shared/domain/abstractions";
+import type { ICommandHandler } from "@/domain/abstractions";
 import type { CampusFindOneQuery } from "../queries";
 
 export const ICampusDeleteCommandHandler = Symbol("ICampusDeleteCommandHandler");

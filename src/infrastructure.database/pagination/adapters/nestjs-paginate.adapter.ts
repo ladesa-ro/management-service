@@ -1,8 +1,8 @@
 import { type PaginateConfig, paginate } from "nestjs-paginate";
 import type { PaginateQuery } from "nestjs-paginate/lib/decorator";
 import type { ObjectLiteral, SelectQueryBuilder } from "typeorm";
+import type { IPaginationCriteria, IPaginationResult } from "@/application/pagination";
 import { DeclareImplementation } from "@/domain/dependency-injection";
-import type { IPaginationCriteria, IPaginationResult } from "@/modules/@shared";
 import { paginateConfig } from "../config/paginate-config";
 import type { ITypeOrmPaginationConfig } from "../interfaces/pagination-config.types";
 

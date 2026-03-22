@@ -1,7 +1,8 @@
 import {
-  PaginatedFilterByStringIdRestDto,
-  PaginationMetaRestDto,
-} from "@/modules/@shared/infrastructure/presentation/rest/dtos";
+  cidadeFindOneInputSchema,
+  cidadePaginationInputSchema,
+} from "@/modules/localidades/cidade/domain/cidade.schemas";
+import { EstadoFindOneOutputRestDto } from "@/modules/localidades/estado/presentation.rest/estado.rest.dto";
 import {
   ApiProperty,
   ApiPropertyOptional,
@@ -9,17 +10,8 @@ import {
   RegisterModel,
   referenceProperty,
   simpleProperty,
-  TransformToArray,
-} from "@/modules/@shared/presentation/rest";
-import {
-  IsArray,
-  IsInt,
-  IsOptional,
-  IsString,
-  Type,
-  ValidateNested,
-} from "@/modules/@shared/presentation/shared";
-import { EstadoFindOneOutputRestDto } from "@/modules/localidades/estado/presentation.rest/estado.rest.dto";
+} from "@/shared/presentation/rest";
+import { PaginationMetaRestDto } from "@/shared/presentation/rest/dtos";
 
 // ============================================================================
 // FindOne Output
@@ -36,16 +28,12 @@ import { EstadoFindOneOutputRestDto } from "@/modules/localidades/estado/present
 })
 export class CidadeFindOneOutputRestDto {
   @ApiProperty({ type: "integer", description: "Identificador do registro (numerico)" })
-  @IsInt()
   id: number;
 
   @ApiProperty({ type: "string", description: "Nome oficial da cidade" })
-  @IsString()
   nome: string;
 
   @ApiProperty({ type: () => EstadoFindOneOutputRestDto, description: "Estado da cidade" })
-  @ValidateNested()
-  @Type(() => EstadoFindOneOutputRestDto)
   estado: EstadoFindOneOutputRestDto;
 }
 
@@ -54,16 +42,43 @@ export class CidadeFindOneOutputRestDto {
 // ============================================================================
 
 @ApiSchema({ name: "CidadeListInputDto" })
-export class CidadeListInputRestDto extends PaginatedFilterByStringIdRestDto {
+export class CidadeListInputRestDto {
+  static schema = cidadePaginationInputSchema;
+
+  [key: string]: string | number | string[] | null | undefined;
+
+  @ApiPropertyOptional({
+    type: "integer",
+    description: "Pagina de consulta",
+    minimum: 1,
+    default: 1,
+  })
+  page?: number = 1;
+
+  @ApiPropertyOptional({
+    type: "integer",
+    description: "Limite da quantidade de resultados por pagina",
+    minimum: 1,
+  })
+  limit?: number;
+
+  @ApiPropertyOptional({ type: "string", description: "Busca textual" })
+  search?: string;
+
+  @ApiPropertyOptional({ description: "Ordenacao (ex: nome:ASC)", isArray: true, type: "string" })
+  sortBy?: string[];
+
+  @ApiPropertyOptional({ description: "Seleção de campos", isArray: true, type: "string" })
+  selection?: string[];
+
+  @ApiPropertyOptional({ description: "Filtro por ID", type: "string", isArray: true })
+  "filter.id"?: string[];
+
   @ApiPropertyOptional({
     description: "Filtro por ID do Estado",
     type: "string",
     isArray: true,
   })
-  @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
   "filter.estado.id"?: string[];
 
   @ApiPropertyOptional({
@@ -71,10 +86,6 @@ export class CidadeListInputRestDto extends PaginatedFilterByStringIdRestDto {
     type: "string",
     isArray: true,
   })
-  @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
   "filter.estado.nome"?: string[];
 
   @ApiPropertyOptional({
@@ -82,10 +93,6 @@ export class CidadeListInputRestDto extends PaginatedFilterByStringIdRestDto {
     type: "string",
     isArray: true,
   })
-  @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
   "filter.estado.sigla"?: string[];
 }
 
@@ -104,8 +111,8 @@ export class CidadeListOutputRestDto {
 
 @ApiSchema({ name: "CidadeFindOneInputDto" })
 export class CidadeFindOneInputRestDto {
+  static schema = cidadeFindOneInputSchema;
+
   @ApiProperty({ type: "integer", description: "Identificador do registro (numerico)" })
-  @Type(() => Number)
-  @IsInt()
   id: number;
 }

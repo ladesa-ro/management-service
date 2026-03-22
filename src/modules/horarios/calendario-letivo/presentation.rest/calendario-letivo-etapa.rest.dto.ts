@@ -1,16 +1,8 @@
-import { ApiProperty, ApiSchema } from "@/modules/@shared/presentation/rest";
-import {
-  IsArray,
-  IsString,
-  IsUUID,
-  Type,
-  ValidateNested,
-} from "@/modules/@shared/presentation/shared";
+import { ApiProperty, ApiSchema } from "@/shared/presentation/rest";
 
 @ApiSchema({ name: "CalendarioLetivoEtapaParentParamsDto" })
 export class CalendarioLetivoEtapaParentParamsRestDto {
   @ApiProperty({ type: "string", format: "uuid", description: "ID do calendario letivo" })
-  @IsUUID()
   calendarioLetivoId: string;
 }
 
@@ -21,24 +13,18 @@ export class CalendarioLetivoEtapaBulkReplaceItemRestDto {
     format: "uuid",
     description: "ID da etapa da oferta de formacao periodo",
   })
-  @IsUUID()
   ofertaFormacaoPeriodoEtapaId: string;
 
   @ApiProperty({ type: "string", format: "date", description: "Data inicio da etapa" })
-  @IsString()
   dataInicio: string;
 
   @ApiProperty({ type: "string", format: "date", description: "Data termino da etapa" })
-  @IsString()
   dataTermino: string;
 }
 
 @ApiSchema({ name: "CalendarioLetivoEtapaBulkReplaceInputDto" })
 export class CalendarioLetivoEtapaBulkReplaceInputRestDto {
   @ApiProperty({ type: () => [CalendarioLetivoEtapaBulkReplaceItemRestDto] })
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => CalendarioLetivoEtapaBulkReplaceItemRestDto)
   etapas: CalendarioLetivoEtapaBulkReplaceItemRestDto[];
 }
 

@@ -1,9 +1,6 @@
-import { Mixin } from "ts-mixer";
-import {
-  EntityBaseRestDto,
-  PaginatedFilterByIdRestDto,
-  PaginationMetaRestDto,
-} from "@/modules/@shared/infrastructure/presentation/rest/dtos";
+import { AmbienteFindOneOutputRestDto } from "@/modules/ambientes/ambiente/presentation.rest";
+import { ImagemFindOneOutputRestDto } from "@/modules/ambientes/bloco/presentation.rest";
+import { CursoFindOneOutputRestDto } from "@/modules/ensino/curso/presentation.rest";
 import {
   ApiProperty,
   ApiPropertyOptional,
@@ -14,25 +11,17 @@ import {
   referenceProperty,
   simpleProperty,
   TransformToArray,
-} from "@/modules/@shared/presentation/rest";
+} from "@/shared/presentation/rest";
 import {
-  IsArray,
-  IsOptional,
-  IsString,
-  IsUUID,
-  Type,
-  ValidateNested,
-} from "@/modules/@shared/presentation/shared";
+  EntityBaseRestDto,
+  PaginatedFilterByIdRestDto,
+  PaginationMetaRestDto,
+} from "@/shared/presentation/rest/dtos";
 import {
-  AmbienteFindOneInputRestDto,
-  AmbienteFindOneOutputRestDto,
-} from "@/modules/ambientes/ambiente/presentation.rest";
-import { ImagemFindOneOutputRestDto } from "@/modules/ambientes/bloco/presentation.rest";
-import {
-  CursoFindOneInputRestDto,
-  CursoFindOneOutputRestDto,
-} from "@/modules/ensino/curso/presentation.rest";
-import { TurmaFieldsMixin } from "@/modules/ensino/turma/presentation.validations/turma.validation-mixin";
+  turmaCreateSchema,
+  turmaFindOneInputSchema,
+  turmaPaginationInputSchema,
+} from "../domain/turma.schemas";
 
 // ============================================================================
 // FindOne Output
@@ -50,16 +39,14 @@ import { TurmaFieldsMixin } from "@/modules/ensino/turma/presentation.validation
     ...commonProperties.dated,
   ],
 })
-export class TurmaFindOneOutputRestDto extends Mixin(EntityBaseRestDto, TurmaFieldsMixin) {
+export class TurmaFindOneOutputRestDto extends EntityBaseRestDto {
   @ApiProperty({ type: "string", description: "Periodo da turma", minLength: 1 })
-  declare periodo: string;
+  periodo: string;
 
   @ApiPropertyOptional({ type: "string", description: "Nome da turma", nullable: true })
-  declare nome: string | null;
+  nome: string | null;
 
   @ApiProperty({ type: () => CursoFindOneOutputRestDto, description: "Curso da turma" })
-  @ValidateNested()
-  @Type(() => CursoFindOneOutputRestDto)
   curso: CursoFindOneOutputRestDto;
 
   @ApiPropertyOptional({
@@ -67,9 +54,6 @@ export class TurmaFindOneOutputRestDto extends Mixin(EntityBaseRestDto, TurmaFie
     description: "Ambiente padrao da sala de aula",
     nullable: true,
   })
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => AmbienteFindOneOutputRestDto)
   ambientePadraoAula: AmbienteFindOneOutputRestDto | null;
 
   @ApiPropertyOptional({
@@ -77,9 +61,6 @@ export class TurmaFindOneOutputRestDto extends Mixin(EntityBaseRestDto, TurmaFie
     description: "Imagem de capa da turma",
     nullable: true,
   })
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => ImagemFindOneOutputRestDto)
   imagemCapa: ImagemFindOneOutputRestDto | null;
 }
 
@@ -89,15 +70,14 @@ export class TurmaFindOneOutputRestDto extends Mixin(EntityBaseRestDto, TurmaFie
 
 @ApiSchema({ name: "TurmaListInputDto" })
 export class TurmaListInputRestDto extends PaginatedFilterByIdRestDto {
+  static schema = turmaPaginationInputSchema;
+
   @ApiPropertyOptional({
     type: "string",
     isArray: true,
     description: "Filtro por periodo da turma",
   })
   @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
   "filter.periodo"?: string[];
 
   @ApiPropertyOptional({
@@ -106,9 +86,6 @@ export class TurmaListInputRestDto extends PaginatedFilterByIdRestDto {
     description: "Filtro por nome do Ambiente Padrao de Aula",
   })
   @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
   "filter.ambientePadraoAula.nome"?: string[];
 
   @ApiPropertyOptional({
@@ -117,9 +94,6 @@ export class TurmaListInputRestDto extends PaginatedFilterByIdRestDto {
     description: "Filtro por codigo do Ambiente Padrao de Aula",
   })
   @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
   "filter.ambientePadraoAula.codigo"?: string[];
 
   @ApiPropertyOptional({
@@ -128,9 +102,6 @@ export class TurmaListInputRestDto extends PaginatedFilterByIdRestDto {
     description: "Filtro por capacidade do Ambiente Padrao de Aula",
   })
   @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
   "filter.ambientePadraoAula.capacidade"?: string[];
 
   @ApiPropertyOptional({
@@ -139,9 +110,6 @@ export class TurmaListInputRestDto extends PaginatedFilterByIdRestDto {
     description: "Filtro por tipo do Ambiente Padrao de Aula",
   })
   @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
   "filter.ambientePadraoAula.tipo"?: string[];
 
   @ApiPropertyOptional({
@@ -150,9 +118,6 @@ export class TurmaListInputRestDto extends PaginatedFilterByIdRestDto {
     description: "Filtro por ID do Curso",
   })
   @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
   "filter.curso.id"?: string[];
 
   @ApiPropertyOptional({
@@ -161,9 +126,6 @@ export class TurmaListInputRestDto extends PaginatedFilterByIdRestDto {
     description: "Filtro por nome do Curso",
   })
   @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
   "filter.curso.nome"?: string[];
 
   @ApiPropertyOptional({
@@ -172,9 +134,6 @@ export class TurmaListInputRestDto extends PaginatedFilterByIdRestDto {
     description: "Filtro por nome abreviado do Curso",
   })
   @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
   "filter.curso.nomeAbreviado"?: string[];
 
   @ApiPropertyOptional({
@@ -183,9 +142,6 @@ export class TurmaListInputRestDto extends PaginatedFilterByIdRestDto {
     description: "Filtro por ID do Campus do Curso",
   })
   @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
   "filter.curso.campus.id"?: string[];
 
   @ApiPropertyOptional({
@@ -194,9 +150,6 @@ export class TurmaListInputRestDto extends PaginatedFilterByIdRestDto {
     description: "Filtro por ID da Oferta de Formacao do Curso",
   })
   @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
   "filter.curso.ofertaFormacao.id"?: string[];
 
   @ApiPropertyOptional({
@@ -205,9 +158,6 @@ export class TurmaListInputRestDto extends PaginatedFilterByIdRestDto {
     description: "Filtro por nome da Oferta de Formacao do Curso",
   })
   @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
   "filter.curso.ofertaFormacao.nome"?: string[];
 
   @ApiPropertyOptional({
@@ -216,9 +166,6 @@ export class TurmaListInputRestDto extends PaginatedFilterByIdRestDto {
     description: "Filtro por slug da Oferta de Formacao do Curso",
   })
   @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
   "filter.curso.ofertaFormacao.slug"?: string[];
 }
 
@@ -236,24 +183,29 @@ export class TurmaListOutputRestDto {
 // ============================================================================
 
 @ApiSchema({ name: "TurmaCreateInputDto" })
-export class TurmaCreateInputRestDto extends TurmaFieldsMixin {
-  @ApiProperty({ type: "string", description: "Periodo da turma", minLength: 1 })
-  declare periodo: string;
+export class TurmaCreateInputRestDto {
+  static readonly schema = turmaCreateSchema;
 
-  @ApiProperty({ type: () => CursoFindOneInputRestDto, description: "Curso da turma" })
-  @ValidateNested()
-  @Type(() => CursoFindOneInputRestDto)
-  curso: CursoFindOneInputRestDto;
+  @ApiProperty({ type: "string", description: "Periodo da turma", minLength: 1 })
+  periodo: string;
+
+  @ApiPropertyOptional({ type: "string", description: "Nome da turma", nullable: true })
+  nome?: string | null;
+
+  @ApiProperty({
+    type: "object",
+    description: "Curso da turma",
+    properties: { id: { type: "string", format: "uuid" } },
+  })
+  curso: { id: string };
 
   @ApiPropertyOptional({
-    type: () => AmbienteFindOneInputRestDto,
+    type: "object",
     description: "Ambiente padrao da sala de aula",
     nullable: true,
+    properties: { id: { type: "string", format: "uuid" } },
   })
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => AmbienteFindOneInputRestDto)
-  ambientePadraoAula?: AmbienteFindOneInputRestDto | null;
+  ambientePadraoAula?: { id: string } | null;
 }
 
 @ApiSchema({ name: "TurmaUpdateInputDto" })
@@ -265,11 +217,12 @@ export class TurmaUpdateInputRestDto extends PartialType(TurmaCreateInputRestDto
 
 @ApiSchema({ name: "TurmaFindOneInputDto" })
 export class TurmaFindOneInputRestDto {
+  static readonly schema = turmaFindOneInputSchema;
+
   @ApiProperty({
     type: "string",
     description: "Identificador do registro (uuid)",
     format: "uuid",
   })
-  @IsUUID()
   id: string;
 }

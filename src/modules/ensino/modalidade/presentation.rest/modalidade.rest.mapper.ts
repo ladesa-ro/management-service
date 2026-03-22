@@ -1,16 +1,16 @@
 import {
-  createFindOneInputMapper,
-  createListInputMapper,
-  createListOutputMapper,
-  mapDatedFields,
-} from "@/modules/@shared/application/mappers";
-import {
   ModalidadeCreateCommand,
   ModalidadeFindOneQuery,
   ModalidadeFindOneQueryResult,
   ModalidadeListQuery,
   ModalidadeUpdateCommand,
 } from "@/modules/ensino/modalidade";
+import {
+  createFindOneInputMapper,
+  createListInputMapper,
+  createListOutputMapper,
+  mapDatedFields,
+} from "@/shared/mapping";
 import {
   ModalidadeCreateInputRestDto,
   ModalidadeFindOneInputRestDto,

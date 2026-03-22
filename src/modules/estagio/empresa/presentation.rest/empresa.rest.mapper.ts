@@ -1,11 +1,4 @@
 import {
-  createFindOneInputMapper,
-  createListInputMapper,
-  createListOutputMapper,
-  mapDatedFields,
-  mapFieldsIfDefined,
-} from "@/modules/@shared/application/mappers";
-import {
   EmpresaCreateCommand,
   EmpresaUpdateCommand,
 } from "@/modules/estagio/empresa/domain/commands";
@@ -14,6 +7,13 @@ import {
   type EmpresaFindOneQueryResult,
   EmpresaListQuery,
 } from "@/modules/estagio/empresa/domain/queries";
+import {
+  createFindOneInputMapper,
+  createListInputMapper,
+  createListOutputMapper,
+  mapDatedFields,
+  mapFieldsIfDefined,
+} from "@/shared/mapping";
 import {
   EmpresaCreateInputRestDto,
   EmpresaFindOneInputRestDto,

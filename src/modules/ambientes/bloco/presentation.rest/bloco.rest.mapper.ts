@@ -1,10 +1,4 @@
 import {
-  createFindOneInputMapper,
-  createListInputMapper,
-  createListOutputMapper,
-  mapDatedFields,
-} from "@/modules/@shared/application/mappers";
-import {
   BlocoCreateCommand,
   BlocoFindOneQuery,
   BlocoFindOneQueryResult,
@@ -13,6 +7,12 @@ import {
 } from "@/modules/ambientes/bloco";
 import { CampusRestMapper } from "@/modules/ambientes/campus/presentation.rest";
 import type { ImagemFindOneQueryResult } from "@/modules/armazenamento/imagem";
+import {
+  createFindOneInputMapper,
+  createListInputMapper,
+  createListOutputMapper,
+  mapDatedFields,
+} from "@/shared/mapping";
 import {
   BlocoCreateInputRestDto,
   BlocoFindOneInputRestDto,

@@ -1,6 +1,6 @@
-import { mapDatedFields } from "@/modules/@shared/application/mappers";
 import { CidadeGraphqlMapper } from "@/modules/localidades/cidade/presentation.graphql/cidade.graphql.mapper";
 import { EnderecoFindOneQuery, EnderecoFindOneQueryResult } from "@/modules/localidades/endereco";
+import { mapDatedFields } from "@/shared/mapping";
 import { EnderecoFindOneOutputGraphQlDto } from "./endereco.graphql.dto";
 
 export class EnderecoGraphqlMapper {

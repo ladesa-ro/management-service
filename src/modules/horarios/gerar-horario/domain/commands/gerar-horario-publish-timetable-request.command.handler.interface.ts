@@ -1,4 +1,4 @@
-import type { ICommandHandler } from "@/modules/@shared/domain/abstractions";
+import type { ICommandHandler } from "@/domain/abstractions";
 
 export type IGerarHorarioPublishTimetableRequestCommand<TRequest = unknown> = {
   request: TRequest;

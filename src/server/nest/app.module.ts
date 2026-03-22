@@ -1,8 +1,8 @@
 import { Module } from "@nestjs/common";
 import { APP_FILTER, APP_INTERCEPTOR } from "@nestjs/core";
 import { ContainerModule } from "@/infrastructure.dependency-injection";
+import { InfrastructureModule } from "@/infrastructure.module";
 import { AccessContextCoreModule } from "@/modules/@seguranca/contexto-acesso";
-import { InfrastructureModule } from "@/modules/@shared/infrastructure";
 import { AppController } from "@/server/nest/app.controller";
 import { AppService } from "@/server/nest/app.service";
 import {

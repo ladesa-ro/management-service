@@ -1,4 +1,4 @@
-import type { IQueryHandler } from "@/modules/@shared/domain/abstractions";
+import type { IQueryHandler } from "@/domain/abstractions";
 import type { EstagioListQuery } from "./estagio-list.query";
 import type { EstagioListQueryResult } from "./estagio-list.query.result";
 

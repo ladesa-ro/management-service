@@ -1,35 +1,23 @@
-// Note: AmbienteListInputRestDto does not use @InputType or @Field for filter fields
-// because GraphQL field names cannot contain dots. Use AmbienteListInputGraphQlDto for GraphQL.
-import { Mixin } from "ts-mixer";
 import {
-  EntityBaseRestDto,
-  PaginatedFilterByIdRestDto,
-  PaginationMetaRestDto,
-} from "@/modules/@shared/infrastructure/presentation/rest/dtos";
+  BlocoFindOneOutputRestDto,
+  ImagemFindOneOutputRestDto,
+} from "@/modules/ambientes/bloco/presentation.rest";
 import {
   ApiProperty,
   ApiPropertyOptional,
   ApiSchema,
   commonProperties,
-  PartialType,
   RegisterModel,
   referenceProperty,
   simpleProperty,
-  TransformToArray,
-} from "@/modules/@shared/presentation/rest";
+} from "@/shared/presentation/rest";
+import { EntityBaseRestDto, PaginationMetaRestDto } from "@/shared/presentation/rest/dtos";
 import {
-  IsArray,
-  IsOptional,
-  IsUUID,
-  Type,
-  ValidateNested,
-} from "@/modules/@shared/presentation/shared";
-import {
-  BlocoFindOneInputRestDto,
-  BlocoFindOneOutputRestDto,
-  ImagemFindOneOutputRestDto,
-} from "@/modules/ambientes/bloco/presentation.rest";
-import { AmbienteFieldsMixin } from "../presentation.validations/ambiente.validation-mixin";
+  ambienteFindOneInputSchema,
+  ambienteInputCreateSchema,
+  ambienteInputUpdateSchema,
+  ambientePaginationInputSchema,
+} from "../domain/ambiente.schemas";
 
 // ============================================================================
 // FindOne Output
@@ -50,40 +38,38 @@ import { AmbienteFieldsMixin } from "../presentation.validations/ambiente.valida
     ...commonProperties.dated,
   ],
 })
-export class AmbienteFindOneOutputRestDto extends Mixin(EntityBaseRestDto, AmbienteFieldsMixin) {
+export class AmbienteFindOneOutputRestDto extends EntityBaseRestDto {
   @ApiProperty({ type: "string", description: "Nome do ambiente/sala", minLength: 1 })
-  declare nome: string;
+  nome: string;
 
   @ApiPropertyOptional({
     type: "string",
     description: "Descricao do ambiente/sala",
     nullable: true,
   })
-  declare descricao: string | null;
+  descricao: string | null;
 
   @ApiProperty({ type: "string", description: "Codigo do ambiente/sala", minLength: 1 })
-  declare codigo: string;
+  codigo: string;
 
   @ApiPropertyOptional({
     type: "integer",
     description: "Capacidade do ambiente/sala",
     nullable: true,
   })
-  declare capacidade: number | null;
+  capacidade: number | null;
 
   @ApiPropertyOptional({
     type: "string",
     description: "Tipo do ambiente/sala. Ex.: sala aula, auditorio, laboratorio de quimica",
     nullable: true,
   })
-  declare tipo: string | null;
+  tipo: string | null;
 
   @ApiProperty({
     type: () => BlocoFindOneOutputRestDto,
     description: "Bloco que o ambiente/sala pertence",
   })
-  @ValidateNested()
-  @Type(() => BlocoFindOneOutputRestDto)
   bloco: BlocoFindOneOutputRestDto;
 
   @ApiPropertyOptional({
@@ -91,9 +77,6 @@ export class AmbienteFindOneOutputRestDto extends Mixin(EntityBaseRestDto, Ambie
     description: "Imagem de capa do ambiente",
     nullable: true,
   })
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => ImagemFindOneOutputRestDto)
   imagemCapa: ImagemFindOneOutputRestDto | null;
 }
 
@@ -102,16 +85,43 @@ export class AmbienteFindOneOutputRestDto extends Mixin(EntityBaseRestDto, Ambie
 // ============================================================================
 
 @ApiSchema({ name: "AmbienteListInputDto" })
-export class AmbienteListInputRestDto extends PaginatedFilterByIdRestDto {
+export class AmbienteListInputRestDto {
+  static schema = ambientePaginationInputSchema;
+
+  [key: string]: string | number | string[] | null | undefined;
+
+  @ApiPropertyOptional({
+    type: "integer",
+    description: "Pagina de consulta",
+    minimum: 1,
+    default: 1,
+  })
+  page?: number = 1;
+
+  @ApiPropertyOptional({
+    type: "integer",
+    description: "Limite da quantidade de resultados por pagina",
+    minimum: 1,
+  })
+  limit?: number;
+
+  @ApiPropertyOptional({ type: "string", description: "Busca textual" })
+  search?: string;
+
+  @ApiPropertyOptional({ description: "Ordenacao (ex: nome:ASC)", isArray: true, type: "string" })
+  sortBy?: string[];
+
+  @ApiPropertyOptional({ description: "Seleção de campos", isArray: true, type: "string" })
+  selection?: string[];
+
+  @ApiPropertyOptional({ description: "Filtro por ID", type: "string", isArray: true })
+  "filter.id"?: string[];
+
   @ApiPropertyOptional({
     description: "Filtro por ID do Bloco",
     type: "string",
     isArray: true,
   })
-  @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
   "filter.bloco.id"?: string[];
 
   @ApiPropertyOptional({
@@ -119,10 +129,6 @@ export class AmbienteListInputRestDto extends PaginatedFilterByIdRestDto {
     type: "string",
     isArray: true,
   })
-  @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
   "filter.bloco.campus.id"?: string[];
 }
 
@@ -139,46 +145,91 @@ export class AmbienteListOutputRestDto {
 // Create/Update Input
 // ============================================================================
 
+@ApiSchema({ name: "AmbienteBlocoRefInputDto" })
+export class AmbienteBlocoRefInputRestDto {
+  @ApiProperty({
+    type: "string",
+    description: "Identificador do bloco (uuid)",
+    format: "uuid",
+  })
+  id: string;
+}
+
 @ApiSchema({ name: "AmbienteCreateInputDto" })
-export class AmbienteCreateInputRestDto extends AmbienteFieldsMixin {
+export class AmbienteCreateInputRestDto {
+  static schema = ambienteInputCreateSchema;
+
   @ApiProperty({ type: "string", description: "Nome do ambiente/sala", minLength: 1 })
-  declare nome: string;
+  nome: string;
 
   @ApiPropertyOptional({
     type: "string",
     description: "Descricao do ambiente/sala",
     nullable: true,
   })
-  declare descricao?: string | null;
+  descricao?: string | null;
 
   @ApiProperty({ type: "string", description: "Codigo do ambiente/sala", minLength: 1 })
-  declare codigo: string;
+  codigo: string;
 
   @ApiPropertyOptional({
     type: "integer",
     description: "Capacidade do ambiente/sala",
     nullable: true,
   })
-  declare capacidade?: number | null;
+  capacidade?: number | null;
 
   @ApiPropertyOptional({
     type: "string",
     description: "Tipo do ambiente/sala. Ex.: sala aula, auditorio, laboratorio de quimica",
     nullable: true,
   })
-  declare tipo?: string | null;
+  tipo?: string | null;
 
   @ApiProperty({
-    type: () => BlocoFindOneInputRestDto,
+    type: () => AmbienteBlocoRefInputRestDto,
     description: "Bloco que o ambiente/sala pertence",
   })
-  @ValidateNested()
-  @Type(() => BlocoFindOneInputRestDto)
-  bloco: BlocoFindOneInputRestDto;
+  bloco: AmbienteBlocoRefInputRestDto;
 }
 
 @ApiSchema({ name: "AmbienteUpdateInputDto" })
-export class AmbienteUpdateInputRestDto extends PartialType(AmbienteCreateInputRestDto) {}
+export class AmbienteUpdateInputRestDto {
+  static schema = ambienteInputUpdateSchema;
+
+  @ApiPropertyOptional({ type: "string", description: "Nome do ambiente/sala", minLength: 1 })
+  nome?: string;
+
+  @ApiPropertyOptional({
+    type: "string",
+    description: "Descricao do ambiente/sala",
+    nullable: true,
+  })
+  descricao?: string | null;
+
+  @ApiPropertyOptional({ type: "string", description: "Codigo do ambiente/sala", minLength: 1 })
+  codigo?: string;
+
+  @ApiPropertyOptional({
+    type: "integer",
+    description: "Capacidade do ambiente/sala",
+    nullable: true,
+  })
+  capacidade?: number | null;
+
+  @ApiPropertyOptional({
+    type: "string",
+    description: "Tipo do ambiente/sala. Ex.: sala aula, auditorio, laboratorio de quimica",
+    nullable: true,
+  })
+  tipo?: string | null;
+
+  @ApiPropertyOptional({
+    type: () => AmbienteBlocoRefInputRestDto,
+    description: "Bloco que o ambiente/sala pertence",
+  })
+  bloco?: AmbienteBlocoRefInputRestDto;
+}
 
 // ============================================================================
 // FindOne Input (for path params)
@@ -186,11 +237,12 @@ export class AmbienteUpdateInputRestDto extends PartialType(AmbienteCreateInputR
 
 @ApiSchema({ name: "AmbienteFindOneInputDto" })
 export class AmbienteFindOneInputRestDto {
+  static schema = ambienteFindOneInputSchema;
+
   @ApiProperty({
     type: "string",
     description: "Identificador do registro (uuid)",
     format: "uuid",
   })
-  @IsUUID()
   id: string;
 }

@@ -7,10 +7,10 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
+import { ensureExists } from "@/application/errors";
 import { DeclareDependency } from "@/domain/dependency-injection";
-import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7.js";
+import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
-import { ensureExists } from "@/modules/@shared";
 import { IHorarioAulaConfiguracaoRepository } from "../domain/repositories";
 import { HorarioAulaConfiguracaoEntity } from "../infrastructure.database/typeorm/horario-aula-configuracao.typeorm.entity";
 import {

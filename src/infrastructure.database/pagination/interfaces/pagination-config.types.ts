@@ -1,6 +1,6 @@
 import type { FilterOperator } from "nestjs-paginate";
 import type { FindOptionsRelations } from "typeorm";
-import type { IPaginationConfig } from "@/modules/@shared";
+import type { IPaginationConfig } from "@/application/pagination";
 
 /**
  * Configuração de paginação estendida para TypeORM

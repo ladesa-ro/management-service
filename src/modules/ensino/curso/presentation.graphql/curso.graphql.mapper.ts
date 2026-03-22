@@ -1,4 +1,3 @@
-import { createListOutputMapper, mapDatedFields } from "@/modules/@shared/application/mappers";
 import { CampusGraphqlMapper } from "@/modules/ambientes/campus/presentation.graphql/campus.graphql.mapper";
 import {
   CursoCreateCommand,
@@ -8,6 +7,7 @@ import {
   CursoUpdateCommand,
 } from "@/modules/ensino/curso";
 import { OfertaFormacaoGraphqlMapper } from "@/modules/ensino/oferta-formacao/presentation.graphql/oferta-formacao.graphql.mapper";
+import { createListOutputMapper, mapDatedFields } from "@/shared/mapping";
 import {
   CursoCreateInputGraphQlDto,
   CursoFindOneOutputGraphQlDto,

@@ -1,4 +1,4 @@
-import type { IQueryHandler } from "@/modules/@shared/domain/abstractions";
+import type { IQueryHandler } from "@/domain/abstractions";
 import type { DisciplinaFindOneQuery } from "./disciplina-find-one.query";
 import type { DisciplinaFindOneQueryResult } from "./disciplina-find-one.query.result";
 

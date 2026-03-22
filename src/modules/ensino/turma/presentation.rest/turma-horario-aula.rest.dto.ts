@@ -1,5 +1,4 @@
-import { ApiProperty, ApiSchema } from "@/modules/@shared/presentation/rest";
-import { IsArray, IsUUID } from "@/modules/@shared/presentation/shared";
+import { ApiProperty, ApiSchema } from "@/shared/presentation/rest";
 
 // ============================================================================
 // Parent Route Params
@@ -8,7 +7,6 @@ import { IsArray, IsUUID } from "@/modules/@shared/presentation/shared";
 @ApiSchema({ name: "TurmaHorarioAulaParentParamsDto" })
 export class TurmaHorarioAulaParentParamsRestDto {
   @ApiProperty({ type: "string", format: "uuid", description: "ID da turma" })
-  @IsUUID()
   turmaId: string;
 }
 
@@ -23,8 +21,6 @@ export class TurmaHorarioAulaBulkReplaceInputRestDto {
     isArray: true,
     description: "IDs dos horarios de aula selecionados",
   })
-  @IsArray()
-  @IsUUID(undefined, { each: true })
   horarioAulaIds: string[];
 }
 

@@ -1,8 +1,13 @@
 import type { IEntityBaseUuid } from "@/domain/abstractions/entities";
 import type { IdUuid, ScalarDateTimeString } from "@/domain/abstractions/scalars";
-import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7.js";
+import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import type { IDiario } from "@/modules/ensino/diario/domain/diario";
-import { createValidator, throwIfInvalid, touchUpdated } from "@/utils/validation-utils.js";
+import { zodValidate } from "@/shared/validation/index";
+import {
+  diarioPreferenciaAgrupamentoCreateSchema,
+  diarioPreferenciaAgrupamentoSchema,
+  diarioPreferenciaAgrupamentoUpdateSchema,
+} from "./diario-preferencia-agrupamento.schemas";
 
 export interface IDiarioPreferenciaAgrupamento extends IEntityBaseUuid {
   dataInicio: ScalarDateTimeString;
@@ -41,39 +46,28 @@ export class DiarioPreferenciaAgrupamento implements IEntityBaseUuid {
   dateUpdated!: ScalarDateTimeString;
   dateDeleted!: ScalarDateTimeString | null;
 
-  constructor(dados: {
-    dataInicio: ScalarDateTimeString;
-    dataFim?: ScalarDateTimeString | null;
-    diaSemanaIso: number;
-    aulasSeguidas: number;
-  }) {
-    this.id = generateUuidV7();
-    this.dataInicio = dados.dataInicio;
-    this.dataFim = dados.dataFim ?? null;
-    this.diaSemanaIso = dados.diaSemanaIso;
-    this.aulasSeguidas = dados.aulasSeguidas;
-    this.dateCreated = new Date().toISOString();
-    this.dateUpdated = new Date().toISOString();
-    this.dateDeleted = null;
-  }
+  private constructor() {}
 
-  validate(): void {
-    const { result, rules } = createValidator("DiarioPreferenciaAgrupamento");
-    rules.required(this.dataInicio, "dataInicio");
-    rules.dateFormat(this.dataInicio, "dataInicio");
-    rules.requiredNumber(this.diaSemanaIso, "diaSemanaIso");
-    rules.range(this.diaSemanaIso, "diaSemanaIso", 1, 7);
-    rules.requiredNumber(this.aulasSeguidas, "aulasSeguidas");
-    rules.min(this.aulasSeguidas, "aulasSeguidas", 1);
-    throwIfInvalid("DiarioPreferenciaAgrupamento", result);
-  }
+  static create(dados: IDiarioPreferenciaAgrupamentoCreate): DiarioPreferenciaAgrupamento {
+    const parsed = zodValidate(
+      DiarioPreferenciaAgrupamento.entityName,
+      diarioPreferenciaAgrupamentoCreateSchema,
+      dados,
+    );
 
-  static create(
-    dados: IDiarioPreferenciaAgrupamentoCreate,
-    validar: boolean = true,
-  ): DiarioPreferenciaAgrupamento {
-    const instance = new DiarioPreferenciaAgrupamento(dados);
-    if (validar) instance.validate();
+    const instance = Object.create(
+      DiarioPreferenciaAgrupamento.prototype,
+    ) as DiarioPreferenciaAgrupamento;
+
+    instance.id = generateUuidV7();
+    instance.dataInicio = parsed.dataInicio;
+    instance.dataFim = parsed.dataFim ?? null;
+    instance.diaSemanaIso = parsed.diaSemanaIso;
+    instance.aulasSeguidas = parsed.aulasSeguidas;
+    instance.dateCreated = new Date().toISOString();
+    instance.dateUpdated = new Date().toISOString();
+    instance.dateDeleted = null;
+
     return instance;
   }
 
@@ -93,12 +87,19 @@ export class DiarioPreferenciaAgrupamento implements IEntityBaseUuid {
     return instance;
   }
 
-  update(dados: IDiarioPreferenciaAgrupamentoUpdate): void {
-    if (dados.dataInicio !== undefined) this.dataInicio = dados.dataInicio;
-    if (dados.dataFim !== undefined) this.dataFim = dados.dataFim;
-    if (dados.diaSemanaIso !== undefined) this.diaSemanaIso = dados.diaSemanaIso;
-    if (dados.aulasSeguidas !== undefined) this.aulasSeguidas = dados.aulasSeguidas;
-    touchUpdated(this);
-    this.validate();
+  update(dados: unknown): void {
+    const parsed = zodValidate(
+      DiarioPreferenciaAgrupamento.entityName,
+      diarioPreferenciaAgrupamentoUpdateSchema,
+      dados,
+    );
+
+    if (parsed.dataInicio !== undefined) this.dataInicio = parsed.dataInicio;
+    if (parsed.dataFim !== undefined) this.dataFim = parsed.dataFim ?? null;
+    if (parsed.diaSemanaIso !== undefined) this.diaSemanaIso = parsed.diaSemanaIso;
+    if (parsed.aulasSeguidas !== undefined) this.aulasSeguidas = parsed.aulasSeguidas;
+
+    this.dateUpdated = new Date().toISOString();
+    zodValidate(DiarioPreferenciaAgrupamento.entityName, diarioPreferenciaAgrupamentoSchema, this);
   }
 }

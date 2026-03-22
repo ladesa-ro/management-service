@@ -1,6 +1,6 @@
+import { ensureExists } from "@/application/errors";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
-import { ensureExists } from "@/modules/@shared";
 import type { ModalidadeUpdateCommand } from "@/modules/ensino/modalidade/domain/commands/modalidade-update.command";
 import { IModalidadeUpdateCommandHandler } from "@/modules/ensino/modalidade/domain/commands/modalidade-update.command.handler.interface";
 import { Modalidade } from "@/modules/ensino/modalidade/domain/modalidade";

@@ -1,20 +1,12 @@
-import {
-  EntityBaseGraphQlDto,
-  PaginatedFilterByIdGraphQlDto,
-  PaginationMetaGraphQlDto,
-} from "@/modules/@shared/infrastructure/graphql/dtos";
-import { ArgsType, Field, InputType, ObjectType } from "@/modules/@shared/presentation/graphql";
-import {
-  IsArray,
-  IsOptional,
-  IsString,
-  IsUUID,
-  MinLength,
-  ValidateNested,
-} from "@/modules/@shared/presentation/shared";
+import { EntityBaseGraphQlDto, PaginationMetaGraphQlDto } from "@/infrastructure.graphql/dtos";
 import { CampusFindOneOutputGraphQlDto } from "@/modules/ambientes/campus/presentation.graphql/campus.graphql.dto";
 import { ImagemFindOneOutputGraphQlDto } from "@/modules/armazenamento/imagem-arquivo/presentation.graphql/imagem-arquivo.graphql.dto";
-import { BlocoFieldsMixin } from "../presentation.validations/bloco.validation-mixin";
+import { ArgsType, Field, InputType, ObjectType } from "@/shared/presentation/graphql";
+import {
+  blocoGraphqlListInputSchema,
+  blocoInputCreateSchema,
+  blocoInputUpdateSchema,
+} from "../domain/bloco.schemas";
 
 // ============================================================================
 // FindOne Output
@@ -35,7 +27,7 @@ export class BlocoFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
 
 @InputType("ObjectUuidRefInputDto")
 export class ObjectUuidRefInputGraphQlDto {
-  @Field(() => String) @IsString() id: string;
+  @Field(() => String) id: string;
 }
 
 // ============================================================================
@@ -43,12 +35,12 @@ export class ObjectUuidRefInputGraphQlDto {
 // ============================================================================
 
 @InputType("BlocoCreateInputDto")
-export class BlocoCreateInputGraphQlDto extends BlocoFieldsMixin {
-  @Field(() => String) declare nome: string;
-  @Field(() => String) declare codigo: string;
-  @Field(() => ObjectUuidRefInputGraphQlDto)
-  @ValidateNested()
-  campus: ObjectUuidRefInputGraphQlDto;
+export class BlocoCreateInputGraphQlDto {
+  static schema = blocoInputCreateSchema;
+
+  @Field(() => String) nome: string;
+  @Field(() => String) codigo: string;
+  @Field(() => ObjectUuidRefInputGraphQlDto) campus: ObjectUuidRefInputGraphQlDto;
 }
 
 // ============================================================================
@@ -57,19 +49,11 @@ export class BlocoCreateInputGraphQlDto extends BlocoFieldsMixin {
 
 @InputType("BlocoUpdateInputDto")
 export class BlocoUpdateInputGraphQlDto {
-  @Field(() => String, { nullable: true })
-  @IsOptional()
-  @IsString()
-  @MinLength(1)
-  nome?: string;
-  @Field(() => String, { nullable: true })
-  @IsOptional()
-  @IsString()
-  @MinLength(1)
-  codigo?: string;
+  static schema = blocoInputUpdateSchema;
+
+  @Field(() => String, { nullable: true }) nome?: string;
+  @Field(() => String, { nullable: true }) codigo?: string;
   @Field(() => ObjectUuidRefInputGraphQlDto, { nullable: true })
-  @IsOptional()
-  @ValidateNested()
   campus?: ObjectUuidRefInputGraphQlDto;
 }
 
@@ -78,11 +62,16 @@ export class BlocoUpdateInputGraphQlDto {
 // ============================================================================
 
 @ArgsType()
-export class BlocoListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {
+export class BlocoListInputGraphQlDto {
+  static schema = blocoGraphqlListInputSchema;
+
+  @Field(() => Number, { nullable: true, defaultValue: 1 }) page?: number = 1;
+  @Field(() => Number, { nullable: true }) limit?: number;
+  @Field(() => String, { nullable: true }) search?: string;
+  @Field(() => [String], { nullable: true }) sortBy?: string[];
+  @Field(() => [String], { nullable: true }) selection?: string[];
+  @Field(() => [String], { nullable: true, description: "Filtro por ID" }) filterId?: string[];
   @Field(() => [String], { nullable: true, description: "Filtro por ID do Campus" })
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
   filterCampusId?: string[];
 }
 

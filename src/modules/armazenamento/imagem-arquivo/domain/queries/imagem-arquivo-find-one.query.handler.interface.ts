@@ -1,4 +1,4 @@
-import type { IQueryHandler } from "@/modules/@shared/domain/abstractions";
+import type { IQueryHandler } from "@/domain/abstractions";
 import type { ImagemArquivoFindOneQuery } from "./imagem-arquivo-find-one.query";
 import type { ImagemArquivoFindOneQueryResult } from "./imagem-arquivo-find-one.query.result";
 

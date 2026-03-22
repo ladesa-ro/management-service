@@ -1,7 +1,8 @@
 import { type StreamableFile } from "@nestjs/common";
+import { ensureExists } from "@/application/errors";
+import { getEntityImagemStreamableFile } from "@/application/helpers";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
-import { ensureExists, getEntityImagemStreamableFile } from "@/modules/@shared";
 import { Bloco } from "@/modules/ambientes/bloco/domain/bloco";
 import { IBlocoGetImagemCapaQueryHandler } from "@/modules/ambientes/bloco/domain/queries/bloco-get-imagem-capa.query.handler.interface";
 import {

@@ -2,11 +2,14 @@ import {
   EntityBaseGraphQlDto,
   PaginatedFilterByIdGraphQlDto,
   PaginationMetaGraphQlDto,
-} from "@/modules/@shared/infrastructure/graphql/dtos";
-import { ArgsType, Field, InputType, ObjectType } from "@/modules/@shared/presentation/graphql";
-import { IsOptional, IsString, MinLength } from "@/modules/@shared/presentation/shared";
-import { UsuarioFieldsMixin } from "@/modules/acesso/usuario/presentation.validations/usuario.validation-mixin";
+} from "@/infrastructure.graphql/dtos";
+import {
+  usuarioCreateSchema,
+  usuarioGraphqlListInputSchema,
+  usuarioUpdateSchema,
+} from "@/modules/acesso/usuario/domain/usuario.schemas";
 import { ImagemFindOneOutputGraphQlDto } from "@/modules/armazenamento/imagem-arquivo/presentation.graphql/imagem-arquivo.graphql.dto";
+import { ArgsType, Field, InputType, ObjectType } from "@/shared/presentation/graphql";
 
 // ============================================================================
 // FindOne Output
@@ -29,10 +32,12 @@ export class UsuarioFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
 // ============================================================================
 
 @InputType("UsuarioCreateInputDto")
-export class UsuarioCreateInputGraphQlDto extends UsuarioFieldsMixin {
-  @Field(() => String, { nullable: true }) declare nome?: string | null;
-  @Field(() => String, { nullable: true }) declare matricula?: string | null;
-  @Field(() => String, { nullable: true }) declare email?: string | null;
+export class UsuarioCreateInputGraphQlDto {
+  static schema = usuarioCreateSchema;
+
+  @Field(() => String, { nullable: true }) nome?: string | null;
+  @Field(() => String, { nullable: true }) matricula?: string | null;
+  @Field(() => String, { nullable: true }) email?: string | null;
 }
 
 // ============================================================================
@@ -41,18 +46,13 @@ export class UsuarioCreateInputGraphQlDto extends UsuarioFieldsMixin {
 
 @InputType("UsuarioUpdateInputDto")
 export class UsuarioUpdateInputGraphQlDto {
+  static schema = usuarioUpdateSchema;
+
   @Field(() => String, { nullable: true })
-  @IsOptional()
-  @IsString()
-  @MinLength(1)
   nome?: string | null;
   @Field(() => String, { nullable: true })
-  @IsOptional()
-  @IsString()
   matricula?: string | null;
   @Field(() => String, { nullable: true })
-  @IsOptional()
-  @IsString()
   email?: string | null;
 }
 
@@ -61,7 +61,9 @@ export class UsuarioUpdateInputGraphQlDto {
 // ============================================================================
 
 @ArgsType()
-export class UsuarioListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {}
+export class UsuarioListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {
+  static schema = usuarioGraphqlListInputSchema;
+}
 
 // ============================================================================
 // List Output

@@ -1,5 +1,5 @@
-import { createListOutputMapper } from "@/modules/@shared/application/mappers";
 import { NivelFormacaoRestMapper } from "@/modules/ensino/nivel-formacao/presentation.rest";
+import { createListOutputMapper } from "@/shared/mapping";
 import {
   OfertaFormacaoNivelFormacaoBulkReplaceCommand,
   OfertaFormacaoNivelFormacaoListQuery,

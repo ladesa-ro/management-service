@@ -1,4 +1,4 @@
-import type { IReadOnlyRepository } from "@/modules/@shared";
+import type { IReadOnlyRepository } from "@/domain/abstractions";
 import {
   EstadoFindOneQuery,
   EstadoFindOneQueryResult,

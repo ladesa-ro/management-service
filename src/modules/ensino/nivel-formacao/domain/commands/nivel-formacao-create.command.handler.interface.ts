@@ -1,4 +1,4 @@
-import type { ICommandHandler } from "@/modules/@shared/domain/abstractions";
+import type { ICommandHandler } from "@/domain/abstractions";
 import type { NivelFormacaoFindOneQueryResult } from "../queries";
 import type { NivelFormacaoCreateCommand } from "./nivel-formacao-create.command";
 

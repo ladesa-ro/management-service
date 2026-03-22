@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Put } from "@nestjs/common";
 import { ApiForbiddenResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { DeclareDependency } from "@/domain/dependency-injection";
-import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7.js";
+import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { IOfertaFormacaoPeriodoRepository } from "@/modules/ensino/oferta-formacao-periodo/domain/repositories";
 import { OfertaFormacaoPeriodoEntity } from "@/modules/ensino/oferta-formacao-periodo/infrastructure.database/typeorm/oferta-formacao-periodo.typeorm.entity";

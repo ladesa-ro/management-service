@@ -1,6 +1,7 @@
+import { ensureExists } from "@/application/errors";
+import { saveEntityImagemField } from "@/application/helpers";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
-import { ensureExists, saveEntityImagemField } from "@/modules/@shared";
 import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente";
 import {
   type AmbienteUpdateImagemCapaCommand,
