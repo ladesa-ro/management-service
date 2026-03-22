@@ -13,6 +13,7 @@ export const ConfigTokens = {
     SwaggerServers: Symbol("RuntimeOptions.SwaggerServers"),
     StoragePath: Symbol("RuntimeOptions.StoragePath"),
     ApiVersion: Symbol("RuntimeOptions.ApiVersion"),
+    EnableMockAccessToken: Symbol("RuntimeOptions.EnableMockAccessToken"),
   },
   AuthOptions: {
     Oidc: {

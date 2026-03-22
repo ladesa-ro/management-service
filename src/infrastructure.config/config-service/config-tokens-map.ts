@@ -13,6 +13,7 @@ export const ConfigTokensMap = new Map<symbol, string>([
   [ConfigTokens.RuntimeOptions.SwaggerServers, EnvKeys.SWAGGER_SERVERS],
   [ConfigTokens.RuntimeOptions.StoragePath, EnvKeys.STORAGE_PATH],
   [ConfigTokens.RuntimeOptions.ApiVersion, EnvKeys.LADESA_API_VERSION],
+  [ConfigTokens.RuntimeOptions.EnableMockAccessToken, EnvKeys.ENABLE_MOCK_ACCESS_TOKEN],
   [ConfigTokens.AuthOptions.Oidc.Issuer, EnvKeys.OAUTH2_CLIENT_PROVIDER_OIDC_ISSUER],
   [ConfigTokens.AuthOptions.Oidc.ClientId, EnvKeys.OAUTH2_CLIENT_REGISTRATION_LOGIN_CLIENT_ID],
   [

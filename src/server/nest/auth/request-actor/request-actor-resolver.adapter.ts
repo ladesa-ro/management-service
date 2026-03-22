@@ -3,6 +3,8 @@ import { pick } from "lodash";
 import { IIdentityProvider } from "@/domain/abstractions/identity-provider";
 import type { IRequestActor, IRequestActorResolver } from "@/domain/abstractions/request-actor";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import type { IRuntimeOptions } from "@/infrastructure.config/options/runtime/runtime-options.interface";
+import { IRuntimeOptions as IRuntimeOptionsToken } from "@/infrastructure.config/options/runtime/runtime-options.interface";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import { UsuarioEntity } from "@/modules/acesso/usuario/infrastructure.database/typeorm/usuario.typeorm.entity";
 
@@ -13,6 +15,8 @@ export class RequestActorResolverAdapter implements IRequestActorResolver {
     private readonly identityProvider: IIdentityProvider,
     @DeclareDependency(IAppTypeormConnection)
     private readonly appTypeormConnection: IAppTypeormConnection,
+    @DeclareDependency(IRuntimeOptionsToken)
+    private readonly runtimeOptions: IRuntimeOptions,
   ) {}
 
   private get usuarioRepository() {
@@ -24,7 +28,7 @@ export class RequestActorResolverAdapter implements IRequestActorResolver {
       return null;
     }
 
-    if (process.env.ENABLE_MOCK_ACCESS_TOKEN === "true") {
+    if (this.runtimeOptions.enableMockAccessToken) {
       const matriculaMockMatch = accessToken.match(/^mock\.matricula\.(\d+)$/);
 
       if (matriculaMockMatch) {

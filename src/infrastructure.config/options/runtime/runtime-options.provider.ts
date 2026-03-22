@@ -45,6 +45,10 @@ export const RuntimeOptionsProvider: Provider = {
       throw new Error("Please provide env.STORAGE_PATH (e.g. /tmp/uploaded)");
     }
 
+    const enableMockAccessTokenRaw =
+      configService.get<string>(ConfigTokens.RuntimeOptions.EnableMockAccessToken) ?? "false";
+    const enableMockAccessToken = nodeEnv !== "production" && enableMockAccessTokenRaw === "true";
+
     return {
       version: configService.get<string>(ConfigTokens.RuntimeOptions.ApiVersion) ?? pkg.version,
       port,
@@ -54,6 +58,7 @@ export const RuntimeOptionsProvider: Provider = {
       gitCommitHash,
       swaggerServers,
       storagePath,
+      enableMockAccessToken,
     };
   },
   inject: [IConfigServiceToken],

@@ -9,4 +9,5 @@ export interface IRuntimeOptions {
   gitCommitHash: string | null;
   swaggerServers: string[] | null;
   storagePath: string;
+  enableMockAccessToken: boolean;
 }
