@@ -1,7 +1,6 @@
 import { ensureExists } from "@/application/errors";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
-import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import type {
   EmpresaCreateCommand,
   EmpresaUpdateCommand,
@@ -16,6 +15,7 @@ import type {
 import type { IEmpresaRepository } from "@/modules/estagio/empresa/domain/repositories";
 import { Endereco } from "@/modules/localidades/endereco/domain/endereco";
 import { EnderecoEntity } from "@/modules/localidades/endereco/infrastructure.database/typeorm/endereco.typeorm.entity";
+import type { AccessContext } from "@/server/access-context";
 import { EmpresaMapper, EmpresaTypeormEntity } from "./typeorm";
 
 @DeclareImplementation()

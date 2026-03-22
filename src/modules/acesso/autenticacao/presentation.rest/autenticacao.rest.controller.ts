@@ -8,7 +8,6 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { DeclareDependency } from "@/domain/dependency-injection";
-import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { IAutenticacaoDefinirSenhaCommandHandler } from "@/modules/acesso/autenticacao/domain/commands/autenticacao-definir-senha.command.handler.interface";
 import { IAutenticacaoLoginCommandHandler } from "@/modules/acesso/autenticacao/domain/commands/autenticacao-login.command.handler.interface";
 import { IAutenticacaoRecoverPasswordCommandHandler } from "@/modules/acesso/autenticacao/domain/commands/autenticacao-recover-password.command.handler.interface";
@@ -16,6 +15,7 @@ import { IAutenticacaoRefreshCommandHandler } from "@/modules/acesso/autenticaca
 import { IAutenticacaoWhoAmIQueryHandler } from "@/modules/acesso/autenticacao/domain/queries/autenticacao-who-am-i.query.handler.interface";
 import { IUsuarioEnsinoQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-ensino.query.handler.interface";
 import { UsuarioEnsinoOutputRestDto } from "@/modules/acesso/usuario/presentation.rest";
+import { AccessContext, AccessContextHttp } from "@/server/access-context";
 import { Public } from "@/server/nest/auth";
 import {
   AuthCredentialsSetInitialPasswordInputRestDto,

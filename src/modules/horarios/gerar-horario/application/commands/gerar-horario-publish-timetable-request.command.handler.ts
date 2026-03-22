@@ -3,11 +3,11 @@ import {
   IMessageBrokerService as IMessageBrokerServiceToken,
 } from "@/domain/abstractions/message-broker";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import {
   type IGerarHorarioPublishTimetableRequestCommand,
   IGerarHorarioPublishTimetableRequestCommandHandler,
 } from "@/modules/horarios/gerar-horario/domain/commands/gerar-horario-publish-timetable-request.command.handler.interface";
+import type { AccessContext } from "@/server/access-context";
 
 @DeclareImplementation()
 export class GerarHorarioPublishTimetableRequestCommandHandlerImpl

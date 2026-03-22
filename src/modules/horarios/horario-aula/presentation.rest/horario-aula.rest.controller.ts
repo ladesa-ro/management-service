@@ -10,7 +10,7 @@ import {
 import { ensureExists } from "@/application/errors";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
-import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
+import { AccessContext, AccessContextHttp } from "@/server/access-context";
 import { IHorarioAulaRepository } from "../domain/repositories";
 import { HorarioAulaEntity } from "../infrastructure.database/typeorm/horario-aula.typeorm.entity";
 import {

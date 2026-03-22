@@ -1,10 +1,10 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import type {
   IImagemGetLatestArquivoIdQuery,
   IImagemGetLatestArquivoIdQueryHandler,
 } from "@/modules/armazenamento/imagem/domain/queries";
 import { IImagemArquivoRepository } from "@/modules/armazenamento/imagem/domain/repositories";
+import type { AccessContext } from "@/server/access-context";
 
 @DeclareImplementation()
 export class ImagemGetLatestArquivoIdQueryHandlerImpl

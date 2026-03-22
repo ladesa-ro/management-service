@@ -1,7 +1,7 @@
 import { Controller, Get, Query } from "@nestjs/common";
 import { ApiForbiddenResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { DeclareDependency } from "@/domain/dependency-injection";
-import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
+import { AccessContext, AccessContextHttp } from "@/server/access-context";
 import { IHorarioConsultaQueryHandler } from "../domain/queries";
 import {
   HorarioMescladoQueryParamsRestDto,

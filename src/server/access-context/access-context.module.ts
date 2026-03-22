@@ -1,5 +1,5 @@
 import { Global, Module } from "@nestjs/common";
-import { ResolveAccessContextPipe } from "./infrastructure/pipes";
+import { ResolveAccessContextPipe } from "./resolve-access-context.pipe";
 
 @Global()
 @Module({

@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Put, Query } from "@nestjs/common";
 import { ApiForbiddenResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { DeclareDependency } from "@/domain/dependency-injection";
-import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
+import { AccessContext, AccessContextHttp } from "@/server/access-context";
 import { IDiarioProfessorBulkReplaceCommandHandler } from "../domain/commands/diario-professor-bulk-replace.command.handler.interface";
 import { IDiarioProfessorListQueryHandler } from "../domain/queries/diario-professor-list.query.handler.interface";
 import {

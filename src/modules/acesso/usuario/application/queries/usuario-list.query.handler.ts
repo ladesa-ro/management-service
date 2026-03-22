@@ -1,6 +1,6 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { IUsuarioListQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-list.query.handler.interface";
+import type { AccessContext } from "@/server/access-context";
 import type { UsuarioListQuery, UsuarioListQueryResult } from "../../domain/queries";
 import { IUsuarioRepository } from "../../domain/repositories";
 

@@ -1,6 +1,6 @@
 import type { IBaseCrudRepository } from "@/domain/abstractions";
-import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import type { ICampus } from "@/modules/ambientes/campus";
+import type { AccessContext } from "@/server/access-context";
 import type { CampusFindOneQueryResult, CampusListQueryResult } from "../queries";
 /**
  * Token de injeção para o repositório de Campus

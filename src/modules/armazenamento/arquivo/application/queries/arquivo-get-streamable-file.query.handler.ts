@@ -4,7 +4,6 @@ import { ensureExists } from "@/application/errors";
 import { IStorageService } from "@/domain/abstractions/storage";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { isValidUuid } from "@/domain/validation";
-import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { UsuarioEntity } from "@/modules/acesso/usuario/infrastructure.database";
 import { Arquivo } from "@/modules/armazenamento/arquivo/domain/arquivo";
 import type {
@@ -12,6 +11,7 @@ import type {
   IArquivoGetStreamableFileQueryHandler,
 } from "@/modules/armazenamento/arquivo/domain/queries";
 import { IArquivoRepository } from "@/modules/armazenamento/arquivo/domain/repositories";
+import type { AccessContext } from "@/server/access-context";
 
 @DeclareImplementation()
 export class ArquivoGetStreamableFileQueryHandlerImpl

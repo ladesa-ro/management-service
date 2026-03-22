@@ -1,6 +1,6 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { INivelFormacaoListQueryHandler } from "@/modules/ensino/nivel-formacao/domain/queries/nivel-formacao-list.query.handler.interface";
+import type { AccessContext } from "@/server/access-context";
 import type { NivelFormacaoListQuery, NivelFormacaoListQueryResult } from "../../domain/queries";
 import { INivelFormacaoRepository } from "../../domain/repositories";
 

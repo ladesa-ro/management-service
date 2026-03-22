@@ -1,10 +1,10 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import {
   IImagemSaveImageCommandHandler,
   type IImagemSaveImagemCapaCommand,
   type IImagemSaveImagemCapaCommandHandler,
 } from "@/modules/armazenamento/imagem/domain/commands";
+import type { AccessContext } from "@/server/access-context";
 
 @DeclareImplementation()
 export class ImagemSaveImagemCapaCommandHandlerImpl implements IImagemSaveImagemCapaCommandHandler {

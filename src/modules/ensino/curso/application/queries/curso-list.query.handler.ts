@@ -1,6 +1,6 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ICursoListQueryHandler } from "@/modules/ensino/curso/domain/queries/curso-list.query.handler.interface";
+import type { AccessContext } from "@/server/access-context";
 import type { CursoListQuery, CursoListQueryResult } from "../../domain/queries";
 import { ICursoRepository } from "../../domain/repositories";
 

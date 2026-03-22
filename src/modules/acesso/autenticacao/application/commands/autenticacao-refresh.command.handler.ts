@@ -1,9 +1,9 @@
 import { ForbiddenException } from "@nestjs/common";
 import { IIdpTokenService } from "@/domain/abstractions/identity-provider";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { IAutenticacaoRefreshCommandHandler } from "@/modules/acesso/autenticacao/domain/commands/autenticacao-refresh.command.handler.interface";
 import type { AuthRefreshCommand } from "@/modules/acesso/autenticacao/domain/commands/auth-refresh.command";
+import type { AccessContext } from "@/server/access-context";
 import type { AuthSessionCredentials } from "../../domain/shared";
 
 @DeclareImplementation()

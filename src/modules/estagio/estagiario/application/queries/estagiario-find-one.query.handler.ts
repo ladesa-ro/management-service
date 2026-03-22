@@ -1,6 +1,6 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { IEstagiarioFindOneQueryHandler } from "@/modules/estagio/estagiario/domain/queries/estagiario-find-one.query.handler.interface";
+import type { AccessContext } from "@/server/access-context";
 import type { EstagiarioFindOneQuery, EstagiarioFindOneQueryResult } from "../../domain/queries";
 import { IEstagiarioRepository } from "../../domain/repositories";
 

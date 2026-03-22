@@ -1,8 +1,8 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { IAutenticacaoWhoAmIQueryHandler } from "@/modules/acesso/autenticacao/domain/queries/autenticacao-who-am-i.query.handler.interface";
 import { IPerfilFindAllActiveQueryHandler } from "@/modules/acesso/perfil/domain/queries/perfil-find-all-active.query.handler.interface";
 import { IUsuarioFindOneQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-find-one.query.handler.interface";
+import type { AccessContext } from "@/server/access-context";
 import type { AuthWhoAmIQueryResult } from "../../domain/queries";
 
 @DeclareImplementation()

@@ -2,9 +2,9 @@ import { Body, Controller, Get, Param, Put } from "@nestjs/common";
 import { ApiForbiddenResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
-import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { ITurmaHorarioAulaRepository } from "@/modules/horarios/turma-horario-aula/domain/repositories";
 import { TurmaHorarioAulaEntity } from "@/modules/horarios/turma-horario-aula/infrastructure.database/typeorm/turma-horario-aula.typeorm.entity";
+import { AccessContext, AccessContextHttp } from "@/server/access-context";
 import {
   TurmaHorarioAulaBulkReplaceInputRestDto,
   TurmaHorarioAulaListOutputRestDto,

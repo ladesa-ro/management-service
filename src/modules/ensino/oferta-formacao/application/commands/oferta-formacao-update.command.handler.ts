@@ -2,7 +2,6 @@ import { has } from "lodash";
 import { ensureExists } from "@/application/errors";
 import type { PersistInput } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { Modalidade } from "@/modules/ensino/modalidade/domain/modalidade";
 import { IModalidadeFindOneQueryHandler } from "@/modules/ensino/modalidade/domain/queries/modalidade-find-one.query.handler.interface";
 import type { OfertaFormacaoUpdateCommand } from "@/modules/ensino/oferta-formacao/domain/commands/oferta-formacao-update.command";
@@ -10,6 +9,7 @@ import { IOfertaFormacaoUpdateCommandHandler } from "@/modules/ensino/oferta-for
 import type { IOfertaFormacao } from "@/modules/ensino/oferta-formacao/domain/oferta-formacao";
 import { OfertaFormacao } from "@/modules/ensino/oferta-formacao/domain/oferta-formacao";
 import type { OfertaFormacaoFindOneQuery } from "@/modules/ensino/oferta-formacao/domain/queries";
+import type { AccessContext } from "@/server/access-context";
 import { IOfertaFormacaoPermissionChecker } from "../../domain/authorization";
 import type { OfertaFormacaoFindOneQueryResult } from "../../domain/queries";
 import { IOfertaFormacaoRepository } from "../../domain/repositories";

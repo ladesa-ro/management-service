@@ -10,7 +10,7 @@ import {
 import { ensureExists } from "@/application/errors";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
-import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
+import { AccessContext, AccessContextHttp } from "@/server/access-context";
 import type { ICalendarioAgendamentoRepository } from "../domain/repositories/calendario-agendamento.repository.interface";
 import { ICalendarioAgendamentoRepository as ICalendarioAgendamentoRepositoryToken } from "../domain/repositories/calendario-agendamento.repository.interface";
 import type { ICalendarioAgendamentoJunctionRepository } from "../domain/repositories/calendario-agendamento-junction.repository.interface";

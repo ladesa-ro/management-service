@@ -2,7 +2,6 @@ import { ServiceUnavailableException, UnprocessableEntityException } from "@nest
 import sharp from "sharp";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
-import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { IArquivoCreateCommandHandler } from "@/modules/armazenamento/arquivo/domain/commands";
 import type {
   IImagemSaveImageCommand,
@@ -12,6 +11,7 @@ import {
   IImagemArquivoRepository,
   IImagemRepository,
 } from "@/modules/armazenamento/imagem/domain/repositories";
+import type { AccessContext } from "@/server/access-context";
 
 @DeclareImplementation()
 export class ImagemSaveImageCommandHandlerImpl implements IImagemSaveImageCommandHandler {

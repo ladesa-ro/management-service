@@ -11,7 +11,7 @@ import {
   typeormSoftDeleteById,
   typeormUpdate,
 } from "@/infrastructure.database/typeorm/helpers/typeorm-repository-helpers";
-import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
+import type { AccessContext } from "@/server/access-context";
 import type {
   CalendarioLetivoDiaFindOneQuery,
   CalendarioLetivoDiaFindOneQueryResult,

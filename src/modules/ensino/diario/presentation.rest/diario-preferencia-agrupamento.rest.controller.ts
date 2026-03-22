@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Put, Query } from "@nestjs/common";
 import { ApiForbiddenResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { DeclareDependency } from "@/domain/dependency-injection";
-import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
+import { AccessContext, AccessContextHttp } from "@/server/access-context";
 import { IDiarioPreferenciaAgrupamentoBulkReplaceCommandHandler } from "../domain/commands/diario-preferencia-agrupamento-bulk-replace.command.handler.interface";
 import { IDiarioPreferenciaAgrupamentoListQueryHandler } from "../domain/queries/diario-preferencia-agrupamento-list.query.handler.interface";
 import {

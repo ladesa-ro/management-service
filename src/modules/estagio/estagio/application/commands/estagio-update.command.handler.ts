@@ -1,10 +1,10 @@
 import { InternalServerErrorException } from "@nestjs/common";
 import { ResourceNotFoundError } from "@/application/errors";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import type { EstagioUpdateCommand } from "@/modules/estagio/estagio/domain/commands/estagio-update.command";
 import { IEstagioUpdateCommandHandler } from "@/modules/estagio/estagio/domain/commands/estagio-update.command.handler.interface";
 import type { EstagioFindOneQuery } from "@/modules/estagio/estagio/domain/queries";
+import type { AccessContext } from "@/server/access-context";
 import type { EstagioFindOneQueryResult } from "../../domain/queries";
 import { IEstagioRepository } from "../../domain/repositories";
 

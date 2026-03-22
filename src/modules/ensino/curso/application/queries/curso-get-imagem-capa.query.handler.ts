@@ -2,7 +2,6 @@ import { type StreamableFile } from "@nestjs/common";
 import { ensureExists } from "@/application/errors";
 import { getEntityImagemStreamableFile } from "@/application/helpers";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import {
   IArquivoGetStreamableFileQueryHandler,
   type IArquivoGetStreamableFileQueryHandler as IArquivoGetStreamableFileQueryHandlerType,
@@ -13,6 +12,7 @@ import {
 } from "@/modules/armazenamento/imagem/domain/queries";
 import { Curso } from "@/modules/ensino/curso/domain/curso";
 import { ICursoGetImagemCapaQueryHandler } from "@/modules/ensino/curso/domain/queries/curso-get-imagem-capa.query.handler.interface";
+import type { AccessContext } from "@/server/access-context";
 import type { CursoFindOneQuery } from "../../domain/queries";
 import { ICursoRepository } from "../../domain/repositories";
 

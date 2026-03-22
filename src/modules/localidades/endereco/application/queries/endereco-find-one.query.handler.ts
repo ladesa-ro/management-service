@@ -1,6 +1,6 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { IEnderecoFindOneQueryHandler } from "@/modules/localidades/endereco/domain/queries/endereco-find-one.query.handler.interface";
+import type { AccessContext } from "@/server/access-context";
 import type { EnderecoFindOneQuery, EnderecoFindOneQueryResult } from "../../domain/queries";
 import { IEnderecoRepository } from "../../domain/repositories";
 

@@ -8,8 +8,8 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { DeclareDependency } from "@/domain/dependency-injection";
-import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { CalendarioAgendamentoEntity } from "@/modules/horarios/calendario-agendamento/infrastructure.database/typeorm/calendario-agendamento.typeorm.entity";
+import { AccessContext, AccessContextHttp } from "@/server/access-context";
 import { ITurmaEventoRepository } from "../domain/repositories";
 import {
   TurmaEventoCreateInputRestDto,

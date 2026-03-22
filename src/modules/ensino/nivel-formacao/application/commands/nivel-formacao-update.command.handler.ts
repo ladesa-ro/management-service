@@ -1,10 +1,10 @@
 import { ensureExists } from "@/application/errors";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import type { NivelFormacaoUpdateCommand } from "@/modules/ensino/nivel-formacao/domain/commands/nivel-formacao-update.command";
 import { INivelFormacaoUpdateCommandHandler } from "@/modules/ensino/nivel-formacao/domain/commands/nivel-formacao-update.command.handler.interface";
 import { NivelFormacao } from "@/modules/ensino/nivel-formacao/domain/nivel-formacao";
 import type { NivelFormacaoFindOneQuery } from "@/modules/ensino/nivel-formacao/domain/queries";
+import type { AccessContext } from "@/server/access-context";
 import { INivelFormacaoPermissionChecker } from "../../domain/authorization";
 import type { NivelFormacaoFindOneQueryResult } from "../../domain/queries";
 import { INivelFormacaoRepository } from "../../domain/repositories";

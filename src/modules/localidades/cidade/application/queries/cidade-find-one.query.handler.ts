@@ -1,6 +1,6 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ICidadeFindOneQueryHandler } from "@/modules/localidades/cidade/domain/queries/cidade-find-one.query.handler.interface";
+import type { AccessContext } from "@/server/access-context";
 import type { CidadeFindOneQuery, CidadeFindOneQueryResult } from "../../domain/queries";
 import { ICidadeRepository } from "../../domain/repositories";
 

@@ -2,7 +2,7 @@ import { Controller, Get, HttpCode, HttpStatus, Query, Res } from "@nestjs/commo
 import { ApiForbiddenResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import type { Response } from "express";
 import { DeclareDependency } from "@/domain/dependency-injection";
-import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
+import { AccessContext, AccessContextHttp } from "@/server/access-context";
 import { IRelatorioRepository } from "../domain/repositories";
 
 @ApiTags("relatorios")

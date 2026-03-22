@@ -2,8 +2,8 @@ import { Body, Controller, Param, Post } from "@nestjs/common";
 import { ApiCreatedResponse, ApiForbiddenResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
-import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { IDiarioConfigurarRepository } from "@/modules/ensino/turma/domain/repositories";
+import { AccessContext, AccessContextHttp } from "@/server/access-context";
 import {
   TurmaDiarioConfigurarInputRestDto,
   TurmaDiarioConfigurarOutputRestDto,

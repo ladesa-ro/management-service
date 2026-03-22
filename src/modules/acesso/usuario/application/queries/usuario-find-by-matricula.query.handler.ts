@@ -1,9 +1,9 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import {
   type IUsuarioFindByMatriculaQuery,
   IUsuarioFindByMatriculaQueryHandler,
 } from "@/modules/acesso/usuario/domain/queries/usuario-find-by-matricula.query.handler.interface";
+import type { AccessContext } from "@/server/access-context";
 import type { UsuarioFindOneQueryResult } from "../../domain/queries";
 import { IUsuarioRepository } from "../../domain/repositories";
 

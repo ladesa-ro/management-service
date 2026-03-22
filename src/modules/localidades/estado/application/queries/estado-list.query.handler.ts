@@ -1,6 +1,6 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { IEstadoListQueryHandler } from "@/modules/localidades/estado/domain/queries/estado-list.query.handler.interface";
+import type { AccessContext } from "@/server/access-context";
 import type { EstadoListQuery, EstadoListQueryResult } from "../../domain/queries";
 import { IEstadoRepository } from "../../domain/repositories";
 

@@ -2,7 +2,6 @@ import { type StreamableFile } from "@nestjs/common";
 import { ensureExists } from "@/application/errors";
 import { getEntityImagemStreamableFile } from "@/application/helpers";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente";
 import { IAmbienteGetImagemCapaQueryHandler } from "@/modules/ambientes/ambiente/domain/queries/ambiente-get-imagem-capa.query.handler.interface";
 import {
@@ -13,6 +12,7 @@ import {
   IImagemGetLatestArquivoIdQueryHandler,
   type IImagemGetLatestArquivoIdQueryHandler as IImagemGetLatestArquivoIdQueryHandlerType,
 } from "@/modules/armazenamento/imagem/domain/queries";
+import type { AccessContext } from "@/server/access-context";
 import type { AmbienteFindOneQuery } from "../../domain/queries";
 import { IAmbienteRepository } from "../../domain/repositories";
 

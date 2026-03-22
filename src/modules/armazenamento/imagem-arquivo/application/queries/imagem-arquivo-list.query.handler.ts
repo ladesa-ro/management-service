@@ -1,6 +1,6 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { IImagemArquivoListQueryHandler } from "@/modules/armazenamento/imagem-arquivo/domain/queries/imagem-arquivo-list.query.handler.interface";
+import type { AccessContext } from "@/server/access-context";
 import type { ImagemArquivoListQuery, ImagemArquivoListQueryResult } from "../../domain/queries";
 import { IImagemArquivoQueryRepository } from "../../domain/repositories";
 

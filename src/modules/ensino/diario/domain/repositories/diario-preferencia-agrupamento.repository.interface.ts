@@ -1,8 +1,8 @@
 import type { SelectQueryBuilder } from "typeorm";
 import type { IBaseCrudRepository } from "@/domain/abstractions";
-import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import type { IDiarioPreferenciaAgrupamento } from "@/modules/ensino/diario";
 import type { DiarioPreferenciaAgrupamentoEntity } from "@/modules/ensino/diario/infrastructure.database";
+import type { AccessContext } from "@/server/access-context";
 import type {
   DiarioPreferenciaAgrupamentoFindOneQueryResult,
   DiarioPreferenciaAgrupamentoListQueryResult,

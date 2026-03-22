@@ -1,9 +1,9 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import {
   type IEnderecoCreateOrUpdateCommand,
   IEnderecoCreateOrUpdateCommandHandler,
 } from "@/modules/localidades/endereco/domain/commands/endereco-create-or-update.command.handler.interface";
+import type { AccessContext } from "@/server/access-context";
 import { Endereco } from "../../domain/endereco";
 import { IEnderecoRepository } from "../../domain/repositories";
 

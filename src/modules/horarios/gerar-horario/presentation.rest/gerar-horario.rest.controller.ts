@@ -9,7 +9,7 @@ import {
 } from "@nestjs/swagger";
 import { ensureExists } from "@/application/errors";
 import { DeclareDependency } from "@/domain/dependency-injection";
-import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
+import { AccessContext, AccessContextHttp } from "@/server/access-context";
 import { IGerarHorarioAceitarCommandHandler } from "../domain/commands/gerar-horario-aceitar.command.handler.interface";
 import { IGerarHorarioCreateCommandHandler } from "../domain/commands/gerar-horario-create.command.handler.interface";
 import { IGerarHorarioRejeitarCommandHandler } from "../domain/commands/gerar-horario-rejeitar.command.handler.interface";

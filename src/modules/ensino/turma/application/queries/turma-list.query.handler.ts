@@ -1,6 +1,6 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ITurmaListQueryHandler } from "@/modules/ensino/turma/domain/queries/turma-list.query.handler.interface";
+import type { AccessContext } from "@/server/access-context";
 import type { TurmaListQuery, TurmaListQueryResult } from "../../domain/queries";
 import { ITurmaRepository } from "../../domain/repositories";
 

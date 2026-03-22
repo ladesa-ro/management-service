@@ -1,6 +1,6 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { IAmbienteListQueryHandler } from "@/modules/ambientes/ambiente/domain/queries/ambiente-list.query.handler.interface";
+import type { AccessContext } from "@/server/access-context";
 import type { AmbienteListQuery, AmbienteListQueryResult } from "../../domain/queries";
 import { IAmbienteRepository } from "../../domain/repositories";
 

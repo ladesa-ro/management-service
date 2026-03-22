@@ -1,6 +1,6 @@
 import type { StreamableFile } from "@nestjs/common";
 import { ResourceNotFoundError } from "@/application/errors";
-import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
+import type { AccessContext } from "@/server/access-context";
 
 /**
  * Obtém o StreamableFile de um campo de imagem de uma entidade.

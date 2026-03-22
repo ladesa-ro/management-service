@@ -1,6 +1,6 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { IEstagioListQueryHandler } from "@/modules/estagio/estagio/domain/queries/estagio-list.query.handler.interface";
+import type { AccessContext } from "@/server/access-context";
 import type { EstagioListQuery, EstagioListQueryResult } from "../../domain/queries";
 import { IEstagioRepository } from "../../domain/repositories";
 

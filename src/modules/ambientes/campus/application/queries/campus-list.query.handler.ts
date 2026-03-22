@@ -1,6 +1,6 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ICampusListQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-list.query.handler.interface";
+import type { AccessContext } from "@/server/access-context";
 import type { CampusListQuery, CampusListQueryResult } from "../../domain/queries";
 import { ICampusRepository } from "../../domain/repositories";
 

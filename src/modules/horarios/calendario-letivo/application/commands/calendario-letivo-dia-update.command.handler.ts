@@ -1,7 +1,7 @@
 import { ensureExists } from "@/application/errors";
 import type { PersistInput } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
+import type { AccessContext } from "@/server/access-context";
 import { ICalendarioLetivoPermissionChecker } from "../../domain/authorization";
 import { CalendarioLetivoDia, type ICalendarioLetivoDia } from "../../domain/calendario-letivo-dia";
 import type { CalendarioLetivoDiaUpdateCommand } from "../../domain/commands/calendario-letivo-dia-update.command";

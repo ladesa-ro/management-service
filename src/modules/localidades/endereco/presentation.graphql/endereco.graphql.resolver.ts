@@ -3,9 +3,9 @@ import { type GraphQLResolveInfo } from "graphql";
 import { ensureExists } from "@/application/errors";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { graphqlExtractSelection } from "@/infrastructure.graphql";
-import { AccessContext, AccessContextGraphQL } from "@/modules/@seguranca/contexto-acesso";
 import { Endereco } from "@/modules/localidades/endereco/domain/endereco";
 import { IEnderecoFindOneQueryHandler } from "@/modules/localidades/endereco/domain/queries/endereco-find-one.query.handler.interface";
+import { AccessContext, AccessContextGraphQL } from "@/server/access-context";
 import { EnderecoFindOneOutputGraphQlDto } from "./endereco.graphql.dto";
 import { EnderecoGraphqlMapper } from "./endereco.graphql.mapper";
 

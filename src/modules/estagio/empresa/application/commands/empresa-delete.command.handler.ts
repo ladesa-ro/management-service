@@ -1,9 +1,9 @@
 import { InternalServerErrorException } from "@nestjs/common";
 import { ResourceNotFoundError } from "@/application/errors";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { IEmpresaDeleteCommandHandler } from "@/modules/estagio/empresa/domain/commands/empresa-delete.command.handler.interface";
 import type { EmpresaFindOneQuery } from "@/modules/estagio/empresa/domain/queries";
+import type { AccessContext } from "@/server/access-context";
 import { IEmpresaRepository } from "../../domain/repositories";
 
 @DeclareImplementation()

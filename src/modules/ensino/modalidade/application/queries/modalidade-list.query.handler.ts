@@ -1,6 +1,6 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { IModalidadeListQueryHandler } from "@/modules/ensino/modalidade/domain/queries/modalidade-list.query.handler.interface";
+import type { AccessContext } from "@/server/access-context";
 import type { ModalidadeListQuery, ModalidadeListQueryResult } from "../../domain/queries";
 import { IModalidadeRepository } from "../../domain/repositories";
 

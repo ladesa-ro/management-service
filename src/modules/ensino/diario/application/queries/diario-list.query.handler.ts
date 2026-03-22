@@ -1,6 +1,6 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { IDiarioListQueryHandler } from "@/modules/ensino/diario/domain/queries/diario-list.query.handler.interface";
+import type { AccessContext } from "@/server/access-context";
 import type { DiarioListQuery, DiarioListQueryResult } from "../../domain/queries";
 import { IDiarioRepository } from "../../domain/repositories";
 

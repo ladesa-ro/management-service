@@ -1,10 +1,10 @@
 import { BadRequestException, ForbiddenException } from "@nestjs/common";
 import { IIdpTokenService, IIdpUserService } from "@/domain/abstractions/identity-provider";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { IAutenticacaoLoginCommandHandler } from "@/modules/acesso/autenticacao/domain/commands/autenticacao-login.command.handler.interface";
 import type { AuthLoginCommand } from "@/modules/acesso/autenticacao/domain/commands/auth-login.command";
 import { IUsuarioFindByMatriculaQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-find-by-matricula.query.handler.interface";
+import type { AccessContext } from "@/server/access-context";
 import type { AuthSessionCredentials } from "../../domain/shared";
 
 @DeclareImplementation()

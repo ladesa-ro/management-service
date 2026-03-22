@@ -1,5 +1,5 @@
 import type { IBaseCrudRepository } from "@/domain/abstractions";
-import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
+import type { AccessContext } from "@/server/access-context";
 import type { ICalendarioLetivoDia } from "../calendario-letivo-dia";
 import type {
   CalendarioLetivoDiaFindOneQueryResult,

@@ -1,7 +1,6 @@
 import { ensureExists } from "@/application/errors";
 import { saveEntityImagemField } from "@/application/helpers";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import {
   IImagemSaveImagemCapaCommandHandler,
   type IImagemSaveImagemCapaCommandHandler as IImagemSaveImagemCapaCommandHandlerType,
@@ -11,6 +10,7 @@ import {
   type TurmaUpdateImagemCapaCommand,
 } from "@/modules/ensino/turma/domain/commands/turma-update-imagem-capa.command.handler.interface";
 import { Turma } from "@/modules/ensino/turma/domain/turma";
+import type { AccessContext } from "@/server/access-context";
 import { ITurmaPermissionChecker } from "../../domain/authorization";
 import { ITurmaRepository } from "../../domain/repositories";
 

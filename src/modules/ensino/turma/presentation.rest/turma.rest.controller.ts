@@ -25,7 +25,6 @@ import {
 import type { Express } from "express";
 import { ensureExists } from "@/application/errors";
 import { DeclareDependency } from "@/domain/dependency-injection";
-import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { ITurmaCreateCommandHandler } from "@/modules/ensino/turma/domain/commands/turma-create.command.handler.interface";
 import { ITurmaDeleteCommandHandler } from "@/modules/ensino/turma/domain/commands/turma-delete.command.handler.interface";
 import { ITurmaUpdateCommandHandler } from "@/modules/ensino/turma/domain/commands/turma-update.command.handler.interface";
@@ -39,6 +38,7 @@ import {
   HorarioSemanalOutputRestDto,
   HorarioSemanalQueryParamsRestDto,
 } from "@/modules/horarios/horario-consulta/presentation.rest";
+import { AccessContext, AccessContextHttp } from "@/server/access-context";
 import {
   TurmaCreateInputRestDto,
   TurmaFindOneInputRestDto,

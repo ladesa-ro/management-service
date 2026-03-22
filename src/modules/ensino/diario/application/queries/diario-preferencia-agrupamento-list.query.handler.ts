@@ -1,6 +1,6 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { IDiarioPreferenciaAgrupamentoListQueryHandler } from "@/modules/ensino/diario/domain/queries/diario-preferencia-agrupamento-list.query.handler.interface";
+import type { AccessContext } from "@/server/access-context";
 import type {
   DiarioPreferenciaAgrupamentoListQuery,
   DiarioPreferenciaAgrupamentoListQueryResult,

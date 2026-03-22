@@ -1,5 +1,5 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
+import type { AccessContext } from "@/server/access-context";
 import type { OfertaFormacaoNivelFormacaoBulkReplaceCommand } from "../../domain/commands/oferta-formacao-nivel-formacao-bulk-replace.command";
 import { IOfertaFormacaoNivelFormacaoBulkReplaceCommandHandler } from "../../domain/commands/oferta-formacao-nivel-formacao-bulk-replace.command.handler.interface";
 import type { OfertaFormacaoNivelFormacaoListQueryResult } from "../../domain/queries";

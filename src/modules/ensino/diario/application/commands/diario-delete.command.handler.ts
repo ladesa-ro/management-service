@@ -1,9 +1,9 @@
 import { ensureExists } from "@/application/errors";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { IDiarioDeleteCommandHandler } from "@/modules/ensino/diario/domain/commands/diario-delete.command.handler.interface";
 import { Diario } from "@/modules/ensino/diario/domain/diario";
 import type { DiarioFindOneQuery } from "@/modules/ensino/diario/domain/queries";
+import type { AccessContext } from "@/server/access-context";
 import { IDiarioPermissionChecker } from "../../domain/authorization";
 import { IDiarioRepository } from "../../domain/repositories";
 

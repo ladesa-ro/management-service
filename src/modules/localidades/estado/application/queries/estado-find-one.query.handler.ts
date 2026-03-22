@@ -1,6 +1,6 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { IEstadoFindOneQueryHandler } from "@/modules/localidades/estado/domain/queries/estado-find-one.query.handler.interface";
+import type { AccessContext } from "@/server/access-context";
 import type { EstadoFindOneQuery, EstadoFindOneQueryResult } from "../../domain/queries";
 import { IEstadoRepository } from "../../domain/repositories";
 

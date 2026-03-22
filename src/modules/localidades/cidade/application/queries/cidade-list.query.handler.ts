@@ -1,6 +1,6 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ICidadeListQueryHandler } from "@/modules/localidades/cidade/domain/queries/cidade-list.query.handler.interface";
+import type { AccessContext } from "@/server/access-context";
 import type { CidadeListQuery, CidadeListQueryResult } from "../../domain/queries";
 import { ICidadeRepository } from "../../domain/repositories";
 

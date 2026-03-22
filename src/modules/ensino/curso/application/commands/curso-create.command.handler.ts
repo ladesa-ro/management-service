@@ -1,6 +1,5 @@
 import { ensureExists } from "@/application/errors";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { Campus } from "@/modules/ambientes/campus/domain/campus";
 import { ICampusFindOneQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-find-one.query.handler.interface";
 import type { CursoCreateCommand } from "@/modules/ensino/curso/domain/commands/curso-create.command";
@@ -8,6 +7,7 @@ import { ICursoCreateCommandHandler } from "@/modules/ensino/curso/domain/comman
 import { Curso } from "@/modules/ensino/curso/domain/curso";
 import { OfertaFormacao } from "@/modules/ensino/oferta-formacao/domain/oferta-formacao";
 import { IOfertaFormacaoFindOneQueryHandler } from "@/modules/ensino/oferta-formacao/domain/queries/oferta-formacao-find-one.query.handler.interface";
+import type { AccessContext } from "@/server/access-context";
 import { ICursoPermissionChecker } from "../../domain/authorization";
 import type { CursoFindOneQueryResult } from "../../domain/queries";
 import { ICursoRepository } from "../../domain/repositories";

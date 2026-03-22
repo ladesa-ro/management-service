@@ -1,6 +1,6 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { IDisciplinaListQueryHandler } from "@/modules/ensino/disciplina/domain/queries/disciplina-list.query.handler.interface";
+import type { AccessContext } from "@/server/access-context";
 import type { DisciplinaListQuery, DisciplinaListQueryResult } from "../../domain/queries";
 import { IDisciplinaRepository } from "../../domain/repositories";
 

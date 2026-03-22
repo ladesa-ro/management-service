@@ -1,4 +1,4 @@
-import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
+import type { AccessContext } from "@/server/access-context";
 import type { EstagiarioCreateCommand, EstagiarioUpdateCommand } from "../commands";
 import type {
   EstagiarioFindOneQuery,

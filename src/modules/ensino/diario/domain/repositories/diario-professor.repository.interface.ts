@@ -1,6 +1,6 @@
 import type { IBaseCrudRepository } from "@/domain/abstractions";
-import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import type { IDiarioProfessor } from "@/modules/ensino/diario";
+import type { AccessContext } from "@/server/access-context";
 import type { DiarioProfessorFindOneQueryResult, DiarioProfessorListQueryResult } from "../queries";
 export const IDiarioProfessorRepository = Symbol("IDiarioProfessorRepository");
 

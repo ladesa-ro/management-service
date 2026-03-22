@@ -2,7 +2,6 @@ import { has } from "lodash";
 import { ensureExists } from "@/application/errors";
 import type { PersistInput } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente";
 import { IAmbienteFindOneQueryHandler } from "@/modules/ambientes/ambiente/domain/queries/ambiente-find-one.query.handler.interface";
 import { Curso } from "@/modules/ensino/curso/domain/curso";
@@ -12,6 +11,7 @@ import { ITurmaUpdateCommandHandler } from "@/modules/ensino/turma/domain/comman
 import type { TurmaFindOneQuery } from "@/modules/ensino/turma/domain/queries";
 import type { ITurma } from "@/modules/ensino/turma/domain/turma";
 import { Turma } from "@/modules/ensino/turma/domain/turma";
+import type { AccessContext } from "@/server/access-context";
 import { ITurmaPermissionChecker } from "../../domain/authorization";
 import type { TurmaFindOneQueryResult } from "../../domain/queries";
 import { ITurmaRepository } from "../../domain/repositories";

@@ -8,7 +8,7 @@ import {
 } from "@nestjs/swagger";
 import { ensureExists } from "@/application/errors";
 import { DeclareDependency } from "@/domain/dependency-injection";
-import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
+import { AccessContext, AccessContextHttp } from "@/server/access-context";
 import { CalendarioLetivoDia } from "../domain/calendario-letivo-dia";
 import { ICalendarioLetivoDiaUpdateCommandHandler } from "../domain/commands/calendario-letivo-dia-update.command.handler.interface";
 import { ICalendarioLetivoDiaFindOneQueryHandler } from "../domain/queries/calendario-letivo-dia-find-one.query.handler.interface";
