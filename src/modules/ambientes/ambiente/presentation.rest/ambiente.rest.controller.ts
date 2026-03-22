@@ -24,6 +24,7 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { ensureExists } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente";
 import {
@@ -58,7 +59,7 @@ import {
   AmbienteListQueryMetadata,
   IAmbienteListQueryHandler,
 } from "@/modules/ambientes/ambiente/domain/queries/ambiente-list.query.handler.interface";
-import { AccessContext, AccessContextHttp } from "@/server/access-context";
+import { AccessContextHttp } from "@/server/access-context";
 import {
   AmbienteCreateInputRestDto,
   AmbienteFindOneInputRestDto,
@@ -93,7 +94,7 @@ export class AmbienteRestController {
   @ApiOperation(AmbienteListDisponiveisQueryMetadata.swaggerMetadata)
   @ApiOkResponse()
   @ApiForbiddenResponse()
-  async listDisponiveis(@AccessContextHttp() _accessContext: AccessContext) {
+  async listDisponiveis(@AccessContextHttp() _accessContext: IAccessContext) {
     // Placeholder: returns empty array
     return { data: [] };
   }
@@ -103,12 +104,12 @@ export class AmbienteRestController {
   @ApiOkResponse({ type: AmbienteListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Query() dto: AmbienteListInputRestDto,
   ): Promise<AmbienteListOutputRestDto> {
     const input = AmbienteRestMapper.toListInput(dto);
-    const result = await this.listHandler.execute(accessContext, input as any);
-    return AmbienteRestMapper.toListOutputDto(result as any);
+    const result = await this.listHandler.execute(accessContext, input);
+    return AmbienteRestMapper.toListOutputDto(result);
   }
 
   @Get("/:id/disponibilidade")
@@ -117,7 +118,7 @@ export class AmbienteRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async getDisponibilidade(
-    @AccessContextHttp() _accessContext: AccessContext,
+    @AccessContextHttp() _accessContext: IAccessContext,
     @Param() params: AmbienteFindOneInputRestDto,
   ) {
     // Placeholder: returns empty availability grid
@@ -130,13 +131,13 @@ export class AmbienteRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async findById(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: AmbienteFindOneInputRestDto,
   ): Promise<AmbienteFindOneOutputRestDto> {
     const input = AmbienteRestMapper.toFindOneInput(params);
-    const result = await this.findOneHandler.execute(accessContext, input as any);
+    const result = await this.findOneHandler.execute(accessContext, input);
     ensureExists(result, Ambiente.entityName, input.id);
-    return AmbienteRestMapper.toFindOneOutputDto(result as any);
+    return AmbienteRestMapper.toFindOneOutputDto(result);
   }
 
   @Post("/")
@@ -144,12 +145,12 @@ export class AmbienteRestController {
   @ApiCreatedResponse({ type: AmbienteFindOneOutputRestDto })
   @ApiForbiddenResponse()
   async create(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Body() dto: AmbienteCreateInputRestDto,
   ): Promise<AmbienteFindOneOutputRestDto> {
     const input = AmbienteRestMapper.toCreateInput(dto);
-    const result = await this.createHandler.execute(accessContext, input as any);
-    return AmbienteRestMapper.toFindOneOutputDto(result as any);
+    const result = await this.createHandler.execute(accessContext, input);
+    return AmbienteRestMapper.toFindOneOutputDto(result);
   }
 
   @Patch("/:id")
@@ -158,13 +159,13 @@ export class AmbienteRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async update(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: AmbienteFindOneInputRestDto,
     @Body() dto: AmbienteUpdateInputRestDto,
   ): Promise<AmbienteFindOneOutputRestDto> {
     const input = AmbienteRestMapper.toUpdateInput(params, dto);
-    const result = await this.updateHandler.execute(accessContext, input as any);
-    return AmbienteRestMapper.toFindOneOutputDto(result as any);
+    const result = await this.updateHandler.execute(accessContext, input);
+    return AmbienteRestMapper.toFindOneOutputDto(result);
   }
 
   @Get("/:id/imagem/capa")
@@ -173,7 +174,7 @@ export class AmbienteRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async getImagemCapa(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: AmbienteFindOneInputRestDto,
   ) {
     const result = await this.getImagemCapaHandler.execute(accessContext, { id: params.id });
@@ -200,7 +201,7 @@ export class AmbienteRestController {
   @ApiNotFoundResponse()
   @UseInterceptors(FileInterceptor("file"))
   async updateImagemCapa(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: AmbienteFindOneInputRestDto,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<boolean> {
@@ -213,10 +214,10 @@ export class AmbienteRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async deleteOneById(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: AmbienteFindOneInputRestDto,
   ): Promise<boolean> {
     const input = AmbienteRestMapper.toFindOneInput(params);
-    return this.deleteHandler.execute(accessContext, input as any);
+    return this.deleteHandler.execute(accessContext, input);
   }
 }

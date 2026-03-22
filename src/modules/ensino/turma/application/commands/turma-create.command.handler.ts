@@ -1,4 +1,5 @@
 import { ensureExists } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente";
 import { IAmbienteFindOneQueryHandler } from "@/modules/ambientes/ambiente/domain/queries/ambiente-find-one.query.handler.interface";
@@ -7,7 +8,6 @@ import { ICursoFindOneQueryHandler } from "@/modules/ensino/curso/domain/queries
 import type { TurmaCreateCommand } from "@/modules/ensino/turma/domain/commands/turma-create.command";
 import { ITurmaCreateCommandHandler } from "@/modules/ensino/turma/domain/commands/turma-create.command.handler.interface";
 import { Turma } from "@/modules/ensino/turma/domain/turma";
-import type { AccessContext } from "@/server/access-context";
 import { ITurmaPermissionChecker } from "../../domain/authorization";
 import type { TurmaFindOneQueryResult } from "../../domain/queries";
 import { ITurmaRepository } from "../../domain/repositories";
@@ -26,7 +26,7 @@ export class TurmaCreateCommandHandlerImpl implements ITurmaCreateCommandHandler
   ) {}
 
   async execute(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: TurmaCreateCommand,
   ): Promise<TurmaFindOneQueryResult> {
     await this.permissionChecker.ensureCanCreate(accessContext, { dto });

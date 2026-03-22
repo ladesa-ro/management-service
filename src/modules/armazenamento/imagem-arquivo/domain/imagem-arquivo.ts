@@ -10,6 +10,12 @@ import {
   ImagemArquivoUpdateSchema,
 } from "./imagem-arquivo.schemas";
 
+interface IImagemArquivoLoadInput {
+  imagem?: Imagem;
+  arquivo?: Arquivo;
+  [key: string]: unknown;
+}
+
 export interface IImagemArquivo extends IEntityBaseUuid {
   largura: number;
   altura: number;
@@ -68,7 +74,7 @@ export class ImagemArquivo implements IEntityBaseUuid {
     return instance;
   }
 
-  static load(dados: unknown): ImagemArquivo {
+  static load(dados: IImagemArquivoLoadInput): ImagemArquivo {
     const parsed = zodValidate(ImagemArquivo.entityName, ImagemArquivoSchema, dados);
 
     const instance = new ImagemArquivo();
@@ -78,8 +84,8 @@ export class ImagemArquivo implements IEntityBaseUuid {
     instance.altura = parsed.altura;
     instance.formato = parsed.formato;
     instance.mimeType = parsed.mimeType;
-    instance.imagem = (dados as any)?.imagem;
-    instance.arquivo = (dados as any)?.arquivo;
+    instance.imagem = dados.imagem!;
+    instance.arquivo = dados.arquivo!;
     instance.dateCreated = parsed.dateCreated;
     instance.dateUpdated = parsed.dateUpdated;
     instance.dateDeleted = parsed.dateDeleted;

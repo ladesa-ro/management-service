@@ -1,4 +1,4 @@
-import type { AccessContext } from "@/server/access-context";
+import type { IAccessContext } from "@/domain/abstractions";
 
 /**
  * Contrato granular para listagem paginada. Composto por interface — não por herança de classe base —
@@ -6,7 +6,7 @@ import type { AccessContext } from "@/server/access-context";
  */
 export interface IRepositoryFindAll<ListOutputDto> {
   findAll(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: unknown,
     selection?: string[] | boolean | null,
   ): Promise<ListOutputDto>;

@@ -1,9 +1,9 @@
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
   type IPerfilFindAllActiveQuery,
   IPerfilFindAllActiveQueryHandler,
 } from "@/modules/acesso/perfil/domain/queries/perfil-find-all-active.query.handler.interface";
-import type { AccessContext } from "@/server/access-context";
 import type { PerfilFindOneQueryResult } from "../../domain/queries";
 import { IPerfilRepository } from "../../domain/repositories";
 
@@ -15,7 +15,7 @@ export class PerfilFindAllActiveQueryHandlerImpl implements IPerfilFindAllActive
   ) {}
 
   async execute(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     { usuarioId }: IPerfilFindAllActiveQuery,
   ): Promise<PerfilFindOneQueryResult[]> {
     return this.repository.findAllActiveByUsuarioId(accessContext, usuarioId);

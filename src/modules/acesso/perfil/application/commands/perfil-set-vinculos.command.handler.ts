@@ -1,4 +1,5 @@
 import { ensureExists } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import type { PerfilSetVinculosCommand } from "@/modules/acesso/perfil/domain/commands/perfil-set-vinculos.command";
@@ -8,7 +9,6 @@ import { IUsuarioFindByIdSimpleQueryHandler } from "@/modules/acesso/usuario/dom
 import { Usuario } from "@/modules/acesso/usuario/domain/usuario";
 import { Campus } from "@/modules/ambientes/campus/domain/campus";
 import { ICampusFindOneQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-find-one.query.handler.interface";
-import type { AccessContext } from "@/server/access-context";
 import type { PerfilListQuery, PerfilListQueryResult } from "../../domain/queries";
 import { IPerfilRepository } from "../../domain/repositories";
 
@@ -26,7 +26,7 @@ export class PerfilSetVinculosCommandHandlerImpl implements IPerfilSetVinculosCo
   ) {}
 
   async execute(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: PerfilSetVinculosCommand,
   ): Promise<PerfilListQueryResult> {
     // Valida campus e usuário

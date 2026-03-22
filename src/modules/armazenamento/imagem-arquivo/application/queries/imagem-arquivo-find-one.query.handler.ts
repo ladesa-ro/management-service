@@ -1,6 +1,6 @@
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { IImagemArquivoFindOneQueryHandler } from "@/modules/armazenamento/imagem-arquivo/domain/queries/imagem-arquivo-find-one.query.handler.interface";
-import type { AccessContext } from "@/server/access-context";
 import type {
   ImagemArquivoFindOneQuery,
   ImagemArquivoFindOneQueryResult,
@@ -15,7 +15,7 @@ export class ImagemArquivoFindOneQueryHandlerImpl implements IImagemArquivoFindO
   ) {}
 
   async execute(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: ImagemArquivoFindOneQuery,
   ): Promise<ImagemArquivoFindOneQueryResult | null> {
     return this.repository.findById(accessContext, dto);

@@ -1,6 +1,6 @@
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { IAmbienteListQueryHandler } from "@/modules/ambientes/ambiente/domain/queries/ambiente-list.query.handler.interface";
-import type { AccessContext } from "@/server/access-context";
 import type { AmbienteListQuery, AmbienteListQueryResult } from "../../domain/queries";
 import { IAmbienteRepository } from "../../domain/repositories";
 
@@ -12,7 +12,7 @@ export class AmbienteListQueryHandlerImpl implements IAmbienteListQueryHandler {
   ) {}
 
   async execute(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: AmbienteListQuery | null,
   ): Promise<AmbienteListQueryResult> {
     return this.repository.findAll(accessContext, dto, dto?.selection);

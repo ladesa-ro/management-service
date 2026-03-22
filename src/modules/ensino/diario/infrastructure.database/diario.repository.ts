@@ -1,4 +1,5 @@
 import { FilterOperator } from "nestjs-paginate";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
 import { paginateConfig } from "@/infrastructure.database/pagination/config/paginate-config";
@@ -62,7 +63,7 @@ export class DiarioTypeOrmRepositoryAdapter implements IDiarioRepository {
   ) {}
 
   findAll(
-    accessContext: unknown,
+    accessContext: IAccessContext | null,
     dto: DiarioListQuery | null = null,
     selection?: string[] | boolean | null,
   ) {
@@ -76,7 +77,11 @@ export class DiarioTypeOrmRepositoryAdapter implements IDiarioRepository {
     );
   }
 
-  findById(accessContext: unknown, dto: DiarioFindOneQuery, selection?: string[] | boolean | null) {
+  findById(
+    accessContext: IAccessContext | null,
+    dto: DiarioFindOneQuery,
+    selection?: string[] | boolean | null,
+  ) {
     return typeormFindById<DiarioEntity, DiarioFindOneQuery, DiarioFindOneQueryResult>(
       this.appTypeormConnection,
       DiarioEntity,
@@ -86,7 +91,11 @@ export class DiarioTypeOrmRepositoryAdapter implements IDiarioRepository {
     );
   }
 
-  findByIdSimple(accessContext: unknown, id: string, selection?: string[] | boolean | null) {
+  findByIdSimple(
+    accessContext: IAccessContext | null,
+    id: string,
+    selection?: string[] | boolean | null,
+  ) {
     return this.findById(accessContext, { id } as DiarioFindOneQuery, selection);
   }
 

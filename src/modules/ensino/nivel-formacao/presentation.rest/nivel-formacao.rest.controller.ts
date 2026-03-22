@@ -8,6 +8,7 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { ensureExists } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import {
   INivelFormacaoCreateCommandHandler,
@@ -30,7 +31,7 @@ import {
   INivelFormacaoListQueryHandler,
   NivelFormacaoListQueryMetadata,
 } from "@/modules/ensino/nivel-formacao/domain/queries/nivel-formacao-list.query.handler.interface";
-import { AccessContext, AccessContextHttp } from "@/server/access-context";
+import { AccessContextHttp } from "@/server/access-context";
 import {
   NivelFormacaoCreateInputRestDto,
   NivelFormacaoFindOneInputRestDto,
@@ -62,7 +63,7 @@ export class NivelFormacaoRestController {
   @ApiOkResponse({ type: NivelFormacaoListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Query() dto: NivelFormacaoListInputRestDto,
   ): Promise<NivelFormacaoListOutputRestDto> {
     const input = NivelFormacaoRestMapper.toListInput(dto);
@@ -76,7 +77,7 @@ export class NivelFormacaoRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async findById(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: NivelFormacaoFindOneInputRestDto,
   ): Promise<NivelFormacaoFindOneOutputRestDto> {
     const input = NivelFormacaoRestMapper.toFindOneInput(params);
@@ -90,7 +91,7 @@ export class NivelFormacaoRestController {
   @ApiCreatedResponse({ type: NivelFormacaoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   async create(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Body() dto: NivelFormacaoCreateInputRestDto,
   ): Promise<NivelFormacaoFindOneOutputRestDto> {
     const input = NivelFormacaoRestMapper.toCreateInput(dto);
@@ -104,7 +105,7 @@ export class NivelFormacaoRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async update(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: NivelFormacaoFindOneInputRestDto,
     @Body() dto: NivelFormacaoUpdateInputRestDto,
   ): Promise<NivelFormacaoFindOneOutputRestDto> {
@@ -123,7 +124,7 @@ export class NivelFormacaoRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async deleteOneById(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: NivelFormacaoFindOneInputRestDto,
   ): Promise<boolean> {
     const input = NivelFormacaoRestMapper.toFindOneInput(params);

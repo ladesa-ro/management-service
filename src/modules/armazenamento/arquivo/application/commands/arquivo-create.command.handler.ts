@@ -1,3 +1,4 @@
+import type { IAccessContext } from "@/domain/abstractions";
 import { IStorageService } from "@/domain/abstractions/storage";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
@@ -6,7 +7,6 @@ import type {
   IArquivoCreateCommandHandler,
 } from "@/modules/armazenamento/arquivo/domain/commands";
 import { IArquivoRepository } from "@/modules/armazenamento/arquivo/domain/repositories";
-import type { AccessContext } from "@/server/access-context";
 
 @DeclareImplementation()
 export class ArquivoCreateCommandHandlerImpl implements IArquivoCreateCommandHandler {
@@ -18,7 +18,7 @@ export class ArquivoCreateCommandHandlerImpl implements IArquivoCreateCommandHan
   ) {}
 
   async execute(
-    _accessContext: AccessContext | null,
+    _accessContext: IAccessContext | null,
     { dto, data }: IArquivoCreateCommand,
   ): Promise<{ id: string }> {
     let id: string;

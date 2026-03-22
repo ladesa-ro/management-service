@@ -1,3 +1,4 @@
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
 import { paginateConfig } from "@/infrastructure.database/pagination/config/paginate-config";
@@ -46,7 +47,7 @@ export class NivelFormacaoTypeOrmRepositoryAdapter implements INivelFormacaoRepo
   ) {}
 
   findAll(
-    accessContext: unknown,
+    accessContext: IAccessContext | null,
     dto: NivelFormacaoListQuery | null = null,
     selection?: string[] | boolean | null,
   ) {
@@ -65,7 +66,7 @@ export class NivelFormacaoTypeOrmRepositoryAdapter implements INivelFormacaoRepo
   }
 
   findById(
-    accessContext: unknown,
+    accessContext: IAccessContext | null,
     dto: NivelFormacaoFindOneQuery,
     selection?: string[] | boolean | null,
   ) {
@@ -76,7 +77,11 @@ export class NivelFormacaoTypeOrmRepositoryAdapter implements INivelFormacaoRepo
     >(this.appTypeormConnection, NivelFormacaoEntity, config, dto, selection);
   }
 
-  findByIdSimple(accessContext: unknown, id: string, selection?: string[] | boolean | null) {
+  findByIdSimple(
+    accessContext: IAccessContext | null,
+    id: string,
+    selection?: string[] | boolean | null,
+  ) {
     return this.findById(accessContext, { id } as NivelFormacaoFindOneQuery, selection);
   }
 

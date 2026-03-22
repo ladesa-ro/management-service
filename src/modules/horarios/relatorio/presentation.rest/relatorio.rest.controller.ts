@@ -1,8 +1,9 @@
 import { Controller, Get, HttpCode, HttpStatus, Query, Res } from "@nestjs/common";
 import { ApiForbiddenResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import type { Response } from "express";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
-import { AccessContext, AccessContextHttp } from "@/server/access-context";
+import { AccessContextHttp } from "@/server/access-context";
 import { IRelatorioRepository } from "../domain/repositories";
 
 @ApiTags("relatorios")
@@ -21,7 +22,7 @@ export class RelatorioRestController {
   @ApiOkResponse()
   @ApiForbiddenResponse()
   async aulasMinistradas(
-    @AccessContextHttp() _accessContext: AccessContext,
+    @AccessContextHttp() _accessContext: IAccessContext,
     @Query("perfilId") perfilId?: string,
     @Query("turmaId") turmaId?: string,
     @Query("disciplinaId") disciplinaId?: string,
@@ -47,7 +48,7 @@ export class RelatorioRestController {
   @ApiForbiddenResponse()
   @HttpCode(HttpStatus.NOT_IMPLEMENTED)
   async aulasMinistradsPdf(
-    @AccessContextHttp() _accessContext: AccessContext,
+    @AccessContextHttp() _accessContext: IAccessContext,
     @Res() res: Response,
   ) {
     res.status(HttpStatus.NOT_IMPLEMENTED).json({

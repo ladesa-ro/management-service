@@ -1,9 +1,10 @@
 import { Body, Controller, Param, Post } from "@nestjs/common";
 import { ApiCreatedResponse, ApiForbiddenResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { IDiarioConfigurarRepository } from "@/modules/ensino/turma/domain/repositories";
-import { AccessContext, AccessContextHttp } from "@/server/access-context";
+import { AccessContextHttp } from "@/server/access-context";
 import {
   TurmaDiarioConfigurarInputRestDto,
   TurmaDiarioConfigurarOutputRestDto,
@@ -26,7 +27,7 @@ export class TurmaDiarioConfigurarRestController {
   @ApiCreatedResponse({ type: TurmaDiarioConfigurarOutputRestDto })
   @ApiForbiddenResponse()
   async configurar(
-    @AccessContextHttp() _accessContext: AccessContext,
+    @AccessContextHttp() _accessContext: IAccessContext,
     @Param() params: TurmaDiarioConfigurarParamsRestDto,
     @Body() dto: TurmaDiarioConfigurarInputRestDto,
   ): Promise<TurmaDiarioConfigurarOutputRestDto> {

@@ -1,4 +1,5 @@
 import { FilterOperator } from "nestjs-paginate";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
@@ -56,7 +57,7 @@ export class DiarioProfessorTypeOrmRepositoryAdapter implements IDiarioProfessor
   ) {}
 
   findAll(
-    accessContext: unknown,
+    accessContext: IAccessContext | null,
     dto: DiarioProfessorListQuery | null = null,
     selection?: string[] | boolean | null,
   ) {
@@ -75,7 +76,7 @@ export class DiarioProfessorTypeOrmRepositoryAdapter implements IDiarioProfessor
   }
 
   findById(
-    accessContext: unknown,
+    accessContext: IAccessContext | null,
     dto: DiarioProfessorFindOneQuery,
     selection?: string[] | boolean | null,
   ) {
@@ -86,7 +87,11 @@ export class DiarioProfessorTypeOrmRepositoryAdapter implements IDiarioProfessor
     >(this.appTypeormConnection, DiarioProfessorEntity, config, dto, selection);
   }
 
-  findByIdSimple(accessContext: unknown, id: string, selection?: string[] | boolean | null) {
+  findByIdSimple(
+    accessContext: IAccessContext | null,
+    id: string,
+    selection?: string[] | boolean | null,
+  ) {
     return this.findById(accessContext, { id } as DiarioProfessorFindOneQuery, selection);
   }
 
@@ -128,8 +133,8 @@ export class DiarioProfessorTypeOrmRepositoryAdapter implements IDiarioProfessor
       const entity = new DiarioProfessorEntity();
       entity.id = generateUuidV7();
       entity.situacao = p.situacao;
-      (entity as any).diario = { id: p.diarioId };
-      (entity as any).perfil = { id: p.perfilId };
+      Object.assign(entity, { diario: { id: p.diarioId } });
+      Object.assign(entity, { perfil: { id: p.perfilId } });
       entity.dateCreated = now;
       entity.dateUpdated = now;
       entity.dateDeleted = null;

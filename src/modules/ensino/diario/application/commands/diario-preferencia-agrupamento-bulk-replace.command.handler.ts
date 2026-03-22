@@ -1,8 +1,11 @@
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import type { AccessContext } from "@/server/access-context";
 import type { DiarioPreferenciaAgrupamentoBulkReplaceCommand } from "../../domain/commands/diario-preferencia-agrupamento-bulk-replace.command";
 import { IDiarioPreferenciaAgrupamentoBulkReplaceCommandHandler } from "../../domain/commands/diario-preferencia-agrupamento-bulk-replace.command.handler.interface";
-import type { DiarioPreferenciaAgrupamentoListQueryResult } from "../../domain/queries";
+import type {
+  DiarioPreferenciaAgrupamentoListQuery,
+  DiarioPreferenciaAgrupamentoListQueryResult,
+} from "../../domain/queries";
 import { IDiarioPreferenciaAgrupamentoRepository } from "../../domain/repositories";
 
 @DeclareImplementation()
@@ -15,7 +18,7 @@ export class DiarioPreferenciaAgrupamentoBulkReplaceCommandHandlerImpl
   ) {}
 
   async execute(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: DiarioPreferenciaAgrupamentoBulkReplaceCommand,
   ): Promise<DiarioPreferenciaAgrupamentoListQueryResult> {
     await this.repository.softDeleteByDiarioId(dto.diarioId);
@@ -30,7 +33,7 @@ export class DiarioPreferenciaAgrupamentoBulkReplaceCommandHandlerImpl
       })),
     );
 
-    const listQuery = { "filter.diario.id": [dto.diarioId] } as any;
+    const listQuery: DiarioPreferenciaAgrupamentoListQuery = { "filter.diario.id": [dto.diarioId] };
     return this.repository.findAll(accessContext, listQuery);
   }
 }

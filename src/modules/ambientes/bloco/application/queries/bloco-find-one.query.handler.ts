@@ -1,6 +1,6 @@
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { IBlocoFindOneQueryHandler } from "@/modules/ambientes/bloco/domain/queries/bloco-find-one.query.handler.interface";
-import type { AccessContext } from "@/server/access-context";
 import type { BlocoFindOneQuery, BlocoFindOneQueryResult } from "../../domain/queries";
 import { IBlocoRepository } from "../../domain/repositories";
 
@@ -12,7 +12,7 @@ export class BlocoFindOneQueryHandlerImpl implements IBlocoFindOneQueryHandler {
   ) {}
 
   async execute(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: BlocoFindOneQuery,
   ): Promise<BlocoFindOneQueryResult | null> {
     return this.repository.findById(accessContext, dto, dto?.selection);

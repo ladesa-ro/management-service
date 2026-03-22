@@ -1,4 +1,6 @@
+import { IsNull } from "typeorm";
 import { ensureExists } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import { Perfil } from "@/modules/acesso/perfil/domain/perfil";
@@ -19,7 +21,6 @@ import type {
   EstagiarioListQueryResult,
 } from "@/modules/estagio/estagiario/domain/queries";
 import type { IEstagiarioRepository } from "@/modules/estagio/estagiario/domain/repositories";
-import type { AccessContext } from "@/server/access-context";
 import { EstagiarioMapper, EstagiarioTypeormEntity } from "./typeorm";
 
 @DeclareImplementation()
@@ -49,7 +50,7 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
   }
 
   async findAll(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: EstagiarioListQuery | null = null,
     selection?: string[] | boolean | null,
   ): Promise<EstagiarioListQueryResult> {
@@ -120,12 +121,12 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
   }
 
   async findById(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: EstagiarioFindOneQuery,
     selection?: string[] | boolean | null,
   ): Promise<EstagiarioFindOneQueryResult | null> {
     const entity = await this.repository.findOne({
-      where: { id: dto.id, dateDeleted: null as any },
+      where: { id: dto.id, dateDeleted: IsNull() },
     });
 
     if (!entity) {
@@ -136,23 +137,23 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
   }
 
   async create(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: EstagiarioCreateCommand,
   ): Promise<EstagiarioFindOneQueryResult> {
     const perfil = await this.perfilRepository.findOne({
-      where: { id: dto.perfil.id, dateDeleted: null as any },
+      where: { id: dto.perfil.id, dateDeleted: IsNull() },
     });
 
     ensureExists(perfil, Perfil.entityName, dto.perfil.id);
 
     const curso = await this.cursoRepository.findOne({
-      where: { id: dto.curso.id, dateDeleted: null as any },
+      where: { id: dto.curso.id, dateDeleted: IsNull() },
     });
 
     ensureExists(curso, Curso.entityName, dto.curso.id);
 
     const turma = await this.turmaRepository.findOne({
-      where: { id: dto.turma.id, dateDeleted: null as any },
+      where: { id: dto.turma.id, dateDeleted: IsNull() },
     });
 
     ensureExists(turma, Turma.entityName, dto.turma.id);
@@ -166,12 +167,12 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
   }
 
   async update(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     id: string,
     dto: EstagiarioUpdateCommand,
   ): Promise<EstagiarioFindOneQueryResult> {
     const entity = await this.repository.findOne({
-      where: { id, dateDeleted: null as any },
+      where: { id, dateDeleted: IsNull() },
     });
 
     ensureExists(entity, Estagiario.entityName, id);
@@ -180,7 +181,7 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
 
     if (dto.perfil) {
       const perfil = await this.perfilRepository.findOne({
-        where: { id: dto.perfil.id, dateDeleted: null as any },
+        where: { id: dto.perfil.id, dateDeleted: IsNull() },
       });
 
       ensureExists(perfil, Perfil.entityName, dto.perfil.id);
@@ -188,7 +189,7 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
 
     if (dto.curso) {
       const curso = await this.cursoRepository.findOne({
-        where: { id: dto.curso.id, dateDeleted: null as any },
+        where: { id: dto.curso.id, dateDeleted: IsNull() },
       });
 
       ensureExists(curso, Curso.entityName, dto.curso.id);
@@ -196,7 +197,7 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
 
     if (dto.turma) {
       const turma = await this.turmaRepository.findOne({
-        where: { id: dto.turma.id, dateDeleted: null as any },
+        where: { id: dto.turma.id, dateDeleted: IsNull() },
       });
 
       ensureExists(turma, Turma.entityName, dto.turma.id);
@@ -210,9 +211,9 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
     return EstagiarioMapper.toOutputDto(saved);
   }
 
-  async delete(accessContext: AccessContext | null, id: string): Promise<void> {
+  async delete(accessContext: IAccessContext | null, id: string): Promise<void> {
     const entity = await this.repository.findOne({
-      where: { id, dateDeleted: null as any },
+      where: { id, dateDeleted: IsNull() },
     });
 
     ensureExists(entity, Estagiario.entityName, id);

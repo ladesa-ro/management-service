@@ -1,8 +1,8 @@
 import { InternalError, ResourceNotFoundError } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { EmpresaCreateCommand } from "@/modules/estagio/empresa/domain/commands/empresa-create.command";
 import { IEmpresaCreateCommandHandler } from "@/modules/estagio/empresa/domain/commands/empresa-create.command.handler.interface";
-import type { AccessContext } from "@/server/access-context";
 import type { EmpresaFindOneQueryResult } from "../../domain/queries";
 import { IEmpresaRepository } from "../../domain/repositories";
 
@@ -14,7 +14,7 @@ export class EmpresaCreateCommandHandlerImpl implements IEmpresaCreateCommandHan
   ) {}
 
   async execute(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: EmpresaCreateCommand,
   ): Promise<EmpresaFindOneQueryResult> {
     try {

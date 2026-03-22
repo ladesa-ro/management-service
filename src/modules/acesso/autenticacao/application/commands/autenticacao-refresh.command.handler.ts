@@ -1,9 +1,9 @@
 import { ForbiddenError } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import { IIdpTokenService } from "@/domain/abstractions/identity-provider";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { IAutenticacaoRefreshCommandHandler } from "@/modules/acesso/autenticacao/domain/commands/autenticacao-refresh.command.handler.interface";
 import type { AuthRefreshCommand } from "@/modules/acesso/autenticacao/domain/commands/auth-refresh.command";
-import type { AccessContext } from "@/server/access-context";
 import type { AuthSessionCredentials } from "../../domain/shared";
 
 @DeclareImplementation()
@@ -14,7 +14,7 @@ export class AutenticacaoRefreshCommandHandlerImpl implements IAutenticacaoRefre
   ) {}
 
   async execute(
-    _accessContext: AccessContext | null,
+    _accessContext: IAccessContext | null,
     dto: AuthRefreshCommand,
   ): Promise<AuthSessionCredentials> {
     try {

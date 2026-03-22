@@ -1,6 +1,6 @@
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { IEnderecoFindOneQueryHandler } from "@/modules/localidades/endereco/domain/queries/endereco-find-one.query.handler.interface";
-import type { AccessContext } from "@/server/access-context";
 import type { EnderecoFindOneQuery, EnderecoFindOneQueryResult } from "../../domain/queries";
 import { IEnderecoRepository } from "../../domain/repositories";
 
@@ -12,7 +12,7 @@ export class EnderecoFindOneQueryHandlerImpl implements IEnderecoFindOneQueryHan
   ) {}
 
   async execute(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: EnderecoFindOneQuery,
   ): Promise<EnderecoFindOneQueryResult | null> {
     return this.repository.findById(accessContext, dto, dto?.selection);

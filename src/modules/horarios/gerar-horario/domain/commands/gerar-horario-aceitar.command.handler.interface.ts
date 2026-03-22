@@ -1,5 +1,5 @@
+import type { IAccessContext } from "@/domain/abstractions";
 import { createOperationMetadata } from "@/domain/abstractions";
-import type { AccessContext } from "@/server/access-context";
 import type { IGerarHorario } from "../gerar-horario.types";
 
 export interface IGerarHorarioAceitarCommand {
@@ -15,7 +15,7 @@ export const IGerarHorarioAceitarCommandHandler = Symbol("IGerarHorarioAceitarCo
 
 export interface IGerarHorarioAceitarCommandHandler {
   execute(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     command: IGerarHorarioAceitarCommand,
   ): Promise<IGerarHorario>;
 }

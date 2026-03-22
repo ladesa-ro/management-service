@@ -8,9 +8,10 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { ensureExists } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
-import { AccessContext, AccessContextHttp } from "@/server/access-context";
+import { AccessContextHttp } from "@/server/access-context";
 import type { ICalendarioAgendamentoRepository } from "../domain/repositories/calendario-agendamento.repository.interface";
 import { ICalendarioAgendamentoRepository as ICalendarioAgendamentoRepositoryToken } from "../domain/repositories/calendario-agendamento.repository.interface";
 import type { ICalendarioAgendamentoJunctionRepository } from "../domain/repositories/calendario-agendamento-junction.repository.interface";
@@ -43,7 +44,7 @@ export class CalendarioEventoRestController {
   @ApiOkResponse({ type: CalendarioEventoListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
-    @AccessContextHttp() _accessContext: AccessContext,
+    @AccessContextHttp() _accessContext: IAccessContext,
     @Query("search") search?: string,
     @Query("filter.turma.id") filterTurmaId?: string,
     @Query("filter.ofertaFormacao.id") filterOfertaFormacaoId?: string,
@@ -66,7 +67,7 @@ export class CalendarioEventoRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async findById(
-    @AccessContextHttp() _accessContext: AccessContext,
+    @AccessContextHttp() _accessContext: IAccessContext,
     @Param() params: CalendarioEventoFindOneParamsRestDto,
   ): Promise<CalendarioEventoFindOneOutputRestDto> {
     const entity = await this.calendarioAgendamentoRepository.findById(
@@ -82,7 +83,7 @@ export class CalendarioEventoRestController {
   @ApiCreatedResponse({ type: CalendarioEventoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   async create(
-    @AccessContextHttp() _accessContext: AccessContext,
+    @AccessContextHttp() _accessContext: IAccessContext,
     @Body() dto: CalendarioEventoCreateInputRestDto,
   ): Promise<CalendarioEventoFindOneOutputRestDto> {
     const entity = new CalendarioAgendamentoEntity();
@@ -110,7 +111,7 @@ export class CalendarioEventoRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async update(
-    @AccessContextHttp() _accessContext: AccessContext,
+    @AccessContextHttp() _accessContext: IAccessContext,
     @Param() params: CalendarioEventoFindOneParamsRestDto,
     @Body() dto: CalendarioEventoUpdateInputRestDto,
   ): Promise<CalendarioEventoFindOneOutputRestDto> {
@@ -141,7 +142,7 @@ export class CalendarioEventoRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async delete(
-    @AccessContextHttp() _accessContext: AccessContext,
+    @AccessContextHttp() _accessContext: IAccessContext,
     @Param() params: CalendarioEventoFindOneParamsRestDto,
   ): Promise<boolean> {
     const entity = await this.calendarioAgendamentoRepository.findById(

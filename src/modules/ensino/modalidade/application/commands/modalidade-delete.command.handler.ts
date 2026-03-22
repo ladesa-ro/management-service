@@ -1,9 +1,9 @@
 import { ensureExists } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { IModalidadeDeleteCommandHandler } from "@/modules/ensino/modalidade/domain/commands/modalidade-delete.command.handler.interface";
 import { Modalidade } from "@/modules/ensino/modalidade/domain/modalidade";
 import type { ModalidadeFindOneQuery } from "@/modules/ensino/modalidade/domain/queries";
-import type { AccessContext } from "@/server/access-context";
 import { IModalidadePermissionChecker } from "../../domain/authorization";
 import { IModalidadeRepository } from "../../domain/repositories";
 
@@ -17,7 +17,7 @@ export class ModalidadeDeleteCommandHandlerImpl implements IModalidadeDeleteComm
   ) {}
 
   async execute(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: ModalidadeFindOneQuery,
   ): Promise<boolean> {
     await this.permissionChecker.ensureCanDelete(accessContext, { dto }, dto.id);

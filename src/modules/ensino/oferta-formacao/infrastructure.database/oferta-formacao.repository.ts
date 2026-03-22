@@ -1,4 +1,5 @@
 import { FilterOperator } from "nestjs-paginate";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
 import { paginateConfig } from "@/infrastructure.database/pagination/config/paginate-config";
@@ -52,7 +53,7 @@ export class OfertaFormacaoTypeOrmRepositoryAdapter implements IOfertaFormacaoRe
   ) {}
 
   findAll(
-    accessContext: unknown,
+    accessContext: IAccessContext | null,
     dto: OfertaFormacaoListQuery | null = null,
     selection?: string[] | boolean | null,
   ) {
@@ -71,7 +72,7 @@ export class OfertaFormacaoTypeOrmRepositoryAdapter implements IOfertaFormacaoRe
   }
 
   findById(
-    accessContext: unknown,
+    accessContext: IAccessContext | null,
     dto: OfertaFormacaoFindOneQuery,
     selection?: string[] | boolean | null,
   ) {
@@ -82,7 +83,11 @@ export class OfertaFormacaoTypeOrmRepositoryAdapter implements IOfertaFormacaoRe
     >(this.appTypeormConnection, OfertaFormacaoEntity, config, dto, selection);
   }
 
-  findByIdSimple(accessContext: unknown, id: string, selection?: string[] | boolean | null) {
+  findByIdSimple(
+    accessContext: IAccessContext | null,
+    id: string,
+    selection?: string[] | boolean | null,
+  ) {
     return this.findById(accessContext, { id } as OfertaFormacaoFindOneQuery, selection);
   }
 

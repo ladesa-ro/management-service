@@ -1,6 +1,6 @@
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { INivelFormacaoListQueryHandler } from "@/modules/ensino/nivel-formacao/domain/queries/nivel-formacao-list.query.handler.interface";
-import type { AccessContext } from "@/server/access-context";
 import type { NivelFormacaoListQuery, NivelFormacaoListQueryResult } from "../../domain/queries";
 import { INivelFormacaoRepository } from "../../domain/repositories";
 
@@ -12,7 +12,7 @@ export class NivelFormacaoListQueryHandlerImpl implements INivelFormacaoListQuer
   ) {}
 
   async execute(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: NivelFormacaoListQuery | null,
   ): Promise<NivelFormacaoListQueryResult> {
     return this.repository.findAll(accessContext, dto, dto?.selection);

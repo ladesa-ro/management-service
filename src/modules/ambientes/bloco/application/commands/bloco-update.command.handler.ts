@@ -1,10 +1,10 @@
 import { ensureExists } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { Bloco } from "@/modules/ambientes/bloco/domain/bloco";
 import type { BlocoUpdateCommand } from "@/modules/ambientes/bloco/domain/commands/bloco-update.command";
 import { IBlocoUpdateCommandHandler } from "@/modules/ambientes/bloco/domain/commands/bloco-update.command.handler.interface";
 import type { BlocoFindOneQuery } from "@/modules/ambientes/bloco/domain/queries";
-import type { AccessContext } from "@/server/access-context";
 import { IBlocoPermissionChecker } from "../../domain/authorization";
 import type { BlocoFindOneQueryResult } from "../../domain/queries";
 import { IBlocoRepository } from "../../domain/repositories";
@@ -19,7 +19,7 @@ export class BlocoUpdateCommandHandlerImpl implements IBlocoUpdateCommandHandler
   ) {}
 
   async execute(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: BlocoFindOneQuery & BlocoUpdateCommand,
   ): Promise<BlocoFindOneQueryResult> {
     const current = await this.repository.findById(accessContext, { id: dto.id });

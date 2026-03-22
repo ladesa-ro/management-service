@@ -25,6 +25,7 @@ import {
 } from "@nestjs/swagger";
 import type { Express } from "express";
 import { ensureExists } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import {
   ITurmaCreateCommandHandler,
@@ -63,7 +64,7 @@ import {
   HorarioSemanalOutputRestDto,
   HorarioSemanalQueryParamsRestDto,
 } from "@/modules/horarios/horario-consulta/presentation.rest";
-import { AccessContext, AccessContextHttp } from "@/server/access-context";
+import { AccessContextHttp } from "@/server/access-context";
 import {
   TurmaCreateInputRestDto,
   TurmaFindOneInputRestDto,
@@ -101,7 +102,7 @@ export class TurmaRestController {
   @ApiOkResponse({ type: TurmaListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Query() dto: TurmaListInputRestDto,
   ): Promise<TurmaListOutputRestDto> {
     const input = TurmaRestMapper.toListInput(dto);
@@ -115,7 +116,7 @@ export class TurmaRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async findById(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: TurmaFindOneInputRestDto,
   ): Promise<TurmaFindOneOutputRestDto> {
     const input = TurmaRestMapper.toFindOneInput(params);
@@ -129,7 +130,7 @@ export class TurmaRestController {
   @ApiCreatedResponse({ type: TurmaFindOneOutputRestDto })
   @ApiForbiddenResponse()
   async create(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Body() dto: TurmaCreateInputRestDto,
   ): Promise<TurmaFindOneOutputRestDto> {
     const input = TurmaRestMapper.toCreateInput(dto);
@@ -143,7 +144,7 @@ export class TurmaRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async update(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: TurmaFindOneInputRestDto,
     @Body() dto: TurmaUpdateInputRestDto,
   ): Promise<TurmaFindOneOutputRestDto> {
@@ -158,7 +159,7 @@ export class TurmaRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async horarioSemanal(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: TurmaFindOneInputRestDto,
     @Query() queryParams: HorarioSemanalQueryParamsRestDto,
   ): Promise<HorarioSemanalOutputRestDto> {
@@ -174,7 +175,7 @@ export class TurmaRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async getImagemCapa(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: TurmaFindOneInputRestDto,
   ) {
     const result = await this.getImagemCapaHandler.execute(accessContext, { id: params.id });
@@ -201,7 +202,7 @@ export class TurmaRestController {
   @ApiNotFoundResponse()
   @UseInterceptors(FileInterceptor("file"))
   async updateImagemCapa(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: TurmaFindOneInputRestDto,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<boolean> {
@@ -214,7 +215,7 @@ export class TurmaRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async deleteOneById(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: TurmaFindOneInputRestDto,
   ): Promise<boolean> {
     const input = TurmaRestMapper.toFindOneInput(params);

@@ -1,5 +1,6 @@
 import { ensureExists } from "@/application/errors";
 import { getEntityImagemStreamableFile } from "@/application/helpers";
+import type { IAccessContext } from "@/domain/abstractions";
 import type { IStreamableFileResult } from "@/domain/abstractions/storage";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
@@ -12,7 +13,6 @@ import {
 } from "@/modules/armazenamento/imagem/domain/queries";
 import { ITurmaGetImagemCapaQueryHandler } from "@/modules/ensino/turma/domain/queries/turma-get-imagem-capa.query.handler.interface";
 import { Turma } from "@/modules/ensino/turma/domain/turma";
-import type { AccessContext } from "@/server/access-context";
 import type { TurmaFindOneQuery } from "../../domain/queries";
 import { ITurmaRepository } from "../../domain/repositories";
 
@@ -28,7 +28,7 @@ export class TurmaGetImagemCapaQueryHandlerImpl implements ITurmaGetImagemCapaQu
   ) {}
 
   async execute(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     { id }: TurmaFindOneQuery,
   ): Promise<IStreamableFileResult> {
     const entity = await this.repository.findById(accessContext, { id });

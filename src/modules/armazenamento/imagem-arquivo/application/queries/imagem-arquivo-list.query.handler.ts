@@ -1,6 +1,6 @@
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { IImagemArquivoListQueryHandler } from "@/modules/armazenamento/imagem-arquivo/domain/queries/imagem-arquivo-list.query.handler.interface";
-import type { AccessContext } from "@/server/access-context";
 import type { ImagemArquivoListQuery, ImagemArquivoListQueryResult } from "../../domain/queries";
 import { IImagemArquivoQueryRepository } from "../../domain/repositories";
 
@@ -12,7 +12,7 @@ export class ImagemArquivoListQueryHandlerImpl implements IImagemArquivoListQuer
   ) {}
 
   async execute(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: ImagemArquivoListQuery | null,
   ): Promise<ImagemArquivoListQueryResult> {
     return this.repository.findAll(accessContext, dto);

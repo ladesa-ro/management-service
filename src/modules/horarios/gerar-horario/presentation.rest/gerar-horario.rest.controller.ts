@@ -8,8 +8,9 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { ensureExists } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
-import { AccessContext, AccessContextHttp } from "@/server/access-context";
+import { AccessContextHttp } from "@/server/access-context";
 import {
   GerarHorarioAceitarCommandMetadata,
   IGerarHorarioAceitarCommandHandler,
@@ -53,7 +54,7 @@ export class GerarHorarioRestController {
   @ApiAcceptedResponse({ type: GerarHorarioFindOneOutputRestDto })
   @ApiForbiddenResponse()
   async create(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Body() dto: GerarHorarioCreateInputRestDto,
   ): Promise<GerarHorarioFindOneOutputRestDto> {
     const result = await this.createHandler.execute(accessContext, dto);
@@ -66,7 +67,7 @@ export class GerarHorarioRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async findById(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: GerarHorarioFindOneParamsRestDto,
   ): Promise<GerarHorarioFindOneOutputRestDto> {
     const result = await this.findOneHandler.execute(accessContext, { id: params.id });
@@ -80,7 +81,7 @@ export class GerarHorarioRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async aceitar(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: GerarHorarioFindOneParamsRestDto,
   ): Promise<GerarHorarioFindOneOutputRestDto> {
     const result = await this.aceitarHandler.execute(accessContext, { id: params.id });
@@ -93,7 +94,7 @@ export class GerarHorarioRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async rejeitar(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: GerarHorarioFindOneParamsRestDto,
   ): Promise<GerarHorarioFindOneOutputRestDto> {
     const result = await this.rejeitarHandler.execute(accessContext, { id: params.id });

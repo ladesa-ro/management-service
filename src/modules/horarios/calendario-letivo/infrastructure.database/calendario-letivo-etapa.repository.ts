@@ -1,3 +1,4 @@
+import { IsNull } from "typeorm";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import type { ICalendarioLetivoEtapaRepository } from "@/modules/horarios/calendario-letivo/domain/repositories";
@@ -19,7 +20,7 @@ export class CalendarioLetivoEtapaTypeOrmRepositoryAdapter
     return repo.find({
       where: {
         calendarioLetivo: { id: calendarioLetivoId },
-        dateDeleted: null as any,
+        dateDeleted: IsNull(),
       },
       relations: ["ofertaFormacaoPeriodoEtapa"],
       order: { dataInicio: "ASC" },

@@ -1,3 +1,4 @@
+import type { FindOptionsWhere } from "typeorm";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
@@ -77,7 +78,7 @@ export class CalendarioAgendamentoTypeOrmRepositoryAdapter
     if (tipo !== undefined) {
       where.tipo = tipo;
     }
-    return repo.findOneBy(where as any);
+    return repo.findOneBy(where as FindOptionsWhere<CalendarioAgendamentoEntity>);
   }
 
   async save(entity: CalendarioAgendamentoEntity): Promise<CalendarioAgendamentoEntity> {
@@ -127,24 +128,26 @@ export class CalendarioAgendamentoTypeOrmRepositoryAdapter
   ): Promise<void> {
     if (data.turmaIds !== undefined) {
       const repo = this.appTypeormConnection.getRepository(CalendarioAgendamentoTurmaEntity);
-      await repo.delete({ calendarioAgendamento: { id: eventoId } } as any);
+      await repo.delete({
+        calendarioAgendamento: { id: eventoId },
+      } as FindOptionsWhere<CalendarioAgendamentoTurmaEntity>);
       for (const turmaId of data.turmaIds) {
         const j = new CalendarioAgendamentoTurmaEntity();
         j.id = generateUuidV7();
-        (j as any).turma = { id: turmaId };
-        (j as any).calendarioAgendamento = { id: eventoId };
+        Object.assign(j, { turma: { id: turmaId }, calendarioAgendamento: { id: eventoId } });
         await repo.save(j);
       }
     }
 
     if (data.perfilIds !== undefined) {
       const repo = this.appTypeormConnection.getRepository(CalendarioAgendamentoProfessorEntity);
-      await repo.delete({ calendarioAgendamento: { id: eventoId } } as any);
+      await repo.delete({
+        calendarioAgendamento: { id: eventoId },
+      } as FindOptionsWhere<CalendarioAgendamentoProfessorEntity>);
       for (const perfilId of data.perfilIds) {
         const j = new CalendarioAgendamentoProfessorEntity();
         j.id = generateUuidV7();
-        (j as any).perfil = { id: perfilId };
-        (j as any).calendarioAgendamento = { id: eventoId };
+        Object.assign(j, { perfil: { id: perfilId }, calendarioAgendamento: { id: eventoId } });
         await repo.save(j);
       }
     }
@@ -153,12 +156,16 @@ export class CalendarioAgendamentoTypeOrmRepositoryAdapter
       const repo = this.appTypeormConnection.getRepository(
         CalendarioAgendamentoCalendarioLetivoEntity,
       );
-      await repo.delete({ calendarioAgendamento: { id: eventoId } } as any);
+      await repo.delete({
+        calendarioAgendamento: { id: eventoId },
+      } as FindOptionsWhere<CalendarioAgendamentoCalendarioLetivoEntity>);
       for (const clId of data.calendarioLetivoIds) {
         const j = new CalendarioAgendamentoCalendarioLetivoEntity();
         j.id = generateUuidV7();
-        (j as any).calendarioLetivo = { id: clId };
-        (j as any).calendarioAgendamento = { id: eventoId };
+        Object.assign(j, {
+          calendarioLetivo: { id: clId },
+          calendarioAgendamento: { id: eventoId },
+        });
         await repo.save(j);
       }
     }
@@ -167,24 +174,26 @@ export class CalendarioAgendamentoTypeOrmRepositoryAdapter
       const repo = this.appTypeormConnection.getRepository(
         CalendarioAgendamentoOfertaFormacaoEntity,
       );
-      await repo.delete({ calendarioAgendamento: { id: eventoId } } as any);
+      await repo.delete({
+        calendarioAgendamento: { id: eventoId },
+      } as FindOptionsWhere<CalendarioAgendamentoOfertaFormacaoEntity>);
       for (const ofId of data.ofertaFormacaoIds) {
         const j = new CalendarioAgendamentoOfertaFormacaoEntity();
         j.id = generateUuidV7();
-        (j as any).ofertaFormacao = { id: ofId };
-        (j as any).calendarioAgendamento = { id: eventoId };
+        Object.assign(j, { ofertaFormacao: { id: ofId }, calendarioAgendamento: { id: eventoId } });
         await repo.save(j);
       }
     }
 
     if (data.modalidadeIds !== undefined) {
       const repo = this.appTypeormConnection.getRepository(CalendarioAgendamentoModalidadeEntity);
-      await repo.delete({ calendarioAgendamento: { id: eventoId } } as any);
+      await repo.delete({
+        calendarioAgendamento: { id: eventoId },
+      } as FindOptionsWhere<CalendarioAgendamentoModalidadeEntity>);
       for (const modId of data.modalidadeIds) {
         const j = new CalendarioAgendamentoModalidadeEntity();
         j.id = generateUuidV7();
-        (j as any).modalidade = { id: modId };
-        (j as any).calendarioAgendamento = { id: eventoId };
+        Object.assign(j, { modalidade: { id: modId }, calendarioAgendamento: { id: eventoId } });
         await repo.save(j);
       }
     }

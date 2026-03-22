@@ -1,4 +1,5 @@
 import { FilterOperator } from "nestjs-paginate";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
 import { paginateConfig } from "@/infrastructure.database/pagination/config/paginate-config";
@@ -57,7 +58,7 @@ export class UsuarioTypeOrmRepositoryAdapter implements IUsuarioRepository {
   ) {}
 
   findAll(
-    accessContext: unknown,
+    accessContext: IAccessContext | null,
     dto: UsuarioListQuery | null = null,
     selection?: string[] | boolean | null,
   ) {
@@ -72,7 +73,7 @@ export class UsuarioTypeOrmRepositoryAdapter implements IUsuarioRepository {
   }
 
   findById(
-    accessContext: unknown,
+    accessContext: IAccessContext | null,
     dto: UsuarioFindOneQuery,
     selection?: string[] | boolean | null,
   ) {
@@ -85,7 +86,11 @@ export class UsuarioTypeOrmRepositoryAdapter implements IUsuarioRepository {
     );
   }
 
-  findByIdSimple(accessContext: unknown, id: string, selection?: string[] | boolean | null) {
+  findByIdSimple(
+    accessContext: IAccessContext | null,
+    id: string,
+    selection?: string[] | boolean | null,
+  ) {
     return this.findById(accessContext, { id } as UsuarioFindOneQuery, selection);
   }
 

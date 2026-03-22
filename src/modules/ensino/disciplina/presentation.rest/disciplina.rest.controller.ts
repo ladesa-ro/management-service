@@ -24,6 +24,7 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { ensureExists } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import {
   DisciplinaCreateCommandMetadata,
@@ -54,7 +55,7 @@ import {
   DisciplinaListQueryMetadata,
   IDisciplinaListQueryHandler,
 } from "@/modules/ensino/disciplina/domain/queries/disciplina-list.query.handler.interface";
-import { AccessContext, AccessContextHttp } from "@/server/access-context";
+import { AccessContextHttp } from "@/server/access-context";
 import {
   DisciplinaCreateInputRestDto,
   DisciplinaFindOneInputRestDto,
@@ -90,7 +91,7 @@ export class DisciplinaRestController {
   @ApiOkResponse({ type: DisciplinaListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Query() dto: DisciplinaListInputRestDto,
   ): Promise<DisciplinaListOutputRestDto> {
     const input = DisciplinaRestMapper.toListInput(dto);
@@ -104,7 +105,7 @@ export class DisciplinaRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async findById(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: DisciplinaFindOneInputRestDto,
   ): Promise<DisciplinaFindOneOutputRestDto> {
     const input = DisciplinaRestMapper.toFindOneInput(params);
@@ -118,7 +119,7 @@ export class DisciplinaRestController {
   @ApiCreatedResponse({ type: DisciplinaFindOneOutputRestDto })
   @ApiForbiddenResponse()
   async create(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Body() dto: DisciplinaCreateInputRestDto,
   ): Promise<DisciplinaFindOneOutputRestDto> {
     const input = DisciplinaRestMapper.toCreateInput(dto);
@@ -132,7 +133,7 @@ export class DisciplinaRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async update(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: DisciplinaFindOneInputRestDto,
     @Body() dto: DisciplinaUpdateInputRestDto,
   ): Promise<DisciplinaFindOneOutputRestDto> {
@@ -147,7 +148,7 @@ export class DisciplinaRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async getImagemCapa(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: DisciplinaFindOneInputRestDto,
   ) {
     const result = await this.getImagemCapaHandler.execute(accessContext, { id: params.id });
@@ -174,7 +175,7 @@ export class DisciplinaRestController {
   @ApiNotFoundResponse()
   @UseInterceptors(FileInterceptor("file"))
   async updateImagemCapa(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: DisciplinaFindOneInputRestDto,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<boolean> {
@@ -187,7 +188,7 @@ export class DisciplinaRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async deleteOneById(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: DisciplinaFindOneInputRestDto,
   ): Promise<boolean> {
     const input = DisciplinaRestMapper.toFindOneInput(params);

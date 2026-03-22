@@ -1,7 +1,8 @@
 import { Body, Controller, Get, Param, Put, Query } from "@nestjs/common";
 import { ApiForbiddenResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
-import { AccessContext, AccessContextHttp } from "@/server/access-context";
+import { AccessContextHttp } from "@/server/access-context";
 import {
   DiarioPreferenciaAgrupamentoBulkReplaceCommandMetadata,
   IDiarioPreferenciaAgrupamentoBulkReplaceCommandHandler,
@@ -33,13 +34,13 @@ export class DiarioPreferenciaAgrupamentoRestController {
   @ApiOkResponse({ type: DiarioPreferenciaAgrupamentoListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() parentParams: DiarioPreferenciaAgrupamentoParentParamsRestDto,
     @Query() dto: DiarioPreferenciaAgrupamentoListInputRestDto,
   ): Promise<DiarioPreferenciaAgrupamentoListOutputRestDto> {
     const input = DiarioPreferenciaAgrupamentoRestMapper.toListInput(parentParams, dto);
-    const result = await this.listHandler.execute(accessContext, input as any);
-    return DiarioPreferenciaAgrupamentoRestMapper.toListOutputDto(result as any);
+    const result = await this.listHandler.execute(accessContext, input);
+    return DiarioPreferenciaAgrupamentoRestMapper.toListOutputDto(result);
   }
 
   @Put("/")
@@ -47,12 +48,12 @@ export class DiarioPreferenciaAgrupamentoRestController {
   @ApiOkResponse({ type: DiarioPreferenciaAgrupamentoListOutputRestDto })
   @ApiForbiddenResponse()
   async bulkReplace(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() parentParams: DiarioPreferenciaAgrupamentoParentParamsRestDto,
     @Body() dto: DiarioPreferenciaAgrupamentoBulkReplaceInputRestDto,
   ): Promise<DiarioPreferenciaAgrupamentoListOutputRestDto> {
     const input = DiarioPreferenciaAgrupamentoRestMapper.toBulkReplaceInput(parentParams, dto);
-    const result = await this.bulkReplaceHandler.execute(accessContext, input as any);
-    return DiarioPreferenciaAgrupamentoRestMapper.toListOutputDto(result as any);
+    const result = await this.bulkReplaceHandler.execute(accessContext, input);
+    return DiarioPreferenciaAgrupamentoRestMapper.toListOutputDto(result);
   }
 }

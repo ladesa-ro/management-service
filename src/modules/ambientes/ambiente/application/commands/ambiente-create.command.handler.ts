@@ -1,11 +1,11 @@
 import { ensureExists } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente";
 import type { AmbienteCreateCommand } from "@/modules/ambientes/ambiente/domain/commands/ambiente-create.command";
 import { IAmbienteCreateCommandHandler } from "@/modules/ambientes/ambiente/domain/commands/ambiente-create.command.handler.interface";
 import { Bloco } from "@/modules/ambientes/bloco/domain/bloco";
 import { IBlocoFindOneQueryHandler } from "@/modules/ambientes/bloco/domain/queries/bloco-find-one.query.handler.interface";
-import type { AccessContext } from "@/server/access-context";
 import { IAmbientePermissionChecker } from "../../domain/authorization";
 import type { AmbienteFindOneQueryResult } from "../../domain/queries";
 import { IAmbienteRepository } from "../../domain/repositories";
@@ -22,7 +22,7 @@ export class AmbienteCreateCommandHandlerImpl implements IAmbienteCreateCommandH
   ) {}
 
   async execute(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: AmbienteCreateCommand,
   ): Promise<AmbienteFindOneQueryResult> {
     await this.permissionChecker.ensureCanCreate(accessContext, { dto });

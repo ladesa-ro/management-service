@@ -4,12 +4,12 @@ import {
   InternalError,
   ValidationError,
 } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import { IIdpUserService } from "@/domain/abstractions/identity-provider";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { UsuarioCreateCommand } from "@/modules/acesso/usuario/domain/commands/usuario-create.command";
 import { IUsuarioCreateCommandHandler } from "@/modules/acesso/usuario/domain/commands/usuario-create.command.handler.interface";
 import { Usuario } from "@/modules/acesso/usuario/domain/usuario";
-import type { AccessContext } from "@/server/access-context";
 import { IUsuarioPermissionChecker } from "../../domain/authorization";
 import type { UsuarioFindOneQueryResult } from "../../domain/queries";
 import { IUsuarioRepository } from "../../domain/repositories";
@@ -26,7 +26,7 @@ export class UsuarioCreateCommandHandlerImpl implements IUsuarioCreateCommandHan
   ) {}
 
   async execute(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: UsuarioCreateCommand,
   ): Promise<UsuarioFindOneQueryResult> {
     await this.permissionChecker.ensureCanCreate(accessContext, { dto });

@@ -3,6 +3,6 @@ import { ResolveAccessContextPipe } from "./resolve-access-context.pipe";
 
 /**
  * Decorator para injetar AccessContext em resolvers GraphQL.
- * Uso: @AccessContextGraphQL() accessContext: AccessContext
+ * Uso: @AccessContextGraphQL() accessContext: IAccessContext
  */
 export const AccessContextGraphQL = () => RequestActorGraphQL(undefined, ResolveAccessContextPipe);

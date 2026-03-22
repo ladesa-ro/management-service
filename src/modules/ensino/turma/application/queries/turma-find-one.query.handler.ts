@@ -1,6 +1,6 @@
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { ITurmaFindOneQueryHandler } from "@/modules/ensino/turma/domain/queries/turma-find-one.query.handler.interface";
-import type { AccessContext } from "@/server/access-context";
 import type { TurmaFindOneQuery, TurmaFindOneQueryResult } from "../../domain/queries";
 import { ITurmaRepository } from "../../domain/repositories";
 
@@ -12,7 +12,7 @@ export class TurmaFindOneQueryHandlerImpl implements ITurmaFindOneQueryHandler {
   ) {}
 
   async execute(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: TurmaFindOneQuery,
   ): Promise<TurmaFindOneQueryResult | null> {
     return this.repository.findById(accessContext, dto, dto?.selection);

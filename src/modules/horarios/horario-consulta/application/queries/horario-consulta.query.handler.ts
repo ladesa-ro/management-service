@@ -1,6 +1,6 @@
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
-import type { AccessContext } from "@/server/access-context";
 import {
   type HorarioAulaItem,
   type HorarioMescladoQuery,
@@ -19,7 +19,7 @@ export class HorarioConsultaQueryHandlerImpl implements IHorarioConsultaQueryHan
   ) {}
 
   async findTurmaHorarioSemanal(
-    _accessContext: AccessContext | null,
+    _accessContext: IAccessContext | null,
     query: TurmaHorarioSemanalQuery,
   ): Promise<HorarioSemanalQueryResult> {
     const { weekStart, weekEnd } = this.getWeekRange(query.semana);
@@ -71,7 +71,7 @@ export class HorarioConsultaQueryHandlerImpl implements IHorarioConsultaQueryHan
   }
 
   async findUsuarioHorarioSemanal(
-    _accessContext: AccessContext | null,
+    _accessContext: IAccessContext | null,
     query: UsuarioHorarioSemanalQuery,
   ): Promise<HorarioSemanalQueryResult> {
     const { weekStart, weekEnd } = this.getWeekRange(query.semana);
@@ -124,7 +124,7 @@ export class HorarioConsultaQueryHandlerImpl implements IHorarioConsultaQueryHan
   }
 
   async findHorarioMesclado(
-    _accessContext: AccessContext | null,
+    _accessContext: IAccessContext | null,
     query: HorarioMescladoQuery,
   ): Promise<HorarioSemanalQueryResult> {
     const { weekStart, weekEnd } = this.getWeekRange(query.semana);

@@ -1,5 +1,6 @@
 import { ensureExists } from "@/application/errors";
 import { getEntityImagemStreamableFile } from "@/application/helpers";
+import type { IAccessContext } from "@/domain/abstractions";
 import type { IStreamableFileResult } from "@/domain/abstractions/storage";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
@@ -12,7 +13,6 @@ import {
 } from "@/modules/armazenamento/imagem/domain/queries";
 import { Curso } from "@/modules/ensino/curso/domain/curso";
 import { ICursoGetImagemCapaQueryHandler } from "@/modules/ensino/curso/domain/queries/curso-get-imagem-capa.query.handler.interface";
-import type { AccessContext } from "@/server/access-context";
 import type { CursoFindOneQuery } from "../../domain/queries";
 import { ICursoRepository } from "../../domain/repositories";
 
@@ -28,7 +28,7 @@ export class CursoGetImagemCapaQueryHandlerImpl implements ICursoGetImagemCapaQu
   ) {}
 
   async execute(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     { id }: CursoFindOneQuery,
   ): Promise<IStreamableFileResult> {
     const entity = await this.repository.findById(accessContext, { id });

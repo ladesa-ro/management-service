@@ -1,4 +1,5 @@
 import { FilterOperator } from "nestjs-paginate";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
 import { paginateConfig } from "@/infrastructure.database/pagination/config/paginate-config";
@@ -81,7 +82,7 @@ export class TurmaTypeOrmRepositoryAdapter implements ITurmaRepository {
   ) {}
 
   findAll(
-    accessContext: unknown,
+    accessContext: IAccessContext | null,
     dto: TurmaListQuery | null = null,
     selection?: string[] | boolean | null,
   ) {
@@ -95,7 +96,11 @@ export class TurmaTypeOrmRepositoryAdapter implements ITurmaRepository {
     );
   }
 
-  findById(accessContext: unknown, dto: TurmaFindOneQuery, selection?: string[] | boolean | null) {
+  findById(
+    accessContext: IAccessContext | null,
+    dto: TurmaFindOneQuery,
+    selection?: string[] | boolean | null,
+  ) {
     return typeormFindById<TurmaEntity, TurmaFindOneQuery, TurmaFindOneQueryResult>(
       this.appTypeormConnection,
       TurmaEntity,
@@ -105,15 +110,19 @@ export class TurmaTypeOrmRepositoryAdapter implements ITurmaRepository {
     );
   }
 
-  findByIdSimple(accessContext: unknown, id: string, selection?: string[] | boolean | null) {
+  findByIdSimple(
+    accessContext: IAccessContext | null,
+    id: string,
+    selection?: string[] | boolean | null,
+  ) {
     return this.findById(accessContext, { id } as TurmaFindOneQuery, selection);
   }
 
-  create(data: Record<string, any>) {
+  create(data: Record<string, unknown>) {
     return typeormCreate(this.appTypeormConnection, TurmaEntity, data);
   }
 
-  update(id: string | number, data: Record<string, any>) {
+  update(id: string | number, data: Record<string, unknown>) {
     return typeormUpdate(this.appTypeormConnection, TurmaEntity, id, data);
   }
 

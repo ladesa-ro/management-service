@@ -1,5 +1,5 @@
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import type { AccessContext } from "@/server/access-context";
 import type {
   OfertaFormacaoNivelFormacaoFindOneQuery,
   OfertaFormacaoNivelFormacaoFindOneQueryResult,
@@ -17,7 +17,7 @@ export class OfertaFormacaoNivelFormacaoFindOneQueryHandlerImpl
   ) {}
 
   async execute(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: OfertaFormacaoNivelFormacaoFindOneQuery,
   ): Promise<OfertaFormacaoNivelFormacaoFindOneQueryResult | null> {
     return this.repository.findById(accessContext, dto, dto?.selection);

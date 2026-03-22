@@ -1,3 +1,4 @@
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
 import { paginateConfig } from "@/infrastructure.database/pagination/config/paginate-config";
@@ -43,7 +44,7 @@ export class EstadoTypeOrmRepositoryAdapter implements IEstadoRepository {
   ) {}
 
   findAll(
-    accessContext: unknown,
+    accessContext: IAccessContext | null,
     dto: EstadoListQuery | null = null,
     selection?: string[] | boolean | null,
   ) {
@@ -57,7 +58,11 @@ export class EstadoTypeOrmRepositoryAdapter implements IEstadoRepository {
     );
   }
 
-  findById(accessContext: unknown, dto: EstadoFindOneQuery, selection?: string[] | boolean | null) {
+  findById(
+    accessContext: IAccessContext | null,
+    dto: EstadoFindOneQuery,
+    selection?: string[] | boolean | null,
+  ) {
     return typeormFindById<EstadoEntity, EstadoFindOneQuery, EstadoFindOneQueryResult>(
       this.appTypeormConnection,
       EstadoEntity,
@@ -67,15 +72,19 @@ export class EstadoTypeOrmRepositoryAdapter implements IEstadoRepository {
     );
   }
 
-  findByIdSimple(accessContext: unknown, id: string, selection?: string[] | boolean | null) {
+  findByIdSimple(
+    accessContext: IAccessContext | null,
+    id: string,
+    selection?: string[] | boolean | null,
+  ) {
     return this.findById(accessContext, { id: Number(id) } as EstadoFindOneQuery, selection);
   }
 
-  create(data: Record<string, any>) {
+  create(data: Record<string, unknown>) {
     return typeormCreate(this.appTypeormConnection, EstadoEntity, data);
   }
 
-  update(id: string | number, data: Record<string, any>) {
+  update(id: string | number, data: Record<string, unknown>) {
     return typeormUpdate(this.appTypeormConnection, EstadoEntity, id, data);
   }
 

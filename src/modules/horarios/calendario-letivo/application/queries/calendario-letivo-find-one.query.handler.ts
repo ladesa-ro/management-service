@@ -1,6 +1,6 @@
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { ICalendarioLetivoFindOneQueryHandler } from "@/modules/horarios/calendario-letivo/domain/queries/calendario-letivo-find-one.query.handler.interface";
-import type { AccessContext } from "@/server/access-context";
 import type {
   CalendarioLetivoFindOneQuery,
   CalendarioLetivoFindOneQueryResult,
@@ -17,7 +17,7 @@ export class CalendarioLetivoFindOneQueryHandlerImpl
   ) {}
 
   async execute(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: CalendarioLetivoFindOneQuery,
   ): Promise<CalendarioLetivoFindOneQueryResult | null> {
     return this.repository.findById(accessContext, dto, dto?.selection);

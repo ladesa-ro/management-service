@@ -1,5 +1,5 @@
+import type { IAccessContext } from "@/domain/abstractions";
 import { createOperationMetadata } from "@/domain/abstractions";
-import type { AccessContext } from "@/server/access-context";
 import type {
   HorarioMescladoQuery,
   TurmaHorarioSemanalQuery,
@@ -21,17 +21,17 @@ export const IHorarioConsultaQueryHandler = Symbol("IHorarioConsultaQueryHandler
 
 export interface IHorarioConsultaQueryHandler {
   findTurmaHorarioSemanal(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     query: TurmaHorarioSemanalQuery,
   ): Promise<HorarioSemanalQueryResult>;
 
   findUsuarioHorarioSemanal(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     query: UsuarioHorarioSemanalQuery,
   ): Promise<HorarioSemanalQueryResult>;
 
   findHorarioMesclado(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     query: HorarioMescladoQuery,
   ): Promise<HorarioSemanalQueryResult>;
 }

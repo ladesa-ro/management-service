@@ -1,4 +1,5 @@
 import { FilterOperator } from "nestjs-paginate";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
 import { paginateConfig } from "@/infrastructure.database/pagination/config/paginate-config";
@@ -51,7 +52,7 @@ export class CidadeTypeOrmRepositoryAdapter implements ICidadeRepository {
   ) {}
 
   findAll(
-    accessContext: unknown,
+    accessContext: IAccessContext | null,
     dto: CidadeListQuery | null = null,
     selection?: string[] | boolean | null,
   ) {
@@ -65,7 +66,11 @@ export class CidadeTypeOrmRepositoryAdapter implements ICidadeRepository {
     );
   }
 
-  findById(accessContext: unknown, dto: CidadeFindOneQuery, selection?: string[] | boolean | null) {
+  findById(
+    accessContext: IAccessContext | null,
+    dto: CidadeFindOneQuery,
+    selection?: string[] | boolean | null,
+  ) {
     return typeormFindById<CidadeEntity, CidadeFindOneQuery, CidadeFindOneQueryResult>(
       this.appTypeormConnection,
       CidadeEntity,
@@ -75,7 +80,11 @@ export class CidadeTypeOrmRepositoryAdapter implements ICidadeRepository {
     );
   }
 
-  findByIdSimple(accessContext: unknown, id: string, selection?: string[] | boolean | null) {
+  findByIdSimple(
+    accessContext: IAccessContext | null,
+    id: string,
+    selection?: string[] | boolean | null,
+  ) {
     return this.findById(accessContext, { id: Number(id) } as CidadeFindOneQuery, selection);
   }
 }

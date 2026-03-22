@@ -1,6 +1,6 @@
 import { has } from "lodash";
 import { ensureExists } from "@/application/errors";
-import type { PersistInput } from "@/domain/abstractions";
+import type { IAccessContext, PersistInput } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { Campus } from "@/modules/ambientes/campus/domain/campus";
 import { ICampusFindOneQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-find-one.query.handler.interface";
@@ -13,7 +13,6 @@ import {
 import type { CalendarioLetivoUpdateCommand } from "@/modules/horarios/calendario-letivo/domain/commands/calendario-letivo-update.command";
 import { ICalendarioLetivoUpdateCommandHandler } from "@/modules/horarios/calendario-letivo/domain/commands/calendario-letivo-update.command.handler.interface";
 import type { CalendarioLetivoFindOneQuery } from "@/modules/horarios/calendario-letivo/domain/queries";
-import type { AccessContext } from "@/server/access-context";
 import { ICalendarioLetivoPermissionChecker } from "../../domain/authorization";
 import type { CalendarioLetivoFindOneQueryResult } from "../../domain/queries";
 import { ICalendarioLetivoRepository } from "../../domain/repositories";
@@ -34,7 +33,7 @@ export class CalendarioLetivoUpdateCommandHandlerImpl
   ) {}
 
   async execute(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: CalendarioLetivoFindOneQuery & CalendarioLetivoUpdateCommand,
   ): Promise<CalendarioLetivoFindOneQueryResult> {
     const current = await this.repository.findById(accessContext, { id: dto.id });

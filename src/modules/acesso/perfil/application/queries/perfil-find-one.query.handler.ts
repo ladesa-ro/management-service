@@ -1,6 +1,6 @@
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { IPerfilFindOneQueryHandler } from "@/modules/acesso/perfil/domain/queries/perfil-find-one.query.handler.interface";
-import type { AccessContext } from "@/server/access-context";
 import type { PerfilFindOneQuery, PerfilFindOneQueryResult } from "../../domain/queries";
 import { IPerfilRepository } from "../../domain/repositories";
 
@@ -12,7 +12,7 @@ export class PerfilFindOneQueryHandlerImpl implements IPerfilFindOneQueryHandler
   ) {}
 
   async execute(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: PerfilFindOneQuery,
   ): Promise<PerfilFindOneQueryResult | null> {
     return this.repository.findById(accessContext, dto);

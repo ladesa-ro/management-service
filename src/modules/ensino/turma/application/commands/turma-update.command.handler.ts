@@ -1,6 +1,6 @@
 import { has } from "lodash";
 import { ensureExists } from "@/application/errors";
-import type { PersistInput } from "@/domain/abstractions";
+import type { IAccessContext, PersistInput } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente";
 import { IAmbienteFindOneQueryHandler } from "@/modules/ambientes/ambiente/domain/queries/ambiente-find-one.query.handler.interface";
@@ -11,7 +11,6 @@ import { ITurmaUpdateCommandHandler } from "@/modules/ensino/turma/domain/comman
 import type { TurmaFindOneQuery } from "@/modules/ensino/turma/domain/queries";
 import type { ITurma } from "@/modules/ensino/turma/domain/turma";
 import { Turma } from "@/modules/ensino/turma/domain/turma";
-import type { AccessContext } from "@/server/access-context";
 import { ITurmaPermissionChecker } from "../../domain/authorization";
 import type { TurmaFindOneQueryResult } from "../../domain/queries";
 import { ITurmaRepository } from "../../domain/repositories";
@@ -30,7 +29,7 @@ export class TurmaUpdateCommandHandlerImpl implements ITurmaUpdateCommandHandler
   ) {}
 
   async execute(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: TurmaFindOneQuery & TurmaUpdateCommand,
   ): Promise<TurmaFindOneQueryResult> {
     const current = await this.repository.findById(accessContext, { id: dto.id });

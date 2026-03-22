@@ -25,9 +25,11 @@ export class EstagiarioMapper {
 
     const estagiario = Estagiario.load({
       id: entity.id,
-      perfil: { id: entity.perfil?.id ?? (entity as any).id_perfil_fk },
-      curso: { id: entity.curso?.id ?? (entity as any).id_curso_fk },
-      turma: { id: entity.turma?.id ?? (entity as any).id_turma_fk },
+      perfil: {
+        id: entity.perfil?.id ?? (entity as unknown as Record<string, string>).id_perfil_fk,
+      },
+      curso: { id: entity.curso?.id ?? (entity as unknown as Record<string, string>).id_curso_fk },
+      turma: { id: entity.turma?.id ?? (entity as unknown as Record<string, string>).id_turma_fk },
       telefone: entity.telefone,
       emailInstitucional: entity.emailInstitucional,
       dataNascimento:
@@ -50,9 +52,9 @@ export class EstagiarioMapper {
     entity.telefone = estagiario.telefone;
     entity.emailInstitucional = estagiario.emailInstitucional || null;
     entity.dataNascimento = new Date(estagiario.dataNascimento);
-    entity.perfil = { id: estagiario.perfil.id } as any;
-    entity.curso = { id: estagiario.curso.id } as any;
-    entity.turma = { id: estagiario.turma.id } as any;
+    entity.perfil = { id: estagiario.perfil.id } as unknown as typeof entity.perfil;
+    entity.curso = { id: estagiario.curso.id } as unknown as typeof entity.curso;
+    entity.turma = { id: estagiario.turma.id } as unknown as typeof entity.turma;
     entity.dateCreated = new Date(estagiario.dateCreated);
     entity.dateUpdated = new Date(estagiario.dateUpdated);
     entity.dateDeleted = estagiario.dateDeleted ? new Date(estagiario.dateDeleted) : null;
@@ -76,9 +78,15 @@ export class EstagiarioMapper {
 
     return {
       id: entity.id,
-      perfil: (entity.perfil ?? { id: (entity as any).id_perfil_fk }) as any,
-      curso: (entity.curso ?? { id: (entity as any).id_curso_fk }) as any,
-      turma: (entity.turma ?? { id: (entity as any).id_turma_fk }) as any,
+      perfil: (entity.perfil ?? {
+        id: (entity as unknown as Record<string, string>).id_perfil_fk,
+      }) as unknown as EstagiarioFindOneQueryResult["perfil"],
+      curso: (entity.curso ?? {
+        id: (entity as unknown as Record<string, string>).id_curso_fk,
+      }) as unknown as EstagiarioFindOneQueryResult["curso"],
+      turma: (entity.turma ?? {
+        id: (entity as unknown as Record<string, string>).id_turma_fk,
+      }) as unknown as EstagiarioFindOneQueryResult["turma"],
       telefone: entity.telefone,
       emailInstitucional: entity.emailInstitucional,
       dataNascimento: dataNascimentoFormatted,
@@ -95,9 +103,9 @@ export class EstagiarioMapper {
   static domainToOutputDto(estagiario: Estagiario): EstagiarioFindOneQueryResult {
     return {
       id: estagiario.id!,
-      perfil: estagiario.perfil as any,
-      curso: estagiario.curso as any,
-      turma: estagiario.turma as any,
+      perfil: estagiario.perfil as unknown as EstagiarioFindOneQueryResult["perfil"],
+      curso: estagiario.curso as unknown as EstagiarioFindOneQueryResult["curso"],
+      turma: estagiario.turma as unknown as EstagiarioFindOneQueryResult["turma"],
       telefone: estagiario.telefone,
       emailInstitucional: estagiario.emailInstitucional || null,
       dataNascimento: estagiario.dataNascimento,

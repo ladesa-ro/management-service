@@ -1,3 +1,4 @@
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
 import { paginateConfig } from "@/infrastructure.database/pagination/config/paginate-config";
@@ -52,7 +53,7 @@ export class EnderecoTypeOrmRepositoryAdapter implements IEnderecoRepository {
   ) {}
 
   findAll(
-    accessContext: unknown,
+    accessContext: IAccessContext | null,
     dto: EnderecoListQuery | null = null,
     selection?: string[] | boolean | null,
   ) {
@@ -67,7 +68,7 @@ export class EnderecoTypeOrmRepositoryAdapter implements IEnderecoRepository {
   }
 
   findById(
-    accessContext: unknown,
+    accessContext: IAccessContext | null,
     dto: EnderecoFindOneQuery,
     selection?: string[] | boolean | null,
   ) {
@@ -80,7 +81,11 @@ export class EnderecoTypeOrmRepositoryAdapter implements IEnderecoRepository {
     );
   }
 
-  findByIdSimple(accessContext: unknown, id: string, selection?: string[] | boolean | null) {
+  findByIdSimple(
+    accessContext: IAccessContext | null,
+    id: string,
+    selection?: string[] | boolean | null,
+  ) {
     return this.findById(accessContext, { id } as EnderecoFindOneQuery, selection);
   }
 
@@ -99,11 +104,11 @@ export class EnderecoTypeOrmRepositoryAdapter implements IEnderecoRepository {
     return repo.exists({ where: { id } });
   }
 
-  create(data: Record<string, any>) {
+  create(data: Record<string, unknown>) {
     return typeormCreate(this.appTypeormConnection, EnderecoEntity, data);
   }
 
-  update(id: string | number, data: Record<string, any>) {
+  update(id: string | number, data: Record<string, unknown>) {
     return typeormUpdate(this.appTypeormConnection, EnderecoEntity, id, data);
   }
 

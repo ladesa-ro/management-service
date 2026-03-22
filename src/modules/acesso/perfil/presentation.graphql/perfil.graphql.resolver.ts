@@ -1,5 +1,6 @@
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { graphqlExtractSelection } from "@/infrastructure.graphql";
 import {
@@ -14,7 +15,7 @@ import {
   IPerfilListQueryHandler,
   PerfilListQueryMetadata,
 } from "@/modules/acesso/perfil/domain/queries/perfil-list.query.handler.interface";
-import { AccessContext, AccessContextGraphQL } from "@/server/access-context";
+import { AccessContextGraphQL } from "@/server/access-context";
 import {
   PerfilFindOneOutputGraphQlDto,
   PerfilListInputGraphQlDto,
@@ -36,7 +37,7 @@ export class PerfilGraphqlResolver {
 
   @Query(() => PerfilListOutputGraphQlDto, PerfilListQueryMetadata.gqlMetadata)
   async findAll(
-    @AccessContextGraphQL() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: IAccessContext,
     @Args() dto: PerfilListInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
   ): Promise<PerfilListOutputGraphQlDto> {
@@ -54,7 +55,7 @@ export class PerfilGraphqlResolver {
     nullable: true,
   })
   async findById(
-    @AccessContextGraphQL() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Info() info: GraphQLResolveInfo,
   ): Promise<PerfilFindOneOutputGraphQlDto | null> {
@@ -68,7 +69,7 @@ export class PerfilGraphqlResolver {
 
   @Mutation(() => PerfilListOutputGraphQlDto, PerfilSetVinculosCommandMetadata.gqlMetadata)
   async setVinculos(
-    @AccessContextGraphQL() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("input") dto: PerfilSetVinculosInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
   ): Promise<PerfilListOutputGraphQlDto> {

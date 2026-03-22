@@ -1,6 +1,6 @@
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { IDiarioPreferenciaAgrupamentoListQueryHandler } from "@/modules/ensino/diario/domain/queries/diario-preferencia-agrupamento-list.query.handler.interface";
-import type { AccessContext } from "@/server/access-context";
 import type {
   DiarioPreferenciaAgrupamentoListQuery,
   DiarioPreferenciaAgrupamentoListQueryResult,
@@ -17,7 +17,7 @@ export class DiarioPreferenciaAgrupamentoListQueryHandlerImpl
   ) {}
 
   async execute(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: DiarioPreferenciaAgrupamentoListQuery | null,
   ): Promise<DiarioPreferenciaAgrupamentoListQueryResult> {
     return this.repository.findAll(accessContext, dto, dto?.selection);

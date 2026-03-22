@@ -1,3 +1,4 @@
+import type { FindOptionsWhere } from "typeorm";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
@@ -25,14 +26,17 @@ export class UsuarioEventoTypeOrmRepositoryAdapter implements IUsuarioEventoRepo
   async findPerfilIdsByUsuario(usuarioId: string): Promise<string[]> {
     const perfilRepo = this.appTypeormConnection.getRepository(PerfilEntity);
     const perfis = await perfilRepo.find({
-      where: { usuario: { id: usuarioId } as any },
+      where: { usuario: { id: usuarioId } } as FindOptionsWhere<PerfilEntity>,
     });
     return perfis.map((p) => p.id);
   }
 
   async findPerfilIdByUsuario(usuarioId: string): Promise<string | null> {
     const perfilRepo = this.appTypeormConnection.getRepository(PerfilEntity);
-    const perfil = await perfilRepo.findOneBy({ usuario: { id: usuarioId } as any });
+    const perfil = await perfilRepo.findOneBy({
+      usuario: { id: usuarioId },
+    } as FindOptionsWhere<PerfilEntity>);
+
     return perfil?.id ?? null;
   }
 
@@ -83,8 +87,10 @@ export class UsuarioEventoTypeOrmRepositoryAdapter implements IUsuarioEventoRepo
     if (perfilId) {
       const junction = new CalendarioAgendamentoProfessorEntity();
       junction.id = generateUuidV7();
-      (junction as any).perfil = { id: perfilId };
-      (junction as any).calendarioAgendamento = { id: evento.id };
+      Object.assign(junction, {
+        perfil: { id: perfilId },
+        calendarioAgendamento: { id: evento.id },
+      });
       await junctionRepo.save(junction);
     }
 
@@ -123,14 +129,14 @@ export class UsuarioEventoTypeOrmRepositoryAdapter implements IUsuarioEventoRepo
     );
 
     const perfis = await perfilRepo.find({
-      where: { usuario: { id: usuarioId } as any },
+      where: { usuario: { id: usuarioId } } as FindOptionsWhere<PerfilEntity>,
     });
 
     for (const perfil of perfis) {
       await junctionRepo.delete({
         perfil: { id: perfil.id },
         calendarioAgendamento: { id: eventoId },
-      } as any);
+      } as FindOptionsWhere<CalendarioAgendamentoProfessorEntity>);
     }
   }
 

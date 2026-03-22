@@ -1,5 +1,6 @@
 import { ensureExists } from "@/application/errors";
 import { getEntityImagemStreamableFile } from "@/application/helpers";
+import type { IAccessContext } from "@/domain/abstractions";
 import type { IStreamableFileResult } from "@/domain/abstractions/storage";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { Bloco } from "@/modules/ambientes/bloco/domain/bloco";
@@ -12,7 +13,6 @@ import {
   IImagemGetLatestArquivoIdQueryHandler,
   type IImagemGetLatestArquivoIdQueryHandler as IImagemGetLatestArquivoIdQueryHandlerType,
 } from "@/modules/armazenamento/imagem/domain/queries";
-import type { AccessContext } from "@/server/access-context";
 import type { BlocoFindOneQuery } from "../../domain/queries";
 import { IBlocoRepository } from "../../domain/repositories";
 
@@ -28,7 +28,7 @@ export class BlocoGetImagemCapaQueryHandlerImpl implements IBlocoGetImagemCapaQu
   ) {}
 
   async execute(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     { id }: BlocoFindOneQuery,
   ): Promise<IStreamableFileResult> {
     const entity = await this.repository.findById(accessContext, { id });

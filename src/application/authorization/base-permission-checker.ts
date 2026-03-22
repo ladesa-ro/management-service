@@ -1,11 +1,20 @@
 import type { IPermissionChecker } from "@/domain/abstractions";
+import type { IAccessContext } from "@/server/access-context";
 
 export abstract class BasePermissionChecker implements IPermissionChecker {
   protected abstract readonly resource: string;
 
-  async ensureCanCreate(_accessContext: unknown, _payload: { dto: unknown }) {}
+  async ensureCanCreate(_accessContext: IAccessContext | null, _payload: { dto: unknown }) {}
 
-  async ensureCanUpdate(_accessContext: unknown, _payload: { dto: unknown }, _id: string) {}
+  async ensureCanUpdate(
+    _accessContext: IAccessContext | null,
+    _payload: { dto: unknown },
+    _id: string,
+  ) {}
 
-  async ensureCanDelete(_accessContext: unknown, _payload: { dto: unknown }, _id: string) {}
+  async ensureCanDelete(
+    _accessContext: IAccessContext | null,
+    _payload: { dto: unknown },
+    _id: string,
+  ) {}
 }

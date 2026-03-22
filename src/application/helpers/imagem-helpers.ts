@@ -1,6 +1,6 @@
 import { ResourceNotFoundError } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import type { IStreamableFileResult } from "@/domain/abstractions/storage";
-import type { AccessContext } from "@/server/access-context";
 
 /**
  * Obtém o IStreamableFileResult de um campo de imagem de uma entidade.
@@ -14,13 +14,13 @@ export async function getEntityImagemStreamableFile(
   entityId: string | number,
   getLatestArquivoIdHandler: {
     execute(
-      accessContext: AccessContext | null,
+      accessContext: IAccessContext | null,
       query: { imagemId: string },
     ): Promise<string | null>;
   },
   getStreamableFileHandler: {
     execute(
-      accessContext: AccessContext | null,
+      accessContext: IAccessContext | null,
       query: { id: string },
     ): Promise<IStreamableFileResult>;
   },
@@ -49,7 +49,7 @@ export async function saveEntityImagemField(
   fieldName: string,
   saveImagemCapaHandler: {
     execute(
-      accessContext: AccessContext | null,
+      accessContext: IAccessContext | null,
       command: { file: Express.Multer.File },
     ): Promise<{ imagem: { id: string } }>;
   },

@@ -1,8 +1,8 @@
 import { InternalError, ResourceNotFoundError } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { IEstagioDeleteCommandHandler } from "@/modules/estagio/estagio/domain/commands/estagio-delete.command.handler.interface";
 import type { EstagioFindOneQuery } from "@/modules/estagio/estagio/domain/queries";
-import type { AccessContext } from "@/server/access-context";
 import { IEstagioRepository } from "../../domain/repositories";
 
 @DeclareImplementation()
@@ -12,7 +12,7 @@ export class EstagioDeleteCommandHandlerImpl implements IEstagioDeleteCommandHan
     private readonly repository: IEstagioRepository,
   ) {}
 
-  async execute(accessContext: AccessContext | null, { id }: EstagioFindOneQuery): Promise<void> {
+  async execute(accessContext: IAccessContext | null, { id }: EstagioFindOneQuery): Promise<void> {
     try {
       await this.repository.delete(accessContext, id);
     } catch (error) {

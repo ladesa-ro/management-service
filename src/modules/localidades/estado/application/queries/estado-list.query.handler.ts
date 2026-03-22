@@ -1,6 +1,6 @@
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { IEstadoListQueryHandler } from "@/modules/localidades/estado/domain/queries/estado-list.query.handler.interface";
-import type { AccessContext } from "@/server/access-context";
 import type { EstadoListQuery, EstadoListQueryResult } from "../../domain/queries";
 import { IEstadoRepository } from "../../domain/repositories";
 
@@ -12,7 +12,7 @@ export class EstadoListQueryHandlerImpl implements IEstadoListQueryHandler {
   ) {}
 
   async execute(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: EstadoListQuery | null,
   ): Promise<EstadoListQueryResult> {
     return this.repository.findAll(accessContext, dto);

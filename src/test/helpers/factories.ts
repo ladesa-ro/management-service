@@ -1,6 +1,6 @@
 import { v7 as uuidv7 } from "uuid";
+import type { IAccessContext } from "@/domain/abstractions";
 import type { IRequestActor } from "@/domain/abstractions/request-actor";
-import { AccessContext } from "@/server/access-context/access-context";
 
 /**
  * Generates a valid UUID v7 for testing.
@@ -33,19 +33,18 @@ export function createTestRequestActor(
 }
 
 /**
- * Creates a mock AccessContext for testing application handlers.
- * Uses a null appTypeormConnection (not needed for unit tests).
+ * Creates a mock IAccessContext for testing application handlers.
  */
 export function createTestAccessContext(
   requestActor: IRequestActor = createTestRequestActor(),
-): AccessContext {
-  return new AccessContext(null as any, requestActor);
+): IAccessContext {
+  return { requestActor };
 }
 
 /**
- * Creates a mock AccessContext with superuser privileges.
+ * Creates a mock IAccessContext with superuser privileges.
  */
-export function createTestSuperUserAccessContext(): AccessContext {
+export function createTestSuperUserAccessContext(): IAccessContext {
   return createTestAccessContext(createTestRequestActor({ isSuperUser: true }));
 }
 

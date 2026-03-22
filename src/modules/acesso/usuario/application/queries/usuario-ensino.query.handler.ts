@@ -1,8 +1,8 @@
 import { ensureExists } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { IUsuarioEnsinoQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-ensino.query.handler.interface";
 import { Usuario } from "@/modules/acesso/usuario/domain/usuario";
-import type { AccessContext } from "@/server/access-context";
 import type { UsuarioEnsinoQueryResult, UsuarioFindOneQuery } from "../../domain/queries";
 import { IUsuarioRepository } from "../../domain/repositories";
 
@@ -14,7 +14,7 @@ export class UsuarioEnsinoQueryHandlerImpl implements IUsuarioEnsinoQueryHandler
   ) {}
 
   async execute(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: UsuarioFindOneQuery,
   ): Promise<UsuarioEnsinoQueryResult> {
     const usuario = await this.repository.findById(accessContext, dto, dto?.selection);

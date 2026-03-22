@@ -8,6 +8,7 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { ensureExists } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { Campus } from "@/modules/ambientes/campus/domain/campus";
 import {
@@ -30,7 +31,7 @@ import {
   CampusListQueryMetadata,
   ICampusListQueryHandler,
 } from "@/modules/ambientes/campus/domain/queries/campus-list.query.handler.interface";
-import { AccessContext, AccessContextHttp } from "@/server/access-context";
+import { AccessContextHttp } from "@/server/access-context";
 import {
   CampusCreateInputRestDto,
   CampusFindOneInputRestDto,
@@ -62,7 +63,7 @@ export class CampusRestController {
   @ApiOkResponse({ type: CampusListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Query() dto: CampusListInputRestDto,
   ): Promise<CampusListOutputRestDto> {
     const input = CampusRestMapper.toListInput(dto);
@@ -76,7 +77,7 @@ export class CampusRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async findById(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: CampusFindOneInputRestDto,
   ): Promise<CampusFindOneOutputRestDto> {
     const input = CampusRestMapper.toFindOneInput(params);
@@ -90,7 +91,7 @@ export class CampusRestController {
   @ApiCreatedResponse({ type: CampusFindOneOutputRestDto })
   @ApiForbiddenResponse()
   async create(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Body() dto: CampusCreateInputRestDto,
   ): Promise<CampusFindOneOutputRestDto> {
     const input = CampusRestMapper.toCreateInput(dto);
@@ -104,7 +105,7 @@ export class CampusRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async update(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: CampusFindOneInputRestDto,
     @Body() dto: CampusUpdateInputRestDto,
   ): Promise<CampusFindOneOutputRestDto> {
@@ -119,7 +120,7 @@ export class CampusRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async deleteOneById(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: CampusFindOneInputRestDto,
   ): Promise<boolean> {
     const input = CampusRestMapper.toFindOneInput(params);

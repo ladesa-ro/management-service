@@ -1,5 +1,6 @@
 import sharp from "sharp";
 import { ServiceUnavailableError, ValidationError } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import { ILoggerPort, ILoggerPort as ILoggerPortToken } from "@/domain/abstractions/logging";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
@@ -12,7 +13,6 @@ import {
   IImagemArquivoRepository,
   IImagemRepository,
 } from "@/modules/armazenamento/imagem/domain/repositories";
-import type { AccessContext } from "@/server/access-context";
 
 @DeclareImplementation()
 export class ImagemSaveImageCommandHandlerImpl implements IImagemSaveImageCommandHandler {
@@ -28,7 +28,7 @@ export class ImagemSaveImageCommandHandlerImpl implements IImagemSaveImageComman
   ) {}
 
   async execute(
-    _accessContext: AccessContext | null,
+    _accessContext: IAccessContext | null,
     { file, options }: IImagemSaveImageCommand,
   ): Promise<{ imagem: { id: string } }> {
     const name = file.originalname;

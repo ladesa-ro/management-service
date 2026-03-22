@@ -1,5 +1,5 @@
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import type { AccessContext } from "@/server/access-context";
 import type {
   CalendarioLetivoDiaListQuery,
   CalendarioLetivoDiaListQueryResult,
@@ -17,7 +17,7 @@ export class CalendarioLetivoDiaListQueryHandlerImpl
   ) {}
 
   async execute(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: CalendarioLetivoDiaListQuery | null,
   ): Promise<CalendarioLetivoDiaListQueryResult> {
     return this.repository.findAll(accessContext, dto, dto?.selection);

@@ -1,4 +1,6 @@
+import { IsNull } from "typeorm";
 import { ensureExists } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import type {
@@ -15,7 +17,6 @@ import type {
 import type { IEmpresaRepository } from "@/modules/estagio/empresa/domain/repositories";
 import { Endereco } from "@/modules/localidades/endereco/domain/endereco";
 import { EnderecoEntity } from "@/modules/localidades/endereco/infrastructure.database/typeorm/endereco.typeorm.entity";
-import type { AccessContext } from "@/server/access-context";
 import { EmpresaMapper, EmpresaTypeormEntity } from "./typeorm";
 
 @DeclareImplementation()
@@ -35,7 +36,7 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
   }
 
   async findAll(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: EmpresaListQuery | null = null,
     selection?: string[] | boolean | null,
   ): Promise<EmpresaListQueryResult> {
@@ -107,12 +108,12 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
   }
 
   async findById(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: EmpresaFindOneQuery,
     selection?: string[] | boolean | null,
   ): Promise<EmpresaFindOneQueryResult | null> {
     const entity = await this.repository.findOne({
-      where: { id: dto.id, dateDeleted: null as any },
+      where: { id: dto.id, dateDeleted: IsNull() },
       relations: ["endereco"],
     });
 
@@ -124,11 +125,11 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
   }
 
   async create(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: EmpresaCreateCommand,
   ): Promise<EmpresaFindOneQueryResult> {
     const endereco = await this.enderecoRepository.findOne({
-      where: { id: dto.endereco.id, dateDeleted: null as any },
+      where: { id: dto.endereco.id, dateDeleted: IsNull() },
     });
 
     ensureExists(endereco, Endereco.entityName, dto.endereco.id);
@@ -147,12 +148,12 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
   }
 
   async update(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     id: string,
     dto: EmpresaUpdateCommand,
   ): Promise<EmpresaFindOneQueryResult> {
     const entity = await this.repository.findOne({
-      where: { id, dateDeleted: null as any },
+      where: { id, dateDeleted: IsNull() },
       relations: ["endereco"],
     });
 
@@ -162,7 +163,7 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
 
     if (dto.endereco) {
       const endereco = await this.enderecoRepository.findOne({
-        where: { id: dto.endereco.id, dateDeleted: null as any },
+        where: { id: dto.endereco.id, dateDeleted: IsNull() },
       });
 
       ensureExists(endereco, Endereco.entityName, dto.endereco.id);
@@ -181,9 +182,9 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
     return EmpresaMapper.toOutputDto(result!);
   }
 
-  async delete(accessContext: AccessContext | null, id: string): Promise<void> {
+  async delete(accessContext: IAccessContext | null, id: string): Promise<void> {
     const entity = await this.repository.findOne({
-      where: { id, dateDeleted: null as any },
+      where: { id, dateDeleted: IsNull() },
     });
 
     ensureExists(entity, Empresa.entityName, id);

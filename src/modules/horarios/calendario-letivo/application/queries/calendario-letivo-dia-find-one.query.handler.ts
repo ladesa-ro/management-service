@@ -1,5 +1,5 @@
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import type { AccessContext } from "@/server/access-context";
 import type {
   CalendarioLetivoDiaFindOneQuery,
   CalendarioLetivoDiaFindOneQueryResult,
@@ -17,7 +17,7 @@ export class CalendarioLetivoDiaFindOneQueryHandlerImpl
   ) {}
 
   async execute(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: CalendarioLetivoDiaFindOneQuery,
   ): Promise<CalendarioLetivoDiaFindOneQueryResult | null> {
     if (dto.calendarioLetivoId && dto.data) {

@@ -8,6 +8,7 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { ensureExists } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { CalendarioLetivo } from "@/modules/horarios/calendario-letivo/domain/calendario-letivo";
 import {
@@ -30,7 +31,7 @@ import {
   CalendarioLetivoListQueryMetadata,
   ICalendarioLetivoListQueryHandler,
 } from "@/modules/horarios/calendario-letivo/domain/queries/calendario-letivo-list.query.handler.interface";
-import { AccessContext, AccessContextHttp } from "@/server/access-context";
+import { AccessContextHttp } from "@/server/access-context";
 import {
   CalendarioLetivoCreateInputRestDto,
   CalendarioLetivoFindOneInputRestDto,
@@ -62,7 +63,7 @@ export class CalendarioLetivoRestController {
   @ApiOkResponse({ type: CalendarioLetivoListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Query() dto: CalendarioLetivoListInputRestDto,
   ): Promise<CalendarioLetivoListOutputRestDto> {
     const input = CalendarioLetivoRestMapper.toListInput(dto);
@@ -76,7 +77,7 @@ export class CalendarioLetivoRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async findById(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: CalendarioLetivoFindOneInputRestDto,
   ): Promise<CalendarioLetivoFindOneOutputRestDto> {
     const input = CalendarioLetivoRestMapper.toFindOneInput(params);
@@ -90,7 +91,7 @@ export class CalendarioLetivoRestController {
   @ApiCreatedResponse({ type: CalendarioLetivoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   async create(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Body() dto: CalendarioLetivoCreateInputRestDto,
   ): Promise<CalendarioLetivoFindOneOutputRestDto> {
     const input = CalendarioLetivoRestMapper.toCreateInput(dto);
@@ -104,7 +105,7 @@ export class CalendarioLetivoRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async update(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: CalendarioLetivoFindOneInputRestDto,
     @Body() dto: CalendarioLetivoUpdateInputRestDto,
   ): Promise<CalendarioLetivoFindOneOutputRestDto> {
@@ -119,7 +120,7 @@ export class CalendarioLetivoRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async deleteOneById(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: CalendarioLetivoFindOneInputRestDto,
   ): Promise<boolean> {
     const input = CalendarioLetivoRestMapper.toFindOneInput(params);

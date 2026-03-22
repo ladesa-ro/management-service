@@ -8,6 +8,7 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { ensureExists } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import {
   IOfertaFormacaoCreateCommandHandler,
@@ -30,7 +31,7 @@ import {
   IOfertaFormacaoListQueryHandler,
   OfertaFormacaoListQueryMetadata,
 } from "@/modules/ensino/oferta-formacao/domain/queries/oferta-formacao-list.query.handler.interface";
-import { AccessContext, AccessContextHttp } from "@/server/access-context";
+import { AccessContextHttp } from "@/server/access-context";
 import {
   OfertaFormacaoCreateInputRestDto,
   OfertaFormacaoFindOneInputRestDto,
@@ -62,7 +63,7 @@ export class OfertaFormacaoRestController {
   @ApiOkResponse({ type: OfertaFormacaoListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Query() dto: OfertaFormacaoListInputRestDto,
   ): Promise<OfertaFormacaoListOutputRestDto> {
     const input = OfertaFormacaoRestMapper.toListInput(dto);
@@ -76,7 +77,7 @@ export class OfertaFormacaoRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async findById(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: OfertaFormacaoFindOneInputRestDto,
   ): Promise<OfertaFormacaoFindOneOutputRestDto> {
     const input = OfertaFormacaoRestMapper.toFindOneInput(params);
@@ -90,7 +91,7 @@ export class OfertaFormacaoRestController {
   @ApiCreatedResponse({ type: OfertaFormacaoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   async create(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Body() dto: OfertaFormacaoCreateInputRestDto,
   ): Promise<OfertaFormacaoFindOneOutputRestDto> {
     const input = OfertaFormacaoRestMapper.toCreateInput(dto);
@@ -104,7 +105,7 @@ export class OfertaFormacaoRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async update(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: OfertaFormacaoFindOneInputRestDto,
     @Body() dto: OfertaFormacaoUpdateInputRestDto,
   ): Promise<OfertaFormacaoFindOneOutputRestDto> {
@@ -119,7 +120,7 @@ export class OfertaFormacaoRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async deleteOneById(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: OfertaFormacaoFindOneInputRestDto,
   ): Promise<boolean> {
     const input = OfertaFormacaoRestMapper.toFindOneInput(params);

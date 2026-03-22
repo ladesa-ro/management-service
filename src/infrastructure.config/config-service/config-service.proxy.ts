@@ -5,7 +5,7 @@ import { ConfigTokensMap } from "./config-tokens-map";
 export class ConfigServiceProxy implements IConfigService {
   constructor(private readonly inner: NestConfigService) {}
 
-  get<T = any>(propertyPath: symbol | string): T | undefined {
+  get<T = unknown>(propertyPath: symbol | string): T | undefined {
     if (typeof propertyPath === "symbol") {
       const resolved = ConfigTokensMap.get(propertyPath);
       if (resolved === undefined) {

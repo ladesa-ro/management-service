@@ -8,6 +8,7 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { ensureExists } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import {
   EmpresaCreateCommandMetadata,
@@ -30,7 +31,7 @@ import {
   EmpresaListQueryMetadata,
   IEmpresaListQueryHandler,
 } from "@/modules/estagio/empresa/domain/queries/empresa-list.query.handler.interface";
-import { AccessContext, AccessContextHttp } from "@/server/access-context";
+import { AccessContextHttp } from "@/server/access-context";
 import {
   EmpresaCreateInputRestDto,
   EmpresaFindOneInputRestDto,
@@ -62,7 +63,7 @@ export class EmpresaRestController {
   @ApiOkResponse({ type: EmpresaListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Query() dto: EmpresaListInputRestDto,
   ): Promise<EmpresaListOutputRestDto> {
     const input = EmpresaRestMapper.toListInput(dto);
@@ -76,7 +77,7 @@ export class EmpresaRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async findById(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: EmpresaFindOneInputRestDto,
   ): Promise<EmpresaFindOneOutputRestDto> {
     const input = EmpresaRestMapper.toFindOneInput(params);
@@ -90,7 +91,7 @@ export class EmpresaRestController {
   @ApiCreatedResponse({ type: EmpresaFindOneOutputRestDto })
   @ApiForbiddenResponse()
   async create(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Body() dto: EmpresaCreateInputRestDto,
   ): Promise<EmpresaFindOneOutputRestDto> {
     const input = EmpresaRestMapper.toCreateInput(dto);
@@ -104,7 +105,7 @@ export class EmpresaRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async update(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: EmpresaFindOneInputRestDto,
     @Body() dto: EmpresaUpdateInputRestDto,
   ): Promise<EmpresaFindOneOutputRestDto> {
@@ -119,7 +120,7 @@ export class EmpresaRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async deleteOneById(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: EmpresaFindOneInputRestDto,
   ): Promise<boolean> {
     const input = EmpresaRestMapper.toFindOneInput(params);

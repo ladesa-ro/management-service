@@ -1,6 +1,6 @@
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { ICampusFindOneQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-find-one.query.handler.interface";
-import type { AccessContext } from "@/server/access-context";
 import type { CampusFindOneQuery, CampusFindOneQueryResult } from "../../domain/queries";
 import { ICampusRepository } from "../../domain/repositories";
 
@@ -12,7 +12,7 @@ export class CampusFindOneQueryHandlerImpl implements ICampusFindOneQueryHandler
   ) {}
 
   async execute(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: CampusFindOneQuery,
   ): Promise<CampusFindOneQueryResult | null> {
     return this.repository.findById(accessContext, dto, dto?.selection);

@@ -1,4 +1,5 @@
 import { FilterOperator } from "nestjs-paginate";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
@@ -58,7 +59,7 @@ export class OfertaFormacaoNivelFormacaoTypeOrmRepositoryAdapter
   ) {}
 
   findAll(
-    accessContext: unknown,
+    accessContext: IAccessContext | null,
     dto: OfertaFormacaoNivelFormacaoListQuery | null = null,
     selection?: string[] | boolean | null,
   ) {
@@ -77,7 +78,7 @@ export class OfertaFormacaoNivelFormacaoTypeOrmRepositoryAdapter
   }
 
   findById(
-    accessContext: unknown,
+    accessContext: IAccessContext | null,
     dto: OfertaFormacaoNivelFormacaoFindOneQuery,
     selection?: string[] | boolean | null,
   ) {
@@ -88,7 +89,11 @@ export class OfertaFormacaoNivelFormacaoTypeOrmRepositoryAdapter
     >(this.appTypeormConnection, OfertaFormacaoNivelFormacaoEntity, config, dto, selection);
   }
 
-  findByIdSimple(accessContext: unknown, id: string, selection?: string[] | boolean | null) {
+  findByIdSimple(
+    accessContext: IAccessContext | null,
+    id: string,
+    selection?: string[] | boolean | null,
+  ) {
     return this.findById(
       accessContext,
       { id } as OfertaFormacaoNivelFormacaoFindOneQuery,
@@ -135,8 +140,8 @@ export class OfertaFormacaoNivelFormacaoTypeOrmRepositoryAdapter
     const entities = entries.map((n) => {
       const entity = new OfertaFormacaoNivelFormacaoEntity();
       entity.id = generateUuidV7();
-      (entity as any).nivelFormacao = { id: n.nivelFormacaoId };
-      (entity as any).ofertaFormacao = { id: n.ofertaFormacaoId };
+      Object.assign(entity, { nivelFormacao: { id: n.nivelFormacaoId } });
+      Object.assign(entity, { ofertaFormacao: { id: n.ofertaFormacaoId } });
       entity.dateCreated = now;
       entity.dateUpdated = now;
       entity.dateDeleted = null;

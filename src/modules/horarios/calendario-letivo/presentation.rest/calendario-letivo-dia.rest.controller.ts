@@ -7,8 +7,9 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { ensureExists } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
-import { AccessContext, AccessContextHttp } from "@/server/access-context";
+import { AccessContextHttp } from "@/server/access-context";
 import { CalendarioLetivoDia } from "../domain/calendario-letivo-dia";
 import {
   CalendarioLetivoDiaUpdateCommandMetadata,
@@ -49,13 +50,13 @@ export class CalendarioLetivoDiaRestController {
   @ApiOkResponse({ type: CalendarioLetivoDiaListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() parentParams: CalendarioLetivoDiaParentParamsRestDto,
     @Query() dto: CalendarioLetivoDiaListInputRestDto,
   ): Promise<CalendarioLetivoDiaListOutputRestDto> {
     const input = CalendarioLetivoDiaRestMapper.toListInput(parentParams, dto);
-    const result = await this.listHandler.execute(accessContext, input as any);
-    return CalendarioLetivoDiaRestMapper.toListOutputDto(result as any);
+    const result = await this.listHandler.execute(accessContext, input);
+    return CalendarioLetivoDiaRestMapper.toListOutputDto(result);
   }
 
   @Get("/:data")
@@ -64,13 +65,13 @@ export class CalendarioLetivoDiaRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async findByData(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: CalendarioLetivoDiaFindByDataParamsRestDto,
   ): Promise<CalendarioLetivoDiaFindOneOutputRestDto> {
     const input = CalendarioLetivoDiaRestMapper.toFindByDataInput(params);
-    const result = await this.findOneHandler.execute(accessContext, input as any);
+    const result = await this.findOneHandler.execute(accessContext, input);
     ensureExists(result, CalendarioLetivoDia.entityName, params.data);
-    return CalendarioLetivoDiaRestMapper.toFindOneOutputDto(result as any);
+    return CalendarioLetivoDiaRestMapper.toFindOneOutputDto(result);
   }
 
   @Patch("/:data")
@@ -79,12 +80,12 @@ export class CalendarioLetivoDiaRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async update(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: CalendarioLetivoDiaFindByDataParamsRestDto,
     @Body() dto: CalendarioLetivoDiaUpdateInputRestDto,
   ): Promise<CalendarioLetivoDiaFindOneOutputRestDto> {
     const input = CalendarioLetivoDiaRestMapper.toUpdateInput(params, dto);
-    const result = await this.updateHandler.execute(accessContext, input as any);
-    return CalendarioLetivoDiaRestMapper.toFindOneOutputDto(result as any);
+    const result = await this.updateHandler.execute(accessContext, input);
+    return CalendarioLetivoDiaRestMapper.toFindOneOutputDto(result);
   }
 }

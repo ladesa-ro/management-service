@@ -1,4 +1,5 @@
 import { FilterOperator } from "nestjs-paginate";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
 import { paginateConfig } from "@/infrastructure.database/pagination/config/paginate-config";
@@ -57,7 +58,7 @@ export class ImagemArquivoQueryTypeOrmRepositoryAdapter implements IImagemArquiv
   ) {}
 
   findAll(
-    accessContext: unknown,
+    accessContext: IAccessContext | null,
     dto: ImagemArquivoListQuery | null = null,
     selection?: string[] | boolean | null,
   ) {
@@ -76,7 +77,7 @@ export class ImagemArquivoQueryTypeOrmRepositoryAdapter implements IImagemArquiv
   }
 
   findById(
-    accessContext: unknown,
+    accessContext: IAccessContext | null,
     dto: ImagemArquivoFindOneQuery,
     selection?: string[] | boolean | null,
   ) {

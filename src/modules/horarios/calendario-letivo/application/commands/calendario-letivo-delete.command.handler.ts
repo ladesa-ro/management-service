@@ -1,9 +1,9 @@
 import { ensureExists } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { CalendarioLetivo } from "@/modules/horarios/calendario-letivo/domain/calendario-letivo";
 import { ICalendarioLetivoDeleteCommandHandler } from "@/modules/horarios/calendario-letivo/domain/commands/calendario-letivo-delete.command.handler.interface";
 import type { CalendarioLetivoFindOneQuery } from "@/modules/horarios/calendario-letivo/domain/queries";
-import type { AccessContext } from "@/server/access-context";
 import { ICalendarioLetivoPermissionChecker } from "../../domain/authorization";
 import { ICalendarioLetivoRepository } from "../../domain/repositories";
 
@@ -19,7 +19,7 @@ export class CalendarioLetivoDeleteCommandHandlerImpl
   ) {}
 
   async execute(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: CalendarioLetivoFindOneQuery,
   ): Promise<boolean> {
     await this.permissionChecker.ensureCanDelete(accessContext, { dto }, dto.id);

@@ -1,5 +1,6 @@
 import { ensureExists } from "@/application/errors";
 import { saveEntityImagemField } from "@/application/helpers";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
   IUsuarioUpdateImagemCapaCommandHandler,
@@ -10,7 +11,6 @@ import {
   IImagemSaveImagemCapaCommandHandler,
   type IImagemSaveImagemCapaCommandHandler as IImagemSaveImagemCapaCommandHandlerType,
 } from "@/modules/armazenamento/imagem/domain/commands";
-import type { AccessContext } from "@/server/access-context";
 import { IUsuarioPermissionChecker } from "../../domain/authorization";
 import { IUsuarioRepository } from "../../domain/repositories";
 
@@ -28,7 +28,7 @@ export class UsuarioUpdateImagemCapaCommandHandlerImpl
   ) {}
 
   async execute(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     { dto, file }: UsuarioUpdateImagemCapaCommand,
   ): Promise<boolean> {
     const currentUsuario = await this.repository.findById(accessContext, { id: dto.id });

@@ -7,9 +7,10 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { CalendarioAgendamentoEntity } from "@/modules/horarios/calendario-agendamento/infrastructure.database/typeorm/calendario-agendamento.typeorm.entity";
-import { AccessContext, AccessContextHttp } from "@/server/access-context";
+import { AccessContextHttp } from "@/server/access-context";
 import { ITurmaEventoRepository } from "../domain/repositories";
 import {
   TurmaEventoCreateInputRestDto,
@@ -33,7 +34,7 @@ export class TurmaEventoRestController {
   @ApiOkResponse({ type: TurmaEventoListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
-    @AccessContextHttp() _accessContext: AccessContext,
+    @AccessContextHttp() _accessContext: IAccessContext,
     @Param() parentParams: TurmaEventoParentParamsRestDto,
   ): Promise<TurmaEventoListOutputRestDto> {
     const eventos = await this.turmaEventoRepository.findEventosByTurmaId(parentParams.turmaId);
@@ -48,7 +49,7 @@ export class TurmaEventoRestController {
   @ApiCreatedResponse({ type: TurmaEventoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   async create(
-    @AccessContextHttp() _accessContext: AccessContext,
+    @AccessContextHttp() _accessContext: IAccessContext,
     @Param() parentParams: TurmaEventoParentParamsRestDto,
     @Body() dto: TurmaEventoCreateInputRestDto,
   ): Promise<TurmaEventoFindOneOutputRestDto> {
@@ -72,7 +73,7 @@ export class TurmaEventoRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async update(
-    @AccessContextHttp() _accessContext: AccessContext,
+    @AccessContextHttp() _accessContext: IAccessContext,
     @Param() params: TurmaEventoItemParamsRestDto,
     @Body() dto: TurmaEventoUpdateInputRestDto,
   ): Promise<TurmaEventoFindOneOutputRestDto> {
@@ -96,7 +97,7 @@ export class TurmaEventoRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async delete(
-    @AccessContextHttp() _accessContext: AccessContext,
+    @AccessContextHttp() _accessContext: IAccessContext,
     @Param() params: TurmaEventoItemParamsRestDto,
   ): Promise<boolean> {
     await this.turmaEventoRepository.deleteEventoForTurma(params.eventoId, params.turmaId);

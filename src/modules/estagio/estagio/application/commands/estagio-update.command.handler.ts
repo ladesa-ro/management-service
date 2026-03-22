@@ -1,9 +1,9 @@
 import { InternalError, ResourceNotFoundError } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { EstagioUpdateCommand } from "@/modules/estagio/estagio/domain/commands/estagio-update.command";
 import { IEstagioUpdateCommandHandler } from "@/modules/estagio/estagio/domain/commands/estagio-update.command.handler.interface";
 import type { EstagioFindOneQuery } from "@/modules/estagio/estagio/domain/queries";
-import type { AccessContext } from "@/server/access-context";
 import type { EstagioFindOneQueryResult } from "../../domain/queries";
 import { IEstagioRepository } from "../../domain/repositories";
 
@@ -15,7 +15,7 @@ export class EstagioUpdateCommandHandlerImpl implements IEstagioUpdateCommandHan
   ) {}
 
   async execute(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     command: EstagioFindOneQuery & EstagioUpdateCommand,
   ): Promise<EstagioFindOneQueryResult> {
     const { id, ...dto } = command;

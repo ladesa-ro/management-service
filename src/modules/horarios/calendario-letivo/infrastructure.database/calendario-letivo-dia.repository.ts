@@ -1,4 +1,6 @@
 import { FilterOperator } from "nestjs-paginate";
+import type { IAccessContext } from "@/domain/abstractions";
+import type { ScalarDate } from "@/domain/abstractions/scalars";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
 import { paginateConfig } from "@/infrastructure.database/pagination/config/paginate-config";
@@ -11,13 +13,13 @@ import {
   typeormSoftDeleteById,
   typeormUpdate,
 } from "@/infrastructure.database/typeorm/helpers/typeorm-repository-helpers";
-import type { AccessContext } from "@/server/access-context";
 import type {
   CalendarioLetivoDiaFindOneQuery,
   CalendarioLetivoDiaFindOneQueryResult,
   CalendarioLetivoDiaListQuery,
   CalendarioLetivoDiaListQueryResult,
 } from "../domain/queries";
+import type { CalendarioLetivoFindOneQueryResult } from "../domain/queries/calendario-letivo-find-one.query.result";
 import type { ICalendarioLetivoDiaRepository } from "../domain/repositories/calendario-letivo-dia.repository.interface";
 import { CalendarioLetivoDiaEntity } from "./typeorm/calendario-letivo-dia.typeorm.entity";
 
@@ -70,7 +72,7 @@ export class CalendarioLetivoDiaTypeOrmRepositoryAdapter implements ICalendarioL
   ) {}
 
   findAll(
-    accessContext: unknown,
+    accessContext: IAccessContext | null,
     dto: CalendarioLetivoDiaListQuery | null = null,
     selection?: string[] | boolean | null,
   ) {
@@ -89,7 +91,7 @@ export class CalendarioLetivoDiaTypeOrmRepositoryAdapter implements ICalendarioL
   }
 
   findById(
-    accessContext: unknown,
+    accessContext: IAccessContext | null,
     dto: CalendarioLetivoDiaFindOneQuery,
     selection?: string[] | boolean | null,
   ) {
@@ -100,12 +102,12 @@ export class CalendarioLetivoDiaTypeOrmRepositoryAdapter implements ICalendarioL
     >(this.appTypeormConnection, CalendarioLetivoDiaEntity, config, dto, selection);
   }
 
-  findByIdSimple(accessContext: AccessContext | null, id: string, selection?: string[]) {
+  findByIdSimple(accessContext: IAccessContext | null, id: string, selection?: string[]) {
     return this.findById(accessContext, { id } as CalendarioLetivoDiaFindOneQuery, selection);
   }
 
   async findByCalendarioAndDate(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     calendarioLetivoId: string,
     data: string,
     selection?: string[],
@@ -122,24 +124,24 @@ export class CalendarioLetivoDiaTypeOrmRepositoryAdapter implements ICalendarioL
 
     return {
       id: entity.id,
-      data: entity.data as any,
+      data: entity.data as unknown as ScalarDate,
       diaLetivo: entity.diaLetivo,
       feriado: entity.feriado,
       diaPresencial: entity.diaPresencial,
       tipo: entity.tipo,
       extraCurricular: entity.extraCurricular,
-      calendario: entity.calendario as any,
-      dateCreated: entity.dateCreated as any,
-      dateUpdated: entity.dateUpdated as any,
-      dateDeleted: entity.dateDeleted as any,
+      calendario: entity.calendario as unknown as CalendarioLetivoFindOneQueryResult,
+      dateCreated: entity.dateCreated as unknown as string,
+      dateUpdated: entity.dateUpdated as unknown as string,
+      dateDeleted: entity.dateDeleted as unknown as string | null,
     } as CalendarioLetivoDiaFindOneQueryResult;
   }
 
-  create(data: Record<string, any>) {
+  create(data: Record<string, unknown>) {
     return typeormCreate(this.appTypeormConnection, CalendarioLetivoDiaEntity, data);
   }
 
-  update(id: string | number, data: Record<string, any>) {
+  update(id: string | number, data: Record<string, unknown>) {
     return typeormUpdate(this.appTypeormConnection, CalendarioLetivoDiaEntity, id, data);
   }
 

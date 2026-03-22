@@ -7,6 +7,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import {
   AutenticacaoDefinirSenhaCommandMetadata,
@@ -31,7 +32,7 @@ import {
 import { AutenticacaoWhoAmIEnsinoQueryMetadata } from "@/modules/acesso/autenticacao/domain/queries/autenticacao-who-am-i-ensino.query.metadata";
 import { IUsuarioEnsinoQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-ensino.query.handler.interface";
 import { UsuarioEnsinoOutputRestDto } from "@/modules/acesso/usuario/presentation.rest";
-import { AccessContext, AccessContextHttp } from "@/server/access-context";
+import { AccessContextHttp } from "@/server/access-context";
 import { Public } from "@/server/nest/auth";
 import {
   AuthCredentialsSetInitialPasswordInputRestDto,
@@ -66,13 +67,15 @@ export class AutenticacaoRestController {
   @ApiForbiddenResponse()
   @ApiBadRequestResponse()
   async whoAmIEnsino(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
   ): Promise<UsuarioEnsinoOutputRestDto> {
     const idUsuario = accessContext.requestActor?.id;
     if (!idUsuario) {
       throw new BadRequestException();
     }
-    return this.usuarioEnsinoHandler.execute(accessContext, { id: idUsuario }) as any;
+    return this.usuarioEnsinoHandler.execute(accessContext, {
+      id: idUsuario,
+    }) as unknown as Promise<UsuarioEnsinoOutputRestDto>;
   }
 
   @Get("/quem-sou-eu")
@@ -80,7 +83,7 @@ export class AutenticacaoRestController {
   @ApiOkResponse({ type: AuthWhoAmIOutputRestDto })
   @ApiForbiddenResponse()
   async whoAmI(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
   ): Promise<AuthWhoAmIOutputRestDto> {
     return this.whoAmIHandler.execute(
       accessContext,
@@ -94,7 +97,7 @@ export class AutenticacaoRestController {
   @ApiCreatedResponse({ type: AuthSessionCredentialsRestDto })
   @ApiForbiddenResponse()
   async login(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Body() dto: AuthLoginInputRestDto,
   ): Promise<AuthSessionCredentialsRestDto> {
     return this.loginHandler.execute(accessContext, dto);
@@ -106,7 +109,7 @@ export class AutenticacaoRestController {
   @ApiCreatedResponse({ type: AuthSessionCredentialsRestDto })
   @ApiForbiddenResponse()
   async refresh(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Body() dto: AuthRefreshInputRestDto,
   ): Promise<AuthSessionCredentialsRestDto> {
     return this.refreshHandler.execute(accessContext, dto);
@@ -117,7 +120,7 @@ export class AutenticacaoRestController {
   @ApiCreatedResponse({ type: Boolean })
   @ApiForbiddenResponse()
   async definirSenha(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Body() dto: AuthCredentialsSetInitialPasswordInputRestDto,
   ): Promise<boolean> {
     return this.definirSenhaHandler.execute(accessContext, dto);
@@ -128,7 +131,7 @@ export class AutenticacaoRestController {
   @ApiCreatedResponse({ type: Boolean })
   @ApiForbiddenResponse()
   async redefinirSenha(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Body() dto: AuthRecoverPasswordInputRestDto,
   ): Promise<boolean> {
     return this.recoverPasswordHandler.execute(accessContext, dto);

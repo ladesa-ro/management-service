@@ -1,10 +1,10 @@
 import { ensureExists } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente";
 import type { AmbienteUpdateCommand } from "@/modules/ambientes/ambiente/domain/commands/ambiente-update.command";
 import { IAmbienteUpdateCommandHandler } from "@/modules/ambientes/ambiente/domain/commands/ambiente-update.command.handler.interface";
 import type { AmbienteFindOneQuery } from "@/modules/ambientes/ambiente/domain/queries";
-import type { AccessContext } from "@/server/access-context";
 import { IAmbientePermissionChecker } from "../../domain/authorization";
 import type { AmbienteFindOneQueryResult } from "../../domain/queries";
 import { IAmbienteRepository } from "../../domain/repositories";
@@ -19,7 +19,7 @@ export class AmbienteUpdateCommandHandlerImpl implements IAmbienteUpdateCommandH
   ) {}
 
   async execute(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: AmbienteFindOneQuery & AmbienteUpdateCommand,
   ): Promise<AmbienteFindOneQueryResult> {
     const current = await this.repository.findById(accessContext, { id: dto.id });

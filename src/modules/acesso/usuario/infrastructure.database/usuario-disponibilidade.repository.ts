@@ -1,3 +1,4 @@
+import type { FindOptionsWhere } from "typeorm";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
@@ -31,7 +32,7 @@ export class UsuarioDisponibilidadeTypeOrmRepositoryAdapter
       where.campus = { id: campusId };
     }
 
-    const perfis = await perfilRepo.find({ where: where as any });
+    const perfis = await perfilRepo.find({ where: where as FindOptionsWhere<PerfilEntity> });
     return perfis.map((p) => p.id);
   }
 
@@ -43,7 +44,7 @@ export class UsuarioDisponibilidadeTypeOrmRepositoryAdapter
       where.campus = { id: campusId };
     }
 
-    const perfil = await perfilRepo.findOne({ where: where as any });
+    const perfil = await perfilRepo.findOne({ where: where as FindOptionsWhere<PerfilEntity> });
     return perfil?.id ?? null;
   }
 
@@ -132,8 +133,10 @@ export class UsuarioDisponibilidadeTypeOrmRepositoryAdapter
 
       const junction = new CalendarioAgendamentoProfessorEntity();
       junction.id = generateUuidV7();
-      (junction as any).perfil = { id: perfilId };
-      (junction as any).calendarioAgendamento = { id: agendamento.id };
+      Object.assign(junction, {
+        perfil: { id: perfilId },
+        calendarioAgendamento: { id: agendamento.id },
+      });
       await junctionRepo.save(junction);
     }
   }

@@ -1,10 +1,10 @@
 import { ensureExists } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { Campus } from "@/modules/ambientes/campus/domain/campus";
 import type { CampusCreateCommand } from "@/modules/ambientes/campus/domain/commands/campus-create.command";
 import { ICampusCreateCommandHandler } from "@/modules/ambientes/campus/domain/commands/campus-create.command.handler.interface";
 import { IEnderecoCreateOrUpdateCommandHandler } from "@/modules/localidades/endereco/domain/commands/endereco-create-or-update.command.handler.interface";
-import type { AccessContext } from "@/server/access-context";
 import { ICampusPermissionChecker } from "../../domain/authorization";
 import type { CampusFindOneQueryResult } from "../../domain/queries";
 import { ICampusRepository } from "../../domain/repositories";
@@ -21,7 +21,7 @@ export class CampusCreateCommandHandlerImpl implements ICampusCreateCommandHandl
   ) {}
 
   async execute(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: CampusCreateCommand,
   ): Promise<CampusFindOneQueryResult> {
     await this.permissionChecker.ensureCanCreate(accessContext, { dto });

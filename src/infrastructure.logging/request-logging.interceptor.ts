@@ -30,7 +30,7 @@ export class RequestLoggingInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
     const req = context.switchToHttp().getRequest<Request>();
     const { method, url } = req;
-    const correlationId = (req as any).correlationId as string | undefined;
+    const correlationId = req.correlationId;
 
     const checkpoint = this.perfHooks.startCheckpoint("http.request", {
       method,

@@ -7,6 +7,7 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { ensureExists } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { Cidade } from "@/modules/localidades/cidade/domain/cidade";
 import {
@@ -17,7 +18,7 @@ import {
   CidadeListQueryMetadata,
   ICidadeListQueryHandler,
 } from "@/modules/localidades/cidade/domain/queries/cidade-list.query.handler.interface";
-import { AccessContext, AccessContextHttp } from "@/server/access-context";
+import { AccessContextHttp } from "@/server/access-context";
 import {
   CidadeFindOneInputRestDto,
   CidadeFindOneOutputRestDto,
@@ -41,7 +42,7 @@ export class CidadeRestController {
   @ApiOkResponse({ type: CidadeListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Query() dto: CidadeListInputRestDto,
   ): Promise<CidadeListOutputRestDto> {
     const input = CidadeRestMapper.toListInput(dto);
@@ -55,7 +56,7 @@ export class CidadeRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async findById(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: CidadeFindOneInputRestDto,
   ): Promise<CidadeFindOneOutputRestDto> {
     const input = CidadeRestMapper.toFindOneInput(params);

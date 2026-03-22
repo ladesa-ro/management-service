@@ -1,4 +1,4 @@
-import type { AccessContext } from "@/server/access-context";
+import type { IAccessContext } from "@/domain/abstractions";
 
 /**
  * Handler CQRS de leitura. Queries são side-effect-free e recebem AccessContext
@@ -6,5 +6,5 @@ import type { AccessContext } from "@/server/access-context";
  * independente de leitura (cache, projeção) sem afetar escrita.
  */
 export interface IQueryHandler<TQuery, TResult> {
-  execute(accessContext: AccessContext | null, query: TQuery): Promise<TResult>;
+  execute(accessContext: IAccessContext | null, query: TQuery): Promise<TResult>;
 }

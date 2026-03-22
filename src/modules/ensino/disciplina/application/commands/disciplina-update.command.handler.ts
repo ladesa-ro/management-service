@@ -1,10 +1,10 @@
 import { ensureExists } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { DisciplinaUpdateCommand } from "@/modules/ensino/disciplina/domain/commands/disciplina-update.command";
 import { IDisciplinaUpdateCommandHandler } from "@/modules/ensino/disciplina/domain/commands/disciplina-update.command.handler.interface";
 import { Disciplina } from "@/modules/ensino/disciplina/domain/disciplina";
 import type { DisciplinaFindOneQuery } from "@/modules/ensino/disciplina/domain/queries";
-import type { AccessContext } from "@/server/access-context";
 import { IDisciplinaPermissionChecker } from "../../domain/authorization";
 import type { DisciplinaFindOneQueryResult } from "../../domain/queries";
 import { IDisciplinaRepository } from "../../domain/repositories";
@@ -19,7 +19,7 @@ export class DisciplinaUpdateCommandHandlerImpl implements IDisciplinaUpdateComm
   ) {}
 
   async execute(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: DisciplinaFindOneQuery & DisciplinaUpdateCommand,
   ): Promise<DisciplinaFindOneQueryResult> {
     const current = await this.repository.findById(accessContext, { id: dto.id });

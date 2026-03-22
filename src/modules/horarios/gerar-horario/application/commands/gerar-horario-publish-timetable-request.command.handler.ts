@@ -1,3 +1,4 @@
+import type { IAccessContext } from "@/domain/abstractions";
 import {
   type IMessageBrokerService,
   IMessageBrokerService as IMessageBrokerServiceToken,
@@ -7,7 +8,6 @@ import {
   type IGerarHorarioPublishTimetableRequestCommand,
   IGerarHorarioPublishTimetableRequestCommandHandler,
 } from "@/modules/horarios/gerar-horario/domain/commands/gerar-horario-publish-timetable-request.command.handler.interface";
-import type { AccessContext } from "@/server/access-context";
 
 @DeclareImplementation()
 export class GerarHorarioPublishTimetableRequestCommandHandlerImpl
@@ -19,7 +19,7 @@ export class GerarHorarioPublishTimetableRequestCommandHandlerImpl
   ) {}
 
   async execute(
-    _accessContext: AccessContext | null,
+    _accessContext: IAccessContext | null,
     { request, timeoutMs }: IGerarHorarioPublishTimetableRequestCommand,
   ): Promise<unknown> {
     return this.messageBrokerService.publishTimetableRequest(request, timeoutMs);

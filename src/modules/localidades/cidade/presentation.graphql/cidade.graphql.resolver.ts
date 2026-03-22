@@ -1,6 +1,7 @@
 import { Args, Info, Int, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
 import { ensureExists } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { graphqlExtractSelection } from "@/infrastructure.graphql";
 import { Cidade } from "@/modules/localidades/cidade/domain/cidade";
@@ -12,7 +13,7 @@ import {
   CidadeListQueryMetadata,
   ICidadeListQueryHandler,
 } from "@/modules/localidades/cidade/domain/queries/cidade-list.query.handler.interface";
-import { AccessContext, AccessContextGraphQL } from "@/server/access-context";
+import { AccessContextGraphQL } from "@/server/access-context";
 import {
   CidadeFindOneOutputGraphQlDto,
   CidadeListInputGraphQlDto,
@@ -31,7 +32,7 @@ export class CidadeGraphqlResolver {
 
   @Query(() => CidadeListOutputGraphQlDto, CidadeListQueryMetadata.gqlMetadata)
   async findAll(
-    @AccessContextGraphQL() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: IAccessContext,
     @Args() dto: CidadeListInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
   ): Promise<CidadeListOutputGraphQlDto> {
@@ -46,7 +47,7 @@ export class CidadeGraphqlResolver {
 
   @Query(() => CidadeFindOneOutputGraphQlDto, CidadeFindOneQueryMetadata.gqlMetadata)
   async findById(
-    @AccessContextGraphQL() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("id", { type: () => Int }) id: number,
     @Info() info: GraphQLResolveInfo,
   ): Promise<CidadeFindOneOutputGraphQlDto> {

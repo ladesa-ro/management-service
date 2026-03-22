@@ -1,7 +1,8 @@
 import { Body, Controller, Get, Param, Put, Query } from "@nestjs/common";
 import { ApiForbiddenResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
-import { AccessContext, AccessContextHttp } from "@/server/access-context";
+import { AccessContextHttp } from "@/server/access-context";
 import {
   IOfertaFormacaoNivelFormacaoBulkReplaceCommandHandler,
   OfertaFormacaoNivelFormacaoBulkReplaceCommandMetadata,
@@ -33,13 +34,13 @@ export class OfertaFormacaoNivelFormacaoRestController {
   @ApiOkResponse({ type: OfertaFormacaoNivelFormacaoListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() parentParams: OfertaFormacaoNivelFormacaoParentParamsRestDto,
     @Query() dto: OfertaFormacaoNivelFormacaoListInputRestDto,
   ): Promise<OfertaFormacaoNivelFormacaoListOutputRestDto> {
     const input = OfertaFormacaoNivelFormacaoRestMapper.toListInput(parentParams, dto);
-    const result = await this.listHandler.execute(accessContext, input as any);
-    return OfertaFormacaoNivelFormacaoRestMapper.toListOutputDto(result as any);
+    const result = await this.listHandler.execute(accessContext, input);
+    return OfertaFormacaoNivelFormacaoRestMapper.toListOutputDto(result);
   }
 
   @Put("/")
@@ -47,12 +48,12 @@ export class OfertaFormacaoNivelFormacaoRestController {
   @ApiOkResponse({ type: OfertaFormacaoNivelFormacaoListOutputRestDto })
   @ApiForbiddenResponse()
   async bulkReplace(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() parentParams: OfertaFormacaoNivelFormacaoParentParamsRestDto,
     @Body() dto: OfertaFormacaoNivelFormacaoBulkReplaceInputRestDto,
   ): Promise<OfertaFormacaoNivelFormacaoListOutputRestDto> {
     const input = OfertaFormacaoNivelFormacaoRestMapper.toBulkReplaceInput(parentParams, dto);
-    const result = await this.bulkReplaceHandler.execute(accessContext, input as any);
-    return OfertaFormacaoNivelFormacaoRestMapper.toListOutputDto(result as any);
+    const result = await this.bulkReplaceHandler.execute(accessContext, input);
+    return OfertaFormacaoNivelFormacaoRestMapper.toListOutputDto(result);
   }
 }

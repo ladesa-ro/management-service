@@ -1,12 +1,12 @@
 import { has } from "lodash";
 import { ensureExists, ServiceUnavailableError, ValidationError } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import { IIdpUserService } from "@/domain/abstractions/identity-provider";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { UsuarioUpdateCommand } from "@/modules/acesso/usuario/domain/commands/usuario-update.command";
 import { IUsuarioUpdateCommandHandler } from "@/modules/acesso/usuario/domain/commands/usuario-update.command.handler.interface";
 import type { UsuarioFindOneQuery } from "@/modules/acesso/usuario/domain/queries";
 import { Usuario } from "@/modules/acesso/usuario/domain/usuario";
-import type { AccessContext } from "@/server/access-context";
 import { IUsuarioPermissionChecker } from "../../domain/authorization";
 import type { UsuarioFindOneQueryResult } from "../../domain/queries";
 import { IUsuarioRepository } from "../../domain/repositories";
@@ -23,7 +23,7 @@ export class UsuarioUpdateCommandHandlerImpl implements IUsuarioUpdateCommandHan
   ) {}
 
   async execute(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: UsuarioFindOneQuery & UsuarioUpdateCommand,
   ): Promise<UsuarioFindOneQueryResult> {
     const currentUsuario = await this.repository.findById(accessContext, dto);

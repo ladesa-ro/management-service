@@ -17,9 +17,10 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { ensureExists } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
-import { AccessContext, AccessContextHttp } from "@/server/access-context";
+import { AccessContextHttp } from "@/server/access-context";
 import {
   HorarioEdicaoApplyChangeCommandMetadata,
   HorarioEdicaoCancelarCommandMetadata,
@@ -80,7 +81,7 @@ export class HorarioEdicaoRestController {
   @ApiCreatedResponse({ type: HorarioEdicaoSessaoOutputRestDto })
   @ApiForbiddenResponse()
   async create(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
   ): Promise<HorarioEdicaoSessaoOutputRestDto> {
     const entity = {
       id: generateUuidV7(),
@@ -102,7 +103,7 @@ export class HorarioEdicaoRestController {
   @ApiNotFoundResponse()
   @ApiBadRequestResponse()
   async applyChange(
-    @AccessContextHttp() _accessContext: AccessContext,
+    @AccessContextHttp() _accessContext: IAccessContext,
     @Param() params: HorarioEdicaoSessaoParamsRestDto,
     @Body() dto: HorarioEdicaoMudancaInputRestDto,
   ): Promise<HorarioEdicaoMudancaOutputRestDto> {
@@ -142,7 +143,7 @@ export class HorarioEdicaoRestController {
   @ApiNotFoundResponse()
   @ApiBadRequestResponse()
   async salvar(
-    @AccessContextHttp() _accessContext: AccessContext,
+    @AccessContextHttp() _accessContext: IAccessContext,
     @Param() params: HorarioEdicaoSessaoParamsRestDto,
   ): Promise<HorarioEdicaoSessaoOutputRestDto> {
     const sessao = await this.sessaoRepository.findById(params.sessaoId);
@@ -173,7 +174,7 @@ export class HorarioEdicaoRestController {
   @ApiNotFoundResponse()
   @ApiBadRequestResponse()
   async cancelar(
-    @AccessContextHttp() _accessContext: AccessContext,
+    @AccessContextHttp() _accessContext: IAccessContext,
     @Param() params: HorarioEdicaoSessaoParamsRestDto,
   ): Promise<HorarioEdicaoSessaoOutputRestDto> {
     const sessao = await this.sessaoRepository.findById(params.sessaoId);

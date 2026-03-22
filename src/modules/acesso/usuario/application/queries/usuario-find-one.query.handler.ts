@@ -1,6 +1,6 @@
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { IUsuarioFindOneQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-find-one.query.handler.interface";
-import type { AccessContext } from "@/server/access-context";
 import type { UsuarioFindOneQuery, UsuarioFindOneQueryResult } from "../../domain/queries";
 import { IUsuarioRepository } from "../../domain/repositories";
 
@@ -12,7 +12,7 @@ export class UsuarioFindOneQueryHandlerImpl implements IUsuarioFindOneQueryHandl
   ) {}
 
   async execute(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: UsuarioFindOneQuery,
   ): Promise<UsuarioFindOneQueryResult | null> {
     return this.repository.findById(accessContext, dto, dto?.selection);

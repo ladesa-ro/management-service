@@ -8,6 +8,7 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { ensureExists } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import {
   IModalidadeCreateCommandHandler,
@@ -30,7 +31,7 @@ import {
   IModalidadeListQueryHandler,
   ModalidadeListQueryMetadata,
 } from "@/modules/ensino/modalidade/domain/queries/modalidade-list.query.handler.interface";
-import { AccessContext, AccessContextHttp } from "@/server/access-context";
+import { AccessContextHttp } from "@/server/access-context";
 import {
   ModalidadeCreateInputRestDto,
   ModalidadeFindOneInputRestDto,
@@ -62,7 +63,7 @@ export class ModalidadeRestController {
   @ApiOkResponse({ type: ModalidadeListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Query() dto: ModalidadeListInputRestDto,
   ): Promise<ModalidadeListOutputRestDto> {
     const input = ModalidadeRestMapper.toListInput(dto);
@@ -76,7 +77,7 @@ export class ModalidadeRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async findById(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: ModalidadeFindOneInputRestDto,
   ): Promise<ModalidadeFindOneOutputRestDto> {
     const input = ModalidadeRestMapper.toFindOneInput(params);
@@ -90,7 +91,7 @@ export class ModalidadeRestController {
   @ApiCreatedResponse({ type: ModalidadeFindOneOutputRestDto })
   @ApiForbiddenResponse()
   async create(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Body() dto: ModalidadeCreateInputRestDto,
   ): Promise<ModalidadeFindOneOutputRestDto> {
     const input = ModalidadeRestMapper.toCreateInput(dto);
@@ -104,7 +105,7 @@ export class ModalidadeRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async update(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: ModalidadeFindOneInputRestDto,
     @Body() dto: ModalidadeUpdateInputRestDto,
   ): Promise<ModalidadeFindOneOutputRestDto> {
@@ -119,7 +120,7 @@ export class ModalidadeRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async deleteOneById(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: ModalidadeFindOneInputRestDto,
   ): Promise<boolean> {
     const input = ModalidadeRestMapper.toFindOneInput(params);

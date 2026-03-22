@@ -1,6 +1,6 @@
 import { has } from "lodash";
 import { ensureExists } from "@/application/errors";
-import type { PersistInput } from "@/domain/abstractions";
+import type { IAccessContext, PersistInput } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { Modalidade } from "@/modules/ensino/modalidade/domain/modalidade";
 import { IModalidadeFindOneQueryHandler } from "@/modules/ensino/modalidade/domain/queries/modalidade-find-one.query.handler.interface";
@@ -9,7 +9,6 @@ import { IOfertaFormacaoUpdateCommandHandler } from "@/modules/ensino/oferta-for
 import type { IOfertaFormacao } from "@/modules/ensino/oferta-formacao/domain/oferta-formacao";
 import { OfertaFormacao } from "@/modules/ensino/oferta-formacao/domain/oferta-formacao";
 import type { OfertaFormacaoFindOneQuery } from "@/modules/ensino/oferta-formacao/domain/queries";
-import type { AccessContext } from "@/server/access-context";
 import { IOfertaFormacaoPermissionChecker } from "../../domain/authorization";
 import type { OfertaFormacaoFindOneQueryResult } from "../../domain/queries";
 import { IOfertaFormacaoRepository } from "../../domain/repositories";
@@ -26,7 +25,7 @@ export class OfertaFormacaoUpdateCommandHandlerImpl implements IOfertaFormacaoUp
   ) {}
 
   async execute(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: OfertaFormacaoFindOneQuery & OfertaFormacaoUpdateCommand,
   ): Promise<OfertaFormacaoFindOneQueryResult> {
     const current = await this.repository.findById(accessContext, { id: dto.id });
@@ -39,7 +38,7 @@ export class OfertaFormacaoUpdateCommandHandlerImpl implements IOfertaFormacaoUp
     domain.update({ nome: dto.nome, slug: dto.slug });
     const updateData: Partial<PersistInput<IOfertaFormacao>> = { ...domain };
     if (has(dto, "duracaoPeriodo")) {
-      (updateData as any).duracaoPeriodo = dto.duracaoPeriodo ?? null;
+      (updateData as Record<string, unknown>).duracaoPeriodo = dto.duracaoPeriodo ?? null;
     }
     if (has(dto, "modalidade") && dto.modalidade !== undefined) {
       if (dto.modalidade) {

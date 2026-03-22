@@ -8,9 +8,10 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { ensureExists } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
-import { AccessContext, AccessContextHttp } from "@/server/access-context";
+import { AccessContextHttp } from "@/server/access-context";
 import {
   HorarioAulaConfiguracaoCreateCommandMetadata,
   HorarioAulaConfiguracaoDeleteCommandMetadata,
@@ -41,7 +42,7 @@ export class HorarioAulaConfiguracaoRestController {
   @ApiOkResponse({ type: HorarioAulaConfiguracaoListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
-    @AccessContextHttp() _accessContext: AccessContext,
+    @AccessContextHttp() _accessContext: IAccessContext,
     @Query("campusId") campusId?: string,
   ): Promise<HorarioAulaConfiguracaoListOutputRestDto> {
     const where: Record<string, unknown> = {};
@@ -62,7 +63,7 @@ export class HorarioAulaConfiguracaoRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async findById(
-    @AccessContextHttp() _accessContext: AccessContext,
+    @AccessContextHttp() _accessContext: IAccessContext,
     @Param() params: HorarioAulaConfiguracaoFindOneParamsRestDto,
   ): Promise<HorarioAulaConfiguracaoFindOneOutputRestDto> {
     const entity = await this.repository.findById(params.id);
@@ -75,7 +76,7 @@ export class HorarioAulaConfiguracaoRestController {
   @ApiCreatedResponse({ type: HorarioAulaConfiguracaoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   async create(
-    @AccessContextHttp() _accessContext: AccessContext,
+    @AccessContextHttp() _accessContext: IAccessContext,
     @Body() dto: HorarioAulaConfiguracaoCreateInputRestDto,
   ): Promise<HorarioAulaConfiguracaoFindOneOutputRestDto> {
     const entity = {
@@ -95,7 +96,7 @@ export class HorarioAulaConfiguracaoRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async update(
-    @AccessContextHttp() _accessContext: AccessContext,
+    @AccessContextHttp() _accessContext: IAccessContext,
     @Param() params: HorarioAulaConfiguracaoFindOneParamsRestDto,
     @Body() dto: HorarioAulaConfiguracaoUpdateInputRestDto,
   ): Promise<HorarioAulaConfiguracaoFindOneOutputRestDto> {
@@ -105,7 +106,8 @@ export class HorarioAulaConfiguracaoRestController {
     if (dto.dataInicio !== undefined) entity.dataInicio = new Date(dto.dataInicio);
     if (dto.dataFim !== undefined) entity.dataFim = dto.dataFim ? new Date(dto.dataFim) : null;
     if (dto.ativo !== undefined) entity.ativo = dto.ativo;
-    if (dto.campusId !== undefined) entity.campus = { id: dto.campusId } as any;
+    if (dto.campusId !== undefined)
+      entity.campus = { id: dto.campusId } as unknown as typeof entity.campus;
 
     await this.repository.save(entity);
     return this.toOutputDto(entity);
@@ -117,7 +119,7 @@ export class HorarioAulaConfiguracaoRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async delete(
-    @AccessContextHttp() _accessContext: AccessContext,
+    @AccessContextHttp() _accessContext: IAccessContext,
     @Param() params: HorarioAulaConfiguracaoFindOneParamsRestDto,
   ): Promise<boolean> {
     const entity = await this.repository.findById(params.id);

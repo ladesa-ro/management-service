@@ -1,4 +1,4 @@
-import type { AccessContext } from "@/server/access-context";
+import type { IAccessContext } from "@/domain/abstractions";
 
 /**
  * Variante simplificada de findById que aceita o ID diretamente (não um DTO wrapper).
@@ -6,7 +6,7 @@ import type { AccessContext } from "@/server/access-context";
  */
 export interface IRepositoryFindByIdSimple<FindOneOutputDto> {
   findByIdSimple(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     id: string | number,
     selection?: string[] | boolean | null,
   ): Promise<FindOneOutputDto | null>;

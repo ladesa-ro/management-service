@@ -1,9 +1,9 @@
 import { ensureExists } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { ICursoDeleteCommandHandler } from "@/modules/ensino/curso/domain/commands/curso-delete.command.handler.interface";
 import { Curso } from "@/modules/ensino/curso/domain/curso";
 import type { CursoFindOneQuery } from "@/modules/ensino/curso/domain/queries";
-import type { AccessContext } from "@/server/access-context";
 import { ICursoPermissionChecker } from "../../domain/authorization";
 import { ICursoRepository } from "../../domain/repositories";
 
@@ -16,7 +16,7 @@ export class CursoDeleteCommandHandlerImpl implements ICursoDeleteCommandHandler
     private readonly permissionChecker: ICursoPermissionChecker,
   ) {}
 
-  async execute(accessContext: AccessContext | null, dto: CursoFindOneQuery): Promise<boolean> {
+  async execute(accessContext: IAccessContext | null, dto: CursoFindOneQuery): Promise<boolean> {
     await this.permissionChecker.ensureCanDelete(accessContext, { dto }, dto.id);
 
     const entity = await this.repository.findById(accessContext, dto);

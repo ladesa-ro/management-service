@@ -1,9 +1,9 @@
 import { ensureExists } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { IDisciplinaDeleteCommandHandler } from "@/modules/ensino/disciplina/domain/commands/disciplina-delete.command.handler.interface";
 import { Disciplina } from "@/modules/ensino/disciplina/domain/disciplina";
 import type { DisciplinaFindOneQuery } from "@/modules/ensino/disciplina/domain/queries";
-import type { AccessContext } from "@/server/access-context";
 import { IDisciplinaPermissionChecker } from "../../domain/authorization";
 import { IDisciplinaRepository } from "../../domain/repositories";
 
@@ -17,7 +17,7 @@ export class DisciplinaDeleteCommandHandlerImpl implements IDisciplinaDeleteComm
   ) {}
 
   async execute(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: DisciplinaFindOneQuery,
   ): Promise<boolean> {
     await this.permissionChecker.ensureCanDelete(accessContext, { dto }, dto.id);

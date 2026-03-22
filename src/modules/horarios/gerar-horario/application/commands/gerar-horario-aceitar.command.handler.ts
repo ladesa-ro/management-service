@@ -1,6 +1,6 @@
 import { ensureExists, ValidationError } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import type { AccessContext } from "@/server/access-context";
 import type {
   IGerarHorarioAceitarCommand,
   IGerarHorarioAceitarCommandHandler,
@@ -23,7 +23,7 @@ export class GerarHorarioAceitarCommandHandlerImpl implements IGerarHorarioAceit
   ) {}
 
   async execute(
-    _accessContext: AccessContext | null,
+    _accessContext: IAccessContext | null,
     command: IGerarHorarioAceitarCommand,
   ): Promise<IGerarHorario> {
     const entity = await this.gerarHorarioRepository.findOneBy({ id: command.id });

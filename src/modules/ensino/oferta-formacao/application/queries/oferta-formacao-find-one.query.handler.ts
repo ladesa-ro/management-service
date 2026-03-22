@@ -1,6 +1,6 @@
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { IOfertaFormacaoFindOneQueryHandler } from "@/modules/ensino/oferta-formacao/domain/queries/oferta-formacao-find-one.query.handler.interface";
-import type { AccessContext } from "@/server/access-context";
 import type {
   OfertaFormacaoFindOneQuery,
   OfertaFormacaoFindOneQueryResult,
@@ -15,7 +15,7 @@ export class OfertaFormacaoFindOneQueryHandlerImpl implements IOfertaFormacaoFin
   ) {}
 
   async execute(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: OfertaFormacaoFindOneQuery,
   ): Promise<OfertaFormacaoFindOneQueryResult | null> {
     return this.repository.findById(accessContext, dto, dto?.selection);

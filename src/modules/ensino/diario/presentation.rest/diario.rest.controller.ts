@@ -8,6 +8,7 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { ensureExists } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import {
   DiarioCreateCommandMetadata,
@@ -30,7 +31,7 @@ import {
   DiarioListQueryMetadata,
   IDiarioListQueryHandler,
 } from "@/modules/ensino/diario/domain/queries/diario-list.query.handler.interface";
-import { AccessContext, AccessContextHttp } from "@/server/access-context";
+import { AccessContextHttp } from "@/server/access-context";
 import {
   DiarioCreateInputRestDto,
   DiarioFindOneInputRestDto,
@@ -62,7 +63,7 @@ export class DiarioRestController {
   @ApiOkResponse({ type: DiarioListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Query() dto: DiarioListInputRestDto,
   ): Promise<DiarioListOutputRestDto> {
     const input = DiarioRestMapper.toListInput(dto);
@@ -76,7 +77,7 @@ export class DiarioRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async findById(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: DiarioFindOneInputRestDto,
   ): Promise<DiarioFindOneOutputRestDto> {
     const input = DiarioRestMapper.toFindOneInput(params);
@@ -90,7 +91,7 @@ export class DiarioRestController {
   @ApiCreatedResponse({ type: DiarioFindOneOutputRestDto })
   @ApiForbiddenResponse()
   async create(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Body() dto: DiarioCreateInputRestDto,
   ): Promise<DiarioFindOneOutputRestDto> {
     const input = DiarioRestMapper.toCreateInput(dto);
@@ -104,7 +105,7 @@ export class DiarioRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async update(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: DiarioFindOneInputRestDto,
     @Body() dto: DiarioUpdateInputRestDto,
   ): Promise<DiarioFindOneOutputRestDto> {
@@ -119,7 +120,7 @@ export class DiarioRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async deleteOneById(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: DiarioFindOneInputRestDto,
   ): Promise<boolean> {
     const input = DiarioRestMapper.toFindOneInput(params);

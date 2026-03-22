@@ -1,9 +1,9 @@
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
   type IEnderecoCreateOrUpdateCommand,
   IEnderecoCreateOrUpdateCommandHandler,
 } from "@/modules/localidades/endereco/domain/commands/endereco-create-or-update.command.handler.interface";
-import type { AccessContext } from "@/server/access-context";
 import { Endereco } from "../../domain/endereco";
 import { IEnderecoRepository } from "../../domain/repositories";
 
@@ -17,7 +17,7 @@ export class EnderecoCreateOrUpdateCommandHandlerImpl
   ) {}
 
   async execute(
-    _accessContext: AccessContext | null,
+    _accessContext: IAccessContext | null,
     { id, dto }: IEnderecoCreateOrUpdateCommand,
   ): Promise<{ id: string | number }> {
     if (id) {

@@ -1,6 +1,7 @@
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
 import { ensureExists } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { graphqlExtractSelection } from "@/infrastructure.graphql";
 import {
@@ -24,7 +25,7 @@ import {
   DiarioListQueryMetadata,
   IDiarioListQueryHandler,
 } from "@/modules/ensino/diario/domain/queries/diario-list.query.handler.interface";
-import { AccessContext, AccessContextGraphQL } from "@/server/access-context";
+import { AccessContextGraphQL } from "@/server/access-context";
 import {
   DiarioCreateInputGraphQlDto,
   DiarioFindOneOutputGraphQlDto,
@@ -51,7 +52,7 @@ export class DiarioGraphqlResolver {
 
   @Query(() => DiarioListOutputGraphQlDto, DiarioListQueryMetadata.gqlMetadata)
   async findAll(
-    @AccessContextGraphQL() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: IAccessContext,
     @Args() dto: DiarioListInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
   ): Promise<DiarioListOutputGraphQlDto> {
@@ -66,7 +67,7 @@ export class DiarioGraphqlResolver {
 
   @Query(() => DiarioFindOneOutputGraphQlDto, DiarioFindOneQueryMetadata.gqlMetadata)
   async findById(
-    @AccessContextGraphQL() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Info() info: GraphQLResolveInfo,
   ): Promise<DiarioFindOneOutputGraphQlDto> {
@@ -78,7 +79,7 @@ export class DiarioGraphqlResolver {
 
   @Mutation(() => DiarioFindOneOutputGraphQlDto, DiarioCreateCommandMetadata.gqlMetadata)
   async create(
-    @AccessContextGraphQL() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("data") dto: DiarioCreateInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
   ): Promise<DiarioFindOneOutputGraphQlDto> {
@@ -89,7 +90,7 @@ export class DiarioGraphqlResolver {
 
   @Mutation(() => DiarioFindOneOutputGraphQlDto, DiarioUpdateCommandMetadata.gqlMetadata)
   async update(
-    @AccessContextGraphQL() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Args("data") dto: DiarioUpdateInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
@@ -101,7 +102,7 @@ export class DiarioGraphqlResolver {
 
   @Mutation(() => Boolean, DiarioDeleteCommandMetadata.gqlMetadata)
   async deleteOneById(
-    @AccessContextGraphQL() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<boolean> {
     return this.deleteHandler.execute(accessContext, { id });

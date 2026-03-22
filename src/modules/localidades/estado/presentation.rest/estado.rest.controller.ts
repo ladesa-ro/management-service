@@ -7,6 +7,7 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { ensureExists } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { Estado } from "@/modules/localidades/estado/domain/estado";
 import {
@@ -17,7 +18,7 @@ import {
   EstadoListQueryMetadata,
   IEstadoListQueryHandler,
 } from "@/modules/localidades/estado/domain/queries/estado-list.query.handler.interface";
-import { AccessContext, AccessContextHttp } from "@/server/access-context";
+import { AccessContextHttp } from "@/server/access-context";
 import {
   EstadoFindOneInputRestDto,
   EstadoFindOneOutputRestDto,
@@ -41,7 +42,7 @@ export class EstadoRestController {
   @ApiOkResponse({ type: EstadoListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Query() dto: EstadoListInputRestDto,
   ): Promise<EstadoListOutputRestDto> {
     const input = EstadoRestMapper.toListInput(dto);
@@ -55,7 +56,7 @@ export class EstadoRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async findById(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: EstadoFindOneInputRestDto,
   ): Promise<EstadoFindOneOutputRestDto> {
     const input = EstadoRestMapper.toFindOneInput(params);

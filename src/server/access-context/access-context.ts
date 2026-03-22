@@ -1,6 +1,6 @@
+import type { IAccessContext } from "@/domain/abstractions/access-context.interface";
 import type { IRequestActor } from "@/domain/abstractions/request-actor";
 import type { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
-import type { IAccessContext } from "./access-context.types";
 
 /**
  * Contexto de acesso simplificado.

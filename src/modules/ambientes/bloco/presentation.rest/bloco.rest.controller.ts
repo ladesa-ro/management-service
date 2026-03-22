@@ -24,6 +24,7 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { ensureExists } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { Bloco } from "@/modules/ambientes/bloco/domain/bloco";
 import {
@@ -54,7 +55,7 @@ import {
   BlocoListQueryMetadata,
   IBlocoListQueryHandler,
 } from "@/modules/ambientes/bloco/domain/queries/bloco-list.query.handler.interface";
-import { AccessContext, AccessContextHttp } from "@/server/access-context";
+import { AccessContextHttp } from "@/server/access-context";
 import {
   BlocoCreateInputRestDto,
   BlocoFindOneInputRestDto,
@@ -90,7 +91,7 @@ export class BlocoRestController {
   @ApiOkResponse({ type: BlocoListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Query() dto: BlocoListInputRestDto,
   ): Promise<BlocoListOutputRestDto> {
     const input = BlocoRestMapper.toListInput(dto);
@@ -104,7 +105,7 @@ export class BlocoRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async findById(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: BlocoFindOneInputRestDto,
   ): Promise<BlocoFindOneOutputRestDto> {
     const input = BlocoRestMapper.toFindOneInput(params);
@@ -118,7 +119,7 @@ export class BlocoRestController {
   @ApiCreatedResponse({ type: BlocoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   async create(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Body() dto: BlocoCreateInputRestDto,
   ): Promise<BlocoFindOneOutputRestDto> {
     const input = BlocoRestMapper.toCreateInput(dto);
@@ -132,7 +133,7 @@ export class BlocoRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async update(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: BlocoFindOneInputRestDto,
     @Body() dto: BlocoUpdateInputRestDto,
   ): Promise<BlocoFindOneOutputRestDto> {
@@ -147,7 +148,7 @@ export class BlocoRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async getImagemCapa(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: BlocoFindOneInputRestDto,
   ) {
     const result = await this.getImagemCapaHandler.execute(accessContext, { id: params.id });
@@ -174,7 +175,7 @@ export class BlocoRestController {
   @ApiNotFoundResponse()
   @UseInterceptors(FileInterceptor("file"))
   async updateImagemCapa(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: BlocoFindOneInputRestDto,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<boolean> {
@@ -187,7 +188,7 @@ export class BlocoRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async deleteOneById(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: BlocoFindOneInputRestDto,
   ): Promise<boolean> {
     const input = BlocoRestMapper.toFindOneInput(params);

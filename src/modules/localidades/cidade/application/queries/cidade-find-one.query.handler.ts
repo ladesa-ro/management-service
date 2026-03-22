@@ -1,6 +1,6 @@
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { ICidadeFindOneQueryHandler } from "@/modules/localidades/cidade/domain/queries/cidade-find-one.query.handler.interface";
-import type { AccessContext } from "@/server/access-context";
 import type { CidadeFindOneQuery, CidadeFindOneQueryResult } from "../../domain/queries";
 import { ICidadeRepository } from "../../domain/repositories";
 
@@ -12,7 +12,7 @@ export class CidadeFindOneQueryHandlerImpl implements ICidadeFindOneQueryHandler
   ) {}
 
   async execute(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: CidadeFindOneQuery,
   ): Promise<CidadeFindOneQueryResult | null> {
     return this.repository.findById(accessContext, dto);

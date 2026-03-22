@@ -8,6 +8,11 @@ import type {
 import { zodValidate } from "@/shared/validation/index";
 import { ImagemCreateSchema, ImagemSchema, ImagemUpdateSchema } from "./imagem.schemas";
 
+interface IImagemLoadInput {
+  versoes?: ImagemArquivo[];
+  [key: string]: unknown;
+}
+
 export interface IImagem extends IEntityBaseUuid {
   descricao: string | null;
   versoes?: IImagemArquivo[];
@@ -48,14 +53,14 @@ export class Imagem implements IEntityBaseUuid {
     return instance;
   }
 
-  static load(dados: unknown): Imagem {
+  static load(dados: IImagemLoadInput): Imagem {
     const parsed = zodValidate(Imagem.entityName, ImagemSchema, dados);
 
     const instance = new Imagem();
 
     instance.id = parsed.id;
     instance.descricao = parsed.descricao;
-    instance.versoes = (dados as any)?.versoes ?? [];
+    instance.versoes = dados.versoes ?? [];
     instance.dateCreated = parsed.dateCreated;
     instance.dateUpdated = parsed.dateUpdated;
     instance.dateDeleted = parsed.dateDeleted;

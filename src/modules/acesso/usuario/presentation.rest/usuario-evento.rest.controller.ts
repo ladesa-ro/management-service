@@ -8,9 +8,10 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { ensureExists } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { IUsuarioEventoRepository } from "@/modules/acesso/usuario/domain/repositories/usuario-evento.repository.interface";
-import { AccessContext, AccessContextHttp } from "@/server/access-context";
+import { AccessContextHttp } from "@/server/access-context";
 import {
   UsuarioEventoCreateInputRestDto,
   UsuarioEventoFindOneOutputRestDto,
@@ -36,7 +37,7 @@ export class UsuarioEventoRestController {
   @ApiOkResponse({ type: UsuarioEventoListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
-    @AccessContextHttp() _accessContext: AccessContext,
+    @AccessContextHttp() _accessContext: IAccessContext,
     @Param() parentParams: UsuarioEventoParentParamsRestDto,
   ): Promise<UsuarioEventoListOutputRestDto> {
     const perfilIds = await this.eventoRepository.findPerfilIdsByUsuario(parentParams.id);
@@ -58,7 +59,7 @@ export class UsuarioEventoRestController {
   @ApiCreatedResponse({ type: UsuarioEventoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   async create(
-    @AccessContextHttp() _accessContext: AccessContext,
+    @AccessContextHttp() _accessContext: IAccessContext,
     @Param() parentParams: UsuarioEventoParentParamsRestDto,
     @Body() dto: UsuarioEventoCreateInputRestDto,
   ): Promise<UsuarioEventoFindOneOutputRestDto> {
@@ -83,7 +84,7 @@ export class UsuarioEventoRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async update(
-    @AccessContextHttp() _accessContext: AccessContext,
+    @AccessContextHttp() _accessContext: IAccessContext,
     @Param() params: UsuarioEventoItemParamsRestDto,
     @Body() dto: UsuarioEventoUpdateInputRestDto,
   ): Promise<UsuarioEventoFindOneOutputRestDto> {
@@ -109,7 +110,7 @@ export class UsuarioEventoRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async delete(
-    @AccessContextHttp() _accessContext: AccessContext,
+    @AccessContextHttp() _accessContext: IAccessContext,
     @Param() params: UsuarioEventoItemParamsRestDto,
   ): Promise<boolean> {
     await this.eventoRepository.deleteEventoForUsuario(params.id, params.eventoId);

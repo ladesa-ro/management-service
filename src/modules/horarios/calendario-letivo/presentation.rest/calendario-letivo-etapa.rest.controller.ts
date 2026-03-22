@@ -6,9 +6,10 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
-import { AccessContext, AccessContextHttp } from "@/server/access-context";
+import { AccessContextHttp } from "@/server/access-context";
 import {
   CalendarioLetivoDesativarCommandMetadata,
   CalendarioLetivoEtapaBulkReplaceCommandMetadata,
@@ -36,7 +37,7 @@ export class CalendarioLetivoEtapaRestController {
   @ApiOkResponse({ type: CalendarioLetivoEtapaListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
-    @AccessContextHttp() _accessContext: AccessContext,
+    @AccessContextHttp() _accessContext: IAccessContext,
     @Param() parentParams: CalendarioLetivoEtapaParentParamsRestDto,
   ): Promise<CalendarioLetivoEtapaListOutputRestDto> {
     const etapas = await this.etapaRepository.findByCalendarioLetivoId(
@@ -65,7 +66,7 @@ export class CalendarioLetivoEtapaRestController {
   @ApiOkResponse({ type: CalendarioLetivoEtapaListOutputRestDto })
   @ApiForbiddenResponse()
   async bulkReplace(
-    @AccessContextHttp() _accessContext: AccessContext,
+    @AccessContextHttp() _accessContext: IAccessContext,
     @Param() parentParams: CalendarioLetivoEtapaParentParamsRestDto,
     @Body() dto: CalendarioLetivoEtapaBulkReplaceInputRestDto,
   ): Promise<CalendarioLetivoEtapaListOutputRestDto> {
@@ -108,7 +109,7 @@ export class CalendarioLetivoDesativarRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async desativar(
-    @AccessContextHttp() _accessContext: AccessContext,
+    @AccessContextHttp() _accessContext: IAccessContext,
     @Param() params: CalendarioLetivoFindOneInputRestDto,
   ): Promise<boolean> {
     await this.calendarioLetivoRepository.softDeleteById(params.id);

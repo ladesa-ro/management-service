@@ -1,6 +1,7 @@
 import { FilterOperator } from "nestjs-paginate";
 import type { DeepPartial } from "typeorm";
 import type { IPaginationCriteria, IPaginationResult } from "@/application/pagination";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
 import { paginateConfig } from "@/infrastructure.database/pagination/config/paginate-config";
@@ -69,7 +70,7 @@ export class PerfilTypeOrmRepositoryAdapter implements IPerfilRepository {
   ) {}
 
   findAll(
-    accessContext: unknown,
+    accessContext: IAccessContext | null,
     dto: PerfilListQuery | null = null,
     selection?: string[] | boolean | null,
   ) {
@@ -83,7 +84,11 @@ export class PerfilTypeOrmRepositoryAdapter implements IPerfilRepository {
     );
   }
 
-  findById(accessContext: unknown, dto: PerfilFindOneQuery, selection?: string[] | boolean | null) {
+  findById(
+    accessContext: IAccessContext | null,
+    dto: PerfilFindOneQuery,
+    selection?: string[] | boolean | null,
+  ) {
     return typeormFindById<PerfilEntity, PerfilFindOneQuery, PerfilFindOneQueryResult>(
       this.appTypeormConnection,
       PerfilEntity,
@@ -93,12 +98,16 @@ export class PerfilTypeOrmRepositoryAdapter implements IPerfilRepository {
     );
   }
 
-  findByIdSimple(accessContext: unknown, id: string, selection?: string[] | boolean | null) {
+  findByIdSimple(
+    accessContext: IAccessContext | null,
+    id: string,
+    selection?: string[] | boolean | null,
+  ) {
     return this.findById(accessContext, { id } as PerfilFindOneQuery, selection);
   }
 
   async findAllActiveByUsuarioId(
-    _accessContext: unknown,
+    _accessContext: IAccessContext | null,
     usuarioId: UsuarioEntity["id"],
   ): Promise<PerfilFindOneQueryResult[]> {
     const repo = this.appTypeormConnection.getRepository(PerfilEntity);
@@ -117,7 +126,7 @@ export class PerfilTypeOrmRepositoryAdapter implements IPerfilRepository {
   }
 
   async findPaginated(
-    _accessContext: unknown,
+    _accessContext: IAccessContext | null,
     criteria: IPaginationCriteria | null,
     paginateConfigOverride: ITypeOrmPaginationConfig<PerfilFindOneQueryResult>,
     selection?: string[] | boolean | null,
@@ -175,11 +184,11 @@ export class PerfilTypeOrmRepositoryAdapter implements IPerfilRepository {
       .execute();
   }
 
-  create(data: Record<string, any>) {
+  create(data: Record<string, unknown>) {
     return typeormCreate(this.appTypeormConnection, PerfilEntity, data);
   }
 
-  update(id: string | number, data: Record<string, any>) {
+  update(id: string | number, data: Record<string, unknown>) {
     return typeormUpdate(this.appTypeormConnection, PerfilEntity, id, data);
   }
 

@@ -8,6 +8,7 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { ensureExists } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import {
   EstagiarioCreateCommandMetadata,
@@ -30,7 +31,7 @@ import {
   EstagiarioListQueryMetadata,
   IEstagiarioListQueryHandler,
 } from "@/modules/estagio/estagiario/domain/queries/estagiario-list.query.handler.interface";
-import { AccessContext, AccessContextHttp } from "@/server/access-context";
+import { AccessContextHttp } from "@/server/access-context";
 import {
   EstagiarioCreateInputRestDto,
   EstagiarioFindOneInputRestDto,
@@ -62,7 +63,7 @@ export class EstagiarioRestController {
   @ApiOkResponse({ type: EstagiarioListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Query() dto: EstagiarioListInputRestDto,
   ): Promise<EstagiarioListOutputRestDto> {
     const input = EstagiarioRestMapper.toListInput(dto);
@@ -76,7 +77,7 @@ export class EstagiarioRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async findById(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: EstagiarioFindOneInputRestDto,
   ): Promise<EstagiarioFindOneOutputRestDto> {
     const input = EstagiarioRestMapper.toFindOneInput(params);
@@ -90,7 +91,7 @@ export class EstagiarioRestController {
   @ApiCreatedResponse({ type: EstagiarioFindOneOutputRestDto })
   @ApiForbiddenResponse()
   async create(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Body() dto: EstagiarioCreateInputRestDto,
   ): Promise<EstagiarioFindOneOutputRestDto> {
     const input = EstagiarioRestMapper.toCreateInput(dto);
@@ -104,7 +105,7 @@ export class EstagiarioRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async update(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: EstagiarioFindOneInputRestDto,
     @Body() dto: EstagiarioUpdateInputRestDto,
   ): Promise<EstagiarioFindOneOutputRestDto> {
@@ -119,7 +120,7 @@ export class EstagiarioRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async deleteOneById(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: EstagiarioFindOneInputRestDto,
   ): Promise<boolean> {
     const input = EstagiarioRestMapper.toFindOneInput(params);

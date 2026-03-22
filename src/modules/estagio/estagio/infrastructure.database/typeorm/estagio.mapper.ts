@@ -21,7 +21,9 @@ export class EstagioMapper {
 
     return Estagio.load({
       id: entity.id,
-      empresa: { id: entity.empresa?.id ?? (entity as any).idEmpresaFk },
+      empresa: {
+        id: entity.empresa?.id ?? (entity as unknown as Record<string, string>).idEmpresaFk,
+      },
       estagiario: entity.estagiario ? { id: entity.estagiario.id } : null,
       cargaHoraria: entity.cargaHoraria,
       dataInicio: formatDateOnly(entity.dataInicio),
@@ -44,8 +46,10 @@ export class EstagioMapper {
   static toPersistence(estagio: Estagio): EstagioTypeormEntity {
     const entity = new EstagioTypeormEntity();
     entity.id = estagio.id || generateUuidV7();
-    entity.empresa = { id: estagio.empresa.id } as any;
-    entity.estagiario = estagio.estagiario ? ({ id: estagio.estagiario.id } as any) : null;
+    entity.empresa = { id: estagio.empresa.id } as unknown as typeof entity.empresa;
+    entity.estagiario = estagio.estagiario
+      ? ({ id: estagio.estagiario.id } as unknown as NonNullable<typeof entity.estagiario>)
+      : null;
     entity.cargaHoraria = estagio.cargaHoraria;
     entity.dataInicio = estagio.dataInicio ? new Date(estagio.dataInicio) : null;
     entity.dataFim = estagio.dataFim ? new Date(estagio.dataFim) : null;
@@ -62,7 +66,7 @@ export class EstagioMapper {
   ): HorarioEstagioTypeormEntity {
     const entity = new HorarioEstagioTypeormEntity();
     entity.id = horario.id || generateUuidV7();
-    entity.estagio = { id: idEstagioFk } as any;
+    entity.estagio = { id: idEstagioFk } as unknown as typeof entity.estagio;
     entity.diaSemana = horario.diaSemana;
     entity.horaInicio = horario.horaInicio;
     entity.horaFim = horario.horaFim;
@@ -87,7 +91,9 @@ export class EstagioMapper {
 
     return {
       id: entity.id,
-      empresa: { id: entity.empresa?.id ?? (entity as any).idEmpresaFk },
+      empresa: {
+        id: entity.empresa?.id ?? (entity as unknown as Record<string, string>).idEmpresaFk,
+      },
       estagiario: entity.estagiario ? { id: entity.estagiario.id } : null,
       cargaHoraria: entity.cargaHoraria,
       dataInicio: formatDateOnly(entity.dataInicio),

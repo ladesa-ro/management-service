@@ -1,5 +1,6 @@
 import type { Readable } from "node:stream";
 import { ensureExists, ForbiddenError, ServiceUnavailableError } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import type { IStreamableFileResult } from "@/domain/abstractions/storage";
 import { IStorageService } from "@/domain/abstractions/storage";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
@@ -11,7 +12,6 @@ import type {
   IArquivoGetStreamableFileQueryHandler,
 } from "@/modules/armazenamento/arquivo/domain/queries";
 import { IArquivoRepository } from "@/modules/armazenamento/arquivo/domain/repositories";
-import type { AccessContext } from "@/server/access-context";
 
 @DeclareImplementation()
 export class ArquivoGetStreamableFileQueryHandlerImpl
@@ -25,7 +25,7 @@ export class ArquivoGetStreamableFileQueryHandlerImpl
   ) {}
 
   async execute(
-    _accessContext: AccessContext | null,
+    _accessContext: IAccessContext | null,
     input: ArquivoGetFileQuery,
   ): Promise<IStreamableFileResult> {
     const file = await this.getFile(input);

@@ -1,5 +1,6 @@
 import { FilterOperator } from "nestjs-paginate";
 import type { SelectQueryBuilder } from "typeorm";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
@@ -73,7 +74,7 @@ export class DiarioPreferenciaAgrupamentoTypeOrmRepositoryAdapter
   ) {}
 
   findAll(
-    accessContext: unknown,
+    accessContext: IAccessContext | null,
     dto: DiarioPreferenciaAgrupamentoListQuery | null = null,
     selection?: string[] | boolean | null,
   ) {
@@ -92,7 +93,7 @@ export class DiarioPreferenciaAgrupamentoTypeOrmRepositoryAdapter
   }
 
   findById(
-    accessContext: unknown,
+    accessContext: IAccessContext | null,
     dto: DiarioPreferenciaAgrupamentoFindOneQuery,
     selection?: string[] | boolean | null,
   ) {
@@ -103,7 +104,11 @@ export class DiarioPreferenciaAgrupamentoTypeOrmRepositoryAdapter
     >(this.appTypeormConnection, DiarioPreferenciaAgrupamentoEntity, config, dto, selection);
   }
 
-  findByIdSimple(accessContext: unknown, id: string, selection?: string[] | boolean | null) {
+  findByIdSimple(
+    accessContext: IAccessContext | null,
+    id: string,
+    selection?: string[] | boolean | null,
+  ) {
     return this.findById(
       accessContext,
       { id } as DiarioPreferenciaAgrupamentoFindOneQuery,
@@ -167,7 +172,7 @@ export class DiarioPreferenciaAgrupamentoTypeOrmRepositoryAdapter
       entity.dataFim = p.dataFim ? new Date(p.dataFim) : null;
       entity.diaSemanaIso = p.diaSemanaIso;
       entity.aulasSeguidas = p.aulasSeguidas;
-      (entity as any).diario = { id: p.diarioId };
+      Object.assign(entity, { diario: { id: p.diarioId } });
       entity.dateCreated = now;
       entity.dateUpdated = now;
       entity.dateDeleted = null;

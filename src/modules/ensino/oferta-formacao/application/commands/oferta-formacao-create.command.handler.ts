@@ -1,11 +1,11 @@
 import { ensureExists } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { Modalidade } from "@/modules/ensino/modalidade/domain/modalidade";
 import { IModalidadeFindOneQueryHandler } from "@/modules/ensino/modalidade/domain/queries/modalidade-find-one.query.handler.interface";
 import type { OfertaFormacaoCreateCommand } from "@/modules/ensino/oferta-formacao/domain/commands/oferta-formacao-create.command";
 import { IOfertaFormacaoCreateCommandHandler } from "@/modules/ensino/oferta-formacao/domain/commands/oferta-formacao-create.command.handler.interface";
 import { OfertaFormacao } from "@/modules/ensino/oferta-formacao/domain/oferta-formacao";
-import type { AccessContext } from "@/server/access-context";
 import { IOfertaFormacaoPermissionChecker } from "../../domain/authorization";
 import type { OfertaFormacaoFindOneQueryResult } from "../../domain/queries";
 import { IOfertaFormacaoRepository } from "../../domain/repositories";
@@ -22,7 +22,7 @@ export class OfertaFormacaoCreateCommandHandlerImpl implements IOfertaFormacaoCr
   ) {}
 
   async execute(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: OfertaFormacaoCreateCommand,
   ): Promise<OfertaFormacaoFindOneQueryResult> {
     await this.permissionChecker.ensureCanCreate(accessContext, { dto });

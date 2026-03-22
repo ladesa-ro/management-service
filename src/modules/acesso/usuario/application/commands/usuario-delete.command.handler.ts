@@ -1,9 +1,9 @@
 import { ensureExists } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { IUsuarioDeleteCommandHandler } from "@/modules/acesso/usuario/domain/commands/usuario-delete.command.handler.interface";
 import type { UsuarioFindOneQuery } from "@/modules/acesso/usuario/domain/queries";
 import { Usuario } from "@/modules/acesso/usuario/domain/usuario";
-import type { AccessContext } from "@/server/access-context";
 import { IUsuarioPermissionChecker } from "../../domain/authorization";
 import { IUsuarioRepository } from "../../domain/repositories";
 
@@ -16,7 +16,7 @@ export class UsuarioDeleteCommandHandlerImpl implements IUsuarioDeleteCommandHan
     private readonly permissionChecker: IUsuarioPermissionChecker,
   ) {}
 
-  async execute(accessContext: AccessContext | null, dto: UsuarioFindOneQuery): Promise<boolean> {
+  async execute(accessContext: IAccessContext | null, dto: UsuarioFindOneQuery): Promise<boolean> {
     await this.permissionChecker.ensureCanDelete(accessContext, { dto }, dto.id);
 
     const usuario = await this.repository.findById(accessContext, dto);

@@ -7,8 +7,9 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { ensureExists } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
-import { AccessContext, AccessContextHttp } from "@/server/access-context";
+import { AccessContextHttp } from "@/server/access-context";
 import {
   NotificacaoContagemNaoLidasQueryMetadata,
   NotificacaoFindAllQueryMetadata,
@@ -31,7 +32,7 @@ export class NotificacaoRestController {
   @ApiOperation(NotificacaoFindAllQueryMetadata.swaggerMetadata)
   @ApiOkResponse()
   @ApiForbiddenResponse()
-  async findAll(@AccessContextHttp() _accessContext: AccessContext) {
+  async findAll(@AccessContextHttp() _accessContext: IAccessContext) {
     const entities = await this.notificacaoRepository.find({
       order: { dateCreated: "DESC" },
     });
@@ -51,7 +52,7 @@ export class NotificacaoRestController {
   @ApiOperation(NotificacaoContagemNaoLidasQueryMetadata.swaggerMetadata)
   @ApiOkResponse()
   @ApiForbiddenResponse()
-  async contagemNaoLidas(@AccessContextHttp() _accessContext: AccessContext) {
+  async contagemNaoLidas(@AccessContextHttp() _accessContext: IAccessContext) {
     const count = await this.notificacaoRepository.count({ where: { lida: false } });
     return { count };
   }
@@ -61,7 +62,7 @@ export class NotificacaoRestController {
   @ApiOkResponse()
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
-  async marcarLida(@AccessContextHttp() _accessContext: AccessContext, @Param("id") id: string) {
+  async marcarLida(@AccessContextHttp() _accessContext: IAccessContext, @Param("id") id: string) {
     const entity = await this.notificacaoRepository.findOneBy({ id });
     ensureExists(entity, "Notificacao", id);
     entity.lida = true;

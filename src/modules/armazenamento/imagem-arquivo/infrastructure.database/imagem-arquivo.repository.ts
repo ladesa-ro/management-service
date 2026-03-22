@@ -21,7 +21,10 @@ export class ImagemArquivoTypeOrmRepositoryAdapter implements IImagemArquivoRepo
   merge(imagemArquivo: ImagemArquivo, data: PartialEntity<ImagemArquivo>): void {
     this.appTypeormConnection
       .getRepository(ImagemArquivoEntity)
-      .merge(imagemArquivo as any, data as any);
+      .merge(
+        imagemArquivo as unknown as ImagemArquivoEntity,
+        data as unknown as ImagemArquivoEntity,
+      );
   }
 
   async findLatestArquivoIdForImagem(imagemId: string): Promise<string | null> {

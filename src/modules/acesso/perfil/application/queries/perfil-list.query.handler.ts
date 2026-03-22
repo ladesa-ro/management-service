@@ -1,6 +1,6 @@
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { IPerfilListQueryHandler } from "@/modules/acesso/perfil/domain/queries/perfil-list.query.handler.interface";
-import type { AccessContext } from "@/server/access-context";
 import type { PerfilListQuery, PerfilListQueryResult } from "../../domain/queries";
 import { IPerfilRepository } from "../../domain/repositories";
 
@@ -12,7 +12,7 @@ export class PerfilListQueryHandlerImpl implements IPerfilListQueryHandler {
   ) {}
 
   async execute(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: PerfilListQuery | null,
   ): Promise<PerfilListQueryResult> {
     return this.repository.findAll(accessContext, dto);

@@ -1,9 +1,9 @@
 import { ensureExists } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { NivelFormacaoCreateCommand } from "@/modules/ensino/nivel-formacao/domain/commands/nivel-formacao-create.command";
 import { INivelFormacaoCreateCommandHandler } from "@/modules/ensino/nivel-formacao/domain/commands/nivel-formacao-create.command.handler.interface";
 import { NivelFormacao } from "@/modules/ensino/nivel-formacao/domain/nivel-formacao";
-import type { AccessContext } from "@/server/access-context";
 import { INivelFormacaoPermissionChecker } from "../../domain/authorization";
 import type { NivelFormacaoFindOneQueryResult } from "../../domain/queries";
 import { INivelFormacaoRepository } from "../../domain/repositories";
@@ -18,7 +18,7 @@ export class NivelFormacaoCreateCommandHandlerImpl implements INivelFormacaoCrea
   ) {}
 
   async execute(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: NivelFormacaoCreateCommand,
   ): Promise<NivelFormacaoFindOneQueryResult> {
     await this.permissionChecker.ensureCanCreate(accessContext, { dto });

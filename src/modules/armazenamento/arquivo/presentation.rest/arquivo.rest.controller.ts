@@ -6,13 +6,14 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import {
   ArquivoGetStreamableFileQueryMetadata,
   IArquivoGetStreamableFileQueryHandler,
   type IArquivoGetStreamableFileQueryHandler as IArquivoGetStreamableFileQueryHandlerType,
 } from "@/modules/armazenamento/arquivo/domain/queries";
-import { AccessContext, AccessContextHttp } from "@/server/access-context";
+import { AccessContextHttp } from "@/server/access-context";
 import { ArquivoFindOneInputRestDto, ArquivoGetFileQueryInputRestDto } from "./arquivo.rest.dto";
 import { ArquivoRestMapper } from "./arquivo.rest.mapper";
 
@@ -30,7 +31,7 @@ export class ArquivoRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async getFile(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: ArquivoFindOneInputRestDto,
     @Query() query: ArquivoGetFileQueryInputRestDto,
   ): Promise<StreamableFile> {

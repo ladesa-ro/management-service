@@ -1,13 +1,13 @@
 import { get } from "lodash";
 import { ensureExists } from "@/application/errors";
-import type { PersistInput } from "@/domain/abstractions";
+import type { IAccessContext, PersistInput } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { Campus, type ICampus } from "@/modules/ambientes/campus/domain/campus";
 import type { CampusUpdateCommand } from "@/modules/ambientes/campus/domain/commands/campus-update.command";
 import { ICampusUpdateCommandHandler } from "@/modules/ambientes/campus/domain/commands/campus-update.command.handler.interface";
 import type { CampusFindOneQuery } from "@/modules/ambientes/campus/domain/queries";
 import { IEnderecoCreateOrUpdateCommandHandler } from "@/modules/localidades/endereco/domain/commands/endereco-create-or-update.command.handler.interface";
-import type { AccessContext } from "@/server/access-context";
+import type { EnderecoInputCommand } from "@/modules/localidades/endereco/domain/commands/endereco-input.command";
 import { ICampusPermissionChecker } from "../../domain/authorization";
 import type { CampusFindOneQueryResult } from "../../domain/queries";
 import { ICampusRepository } from "../../domain/repositories";
@@ -24,7 +24,7 @@ export class CampusUpdateCommandHandlerImpl implements ICampusUpdateCommandHandl
   ) {}
 
   async execute(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: CampusFindOneQuery & CampusUpdateCommand,
   ): Promise<CampusFindOneQueryResult> {
     const current = await this.repository.findById(accessContext, { id: dto.id });
@@ -45,7 +45,7 @@ export class CampusUpdateCommandHandlerImpl implements ICampusUpdateCommandHandl
     if (dtoEndereco) {
       const endereco = await this.enderecoCreateOrUpdateHandler.execute(null, {
         id: current.endereco.id,
-        dto: dtoEndereco as any,
+        dto: dtoEndereco as EnderecoInputCommand,
       });
       updateData.endereco = { id: endereco.id as string };
     }

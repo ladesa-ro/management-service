@@ -1,4 +1,4 @@
-import type { AccessContext } from "@/server/access-context";
+import type { IAccessContext } from "@/domain/abstractions";
 import type { EstagioCreateCommand, EstagioUpdateCommand } from "../commands";
 import type {
   EstagioFindOneQuery,
@@ -11,27 +11,27 @@ export const IEstagioRepository = Symbol("IEstagioRepository");
 
 export interface IEstagioRepository {
   findAll(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: EstagioListQuery | null,
     selection?: string[] | boolean | null,
   ): Promise<EstagioListQueryResult>;
 
   findById(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: EstagioFindOneQuery,
     selection?: string[] | boolean | null,
   ): Promise<EstagioFindOneQueryResult | null>;
 
   create(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: EstagioCreateCommand,
   ): Promise<EstagioFindOneQueryResult>;
 
   update(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     id: string,
     dto: EstagioUpdateCommand,
   ): Promise<EstagioFindOneQueryResult>;
 
-  delete(accessContext: AccessContext | null, id: string): Promise<void>;
+  delete(accessContext: IAccessContext | null, id: string): Promise<void>;
 }

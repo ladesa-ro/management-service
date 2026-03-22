@@ -1,4 +1,4 @@
-import type { AccessContext } from "@/server/access-context";
+import type { IAccessContext } from "@/domain/abstractions";
 import type { EmpresaCreateCommand, EmpresaUpdateCommand } from "../commands";
 import type {
   EmpresaFindOneQuery,
@@ -16,27 +16,27 @@ export const IEmpresaRepository = Symbol("IEmpresaRepository");
  */
 export interface IEmpresaRepository {
   findAll(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: EmpresaListQuery | null,
     selection?: string[] | boolean | null,
   ): Promise<EmpresaListQueryResult>;
 
   findById(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: EmpresaFindOneQuery,
     selection?: string[] | boolean | null,
   ): Promise<EmpresaFindOneQueryResult | null>;
 
   create(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: EmpresaCreateCommand,
   ): Promise<EmpresaFindOneQueryResult>;
 
   update(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     id: string,
     dto: EmpresaUpdateCommand,
   ): Promise<EmpresaFindOneQueryResult>;
 
-  delete(accessContext: AccessContext | null, id: string): Promise<void>;
+  delete(accessContext: IAccessContext | null, id: string): Promise<void>;
 }

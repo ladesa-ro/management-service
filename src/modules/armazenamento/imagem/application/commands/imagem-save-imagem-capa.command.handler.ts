@@ -1,10 +1,10 @@
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
   IImagemSaveImageCommandHandler,
   type IImagemSaveImagemCapaCommand,
   type IImagemSaveImagemCapaCommandHandler,
 } from "@/modules/armazenamento/imagem/domain/commands";
-import type { AccessContext } from "@/server/access-context";
 
 @DeclareImplementation()
 export class ImagemSaveImagemCapaCommandHandlerImpl implements IImagemSaveImagemCapaCommandHandler {
@@ -14,7 +14,7 @@ export class ImagemSaveImagemCapaCommandHandlerImpl implements IImagemSaveImagem
   ) {}
 
   async execute(
-    _accessContext: AccessContext | null,
+    _accessContext: IAccessContext | null,
     { file }: IImagemSaveImagemCapaCommand,
   ): Promise<{ imagem: { id: string } }> {
     return this.saveImageHandler.execute(null, {

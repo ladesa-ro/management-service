@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Param, Put } from "@nestjs/common";
 import { ApiForbiddenResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import {
@@ -10,7 +11,7 @@ import { IOfertaFormacaoPeriodoRepository } from "@/modules/ensino/oferta-formac
 import { OfertaFormacaoPeriodoEntity } from "@/modules/ensino/oferta-formacao-periodo/infrastructure.database/typeorm/oferta-formacao-periodo.typeorm.entity";
 import { IOfertaFormacaoPeriodoEtapaRepository } from "@/modules/ensino/oferta-formacao-periodo-etapa/domain/repositories";
 import { OfertaFormacaoPeriodoEtapaEntity } from "@/modules/ensino/oferta-formacao-periodo-etapa/infrastructure.database/typeorm/oferta-formacao-periodo-etapa.typeorm.entity";
-import { AccessContext, AccessContextHttp } from "@/server/access-context";
+import { AccessContextHttp } from "@/server/access-context";
 import {
   OfertaFormacaoPeriodoBulkReplaceInputRestDto,
   OfertaFormacaoPeriodoFindOneOutputRestDto,
@@ -33,7 +34,7 @@ export class OfertaFormacaoPeriodoRestController {
   @ApiOkResponse({ type: OfertaFormacaoPeriodoListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
-    @AccessContextHttp() _accessContext: AccessContext,
+    @AccessContextHttp() _accessContext: IAccessContext,
     @Param() parentParams: OfertaFormacaoPeriodoParentParamsRestDto,
   ): Promise<OfertaFormacaoPeriodoListOutputRestDto> {
     const periodos = await this.ofertaFormacaoPeriodoRepository.findByOfertaFormacaoId(
@@ -64,7 +65,7 @@ export class OfertaFormacaoPeriodoRestController {
   @ApiOkResponse({ type: OfertaFormacaoPeriodoListOutputRestDto })
   @ApiForbiddenResponse()
   async bulkReplace(
-    @AccessContextHttp() _accessContext: AccessContext,
+    @AccessContextHttp() _accessContext: IAccessContext,
     @Param() parentParams: OfertaFormacaoPeriodoParentParamsRestDto,
     @Body() dto: OfertaFormacaoPeriodoBulkReplaceInputRestDto,
   ): Promise<OfertaFormacaoPeriodoListOutputRestDto> {
@@ -86,7 +87,9 @@ export class OfertaFormacaoPeriodoRestController {
     for (const item of dto.periodos) {
       const periodoEntity = new OfertaFormacaoPeriodoEntity();
       periodoEntity.id = generateUuidV7();
-      periodoEntity.ofertaFormacao = { id: ofertaFormacaoId } as any;
+      periodoEntity.ofertaFormacao = {
+        id: ofertaFormacaoId,
+      } as typeof periodoEntity.ofertaFormacao;
       periodoEntity.numeroPeriodo = item.numeroPeriodo;
       await this.ofertaFormacaoPeriodoRepository.save(periodoEntity);
 
@@ -94,7 +97,9 @@ export class OfertaFormacaoPeriodoRestController {
         for (const etapaItem of item.etapas) {
           const etapaEntity = new OfertaFormacaoPeriodoEtapaEntity();
           etapaEntity.id = generateUuidV7();
-          etapaEntity.ofertaFormacaoPeriodo = { id: periodoEntity.id } as any;
+          etapaEntity.ofertaFormacaoPeriodo = {
+            id: periodoEntity.id,
+          } as typeof etapaEntity.ofertaFormacaoPeriodo;
           etapaEntity.nome = etapaItem.nome;
           etapaEntity.cor = etapaItem.cor ?? "#000000";
           await this.ofertaFormacaoPeriodoEtapaRepository.save(etapaEntity);

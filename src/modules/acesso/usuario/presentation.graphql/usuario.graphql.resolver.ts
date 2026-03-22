@@ -1,6 +1,7 @@
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
 import { ensureExists } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { graphqlExtractSelection } from "@/infrastructure.graphql";
 import {
@@ -24,7 +25,7 @@ import {
   UsuarioListQueryMetadata,
 } from "@/modules/acesso/usuario/domain/queries/usuario-list.query.handler.interface";
 import { Usuario } from "@/modules/acesso/usuario/domain/usuario";
-import { AccessContext, AccessContextGraphQL } from "@/server/access-context";
+import { AccessContextGraphQL } from "@/server/access-context";
 import {
   UsuarioCreateInputGraphQlDto,
   UsuarioFindOneOutputGraphQlDto,
@@ -51,7 +52,7 @@ export class UsuarioGraphqlResolver {
 
   @Query(() => UsuarioListOutputGraphQlDto, UsuarioListQueryMetadata.gqlMetadata)
   async findAll(
-    @AccessContextGraphQL() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: IAccessContext,
     @Args() dto: UsuarioListInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
   ): Promise<UsuarioListOutputGraphQlDto> {
@@ -67,7 +68,7 @@ export class UsuarioGraphqlResolver {
 
   @Query(() => UsuarioFindOneOutputGraphQlDto, UsuarioFindOneQueryMetadata.gqlMetadata)
   async findById(
-    @AccessContextGraphQL() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Info() info: GraphQLResolveInfo,
   ): Promise<UsuarioFindOneOutputGraphQlDto> {
@@ -79,30 +80,30 @@ export class UsuarioGraphqlResolver {
 
   @Mutation(() => UsuarioFindOneOutputGraphQlDto, UsuarioCreateCommandMetadata.gqlMetadata)
   async create(
-    @AccessContextGraphQL() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("input") dto: UsuarioCreateInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
   ): Promise<UsuarioFindOneOutputGraphQlDto> {
     const input = UsuarioGraphqlMapper.toCreateInput(dto);
-    const result = await this.createHandler.execute(accessContext, input as any);
+    const result = await this.createHandler.execute(accessContext, input);
     return UsuarioGraphqlMapper.toFindOneOutputDto(result);
   }
 
   @Mutation(() => UsuarioFindOneOutputGraphQlDto, UsuarioUpdateCommandMetadata.gqlMetadata)
   async update(
-    @AccessContextGraphQL() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Args("input") dto: UsuarioUpdateInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
   ): Promise<UsuarioFindOneOutputGraphQlDto> {
     const input = UsuarioGraphqlMapper.toUpdateInput({ id }, dto);
-    const result = await this.updateHandler.execute(accessContext, input as any);
+    const result = await this.updateHandler.execute(accessContext, input);
     return UsuarioGraphqlMapper.toFindOneOutputDto(result);
   }
 
   @Mutation(() => Boolean, UsuarioDeleteCommandMetadata.gqlMetadata)
   async deleteOneById(
-    @AccessContextGraphQL() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<boolean> {
     return this.deleteHandler.execute(accessContext, { id });

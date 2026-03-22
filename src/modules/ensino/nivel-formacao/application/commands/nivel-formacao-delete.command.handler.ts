@@ -1,9 +1,9 @@
 import { ensureExists } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { INivelFormacaoDeleteCommandHandler } from "@/modules/ensino/nivel-formacao/domain/commands/nivel-formacao-delete.command.handler.interface";
 import { NivelFormacao } from "@/modules/ensino/nivel-formacao/domain/nivel-formacao";
 import type { NivelFormacaoFindOneQuery } from "@/modules/ensino/nivel-formacao/domain/queries";
-import type { AccessContext } from "@/server/access-context";
 import { INivelFormacaoPermissionChecker } from "../../domain/authorization";
 import { INivelFormacaoRepository } from "../../domain/repositories";
 
@@ -17,7 +17,7 @@ export class NivelFormacaoDeleteCommandHandlerImpl implements INivelFormacaoDele
   ) {}
 
   async execute(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: NivelFormacaoFindOneQuery,
   ): Promise<boolean> {
     await this.permissionChecker.ensureCanDelete(accessContext, { dto }, dto.id);

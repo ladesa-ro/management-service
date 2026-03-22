@@ -1,5 +1,6 @@
 import { ensureExists } from "@/application/errors";
 import { getEntityImagemStreamableFile } from "@/application/helpers";
+import type { IAccessContext } from "@/domain/abstractions";
 import type { IStreamableFileResult } from "@/domain/abstractions/storage";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
@@ -12,7 +13,6 @@ import {
 } from "@/modules/armazenamento/imagem/domain/queries";
 import { Disciplina } from "@/modules/ensino/disciplina/domain/disciplina";
 import { IDisciplinaGetImagemCapaQueryHandler } from "@/modules/ensino/disciplina/domain/queries/disciplina-get-imagem-capa.query.handler.interface";
-import type { AccessContext } from "@/server/access-context";
 import type { DisciplinaFindOneQuery } from "../../domain/queries";
 import { IDisciplinaRepository } from "../../domain/repositories";
 
@@ -30,7 +30,7 @@ export class DisciplinaGetImagemCapaQueryHandlerImpl
   ) {}
 
   async execute(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     { id }: DisciplinaFindOneQuery,
   ): Promise<IStreamableFileResult> {
     const entity = await this.repository.findById(accessContext, { id });

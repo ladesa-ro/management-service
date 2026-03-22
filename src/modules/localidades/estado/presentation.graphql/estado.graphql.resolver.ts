@@ -1,6 +1,7 @@
 import { Args, Info, Int, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
 import { ensureExists } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { graphqlExtractSelection } from "@/infrastructure.graphql";
 import { Estado } from "@/modules/localidades/estado/domain/estado";
@@ -12,7 +13,7 @@ import {
   EstadoListQueryMetadata,
   IEstadoListQueryHandler,
 } from "@/modules/localidades/estado/domain/queries/estado-list.query.handler.interface";
-import { AccessContext, AccessContextGraphQL } from "@/server/access-context";
+import { AccessContextGraphQL } from "@/server/access-context";
 import {
   EstadoFindOneOutputGraphQlDto,
   EstadoListInputGraphQlDto,
@@ -31,7 +32,7 @@ export class EstadoGraphqlResolver {
 
   @Query(() => EstadoListOutputGraphQlDto, EstadoListQueryMetadata.gqlMetadata)
   async findAll(
-    @AccessContextGraphQL() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: IAccessContext,
     @Args() dto: EstadoListInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
   ): Promise<EstadoListOutputGraphQlDto> {
@@ -46,7 +47,7 @@ export class EstadoGraphqlResolver {
 
   @Query(() => EstadoFindOneOutputGraphQlDto, EstadoFindOneQueryMetadata.gqlMetadata)
   async findById(
-    @AccessContextGraphQL() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("id", { type: () => Int }) id: number,
     @Info() info: GraphQLResolveInfo,
   ): Promise<EstadoFindOneOutputGraphQlDto> {

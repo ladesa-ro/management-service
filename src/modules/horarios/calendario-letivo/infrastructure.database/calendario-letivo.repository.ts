@@ -1,4 +1,5 @@
 import { FilterOperator } from "nestjs-paginate";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
 import { paginateConfig } from "@/infrastructure.database/pagination/config/paginate-config";
@@ -80,7 +81,7 @@ export class CalendarioLetivoTypeOrmRepositoryAdapter implements ICalendarioLeti
   ) {}
 
   findAll(
-    accessContext: unknown,
+    accessContext: IAccessContext | null,
     dto: CalendarioLetivoListQuery | null = null,
     selection?: string[] | boolean | null,
   ) {
@@ -99,7 +100,7 @@ export class CalendarioLetivoTypeOrmRepositoryAdapter implements ICalendarioLeti
   }
 
   findById(
-    accessContext: unknown,
+    accessContext: IAccessContext | null,
     dto: CalendarioLetivoFindOneQuery,
     selection?: string[] | boolean | null,
   ) {
@@ -110,15 +111,19 @@ export class CalendarioLetivoTypeOrmRepositoryAdapter implements ICalendarioLeti
     >(this.appTypeormConnection, CalendarioLetivoEntity, config, dto, selection);
   }
 
-  findByIdSimple(accessContext: unknown, id: string, selection?: string[] | boolean | null) {
+  findByIdSimple(
+    accessContext: IAccessContext | null,
+    id: string,
+    selection?: string[] | boolean | null,
+  ) {
     return this.findById(accessContext, { id } as CalendarioLetivoFindOneQuery, selection);
   }
 
-  create(data: Record<string, any>) {
+  create(data: Record<string, unknown>) {
     return typeormCreate(this.appTypeormConnection, CalendarioLetivoEntity, data);
   }
 
-  update(id: string | number, data: Record<string, any>) {
+  update(id: string | number, data: Record<string, unknown>) {
     return typeormUpdate(this.appTypeormConnection, CalendarioLetivoEntity, id, data);
   }
 

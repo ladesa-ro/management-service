@@ -1,11 +1,12 @@
 import { Args, ID, Info, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
 import { ensureExists } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { graphqlExtractSelection } from "@/infrastructure.graphql";
 import { Endereco } from "@/modules/localidades/endereco/domain/endereco";
 import { IEnderecoFindOneQueryHandler } from "@/modules/localidades/endereco/domain/queries/endereco-find-one.query.handler.interface";
-import { AccessContext, AccessContextGraphQL } from "@/server/access-context";
+import { AccessContextGraphQL } from "@/server/access-context";
 import { EnderecoFindOneOutputGraphQlDto } from "./endereco.graphql.dto";
 import { EnderecoGraphqlMapper } from "./endereco.graphql.mapper";
 
@@ -18,7 +19,7 @@ export class EnderecoGraphqlResolver {
 
   @Query(() => EnderecoFindOneOutputGraphQlDto, { name: "enderecoFindById" })
   async findById(
-    @AccessContextGraphQL() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Info() info: GraphQLResolveInfo,
   ): Promise<EnderecoFindOneOutputGraphQlDto> {

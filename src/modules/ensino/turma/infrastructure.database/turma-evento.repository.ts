@@ -1,3 +1,4 @@
+import type { FindOptionsWhere } from "typeorm";
 import { ensureExists } from "@/application/errors";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
@@ -110,6 +111,6 @@ export class TurmaEventoTypeOrmRepositoryAdapter implements ITurmaEventoReposito
     await junctionRepo.delete({
       turma: { id: turmaId },
       calendarioAgendamento: { id: eventoId },
-    } as any);
+    } as FindOptionsWhere<CalendarioAgendamentoTurmaEntity>);
   }
 }

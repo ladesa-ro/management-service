@@ -7,6 +7,27 @@ import type {
   IRelatorioRepository,
 } from "../domain/repositories";
 
+/** Represents the hydrated shape of DiarioProfessorEntity after leftJoinAndSelect of nested relations. */
+interface HydratedDiarioProfessor {
+  id: string;
+  diario?: {
+    id: string;
+    ativo: boolean;
+    disciplina?: { id: string; nome: string };
+    turma?: {
+      id: string;
+      nome: string | null;
+      periodo: string;
+      curso?: { id: string; nome: string };
+    };
+    calendarioLetivo?: { id: string; nome: string; ano: number };
+  };
+  perfil?: {
+    id: string;
+    usuario?: { nome: string | null };
+  };
+}
+
 // cross-module: uses TypeORM directly for join query (DiarioProfessorEntity - diario module has no repository to inject)
 @DeclareImplementation()
 export class RelatorioTypeOrmRepositoryAdapter implements IRelatorioRepository {
@@ -48,21 +69,22 @@ export class RelatorioTypeOrmRepositoryAdapter implements IRelatorioRepository {
 
     const entries = await qb.getMany();
 
-    return entries.map((dp) => {
+    return entries.map((rawDp) => {
+      const dp = rawDp as unknown as HydratedDiarioProfessor;
       const diario = dp.diario;
       return {
         diarioId: diario?.id,
-        professorNome: (dp.perfil as any)?.usuario?.nome ?? null,
-        perfilId: (dp.perfil as any)?.id ?? null,
-        disciplinaNome: (diario?.disciplina as any)?.nome ?? null,
-        disciplinaId: (diario?.disciplina as any)?.id ?? null,
-        turmaPeriodo: (diario?.turma as any)?.periodo ?? null,
-        turmaNome: (diario?.turma as any)?.nome ?? null,
-        turmaId: (diario?.turma as any)?.id ?? null,
-        cursoNome: (diario?.turma as any)?.curso?.nome ?? null,
-        cursoId: (diario?.turma as any)?.curso?.id ?? null,
-        calendarioLetivoNome: (diario?.calendarioLetivo as any)?.nome ?? null,
-        calendarioLetivoAno: (diario?.calendarioLetivo as any)?.ano ?? null,
+        professorNome: dp.perfil?.usuario?.nome ?? null,
+        perfilId: dp.perfil?.id ?? null,
+        disciplinaNome: diario?.disciplina?.nome ?? null,
+        disciplinaId: diario?.disciplina?.id ?? null,
+        turmaPeriodo: diario?.turma?.periodo ?? null,
+        turmaNome: diario?.turma?.nome ?? null,
+        turmaId: diario?.turma?.id ?? null,
+        cursoNome: diario?.turma?.curso?.nome ?? null,
+        cursoId: diario?.turma?.curso?.id ?? null,
+        calendarioLetivoNome: diario?.calendarioLetivo?.nome ?? null,
+        calendarioLetivoAno: diario?.calendarioLetivo?.ano ?? null,
         ativo: diario?.ativo ?? false,
       };
     });

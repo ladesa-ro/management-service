@@ -1,3 +1,4 @@
+export * from "./access-context.interface";
 export * from "./entities";
 export * from "./fields";
 export * from "./identity-provider";

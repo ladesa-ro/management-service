@@ -1,6 +1,6 @@
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { IDiarioProfessorListQueryHandler } from "@/modules/ensino/diario/domain/queries/diario-professor-list.query.handler.interface";
-import type { AccessContext } from "@/server/access-context";
 import type {
   DiarioProfessorListQuery,
   DiarioProfessorListQueryResult,
@@ -15,7 +15,7 @@ export class DiarioProfessorListQueryHandlerImpl implements IDiarioProfessorList
   ) {}
 
   async execute(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: DiarioProfessorListQuery | null,
   ): Promise<DiarioProfessorListQueryResult> {
     return this.repository.findAll(accessContext, dto, dto?.selection);

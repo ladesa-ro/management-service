@@ -54,7 +54,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
   }
 
   private handleUnknownException(exception: unknown, request: Request, response: Response): void {
-    const correlationId = (request as any).correlationId as string | undefined;
+    const correlationId = request.correlationId;
 
     this.logger.error(
       "Unhandled exception",

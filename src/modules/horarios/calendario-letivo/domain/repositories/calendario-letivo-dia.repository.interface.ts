@@ -1,4 +1,5 @@
 import type {
+  IAccessContext,
   IRepositoryCreate,
   IRepositoryFindAll,
   IRepositoryFindById,
@@ -6,7 +7,6 @@ import type {
   IRepositorySoftDelete,
   IRepositoryUpdate,
 } from "@/domain/abstractions";
-import type { AccessContext } from "@/server/access-context";
 import type { ICalendarioLetivoDia } from "../calendario-letivo-dia";
 import type {
   CalendarioLetivoDiaFindOneQueryResult,
@@ -23,7 +23,7 @@ export type ICalendarioLetivoDiaRepository =
     IRepositoryUpdate<ICalendarioLetivoDia> &
     IRepositorySoftDelete & {
       findByCalendarioAndDate(
-        accessContext: AccessContext | null,
+        accessContext: IAccessContext | null,
         calendarioLetivoId: string,
         data: string,
         selection?: string[],

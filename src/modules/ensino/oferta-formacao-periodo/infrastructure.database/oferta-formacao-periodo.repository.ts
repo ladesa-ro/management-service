@@ -1,3 +1,4 @@
+import type { FindOptionsWhere } from "typeorm";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import type { IOfertaFormacaoPeriodoRepository } from "../domain/repositories";
@@ -18,13 +19,17 @@ export class OfertaFormacaoPeriodoTypeOrmRepositoryAdapter
 
   async findByOfertaFormacaoId(ofertaFormacaoId: string): Promise<OfertaFormacaoPeriodoEntity[]> {
     return this.repository.find({
-      where: { ofertaFormacao: { id: ofertaFormacaoId } } as any,
+      where: {
+        ofertaFormacao: { id: ofertaFormacaoId },
+      } as FindOptionsWhere<OfertaFormacaoPeriodoEntity>,
       order: { numeroPeriodo: "ASC" },
     });
   }
 
   async deleteByOfertaFormacaoId(ofertaFormacaoId: string): Promise<void> {
-    await this.repository.delete({ ofertaFormacao: { id: ofertaFormacaoId } } as any);
+    await this.repository.delete({
+      ofertaFormacao: { id: ofertaFormacaoId },
+    } as FindOptionsWhere<OfertaFormacaoPeriodoEntity>);
   }
 
   async save(entity: OfertaFormacaoPeriodoEntity): Promise<OfertaFormacaoPeriodoEntity> {

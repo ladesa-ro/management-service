@@ -1,12 +1,13 @@
 import { Body, Controller, Get, Param, Put } from "@nestjs/common";
 import { ApiForbiddenResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import {
   CursoDisciplinasPorPeriodoBulkReplaceCommandMetadata,
   CursoDisciplinasPorPeriodoFindAllQueryMetadata,
 } from "@/modules/ensino/curso/domain/queries/curso-periodo-disciplina.query.metadata";
-import { AccessContext, AccessContextHttp } from "@/server/access-context";
+import { AccessContextHttp } from "@/server/access-context";
 import { ICursoPeriodoDisciplinaRepository } from "../domain/repositories";
 import {
   CursoPeriodoDisciplinaBulkReplaceInputRestDto,
@@ -28,7 +29,7 @@ export class CursoPeriodoDisciplinaRestController {
   @ApiOkResponse({ type: CursoPeriodoDisciplinaListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
-    @AccessContextHttp() _accessContext: AccessContext,
+    @AccessContextHttp() _accessContext: IAccessContext,
     @Param() parentParams: CursoPeriodoDisciplinaParentParamsRestDto,
   ): Promise<CursoPeriodoDisciplinaListOutputRestDto> {
     const entries = await this.cursoPeriodoDisciplinaRepository.findByCursoId(parentParams.cursoId);
@@ -60,7 +61,7 @@ export class CursoPeriodoDisciplinaRestController {
   @ApiOkResponse({ type: CursoPeriodoDisciplinaListOutputRestDto })
   @ApiForbiddenResponse()
   async bulkReplace(
-    @AccessContextHttp() _accessContext: AccessContext,
+    @AccessContextHttp() _accessContext: IAccessContext,
     @Param() parentParams: CursoPeriodoDisciplinaParentParamsRestDto,
     @Body() dto: CursoPeriodoDisciplinaBulkReplaceInputRestDto,
   ): Promise<CursoPeriodoDisciplinaListOutputRestDto> {

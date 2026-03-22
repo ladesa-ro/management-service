@@ -1,23 +1,22 @@
-import type { IRepositoryCreate, IRepositoryUpdate } from "@/domain/abstractions";
-import type { AccessContext } from "@/server/access-context";
+import type { IAccessContext, IRepositoryCreate, IRepositoryUpdate } from "@/domain/abstractions";
 import type { PerfilFindOneQueryResult, PerfilListQuery, PerfilListQueryResult } from "../queries";
 
 export const IPerfilRepository = Symbol("IPerfilRepository");
 
-export type IPerfilRepository = IRepositoryCreate<Record<string, any>> &
-  IRepositoryUpdate<Record<string, any>> & {
+export type IPerfilRepository = IRepositoryCreate<Record<string, unknown>> &
+  IRepositoryUpdate<Record<string, unknown>> & {
     findAll(
-      accessContext: AccessContext | null,
+      accessContext: IAccessContext | null,
       dto: PerfilListQuery | null,
     ): Promise<PerfilListQueryResult>;
 
     findById(
-      accessContext: AccessContext | null,
+      accessContext: IAccessContext | null,
       dto: { id: string | number },
     ): Promise<PerfilFindOneQueryResult | null>;
 
     findAllActiveByUsuarioId(
-      accessContext: AccessContext | null,
+      accessContext: IAccessContext | null,
       usuarioId: string,
     ): Promise<PerfilFindOneQueryResult[]>;
 

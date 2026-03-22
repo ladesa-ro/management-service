@@ -1,3 +1,4 @@
+import type { FindOptionsWhere } from "typeorm";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import type { ICursoPeriodoDisciplinaRepository } from "../domain/repositories";
@@ -18,14 +19,16 @@ export class CursoPeriodoDisciplinaTypeOrmRepositoryAdapter
 
   async findByCursoId(cursoId: string): Promise<CursoPeriodoDisciplinaEntity[]> {
     return this.repository.find({
-      where: { curso: { id: cursoId } } as any,
+      where: { curso: { id: cursoId } } as FindOptionsWhere<CursoPeriodoDisciplinaEntity>,
       relations: ["disciplina"],
       order: { numeroPeriodo: "ASC" },
     });
   }
 
   async deleteByCursoId(cursoId: string): Promise<void> {
-    await this.repository.delete({ curso: { id: cursoId } } as any);
+    await this.repository.delete({
+      curso: { id: cursoId },
+    } as FindOptionsWhere<CursoPeriodoDisciplinaEntity>);
   }
 
   async save(entity: CursoPeriodoDisciplinaEntity): Promise<CursoPeriodoDisciplinaEntity> {

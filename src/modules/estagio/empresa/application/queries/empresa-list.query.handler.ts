@@ -1,6 +1,6 @@
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { IEmpresaListQueryHandler } from "@/modules/estagio/empresa/domain/queries/empresa-list.query.handler.interface";
-import type { AccessContext } from "@/server/access-context";
 import type { EmpresaListQuery, EmpresaListQueryResult } from "../../domain/queries";
 import { IEmpresaRepository } from "../../domain/repositories";
 
@@ -12,7 +12,7 @@ export class EmpresaListQueryHandlerImpl implements IEmpresaListQueryHandler {
   ) {}
 
   async execute(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: EmpresaListQuery | null,
   ): Promise<EmpresaListQueryResult> {
     return this.repository.findAll(accessContext, dto, dto?.selection);

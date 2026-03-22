@@ -1,8 +1,1 @@
-import type { IRequestActor } from "@/domain/abstractions/request-actor";
-
-/**
- * Interface do AccessContext.
- */
-export interface IAccessContext {
-  readonly requestActor: IRequestActor | null;
-}
+export type { IAccessContext } from "@/domain/abstractions/access-context.interface";

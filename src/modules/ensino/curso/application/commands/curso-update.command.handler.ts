@@ -1,6 +1,6 @@
 import { has } from "lodash";
 import { ensureExists } from "@/application/errors";
-import type { PersistInput } from "@/domain/abstractions";
+import type { IAccessContext, PersistInput } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { Campus } from "@/modules/ambientes/campus/domain/campus";
 import { ICampusFindOneQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-find-one.query.handler.interface";
@@ -11,7 +11,6 @@ import { Curso } from "@/modules/ensino/curso/domain/curso";
 import type { CursoFindOneQuery } from "@/modules/ensino/curso/domain/queries";
 import { OfertaFormacao } from "@/modules/ensino/oferta-formacao/domain/oferta-formacao";
 import { IOfertaFormacaoFindOneQueryHandler } from "@/modules/ensino/oferta-formacao/domain/queries/oferta-formacao-find-one.query.handler.interface";
-import type { AccessContext } from "@/server/access-context";
 import { ICursoPermissionChecker } from "../../domain/authorization";
 import type { CursoFindOneQueryResult } from "../../domain/queries";
 import { ICursoRepository } from "../../domain/repositories";
@@ -30,7 +29,7 @@ export class CursoUpdateCommandHandlerImpl implements ICursoUpdateCommandHandler
   ) {}
 
   async execute(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: CursoFindOneQuery & CursoUpdateCommand,
   ): Promise<CursoFindOneQueryResult> {
     const current = await this.repository.findById(accessContext, { id: dto.id });

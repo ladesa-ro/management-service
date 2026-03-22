@@ -1,6 +1,7 @@
 import { Args, ID, Info, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
 import { ensureExists } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { graphqlExtractSelection } from "@/infrastructure.graphql";
 import { ImagemArquivo } from "@/modules/armazenamento/imagem-arquivo/domain/imagem-arquivo";
@@ -12,7 +13,7 @@ import {
   IImagemArquivoListQueryHandler,
   ImagemArquivoListQueryMetadata,
 } from "@/modules/armazenamento/imagem-arquivo/domain/queries/imagem-arquivo-list.query.handler.interface";
-import { AccessContext, AccessContextGraphQL } from "@/server/access-context";
+import { AccessContextGraphQL } from "@/server/access-context";
 import {
   ImagemArquivoFindOneOutputGraphQlDto,
   ImagemArquivoListInputGraphQlDto,
@@ -31,7 +32,7 @@ export class ImagemArquivoGraphqlResolver {
 
   @Query(() => ImagemArquivoListOutputGraphQlDto, ImagemArquivoListQueryMetadata.gqlMetadata)
   async findAll(
-    @AccessContextGraphQL() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: IAccessContext,
     @Args() dto: ImagemArquivoListInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
   ): Promise<ImagemArquivoListOutputGraphQlDto> {
@@ -46,7 +47,7 @@ export class ImagemArquivoGraphqlResolver {
 
   @Query(() => ImagemArquivoFindOneOutputGraphQlDto, ImagemArquivoFindOneQueryMetadata.gqlMetadata)
   async findById(
-    @AccessContextGraphQL() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Info() info: GraphQLResolveInfo,
   ): Promise<ImagemArquivoFindOneOutputGraphQlDto> {

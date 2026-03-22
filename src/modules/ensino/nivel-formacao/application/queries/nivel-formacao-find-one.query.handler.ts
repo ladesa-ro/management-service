@@ -1,6 +1,6 @@
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { INivelFormacaoFindOneQueryHandler } from "@/modules/ensino/nivel-formacao/domain/queries/nivel-formacao-find-one.query.handler.interface";
-import type { AccessContext } from "@/server/access-context";
 import type {
   NivelFormacaoFindOneQuery,
   NivelFormacaoFindOneQueryResult,
@@ -15,7 +15,7 @@ export class NivelFormacaoFindOneQueryHandlerImpl implements INivelFormacaoFindO
   ) {}
 
   async execute(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: NivelFormacaoFindOneQuery,
   ): Promise<NivelFormacaoFindOneQueryResult | null> {
     return this.repository.findById(accessContext, dto, dto?.selection);

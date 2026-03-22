@@ -7,6 +7,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import {
   IPerfilSetVinculosCommandHandler,
@@ -21,7 +22,7 @@ import {
   IPerfilListQueryHandler,
   PerfilListQueryMetadata,
 } from "@/modules/acesso/perfil/domain/queries/perfil-list.query.handler.interface";
-import { AccessContext, AccessContextHttp } from "@/server/access-context";
+import { AccessContextHttp } from "@/server/access-context";
 import {
   PerfilFindOneInputRestDto,
   PerfilFindOneOutputRestDto,
@@ -49,7 +50,7 @@ export class PerfilRestController {
   @ApiOkResponse({ type: PerfilListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() parentParams: PerfilParentParamsRestDto,
     @Query() dto: PerfilListInputRestDto,
   ): Promise<PerfilListOutputRestDto> {
@@ -65,7 +66,7 @@ export class PerfilRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async findById(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: PerfilFindOneInputRestDto,
   ): Promise<PerfilFindOneOutputRestDto | null> {
     const input = PerfilRestMapper.toFindOneInput(params);
@@ -79,7 +80,7 @@ export class PerfilRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async ensinoById(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: PerfilFindOneInputRestDto,
   ): Promise<PerfilFindOneOutputRestDto | null> {
     const input = PerfilRestMapper.toFindOneInput(params);
@@ -95,7 +96,7 @@ export class PerfilRestController {
   })
   @ApiForbiddenResponse()
   async setVinculos(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() parentParams: PerfilParentParamsRestDto,
     @Body() dto: PerfilSetVinculosInputRestDto,
   ): Promise<PerfilListOutputRestDto> {

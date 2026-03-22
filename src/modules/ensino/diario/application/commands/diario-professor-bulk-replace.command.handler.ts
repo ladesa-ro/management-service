@@ -1,8 +1,11 @@
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import type { AccessContext } from "@/server/access-context";
 import type { DiarioProfessorBulkReplaceCommand } from "../../domain/commands/diario-professor-bulk-replace.command";
 import { IDiarioProfessorBulkReplaceCommandHandler } from "../../domain/commands/diario-professor-bulk-replace.command.handler.interface";
-import type { DiarioProfessorListQueryResult } from "../../domain/queries";
+import type {
+  DiarioProfessorListQuery,
+  DiarioProfessorListQueryResult,
+} from "../../domain/queries";
 import { IDiarioProfessorRepository } from "../../domain/repositories";
 
 @DeclareImplementation()
@@ -15,7 +18,7 @@ export class DiarioProfessorBulkReplaceCommandHandlerImpl
   ) {}
 
   async execute(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: DiarioProfessorBulkReplaceCommand,
   ): Promise<DiarioProfessorListQueryResult> {
     await this.repository.softDeleteByDiarioId(dto.diarioId);
@@ -28,7 +31,7 @@ export class DiarioProfessorBulkReplaceCommandHandlerImpl
       })),
     );
 
-    const listQuery = { "filter.diario.id": [dto.diarioId] } as any;
+    const listQuery: DiarioProfessorListQuery = { "filter.diario.id": [dto.diarioId] };
     return this.repository.findAll(accessContext, listQuery);
   }
 }

@@ -1,8 +1,11 @@
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import type { AccessContext } from "@/server/access-context";
 import type { OfertaFormacaoNivelFormacaoBulkReplaceCommand } from "../../domain/commands/oferta-formacao-nivel-formacao-bulk-replace.command";
 import { IOfertaFormacaoNivelFormacaoBulkReplaceCommandHandler } from "../../domain/commands/oferta-formacao-nivel-formacao-bulk-replace.command.handler.interface";
-import type { OfertaFormacaoNivelFormacaoListQueryResult } from "../../domain/queries";
+import type {
+  OfertaFormacaoNivelFormacaoListQuery,
+  OfertaFormacaoNivelFormacaoListQueryResult,
+} from "../../domain/queries";
 import { IOfertaFormacaoNivelFormacaoRepository } from "../../domain/repositories";
 
 @DeclareImplementation()
@@ -15,7 +18,7 @@ export class OfertaFormacaoNivelFormacaoBulkReplaceCommandHandlerImpl
   ) {}
 
   async execute(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: OfertaFormacaoNivelFormacaoBulkReplaceCommand,
   ): Promise<OfertaFormacaoNivelFormacaoListQueryResult> {
     await this.repository.softDeleteByOfertaFormacaoId(dto.ofertaFormacaoId);
@@ -27,7 +30,9 @@ export class OfertaFormacaoNivelFormacaoBulkReplaceCommandHandlerImpl
       })),
     );
 
-    const listQuery = { "filter.ofertaFormacao.id": [dto.ofertaFormacaoId] } as any;
+    const listQuery: OfertaFormacaoNivelFormacaoListQuery = {
+      "filter.ofertaFormacao.id": [dto.ofertaFormacaoId],
+    };
     return this.repository.findAll(accessContext, listQuery);
   }
 }

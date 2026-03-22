@@ -24,6 +24,7 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { ensureExists } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import {
   IUsuarioCreateCommandHandler,
@@ -77,7 +78,7 @@ import {
   HorarioSemanalOutputRestDto,
   HorarioSemanalQueryParamsRestDto,
 } from "@/modules/horarios/horario-consulta/presentation.rest";
-import { AccessContext, AccessContextHttp } from "@/server/access-context";
+import { AccessContextHttp } from "@/server/access-context";
 import {
   UsuarioCreateInputRestDto,
   UsuarioEnsinoOutputRestDto,
@@ -124,7 +125,7 @@ export class UsuarioRestController {
   @ApiOkResponse({ type: UsuarioListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Query() dto: UsuarioListInputRestDto,
   ): Promise<UsuarioListOutputRestDto> {
     const input = UsuarioRestMapper.toListInput(dto);
@@ -138,7 +139,7 @@ export class UsuarioRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async findById(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: UsuarioFindOneInputRestDto,
   ): Promise<UsuarioFindOneOutputRestDto> {
     const input = UsuarioRestMapper.toFindOneInput(params);
@@ -153,7 +154,7 @@ export class UsuarioRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async ensinoById(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: UsuarioFindOneInputRestDto,
   ): Promise<UsuarioEnsinoOutputRestDto> {
     const input = UsuarioRestMapper.toFindOneInput(params);
@@ -166,7 +167,7 @@ export class UsuarioRestController {
   @ApiCreatedResponse({ type: UsuarioFindOneOutputRestDto })
   @ApiForbiddenResponse()
   async create(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Body() dto: UsuarioCreateInputRestDto,
   ): Promise<UsuarioFindOneOutputRestDto> {
     const input = UsuarioRestMapper.toCreateInput(dto);
@@ -180,7 +181,7 @@ export class UsuarioRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async update(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: UsuarioFindOneInputRestDto,
     @Body() dto: UsuarioUpdateInputRestDto,
   ): Promise<UsuarioFindOneOutputRestDto> {
@@ -195,7 +196,7 @@ export class UsuarioRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async horarioSemanal(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: UsuarioFindOneInputRestDto,
     @Query() queryParams: HorarioSemanalQueryParamsRestDto,
   ): Promise<HorarioSemanalOutputRestDto> {
@@ -211,7 +212,7 @@ export class UsuarioRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async disponibilidade(
-    @AccessContextHttp() _accessContext: AccessContext,
+    @AccessContextHttp() _accessContext: IAccessContext,
     @Param() params: UsuarioFindOneInputRestDto,
     @Query("campusId") campusId: string,
   ): Promise<Record<string, unknown>> {
@@ -236,7 +237,7 @@ export class UsuarioRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async setDisponibilidade(
-    @AccessContextHttp() _accessContext: AccessContext,
+    @AccessContextHttp() _accessContext: IAccessContext,
     @Param() params: UsuarioFindOneInputRestDto,
     @Query("campusId") campusId: string,
     @Body() body: {
@@ -271,7 +272,7 @@ export class UsuarioRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async getImagemCapa(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: UsuarioFindOneInputRestDto,
   ) {
     const result = await this.getImagemCapaHandler.execute(accessContext, { id: params.id });
@@ -298,7 +299,7 @@ export class UsuarioRestController {
   @ApiNotFoundResponse()
   @UseInterceptors(FileInterceptor("file"))
   async updateImagemCapa(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: UsuarioFindOneInputRestDto,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<boolean> {
@@ -311,7 +312,7 @@ export class UsuarioRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async getImagemPerfil(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: UsuarioFindOneInputRestDto,
   ) {
     const result = await this.getImagemPerfilHandler.execute(accessContext, { id: params.id });
@@ -338,7 +339,7 @@ export class UsuarioRestController {
   @ApiNotFoundResponse()
   @UseInterceptors(FileInterceptor("file"))
   async updateImagemPerfil(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: UsuarioFindOneInputRestDto,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<boolean> {
@@ -351,7 +352,7 @@ export class UsuarioRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async deleteOneById(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: UsuarioFindOneInputRestDto,
   ): Promise<boolean> {
     const input = UsuarioRestMapper.toFindOneInput(params);

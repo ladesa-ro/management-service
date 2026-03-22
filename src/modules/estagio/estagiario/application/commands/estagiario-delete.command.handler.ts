@@ -1,8 +1,8 @@
 import { InternalError, ResourceNotFoundError } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { IEstagiarioDeleteCommandHandler } from "@/modules/estagio/estagiario/domain/commands/estagiario-delete.command.handler.interface";
 import type { EstagiarioFindOneQuery } from "@/modules/estagio/estagiario/domain/queries";
-import type { AccessContext } from "@/server/access-context";
 import { IEstagiarioRepository } from "../../domain/repositories";
 
 @DeclareImplementation()
@@ -13,7 +13,7 @@ export class EstagiarioDeleteCommandHandlerImpl implements IEstagiarioDeleteComm
   ) {}
 
   async execute(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     { id }: EstagiarioFindOneQuery,
   ): Promise<void> {
     try {

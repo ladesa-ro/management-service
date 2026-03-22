@@ -4,6 +4,11 @@ import type { IEstado } from "@/modules/localidades/estado";
 import { zodValidate } from "@/shared/validation/index";
 import { CidadeCreateSchema, CidadeSchema, CidadeUpdateSchema } from "./cidade.schemas";
 
+interface ICidadeLoadInput {
+  estado?: IEstado;
+  [key: string]: unknown;
+}
+
 export type ICidade = z.infer<typeof CidadeSchema> & { estado: IEstado };
 
 export class Cidade {
@@ -26,7 +31,7 @@ export class Cidade {
     return instance;
   }
 
-  static load(dados: unknown): Cidade {
+  static load(dados: ICidadeLoadInput): Cidade {
     const parsed = zodValidate(Cidade.entityName, CidadeSchema, dados);
 
     const instance = new Cidade();
@@ -34,8 +39,8 @@ export class Cidade {
     instance.id = parsed.id;
     instance.nome = parsed.nome;
 
-    if ((dados as any)?.estado !== undefined) {
-      instance.estado = (dados as any).estado;
+    if (dados.estado !== undefined) {
+      instance.estado = dados.estado;
     }
 
     return instance;

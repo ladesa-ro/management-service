@@ -1,4 +1,4 @@
-import type { AccessContext } from "@/server/access-context";
+import type { IAccessContext } from "@/domain/abstractions";
 
 /**
  * Contrato granular para busca por ID com DTO estruturado. Aceita selection para projeção parcial.
@@ -6,7 +6,7 @@ import type { AccessContext } from "@/server/access-context";
  */
 export interface IRepositoryFindById<FindOneOutputDto> {
   findById(
-    accessContext: AccessContext | null,
+    accessContext: IAccessContext | null,
     dto: { id: string | number },
     selection?: string[] | boolean | null,
   ): Promise<FindOneOutputDto | null>;

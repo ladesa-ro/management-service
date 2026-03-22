@@ -1,3 +1,4 @@
+import type { FindOptionsWhere } from "typeorm";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import type { ITurmaHorarioAulaRepository } from "../domain/repositories";
@@ -22,7 +23,9 @@ export class TurmaHorarioAulaTypeOrmRepositoryAdapter implements ITurmaHorarioAu
   }
 
   async deleteByTurmaId(turmaId: string): Promise<void> {
-    await this.repository.delete({ turma: { id: turmaId } } as any);
+    await this.repository.delete({
+      turma: { id: turmaId },
+    } as FindOptionsWhere<TurmaHorarioAulaEntity>);
   }
 
   async save(entity: TurmaHorarioAulaEntity): Promise<TurmaHorarioAulaEntity> {

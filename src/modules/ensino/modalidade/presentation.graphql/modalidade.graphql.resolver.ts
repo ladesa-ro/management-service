@@ -1,6 +1,7 @@
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
 import { ensureExists } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { graphqlExtractSelection } from "@/infrastructure.graphql";
 import {
@@ -24,7 +25,7 @@ import {
   IModalidadeListQueryHandler,
   ModalidadeListQueryMetadata,
 } from "@/modules/ensino/modalidade/domain/queries/modalidade-list.query.handler.interface";
-import { AccessContext, AccessContextGraphQL } from "@/server/access-context";
+import { AccessContextGraphQL } from "@/server/access-context";
 import {
   ModalidadeCreateInputGraphQlDto,
   ModalidadeFindOneOutputGraphQlDto,
@@ -51,7 +52,7 @@ export class ModalidadeGraphqlResolver {
 
   @Query(() => ModalidadeListOutputGraphQlDto, ModalidadeListQueryMetadata.gqlMetadata)
   async findAll(
-    @AccessContextGraphQL() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: IAccessContext,
     @Args() dto: ModalidadeListInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
   ): Promise<ModalidadeListOutputGraphQlDto> {
@@ -66,7 +67,7 @@ export class ModalidadeGraphqlResolver {
 
   @Query(() => ModalidadeFindOneOutputGraphQlDto, ModalidadeFindOneQueryMetadata.gqlMetadata)
   async findById(
-    @AccessContextGraphQL() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Info() info: GraphQLResolveInfo,
   ): Promise<ModalidadeFindOneOutputGraphQlDto> {
@@ -78,7 +79,7 @@ export class ModalidadeGraphqlResolver {
 
   @Mutation(() => ModalidadeFindOneOutputGraphQlDto, ModalidadeCreateCommandMetadata.gqlMetadata)
   async create(
-    @AccessContextGraphQL() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("input") dto: ModalidadeCreateInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
   ): Promise<ModalidadeFindOneOutputGraphQlDto> {
@@ -89,7 +90,7 @@ export class ModalidadeGraphqlResolver {
 
   @Mutation(() => ModalidadeFindOneOutputGraphQlDto, ModalidadeUpdateCommandMetadata.gqlMetadata)
   async update(
-    @AccessContextGraphQL() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Args("input") dto: ModalidadeUpdateInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
@@ -101,7 +102,7 @@ export class ModalidadeGraphqlResolver {
 
   @Mutation(() => Boolean, ModalidadeDeleteCommandMetadata.gqlMetadata)
   async deleteOneById(
-    @AccessContextGraphQL() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<boolean> {
     return this.deleteHandler.execute(accessContext, { id });

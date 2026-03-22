@@ -1,10 +1,10 @@
+import type { IAccessContext } from "@/domain/abstractions";
 import {
   type IMessageBrokerService,
   IMessageBrokerService as IMessageBrokerServiceToken,
 } from "@/domain/abstractions/message-broker";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
-import type { AccessContext } from "@/server/access-context";
 import type {
   IGerarHorarioCreateCommand,
   IGerarHorarioCreateCommandHandler,
@@ -29,7 +29,7 @@ export class GerarHorarioCreateCommandHandlerImpl implements IGerarHorarioCreate
   ) {}
 
   async execute(
-    _accessContext: AccessContext | null,
+    _accessContext: IAccessContext | null,
     command: IGerarHorarioCreateCommand,
   ): Promise<IGerarHorario> {
     const entity: IGerarHorario = {

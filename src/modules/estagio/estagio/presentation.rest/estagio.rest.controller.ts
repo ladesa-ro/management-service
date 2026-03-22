@@ -9,6 +9,7 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { ensureExists } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, IContainer } from "@/domain/dependency-injection";
 import {
   EstagioCreateCommandMetadata,
@@ -31,7 +32,7 @@ import {
   EstagioListQueryMetadata,
   IEstagioListQueryHandler,
 } from "@/modules/estagio/estagio/domain/queries/estagio-list.query.handler.interface";
-import { AccessContext, AccessContextHttp } from "@/server/access-context";
+import { AccessContextHttp } from "@/server/access-context";
 import {
   EstagioCreateInputRestDto,
   EstagioFindOneInputRestDto,
@@ -52,7 +53,7 @@ export class EstagioRestController {
   @ApiOkResponse({ type: EstagioListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Query() dto: EstagioListInputRestDto,
   ): Promise<EstagioListOutputRestDto> {
     const listHandler = this.container.get<IEstagioListQueryHandler>(IEstagioListQueryHandler);
@@ -67,7 +68,7 @@ export class EstagioRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async findById(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: EstagioFindOneInputRestDto,
   ): Promise<EstagioFindOneOutputRestDto> {
     const findOneHandler = this.container.get<IEstagioFindOneQueryHandler>(
@@ -85,7 +86,7 @@ export class EstagioRestController {
   @ApiCreatedResponse({ type: EstagioFindOneOutputRestDto })
   @ApiForbiddenResponse()
   async create(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Body() dto: EstagioCreateInputRestDto,
   ): Promise<EstagioFindOneOutputRestDto> {
     const createHandler = this.container.get<IEstagioCreateCommandHandler>(
@@ -103,7 +104,7 @@ export class EstagioRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async update(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: EstagioFindOneInputRestDto,
     @Body() dto: EstagioUpdateInputRestDto,
   ): Promise<EstagioFindOneOutputRestDto> {
@@ -121,7 +122,7 @@ export class EstagioRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async delete(
-    @AccessContextHttp() accessContext: AccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: EstagioFindOneInputRestDto,
   ): Promise<{ message: string }> {
     const deleteHandler = this.container.get<IEstagioDeleteCommandHandler>(
