@@ -3,8 +3,8 @@ import type { IdUuid, ScalarDateTimeString } from "@/domain/abstractions/scalars
 import { zodValidate } from "@/shared/validation/index";
 import type { CalendarioLetivo, ICalendarioLetivo } from "./calendario-letivo";
 import {
-  calendarioLetivoDiaSchema,
-  calendarioLetivoDiaUpdateSchema,
+  CalendarioLetivoDiaSchema,
+  CalendarioLetivoDiaUpdateSchema,
 } from "./calendario-letivo-dia.schemas";
 
 export const TIPO_CALENDARIO_LETIVO_DIA_VALUES = [
@@ -71,7 +71,7 @@ export class CalendarioLetivoDia implements IEntityBaseUuid {
   update(dados: unknown): void {
     const parsed = zodValidate(
       CalendarioLetivoDia.entityName,
-      calendarioLetivoDiaUpdateSchema,
+      CalendarioLetivoDiaUpdateSchema,
       dados,
     );
 
@@ -83,6 +83,6 @@ export class CalendarioLetivoDia implements IEntityBaseUuid {
     if (parsed.extraCurricular !== undefined) this.extraCurricular = parsed.extraCurricular;
 
     this.dateUpdated = new Date().toISOString();
-    zodValidate(CalendarioLetivoDia.entityName, calendarioLetivoDiaSchema, this);
+    zodValidate(CalendarioLetivoDia.entityName, CalendarioLetivoDiaSchema, this);
   }
 }

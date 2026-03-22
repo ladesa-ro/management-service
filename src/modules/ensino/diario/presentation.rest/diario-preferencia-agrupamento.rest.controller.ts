@@ -2,8 +2,14 @@ import { Body, Controller, Get, Param, Put, Query } from "@nestjs/common";
 import { ApiForbiddenResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextHttp } from "@/server/access-context";
-import { IDiarioPreferenciaAgrupamentoBulkReplaceCommandHandler } from "../domain/commands/diario-preferencia-agrupamento-bulk-replace.command.handler.interface";
-import { IDiarioPreferenciaAgrupamentoListQueryHandler } from "../domain/queries/diario-preferencia-agrupamento-list.query.handler.interface";
+import {
+  DiarioPreferenciaAgrupamentoBulkReplaceCommandMetadata,
+  IDiarioPreferenciaAgrupamentoBulkReplaceCommandHandler,
+} from "../domain/commands/diario-preferencia-agrupamento-bulk-replace.command.handler.interface";
+import {
+  DiarioPreferenciaAgrupamentoListQueryMetadata,
+  IDiarioPreferenciaAgrupamentoListQueryHandler,
+} from "../domain/queries/diario-preferencia-agrupamento-list.query.handler.interface";
 import {
   DiarioPreferenciaAgrupamentoBulkReplaceInputRestDto,
   DiarioPreferenciaAgrupamentoListInputRestDto,
@@ -23,10 +29,7 @@ export class DiarioPreferenciaAgrupamentoRestController {
   ) {}
 
   @Get("/")
-  @ApiOperation({
-    summary: "Lista preferencias de agrupamento de um diario",
-    operationId: "diarioPreferenciaAgrupamentoFindAll",
-  })
+  @ApiOperation(DiarioPreferenciaAgrupamentoListQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: DiarioPreferenciaAgrupamentoListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
@@ -40,10 +43,7 @@ export class DiarioPreferenciaAgrupamentoRestController {
   }
 
   @Put("/")
-  @ApiOperation({
-    summary: "Substitui preferencias de agrupamento de um diario",
-    operationId: "diarioPreferenciaAgrupamentoBulkReplace",
-  })
+  @ApiOperation(DiarioPreferenciaAgrupamentoBulkReplaceCommandMetadata.swaggerMetadata)
   @ApiOkResponse({ type: DiarioPreferenciaAgrupamentoListOutputRestDto })
   @ApiForbiddenResponse()
   async bulkReplace(

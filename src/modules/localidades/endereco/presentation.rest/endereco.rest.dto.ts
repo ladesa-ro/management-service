@@ -2,19 +2,9 @@ import {
   CidadeFindOneInputRestDto,
   CidadeFindOneOutputRestDto,
 } from "@/modules/localidades/cidade/presentation.rest/cidade.rest.dto";
-import {
-  enderecoFindOneInputSchema,
-  enderecoInputSchema,
-} from "@/modules/localidades/endereco/domain/endereco.schemas";
-import {
-  ApiProperty,
-  ApiPropertyOptional,
-  ApiSchema,
-  commonProperties,
-  RegisterModel,
-  referenceProperty,
-  simpleProperty,
-} from "@/shared/presentation/rest";
+import { EnderecoInputSchema } from "@/modules/localidades/endereco/domain/endereco.schemas";
+import { EnderecoFindOneInputSchema } from "@/modules/localidades/endereco/domain/queries/endereco-find-one.query.schemas";
+import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@/shared/presentation/rest";
 import { EntityBaseRestDto } from "@/shared/presentation/rest/dtos";
 
 // ============================================================================
@@ -22,20 +12,6 @@ import { EntityBaseRestDto } from "@/shared/presentation/rest/dtos";
 // ============================================================================
 
 @ApiSchema({ name: "EnderecoFindOneOutputDto" })
-@RegisterModel({
-  name: "EnderecoFindOneQueryResult",
-  properties: [
-    simpleProperty("id"),
-    simpleProperty("cep"),
-    simpleProperty("logradouro"),
-    simpleProperty("numero"),
-    simpleProperty("bairro"),
-    simpleProperty("complemento", { nullable: true }),
-    simpleProperty("pontoReferencia", { nullable: true }),
-    referenceProperty("cidade", "CidadeFindOneQueryResult"),
-    ...commonProperties.dated,
-  ],
-})
 export class EnderecoFindOneOutputRestDto extends EntityBaseRestDto {
   @ApiProperty({ type: "string", description: "Codigo postal (CEP)" })
   declare cep: string;
@@ -65,7 +41,7 @@ export class EnderecoFindOneOutputRestDto extends EntityBaseRestDto {
 
 @ApiSchema({ name: "EnderecoInputDto" })
 export class EnderecoInputRestDto {
-  static schema = enderecoInputSchema;
+  static schema = EnderecoInputSchema;
 
   @ApiProperty({ type: "string", description: "Codigo postal (CEP)" })
   declare cep: string;
@@ -95,7 +71,7 @@ export class EnderecoInputRestDto {
 
 @ApiSchema({ name: "EnderecoFindOneInputDto" })
 export class EnderecoFindOneInputRestDto {
-  static schema = enderecoFindOneInputSchema;
+  static schema = EnderecoFindOneInputSchema;
 
   @ApiProperty({
     type: "string",

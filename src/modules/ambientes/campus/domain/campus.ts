@@ -2,9 +2,9 @@ import type { z } from "zod";
 import type { IdUuid, ScalarDateTimeString } from "@/domain/abstractions/scalars";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { zodValidate } from "@/shared/validation/index";
-import { campusCreateSchema, campusSchema, campusUpdateSchema } from "./campus.schemas";
+import { CampusCreateSchema, CampusSchema, CampusUpdateSchema } from "./campus.schemas";
 
-export type ICampus = z.infer<typeof campusSchema>;
+export type ICampus = z.infer<typeof CampusSchema>;
 
 export class Campus {
   static readonly entityName = "Campus";
@@ -22,7 +22,7 @@ export class Campus {
   private constructor() {}
 
   static create(dados: unknown): Campus {
-    const parsed = zodValidate(Campus.entityName, campusCreateSchema, dados);
+    const parsed = zodValidate(Campus.entityName, CampusCreateSchema, dados);
 
     const instance = new Campus();
 
@@ -39,7 +39,7 @@ export class Campus {
   }
 
   static load(dados: unknown): Campus {
-    const parsed = zodValidate(Campus.entityName, campusSchema, dados);
+    const parsed = zodValidate(Campus.entityName, CampusSchema, dados);
 
     const instance = new Campus();
 
@@ -57,7 +57,7 @@ export class Campus {
   }
 
   update(dados: unknown): void {
-    const parsed = zodValidate(Campus.entityName, campusUpdateSchema, dados);
+    const parsed = zodValidate(Campus.entityName, CampusUpdateSchema, dados);
 
     if (parsed.nomeFantasia !== undefined) this.nomeFantasia = parsed.nomeFantasia;
     if (parsed.razaoSocial !== undefined) this.razaoSocial = parsed.razaoSocial;
@@ -66,7 +66,7 @@ export class Campus {
 
     this.dateUpdated = new Date().toISOString();
 
-    zodValidate(Campus.entityName, campusSchema, this);
+    zodValidate(Campus.entityName, CampusSchema, this);
   }
 
   isCnpjValido(): boolean {

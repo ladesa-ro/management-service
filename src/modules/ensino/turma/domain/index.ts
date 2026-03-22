@@ -4,3 +4,5 @@ export * from "./queries";
 export * from "./repositories";
 export * from "./shared";
 export * from "./turma";
+export * from "./turma.fields";
+export * from "./turma.schemas";

@@ -5,7 +5,7 @@ import type { EstadoFindOneQuery, EstadoFindOneQueryResult } from "../../domain/
 import { IEstadoRepository } from "../../domain/repositories";
 
 @DeclareImplementation()
-export class EstadoFindOneQueryHandler implements IEstadoFindOneQueryHandler {
+export class EstadoFindOneQueryHandlerImpl implements IEstadoFindOneQueryHandler {
   constructor(
     @DeclareDependency(IEstadoRepository)
     private readonly repository: IEstadoRepository,

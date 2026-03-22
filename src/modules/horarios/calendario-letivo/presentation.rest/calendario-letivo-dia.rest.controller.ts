@@ -10,9 +10,18 @@ import { ensureExists } from "@/application/errors";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextHttp } from "@/server/access-context";
 import { CalendarioLetivoDia } from "../domain/calendario-letivo-dia";
-import { ICalendarioLetivoDiaUpdateCommandHandler } from "../domain/commands/calendario-letivo-dia-update.command.handler.interface";
-import { ICalendarioLetivoDiaFindOneQueryHandler } from "../domain/queries/calendario-letivo-dia-find-one.query.handler.interface";
-import { ICalendarioLetivoDiaListQueryHandler } from "../domain/queries/calendario-letivo-dia-list.query.handler.interface";
+import {
+  CalendarioLetivoDiaUpdateCommandMetadata,
+  ICalendarioLetivoDiaUpdateCommandHandler,
+} from "../domain/commands/calendario-letivo-dia-update.command.handler.interface";
+import {
+  CalendarioLetivoDiaFindOneQueryMetadata,
+  ICalendarioLetivoDiaFindOneQueryHandler,
+} from "../domain/queries/calendario-letivo-dia-find-one.query.handler.interface";
+import {
+  CalendarioLetivoDiaListQueryMetadata,
+  ICalendarioLetivoDiaListQueryHandler,
+} from "../domain/queries/calendario-letivo-dia-list.query.handler.interface";
 import {
   CalendarioLetivoDiaFindByDataParamsRestDto,
   CalendarioLetivoDiaFindOneOutputRestDto,
@@ -36,10 +45,7 @@ export class CalendarioLetivoDiaRestController {
   ) {}
 
   @Get("/")
-  @ApiOperation({
-    summary: "Lista dias de um calendario letivo",
-    operationId: "calendarioLetivoDiaFindAll",
-  })
+  @ApiOperation(CalendarioLetivoDiaListQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: CalendarioLetivoDiaListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
@@ -53,10 +59,7 @@ export class CalendarioLetivoDiaRestController {
   }
 
   @Get("/:data")
-  @ApiOperation({
-    summary: "Busca um dia de calendario por data (YYYY-MM-DD)",
-    operationId: "calendarioLetivoDiaFindByData",
-  })
+  @ApiOperation(CalendarioLetivoDiaFindOneQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: CalendarioLetivoDiaFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -71,10 +74,7 @@ export class CalendarioLetivoDiaRestController {
   }
 
   @Patch("/:data")
-  @ApiOperation({
-    summary: "Atualiza um dia de calendario",
-    operationId: "calendarioLetivoDiaUpdate",
-  })
+  @ApiOperation(CalendarioLetivoDiaUpdateCommandMetadata.swaggerMetadata)
   @ApiOkResponse({ type: CalendarioLetivoDiaFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()

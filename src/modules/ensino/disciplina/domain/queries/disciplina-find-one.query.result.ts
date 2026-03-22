@@ -1,5 +1,17 @@
-import { EntityQueryResult } from "@/domain/abstractions";
+import { EntityQueryResult, SharedFields } from "@/domain/abstractions";
+import { fieldsToProperties } from "@/infrastructure.database/typeorm/metadata/model-from-fields";
+import {
+  commonProperties,
+  defineModel,
+  referenceProperty,
+} from "@/infrastructure.database/typeorm/metadata/model-registry";
 import { ImagemFindOneQueryResult } from "@/modules/armazenamento/imagem";
+import { DisciplinaFields } from "../disciplina.fields";
+
+export const DisciplinaFindOneQueryResultFields = {
+  id: SharedFields.idUuid,
+  ...DisciplinaFields,
+};
 
 export class DisciplinaFindOneQueryResult extends EntityQueryResult {
   nome!: string;
@@ -7,3 +19,9 @@ export class DisciplinaFindOneQueryResult extends EntityQueryResult {
   cargaHoraria!: number;
   imagemCapa!: ImagemFindOneQueryResult | null;
 }
+
+defineModel("DisciplinaFindOneQueryResult", [
+  ...fieldsToProperties(DisciplinaFindOneQueryResultFields),
+  referenceProperty("imagemCapa", "ImagemFindOneQueryResult", { nullable: true }),
+  ...commonProperties.dated,
+]);

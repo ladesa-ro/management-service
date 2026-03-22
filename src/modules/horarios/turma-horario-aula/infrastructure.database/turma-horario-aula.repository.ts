@@ -16,13 +16,13 @@ export class TurmaHorarioAulaTypeOrmRepositoryAdapter implements ITurmaHorarioAu
 
   async findByTurmaId(turmaId: string): Promise<TurmaHorarioAulaEntity[]> {
     return this.repository.find({
-      where: { idTurmaFk: turmaId },
+      where: { turma: { id: turmaId } },
       relations: ["horarioAula"],
     });
   }
 
   async deleteByTurmaId(turmaId: string): Promise<void> {
-    await this.repository.delete({ idTurmaFk: turmaId });
+    await this.repository.delete({ turma: { id: turmaId } } as any);
   }
 
   async save(entity: TurmaHorarioAulaEntity): Promise<TurmaHorarioAulaEntity> {

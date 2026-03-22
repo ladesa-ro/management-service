@@ -4,11 +4,26 @@ import { ensureExists } from "@/application/errors";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { graphqlExtractSelection } from "@/infrastructure.graphql";
 import { Bloco } from "@/modules/ambientes/bloco/domain/bloco";
-import { IBlocoCreateCommandHandler } from "@/modules/ambientes/bloco/domain/commands/bloco-create.command.handler.interface";
-import { IBlocoDeleteCommandHandler } from "@/modules/ambientes/bloco/domain/commands/bloco-delete.command.handler.interface";
-import { IBlocoUpdateCommandHandler } from "@/modules/ambientes/bloco/domain/commands/bloco-update.command.handler.interface";
-import { IBlocoFindOneQueryHandler } from "@/modules/ambientes/bloco/domain/queries/bloco-find-one.query.handler.interface";
-import { IBlocoListQueryHandler } from "@/modules/ambientes/bloco/domain/queries/bloco-list.query.handler.interface";
+import {
+  BlocoCreateCommandMetadata,
+  IBlocoCreateCommandHandler,
+} from "@/modules/ambientes/bloco/domain/commands/bloco-create.command.handler.interface";
+import {
+  BlocoDeleteCommandMetadata,
+  IBlocoDeleteCommandHandler,
+} from "@/modules/ambientes/bloco/domain/commands/bloco-delete.command.handler.interface";
+import {
+  BlocoUpdateCommandMetadata,
+  IBlocoUpdateCommandHandler,
+} from "@/modules/ambientes/bloco/domain/commands/bloco-update.command.handler.interface";
+import {
+  BlocoFindOneQueryMetadata,
+  IBlocoFindOneQueryHandler,
+} from "@/modules/ambientes/bloco/domain/queries/bloco-find-one.query.handler.interface";
+import {
+  BlocoListQueryMetadata,
+  IBlocoListQueryHandler,
+} from "@/modules/ambientes/bloco/domain/queries/bloco-list.query.handler.interface";
 import { AccessContext, AccessContextGraphQL } from "@/server/access-context";
 import {
   BlocoCreateInputGraphQlDto,
@@ -34,7 +49,7 @@ export class BlocoGraphqlResolver {
     private readonly deleteHandler: IBlocoDeleteCommandHandler,
   ) {}
 
-  @Query(() => BlocoListOutputGraphQlDto, { name: "blocoFindAll" })
+  @Query(() => BlocoListOutputGraphQlDto, BlocoListQueryMetadata.gqlMetadata)
   async findAll(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args() dto: BlocoListInputGraphQlDto,
@@ -49,7 +64,7 @@ export class BlocoGraphqlResolver {
     return BlocoGraphqlMapper.toListOutputDto(result);
   }
 
-  @Query(() => BlocoFindOneOutputGraphQlDto, { name: "blocoFindById" })
+  @Query(() => BlocoFindOneOutputGraphQlDto, BlocoFindOneQueryMetadata.gqlMetadata)
   async findById(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
@@ -61,7 +76,7 @@ export class BlocoGraphqlResolver {
     return BlocoGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => BlocoFindOneOutputGraphQlDto, { name: "blocoCreate" })
+  @Mutation(() => BlocoFindOneOutputGraphQlDto, BlocoCreateCommandMetadata.gqlMetadata)
   async create(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("input") dto: BlocoCreateInputGraphQlDto,
@@ -72,7 +87,7 @@ export class BlocoGraphqlResolver {
     return BlocoGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => BlocoFindOneOutputGraphQlDto, { name: "blocoUpdate" })
+  @Mutation(() => BlocoFindOneOutputGraphQlDto, BlocoUpdateCommandMetadata.gqlMetadata)
   async update(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
@@ -84,7 +99,7 @@ export class BlocoGraphqlResolver {
     return BlocoGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => Boolean, { name: "blocoDeleteOneById" })
+  @Mutation(() => Boolean, BlocoDeleteCommandMetadata.gqlMetadata)
   async deleteOneById(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,

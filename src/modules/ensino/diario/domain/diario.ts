@@ -7,7 +7,7 @@ import type { IDisciplina } from "@/modules/ensino/disciplina/domain/disciplina"
 import type { ITurma } from "@/modules/ensino/turma/domain/turma";
 import type { ICalendarioLetivo } from "@/modules/horarios/calendario-letivo";
 import { zodValidate } from "@/shared/validation/index";
-import { diarioCreateSchema, diarioUpdateSchema } from "./diario.schemas";
+import { DiarioCreateSchema, DiarioUpdateSchema } from "./diario.schemas";
 
 export interface IDiario extends IEntityBaseUuid {
   ativo: boolean;
@@ -51,7 +51,7 @@ export class Diario implements IEntityBaseUuid {
   private constructor() {}
 
   static create(dados: IDiarioCreate): Diario {
-    const parsed = zodValidate(Diario.entityName, diarioCreateSchema, dados);
+    const parsed = zodValidate(Diario.entityName, DiarioCreateSchema, dados);
 
     const instance = new Diario();
 
@@ -82,7 +82,7 @@ export class Diario implements IEntityBaseUuid {
   }
 
   update(dados: unknown): void {
-    const parsed = zodValidate(Diario.entityName, diarioUpdateSchema, dados);
+    const parsed = zodValidate(Diario.entityName, DiarioUpdateSchema, dados);
 
     if (parsed.ativo !== undefined) this.ativo = parsed.ativo;
 

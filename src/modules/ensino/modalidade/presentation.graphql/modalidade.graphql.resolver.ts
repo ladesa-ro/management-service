@@ -3,12 +3,27 @@ import { type GraphQLResolveInfo } from "graphql";
 import { ensureExists } from "@/application/errors";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { graphqlExtractSelection } from "@/infrastructure.graphql";
-import { IModalidadeCreateCommandHandler } from "@/modules/ensino/modalidade/domain/commands/modalidade-create.command.handler.interface";
-import { IModalidadeDeleteCommandHandler } from "@/modules/ensino/modalidade/domain/commands/modalidade-delete.command.handler.interface";
-import { IModalidadeUpdateCommandHandler } from "@/modules/ensino/modalidade/domain/commands/modalidade-update.command.handler.interface";
+import {
+  IModalidadeCreateCommandHandler,
+  ModalidadeCreateCommandMetadata,
+} from "@/modules/ensino/modalidade/domain/commands/modalidade-create.command.handler.interface";
+import {
+  IModalidadeDeleteCommandHandler,
+  ModalidadeDeleteCommandMetadata,
+} from "@/modules/ensino/modalidade/domain/commands/modalidade-delete.command.handler.interface";
+import {
+  IModalidadeUpdateCommandHandler,
+  ModalidadeUpdateCommandMetadata,
+} from "@/modules/ensino/modalidade/domain/commands/modalidade-update.command.handler.interface";
 import { Modalidade } from "@/modules/ensino/modalidade/domain/modalidade";
-import { IModalidadeFindOneQueryHandler } from "@/modules/ensino/modalidade/domain/queries/modalidade-find-one.query.handler.interface";
-import { IModalidadeListQueryHandler } from "@/modules/ensino/modalidade/domain/queries/modalidade-list.query.handler.interface";
+import {
+  IModalidadeFindOneQueryHandler,
+  ModalidadeFindOneQueryMetadata,
+} from "@/modules/ensino/modalidade/domain/queries/modalidade-find-one.query.handler.interface";
+import {
+  IModalidadeListQueryHandler,
+  ModalidadeListQueryMetadata,
+} from "@/modules/ensino/modalidade/domain/queries/modalidade-list.query.handler.interface";
 import { AccessContext, AccessContextGraphQL } from "@/server/access-context";
 import {
   ModalidadeCreateInputGraphQlDto,
@@ -34,7 +49,7 @@ export class ModalidadeGraphqlResolver {
     private readonly deleteHandler: IModalidadeDeleteCommandHandler,
   ) {}
 
-  @Query(() => ModalidadeListOutputGraphQlDto, { name: "modalidadeFindAll" })
+  @Query(() => ModalidadeListOutputGraphQlDto, ModalidadeListQueryMetadata.gqlMetadata)
   async findAll(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args() dto: ModalidadeListInputGraphQlDto,
@@ -49,7 +64,7 @@ export class ModalidadeGraphqlResolver {
     return ModalidadeGraphqlMapper.toListOutputDto(result);
   }
 
-  @Query(() => ModalidadeFindOneOutputGraphQlDto, { name: "modalidadeFindById" })
+  @Query(() => ModalidadeFindOneOutputGraphQlDto, ModalidadeFindOneQueryMetadata.gqlMetadata)
   async findById(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
@@ -61,7 +76,7 @@ export class ModalidadeGraphqlResolver {
     return ModalidadeGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => ModalidadeFindOneOutputGraphQlDto, { name: "modalidadeCreate" })
+  @Mutation(() => ModalidadeFindOneOutputGraphQlDto, ModalidadeCreateCommandMetadata.gqlMetadata)
   async create(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("input") dto: ModalidadeCreateInputGraphQlDto,
@@ -72,7 +87,7 @@ export class ModalidadeGraphqlResolver {
     return ModalidadeGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => ModalidadeFindOneOutputGraphQlDto, { name: "modalidadeUpdate" })
+  @Mutation(() => ModalidadeFindOneOutputGraphQlDto, ModalidadeUpdateCommandMetadata.gqlMetadata)
   async update(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
@@ -84,7 +99,7 @@ export class ModalidadeGraphqlResolver {
     return ModalidadeGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => Boolean, { name: "modalidadeDeleteOneById" })
+  @Mutation(() => Boolean, ModalidadeDeleteCommandMetadata.gqlMetadata)
   async deleteOneById(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,

@@ -10,10 +10,22 @@ import {
 import { ensureExists } from "@/application/errors";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextHttp } from "@/server/access-context";
-import { IGerarHorarioAceitarCommandHandler } from "../domain/commands/gerar-horario-aceitar.command.handler.interface";
-import { IGerarHorarioCreateCommandHandler } from "../domain/commands/gerar-horario-create.command.handler.interface";
-import { IGerarHorarioRejeitarCommandHandler } from "../domain/commands/gerar-horario-rejeitar.command.handler.interface";
-import { IGerarHorarioFindOneQueryHandler } from "../domain/queries/gerar-horario-find-one.query.handler.interface";
+import {
+  GerarHorarioAceitarCommandMetadata,
+  IGerarHorarioAceitarCommandHandler,
+} from "../domain/commands/gerar-horario-aceitar.command.handler.interface";
+import {
+  GerarHorarioCreateCommandMetadata,
+  IGerarHorarioCreateCommandHandler,
+} from "../domain/commands/gerar-horario-create.command.handler.interface";
+import {
+  GerarHorarioRejeitarCommandMetadata,
+  IGerarHorarioRejeitarCommandHandler,
+} from "../domain/commands/gerar-horario-rejeitar.command.handler.interface";
+import {
+  GerarHorarioFindOneQueryMetadata,
+  IGerarHorarioFindOneQueryHandler,
+} from "../domain/queries/gerar-horario-find-one.query.handler.interface";
 import {
   GerarHorarioCreateInputRestDto,
   GerarHorarioFindOneOutputRestDto,
@@ -37,10 +49,7 @@ export class GerarHorarioRestController {
 
   @Post("/")
   @HttpCode(202)
-  @ApiOperation({
-    summary: "Solicita geracao de horario (assincrono)",
-    operationId: "gerarHorarioCreate",
-  })
+  @ApiOperation(GerarHorarioCreateCommandMetadata.swaggerMetadata)
   @ApiAcceptedResponse({ type: GerarHorarioFindOneOutputRestDto })
   @ApiForbiddenResponse()
   async create(
@@ -52,10 +61,7 @@ export class GerarHorarioRestController {
   }
 
   @Get("/:id")
-  @ApiOperation({
-    summary: "Consulta status de uma geracao de horario",
-    operationId: "gerarHorarioFindById",
-  })
+  @ApiOperation(GerarHorarioFindOneQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: GerarHorarioFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -69,10 +75,7 @@ export class GerarHorarioRestController {
   }
 
   @Post("/:id/aceitar")
-  @ApiOperation({
-    summary: "Aceita o horario gerado e aplica ao calendario",
-    operationId: "gerarHorarioAceitar",
-  })
+  @ApiOperation(GerarHorarioAceitarCommandMetadata.swaggerMetadata)
   @ApiOkResponse({ type: GerarHorarioFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -85,10 +88,7 @@ export class GerarHorarioRestController {
   }
 
   @Post("/:id/rejeitar")
-  @ApiOperation({
-    summary: "Rejeita o horario gerado",
-    operationId: "gerarHorarioRejeitar",
-  })
+  @ApiOperation(GerarHorarioRejeitarCommandMetadata.swaggerMetadata)
   @ApiOkResponse({ type: GerarHorarioFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()

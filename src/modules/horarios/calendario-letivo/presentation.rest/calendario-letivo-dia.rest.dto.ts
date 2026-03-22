@@ -2,10 +2,6 @@ import {
   ApiProperty,
   ApiPropertyOptional,
   ApiSchema,
-  commonProperties,
-  RegisterModel,
-  referenceProperty,
-  simpleProperty,
   TransformToArray,
 } from "@/shared/presentation/rest";
 import {
@@ -17,6 +13,10 @@ import {
   TIPO_CALENDARIO_LETIVO_DIA_VALUES,
   type TipoCalendarioLetivoDia,
 } from "../domain/calendario-letivo-dia";
+import { CalendarioLetivoDiaUpdateCommandFields } from "../domain/commands/calendario-letivo-dia-update.command";
+import { CalendarioLetivoDiaFindOneQueryFields } from "../domain/queries/calendario-letivo-dia-find-one.query";
+import { CalendarioLetivoDiaFindOneQueryResultFields } from "../domain/queries/calendario-letivo-dia-find-one.query.result";
+import { CalendarioLetivoDiaListQueryFields } from "../domain/queries/calendario-letivo-dia-list.query";
 import { CalendarioLetivoFindOneOutputRestDto } from "./calendario-letivo.rest.dto";
 
 export { TIPO_CALENDARIO_LETIVO_DIA_VALUES, type TipoCalendarioLetivoDia };
@@ -29,7 +29,7 @@ export { TIPO_CALENDARIO_LETIVO_DIA_VALUES, type TipoCalendarioLetivoDia };
 export class CalendarioLetivoDiaParentParamsRestDto {
   @ApiProperty({
     type: "string",
-    description: "ID do calendario letivo (uuid)",
+    ...CalendarioLetivoDiaFindOneQueryFields.calendarioLetivoId.swaggerMetadata,
     format: "uuid",
   })
   calendarioLetivoId: string;
@@ -43,7 +43,7 @@ export class CalendarioLetivoDiaParentParamsRestDto {
 export class CalendarioLetivoDiaFindByDataParamsRestDto extends CalendarioLetivoDiaParentParamsRestDto {
   @ApiProperty({
     type: "string",
-    description: "Data do dia no calendario (YYYY-MM-DD)",
+    ...CalendarioLetivoDiaFindOneQueryFields.data.swaggerMetadata,
     format: "date",
   })
   data: string;
@@ -54,50 +54,49 @@ export class CalendarioLetivoDiaFindByDataParamsRestDto extends CalendarioLetivo
 // ============================================================================
 
 @ApiSchema({ name: "CalendarioLetivoDiaFindOneOutputDto" })
-@RegisterModel({
-  name: "CalendarioLetivoDiaFindOneQueryResult",
-  properties: [
-    simpleProperty("id"),
-    simpleProperty("data"),
-    simpleProperty("diaLetivo"),
-    simpleProperty("diaPresencial"),
-    simpleProperty("tipo"),
-    simpleProperty("feriado", { nullable: true }),
-    simpleProperty("extraCurricular"),
-    referenceProperty("calendario", "CalendarioLetivoFindOneQueryResult"),
-    ...commonProperties.dated,
-  ],
-})
 export class CalendarioLetivoDiaFindOneOutputRestDto extends EntityBaseRestDto {
-  @ApiProperty({ type: "string", description: "Data do dia no calendario", format: "date" })
+  @ApiProperty({
+    type: "string",
+    ...CalendarioLetivoDiaFindOneQueryResultFields.data.swaggerMetadata,
+    format: "date",
+  })
   data: string;
 
-  @ApiProperty({ type: "boolean", description: "Indica se o dia e letivo" })
+  @ApiProperty({
+    type: "boolean",
+    ...CalendarioLetivoDiaFindOneQueryResultFields.diaLetivo.swaggerMetadata,
+  })
   diaLetivo: boolean;
 
-  @ApiProperty({ type: "boolean", description: "Indica se o dia e presencial" })
+  @ApiProperty({
+    type: "boolean",
+    ...CalendarioLetivoDiaFindOneQueryResultFields.diaPresencial.swaggerMetadata,
+  })
   diaPresencial: boolean;
 
   @ApiProperty({
     type: "string",
-    description: "Tipo do dia (presencial, feriado, sabado, etc.)",
+    ...CalendarioLetivoDiaFindOneQueryResultFields.tipo.swaggerMetadata,
     enum: TIPO_CALENDARIO_LETIVO_DIA_VALUES,
   })
   tipo: TipoCalendarioLetivoDia;
 
   @ApiPropertyOptional({
     type: "string",
-    description: "Nome do feriado (ou null se nao for)",
+    ...CalendarioLetivoDiaFindOneQueryResultFields.feriado.swaggerMetadata,
     nullable: true,
   })
   feriado: string | null;
 
-  @ApiProperty({ type: "boolean", description: "Indica se o dia e extracurricular" })
+  @ApiProperty({
+    type: "boolean",
+    ...CalendarioLetivoDiaFindOneQueryResultFields.extraCurricular.swaggerMetadata,
+  })
   extraCurricular: boolean;
 
   @ApiProperty({
     type: () => CalendarioLetivoFindOneOutputRestDto,
-    description: "Calendario letivo ao qual o dia pertence",
+    ...CalendarioLetivoDiaFindOneQueryResultFields.calendario.swaggerMetadata,
   })
   calendario: CalendarioLetivoFindOneOutputRestDto;
 }
@@ -111,7 +110,7 @@ export class CalendarioLetivoDiaListInputRestDto extends PaginatedFilterByIdRest
   @ApiPropertyOptional({
     type: "string",
     isArray: true,
-    description: "Filtro por nome do Calendario",
+    ...CalendarioLetivoDiaListQueryFields.filterCalendarioNome.swaggerMetadata,
   })
   @TransformToArray()
   "filter.calendario.nome"?: string[];
@@ -119,7 +118,7 @@ export class CalendarioLetivoDiaListInputRestDto extends PaginatedFilterByIdRest
   @ApiPropertyOptional({
     type: "string",
     isArray: true,
-    description: "Filtro por ano do Calendario",
+    ...CalendarioLetivoDiaListQueryFields.filterCalendarioAno.swaggerMetadata,
   })
   @TransformToArray()
   "filter.calendario.ano"?: string[];
@@ -127,12 +126,15 @@ export class CalendarioLetivoDiaListInputRestDto extends PaginatedFilterByIdRest
 
 @ApiSchema({ name: "CalendarioLetivoDiaListOutputDto" })
 export class CalendarioLetivoDiaListOutputRestDto {
-  @ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" })
+  @ApiProperty({
+    type: () => PaginationMetaRestDto,
+    ...CalendarioLetivoDiaListQueryFields.meta.swaggerMetadata,
+  })
   meta: PaginationMetaRestDto;
 
   @ApiProperty({
     type: () => [CalendarioLetivoDiaFindOneOutputRestDto],
-    description: "Resultados da busca",
+    ...CalendarioLetivoDiaListQueryFields.data.swaggerMetadata,
   })
   data: CalendarioLetivoDiaFindOneOutputRestDto[];
 }
@@ -143,26 +145,35 @@ export class CalendarioLetivoDiaListOutputRestDto {
 
 @ApiSchema({ name: "CalendarioLetivoDiaUpdateInputDto" })
 export class CalendarioLetivoDiaUpdateInputRestDto {
-  @ApiPropertyOptional({ type: "boolean", description: "Indica se o dia e letivo" })
+  @ApiPropertyOptional({
+    type: "boolean",
+    ...CalendarioLetivoDiaUpdateCommandFields.diaLetivo.swaggerMetadata,
+  })
   diaLetivo?: boolean;
 
-  @ApiPropertyOptional({ type: "boolean", description: "Indica se o dia e presencial" })
+  @ApiPropertyOptional({
+    type: "boolean",
+    ...CalendarioLetivoDiaUpdateCommandFields.diaPresencial.swaggerMetadata,
+  })
   diaPresencial?: boolean;
 
   @ApiPropertyOptional({
     type: "string",
-    description: "Tipo do dia (presencial, feriado, sabado, etc.)",
+    ...CalendarioLetivoDiaUpdateCommandFields.tipo.swaggerMetadata,
     enum: TIPO_CALENDARIO_LETIVO_DIA_VALUES,
   })
   tipo?: TipoCalendarioLetivoDia;
 
   @ApiPropertyOptional({
     type: "string",
-    description: "Nome do feriado (ou null se nao for)",
+    ...CalendarioLetivoDiaUpdateCommandFields.feriado.swaggerMetadata,
     nullable: true,
   })
   feriado?: string | null;
 
-  @ApiPropertyOptional({ type: "boolean", description: "Indica se o dia e extracurricular" })
+  @ApiPropertyOptional({
+    type: "boolean",
+    ...CalendarioLetivoDiaUpdateCommandFields.extraCurricular.swaggerMetadata,
+  })
   extraCurricular?: boolean;
 }

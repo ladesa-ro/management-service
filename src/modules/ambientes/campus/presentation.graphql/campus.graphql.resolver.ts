@@ -4,11 +4,26 @@ import { ensureExists } from "@/application/errors";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { graphqlExtractSelection } from "@/infrastructure.graphql";
 import { Campus } from "@/modules/ambientes/campus/domain/campus";
-import { ICampusCreateCommandHandler } from "@/modules/ambientes/campus/domain/commands/campus-create.command.handler.interface";
-import { ICampusDeleteCommandHandler } from "@/modules/ambientes/campus/domain/commands/campus-delete.command.handler.interface";
-import { ICampusUpdateCommandHandler } from "@/modules/ambientes/campus/domain/commands/campus-update.command.handler.interface";
-import { ICampusFindOneQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-find-one.query.handler.interface";
-import { ICampusListQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-list.query.handler.interface";
+import {
+  CampusCreateCommandMetadata,
+  ICampusCreateCommandHandler,
+} from "@/modules/ambientes/campus/domain/commands/campus-create.command.handler.interface";
+import {
+  CampusDeleteCommandMetadata,
+  ICampusDeleteCommandHandler,
+} from "@/modules/ambientes/campus/domain/commands/campus-delete.command.handler.interface";
+import {
+  CampusUpdateCommandMetadata,
+  ICampusUpdateCommandHandler,
+} from "@/modules/ambientes/campus/domain/commands/campus-update.command.handler.interface";
+import {
+  CampusFindOneQueryMetadata,
+  ICampusFindOneQueryHandler,
+} from "@/modules/ambientes/campus/domain/queries/campus-find-one.query.handler.interface";
+import {
+  CampusListQueryMetadata,
+  ICampusListQueryHandler,
+} from "@/modules/ambientes/campus/domain/queries/campus-list.query.handler.interface";
 import { AccessContext, AccessContextGraphQL } from "@/server/access-context";
 import {
   CampusCreateInputGraphQlDto,
@@ -34,7 +49,7 @@ export class CampusGraphqlResolver {
     private readonly deleteHandler: ICampusDeleteCommandHandler,
   ) {}
 
-  @Query(() => CampusListOutputGraphQlDto, { name: "campusFindAll" })
+  @Query(() => CampusListOutputGraphQlDto, CampusListQueryMetadata.gqlMetadata)
   async findAll(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args() dto: CampusListInputGraphQlDto,
@@ -49,7 +64,7 @@ export class CampusGraphqlResolver {
     return CampusGraphqlMapper.toListOutputDto(result);
   }
 
-  @Query(() => CampusFindOneOutputGraphQlDto, { name: "campusFindById" })
+  @Query(() => CampusFindOneOutputGraphQlDto, CampusFindOneQueryMetadata.gqlMetadata)
   async findById(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
@@ -61,7 +76,7 @@ export class CampusGraphqlResolver {
     return CampusGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => CampusFindOneOutputGraphQlDto, { name: "campusCreate" })
+  @Mutation(() => CampusFindOneOutputGraphQlDto, CampusCreateCommandMetadata.gqlMetadata)
   async create(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("input") dto: CampusCreateInputGraphQlDto,
@@ -72,7 +87,7 @@ export class CampusGraphqlResolver {
     return CampusGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => CampusFindOneOutputGraphQlDto, { name: "campusUpdate" })
+  @Mutation(() => CampusFindOneOutputGraphQlDto, CampusUpdateCommandMetadata.gqlMetadata)
   async update(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
@@ -84,7 +99,7 @@ export class CampusGraphqlResolver {
     return CampusGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => Boolean, { name: "campusDeleteOneById" })
+  @Mutation(() => Boolean, CampusDeleteCommandMetadata.gqlMetadata)
   async deleteOneById(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,

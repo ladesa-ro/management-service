@@ -25,13 +25,34 @@ import {
 import { ensureExists } from "@/application/errors";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { Bloco } from "@/modules/ambientes/bloco/domain/bloco";
-import { IBlocoCreateCommandHandler } from "@/modules/ambientes/bloco/domain/commands/bloco-create.command.handler.interface";
-import { IBlocoDeleteCommandHandler } from "@/modules/ambientes/bloco/domain/commands/bloco-delete.command.handler.interface";
-import { IBlocoUpdateCommandHandler } from "@/modules/ambientes/bloco/domain/commands/bloco-update.command.handler.interface";
-import { IBlocoUpdateImagemCapaCommandHandler } from "@/modules/ambientes/bloco/domain/commands/bloco-update-imagem-capa.command.handler.interface";
-import { IBlocoFindOneQueryHandler } from "@/modules/ambientes/bloco/domain/queries/bloco-find-one.query.handler.interface";
-import { IBlocoGetImagemCapaQueryHandler } from "@/modules/ambientes/bloco/domain/queries/bloco-get-imagem-capa.query.handler.interface";
-import { IBlocoListQueryHandler } from "@/modules/ambientes/bloco/domain/queries/bloco-list.query.handler.interface";
+import {
+  BlocoCreateCommandMetadata,
+  IBlocoCreateCommandHandler,
+} from "@/modules/ambientes/bloco/domain/commands/bloco-create.command.handler.interface";
+import {
+  BlocoDeleteCommandMetadata,
+  IBlocoDeleteCommandHandler,
+} from "@/modules/ambientes/bloco/domain/commands/bloco-delete.command.handler.interface";
+import {
+  BlocoUpdateCommandMetadata,
+  IBlocoUpdateCommandHandler,
+} from "@/modules/ambientes/bloco/domain/commands/bloco-update.command.handler.interface";
+import {
+  BlocoUpdateImagemCapaCommandMetadata,
+  IBlocoUpdateImagemCapaCommandHandler,
+} from "@/modules/ambientes/bloco/domain/commands/bloco-update-imagem-capa.command.handler.interface";
+import {
+  BlocoFindOneQueryMetadata,
+  IBlocoFindOneQueryHandler,
+} from "@/modules/ambientes/bloco/domain/queries/bloco-find-one.query.handler.interface";
+import {
+  BlocoGetImagemCapaQueryMetadata,
+  IBlocoGetImagemCapaQueryHandler,
+} from "@/modules/ambientes/bloco/domain/queries/bloco-get-imagem-capa.query.handler.interface";
+import {
+  BlocoListQueryMetadata,
+  IBlocoListQueryHandler,
+} from "@/modules/ambientes/bloco/domain/queries/bloco-list.query.handler.interface";
 import { AccessContext, AccessContextHttp } from "@/server/access-context";
 import {
   BlocoCreateInputRestDto,
@@ -64,7 +85,7 @@ export class BlocoRestController {
   ) {}
 
   @Get("/")
-  @ApiOperation({ summary: "Lista blocos", operationId: "blocoFindAll" })
+  @ApiOperation(BlocoListQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: BlocoListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
@@ -77,7 +98,7 @@ export class BlocoRestController {
   }
 
   @Get("/:id")
-  @ApiOperation({ summary: "Busca um bloco por ID", operationId: "blocoFindById" })
+  @ApiOperation(BlocoFindOneQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: BlocoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -92,7 +113,7 @@ export class BlocoRestController {
   }
 
   @Post("/")
-  @ApiOperation({ summary: "Cria um bloco", operationId: "blocoCreate" })
+  @ApiOperation(BlocoCreateCommandMetadata.swaggerMetadata)
   @ApiCreatedResponse({ type: BlocoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   async create(
@@ -105,7 +126,7 @@ export class BlocoRestController {
   }
 
   @Patch("/:id")
-  @ApiOperation({ summary: "Atualiza um bloco", operationId: "blocoUpdate" })
+  @ApiOperation(BlocoUpdateCommandMetadata.swaggerMetadata)
   @ApiOkResponse({ type: BlocoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -120,10 +141,7 @@ export class BlocoRestController {
   }
 
   @Get("/:id/imagem/capa")
-  @ApiOperation({
-    summary: "Obtem a imagem de capa de um bloco",
-    operationId: "blocoGetImagemCapa",
-  })
+  @ApiOperation(BlocoGetImagemCapaQueryMetadata.swaggerMetadata)
   @ApiOkResponse()
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -135,10 +153,7 @@ export class BlocoRestController {
   }
 
   @Put("/:id/imagem/capa")
-  @ApiOperation({
-    summary: "Define a imagem de capa de um bloco",
-    operationId: "blocoUpdateImagemCapa",
-  })
+  @ApiOperation(BlocoUpdateImagemCapaCommandMetadata.swaggerMetadata)
   @ApiConsumes("multipart/form-data")
   @ApiBody({
     schema: {
@@ -162,7 +177,7 @@ export class BlocoRestController {
   }
 
   @Delete("/:id")
-  @ApiOperation({ summary: "Remove um bloco", operationId: "blocoDeleteOneById" })
+  @ApiOperation(BlocoDeleteCommandMetadata.swaggerMetadata)
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()

@@ -10,6 +10,11 @@ import { ensureExists } from "@/application/errors";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextHttp } from "@/server/access-context";
 import {
+  NotificacaoContagemNaoLidasQueryMetadata,
+  NotificacaoFindAllQueryMetadata,
+  NotificacaoMarcarLidaCommandMetadata,
+} from "../domain/notificacao.operations";
+import {
   INotificacaoRepository,
   type INotificacaoRepository as INotificacaoRepositoryType,
 } from "../domain/repositories/notificacao.repository.interface";
@@ -23,10 +28,7 @@ export class NotificacaoRestController {
   ) {}
 
   @Get("/")
-  @ApiOperation({
-    summary: "Lista notificacoes do usuario autenticado",
-    operationId: "notificacaoFindAll",
-  })
+  @ApiOperation(NotificacaoFindAllQueryMetadata.swaggerMetadata)
   @ApiOkResponse()
   @ApiForbiddenResponse()
   async findAll(@AccessContextHttp() _accessContext: AccessContext) {
@@ -39,17 +41,14 @@ export class NotificacaoRestController {
         titulo: e.titulo,
         conteudo: e.conteudo,
         lida: e.lida,
-        idUsuarioFk: e.idUsuarioFk,
+        idUsuarioFk: e.usuario?.id,
         dateCreated: e.dateCreated,
       })),
     };
   }
 
   @Get("/contagem-nao-lidas")
-  @ApiOperation({
-    summary: "Conta notificacoes nao lidas",
-    operationId: "notificacaoContagemNaoLidas",
-  })
+  @ApiOperation(NotificacaoContagemNaoLidasQueryMetadata.swaggerMetadata)
   @ApiOkResponse()
   @ApiForbiddenResponse()
   async contagemNaoLidas(@AccessContextHttp() _accessContext: AccessContext) {
@@ -58,7 +57,7 @@ export class NotificacaoRestController {
   }
 
   @Patch("/:id/lida")
-  @ApiOperation({ summary: "Marca notificacao como lida", operationId: "notificacaoMarcarLida" })
+  @ApiOperation(NotificacaoMarcarLidaCommandMetadata.swaggerMetadata)
   @ApiOkResponse()
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()

@@ -17,15 +17,9 @@ export class EstagioTypeormEntity {
   @PrimaryColumn("uuid")
   id!: string;
 
-  @Column({ name: "id_empresa_fk", type: "uuid", nullable: false })
-  idEmpresaFk!: string;
-
-  @ManyToOne(() => EmpresaTypeormEntity, {})
+  @ManyToOne(() => EmpresaTypeormEntity)
   @JoinColumn({ name: "id_empresa_fk" })
   empresa!: Relation<EmpresaTypeormEntity>;
-
-  @Column({ name: "id_estagiario_fk", type: "uuid", nullable: true })
-  idEstagiarioFk!: string | null;
 
   @ManyToOne(() => EstagiarioTypeormEntity, { nullable: true })
   @JoinColumn({ name: "id_estagiario_fk" })

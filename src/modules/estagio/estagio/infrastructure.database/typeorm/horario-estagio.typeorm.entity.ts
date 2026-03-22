@@ -6,9 +6,6 @@ export class HorarioEstagioTypeormEntity {
   @PrimaryColumn("uuid")
   id!: string;
 
-  @Column({ name: "id_estagio_fk", type: "uuid", nullable: false })
-  idEstagioFk!: string;
-
   @ManyToOne(
     () => EstagioTypeormEntity,
     (estagio) => estagio.horariosEstagio,

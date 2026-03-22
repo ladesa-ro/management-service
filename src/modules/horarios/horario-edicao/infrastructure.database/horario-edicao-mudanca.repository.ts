@@ -20,7 +20,7 @@ export class HorarioEdicaoMudancaTypeOrmRepositoryAdapter
   async findBySessaoId(sessaoId: string): Promise<HorarioEdicaoMudancaEntity[]> {
     const repo = this.appTypeormConnection.getRepository(HorarioEdicaoMudancaEntity);
     return repo.find({
-      where: { idSessaoFk: sessaoId },
+      where: { sessao: { id: sessaoId } },
       order: { dateCreated: "ASC" },
     });
   }

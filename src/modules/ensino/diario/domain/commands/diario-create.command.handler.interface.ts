@@ -1,6 +1,12 @@
 import type { ICommandHandler } from "@/domain/abstractions";
+import { createOperationMetadata } from "@/domain/abstractions";
 import type { DiarioFindOneQueryResult } from "../queries";
 import type { DiarioCreateCommand } from "./diario-create.command";
+
+export const DiarioCreateCommandMetadata = createOperationMetadata({
+  operationId: "diarioCreate",
+  summary: "Cria um diario",
+});
 
 export const IDiarioCreateCommandHandler = Symbol("IDiarioCreateCommandHandler");
 

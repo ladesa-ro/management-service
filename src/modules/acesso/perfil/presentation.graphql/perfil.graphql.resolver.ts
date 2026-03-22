@@ -2,9 +2,18 @@ import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { graphqlExtractSelection } from "@/infrastructure.graphql";
-import { IPerfilSetVinculosCommandHandler } from "@/modules/acesso/perfil/domain/commands/perfil-set-vinculos.command.handler.interface";
-import { IPerfilFindOneQueryHandler } from "@/modules/acesso/perfil/domain/queries/perfil-find-one.query.handler.interface";
-import { IPerfilListQueryHandler } from "@/modules/acesso/perfil/domain/queries/perfil-list.query.handler.interface";
+import {
+  IPerfilSetVinculosCommandHandler,
+  PerfilSetVinculosCommandMetadata,
+} from "@/modules/acesso/perfil/domain/commands/perfil-set-vinculos.command.handler.interface";
+import {
+  IPerfilFindOneQueryHandler,
+  PerfilFindOneQueryMetadata,
+} from "@/modules/acesso/perfil/domain/queries/perfil-find-one.query.handler.interface";
+import {
+  IPerfilListQueryHandler,
+  PerfilListQueryMetadata,
+} from "@/modules/acesso/perfil/domain/queries/perfil-list.query.handler.interface";
 import { AccessContext, AccessContextGraphQL } from "@/server/access-context";
 import {
   PerfilFindOneOutputGraphQlDto,
@@ -25,7 +34,7 @@ export class PerfilGraphqlResolver {
     private readonly setVinculosHandler: IPerfilSetVinculosCommandHandler,
   ) {}
 
-  @Query(() => PerfilListOutputGraphQlDto, { name: "perfilFindAll" })
+  @Query(() => PerfilListOutputGraphQlDto, PerfilListQueryMetadata.gqlMetadata)
   async findAll(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args() dto: PerfilListInputGraphQlDto,
@@ -40,7 +49,10 @@ export class PerfilGraphqlResolver {
     return PerfilGraphqlMapper.toListOutputDto(result);
   }
 
-  @Query(() => PerfilFindOneOutputGraphQlDto, { name: "perfilFindById", nullable: true })
+  @Query(() => PerfilFindOneOutputGraphQlDto, {
+    ...PerfilFindOneQueryMetadata.gqlMetadata,
+    nullable: true,
+  })
   async findById(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
@@ -54,7 +66,7 @@ export class PerfilGraphqlResolver {
     return PerfilGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => PerfilListOutputGraphQlDto, { name: "perfilSetVinculos" })
+  @Mutation(() => PerfilListOutputGraphQlDto, PerfilSetVinculosCommandMetadata.gqlMetadata)
   async setVinculos(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("input") dto: PerfilSetVinculosInputGraphQlDto,

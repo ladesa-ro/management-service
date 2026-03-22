@@ -9,12 +9,27 @@ import {
 } from "@nestjs/swagger";
 import { ensureExists } from "@/application/errors";
 import { DeclareDependency } from "@/domain/dependency-injection";
-import { IModalidadeCreateCommandHandler } from "@/modules/ensino/modalidade/domain/commands/modalidade-create.command.handler.interface";
-import { IModalidadeDeleteCommandHandler } from "@/modules/ensino/modalidade/domain/commands/modalidade-delete.command.handler.interface";
-import { IModalidadeUpdateCommandHandler } from "@/modules/ensino/modalidade/domain/commands/modalidade-update.command.handler.interface";
+import {
+  IModalidadeCreateCommandHandler,
+  ModalidadeCreateCommandMetadata,
+} from "@/modules/ensino/modalidade/domain/commands/modalidade-create.command.handler.interface";
+import {
+  IModalidadeDeleteCommandHandler,
+  ModalidadeDeleteCommandMetadata,
+} from "@/modules/ensino/modalidade/domain/commands/modalidade-delete.command.handler.interface";
+import {
+  IModalidadeUpdateCommandHandler,
+  ModalidadeUpdateCommandMetadata,
+} from "@/modules/ensino/modalidade/domain/commands/modalidade-update.command.handler.interface";
 import { Modalidade } from "@/modules/ensino/modalidade/domain/modalidade";
-import { IModalidadeFindOneQueryHandler } from "@/modules/ensino/modalidade/domain/queries/modalidade-find-one.query.handler.interface";
-import { IModalidadeListQueryHandler } from "@/modules/ensino/modalidade/domain/queries/modalidade-list.query.handler.interface";
+import {
+  IModalidadeFindOneQueryHandler,
+  ModalidadeFindOneQueryMetadata,
+} from "@/modules/ensino/modalidade/domain/queries/modalidade-find-one.query.handler.interface";
+import {
+  IModalidadeListQueryHandler,
+  ModalidadeListQueryMetadata,
+} from "@/modules/ensino/modalidade/domain/queries/modalidade-list.query.handler.interface";
 import { AccessContext, AccessContextHttp } from "@/server/access-context";
 import {
   ModalidadeCreateInputRestDto,
@@ -43,7 +58,7 @@ export class ModalidadeRestController {
   ) {}
 
   @Get("/")
-  @ApiOperation({ summary: "Lista modalidades", operationId: "modalidadeFindAll" })
+  @ApiOperation(ModalidadeListQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: ModalidadeListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
@@ -56,7 +71,7 @@ export class ModalidadeRestController {
   }
 
   @Get("/:id")
-  @ApiOperation({ summary: "Busca uma modalidade por ID", operationId: "modalidadeFindById" })
+  @ApiOperation(ModalidadeFindOneQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: ModalidadeFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -71,7 +86,7 @@ export class ModalidadeRestController {
   }
 
   @Post("/")
-  @ApiOperation({ summary: "Cria uma modalidade", operationId: "modalidadeCreate" })
+  @ApiOperation(ModalidadeCreateCommandMetadata.swaggerMetadata)
   @ApiCreatedResponse({ type: ModalidadeFindOneOutputRestDto })
   @ApiForbiddenResponse()
   async create(
@@ -84,7 +99,7 @@ export class ModalidadeRestController {
   }
 
   @Patch("/:id")
-  @ApiOperation({ summary: "Atualiza uma modalidade", operationId: "modalidadeUpdate" })
+  @ApiOperation(ModalidadeUpdateCommandMetadata.swaggerMetadata)
   @ApiOkResponse({ type: ModalidadeFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -99,7 +114,7 @@ export class ModalidadeRestController {
   }
 
   @Delete("/:id")
-  @ApiOperation({ summary: "Remove uma modalidade", operationId: "modalidadeDeleteOneById" })
+  @ApiOperation(ModalidadeDeleteCommandMetadata.swaggerMetadata)
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()

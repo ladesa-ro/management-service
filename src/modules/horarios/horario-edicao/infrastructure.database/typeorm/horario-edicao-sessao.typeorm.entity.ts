@@ -15,9 +15,6 @@ export class HorarioEdicaoSessaoEntity {
   @Column({ name: "status", type: "varchar", length: 20, nullable: false })
   status!: HorarioEdicaoSessaoStatus;
 
-  @Column({ name: "id_usuario_fk", type: "uuid", nullable: false })
-  idUsuarioFk!: string;
-
   @ManyToOne(() => UsuarioEntity, { nullable: false })
   @JoinColumn({ name: "id_usuario_fk" })
   usuario!: Relation<UsuarioEntity>;

@@ -3,7 +3,7 @@ import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import type { IUsuario } from "@/modules/acesso/usuario";
 import type { ICampus } from "@/modules/ambientes/campus";
 import { zodValidate } from "@/shared/validation/index";
-import { perfilCreateSchema, perfilSchema, perfilUpdateSchema } from "./perfil.schemas";
+import { PerfilCreateSchema, PerfilSchema, PerfilUpdateSchema } from "./perfil.schemas";
 
 export interface IPerfil {
   id: string;
@@ -31,7 +31,7 @@ export class Perfil {
   private constructor() {}
 
   static create(dados: unknown): Perfil {
-    const parsed = zodValidate(Perfil.entityName, perfilCreateSchema, dados);
+    const parsed = zodValidate(Perfil.entityName, PerfilCreateSchema, dados);
 
     const instance = new Perfil();
 
@@ -46,7 +46,7 @@ export class Perfil {
   }
 
   static load(dados: unknown): Perfil {
-    const parsed = zodValidate(Perfil.entityName, perfilSchema, dados);
+    const parsed = zodValidate(Perfil.entityName, PerfilSchema, dados);
 
     const instance = new Perfil();
 
@@ -63,14 +63,14 @@ export class Perfil {
   }
 
   update(dados: unknown): void {
-    const parsed = zodValidate(Perfil.entityName, perfilUpdateSchema, dados);
+    const parsed = zodValidate(Perfil.entityName, PerfilUpdateSchema, dados);
 
     if (parsed.ativo !== undefined) this.ativo = parsed.ativo;
     if (parsed.cargo !== undefined) this.cargo = parsed.cargo;
 
     this.dateUpdated = new Date().toISOString();
 
-    zodValidate(Perfil.entityName, perfilSchema, this);
+    zodValidate(Perfil.entityName, PerfilSchema, this);
   }
 
   isAtivo(): boolean {

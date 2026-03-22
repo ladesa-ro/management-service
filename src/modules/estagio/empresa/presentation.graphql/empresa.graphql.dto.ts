@@ -3,11 +3,16 @@ import {
   PaginatedFilterByIdGraphQlDto,
   PaginationMetaGraphQlDto,
 } from "@/infrastructure.graphql/dtos";
+import { EmpresaCreateCommandFields } from "@/modules/estagio/empresa/domain/commands/empresa-create.command";
+import { EmpresaUpdateCommandFields } from "@/modules/estagio/empresa/domain/commands/empresa-update.command";
 import {
-  empresaCreateSchema,
-  empresaGraphqlListInputSchema,
-  empresaUpdateSchema,
+  EmpresaCreateSchema,
+  EmpresaUpdateSchema,
 } from "@/modules/estagio/empresa/domain/empresa.schemas";
+import { EmpresaFindOneQueryResultFields } from "@/modules/estagio/empresa/domain/queries/empresa-find-one.query.result";
+import { EmpresaListQueryFields } from "@/modules/estagio/empresa/domain/queries/empresa-list.query";
+import { EmpresaGraphqlListInputSchema } from "@/modules/estagio/empresa/domain/queries/empresa-list.query.schemas";
+import { EnderecoFindOneOutputGraphQlDto } from "@/modules/localidades/endereco/presentation.graphql/endereco.graphql.dto";
 import { ArgsType, Field, InputType, ObjectType } from "@/shared/presentation/graphql";
 
 // ============================================================================
@@ -16,29 +21,40 @@ import { ArgsType, Field, InputType, ObjectType } from "@/shared/presentation/gr
 
 @ObjectType("EmpresaFindOneOutputDto")
 export class EmpresaFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
-  @Field(() => String) razaoSocial: string;
-  @Field(() => String) nomeFantasia: string;
-  @Field(() => String) cnpj: string;
-  @Field(() => String) telefone: string;
-  @Field(() => String) email: string;
-  @Field(() => String) idEnderecoFk: string;
-  @Field(() => Boolean) ativo: boolean;
+  @Field(() => String, EmpresaFindOneQueryResultFields.razaoSocial.gqlMetadata) razaoSocial: string;
+  @Field(() => String, EmpresaFindOneQueryResultFields.nomeFantasia.gqlMetadata)
+  nomeFantasia: string;
+  @Field(() => String, EmpresaFindOneQueryResultFields.cnpj.gqlMetadata) cnpj: string;
+  @Field(() => String, EmpresaFindOneQueryResultFields.telefone.gqlMetadata) telefone: string;
+  @Field(() => String, EmpresaFindOneQueryResultFields.email.gqlMetadata) email: string;
+  @Field(
+    () => EnderecoFindOneOutputGraphQlDto,
+    EmpresaFindOneQueryResultFields.endereco.gqlMetadata,
+  )
+  endereco: EnderecoFindOneOutputGraphQlDto;
+  @Field(() => Boolean, EmpresaFindOneQueryResultFields.ativo.gqlMetadata) ativo: boolean;
 }
 
 // ============================================================================
 // Create Input
 // ============================================================================
 
+@InputType("EmpresaEnderecoRefInputDto")
+export class EmpresaEnderecoRefInputGraphQlDto {
+  @Field(() => String) id: string;
+}
+
 @InputType("EmpresaCreateInputDto")
 export class EmpresaCreateInputGraphQlDto {
-  static schema = empresaCreateSchema;
+  static schema = EmpresaCreateSchema;
 
-  @Field(() => String) razaoSocial: string;
-  @Field(() => String) nomeFantasia: string;
-  @Field(() => String) cnpj: string;
-  @Field(() => String) telefone: string;
-  @Field(() => String) email: string;
-  @Field(() => String) idEnderecoFk: string;
+  @Field(() => String, EmpresaCreateCommandFields.razaoSocial.gqlMetadata) razaoSocial: string;
+  @Field(() => String, EmpresaCreateCommandFields.nomeFantasia.gqlMetadata) nomeFantasia: string;
+  @Field(() => String, EmpresaCreateCommandFields.cnpj.gqlMetadata) cnpj: string;
+  @Field(() => String, EmpresaCreateCommandFields.telefone.gqlMetadata) telefone: string;
+  @Field(() => String, EmpresaCreateCommandFields.email.gqlMetadata) email: string;
+  @Field(() => EmpresaEnderecoRefInputGraphQlDto, EmpresaCreateCommandFields.endereco.gqlMetadata)
+  endereco: EmpresaEnderecoRefInputGraphQlDto;
 }
 
 // ============================================================================
@@ -47,25 +63,28 @@ export class EmpresaCreateInputGraphQlDto {
 
 @InputType("EmpresaUpdateInputDto")
 export class EmpresaUpdateInputGraphQlDto {
-  static schema = empresaUpdateSchema;
+  static schema = EmpresaUpdateSchema;
 
-  @Field(() => String, { nullable: true })
+  @Field(() => String, { nullable: true, ...EmpresaUpdateCommandFields.razaoSocial.gqlMetadata })
   razaoSocial?: string;
 
-  @Field(() => String, { nullable: true })
+  @Field(() => String, { nullable: true, ...EmpresaUpdateCommandFields.nomeFantasia.gqlMetadata })
   nomeFantasia?: string;
 
-  @Field(() => String, { nullable: true })
+  @Field(() => String, { nullable: true, ...EmpresaUpdateCommandFields.cnpj.gqlMetadata })
   cnpj?: string;
 
-  @Field(() => String, { nullable: true })
+  @Field(() => String, { nullable: true, ...EmpresaUpdateCommandFields.telefone.gqlMetadata })
   telefone?: string;
 
-  @Field(() => String, { nullable: true })
+  @Field(() => String, { nullable: true, ...EmpresaUpdateCommandFields.email.gqlMetadata })
   email?: string;
 
-  @Field(() => String, { nullable: true })
-  idEnderecoFk?: string;
+  @Field(() => EmpresaEnderecoRefInputGraphQlDto, {
+    nullable: true,
+    ...EmpresaUpdateCommandFields.endereco.gqlMetadata,
+  })
+  endereco?: EmpresaEnderecoRefInputGraphQlDto;
 }
 
 // ============================================================================
@@ -74,16 +93,16 @@ export class EmpresaUpdateInputGraphQlDto {
 
 @ArgsType()
 export class EmpresaListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {
-  static schema = empresaGraphqlListInputSchema;
+  static schema = EmpresaGraphqlListInputSchema;
 
-  @Field(() => [String], { nullable: true, description: "Filtro por CNPJ" })
+  @Field(() => [String], EmpresaListQueryFields.filterCnpj.gqlMetadata)
   filterCnpj?: string[];
 
-  @Field(() => [String], { nullable: true, description: "Filtro por nome fantasia" })
+  @Field(() => [String], EmpresaListQueryFields.filterNomeFantasia.gqlMetadata)
   filterNomeFantasia?: string[];
 
-  @Field(() => [String], { nullable: true, description: "Filtro por ID de endereço" })
-  filterIdEnderecoFk?: string[];
+  @Field(() => [String], EmpresaListQueryFields.filterEnderecoId.gqlMetadata)
+  filterEnderecoId?: string[];
 }
 
 // ============================================================================
@@ -92,9 +111,9 @@ export class EmpresaListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {
 
 @ObjectType("EmpresaListResult")
 export class EmpresaListOutputGraphQlDto {
-  @Field(() => PaginationMetaGraphQlDto)
+  @Field(() => PaginationMetaGraphQlDto, EmpresaListQueryFields.meta.gqlMetadata)
   meta: PaginationMetaGraphQlDto;
 
-  @Field(() => [EmpresaFindOneOutputGraphQlDto])
+  @Field(() => [EmpresaFindOneOutputGraphQlDto], EmpresaListQueryFields.data.gqlMetadata)
   data: EmpresaFindOneOutputGraphQlDto[];
 }

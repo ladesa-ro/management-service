@@ -8,6 +8,7 @@ import {
 } from "@nestjs/swagger";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import {
+  ArquivoGetStreamableFileQueryMetadata,
   IArquivoGetStreamableFileQueryHandler,
   type IArquivoGetStreamableFileQueryHandler as IArquivoGetStreamableFileQueryHandlerType,
 } from "@/modules/armazenamento/arquivo/domain/queries";
@@ -24,7 +25,7 @@ export class ArquivoRestController {
   ) {}
 
   @Get(":id")
-  @ApiOperation({ summary: "Busca um arquivo por ID", operationId: "arquivoFindById" })
+  @ApiOperation(ArquivoGetStreamableFileQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ description: "Arquivo encontrado" })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()

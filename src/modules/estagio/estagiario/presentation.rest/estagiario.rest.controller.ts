@@ -9,12 +9,27 @@ import {
 } from "@nestjs/swagger";
 import { ensureExists } from "@/application/errors";
 import { DeclareDependency } from "@/domain/dependency-injection";
-import { IEstagiarioCreateCommandHandler } from "@/modules/estagio/estagiario/domain/commands/estagiario-create.command.handler.interface";
-import { IEstagiarioDeleteCommandHandler } from "@/modules/estagio/estagiario/domain/commands/estagiario-delete.command.handler.interface";
-import { IEstagiarioUpdateCommandHandler } from "@/modules/estagio/estagiario/domain/commands/estagiario-update.command.handler.interface";
+import {
+  EstagiarioCreateCommandMetadata,
+  IEstagiarioCreateCommandHandler,
+} from "@/modules/estagio/estagiario/domain/commands/estagiario-create.command.handler.interface";
+import {
+  EstagiarioDeleteCommandMetadata,
+  IEstagiarioDeleteCommandHandler,
+} from "@/modules/estagio/estagiario/domain/commands/estagiario-delete.command.handler.interface";
+import {
+  EstagiarioUpdateCommandMetadata,
+  IEstagiarioUpdateCommandHandler,
+} from "@/modules/estagio/estagiario/domain/commands/estagiario-update.command.handler.interface";
 import { Estagiario } from "@/modules/estagio/estagiario/domain/estagiario";
-import { IEstagiarioFindOneQueryHandler } from "@/modules/estagio/estagiario/domain/queries/estagiario-find-one.query.handler.interface";
-import { IEstagiarioListQueryHandler } from "@/modules/estagio/estagiario/domain/queries/estagiario-list.query.handler.interface";
+import {
+  EstagiarioFindOneQueryMetadata,
+  IEstagiarioFindOneQueryHandler,
+} from "@/modules/estagio/estagiario/domain/queries/estagiario-find-one.query.handler.interface";
+import {
+  EstagiarioListQueryMetadata,
+  IEstagiarioListQueryHandler,
+} from "@/modules/estagio/estagiario/domain/queries/estagiario-list.query.handler.interface";
 import { AccessContext, AccessContextHttp } from "@/server/access-context";
 import {
   EstagiarioCreateInputRestDto,
@@ -43,7 +58,7 @@ export class EstagiarioRestController {
   ) {}
 
   @Get("/")
-  @ApiOperation({ summary: "Lista estagiários", operationId: "estagiarioFindAll" })
+  @ApiOperation(EstagiarioListQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: EstagiarioListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
@@ -56,7 +71,7 @@ export class EstagiarioRestController {
   }
 
   @Get("/:id")
-  @ApiOperation({ summary: "Busca um estagiário por ID", operationId: "estagiarioFindById" })
+  @ApiOperation(EstagiarioFindOneQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: EstagiarioFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -71,7 +86,7 @@ export class EstagiarioRestController {
   }
 
   @Post("/")
-  @ApiOperation({ summary: "Cria um estagiário", operationId: "estagiarioCreate" })
+  @ApiOperation(EstagiarioCreateCommandMetadata.swaggerMetadata)
   @ApiCreatedResponse({ type: EstagiarioFindOneOutputRestDto })
   @ApiForbiddenResponse()
   async create(
@@ -84,7 +99,7 @@ export class EstagiarioRestController {
   }
 
   @Patch("/:id")
-  @ApiOperation({ summary: "Atualiza um estagiário", operationId: "estagiarioUpdate" })
+  @ApiOperation(EstagiarioUpdateCommandMetadata.swaggerMetadata)
   @ApiOkResponse({ type: EstagiarioFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -99,7 +114,7 @@ export class EstagiarioRestController {
   }
 
   @Delete("/:id")
-  @ApiOperation({ summary: "Deleta um estagiário", operationId: "estagiarioDeleteOneById" })
+  @ApiOperation(EstagiarioDeleteCommandMetadata.swaggerMetadata)
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()

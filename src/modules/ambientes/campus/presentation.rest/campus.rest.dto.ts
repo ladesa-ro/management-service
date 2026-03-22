@@ -1,55 +1,42 @@
 import {
+  CampusCreateSchema,
+  CampusUpdateSchema,
+} from "@/modules/ambientes/campus/domain/campus.schemas";
+import { CampusFindOneInputSchema } from "@/modules/ambientes/campus/domain/queries/campus-find-one.query.schemas";
+import { CampusPaginationInputSchema } from "@/modules/ambientes/campus/domain/queries/campus-list.query.schemas";
+import {
   EnderecoFindOneOutputRestDto,
   EnderecoInputRestDto,
 } from "@/modules/localidades/endereco/presentation.rest";
-import {
-  ApiProperty,
-  ApiPropertyOptional,
-  ApiSchema,
-  commonProperties,
-  RegisterModel,
-  referenceProperty,
-  simpleProperty,
-} from "@/shared/presentation/rest";
+import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@/shared/presentation/rest";
 import { EntityBaseRestDto, PaginationMetaRestDto } from "@/shared/presentation/rest/dtos";
-import {
-  campusFindOneInputSchema,
-  campusInputCreateSchema,
-  campusInputUpdateSchema,
-  campusPaginationInputSchema,
-} from "../domain/campus.schemas";
+import { CampusCreateCommandFields } from "../domain/commands/campus-create.command";
+import { CampusUpdateCommandFields } from "../domain/commands/campus-update.command";
+import { CampusFindOneQueryResultFields } from "../domain/queries/campus-find-one.query.result";
+import { CampusListQueryFields } from "../domain/queries/campus-list.query";
 
 // ============================================================================
 // FindOne Output
 // ============================================================================
 
 @ApiSchema({ name: "CampusFindOneOutputDto" })
-@RegisterModel({
-  name: "CampusFindOneQueryResult",
-  properties: [
-    simpleProperty("id"),
-    simpleProperty("nomeFantasia"),
-    simpleProperty("razaoSocial"),
-    simpleProperty("apelido"),
-    simpleProperty("cnpj"),
-    referenceProperty("endereco", "EnderecoFindOneQueryResult"),
-    ...commonProperties.dated,
-  ],
-})
 export class CampusFindOneOutputRestDto extends EntityBaseRestDto {
-  @ApiProperty({ type: "string", description: "Nome fantasia do campus", minLength: 1 })
+  @ApiProperty(CampusFindOneQueryResultFields.nomeFantasia.swaggerMetadata)
   nomeFantasia: string;
 
-  @ApiProperty({ type: "string", description: "Razao social do campus", minLength: 1 })
+  @ApiProperty(CampusFindOneQueryResultFields.razaoSocial.swaggerMetadata)
   razaoSocial: string;
 
-  @ApiProperty({ type: "string", description: "Apelido do campus", minLength: 1 })
+  @ApiProperty(CampusFindOneQueryResultFields.apelido.swaggerMetadata)
   apelido: string;
 
-  @ApiProperty({ type: "string", description: "CNPJ do campus", minLength: 1 })
+  @ApiProperty(CampusFindOneQueryResultFields.cnpj.swaggerMetadata)
   cnpj: string;
 
-  @ApiProperty({ type: () => EnderecoFindOneOutputRestDto, description: "Endereco do campus" })
+  @ApiProperty({
+    type: () => EnderecoFindOneOutputRestDto,
+    ...CampusFindOneQueryResultFields.endereco.swaggerMetadata,
+  })
   endereco: EnderecoFindOneOutputRestDto;
 }
 
@@ -59,44 +46,38 @@ export class CampusFindOneOutputRestDto extends EntityBaseRestDto {
 
 @ApiSchema({ name: "CampusListInputDto" })
 export class CampusListInputRestDto {
-  static schema = campusPaginationInputSchema;
+  static schema = CampusPaginationInputSchema;
 
   [key: string]: string | number | string[] | null | undefined;
 
-  @ApiPropertyOptional({
-    type: "integer",
-    description: "Pagina de consulta",
-    minimum: 1,
-    default: 1,
-  })
-  page?: number = 1;
+  @ApiPropertyOptional(CampusListQueryFields.page.swaggerMetadata)
+  page?: number;
 
-  @ApiPropertyOptional({
-    type: "integer",
-    description: "Limite da quantidade de resultados por pagina",
-    minimum: 1,
-  })
+  @ApiPropertyOptional(CampusListQueryFields.limit.swaggerMetadata)
   limit?: number;
 
-  @ApiPropertyOptional({ type: "string", description: "Busca textual" })
+  @ApiPropertyOptional(CampusListQueryFields.search.swaggerMetadata)
   search?: string;
 
-  @ApiPropertyOptional({ description: "Ordenacao (ex: nome:ASC)", isArray: true, type: "string" })
+  @ApiPropertyOptional(CampusListQueryFields.sortBy.swaggerMetadata)
   sortBy?: string[];
 
-  @ApiPropertyOptional({ description: "Seleção de campos", isArray: true, type: "string" })
+  @ApiPropertyOptional(CampusListQueryFields.selection.swaggerMetadata)
   selection?: string[];
 
-  @ApiPropertyOptional({ description: "Filtro por ID", type: "string", isArray: true })
+  @ApiPropertyOptional(CampusListQueryFields.filterId.swaggerMetadata)
   "filter.id"?: string[];
 }
 
 @ApiSchema({ name: "CampusListOutputDto" })
 export class CampusListOutputRestDto {
-  @ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" })
+  @ApiProperty({ type: () => PaginationMetaRestDto, ...CampusListQueryFields.meta.swaggerMetadata })
   meta: PaginationMetaRestDto;
 
-  @ApiProperty({ type: () => [CampusFindOneOutputRestDto], description: "Resultados da busca" })
+  @ApiProperty({
+    type: () => [CampusFindOneOutputRestDto],
+    ...CampusListQueryFields.data.swaggerMetadata,
+  })
   data: CampusFindOneOutputRestDto[];
 }
 
@@ -106,41 +87,47 @@ export class CampusListOutputRestDto {
 
 @ApiSchema({ name: "CampusCreateInputDto" })
 export class CampusCreateInputRestDto {
-  static schema = campusInputCreateSchema;
+  static schema = CampusCreateSchema;
 
-  @ApiProperty({ type: "string", description: "Nome fantasia do campus", minLength: 1 })
+  @ApiProperty(CampusCreateCommandFields.nomeFantasia.swaggerMetadata)
   nomeFantasia: string;
 
-  @ApiProperty({ type: "string", description: "Razao social do campus", minLength: 1 })
+  @ApiProperty(CampusCreateCommandFields.razaoSocial.swaggerMetadata)
   razaoSocial: string;
 
-  @ApiProperty({ type: "string", description: "Apelido do campus", minLength: 1 })
+  @ApiProperty(CampusCreateCommandFields.apelido.swaggerMetadata)
   apelido: string;
 
-  @ApiProperty({ type: "string", description: "CNPJ do campus", minLength: 1 })
+  @ApiProperty(CampusCreateCommandFields.cnpj.swaggerMetadata)
   cnpj: string;
 
-  @ApiProperty({ type: () => EnderecoInputRestDto, description: "Endereco do campus" })
+  @ApiProperty({
+    type: () => EnderecoInputRestDto,
+    ...CampusCreateCommandFields.endereco.swaggerMetadata,
+  })
   endereco: EnderecoInputRestDto;
 }
 
 @ApiSchema({ name: "CampusUpdateInputDto" })
 export class CampusUpdateInputRestDto {
-  static schema = campusInputUpdateSchema;
+  static schema = CampusUpdateSchema;
 
-  @ApiPropertyOptional({ type: "string", description: "Nome fantasia do campus", minLength: 1 })
+  @ApiPropertyOptional(CampusUpdateCommandFields.nomeFantasia.swaggerMetadata)
   nomeFantasia?: string;
 
-  @ApiPropertyOptional({ type: "string", description: "Razao social do campus", minLength: 1 })
+  @ApiPropertyOptional(CampusUpdateCommandFields.razaoSocial.swaggerMetadata)
   razaoSocial?: string;
 
-  @ApiPropertyOptional({ type: "string", description: "Apelido do campus", minLength: 1 })
+  @ApiPropertyOptional(CampusUpdateCommandFields.apelido.swaggerMetadata)
   apelido?: string;
 
-  @ApiPropertyOptional({ type: "string", description: "CNPJ do campus", minLength: 1 })
+  @ApiPropertyOptional(CampusUpdateCommandFields.cnpj.swaggerMetadata)
   cnpj?: string;
 
-  @ApiPropertyOptional({ type: () => EnderecoInputRestDto, description: "Endereco do campus" })
+  @ApiPropertyOptional({
+    type: () => EnderecoInputRestDto,
+    ...CampusUpdateCommandFields.endereco.swaggerMetadata,
+  })
   endereco?: EnderecoInputRestDto;
 }
 
@@ -150,12 +137,8 @@ export class CampusUpdateInputRestDto {
 
 @ApiSchema({ name: "CampusFindOneInputDto" })
 export class CampusFindOneInputRestDto {
-  static schema = campusFindOneInputSchema;
+  static schema = CampusFindOneInputSchema;
 
-  @ApiProperty({
-    type: "string",
-    description: "Identificador do registro (uuid)",
-    format: "uuid",
-  })
+  @ApiProperty(CampusFindOneQueryResultFields.id.swaggerMetadata)
   id: string;
 }

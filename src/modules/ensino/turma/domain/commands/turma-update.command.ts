@@ -1,6 +1,15 @@
 import { AmbienteInputRef } from "@/modules/ambientes/ambiente";
 import { ImagemInputRef } from "@/modules/armazenamento/imagem";
 import { CursoInputRef } from "@/modules/ensino/curso";
+import { TurmaFields } from "../turma.fields";
+
+export const TurmaUpdateCommandFields = {
+  periodo: TurmaFields.periodo,
+  nome: TurmaFields.nome,
+  curso: TurmaFields.curso,
+  ambientePadraoAula: TurmaFields.ambientePadraoAula,
+  imagemCapa: TurmaFields.imagemCapa,
+};
 
 export class TurmaUpdateCommand {
   periodo?: string;

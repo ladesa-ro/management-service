@@ -8,9 +8,19 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { DeclareDependency } from "@/domain/dependency-injection";
-import { IPerfilSetVinculosCommandHandler } from "@/modules/acesso/perfil/domain/commands/perfil-set-vinculos.command.handler.interface";
-import { IPerfilFindOneQueryHandler } from "@/modules/acesso/perfil/domain/queries/perfil-find-one.query.handler.interface";
-import { IPerfilListQueryHandler } from "@/modules/acesso/perfil/domain/queries/perfil-list.query.handler.interface";
+import {
+  IPerfilSetVinculosCommandHandler,
+  PerfilSetVinculosCommandMetadata,
+} from "@/modules/acesso/perfil/domain/commands/perfil-set-vinculos.command.handler.interface";
+import { PerfilEnsinoByIdQueryMetadata } from "@/modules/acesso/perfil/domain/queries/perfil-ensino-by-id.query.metadata";
+import {
+  IPerfilFindOneQueryHandler,
+  PerfilFindOneQueryMetadata,
+} from "@/modules/acesso/perfil/domain/queries/perfil-find-one.query.handler.interface";
+import {
+  IPerfilListQueryHandler,
+  PerfilListQueryMetadata,
+} from "@/modules/acesso/perfil/domain/queries/perfil-list.query.handler.interface";
 import { AccessContext, AccessContextHttp } from "@/server/access-context";
 import {
   PerfilFindOneInputRestDto,
@@ -35,7 +45,7 @@ export class PerfilRestController {
   ) {}
 
   @Get("/")
-  @ApiOperation({ summary: "Lista perfis de um usuario", operationId: "perfilFindAll" })
+  @ApiOperation(PerfilListQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: PerfilListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
@@ -50,7 +60,7 @@ export class PerfilRestController {
   }
 
   @Get("/:id")
-  @ApiOperation({ summary: "Busca um perfil por ID", operationId: "perfilFindById" })
+  @ApiOperation(PerfilFindOneQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: PerfilFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -64,7 +74,7 @@ export class PerfilRestController {
   }
 
   @Get("/:id/ensino")
-  @ApiOperation({ summary: "Busca dados de ensino de um perfil", operationId: "perfilEnsinoById" })
+  @ApiOperation(PerfilEnsinoByIdQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: PerfilFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -78,14 +88,7 @@ export class PerfilRestController {
   }
 
   @Post("/")
-  @ApiOperation({
-    summary: "Define vinculos (cargos) de um usuario em um campus",
-    description:
-      "Define os cargos que um usuario possui em um campus. " +
-      "Cargos existentes que nao estiverem na lista serao desativados. " +
-      "Cargos novos serao criados ou reativados.",
-    operationId: "perfilSetVinculos",
-  })
+  @ApiOperation(PerfilSetVinculosCommandMetadata.swaggerMetadata)
   @ApiCreatedResponse({
     type: PerfilListOutputRestDto,
     description: "Lista de perfis ativos do usuario no campus apos a operacao",

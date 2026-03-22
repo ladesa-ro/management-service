@@ -1,6 +1,18 @@
-import { EntityQueryResult } from "@/domain/abstractions";
+import { EntityQueryResult, SharedFields } from "@/domain/abstractions";
+import { fieldsToProperties } from "@/infrastructure.database/typeorm/metadata/model-from-fields";
+import {
+  commonProperties,
+  defineModel,
+  referenceProperty,
+} from "@/infrastructure.database/typeorm/metadata/model-registry";
 import { UsuarioFindOneQueryResult } from "@/modules/acesso/usuario";
 import { CampusFindOneQueryResult } from "@/modules/ambientes/campus";
+import { PerfilFields } from "../perfil.fields";
+
+export const PerfilFindOneQueryResultFields = {
+  id: SharedFields.idUuid,
+  ...PerfilFields,
+};
 
 export class PerfilFindOneQueryResult extends EntityQueryResult {
   ativo!: boolean;
@@ -8,3 +20,10 @@ export class PerfilFindOneQueryResult extends EntityQueryResult {
   campus!: CampusFindOneQueryResult;
   usuario!: UsuarioFindOneQueryResult;
 }
+
+defineModel("PerfilFindOneQueryResult", [
+  ...fieldsToProperties(PerfilFindOneQueryResultFields),
+  referenceProperty("campus", "CampusFindOneQueryResult"),
+  referenceProperty("usuario", "UsuarioFindOneQueryResult"),
+  ...commonProperties.dated,
+]);

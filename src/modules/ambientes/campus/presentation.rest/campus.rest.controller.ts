@@ -10,11 +10,26 @@ import {
 import { ensureExists } from "@/application/errors";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { Campus } from "@/modules/ambientes/campus/domain/campus";
-import { ICampusCreateCommandHandler } from "@/modules/ambientes/campus/domain/commands/campus-create.command.handler.interface";
-import { ICampusDeleteCommandHandler } from "@/modules/ambientes/campus/domain/commands/campus-delete.command.handler.interface";
-import { ICampusUpdateCommandHandler } from "@/modules/ambientes/campus/domain/commands/campus-update.command.handler.interface";
-import { ICampusFindOneQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-find-one.query.handler.interface";
-import { ICampusListQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-list.query.handler.interface";
+import {
+  CampusCreateCommandMetadata,
+  ICampusCreateCommandHandler,
+} from "@/modules/ambientes/campus/domain/commands/campus-create.command.handler.interface";
+import {
+  CampusDeleteCommandMetadata,
+  ICampusDeleteCommandHandler,
+} from "@/modules/ambientes/campus/domain/commands/campus-delete.command.handler.interface";
+import {
+  CampusUpdateCommandMetadata,
+  ICampusUpdateCommandHandler,
+} from "@/modules/ambientes/campus/domain/commands/campus-update.command.handler.interface";
+import {
+  CampusFindOneQueryMetadata,
+  ICampusFindOneQueryHandler,
+} from "@/modules/ambientes/campus/domain/queries/campus-find-one.query.handler.interface";
+import {
+  CampusListQueryMetadata,
+  ICampusListQueryHandler,
+} from "@/modules/ambientes/campus/domain/queries/campus-list.query.handler.interface";
 import { AccessContext, AccessContextHttp } from "@/server/access-context";
 import {
   CampusCreateInputRestDto,
@@ -43,7 +58,7 @@ export class CampusRestController {
   ) {}
 
   @Get("/")
-  @ApiOperation({ summary: "Lista campi", operationId: "campusFindAll" })
+  @ApiOperation(CampusListQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: CampusListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
@@ -56,7 +71,7 @@ export class CampusRestController {
   }
 
   @Get("/:id")
-  @ApiOperation({ summary: "Busca um campus por ID", operationId: "campusFindById" })
+  @ApiOperation(CampusFindOneQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: CampusFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -71,7 +86,7 @@ export class CampusRestController {
   }
 
   @Post("/")
-  @ApiOperation({ summary: "Cria um campus", operationId: "campusCreate" })
+  @ApiOperation(CampusCreateCommandMetadata.swaggerMetadata)
   @ApiCreatedResponse({ type: CampusFindOneOutputRestDto })
   @ApiForbiddenResponse()
   async create(
@@ -84,7 +99,7 @@ export class CampusRestController {
   }
 
   @Patch("/:id")
-  @ApiOperation({ summary: "Atualiza um campus", operationId: "campusUpdate" })
+  @ApiOperation(CampusUpdateCommandMetadata.swaggerMetadata)
   @ApiOkResponse({ type: CampusFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -99,7 +114,7 @@ export class CampusRestController {
   }
 
   @Delete("/:id")
-  @ApiOperation({ summary: "Remove um campus", operationId: "campusDeleteOneById" })
+  @ApiOperation(CampusDeleteCommandMetadata.swaggerMetadata)
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()

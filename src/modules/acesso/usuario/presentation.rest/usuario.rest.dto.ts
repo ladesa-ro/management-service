@@ -1,19 +1,16 @@
+import { UsuarioCreateCommandFields } from "@/modules/acesso/usuario/domain/commands/usuario-create.command";
+import { UsuarioUpdateCommandFields } from "@/modules/acesso/usuario/domain/commands/usuario-update.command";
+import { UsuarioFindOneQueryFields } from "@/modules/acesso/usuario/domain/queries/usuario-find-one.query";
+import { UsuarioFindOneQueryResultFields } from "@/modules/acesso/usuario/domain/queries/usuario-find-one.query.result";
+import { UsuarioFindOneInputSchema } from "@/modules/acesso/usuario/domain/queries/usuario-find-one.query.schemas";
+import { UsuarioListQueryFields } from "@/modules/acesso/usuario/domain/queries/usuario-list.query";
+import { UsuarioPaginationInputSchema } from "@/modules/acesso/usuario/domain/queries/usuario-list.query.schemas";
 import {
-  usuarioCreateSchema,
-  usuarioFindOneInputSchema,
-  usuarioPaginationInputSchema,
-  usuarioUpdateSchema,
+  UsuarioCreateSchema,
+  UsuarioUpdateSchema,
 } from "@/modules/acesso/usuario/domain/usuario.schemas";
 import { ImagemFindOneOutputRestDto } from "@/modules/ambientes/bloco/presentation.rest";
-import {
-  ApiProperty,
-  ApiPropertyOptional,
-  ApiSchema,
-  commonProperties,
-  RegisterModel,
-  referenceProperty,
-  simpleProperty,
-} from "@/shared/presentation/rest";
+import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@/shared/presentation/rest";
 import {
   EntityBaseRestDto,
   PaginatedFilterByIdRestDto,
@@ -25,58 +22,28 @@ import {
 // ============================================================================
 
 @ApiSchema({ name: "UsuarioFindOneOutputDto" })
-@RegisterModel({
-  name: "UsuarioFindOneQueryResult",
-  properties: [
-    simpleProperty("id"),
-    simpleProperty("nome", { nullable: true }),
-    simpleProperty("matricula", { nullable: true }),
-    simpleProperty("email", { nullable: true }),
-    simpleProperty("isSuperUser"),
-    referenceProperty("imagemCapa", "ImagemFindOneQueryResult", { nullable: true }),
-    referenceProperty("imagemPerfil", "ImagemFindOneQueryResult", { nullable: true }),
-    ...commonProperties.dated,
-  ],
-})
 export class UsuarioFindOneOutputRestDto extends EntityBaseRestDto {
-  @ApiPropertyOptional({
-    type: "string",
-    description: "Nome do usuario",
-    nullable: true,
-    minLength: 1,
-  })
+  @ApiPropertyOptional(UsuarioFindOneQueryResultFields.nome.swaggerMetadata)
   nome: string | null;
 
-  @ApiPropertyOptional({
-    type: "string",
-    description: "Matrícula do usuário",
-    nullable: true,
-    minLength: 1,
-  })
+  @ApiPropertyOptional(UsuarioFindOneQueryResultFields.matricula.swaggerMetadata)
   matricula: string | null;
 
-  @ApiPropertyOptional({
-    type: "string",
-    description: "E-mail do usuario",
-    nullable: true,
-    format: "email",
-  })
+  @ApiPropertyOptional(UsuarioFindOneQueryResultFields.email.swaggerMetadata)
   email: string | null;
 
-  @ApiProperty({ type: "boolean", description: "Diz que o usuario tem poderes de administrador" })
+  @ApiProperty(UsuarioFindOneQueryResultFields.isSuperUser.swaggerMetadata)
   isSuperUser: boolean;
 
   @ApiPropertyOptional({
     type: () => ImagemFindOneOutputRestDto,
-    description: "Imagem de capa do usuario",
-    nullable: true,
+    ...UsuarioFindOneQueryResultFields.imagemCapa.swaggerMetadata,
   })
   imagemCapa: ImagemFindOneOutputRestDto | null;
 
   @ApiPropertyOptional({
     type: () => ImagemFindOneOutputRestDto,
-    description: "Imagem de perfil do usuario",
-    nullable: true,
+    ...UsuarioFindOneQueryResultFields.imagemPerfil.swaggerMetadata,
   })
   imagemPerfil: ImagemFindOneOutputRestDto | null;
 }
@@ -142,21 +109,24 @@ export class UsuarioEnsinoOutputRestDto {
 
 @ApiSchema({ name: "UsuarioListInputDto" })
 export class UsuarioListInputRestDto extends PaginatedFilterByIdRestDto {
-  static schema = usuarioPaginationInputSchema;
+  static schema = UsuarioPaginationInputSchema;
 
-  @ApiPropertyOptional({
-    type: "string",
-    description: "Filtro por cargo do vinculo (ex: professor)",
-  })
+  @ApiPropertyOptional(UsuarioListQueryFields.filterVinculosCargo.swaggerMetadata)
   "filter.vinculos.cargo"?: string;
 }
 
 @ApiSchema({ name: "UsuarioListOutputDto" })
 export class UsuarioListOutputRestDto {
-  @ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" })
+  @ApiProperty({
+    type: () => PaginationMetaRestDto,
+    ...UsuarioListQueryFields.meta.swaggerMetadata,
+  })
   meta: PaginationMetaRestDto;
 
-  @ApiProperty({ type: () => [UsuarioFindOneOutputRestDto], description: "Resultados da busca" })
+  @ApiProperty({
+    type: () => [UsuarioFindOneOutputRestDto],
+    ...UsuarioListQueryFields.data.swaggerMetadata,
+  })
   data: UsuarioFindOneOutputRestDto[];
 }
 
@@ -166,59 +136,29 @@ export class UsuarioListOutputRestDto {
 
 @ApiSchema({ name: "UsuarioCreateInputDto" })
 export class UsuarioCreateInputRestDto {
-  static schema = usuarioCreateSchema;
+  static schema = UsuarioCreateSchema;
 
-  @ApiPropertyOptional({
-    type: "string",
-    description: "Nome do usuario",
-    nullable: true,
-    minLength: 1,
-  })
+  @ApiPropertyOptional(UsuarioCreateCommandFields.nome.swaggerMetadata)
   nome?: string | null;
 
-  @ApiPropertyOptional({
-    type: "string",
-    description: "Matrícula do usuário",
-    nullable: true,
-    minLength: 1,
-  })
+  @ApiPropertyOptional(UsuarioCreateCommandFields.matricula.swaggerMetadata)
   matricula?: string | null;
 
-  @ApiPropertyOptional({
-    type: "string",
-    description: "E-mail do usuario",
-    nullable: true,
-    format: "email",
-  })
+  @ApiPropertyOptional(UsuarioCreateCommandFields.email.swaggerMetadata)
   email?: string | null;
 }
 
 @ApiSchema({ name: "UsuarioUpdateInputDto" })
 export class UsuarioUpdateInputRestDto {
-  static schema = usuarioUpdateSchema;
+  static schema = UsuarioUpdateSchema;
 
-  @ApiPropertyOptional({
-    type: "string",
-    description: "Nome do usuario",
-    nullable: true,
-    minLength: 1,
-  })
+  @ApiPropertyOptional(UsuarioUpdateCommandFields.nome.swaggerMetadata)
   nome?: string | null;
 
-  @ApiPropertyOptional({
-    type: "string",
-    description: "Matrícula do usuário",
-    nullable: true,
-    minLength: 1,
-  })
+  @ApiPropertyOptional(UsuarioUpdateCommandFields.matricula.swaggerMetadata)
   matricula?: string | null;
 
-  @ApiPropertyOptional({
-    type: "string",
-    description: "E-mail do usuario",
-    nullable: true,
-    format: "email",
-  })
+  @ApiPropertyOptional(UsuarioUpdateCommandFields.email.swaggerMetadata)
   email?: string | null;
 }
 
@@ -228,12 +168,8 @@ export class UsuarioUpdateInputRestDto {
 
 @ApiSchema({ name: "UsuarioFindOneInputDto" })
 export class UsuarioFindOneInputRestDto {
-  static schema = usuarioFindOneInputSchema;
+  static schema = UsuarioFindOneInputSchema;
 
-  @ApiProperty({
-    type: "string",
-    description: "Identificador do registro (uuid)",
-    format: "uuid",
-  })
+  @ApiProperty(UsuarioFindOneQueryFields.id.swaggerMetadata)
   id: string;
 }

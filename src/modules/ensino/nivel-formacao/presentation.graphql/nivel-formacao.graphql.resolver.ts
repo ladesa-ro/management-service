@@ -3,12 +3,27 @@ import { type GraphQLResolveInfo } from "graphql";
 import { ensureExists } from "@/application/errors";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { graphqlExtractSelection } from "@/infrastructure.graphql";
-import { INivelFormacaoCreateCommandHandler } from "@/modules/ensino/nivel-formacao/domain/commands/nivel-formacao-create.command.handler.interface";
-import { INivelFormacaoDeleteCommandHandler } from "@/modules/ensino/nivel-formacao/domain/commands/nivel-formacao-delete.command.handler.interface";
-import { INivelFormacaoUpdateCommandHandler } from "@/modules/ensino/nivel-formacao/domain/commands/nivel-formacao-update.command.handler.interface";
+import {
+  INivelFormacaoCreateCommandHandler,
+  NivelFormacaoCreateCommandMetadata,
+} from "@/modules/ensino/nivel-formacao/domain/commands/nivel-formacao-create.command.handler.interface";
+import {
+  INivelFormacaoDeleteCommandHandler,
+  NivelFormacaoDeleteCommandMetadata,
+} from "@/modules/ensino/nivel-formacao/domain/commands/nivel-formacao-delete.command.handler.interface";
+import {
+  INivelFormacaoUpdateCommandHandler,
+  NivelFormacaoUpdateCommandMetadata,
+} from "@/modules/ensino/nivel-formacao/domain/commands/nivel-formacao-update.command.handler.interface";
 import { NivelFormacao } from "@/modules/ensino/nivel-formacao/domain/nivel-formacao";
-import { INivelFormacaoFindOneQueryHandler } from "@/modules/ensino/nivel-formacao/domain/queries/nivel-formacao-find-one.query.handler.interface";
-import { INivelFormacaoListQueryHandler } from "@/modules/ensino/nivel-formacao/domain/queries/nivel-formacao-list.query.handler.interface";
+import {
+  INivelFormacaoFindOneQueryHandler,
+  NivelFormacaoFindOneQueryMetadata,
+} from "@/modules/ensino/nivel-formacao/domain/queries/nivel-formacao-find-one.query.handler.interface";
+import {
+  INivelFormacaoListQueryHandler,
+  NivelFormacaoListQueryMetadata,
+} from "@/modules/ensino/nivel-formacao/domain/queries/nivel-formacao-list.query.handler.interface";
 import { AccessContext, AccessContextGraphQL } from "@/server/access-context";
 import {
   NivelFormacaoCreateInputGraphQlDto,
@@ -34,7 +49,7 @@ export class NivelFormacaoGraphqlResolver {
     private readonly deleteHandler: INivelFormacaoDeleteCommandHandler,
   ) {}
 
-  @Query(() => NivelFormacaoListOutputGraphQlDto, { name: "nivelFormacaoFindAll" })
+  @Query(() => NivelFormacaoListOutputGraphQlDto, NivelFormacaoListQueryMetadata.gqlMetadata)
   async findAll(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args() dto: NivelFormacaoListInputGraphQlDto,
@@ -49,7 +64,7 @@ export class NivelFormacaoGraphqlResolver {
     return NivelFormacaoGraphqlMapper.toListOutputDto(result);
   }
 
-  @Query(() => NivelFormacaoFindOneOutputGraphQlDto, { name: "nivelFormacaoFindById" })
+  @Query(() => NivelFormacaoFindOneOutputGraphQlDto, NivelFormacaoFindOneQueryMetadata.gqlMetadata)
   async findById(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
@@ -61,7 +76,10 @@ export class NivelFormacaoGraphqlResolver {
     return NivelFormacaoGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => NivelFormacaoFindOneOutputGraphQlDto, { name: "nivelFormacaoCreate" })
+  @Mutation(
+    () => NivelFormacaoFindOneOutputGraphQlDto,
+    NivelFormacaoCreateCommandMetadata.gqlMetadata,
+  )
   async create(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("input") dto: NivelFormacaoCreateInputGraphQlDto,
@@ -72,7 +90,10 @@ export class NivelFormacaoGraphqlResolver {
     return NivelFormacaoGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => NivelFormacaoFindOneOutputGraphQlDto, { name: "nivelFormacaoUpdate" })
+  @Mutation(
+    () => NivelFormacaoFindOneOutputGraphQlDto,
+    NivelFormacaoUpdateCommandMetadata.gqlMetadata,
+  )
   async update(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
@@ -84,7 +105,7 @@ export class NivelFormacaoGraphqlResolver {
     return NivelFormacaoGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => Boolean, { name: "nivelFormacaoDeleteOneById" })
+  @Mutation(() => Boolean, NivelFormacaoDeleteCommandMetadata.gqlMetadata)
   async deleteOneById(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,

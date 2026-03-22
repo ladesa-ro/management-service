@@ -45,6 +45,7 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
 
     const query = this.repository
       .createQueryBuilder("empresa")
+      .leftJoinAndSelect("empresa.endereco", "endereco")
       .where("empresa.dateDeleted IS NULL");
 
     if (dto?.search) {
@@ -78,12 +79,12 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
       }
     }
 
-    const filterIdEnderecoFk = dto?.["filter.idEnderecoFk"];
-    if (filterIdEnderecoFk) {
-      const arr = Array.isArray(filterIdEnderecoFk) ? filterIdEnderecoFk : [filterIdEnderecoFk];
+    const filterEnderecoId = dto?.["filter.endereco.id"];
+    if (filterEnderecoId) {
+      const arr = Array.isArray(filterEnderecoId) ? filterEnderecoId : [filterEnderecoId];
       const validIdEnderecos = arr.filter((id) => typeof id === "string" && id.trim());
       if (validIdEnderecos.length > 0) {
-        query.andWhere("empresa.idEnderecoFk IN (:...idEnderecos)", {
+        query.andWhere("endereco.id IN (:...idEnderecos)", {
           idEnderecos: validIdEnderecos,
         });
       }
@@ -112,6 +113,7 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
   ): Promise<EmpresaFindOneQueryResult | null> {
     const entity = await this.repository.findOne({
       where: { id: dto.id, dateDeleted: null as any },
+      relations: ["endereco"],
     });
 
     if (!entity) {
@@ -126,17 +128,22 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
     dto: EmpresaCreateCommand,
   ): Promise<EmpresaFindOneQueryResult> {
     const endereco = await this.enderecoRepository.findOne({
-      where: { id: dto.idEnderecoFk, dateDeleted: null as any },
+      where: { id: dto.endereco.id, dateDeleted: null as any },
     });
 
-    ensureExists(endereco, Endereco.entityName, dto.idEnderecoFk);
+    ensureExists(endereco, Endereco.entityName, dto.endereco.id);
 
     const empresa = Empresa.create(dto);
 
     const entity = EmpresaMapper.toPersistence(empresa);
     const saved = await this.repository.save(entity);
 
-    return EmpresaMapper.toOutputDto(saved);
+    const result = await this.repository.findOne({
+      where: { id: saved.id },
+      relations: ["endereco"],
+    });
+
+    return EmpresaMapper.toOutputDto(result!);
   }
 
   async update(
@@ -146,18 +153,19 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
   ): Promise<EmpresaFindOneQueryResult> {
     const entity = await this.repository.findOne({
       where: { id, dateDeleted: null as any },
+      relations: ["endereco"],
     });
 
     ensureExists(entity, Empresa.entityName, id);
 
     const empresa = EmpresaMapper.toDomain(entity);
 
-    if (dto.idEnderecoFk) {
+    if (dto.endereco) {
       const endereco = await this.enderecoRepository.findOne({
-        where: { id: dto.idEnderecoFk, dateDeleted: null as any },
+        where: { id: dto.endereco.id, dateDeleted: null as any },
       });
 
-      ensureExists(endereco, Endereco.entityName, dto.idEnderecoFk);
+      ensureExists(endereco, Endereco.entityName, dto.endereco.id);
     }
 
     empresa.update(dto);
@@ -165,7 +173,12 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
     const updated = EmpresaMapper.toPersistence(empresa);
     const saved = await this.repository.save(updated);
 
-    return EmpresaMapper.toOutputDto(saved);
+    const result = await this.repository.findOne({
+      where: { id: saved.id },
+      relations: ["endereco"],
+    });
+
+    return EmpresaMapper.toOutputDto(result!);
   }
 
   async delete(accessContext: AccessContext | null, id: string): Promise<void> {

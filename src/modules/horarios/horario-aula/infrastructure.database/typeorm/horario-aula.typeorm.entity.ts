@@ -12,9 +12,6 @@ export class HorarioAulaEntity {
   @Column({ name: "fim", type: "time", nullable: false })
   fim!: string;
 
-  @Column({ name: "id_horario_aula_configuracao_fk", type: "uuid", nullable: false })
-  idHorarioAulaConfiguracaoFk!: string;
-
   @ManyToOne(() => HorarioAulaConfiguracaoEntity, {})
   @JoinColumn({ name: "id_horario_aula_configuracao_fk" })
   horarioAulaConfiguracao!: Relation<HorarioAulaConfiguracaoEntity>;

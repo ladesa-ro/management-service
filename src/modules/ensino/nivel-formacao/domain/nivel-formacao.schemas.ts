@@ -1,59 +1,29 @@
+/**
+ * Nivel Formacao — schemas zod para a entidade e suas operacoes.
+ *
+ * Contem os schemas de referencia, composicao (create/update)
+ * e validacao da entidade. Fonte unica de verdade (SSOT) para
+ * os contratos de dados da entidade.
+ */
 import { z } from "zod";
-import { datedSchema, stringFilterSchema, uuidSchema } from "@/shared/validation/schemas";
-
-// ============================================================================
-// Fragments reutilizáveis
-// ============================================================================
-
-export const nivelFormacaoSlugSchema = z
-  .string()
-  .min(1, "slug é obrigatório")
-  .regex(
-    /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
-    "slug deve conter apenas letras minúsculas, números e hífens",
-  );
+import { datedSchema, uuidSchema } from "@/shared/validation/schemas";
+import { NivelFormacaoFields } from "./nivel-formacao.fields";
 
 // ============================================================================
 // Schemas compostos
 // ============================================================================
 
-export const nivelFormacaoSchema = z
+export const NivelFormacaoSchema = z
   .object({
     id: uuidSchema,
-    slug: nivelFormacaoSlugSchema,
+    slug: NivelFormacaoFields.slug.schema,
   })
   .merge(datedSchema);
 
-export const nivelFormacaoCreateSchema = z.object({
-  slug: nivelFormacaoSlugSchema,
+export const NivelFormacaoCreateSchema = z.object({
+  slug: NivelFormacaoFields.slug.schema,
 });
 
-export const nivelFormacaoUpdateSchema = z.object({
-  slug: nivelFormacaoSlugSchema.optional(),
-});
-
-// ============================================================================
-// Schemas de input (presentation layer)
-// ============================================================================
-
-export const nivelFormacaoFindOneInputSchema = z.object({
-  id: uuidSchema,
-});
-
-export const nivelFormacaoPaginationInputSchema = z.object({
-  page: z.coerce.number().int().min(1).optional().default(1),
-  limit: z.coerce.number().int().min(1).optional(),
-  search: z.string().optional(),
-  sortBy: z.array(z.string()).optional(),
-  selection: z.array(z.string()).optional(),
-  "filter.id": stringFilterSchema,
-});
-
-export const nivelFormacaoGraphqlListInputSchema = z.object({
-  page: z.number().int().min(1).optional().default(1),
-  limit: z.number().int().min(1).optional(),
-  search: z.string().optional(),
-  sortBy: z.array(z.string()).optional(),
-  selection: z.array(z.string()).optional(),
-  filterId: z.array(z.string()).optional(),
+export const NivelFormacaoUpdateSchema = z.object({
+  slug: NivelFormacaoFields.slug.schema.optional(),
 });

@@ -10,11 +10,26 @@ import {
 import { ensureExists } from "@/application/errors";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { CalendarioLetivo } from "@/modules/horarios/calendario-letivo/domain/calendario-letivo";
-import { ICalendarioLetivoCreateCommandHandler } from "@/modules/horarios/calendario-letivo/domain/commands/calendario-letivo-create.command.handler.interface";
-import { ICalendarioLetivoDeleteCommandHandler } from "@/modules/horarios/calendario-letivo/domain/commands/calendario-letivo-delete.command.handler.interface";
-import { ICalendarioLetivoUpdateCommandHandler } from "@/modules/horarios/calendario-letivo/domain/commands/calendario-letivo-update.command.handler.interface";
-import { ICalendarioLetivoFindOneQueryHandler } from "@/modules/horarios/calendario-letivo/domain/queries/calendario-letivo-find-one.query.handler.interface";
-import { ICalendarioLetivoListQueryHandler } from "@/modules/horarios/calendario-letivo/domain/queries/calendario-letivo-list.query.handler.interface";
+import {
+  CalendarioLetivoCreateCommandMetadata,
+  ICalendarioLetivoCreateCommandHandler,
+} from "@/modules/horarios/calendario-letivo/domain/commands/calendario-letivo-create.command.handler.interface";
+import {
+  CalendarioLetivoDeleteCommandMetadata,
+  ICalendarioLetivoDeleteCommandHandler,
+} from "@/modules/horarios/calendario-letivo/domain/commands/calendario-letivo-delete.command.handler.interface";
+import {
+  CalendarioLetivoUpdateCommandMetadata,
+  ICalendarioLetivoUpdateCommandHandler,
+} from "@/modules/horarios/calendario-letivo/domain/commands/calendario-letivo-update.command.handler.interface";
+import {
+  CalendarioLetivoFindOneQueryMetadata,
+  ICalendarioLetivoFindOneQueryHandler,
+} from "@/modules/horarios/calendario-letivo/domain/queries/calendario-letivo-find-one.query.handler.interface";
+import {
+  CalendarioLetivoListQueryMetadata,
+  ICalendarioLetivoListQueryHandler,
+} from "@/modules/horarios/calendario-letivo/domain/queries/calendario-letivo-list.query.handler.interface";
 import { AccessContext, AccessContextHttp } from "@/server/access-context";
 import {
   CalendarioLetivoCreateInputRestDto,
@@ -43,7 +58,7 @@ export class CalendarioLetivoRestController {
   ) {}
 
   @Get("/")
-  @ApiOperation({ summary: "Lista calendarios letivos", operationId: "calendarioLetivoFindAll" })
+  @ApiOperation(CalendarioLetivoListQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: CalendarioLetivoListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
@@ -56,10 +71,7 @@ export class CalendarioLetivoRestController {
   }
 
   @Get("/:id")
-  @ApiOperation({
-    summary: "Busca um calendario letivo por ID",
-    operationId: "calendarioLetivoFindById",
-  })
+  @ApiOperation(CalendarioLetivoFindOneQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: CalendarioLetivoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -74,7 +86,7 @@ export class CalendarioLetivoRestController {
   }
 
   @Post("/")
-  @ApiOperation({ summary: "Cria um calendario letivo", operationId: "calendarioLetivoCreate" })
+  @ApiOperation(CalendarioLetivoCreateCommandMetadata.swaggerMetadata)
   @ApiCreatedResponse({ type: CalendarioLetivoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   async create(
@@ -87,7 +99,7 @@ export class CalendarioLetivoRestController {
   }
 
   @Patch("/:id")
-  @ApiOperation({ summary: "Atualiza um calendario letivo", operationId: "calendarioLetivoUpdate" })
+  @ApiOperation(CalendarioLetivoUpdateCommandMetadata.swaggerMetadata)
   @ApiOkResponse({ type: CalendarioLetivoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -102,10 +114,7 @@ export class CalendarioLetivoRestController {
   }
 
   @Delete("/:id")
-  @ApiOperation({
-    summary: "Remove um calendario letivo",
-    operationId: "calendarioLetivoDeleteOneById",
-  })
+  @ApiOperation(CalendarioLetivoDeleteCommandMetadata.swaggerMetadata)
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()

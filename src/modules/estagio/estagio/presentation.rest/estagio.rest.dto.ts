@@ -1,11 +1,15 @@
 import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@nestjs/swagger";
-import { EstagioStatus } from "@/modules/estagio/estagio/domain/estagio";
+import { EstagioCreateCommandFields } from "@/modules/estagio/estagio/domain/commands/estagio-create.command";
+import { EstagioUpdateCommandFields } from "@/modules/estagio/estagio/domain/commands/estagio-update.command";
+import { EstagioStatusValues } from "@/modules/estagio/estagio/domain/estagio.fields";
 import {
-  estagioCreateSchema,
-  estagioFindOneInputSchema,
-  estagioPaginationInputSchema,
-  estagioUpdateSchema,
+  EstagioCreateSchema,
+  EstagioUpdateSchema,
 } from "@/modules/estagio/estagio/domain/estagio.schemas";
+import { EstagioFindOneQueryResultFields } from "@/modules/estagio/estagio/domain/queries/estagio-find-one.query.result";
+import { EstagioFindOneInputSchema } from "@/modules/estagio/estagio/domain/queries/estagio-find-one.query.schemas";
+import { EstagioListQueryFields } from "@/modules/estagio/estagio/domain/queries/estagio-list.query";
+import { EstagioPaginationInputSchema } from "@/modules/estagio/estagio/domain/queries/estagio-list.query.schemas";
 import { PaginationInputRestDto, UuidParamRestDto } from "@/shared/presentation/rest/dtos";
 
 @ApiSchema({ name: "HorarioEstagioInputDto" })
@@ -28,128 +32,120 @@ export class HorarioEstagioOutputRestDto extends HorarioEstagioInputRestDto {
 
 @ApiSchema({ name: "EstagioCreateInputDto" })
 export class EstagioCreateInputRestDto {
-  static schema = estagioCreateSchema;
+  static schema = EstagioCreateSchema;
 
-  @ApiProperty({ type: "string", format: "uuid", description: "ID da empresa" })
-  idEmpresaFk!: string;
+  @ApiProperty(EstagioCreateCommandFields.empresa.swaggerMetadata)
+  empresa!: { id: string };
 
-  @ApiPropertyOptional({
-    type: "string",
-    format: "uuid",
-    description: "ID do estagiário (opcional enquanto a vaga estiver aberta)",
-  })
-  idEstagiarioFk?: string;
+  @ApiPropertyOptional(EstagioCreateCommandFields.estagiario.swaggerMetadata)
+  estagiario?: { id: string };
 
-  @ApiProperty({ type: "number", description: "Carga horária semanal", minimum: 1 })
+  @ApiProperty(EstagioCreateCommandFields.cargaHoraria.swaggerMetadata)
   cargaHoraria!: number;
 
-  @ApiPropertyOptional({ type: "string", format: "date" })
+  @ApiPropertyOptional(EstagioCreateCommandFields.dataInicio.swaggerMetadata)
   dataInicio?: string;
 
-  @ApiPropertyOptional({ type: "string", format: "date", nullable: true })
+  @ApiPropertyOptional(EstagioCreateCommandFields.dataFim.swaggerMetadata)
   dataFim?: string | null;
 
-  @ApiPropertyOptional({ enum: EstagioStatus, enumName: "EstagioStatus" })
-  status?: EstagioStatus;
+  @ApiPropertyOptional(EstagioCreateCommandFields.status.swaggerMetadata)
+  status?: string;
 
   @ApiPropertyOptional({
     type: () => [HorarioEstagioInputRestDto],
-    example: [
-      { diaSemana: 1, horaInicio: "08:00", horaFim: "12:00" },
-      { diaSemana: 3, horaInicio: "13:00", horaFim: "17:00" },
-    ],
+    ...EstagioCreateCommandFields.horariosEstagio.swaggerMetadata,
   })
   horariosEstagio?: HorarioEstagioInputRestDto[];
 }
 
 @ApiSchema({ name: "EstagioUpdateInputDto" })
 export class EstagioUpdateInputRestDto {
-  static schema = estagioUpdateSchema;
+  static schema = EstagioUpdateSchema;
 
-  @ApiPropertyOptional({ type: "string", format: "uuid" })
-  idEmpresaFk?: string;
+  @ApiPropertyOptional(EstagioUpdateCommandFields.empresa.swaggerMetadata)
+  empresa?: { id: string };
 
-  @ApiPropertyOptional({ type: "string", format: "uuid" })
-  idEstagiarioFk?: string;
+  @ApiPropertyOptional(EstagioUpdateCommandFields.estagiario.swaggerMetadata)
+  estagiario?: { id: string };
 
-  @ApiPropertyOptional({ type: "number", minimum: 1 })
+  @ApiPropertyOptional(EstagioUpdateCommandFields.cargaHoraria.swaggerMetadata)
   cargaHoraria?: number;
 
-  @ApiPropertyOptional({ type: "string", format: "date" })
+  @ApiPropertyOptional(EstagioUpdateCommandFields.dataInicio.swaggerMetadata)
   dataInicio?: string;
 
-  @ApiPropertyOptional({ type: "string", format: "date", nullable: true })
+  @ApiPropertyOptional(EstagioUpdateCommandFields.dataFim.swaggerMetadata)
   dataFim?: string | null;
 
-  @ApiPropertyOptional({ enum: EstagioStatus, enumName: "EstagioStatus" })
-  status?: EstagioStatus;
+  @ApiPropertyOptional({
+    ...EstagioUpdateCommandFields.status.swaggerMetadata,
+    enum: EstagioStatusValues,
+  })
+  status?: string;
 
   @ApiPropertyOptional({
     type: () => [HorarioEstagioInputRestDto],
-    example: [
-      { diaSemana: 1, horaInicio: "08:00", horaFim: "12:00" },
-      { diaSemana: 3, horaInicio: "13:00", horaFim: "17:00" },
-    ],
+    ...EstagioUpdateCommandFields.horariosEstagio.swaggerMetadata,
   })
   horariosEstagio?: HorarioEstagioInputRestDto[];
 }
 
 @ApiSchema({ name: "EstagioFindOneInputDto" })
 export class EstagioFindOneInputRestDto extends UuidParamRestDto {
-  static schema = estagioFindOneInputSchema;
+  static schema = EstagioFindOneInputSchema;
 }
 
 @ApiSchema({ name: "EstagioListInputDto" })
 export class EstagioListInputRestDto extends PaginationInputRestDto {
-  static schema = estagioPaginationInputSchema;
+  static schema = EstagioPaginationInputSchema;
 
-  @ApiPropertyOptional({ type: "string", format: "uuid", description: "Filtro por empresa" })
-  "filter.idEmpresaFk"?: string | string[];
+  @ApiPropertyOptional(EstagioListQueryFields.filterEmpresaId.swaggerMetadata)
+  "filter.empresa.id"?: string | string[];
 
-  @ApiPropertyOptional({ type: "string", format: "uuid", description: "Filtro por estagiário" })
-  "filter.idEstagiarioFk"?: string | string[];
+  @ApiPropertyOptional(EstagioListQueryFields.filterEstagiarioId.swaggerMetadata)
+  "filter.estagiario.id"?: string | string[];
 
-  @ApiPropertyOptional({
-    type: "string",
-    enum: EstagioStatus,
-    description: "Filtro por status (string ou array)",
-  })
-  "filter.status"?: EstagioStatus | EstagioStatus[];
+  @ApiPropertyOptional(EstagioListQueryFields.filterStatus.swaggerMetadata)
+  "filter.status"?: string | string[];
 }
 
 @ApiSchema({ name: "EstagioFindOneOutputDto" })
 export class EstagioFindOneOutputRestDto {
-  @ApiProperty({ type: "string", format: "uuid" })
+  @ApiProperty(EstagioFindOneQueryResultFields.id.swaggerMetadata)
   id!: string;
 
-  @ApiProperty({ type: "string", format: "uuid" })
-  idEmpresaFk!: string;
+  @ApiProperty(EstagioFindOneQueryResultFields.empresa.swaggerMetadata)
+  empresa!: { id: string };
 
-  @ApiPropertyOptional({ type: "string", format: "uuid", nullable: true })
-  idEstagiarioFk!: string | null;
+  @ApiPropertyOptional(EstagioFindOneQueryResultFields.estagiario.swaggerMetadata)
+  estagiario!: { id: string } | null;
 
-  @ApiProperty({ type: "number" })
+  @ApiProperty(EstagioFindOneQueryResultFields.cargaHoraria.swaggerMetadata)
   cargaHoraria!: number;
 
-  @ApiPropertyOptional({ type: "string", format: "date", nullable: true })
+  @ApiPropertyOptional(EstagioFindOneQueryResultFields.dataInicio.swaggerMetadata)
   dataInicio!: string | null;
 
-  @ApiPropertyOptional({ type: "string", format: "date", nullable: true })
+  @ApiPropertyOptional(EstagioFindOneQueryResultFields.dataFim.swaggerMetadata)
   dataFim!: string | null;
 
-  @ApiProperty({ enum: EstagioStatus, enumName: "EstagioStatus" })
-  status!: EstagioStatus;
+  @ApiProperty(EstagioFindOneQueryResultFields.status.swaggerMetadata)
+  status!: string;
 
-  @ApiProperty({ type: () => [HorarioEstagioOutputRestDto] })
+  @ApiProperty({
+    type: () => [HorarioEstagioOutputRestDto],
+    ...EstagioFindOneQueryResultFields.horariosEstagio.swaggerMetadata,
+  })
   horariosEstagio!: HorarioEstagioOutputRestDto[];
 
-  @ApiProperty({ type: "boolean" })
+  @ApiProperty(EstagioFindOneQueryResultFields.ativo.swaggerMetadata)
   ativo!: boolean;
 
-  @ApiProperty({ type: "string", format: "date-time" })
+  @ApiProperty(EstagioFindOneQueryResultFields.dateCreated.swaggerMetadata)
   dateCreated!: string;
 
-  @ApiProperty({ type: "string", format: "date-time" })
+  @ApiProperty(EstagioFindOneQueryResultFields.dateUpdated.swaggerMetadata)
   dateUpdated!: string;
 }
 

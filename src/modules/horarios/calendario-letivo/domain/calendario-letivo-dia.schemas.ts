@@ -1,15 +1,19 @@
+/**
+ * Calendario Letivo Dia — schemas zod para a entidade e suas operacoes.
+ *
+ * Contem os schemas de referencia, composicao (create/update)
+ * e validacao da entidade. Fonte unica de verdade (SSOT) para
+ * os contratos de dados da entidade.
+ */
 import { z } from "zod";
-import { datedSchema, stringFilterSchema, uuidSchema } from "@/shared/validation/schemas";
+import { datedSchema, uuidSchema } from "@/shared/validation/schemas";
+import { CalendarioLetivoDiaFields } from "./calendario-letivo-dia.fields";
 
 // ============================================================================
-// Fragments reutilizáveis
+// Fragments de referência
 // ============================================================================
 
-export const calendarioLetivoDiaDataSchema = z.string().min(1, "data é obrigatória");
-
-export const calendarioLetivoDiaTipoSchema = z.string().min(1, "tipo é obrigatório");
-
-export const calendarioLetivoDiaCalendarioRefSchema = z.object({
+export const CalendarioLetivoDiaCalendarioRefSchema = z.object({
   id: uuidSchema,
 });
 
@@ -17,39 +21,24 @@ export const calendarioLetivoDiaCalendarioRefSchema = z.object({
 // Schemas compostos
 // ============================================================================
 
-export const calendarioLetivoDiaSchema = z
+export const CalendarioLetivoDiaSchema = z
   .object({
     id: uuidSchema,
-    data: calendarioLetivoDiaDataSchema,
-    diaLetivo: z.boolean(),
-    feriado: z.string(),
-    diaPresencial: z.boolean(),
-    tipo: calendarioLetivoDiaTipoSchema,
-    extraCurricular: z.boolean(),
-    calendario: calendarioLetivoDiaCalendarioRefSchema,
+    data: CalendarioLetivoDiaFields.data.schema,
+    diaLetivo: CalendarioLetivoDiaFields.diaLetivo.schema,
+    feriado: CalendarioLetivoDiaFields.feriado.schema,
+    diaPresencial: CalendarioLetivoDiaFields.diaPresencial.schema,
+    tipo: CalendarioLetivoDiaFields.tipo.schema,
+    extraCurricular: CalendarioLetivoDiaFields.extraCurricular.schema,
+    calendario: CalendarioLetivoDiaCalendarioRefSchema,
   })
   .merge(datedSchema);
 
-export const calendarioLetivoDiaUpdateSchema = z.object({
-  data: calendarioLetivoDiaDataSchema.optional(),
-  diaLetivo: z.boolean().optional(),
-  feriado: z.string().optional(),
-  diaPresencial: z.boolean().optional(),
-  tipo: calendarioLetivoDiaTipoSchema.optional(),
-  extraCurricular: z.boolean().optional(),
-});
-
-// ============================================================================
-// Schemas de input (presentation layer)
-// ============================================================================
-
-export const calendarioLetivoDiaListInputSchema = z.object({
-  page: z.coerce.number().int().min(1).optional().default(1),
-  limit: z.coerce.number().int().min(1).optional(),
-  search: z.string().optional(),
-  sortBy: z.array(z.string()).optional(),
-  selection: z.array(z.string()).optional(),
-  "filter.id": stringFilterSchema,
-  "filter.calendario.nome": stringFilterSchema,
-  "filter.calendario.ano": stringFilterSchema,
+export const CalendarioLetivoDiaUpdateSchema = z.object({
+  data: CalendarioLetivoDiaFields.data.schema.optional(),
+  diaLetivo: CalendarioLetivoDiaFields.diaLetivo.schema.optional(),
+  feriado: CalendarioLetivoDiaFields.feriado.schema.optional(),
+  diaPresencial: CalendarioLetivoDiaFields.diaPresencial.schema.optional(),
+  tipo: CalendarioLetivoDiaFields.tipo.schema.optional(),
+  extraCurricular: CalendarioLetivoDiaFields.extraCurricular.schema.optional(),
 });

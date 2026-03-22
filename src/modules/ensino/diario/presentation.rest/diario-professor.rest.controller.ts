@@ -2,8 +2,14 @@ import { Body, Controller, Get, Param, Put, Query } from "@nestjs/common";
 import { ApiForbiddenResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextHttp } from "@/server/access-context";
-import { IDiarioProfessorBulkReplaceCommandHandler } from "../domain/commands/diario-professor-bulk-replace.command.handler.interface";
-import { IDiarioProfessorListQueryHandler } from "../domain/queries/diario-professor-list.query.handler.interface";
+import {
+  DiarioProfessorBulkReplaceCommandMetadata,
+  IDiarioProfessorBulkReplaceCommandHandler,
+} from "../domain/commands/diario-professor-bulk-replace.command.handler.interface";
+import {
+  DiarioProfessorListQueryMetadata,
+  IDiarioProfessorListQueryHandler,
+} from "../domain/queries/diario-professor-list.query.handler.interface";
 import {
   DiarioProfessorBulkReplaceInputRestDto,
   DiarioProfessorListInputRestDto,
@@ -23,10 +29,7 @@ export class DiarioProfessorRestController {
   ) {}
 
   @Get("/")
-  @ApiOperation({
-    summary: "Lista professores de um diario",
-    operationId: "diarioProfessorFindAll",
-  })
+  @ApiOperation(DiarioProfessorListQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: DiarioProfessorListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
@@ -40,10 +43,7 @@ export class DiarioProfessorRestController {
   }
 
   @Put("/")
-  @ApiOperation({
-    summary: "Substitui professores de um diario",
-    operationId: "diarioProfessorBulkReplace",
-  })
+  @ApiOperation(DiarioProfessorBulkReplaceCommandMetadata.swaggerMetadata)
   @ApiOkResponse({ type: DiarioProfessorListOutputRestDto })
   @ApiForbiddenResponse()
   async bulkReplace(

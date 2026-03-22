@@ -6,12 +6,13 @@ import {
 import { AmbienteFindOneOutputGraphQlDto } from "@/modules/ambientes/ambiente/presentation.graphql/ambiente.graphql.dto";
 import { ImagemFindOneOutputGraphQlDto } from "@/modules/armazenamento/imagem-arquivo/presentation.graphql/imagem-arquivo.graphql.dto";
 import { CursoFindOneOutputGraphQlDto } from "@/modules/ensino/curso/presentation.graphql/curso.graphql.dto";
+import { TurmaGraphqlListInputSchema } from "@/modules/ensino/turma/domain/queries/turma-list.query.schemas";
 import { ArgsType, Field, InputType, ObjectType } from "@/shared/presentation/graphql";
-import {
-  turmaCreateSchema,
-  turmaGraphqlListInputSchema,
-  turmaUpdateSchema,
-} from "../domain/turma.schemas";
+import { TurmaCreateCommandFields } from "../domain/commands/turma-create.command";
+import { TurmaUpdateCommandFields } from "../domain/commands/turma-update.command";
+import { TurmaFindOneQueryResultFields } from "../domain/queries/turma-find-one.query.result";
+import { TurmaListQueryFields } from "../domain/queries/turma-list.query";
+import { TurmaCreateSchema, TurmaUpdateSchema } from "../domain/turma.schemas";
 
 // ============================================================================
 // FindOne Output
@@ -19,11 +20,18 @@ import {
 
 @ObjectType("TurmaFindOneOutputDto")
 export class TurmaFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
-  @Field(() => String) periodo: string;
-  @Field(() => CursoFindOneOutputGraphQlDto) curso: CursoFindOneOutputGraphQlDto;
-  @Field(() => AmbienteFindOneOutputGraphQlDto, { nullable: true })
+  @Field(() => String, TurmaFindOneQueryResultFields.periodo.gqlMetadata) periodo: string;
+  @Field(() => CursoFindOneOutputGraphQlDto, TurmaFindOneQueryResultFields.curso.gqlMetadata)
+  curso: CursoFindOneOutputGraphQlDto;
+  @Field(() => AmbienteFindOneOutputGraphQlDto, {
+    nullable: true,
+    ...TurmaFindOneQueryResultFields.ambientePadraoAula.gqlMetadata,
+  })
   ambientePadraoAula: AmbienteFindOneOutputGraphQlDto | null;
-  @Field(() => ImagemFindOneOutputGraphQlDto, { nullable: true })
+  @Field(() => ImagemFindOneOutputGraphQlDto, {
+    nullable: true,
+    ...TurmaFindOneQueryResultFields.imagemCapa.gqlMetadata,
+  })
   imagemCapa: ImagemFindOneOutputGraphQlDto | null;
 }
 
@@ -52,14 +60,20 @@ export class TurmaImagemCapaRefInputGraphQlDto {
 
 @InputType("TurmaCreateInputDto")
 export class TurmaCreateInputGraphQlDto {
-  static readonly schema = turmaCreateSchema;
+  static readonly schema = TurmaCreateSchema;
 
-  @Field(() => String) periodo: string;
-  @Field(() => TurmaCursoRefInputGraphQlDto)
+  @Field(() => String, TurmaCreateCommandFields.periodo.gqlMetadata) periodo: string;
+  @Field(() => TurmaCursoRefInputGraphQlDto, TurmaCreateCommandFields.curso.gqlMetadata)
   curso: TurmaCursoRefInputGraphQlDto;
-  @Field(() => TurmaAmbienteRefInputGraphQlDto, { nullable: true })
+  @Field(() => TurmaAmbienteRefInputGraphQlDto, {
+    nullable: true,
+    ...TurmaCreateCommandFields.ambientePadraoAula.gqlMetadata,
+  })
   ambientePadraoAula?: TurmaAmbienteRefInputGraphQlDto | null;
-  @Field(() => TurmaImagemCapaRefInputGraphQlDto, { nullable: true })
+  @Field(() => TurmaImagemCapaRefInputGraphQlDto, {
+    nullable: true,
+    ...TurmaCreateCommandFields.imagemCapa.gqlMetadata,
+  })
   imagemCapa?: TurmaImagemCapaRefInputGraphQlDto | null;
 }
 
@@ -69,15 +83,24 @@ export class TurmaCreateInputGraphQlDto {
 
 @InputType("TurmaUpdateInputDto")
 export class TurmaUpdateInputGraphQlDto {
-  static readonly schema = turmaUpdateSchema;
+  static readonly schema = TurmaUpdateSchema;
 
-  @Field(() => String, { nullable: true })
+  @Field(() => String, { nullable: true, ...TurmaUpdateCommandFields.periodo.gqlMetadata })
   periodo?: string;
-  @Field(() => TurmaCursoRefInputGraphQlDto, { nullable: true })
+  @Field(() => TurmaCursoRefInputGraphQlDto, {
+    nullable: true,
+    ...TurmaUpdateCommandFields.curso.gqlMetadata,
+  })
   curso?: TurmaCursoRefInputGraphQlDto;
-  @Field(() => TurmaAmbienteRefInputGraphQlDto, { nullable: true })
+  @Field(() => TurmaAmbienteRefInputGraphQlDto, {
+    nullable: true,
+    ...TurmaUpdateCommandFields.ambientePadraoAula.gqlMetadata,
+  })
   ambientePadraoAula?: TurmaAmbienteRefInputGraphQlDto | null;
-  @Field(() => TurmaImagemCapaRefInputGraphQlDto, { nullable: true })
+  @Field(() => TurmaImagemCapaRefInputGraphQlDto, {
+    nullable: true,
+    ...TurmaUpdateCommandFields.imagemCapa.gqlMetadata,
+  })
   imagemCapa?: TurmaImagemCapaRefInputGraphQlDto | null;
 }
 
@@ -87,60 +110,39 @@ export class TurmaUpdateInputGraphQlDto {
 
 @ArgsType()
 export class TurmaListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {
-  static schema = turmaGraphqlListInputSchema;
+  static schema = TurmaGraphqlListInputSchema;
 
-  @Field(() => [String], {
-    nullable: true,
-    description: "Filtro por Nome do Ambiente Padrao de Aula",
-  })
+  @Field(() => [String], TurmaListQueryFields.filterAmbientePadraoAulaNome.gqlMetadata)
   filterAmbientePadraoAulaNome?: string[];
 
-  @Field(() => [String], {
-    nullable: true,
-    description: "Filtro por Codigo do Ambiente Padrao de Aula",
-  })
+  @Field(() => [String], TurmaListQueryFields.filterAmbientePadraoAulaCodigo.gqlMetadata)
   filterAmbientePadraoAulaCodigo?: string[];
 
-  @Field(() => [String], {
-    nullable: true,
-    description: "Filtro por Capacidade do Ambiente Padrao de Aula",
-  })
+  @Field(() => [String], TurmaListQueryFields.filterAmbientePadraoAulaCapacidade.gqlMetadata)
   filterAmbientePadraoAulaCapacidade?: string[];
 
-  @Field(() => [String], {
-    nullable: true,
-    description: "Filtro por Tipo do Ambiente Padrao de Aula",
-  })
+  @Field(() => [String], TurmaListQueryFields.filterAmbientePadraoAulaTipo.gqlMetadata)
   filterAmbientePadraoAulaTipo?: string[];
 
-  @Field(() => [String], { nullable: true, description: "Filtro por ID do Curso" })
+  @Field(() => [String], TurmaListQueryFields.filterCursoId.gqlMetadata)
   filterCursoId?: string[];
 
-  @Field(() => [String], { nullable: true, description: "Filtro por Nome do Curso" })
+  @Field(() => [String], TurmaListQueryFields.filterCursoNome.gqlMetadata)
   filterCursoNome?: string[];
 
-  @Field(() => [String], { nullable: true, description: "Filtro por Nome Abreviado do Curso" })
+  @Field(() => [String], TurmaListQueryFields.filterCursoNomeAbreviado.gqlMetadata)
   filterCursoNomeAbreviado?: string[];
 
-  @Field(() => [String], { nullable: true, description: "Filtro por ID do Campus do Curso" })
+  @Field(() => [String], TurmaListQueryFields.filterCursoCampusId.gqlMetadata)
   filterCursoCampusId?: string[];
 
-  @Field(() => [String], {
-    nullable: true,
-    description: "Filtro por ID da Oferta de Formacao do Curso",
-  })
+  @Field(() => [String], TurmaListQueryFields.filterCursoOfertaFormacaoId.gqlMetadata)
   filterCursoOfertaFormacaoId?: string[];
 
-  @Field(() => [String], {
-    nullable: true,
-    description: "Filtro por Nome da Oferta de Formacao do Curso",
-  })
+  @Field(() => [String], TurmaListQueryFields.filterCursoOfertaFormacaoNome.gqlMetadata)
   filterCursoOfertaFormacaoNome?: string[];
 
-  @Field(() => [String], {
-    nullable: true,
-    description: "Filtro por Slug da Oferta de Formacao do Curso",
-  })
+  @Field(() => [String], TurmaListQueryFields.filterCursoOfertaFormacaoSlug.gqlMetadata)
   filterCursoOfertaFormacaoSlug?: string[];
 }
 
@@ -150,9 +152,9 @@ export class TurmaListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {
 
 @ObjectType("TurmaListResult")
 export class TurmaListOutputGraphQlDto {
-  @Field(() => PaginationMetaGraphQlDto)
+  @Field(() => PaginationMetaGraphQlDto, TurmaListQueryFields.meta.gqlMetadata)
   meta: PaginationMetaGraphQlDto;
 
-  @Field(() => [TurmaFindOneOutputGraphQlDto])
+  @Field(() => [TurmaFindOneOutputGraphQlDto], TurmaListQueryFields.data.gqlMetadata)
   data: TurmaFindOneOutputGraphQlDto[];
 }

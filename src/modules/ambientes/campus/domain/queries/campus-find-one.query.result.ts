@@ -1,5 +1,17 @@
-import { EntityQueryResult } from "@/domain/abstractions";
+import { EntityQueryResult, SharedFields } from "@/domain/abstractions";
+import { fieldsToProperties } from "@/infrastructure.database/typeorm/metadata/model-from-fields";
+import {
+  commonProperties,
+  defineModel,
+  referenceProperty,
+} from "@/infrastructure.database/typeorm/metadata/model-registry";
 import { EnderecoFindOneQueryResult } from "@/modules/localidades/endereco";
+import { CampusFields } from "../campus.fields";
+
+export const CampusFindOneQueryResultFields = {
+  id: SharedFields.idUuid,
+  ...CampusFields,
+};
 
 export class CampusFindOneQueryResult extends EntityQueryResult {
   nomeFantasia!: string;
@@ -8,3 +20,9 @@ export class CampusFindOneQueryResult extends EntityQueryResult {
   cnpj!: string;
   endereco!: EnderecoFindOneQueryResult;
 }
+
+defineModel("CampusFindOneQueryResult", [
+  ...fieldsToProperties(CampusFindOneQueryResultFields),
+  referenceProperty("endereco", "EnderecoFindOneQueryResult"),
+  ...commonProperties.dated,
+]);

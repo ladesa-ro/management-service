@@ -97,27 +97,27 @@ export class CalendarioAgendamentoTypeOrmRepositoryAdapter
       await Promise.all([
         this.appTypeormConnection
           .getRepository(CalendarioAgendamentoTurmaEntity)
-          .find({ where: { idCalendarioAgendamentoFk: eventoId } }),
+          .find({ where: { calendarioAgendamento: { id: eventoId } } }),
         this.appTypeormConnection
           .getRepository(CalendarioAgendamentoProfessorEntity)
-          .find({ where: { idCalendarioAgendamentoFk: eventoId } }),
+          .find({ where: { calendarioAgendamento: { id: eventoId } } }),
         this.appTypeormConnection
           .getRepository(CalendarioAgendamentoCalendarioLetivoEntity)
-          .find({ where: { idCalendarioAgendamentoFk: eventoId } }),
+          .find({ where: { calendarioAgendamento: { id: eventoId } } }),
         this.appTypeormConnection
           .getRepository(CalendarioAgendamentoOfertaFormacaoEntity)
-          .find({ where: { idCalendarioAgendamentoFk: eventoId } }),
+          .find({ where: { calendarioAgendamento: { id: eventoId } } }),
         this.appTypeormConnection
           .getRepository(CalendarioAgendamentoModalidadeEntity)
-          .find({ where: { idCalendarioAgendamentoFk: eventoId } }),
+          .find({ where: { calendarioAgendamento: { id: eventoId } } }),
       ]);
 
     return {
-      turmaIds: turmaJunctions.map((j) => j.idTurmaFk),
-      perfilIds: profJunctions.map((j) => j.idPerfilFk),
-      calendarioLetivoIds: clJunctions.map((j) => j.idCalendarioLetivoFk),
-      ofertaFormacaoIds: ofJunctions.map((j) => j.idOfertaFormacaoFk),
-      modalidadeIds: modJunctions.map((j) => j.idModalidadeFk),
+      turmaIds: turmaJunctions.map((j) => j.turma?.id),
+      perfilIds: profJunctions.map((j) => j.perfil?.id),
+      calendarioLetivoIds: clJunctions.map((j) => j.calendarioLetivo?.id),
+      ofertaFormacaoIds: ofJunctions.map((j) => j.ofertaFormacao?.id),
+      modalidadeIds: modJunctions.map((j) => j.modalidade?.id),
     };
   }
 
@@ -127,12 +127,10 @@ export class CalendarioAgendamentoTypeOrmRepositoryAdapter
   ): Promise<void> {
     if (data.turmaIds !== undefined) {
       const repo = this.appTypeormConnection.getRepository(CalendarioAgendamentoTurmaEntity);
-      await repo.delete({ idCalendarioAgendamentoFk: eventoId });
+      await repo.delete({ calendarioAgendamento: { id: eventoId } } as any);
       for (const turmaId of data.turmaIds) {
         const j = new CalendarioAgendamentoTurmaEntity();
         j.id = generateUuidV7();
-        j.idTurmaFk = turmaId;
-        j.idCalendarioAgendamentoFk = eventoId;
         (j as any).turma = { id: turmaId };
         (j as any).calendarioAgendamento = { id: eventoId };
         await repo.save(j);
@@ -141,12 +139,10 @@ export class CalendarioAgendamentoTypeOrmRepositoryAdapter
 
     if (data.perfilIds !== undefined) {
       const repo = this.appTypeormConnection.getRepository(CalendarioAgendamentoProfessorEntity);
-      await repo.delete({ idCalendarioAgendamentoFk: eventoId });
+      await repo.delete({ calendarioAgendamento: { id: eventoId } } as any);
       for (const perfilId of data.perfilIds) {
         const j = new CalendarioAgendamentoProfessorEntity();
         j.id = generateUuidV7();
-        j.idPerfilFk = perfilId;
-        j.idCalendarioAgendamentoFk = eventoId;
         (j as any).perfil = { id: perfilId };
         (j as any).calendarioAgendamento = { id: eventoId };
         await repo.save(j);
@@ -157,12 +153,10 @@ export class CalendarioAgendamentoTypeOrmRepositoryAdapter
       const repo = this.appTypeormConnection.getRepository(
         CalendarioAgendamentoCalendarioLetivoEntity,
       );
-      await repo.delete({ idCalendarioAgendamentoFk: eventoId });
+      await repo.delete({ calendarioAgendamento: { id: eventoId } } as any);
       for (const clId of data.calendarioLetivoIds) {
         const j = new CalendarioAgendamentoCalendarioLetivoEntity();
         j.id = generateUuidV7();
-        j.idCalendarioLetivoFk = clId;
-        j.idCalendarioAgendamentoFk = eventoId;
         (j as any).calendarioLetivo = { id: clId };
         (j as any).calendarioAgendamento = { id: eventoId };
         await repo.save(j);
@@ -173,12 +167,10 @@ export class CalendarioAgendamentoTypeOrmRepositoryAdapter
       const repo = this.appTypeormConnection.getRepository(
         CalendarioAgendamentoOfertaFormacaoEntity,
       );
-      await repo.delete({ idCalendarioAgendamentoFk: eventoId });
+      await repo.delete({ calendarioAgendamento: { id: eventoId } } as any);
       for (const ofId of data.ofertaFormacaoIds) {
         const j = new CalendarioAgendamentoOfertaFormacaoEntity();
         j.id = generateUuidV7();
-        j.idOfertaFormacaoFk = ofId;
-        j.idCalendarioAgendamentoFk = eventoId;
         (j as any).ofertaFormacao = { id: ofId };
         (j as any).calendarioAgendamento = { id: eventoId };
         await repo.save(j);
@@ -187,12 +179,10 @@ export class CalendarioAgendamentoTypeOrmRepositoryAdapter
 
     if (data.modalidadeIds !== undefined) {
       const repo = this.appTypeormConnection.getRepository(CalendarioAgendamentoModalidadeEntity);
-      await repo.delete({ idCalendarioAgendamentoFk: eventoId });
+      await repo.delete({ calendarioAgendamento: { id: eventoId } } as any);
       for (const modId of data.modalidadeIds) {
         const j = new CalendarioAgendamentoModalidadeEntity();
         j.id = generateUuidV7();
-        j.idModalidadeFk = modId;
-        j.idCalendarioAgendamentoFk = eventoId;
         (j as any).modalidade = { id: modId };
         (j as any).calendarioAgendamento = { id: eventoId };
         await repo.save(j);

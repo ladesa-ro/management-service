@@ -1,4 +1,10 @@
+import type { ObjectUuidRef } from "@/domain/abstractions";
 import type { EstagioStatus, IHorarioEstagio } from "../estagio";
+import { EstagioFields } from "../estagio.fields";
+
+export const EstagioUpdateCommandFields = {
+  ...EstagioFields,
+};
 
 export class HorarioEstagioUpdateCommand {
   diaSemana!: number;
@@ -7,8 +13,8 @@ export class HorarioEstagioUpdateCommand {
 }
 
 export class EstagioUpdateCommand {
-  idEmpresaFk?: string;
-  idEstagiarioFk?: string;
+  empresa?: ObjectUuidRef;
+  estagiario?: ObjectUuidRef;
   cargaHoraria?: number;
   dataInicio?: string;
   dataFim?: string | null;

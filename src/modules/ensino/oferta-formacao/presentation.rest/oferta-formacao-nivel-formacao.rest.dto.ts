@@ -3,10 +3,6 @@ import {
   ApiProperty,
   ApiPropertyOptional,
   ApiSchema,
-  commonProperties,
-  RegisterModel,
-  referenceProperty,
-  simpleProperty,
   TransformToArray,
 } from "@/shared/presentation/rest";
 import {
@@ -14,6 +10,9 @@ import {
   PaginatedFilterByIdRestDto,
   PaginationMetaRestDto,
 } from "@/shared/presentation/rest/dtos";
+import { OfertaFormacaoNivelFormacaoBulkReplaceCommandFields } from "../domain/commands/oferta-formacao-nivel-formacao-bulk-replace.command";
+import { OfertaFormacaoNivelFormacaoFindOneQueryResultFields } from "../domain/queries/oferta-formacao-nivel-formacao-find-one.query.result";
+import { OfertaFormacaoNivelFormacaoListQueryFields } from "../domain/queries/oferta-formacao-nivel-formacao-list.query";
 import { OfertaFormacaoFindOneOutputRestDto } from "./oferta-formacao.rest.dto";
 
 // ============================================================================
@@ -24,7 +23,7 @@ import { OfertaFormacaoFindOneOutputRestDto } from "./oferta-formacao.rest.dto";
 export class OfertaFormacaoNivelFormacaoParentParamsRestDto {
   @ApiProperty({
     type: "string",
-    description: "ID da oferta de formacao (uuid)",
+    ...OfertaFormacaoNivelFormacaoBulkReplaceCommandFields.ofertaFormacaoId.swaggerMetadata,
     format: "uuid",
   })
   ofertaFormacaoId: string;
@@ -35,25 +34,16 @@ export class OfertaFormacaoNivelFormacaoParentParamsRestDto {
 // ============================================================================
 
 @ApiSchema({ name: "OfertaFormacaoNivelFormacaoFindOneOutputDto" })
-@RegisterModel({
-  name: "OfertaFormacaoNivelFormacaoFindOneQueryResult",
-  properties: [
-    simpleProperty("id"),
-    referenceProperty("nivelFormacao", "NivelFormacaoFindOneQueryResult"),
-    referenceProperty("ofertaFormacao", "OfertaFormacaoFindOneQueryResult"),
-    ...commonProperties.dated,
-  ],
-})
 export class OfertaFormacaoNivelFormacaoFindOneOutputRestDto extends EntityBaseRestDto {
   @ApiProperty({
     type: () => NivelFormacaoFindOneOutputRestDto,
-    description: "Nivel de formacao vinculado",
+    ...OfertaFormacaoNivelFormacaoFindOneQueryResultFields.nivelFormacao.swaggerMetadata,
   })
   nivelFormacao: NivelFormacaoFindOneOutputRestDto;
 
   @ApiProperty({
     type: () => OfertaFormacaoFindOneOutputRestDto,
-    description: "Oferta de formacao vinculada",
+    ...OfertaFormacaoNivelFormacaoFindOneQueryResultFields.ofertaFormacao.swaggerMetadata,
   })
   ofertaFormacao: OfertaFormacaoFindOneOutputRestDto;
 }
@@ -67,7 +57,7 @@ export class OfertaFormacaoNivelFormacaoListInputRestDto extends PaginatedFilter
   @ApiPropertyOptional({
     type: "string",
     isArray: true,
-    description: "Filtro por ID do Nivel de Formacao",
+    ...OfertaFormacaoNivelFormacaoListQueryFields.filterNivelFormacaoId.swaggerMetadata,
   })
   @TransformToArray()
   "filter.nivelFormacao.id"?: string[];
@@ -75,12 +65,15 @@ export class OfertaFormacaoNivelFormacaoListInputRestDto extends PaginatedFilter
 
 @ApiSchema({ name: "OfertaFormacaoNivelFormacaoListOutputDto" })
 export class OfertaFormacaoNivelFormacaoListOutputRestDto {
-  @ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" })
+  @ApiProperty({
+    type: () => PaginationMetaRestDto,
+    ...OfertaFormacaoNivelFormacaoListQueryFields.meta.swaggerMetadata,
+  })
   meta: PaginationMetaRestDto;
 
   @ApiProperty({
     type: () => [OfertaFormacaoNivelFormacaoFindOneOutputRestDto],
-    description: "Resultados da busca",
+    ...OfertaFormacaoNivelFormacaoListQueryFields.data.swaggerMetadata,
   })
   data: OfertaFormacaoNivelFormacaoFindOneOutputRestDto[];
 }
@@ -91,7 +84,11 @@ export class OfertaFormacaoNivelFormacaoListOutputRestDto {
 
 @ApiSchema({ name: "OfertaFormacaoNivelFormacaoBulkReplaceItemDto" })
 export class OfertaFormacaoNivelFormacaoBulkReplaceItemRestDto {
-  @ApiProperty({ type: "string", description: "ID do nivel de formacao (uuid)", format: "uuid" })
+  @ApiProperty({
+    type: "string",
+    ...OfertaFormacaoNivelFormacaoBulkReplaceCommandFields.nivelFormacaoId.swaggerMetadata,
+    format: "uuid",
+  })
   nivelFormacaoId: string;
 }
 
@@ -99,7 +96,7 @@ export class OfertaFormacaoNivelFormacaoBulkReplaceItemRestDto {
 export class OfertaFormacaoNivelFormacaoBulkReplaceInputRestDto {
   @ApiProperty({
     type: () => [OfertaFormacaoNivelFormacaoBulkReplaceItemRestDto],
-    description: "Lista de niveis de formacao para vincular a oferta de formacao",
+    ...OfertaFormacaoNivelFormacaoBulkReplaceCommandFields.niveis.swaggerMetadata,
   })
   niveis: OfertaFormacaoNivelFormacaoBulkReplaceItemRestDto[];
 }

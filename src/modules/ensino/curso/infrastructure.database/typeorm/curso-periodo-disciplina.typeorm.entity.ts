@@ -7,18 +7,12 @@ export class CursoPeriodoDisciplinaEntity {
   @PrimaryColumn("uuid")
   id!: string;
 
-  @Column({ name: "id_curso_fk", type: "uuid", nullable: false })
-  idCursoFk!: string;
-
   @ManyToOne(() => CursoEntity, {})
   @JoinColumn({ name: "id_curso_fk" })
   curso!: Relation<CursoEntity>;
 
   @Column({ name: "numero_periodo", type: "integer", nullable: false })
   numeroPeriodo!: number;
-
-  @Column({ name: "id_disciplina_fk", type: "uuid", nullable: false })
-  idDisciplinaFk!: string;
 
   @ManyToOne(() => DisciplinaEntity, {})
   @JoinColumn({ name: "id_disciplina_fk" })

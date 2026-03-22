@@ -5,13 +5,14 @@ import {
 } from "@/infrastructure.graphql/dtos";
 import { CampusFindOneOutputGraphQlDto } from "@/modules/ambientes/campus/presentation.graphql/campus.graphql.dto";
 import { ImagemFindOneOutputGraphQlDto } from "@/modules/armazenamento/imagem-arquivo/presentation.graphql/imagem-arquivo.graphql.dto";
+import { CursoGraphqlListInputSchema } from "@/modules/ensino/curso/domain/queries/curso-list.query.schemas";
 import { OfertaFormacaoFindOneOutputGraphQlDto } from "@/modules/ensino/oferta-formacao/presentation.graphql/oferta-formacao.graphql.dto";
 import { ArgsType, Field, InputType, ObjectType } from "@/shared/presentation/graphql";
-import {
-  cursoCreateSchema,
-  cursoGraphqlListInputSchema,
-  cursoUpdateSchema,
-} from "../domain/curso.schemas";
+import { CursoCreateCommandFields } from "../domain/commands/curso-create.command";
+import { CursoUpdateCommandFields } from "../domain/commands/curso-update.command";
+import { CursoCreateSchema, CursoUpdateSchema } from "../domain/curso.schemas";
+import { CursoFindOneQueryResultFields } from "../domain/queries/curso-find-one.query.result";
+import { CursoListQueryFields } from "../domain/queries/curso-list.query";
 
 // ============================================================================
 // FindOne Output
@@ -19,12 +20,20 @@ import {
 
 @ObjectType("CursoFindOneOutputDto")
 export class CursoFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
-  @Field(() => String) nome: string;
-  @Field(() => String) nomeAbreviado: string;
-  @Field(() => CampusFindOneOutputGraphQlDto) campus: CampusFindOneOutputGraphQlDto;
-  @Field(() => OfertaFormacaoFindOneOutputGraphQlDto)
+  @Field(() => String, CursoFindOneQueryResultFields.nome.gqlMetadata) nome: string;
+  @Field(() => String, CursoFindOneQueryResultFields.nomeAbreviado.gqlMetadata)
+  nomeAbreviado: string;
+  @Field(() => CampusFindOneOutputGraphQlDto, CursoFindOneQueryResultFields.campus.gqlMetadata)
+  campus: CampusFindOneOutputGraphQlDto;
+  @Field(
+    () => OfertaFormacaoFindOneOutputGraphQlDto,
+    CursoFindOneQueryResultFields.ofertaFormacao.gqlMetadata,
+  )
   ofertaFormacao: OfertaFormacaoFindOneOutputGraphQlDto;
-  @Field(() => ImagemFindOneOutputGraphQlDto, { nullable: true })
+  @Field(() => ImagemFindOneOutputGraphQlDto, {
+    nullable: true,
+    ...CursoFindOneQueryResultFields.imagemCapa.gqlMetadata,
+  })
   imagemCapa: ImagemFindOneOutputGraphQlDto | null;
 }
 
@@ -49,15 +58,21 @@ export class CursoImagemCapaRefInputGraphQlDto {
 
 @InputType("CursoCreateInputDto")
 export class CursoCreateInputGraphQlDto {
-  static readonly schema = cursoCreateSchema;
+  static readonly schema = CursoCreateSchema;
 
-  @Field(() => String) nome: string;
-  @Field(() => String) nomeAbreviado: string;
-  @Field(() => CursoCampusRefInputGraphQlDto)
+  @Field(() => String, CursoCreateCommandFields.nome.gqlMetadata) nome: string;
+  @Field(() => String, CursoCreateCommandFields.nomeAbreviado.gqlMetadata) nomeAbreviado: string;
+  @Field(() => CursoCampusRefInputGraphQlDto, CursoCreateCommandFields.campus.gqlMetadata)
   campus: CursoCampusRefInputGraphQlDto;
-  @Field(() => CursoOfertaFormacaoRefInputGraphQlDto)
+  @Field(
+    () => CursoOfertaFormacaoRefInputGraphQlDto,
+    CursoCreateCommandFields.ofertaFormacao.gqlMetadata,
+  )
   ofertaFormacao: CursoOfertaFormacaoRefInputGraphQlDto;
-  @Field(() => CursoImagemCapaRefInputGraphQlDto, { nullable: true })
+  @Field(() => CursoImagemCapaRefInputGraphQlDto, {
+    nullable: true,
+    ...CursoFindOneQueryResultFields.imagemCapa.gqlMetadata,
+  })
   imagemCapa?: CursoImagemCapaRefInputGraphQlDto | null;
 }
 
@@ -67,17 +82,26 @@ export class CursoCreateInputGraphQlDto {
 
 @InputType("CursoUpdateInputDto")
 export class CursoUpdateInputGraphQlDto {
-  static readonly schema = cursoUpdateSchema;
+  static readonly schema = CursoUpdateSchema;
 
-  @Field(() => String, { nullable: true })
+  @Field(() => String, { nullable: true, ...CursoUpdateCommandFields.nome.gqlMetadata })
   nome?: string;
-  @Field(() => String, { nullable: true })
+  @Field(() => String, { nullable: true, ...CursoUpdateCommandFields.nomeAbreviado.gqlMetadata })
   nomeAbreviado?: string;
-  @Field(() => CursoCampusRefInputGraphQlDto, { nullable: true })
+  @Field(() => CursoCampusRefInputGraphQlDto, {
+    nullable: true,
+    ...CursoUpdateCommandFields.campus.gqlMetadata,
+  })
   campus?: CursoCampusRefInputGraphQlDto;
-  @Field(() => CursoOfertaFormacaoRefInputGraphQlDto, { nullable: true })
+  @Field(() => CursoOfertaFormacaoRefInputGraphQlDto, {
+    nullable: true,
+    ...CursoUpdateCommandFields.ofertaFormacao.gqlMetadata,
+  })
   ofertaFormacao?: CursoOfertaFormacaoRefInputGraphQlDto;
-  @Field(() => CursoImagemCapaRefInputGraphQlDto, { nullable: true })
+  @Field(() => CursoImagemCapaRefInputGraphQlDto, {
+    nullable: true,
+    ...CursoFindOneQueryResultFields.imagemCapa.gqlMetadata,
+  })
   imagemCapa?: CursoImagemCapaRefInputGraphQlDto | null;
 }
 
@@ -87,12 +111,12 @@ export class CursoUpdateInputGraphQlDto {
 
 @ArgsType()
 export class CursoListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {
-  static schema = cursoGraphqlListInputSchema;
+  static schema = CursoGraphqlListInputSchema;
 
-  @Field(() => [String], { nullable: true, description: "Filtro por ID do Campus" })
+  @Field(() => [String], CursoListQueryFields.filterCampusId.gqlMetadata)
   filterCampusId?: string[];
 
-  @Field(() => [String], { nullable: true, description: "Filtro por ID da Oferta de Formacao" })
+  @Field(() => [String], CursoListQueryFields.filterOfertaFormacaoId.gqlMetadata)
   filterOfertaFormacaoId?: string[];
 }
 
@@ -102,9 +126,9 @@ export class CursoListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {
 
 @ObjectType("CursoListResult")
 export class CursoListOutputGraphQlDto {
-  @Field(() => PaginationMetaGraphQlDto)
+  @Field(() => PaginationMetaGraphQlDto, CursoListQueryFields.meta.gqlMetadata)
   meta: PaginationMetaGraphQlDto;
 
-  @Field(() => [CursoFindOneOutputGraphQlDto])
+  @Field(() => [CursoFindOneOutputGraphQlDto], CursoListQueryFields.data.gqlMetadata)
   data: CursoFindOneOutputGraphQlDto[];
 }

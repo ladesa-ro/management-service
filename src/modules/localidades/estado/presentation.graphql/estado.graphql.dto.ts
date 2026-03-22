@@ -1,5 +1,7 @@
 import { PaginationMetaGraphQlDto } from "@/infrastructure.graphql/dtos";
-import { estadoGraphqlListInputSchema } from "@/modules/localidades/estado/domain/estado.schemas";
+import { EstadoFindOneQueryResultFields } from "@/modules/localidades/estado/domain/queries/estado-find-one.query.result";
+import { EstadoListQueryFields } from "@/modules/localidades/estado/domain/queries/estado-list.query";
+import { EstadoGraphqlListInputSchema } from "@/modules/localidades/estado/domain/queries/estado-list.query.schemas";
 import { ArgsType, Field, Int, ObjectType } from "@/shared/presentation/graphql";
 
 // ============================================================================
@@ -8,9 +10,9 @@ import { ArgsType, Field, Int, ObjectType } from "@/shared/presentation/graphql"
 
 @ObjectType("EstadoFindOneOutputDto")
 export class EstadoFindOneOutputGraphQlDto {
-  @Field(() => Int) id: number;
-  @Field(() => String) nome: string;
-  @Field(() => String) sigla: string;
+  @Field(() => Int, EstadoFindOneQueryResultFields.id.gqlMetadata) id: number;
+  @Field(() => String, EstadoFindOneQueryResultFields.nome.gqlMetadata) nome: string;
+  @Field(() => String, EstadoFindOneQueryResultFields.sigla.gqlMetadata) sigla: string;
 }
 
 // ============================================================================
@@ -19,24 +21,24 @@ export class EstadoFindOneOutputGraphQlDto {
 
 @ArgsType()
 export class EstadoListInputGraphQlDto {
-  static schema = estadoGraphqlListInputSchema;
+  static schema = EstadoGraphqlListInputSchema;
 
-  @Field(() => Int, { nullable: true, defaultValue: 1 })
-  page?: number = 1;
+  @Field(() => Int, EstadoListQueryFields.page.gqlMetadata)
+  page?: number;
 
-  @Field(() => Int, { nullable: true })
+  @Field(() => Int, EstadoListQueryFields.limit.gqlMetadata)
   limit?: number;
 
-  @Field(() => String, { nullable: true })
+  @Field(() => String, EstadoListQueryFields.search.gqlMetadata)
   search?: string;
 
-  @Field(() => [String], { nullable: true })
+  @Field(() => [String], EstadoListQueryFields.sortBy.gqlMetadata)
   sortBy?: string[];
 
-  @Field(() => [String], { nullable: true })
+  @Field(() => [String], EstadoListQueryFields.selection.gqlMetadata)
   selection?: string[];
 
-  @Field(() => [String], { nullable: true, description: "Filtro por ID" })
+  @Field(() => [String], EstadoListQueryFields.filterId.gqlMetadata)
   filterId?: string[];
 }
 
@@ -46,9 +48,9 @@ export class EstadoListInputGraphQlDto {
 
 @ObjectType("EstadoListResult")
 export class EstadoListOutputGraphQlDto {
-  @Field(() => PaginationMetaGraphQlDto)
+  @Field(() => PaginationMetaGraphQlDto, EstadoListQueryFields.meta.gqlMetadata)
   meta: PaginationMetaGraphQlDto;
 
-  @Field(() => [EstadoFindOneOutputGraphQlDto])
+  @Field(() => [EstadoFindOneOutputGraphQlDto], EstadoListQueryFields.data.gqlMetadata)
   data: EstadoFindOneOutputGraphQlDto[];
 }

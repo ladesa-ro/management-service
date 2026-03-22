@@ -3,12 +3,12 @@ import type { IdUuid, ScalarDateTimeString } from "@/domain/abstractions/scalars
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { zodValidate } from "@/shared/validation/index";
 import {
-  nivelFormacaoCreateSchema,
-  nivelFormacaoSchema,
-  nivelFormacaoUpdateSchema,
+  NivelFormacaoCreateSchema,
+  NivelFormacaoSchema,
+  NivelFormacaoUpdateSchema,
 } from "./nivel-formacao.schemas";
 
-export type INivelFormacao = z.infer<typeof nivelFormacaoSchema>;
+export type INivelFormacao = z.infer<typeof NivelFormacaoSchema>;
 
 export class NivelFormacao {
   static readonly entityName = "NivelFormacao";
@@ -22,7 +22,7 @@ export class NivelFormacao {
   private constructor() {}
 
   static create(dados: unknown): NivelFormacao {
-    const parsed = zodValidate(NivelFormacao.entityName, nivelFormacaoCreateSchema, dados);
+    const parsed = zodValidate(NivelFormacao.entityName, NivelFormacaoCreateSchema, dados);
 
     const instance = new NivelFormacao();
 
@@ -36,7 +36,7 @@ export class NivelFormacao {
   }
 
   static load(dados: unknown): NivelFormacao {
-    const parsed = zodValidate(NivelFormacao.entityName, nivelFormacaoSchema, dados);
+    const parsed = zodValidate(NivelFormacao.entityName, NivelFormacaoSchema, dados);
 
     const instance = new NivelFormacao();
 
@@ -50,12 +50,12 @@ export class NivelFormacao {
   }
 
   update(dados: unknown): void {
-    const parsed = zodValidate(NivelFormacao.entityName, nivelFormacaoUpdateSchema, dados);
+    const parsed = zodValidate(NivelFormacao.entityName, NivelFormacaoUpdateSchema, dados);
 
     if (parsed.slug !== undefined) this.slug = parsed.slug;
 
     this.dateUpdated = new Date().toISOString();
 
-    zodValidate(NivelFormacao.entityName, nivelFormacaoSchema, this);
+    zodValidate(NivelFormacao.entityName, NivelFormacaoSchema, this);
   }
 }

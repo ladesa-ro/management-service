@@ -5,9 +5,9 @@ import { type Arquivo, type IArquivo } from "@/modules/armazenamento/arquivo/dom
 import { type IImagem, type Imagem } from "@/modules/armazenamento/imagem/domain/imagem";
 import { zodValidate } from "@/shared/validation/index";
 import {
-  imagemArquivoCreateSchema,
-  imagemArquivoSchema,
-  imagemArquivoUpdateSchema,
+  ImagemArquivoCreateSchema,
+  ImagemArquivoSchema,
+  ImagemArquivoUpdateSchema,
 } from "./imagem-arquivo.schemas";
 
 export interface IImagemArquivo extends IEntityBaseUuid {
@@ -52,7 +52,7 @@ export class ImagemArquivo implements IEntityBaseUuid {
   private constructor() {}
 
   static create(dados: IImagemArquivoCreate): ImagemArquivo {
-    const parsed = zodValidate(ImagemArquivo.entityName, imagemArquivoCreateSchema, dados);
+    const parsed = zodValidate(ImagemArquivo.entityName, ImagemArquivoCreateSchema, dados);
 
     const instance = new ImagemArquivo();
 
@@ -69,7 +69,7 @@ export class ImagemArquivo implements IEntityBaseUuid {
   }
 
   static load(dados: unknown): ImagemArquivo {
-    const parsed = zodValidate(ImagemArquivo.entityName, imagemArquivoSchema, dados);
+    const parsed = zodValidate(ImagemArquivo.entityName, ImagemArquivoSchema, dados);
 
     const instance = new ImagemArquivo();
 
@@ -88,7 +88,7 @@ export class ImagemArquivo implements IEntityBaseUuid {
   }
 
   update(dados: unknown): void {
-    const parsed = zodValidate(ImagemArquivo.entityName, imagemArquivoUpdateSchema, dados);
+    const parsed = zodValidate(ImagemArquivo.entityName, ImagemArquivoUpdateSchema, dados);
 
     if (parsed.largura !== undefined) this.largura = parsed.largura;
     if (parsed.altura !== undefined) this.altura = parsed.altura;
@@ -96,6 +96,6 @@ export class ImagemArquivo implements IEntityBaseUuid {
     if (parsed.mimeType !== undefined) this.mimeType = parsed.mimeType;
 
     this.dateUpdated = new Date().toISOString();
-    zodValidate(ImagemArquivo.entityName, imagemArquivoSchema, this);
+    zodValidate(ImagemArquivo.entityName, ImagemArquivoSchema, this);
   }
 }

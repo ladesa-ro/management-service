@@ -1,17 +1,18 @@
+import type { ObjectUuidRef } from "@/domain/abstractions";
 import type { IdUuid, ScalarDateTimeString } from "@/domain/abstractions/scalars";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { zodValidate } from "@/shared/validation/index";
 import {
-  estagiarioCreateSchema,
-  estagiarioSchema,
-  estagiarioUpdateSchema,
+  EstagiarioCreateSchema,
+  EstagiarioSchema,
+  EstagiarioUpdateSchema,
 } from "./estagiario.schemas";
 
 export interface IEstagiario {
   id: string;
-  idPerfilFk: string;
-  idCursoFk: string;
-  idTurmaFk: string;
+  perfil: { id: string };
+  curso: { id: string };
+  turma: { id: string };
   telefone: string;
   emailInstitucional: string | null;
   dataNascimento: string;
@@ -25,9 +26,9 @@ export class Estagiario {
   static readonly entityName = "Estagiario";
 
   id!: IdUuid;
-  idPerfilFk!: string;
-  idCursoFk!: string;
-  idTurmaFk!: string;
+  perfil!: ObjectUuidRef;
+  curso!: ObjectUuidRef;
+  turma!: ObjectUuidRef;
   telefone!: string;
   emailInstitucional!: string | null;
   dataNascimento!: string;
@@ -42,14 +43,14 @@ export class Estagiario {
   }
 
   static create(dados: unknown): Estagiario {
-    const parsed = zodValidate(Estagiario.entityName, estagiarioCreateSchema, dados);
+    const parsed = zodValidate(Estagiario.entityName, EstagiarioCreateSchema, dados);
 
     const instance = new Estagiario();
 
     instance.id = generateUuidV7();
-    instance.idPerfilFk = parsed.idPerfilFk;
-    instance.idCursoFk = parsed.idCursoFk;
-    instance.idTurmaFk = parsed.idTurmaFk;
+    instance.perfil = parsed.perfil;
+    instance.curso = parsed.curso;
+    instance.turma = parsed.turma;
     instance.telefone = parsed.telefone;
     instance.emailInstitucional = parsed.emailInstitucional ?? null;
     instance.dataNascimento = parsed.dataNascimento;
@@ -61,14 +62,14 @@ export class Estagiario {
   }
 
   static load(dados: unknown): Estagiario {
-    const parsed = zodValidate(Estagiario.entityName, estagiarioSchema, dados);
+    const parsed = zodValidate(Estagiario.entityName, EstagiarioSchema, dados);
 
     const instance = new Estagiario();
 
     instance.id = parsed.id;
-    instance.idPerfilFk = parsed.idPerfilFk;
-    instance.idCursoFk = parsed.idCursoFk;
-    instance.idTurmaFk = parsed.idTurmaFk;
+    instance.perfil = parsed.perfil;
+    instance.curso = parsed.curso;
+    instance.turma = parsed.turma;
     instance.telefone = parsed.telefone;
     instance.emailInstitucional = parsed.emailInstitucional;
     instance.dataNascimento = parsed.dataNascimento;
@@ -80,11 +81,11 @@ export class Estagiario {
   }
 
   update(dados: unknown): void {
-    const parsed = zodValidate(Estagiario.entityName, estagiarioUpdateSchema, dados);
+    const parsed = zodValidate(Estagiario.entityName, EstagiarioUpdateSchema, dados);
 
-    if (parsed.idPerfilFk !== undefined) this.idPerfilFk = parsed.idPerfilFk;
-    if (parsed.idCursoFk !== undefined) this.idCursoFk = parsed.idCursoFk;
-    if (parsed.idTurmaFk !== undefined) this.idTurmaFk = parsed.idTurmaFk;
+    if (parsed.perfil !== undefined) this.perfil = parsed.perfil;
+    if (parsed.curso !== undefined) this.curso = parsed.curso;
+    if (parsed.turma !== undefined) this.turma = parsed.turma;
     if (parsed.telefone !== undefined) this.telefone = parsed.telefone;
     if (parsed.emailInstitucional !== undefined)
       this.emailInstitucional = parsed.emailInstitucional ?? null;
@@ -92,6 +93,6 @@ export class Estagiario {
 
     this.dateUpdated = new Date().toISOString();
 
-    zodValidate(Estagiario.entityName, estagiarioSchema, this);
+    zodValidate(Estagiario.entityName, EstagiarioSchema, this);
   }
 }

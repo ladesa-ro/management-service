@@ -1,28 +1,19 @@
+/**
+ * Diario Preferencia Agrupamento — schemas zod para a entidade e suas operacoes.
+ *
+ * Contem os schemas de referencia, composicao (create/update)
+ * e validacao da entidade. Fonte unica de verdade (SSOT) para
+ * os contratos de dados da entidade.
+ */
 import { z } from "zod";
 import { datedSchema, uuidSchema } from "@/shared/validation/schemas";
+import { DiarioPreferenciaAgrupamentoFields } from "./diario-preferencia-agrupamento.fields";
 
 // ============================================================================
-// Fragments reutilizáveis
+// Fragments de referência
 // ============================================================================
 
-export const diarioPreferenciaAgrupamentoDataInicioSchema = z
-  .string()
-  .min(1, "dataInicio é obrigatória");
-
-export const diarioPreferenciaAgrupamentoDataFimSchema = z.string().nullable().optional();
-
-export const diarioPreferenciaAgrupamentoDiaSemanaIsoSchema = z
-  .number()
-  .int()
-  .min(1, "diaSemanaIso deve ser >= 1")
-  .max(7, "diaSemanaIso deve ser <= 7");
-
-export const diarioPreferenciaAgrupamentoAulasSeguidasSchema = z
-  .number()
-  .int()
-  .min(1, "aulasSeguidas deve ser >= 1");
-
-export const diarioPreferenciaAgrupamentoDiarioRefSchema = z.object({
+export const DiarioPreferenciaAgrupamentoDiarioRefSchema = z.object({
   id: uuidSchema,
 });
 
@@ -30,29 +21,29 @@ export const diarioPreferenciaAgrupamentoDiarioRefSchema = z.object({
 // Schemas compostos
 // ============================================================================
 
-export const diarioPreferenciaAgrupamentoSchema = z
+export const DiarioPreferenciaAgrupamentoSchema = z
   .object({
     id: uuidSchema,
-    dataInicio: diarioPreferenciaAgrupamentoDataInicioSchema,
+    dataInicio: DiarioPreferenciaAgrupamentoFields.dataInicio.schema,
     dataFim: z.string().nullable(),
-    diaSemanaIso: diarioPreferenciaAgrupamentoDiaSemanaIsoSchema,
-    aulasSeguidas: diarioPreferenciaAgrupamentoAulasSeguidasSchema,
-    diario: diarioPreferenciaAgrupamentoDiarioRefSchema,
+    diaSemanaIso: DiarioPreferenciaAgrupamentoFields.diaSemanaIso.schema,
+    aulasSeguidas: DiarioPreferenciaAgrupamentoFields.aulasSeguidas.schema,
+    diario: DiarioPreferenciaAgrupamentoDiarioRefSchema,
   })
   .merge(datedSchema);
 
-export const diarioPreferenciaAgrupamentoCreateSchema = z.object({
-  dataInicio: diarioPreferenciaAgrupamentoDataInicioSchema,
-  dataFim: diarioPreferenciaAgrupamentoDataFimSchema,
-  diaSemanaIso: diarioPreferenciaAgrupamentoDiaSemanaIsoSchema,
-  aulasSeguidas: diarioPreferenciaAgrupamentoAulasSeguidasSchema,
-  diario: diarioPreferenciaAgrupamentoDiarioRefSchema,
+export const DiarioPreferenciaAgrupamentoCreateSchema = z.object({
+  dataInicio: DiarioPreferenciaAgrupamentoFields.dataInicio.schema,
+  dataFim: DiarioPreferenciaAgrupamentoFields.dataFim.schema,
+  diaSemanaIso: DiarioPreferenciaAgrupamentoFields.diaSemanaIso.schema,
+  aulasSeguidas: DiarioPreferenciaAgrupamentoFields.aulasSeguidas.schema,
+  diario: DiarioPreferenciaAgrupamentoDiarioRefSchema,
 });
 
-export const diarioPreferenciaAgrupamentoUpdateSchema = z.object({
-  dataInicio: diarioPreferenciaAgrupamentoDataInicioSchema.optional(),
-  dataFim: diarioPreferenciaAgrupamentoDataFimSchema,
-  diaSemanaIso: diarioPreferenciaAgrupamentoDiaSemanaIsoSchema.optional(),
-  aulasSeguidas: diarioPreferenciaAgrupamentoAulasSeguidasSchema.optional(),
-  diario: diarioPreferenciaAgrupamentoDiarioRefSchema.optional(),
+export const DiarioPreferenciaAgrupamentoUpdateSchema = z.object({
+  dataInicio: DiarioPreferenciaAgrupamentoFields.dataInicio.schema.optional(),
+  dataFim: DiarioPreferenciaAgrupamentoFields.dataFim.schema,
+  diaSemanaIso: DiarioPreferenciaAgrupamentoFields.diaSemanaIso.schema.optional(),
+  aulasSeguidas: DiarioPreferenciaAgrupamentoFields.aulasSeguidas.schema.optional(),
+  diario: DiarioPreferenciaAgrupamentoDiarioRefSchema.optional(),
 });

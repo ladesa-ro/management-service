@@ -9,12 +9,27 @@ import {
 } from "@nestjs/swagger";
 import { ensureExists } from "@/application/errors";
 import { DeclareDependency } from "@/domain/dependency-injection";
-import { IEmpresaCreateCommandHandler } from "@/modules/estagio/empresa/domain/commands/empresa-create.command.handler.interface";
-import { IEmpresaDeleteCommandHandler } from "@/modules/estagio/empresa/domain/commands/empresa-delete.command.handler.interface";
-import { IEmpresaUpdateCommandHandler } from "@/modules/estagio/empresa/domain/commands/empresa-update.command.handler.interface";
+import {
+  EmpresaCreateCommandMetadata,
+  IEmpresaCreateCommandHandler,
+} from "@/modules/estagio/empresa/domain/commands/empresa-create.command.handler.interface";
+import {
+  EmpresaDeleteCommandMetadata,
+  IEmpresaDeleteCommandHandler,
+} from "@/modules/estagio/empresa/domain/commands/empresa-delete.command.handler.interface";
+import {
+  EmpresaUpdateCommandMetadata,
+  IEmpresaUpdateCommandHandler,
+} from "@/modules/estagio/empresa/domain/commands/empresa-update.command.handler.interface";
 import { Empresa } from "@/modules/estagio/empresa/domain/empresa";
-import { IEmpresaFindOneQueryHandler } from "@/modules/estagio/empresa/domain/queries/empresa-find-one.query.handler.interface";
-import { IEmpresaListQueryHandler } from "@/modules/estagio/empresa/domain/queries/empresa-list.query.handler.interface";
+import {
+  EmpresaFindOneQueryMetadata,
+  IEmpresaFindOneQueryHandler,
+} from "@/modules/estagio/empresa/domain/queries/empresa-find-one.query.handler.interface";
+import {
+  EmpresaListQueryMetadata,
+  IEmpresaListQueryHandler,
+} from "@/modules/estagio/empresa/domain/queries/empresa-list.query.handler.interface";
 import { AccessContext, AccessContextHttp } from "@/server/access-context";
 import {
   EmpresaCreateInputRestDto,
@@ -43,7 +58,7 @@ export class EmpresaRestController {
   ) {}
 
   @Get("/")
-  @ApiOperation({ summary: "Lista empresas", operationId: "empresaFindAll" })
+  @ApiOperation(EmpresaListQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: EmpresaListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
@@ -56,7 +71,7 @@ export class EmpresaRestController {
   }
 
   @Get("/:id")
-  @ApiOperation({ summary: "Busca uma empresa por ID", operationId: "empresaFindById" })
+  @ApiOperation(EmpresaFindOneQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: EmpresaFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -71,7 +86,7 @@ export class EmpresaRestController {
   }
 
   @Post("/")
-  @ApiOperation({ summary: "Cria uma empresa", operationId: "empresaCreate" })
+  @ApiOperation(EmpresaCreateCommandMetadata.swaggerMetadata)
   @ApiCreatedResponse({ type: EmpresaFindOneOutputRestDto })
   @ApiForbiddenResponse()
   async create(
@@ -84,7 +99,7 @@ export class EmpresaRestController {
   }
 
   @Patch("/:id")
-  @ApiOperation({ summary: "Atualiza uma empresa", operationId: "empresaUpdate" })
+  @ApiOperation(EmpresaUpdateCommandMetadata.swaggerMetadata)
   @ApiOkResponse({ type: EmpresaFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -99,7 +114,7 @@ export class EmpresaRestController {
   }
 
   @Delete("/:id")
-  @ApiOperation({ summary: "Deleta uma empresa", operationId: "empresaDeleteOneById" })
+  @ApiOperation(EmpresaDeleteCommandMetadata.swaggerMetadata)
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()

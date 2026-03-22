@@ -9,12 +9,27 @@ import {
 } from "@nestjs/swagger";
 import { ensureExists } from "@/application/errors";
 import { DeclareDependency } from "@/domain/dependency-injection";
-import { INivelFormacaoCreateCommandHandler } from "@/modules/ensino/nivel-formacao/domain/commands/nivel-formacao-create.command.handler.interface";
-import { INivelFormacaoDeleteCommandHandler } from "@/modules/ensino/nivel-formacao/domain/commands/nivel-formacao-delete.command.handler.interface";
-import { INivelFormacaoUpdateCommandHandler } from "@/modules/ensino/nivel-formacao/domain/commands/nivel-formacao-update.command.handler.interface";
+import {
+  INivelFormacaoCreateCommandHandler,
+  NivelFormacaoCreateCommandMetadata,
+} from "@/modules/ensino/nivel-formacao/domain/commands/nivel-formacao-create.command.handler.interface";
+import {
+  INivelFormacaoDeleteCommandHandler,
+  NivelFormacaoDeleteCommandMetadata,
+} from "@/modules/ensino/nivel-formacao/domain/commands/nivel-formacao-delete.command.handler.interface";
+import {
+  INivelFormacaoUpdateCommandHandler,
+  NivelFormacaoUpdateCommandMetadata,
+} from "@/modules/ensino/nivel-formacao/domain/commands/nivel-formacao-update.command.handler.interface";
 import { NivelFormacao } from "@/modules/ensino/nivel-formacao/domain/nivel-formacao";
-import { INivelFormacaoFindOneQueryHandler } from "@/modules/ensino/nivel-formacao/domain/queries/nivel-formacao-find-one.query.handler.interface";
-import { INivelFormacaoListQueryHandler } from "@/modules/ensino/nivel-formacao/domain/queries/nivel-formacao-list.query.handler.interface";
+import {
+  INivelFormacaoFindOneQueryHandler,
+  NivelFormacaoFindOneQueryMetadata,
+} from "@/modules/ensino/nivel-formacao/domain/queries/nivel-formacao-find-one.query.handler.interface";
+import {
+  INivelFormacaoListQueryHandler,
+  NivelFormacaoListQueryMetadata,
+} from "@/modules/ensino/nivel-formacao/domain/queries/nivel-formacao-list.query.handler.interface";
 import { AccessContext, AccessContextHttp } from "@/server/access-context";
 import {
   NivelFormacaoCreateInputRestDto,
@@ -43,7 +58,7 @@ export class NivelFormacaoRestController {
   ) {}
 
   @Get("/")
-  @ApiOperation({ summary: "Lista niveis de formacao", operationId: "nivelFormacaoFindAll" })
+  @ApiOperation(NivelFormacaoListQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: NivelFormacaoListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
@@ -56,10 +71,7 @@ export class NivelFormacaoRestController {
   }
 
   @Get("/:id")
-  @ApiOperation({
-    summary: "Busca um nivel de formacao por ID",
-    operationId: "nivelFormacaoFindById",
-  })
+  @ApiOperation(NivelFormacaoFindOneQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: NivelFormacaoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -74,7 +86,7 @@ export class NivelFormacaoRestController {
   }
 
   @Post("/")
-  @ApiOperation({ summary: "Cria um nivel de formacao", operationId: "nivelFormacaoCreate" })
+  @ApiOperation(NivelFormacaoCreateCommandMetadata.swaggerMetadata)
   @ApiCreatedResponse({ type: NivelFormacaoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   async create(
@@ -87,7 +99,7 @@ export class NivelFormacaoRestController {
   }
 
   @Patch("/:id")
-  @ApiOperation({ summary: "Atualiza um nivel de formacao", operationId: "nivelFormacaoUpdate" })
+  @ApiOperation(NivelFormacaoUpdateCommandMetadata.swaggerMetadata)
   @ApiOkResponse({ type: NivelFormacaoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -106,10 +118,7 @@ export class NivelFormacaoRestController {
   }
 
   @Delete("/:id")
-  @ApiOperation({
-    summary: "Remove um nivel de formacao",
-    operationId: "nivelFormacaoDeleteOneById",
-  })
+  @ApiOperation(NivelFormacaoDeleteCommandMetadata.swaggerMetadata)
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()

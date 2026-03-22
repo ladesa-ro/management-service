@@ -1,53 +1,29 @@
+/**
+ * Imagem — schemas zod para a entidade e suas operacoes.
+ *
+ * Contem os schemas de referencia, composicao (create/update)
+ * e validacao da entidade. Fonte unica de verdade (SSOT) para
+ * os contratos de dados da entidade.
+ */
 import { z } from "zod";
-import { datedSchema, stringFilterSchema, uuidSchema } from "@/shared/validation/schemas";
-
-// ============================================================================
-// Fragments reutilizáveis
-// ============================================================================
-
-export const imagemDescricaoSchema = z.string().nullable().optional();
+import { datedSchema, uuidSchema } from "@/shared/validation/schemas";
+import { ImagemFields } from "./imagem.fields";
 
 // ============================================================================
 // Schemas compostos
 // ============================================================================
 
-export const imagemSchema = z
+export const ImagemSchema = z
   .object({
     id: uuidSchema,
     descricao: z.string().nullable(),
   })
   .merge(datedSchema);
 
-export const imagemCreateSchema = z.object({
-  descricao: imagemDescricaoSchema,
+export const ImagemCreateSchema = z.object({
+  descricao: ImagemFields.descricao.schema,
 });
 
-export const imagemUpdateSchema = z.object({
-  descricao: imagemDescricaoSchema,
-});
-
-// ============================================================================
-// Schemas de input (presentation layer)
-// ============================================================================
-
-export const imagemFindOneInputSchema = z.object({
-  id: uuidSchema,
-});
-
-export const imagemPaginationInputSchema = z.object({
-  page: z.coerce.number().int().min(1).optional().default(1),
-  limit: z.coerce.number().int().min(1).optional(),
-  search: z.string().optional(),
-  sortBy: z.array(z.string()).optional(),
-  selection: z.array(z.string()).optional(),
-  "filter.id": stringFilterSchema,
-});
-
-export const imagemGraphqlListInputSchema = z.object({
-  page: z.number().int().min(1).optional().default(1),
-  limit: z.number().int().min(1).optional(),
-  search: z.string().optional(),
-  sortBy: z.array(z.string()).optional(),
-  selection: z.array(z.string()).optional(),
-  filterId: z.array(z.string()).optional(),
+export const ImagemUpdateSchema = z.object({
+  descricao: ImagemFields.descricao.schema,
 });

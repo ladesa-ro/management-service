@@ -2,10 +2,6 @@ import {
   ApiProperty,
   ApiPropertyOptional,
   ApiSchema,
-  commonProperties,
-  RegisterModel,
-  referenceProperty,
-  simpleProperty,
   TransformToArray,
 } from "@/shared/presentation/rest";
 import {
@@ -13,6 +9,9 @@ import {
   PaginatedFilterByIdRestDto,
   PaginationMetaRestDto,
 } from "@/shared/presentation/rest/dtos";
+import { DiarioPreferenciaAgrupamentoBulkReplaceCommandFields } from "../domain/commands/diario-preferencia-agrupamento-bulk-replace.command";
+import { DiarioPreferenciaAgrupamentoFindOneQueryResultFields } from "../domain/queries/diario-preferencia-agrupamento-find-one.query.result";
+import { DiarioPreferenciaAgrupamentoListQueryFields } from "../domain/queries/diario-preferencia-agrupamento-list.query";
 import { DiarioFindOneOutputRestDto } from "./diario.rest.dto";
 
 // ============================================================================
@@ -23,7 +22,7 @@ import { DiarioFindOneOutputRestDto } from "./diario.rest.dto";
 export class DiarioPreferenciaAgrupamentoParentParamsRestDto {
   @ApiProperty({
     type: "string",
-    description: "ID do diario (uuid)",
+    ...DiarioPreferenciaAgrupamentoBulkReplaceCommandFields.diarioId.swaggerMetadata,
     format: "uuid",
   })
   diarioId: string;
@@ -34,44 +33,39 @@ export class DiarioPreferenciaAgrupamentoParentParamsRestDto {
 // ============================================================================
 
 @ApiSchema({ name: "DiarioPreferenciaAgrupamentoFindOneOutputDto" })
-@RegisterModel({
-  name: "DiarioPreferenciaAgrupamentoFindOneQueryResult",
-  properties: [
-    simpleProperty("id"),
-    simpleProperty("dataInicio"),
-    simpleProperty("dataFim", { nullable: true }),
-    simpleProperty("diaSemanaIso"),
-    simpleProperty("aulasSeguidas"),
-    referenceProperty("diario", "DiarioFindOneQueryResult"),
-    ...commonProperties.dated,
-  ],
-})
 export class DiarioPreferenciaAgrupamentoFindOneOutputRestDto extends EntityBaseRestDto {
   @ApiProperty({
     type: "string",
-    description: "Inicio da vigencia da preferencia de agrupamento",
+    ...DiarioPreferenciaAgrupamentoFindOneQueryResultFields.dataInicio.swaggerMetadata,
   })
   dataInicio: string;
 
   @ApiPropertyOptional({
     type: "string",
-    description: "Fim da vigencia da preferencia de agrupamento",
+    ...DiarioPreferenciaAgrupamentoFindOneQueryResultFields.dataFim.swaggerMetadata,
     nullable: true,
   })
   dataFim: string | null;
 
   @ApiProperty({
     type: "integer",
-    description: "Dia da semana (ISO 8601: 1=Segunda, 7=Domingo)",
+    ...DiarioPreferenciaAgrupamentoFindOneQueryResultFields.diaSemanaIso.swaggerMetadata,
     minimum: 1,
     maximum: 7,
   })
   diaSemanaIso: number;
 
-  @ApiProperty({ type: "integer", description: "Quantidade de aulas seguidas", minimum: 1 })
+  @ApiProperty({
+    type: "integer",
+    ...DiarioPreferenciaAgrupamentoFindOneQueryResultFields.aulasSeguidas.swaggerMetadata,
+    minimum: 1,
+  })
   aulasSeguidas: number;
 
-  @ApiProperty({ type: () => DiarioFindOneOutputRestDto, description: "Diario vinculado" })
+  @ApiProperty({
+    type: () => DiarioFindOneOutputRestDto,
+    ...DiarioPreferenciaAgrupamentoFindOneQueryResultFields.diario.swaggerMetadata,
+  })
   diario: DiarioFindOneOutputRestDto;
 }
 
@@ -84,7 +78,7 @@ export class DiarioPreferenciaAgrupamentoListInputRestDto extends PaginatedFilte
   @ApiPropertyOptional({
     type: "string",
     isArray: true,
-    description: "Filtro por ID do Diario",
+    ...DiarioPreferenciaAgrupamentoListQueryFields.filterDiarioId.swaggerMetadata,
   })
   @TransformToArray()
   "filter.diario.id"?: string[];
@@ -92,12 +86,15 @@ export class DiarioPreferenciaAgrupamentoListInputRestDto extends PaginatedFilte
 
 @ApiSchema({ name: "DiarioPreferenciaAgrupamentoListOutputDto" })
 export class DiarioPreferenciaAgrupamentoListOutputRestDto {
-  @ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" })
+  @ApiProperty({
+    type: () => PaginationMetaRestDto,
+    ...DiarioPreferenciaAgrupamentoListQueryFields.meta.swaggerMetadata,
+  })
   meta: PaginationMetaRestDto;
 
   @ApiProperty({
     type: () => [DiarioPreferenciaAgrupamentoFindOneOutputRestDto],
-    description: "Resultados da busca",
+    ...DiarioPreferenciaAgrupamentoListQueryFields.data.swaggerMetadata,
   })
   data: DiarioPreferenciaAgrupamentoFindOneOutputRestDto[];
 }
@@ -110,26 +107,30 @@ export class DiarioPreferenciaAgrupamentoListOutputRestDto {
 export class DiarioPreferenciaAgrupamentoBulkReplaceItemRestDto {
   @ApiProperty({
     type: "string",
-    description: "Inicio da vigencia da preferencia de agrupamento",
+    ...DiarioPreferenciaAgrupamentoBulkReplaceCommandFields.dataInicio.swaggerMetadata,
   })
   dataInicio: string;
 
   @ApiPropertyOptional({
     type: "string",
-    description: "Fim da vigencia da preferencia de agrupamento",
+    ...DiarioPreferenciaAgrupamentoBulkReplaceCommandFields.dataFim.swaggerMetadata,
     nullable: true,
   })
   dataFim?: string | null;
 
   @ApiProperty({
     type: "integer",
-    description: "Dia da semana (ISO 8601: 1=Segunda, 7=Domingo)",
+    ...DiarioPreferenciaAgrupamentoBulkReplaceCommandFields.diaSemanaIso.swaggerMetadata,
     minimum: 1,
     maximum: 7,
   })
   diaSemanaIso: number;
 
-  @ApiProperty({ type: "integer", description: "Quantidade de aulas seguidas", minimum: 1 })
+  @ApiProperty({
+    type: "integer",
+    ...DiarioPreferenciaAgrupamentoBulkReplaceCommandFields.aulasSeguidas.swaggerMetadata,
+    minimum: 1,
+  })
   aulasSeguidas: number;
 }
 
@@ -137,7 +138,7 @@ export class DiarioPreferenciaAgrupamentoBulkReplaceItemRestDto {
 export class DiarioPreferenciaAgrupamentoBulkReplaceInputRestDto {
   @ApiProperty({
     type: () => [DiarioPreferenciaAgrupamentoBulkReplaceItemRestDto],
-    description: "Lista de preferencias de agrupamento para vincular ao diario",
+    ...DiarioPreferenciaAgrupamentoBulkReplaceCommandFields.preferenciasAgrupamento.swaggerMetadata,
   })
   preferenciasAgrupamento: DiarioPreferenciaAgrupamentoBulkReplaceItemRestDto[];
 }

@@ -3,11 +3,26 @@ import { type GraphQLResolveInfo } from "graphql";
 import { ensureExists } from "@/application/errors";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { graphqlExtractSelection } from "@/infrastructure.graphql";
-import { IUsuarioCreateCommandHandler } from "@/modules/acesso/usuario/domain/commands/usuario-create.command.handler.interface";
-import { IUsuarioDeleteCommandHandler } from "@/modules/acesso/usuario/domain/commands/usuario-delete.command.handler.interface";
-import { IUsuarioUpdateCommandHandler } from "@/modules/acesso/usuario/domain/commands/usuario-update.command.handler.interface";
-import { IUsuarioFindOneQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-find-one.query.handler.interface";
-import { IUsuarioListQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-list.query.handler.interface";
+import {
+  IUsuarioCreateCommandHandler,
+  UsuarioCreateCommandMetadata,
+} from "@/modules/acesso/usuario/domain/commands/usuario-create.command.handler.interface";
+import {
+  IUsuarioDeleteCommandHandler,
+  UsuarioDeleteCommandMetadata,
+} from "@/modules/acesso/usuario/domain/commands/usuario-delete.command.handler.interface";
+import {
+  IUsuarioUpdateCommandHandler,
+  UsuarioUpdateCommandMetadata,
+} from "@/modules/acesso/usuario/domain/commands/usuario-update.command.handler.interface";
+import {
+  IUsuarioFindOneQueryHandler,
+  UsuarioFindOneQueryMetadata,
+} from "@/modules/acesso/usuario/domain/queries/usuario-find-one.query.handler.interface";
+import {
+  IUsuarioListQueryHandler,
+  UsuarioListQueryMetadata,
+} from "@/modules/acesso/usuario/domain/queries/usuario-list.query.handler.interface";
 import { Usuario } from "@/modules/acesso/usuario/domain/usuario";
 import { AccessContext, AccessContextGraphQL } from "@/server/access-context";
 import {
@@ -34,7 +49,7 @@ export class UsuarioGraphqlResolver {
     private readonly deleteHandler: IUsuarioDeleteCommandHandler,
   ) {}
 
-  @Query(() => UsuarioListOutputGraphQlDto, { name: "usuarioFindAll" })
+  @Query(() => UsuarioListOutputGraphQlDto, UsuarioListQueryMetadata.gqlMetadata)
   async findAll(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args() dto: UsuarioListInputGraphQlDto,
@@ -50,7 +65,7 @@ export class UsuarioGraphqlResolver {
     return UsuarioGraphqlMapper.toListOutputDto(result);
   }
 
-  @Query(() => UsuarioFindOneOutputGraphQlDto, { name: "usuarioFindById" })
+  @Query(() => UsuarioFindOneOutputGraphQlDto, UsuarioFindOneQueryMetadata.gqlMetadata)
   async findById(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
@@ -62,7 +77,7 @@ export class UsuarioGraphqlResolver {
     return UsuarioGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => UsuarioFindOneOutputGraphQlDto, { name: "usuarioCreate" })
+  @Mutation(() => UsuarioFindOneOutputGraphQlDto, UsuarioCreateCommandMetadata.gqlMetadata)
   async create(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("input") dto: UsuarioCreateInputGraphQlDto,
@@ -73,7 +88,7 @@ export class UsuarioGraphqlResolver {
     return UsuarioGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => UsuarioFindOneOutputGraphQlDto, { name: "usuarioUpdate" })
+  @Mutation(() => UsuarioFindOneOutputGraphQlDto, UsuarioUpdateCommandMetadata.gqlMetadata)
   async update(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
@@ -85,7 +100,7 @@ export class UsuarioGraphqlResolver {
     return UsuarioGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => Boolean, { name: "usuarioDeleteOneById" })
+  @Mutation(() => Boolean, UsuarioDeleteCommandMetadata.gqlMetadata)
   async deleteOneById(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,

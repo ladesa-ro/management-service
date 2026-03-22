@@ -3,12 +3,16 @@ import {
   PaginatedFilterByIdGraphQlDto,
   PaginationMetaGraphQlDto,
 } from "@/infrastructure.graphql/dtos";
+import { NivelFormacaoGraphqlListInputSchema } from "@/modules/ensino/nivel-formacao/domain/queries/nivel-formacao-list.query.schemas";
 import { ArgsType, Field, InputType, ObjectType } from "@/shared/presentation/graphql";
+import { NivelFormacaoCreateCommandFields } from "../domain/commands/nivel-formacao-create.command";
+import { NivelFormacaoUpdateCommandFields } from "../domain/commands/nivel-formacao-update.command";
 import {
-  nivelFormacaoCreateSchema,
-  nivelFormacaoGraphqlListInputSchema,
-  nivelFormacaoUpdateSchema,
+  NivelFormacaoCreateSchema,
+  NivelFormacaoUpdateSchema,
 } from "../domain/nivel-formacao.schemas";
+import { NivelFormacaoFindOneQueryResultFields } from "../domain/queries/nivel-formacao-find-one.query.result";
+import { NivelFormacaoListQueryFields } from "../domain/queries/nivel-formacao-list.query";
 
 // ============================================================================
 // FindOne Output
@@ -16,7 +20,7 @@ import {
 
 @ObjectType("NivelFormacaoFindOneOutputDto")
 export class NivelFormacaoFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
-  @Field(() => String) slug: string;
+  @Field(() => String, NivelFormacaoFindOneQueryResultFields.slug.gqlMetadata) slug: string;
 }
 
 // ============================================================================
@@ -25,9 +29,9 @@ export class NivelFormacaoFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
 
 @InputType("NivelFormacaoCreateInputDto")
 export class NivelFormacaoCreateInputGraphQlDto {
-  static readonly schema = nivelFormacaoCreateSchema;
+  static readonly schema = NivelFormacaoCreateSchema;
 
-  @Field(() => String) slug: string;
+  @Field(() => String, NivelFormacaoCreateCommandFields.slug.gqlMetadata) slug: string;
 }
 
 // ============================================================================
@@ -36,9 +40,9 @@ export class NivelFormacaoCreateInputGraphQlDto {
 
 @InputType("NivelFormacaoUpdateInputDto")
 export class NivelFormacaoUpdateInputGraphQlDto {
-  static readonly schema = nivelFormacaoUpdateSchema;
+  static readonly schema = NivelFormacaoUpdateSchema;
 
-  @Field(() => String, { nullable: true })
+  @Field(() => String, { nullable: true, ...NivelFormacaoUpdateCommandFields.slug.gqlMetadata })
   slug?: string;
 }
 
@@ -48,7 +52,7 @@ export class NivelFormacaoUpdateInputGraphQlDto {
 
 @ArgsType()
 export class NivelFormacaoListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {
-  static schema = nivelFormacaoGraphqlListInputSchema;
+  static schema = NivelFormacaoGraphqlListInputSchema;
 }
 
 // ============================================================================
@@ -57,9 +61,12 @@ export class NivelFormacaoListInputGraphQlDto extends PaginatedFilterByIdGraphQl
 
 @ObjectType("NivelFormacaoListResult")
 export class NivelFormacaoListOutputGraphQlDto {
-  @Field(() => PaginationMetaGraphQlDto)
+  @Field(() => PaginationMetaGraphQlDto, NivelFormacaoListQueryFields.meta.gqlMetadata)
   meta: PaginationMetaGraphQlDto;
 
-  @Field(() => [NivelFormacaoFindOneOutputGraphQlDto])
+  @Field(
+    () => [NivelFormacaoFindOneOutputGraphQlDto],
+    NivelFormacaoListQueryFields.data.gqlMetadata,
+  )
   data: NivelFormacaoFindOneOutputGraphQlDto[];
 }

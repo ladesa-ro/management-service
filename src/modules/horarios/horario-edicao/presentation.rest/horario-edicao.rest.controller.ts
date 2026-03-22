@@ -20,6 +20,12 @@ import { ensureExists } from "@/application/errors";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { AccessContext, AccessContextHttp } from "@/server/access-context";
+import {
+  HorarioEdicaoApplyChangeCommandMetadata,
+  HorarioEdicaoCancelarCommandMetadata,
+  HorarioEdicaoCreateCommandMetadata,
+  HorarioEdicaoSalvarCommandMetadata,
+} from "../domain/horario-edicao.operations";
 import { IHorarioEdicaoApplicator } from "../domain/repositories/horario-edicao-applicator.interface";
 import { IHorarioEdicaoMudancaRepository } from "../domain/repositories/horario-edicao-mudanca.repository.interface";
 import { IHorarioEdicaoSessaoRepository } from "../domain/repositories/horario-edicao-sessao.repository.interface";
@@ -51,7 +57,7 @@ export class HorarioEdicaoRestController {
     const dto = new HorarioEdicaoSessaoOutputRestDto();
     dto.id = entity.id;
     dto.status = entity.status;
-    dto.idUsuarioFk = entity.idUsuarioFk;
+    dto.idUsuarioFk = entity.usuario?.id;
     dto.dateCreated = entity.dateCreated;
     dto.dateUpdated = entity.dateUpdated;
     return dto;
@@ -60,8 +66,8 @@ export class HorarioEdicaoRestController {
   private toMudancaOutput(entity: HorarioEdicaoMudancaEntity): HorarioEdicaoMudancaOutputRestDto {
     const dto = new HorarioEdicaoMudancaOutputRestDto();
     dto.id = entity.id;
-    dto.idSessaoFk = entity.idSessaoFk;
-    dto.idCalendarioAgendamentoFk = entity.idCalendarioAgendamentoFk;
+    dto.idSessaoFk = entity.sessao?.id;
+    dto.idCalendarioAgendamentoFk = entity.calendarioAgendamento?.id ?? null;
     dto.tipoOperacao = entity.tipoOperacao;
     dto.dados = entity.dados;
     dto.dateCreated = entity.dateCreated;
@@ -70,10 +76,7 @@ export class HorarioEdicaoRestController {
 
   @Post("/")
   @HttpCode(201)
-  @ApiOperation({
-    summary: "Cria nova sessao de edicao de horario",
-    operationId: "horarioEdicaoCreate",
-  })
+  @ApiOperation(HorarioEdicaoCreateCommandMetadata.swaggerMetadata)
   @ApiCreatedResponse({ type: HorarioEdicaoSessaoOutputRestDto })
   @ApiForbiddenResponse()
   async create(
@@ -82,7 +85,7 @@ export class HorarioEdicaoRestController {
     const entity = new HorarioEdicaoSessaoEntity();
     entity.id = generateUuidV7();
     entity.status = HorarioEdicaoSessaoStatus.ABERTA;
-    entity.idUsuarioFk = accessContext.requestActor!.id;
+    entity.usuario = { id: accessContext.requestActor!.id } as any;
     entity.dateCreated = new Date();
     entity.dateUpdated = new Date();
 
@@ -92,10 +95,7 @@ export class HorarioEdicaoRestController {
   }
 
   @Patch("/:sessaoId")
-  @ApiOperation({
-    summary: "Aplica uma mudanca a sessao de edicao de horario",
-    operationId: "horarioEdicaoApplyChange",
-  })
+  @ApiOperation(HorarioEdicaoApplyChangeCommandMetadata.swaggerMetadata)
   @ApiOkResponse({ type: HorarioEdicaoMudancaOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -116,8 +116,10 @@ export class HorarioEdicaoRestController {
 
     const mudanca = new HorarioEdicaoMudancaEntity();
     mudanca.id = generateUuidV7();
-    mudanca.idSessaoFk = params.sessaoId;
-    mudanca.idCalendarioAgendamentoFk = dto.calendarioAgendamentoId ?? null;
+    mudanca.sessao = { id: params.sessaoId } as any;
+    mudanca.calendarioAgendamento = dto.calendarioAgendamentoId
+      ? ({ id: dto.calendarioAgendamentoId } as any)
+      : null;
     mudanca.tipoOperacao = dto.tipoOperacao;
     mudanca.dados = dto.dados;
     mudanca.dateCreated = new Date();
@@ -132,10 +134,7 @@ export class HorarioEdicaoRestController {
   }
 
   @Post("/:sessaoId/salvar")
-  @ApiOperation({
-    summary: "Salva sessao de edicao permanentemente",
-    operationId: "horarioEdicaoSalvar",
-  })
+  @ApiOperation(HorarioEdicaoSalvarCommandMetadata.swaggerMetadata)
   @ApiOkResponse({ type: HorarioEdicaoSessaoOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -166,10 +165,7 @@ export class HorarioEdicaoRestController {
   }
 
   @Post("/:sessaoId/cancelar")
-  @ApiOperation({
-    summary: "Cancela e descarta sessao de edicao",
-    operationId: "horarioEdicaoCancelar",
-  })
+  @ApiOperation(HorarioEdicaoCancelarCommandMetadata.swaggerMetadata)
   @ApiOkResponse({ type: HorarioEdicaoSessaoOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()

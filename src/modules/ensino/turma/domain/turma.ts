@@ -2,9 +2,9 @@ import type { z } from "zod";
 import type { IdUuid, ScalarDateTimeString } from "@/domain/abstractions/scalars";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { zodValidate } from "@/shared/validation/index";
-import { turmaCreateSchema, turmaSchema, turmaUpdateSchema } from "./turma.schemas";
+import { TurmaCreateSchema, TurmaSchema, TurmaUpdateSchema } from "./turma.schemas";
 
-export type ITurma = z.infer<typeof turmaSchema>;
+export type ITurma = z.infer<typeof TurmaSchema>;
 
 export class Turma {
   static readonly entityName = "Turma";
@@ -21,7 +21,7 @@ export class Turma {
   private constructor() {}
 
   static create(dados: unknown): Turma {
-    const parsed = zodValidate(Turma.entityName, turmaCreateSchema, dados);
+    const parsed = zodValidate(Turma.entityName, TurmaCreateSchema, dados);
 
     const instance = new Turma();
 
@@ -38,7 +38,7 @@ export class Turma {
   }
 
   static load(dados: unknown): Turma {
-    const parsed = zodValidate(Turma.entityName, turmaSchema, dados);
+    const parsed = zodValidate(Turma.entityName, TurmaSchema, dados);
 
     const instance = new Turma();
 
@@ -55,7 +55,7 @@ export class Turma {
   }
 
   update(dados: unknown): void {
-    const parsed = zodValidate(Turma.entityName, turmaUpdateSchema, dados);
+    const parsed = zodValidate(Turma.entityName, TurmaUpdateSchema, dados);
 
     if (parsed.periodo !== undefined) this.periodo = parsed.periodo;
     if (parsed.curso !== undefined) this.curso = parsed.curso;
@@ -65,7 +65,7 @@ export class Turma {
 
     this.dateUpdated = new Date().toISOString();
 
-    zodValidate(Turma.entityName, turmaSchema, this);
+    zodValidate(Turma.entityName, TurmaSchema, this);
   }
 
   temAmbientePadraoAula(): boolean {

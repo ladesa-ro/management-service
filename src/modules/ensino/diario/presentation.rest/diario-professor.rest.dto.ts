@@ -3,10 +3,6 @@ import {
   ApiProperty,
   ApiPropertyOptional,
   ApiSchema,
-  commonProperties,
-  RegisterModel,
-  referenceProperty,
-  simpleProperty,
   TransformToArray,
 } from "@/shared/presentation/rest";
 import {
@@ -14,6 +10,9 @@ import {
   PaginatedFilterByIdRestDto,
   PaginationMetaRestDto,
 } from "@/shared/presentation/rest/dtos";
+import { DiarioProfessorBulkReplaceCommandFields } from "../domain/commands/diario-professor-bulk-replace.command";
+import { DiarioProfessorFindOneQueryResultFields } from "../domain/queries/diario-professor-find-one.query.result";
+import { DiarioProfessorListQueryFields } from "../domain/queries/diario-professor-list.query";
 import { DiarioFindOneOutputRestDto } from "./diario.rest.dto";
 
 // ============================================================================
@@ -24,7 +23,7 @@ import { DiarioFindOneOutputRestDto } from "./diario.rest.dto";
 export class DiarioProfessorParentParamsRestDto {
   @ApiProperty({
     type: "string",
-    description: "ID do diario (uuid)",
+    ...DiarioProfessorBulkReplaceCommandFields.diarioId.swaggerMetadata,
     format: "uuid",
   })
   diarioId: string;
@@ -35,27 +34,23 @@ export class DiarioProfessorParentParamsRestDto {
 // ============================================================================
 
 @ApiSchema({ name: "DiarioProfessorFindOneOutputDto" })
-@RegisterModel({
-  name: "DiarioProfessorFindOneQueryResult",
-  properties: [
-    simpleProperty("id"),
-    simpleProperty("situacao"),
-    referenceProperty("perfil", "PerfilFindOneQueryResult"),
-    referenceProperty("diario", "DiarioFindOneQueryResult"),
-    ...commonProperties.dated,
-  ],
-})
 export class DiarioProfessorFindOneOutputRestDto extends EntityBaseRestDto {
-  @ApiProperty({ type: "boolean", description: "Situacao do vinculo" })
+  @ApiProperty({
+    type: "boolean",
+    ...DiarioProfessorFindOneQueryResultFields.situacao.swaggerMetadata,
+  })
   situacao: boolean;
 
   @ApiProperty({
     type: () => PerfilFindOneOutputRestDto,
-    description: "Perfil do usuario ao campus",
+    ...DiarioProfessorFindOneQueryResultFields.perfil.swaggerMetadata,
   })
   perfil: PerfilFindOneOutputRestDto;
 
-  @ApiProperty({ type: () => DiarioFindOneOutputRestDto, description: "Diario vinculado" })
+  @ApiProperty({
+    type: () => DiarioFindOneOutputRestDto,
+    ...DiarioProfessorFindOneQueryResultFields.diario.swaggerMetadata,
+  })
   diario: DiarioFindOneOutputRestDto;
 }
 
@@ -68,7 +63,7 @@ export class DiarioProfessorListInputRestDto extends PaginatedFilterByIdRestDto 
   @ApiPropertyOptional({
     type: "string",
     isArray: true,
-    description: "Filtro por ID do Usuario do Perfil",
+    ...DiarioProfessorListQueryFields.filterPerfilUsuarioId.swaggerMetadata,
   })
   @TransformToArray()
   "filter.perfil.usuario.id"?: string[];
@@ -76,7 +71,7 @@ export class DiarioProfessorListInputRestDto extends PaginatedFilterByIdRestDto 
   @ApiPropertyOptional({
     type: "string",
     isArray: true,
-    description: "Filtro por ID do Perfil",
+    ...DiarioProfessorListQueryFields.filterPerfilId.swaggerMetadata,
   })
   @TransformToArray()
   "filter.perfil.id"?: string[];
@@ -84,12 +79,15 @@ export class DiarioProfessorListInputRestDto extends PaginatedFilterByIdRestDto 
 
 @ApiSchema({ name: "DiarioProfessorListOutputDto" })
 export class DiarioProfessorListOutputRestDto {
-  @ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" })
+  @ApiProperty({
+    type: () => PaginationMetaRestDto,
+    ...DiarioProfessorListQueryFields.meta.swaggerMetadata,
+  })
   meta: PaginationMetaRestDto;
 
   @ApiProperty({
     type: () => [DiarioProfessorFindOneOutputRestDto],
-    description: "Resultados da busca",
+    ...DiarioProfessorListQueryFields.data.swaggerMetadata,
   })
   data: DiarioProfessorFindOneOutputRestDto[];
 }
@@ -100,10 +98,17 @@ export class DiarioProfessorListOutputRestDto {
 
 @ApiSchema({ name: "DiarioProfessorBulkReplaceItemDto" })
 export class DiarioProfessorBulkReplaceItemRestDto {
-  @ApiProperty({ type: "string", description: "ID do perfil (uuid)", format: "uuid" })
+  @ApiProperty({
+    type: "string",
+    ...DiarioProfessorBulkReplaceCommandFields.perfilId.swaggerMetadata,
+    format: "uuid",
+  })
   perfilId: string;
 
-  @ApiProperty({ type: "boolean", description: "Situacao do vinculo" })
+  @ApiProperty({
+    type: "boolean",
+    ...DiarioProfessorBulkReplaceCommandFields.situacao.swaggerMetadata,
+  })
   situacao: boolean;
 }
 
@@ -111,7 +116,7 @@ export class DiarioProfessorBulkReplaceItemRestDto {
 export class DiarioProfessorBulkReplaceInputRestDto {
   @ApiProperty({
     type: () => [DiarioProfessorBulkReplaceItemRestDto],
-    description: "Lista de professores para vincular ao diario",
+    ...DiarioProfessorBulkReplaceCommandFields.professores.swaggerMetadata,
   })
   professores: DiarioProfessorBulkReplaceItemRestDto[];
 }

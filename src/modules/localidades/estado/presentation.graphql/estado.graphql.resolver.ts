@@ -4,8 +4,14 @@ import { ensureExists } from "@/application/errors";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { graphqlExtractSelection } from "@/infrastructure.graphql";
 import { Estado } from "@/modules/localidades/estado/domain/estado";
-import { IEstadoFindOneQueryHandler } from "@/modules/localidades/estado/domain/queries/estado-find-one.query.handler.interface";
-import { IEstadoListQueryHandler } from "@/modules/localidades/estado/domain/queries/estado-list.query.handler.interface";
+import {
+  EstadoFindOneQueryMetadata,
+  IEstadoFindOneQueryHandler,
+} from "@/modules/localidades/estado/domain/queries/estado-find-one.query.handler.interface";
+import {
+  EstadoListQueryMetadata,
+  IEstadoListQueryHandler,
+} from "@/modules/localidades/estado/domain/queries/estado-list.query.handler.interface";
 import { AccessContext, AccessContextGraphQL } from "@/server/access-context";
 import {
   EstadoFindOneOutputGraphQlDto,
@@ -23,7 +29,7 @@ export class EstadoGraphqlResolver {
     private readonly findOneHandler: IEstadoFindOneQueryHandler,
   ) {}
 
-  @Query(() => EstadoListOutputGraphQlDto, { name: "estadoFindAll" })
+  @Query(() => EstadoListOutputGraphQlDto, EstadoListQueryMetadata.gqlMetadata)
   async findAll(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args() dto: EstadoListInputGraphQlDto,
@@ -38,7 +44,7 @@ export class EstadoGraphqlResolver {
     return EstadoGraphqlMapper.toListOutputDto(result);
   }
 
-  @Query(() => EstadoFindOneOutputGraphQlDto, { name: "estadoFindById" })
+  @Query(() => EstadoFindOneOutputGraphQlDto, EstadoFindOneQueryMetadata.gqlMetadata)
   async findById(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => Int }) id: number,

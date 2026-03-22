@@ -4,11 +4,15 @@ import {
   PaginationMetaGraphQlDto,
 } from "@/infrastructure.graphql/dtos";
 import { ImagemFindOneOutputGraphQlDto } from "@/modules/armazenamento/imagem-arquivo/presentation.graphql/imagem-arquivo.graphql.dto";
+import { DiarioCreateCommandFields } from "@/modules/ensino/diario/domain/commands/diario-create.command";
+import { DiarioUpdateCommandFields } from "@/modules/ensino/diario/domain/commands/diario-update.command";
 import {
-  diarioCreateSchema,
-  diarioGraphqlListInputSchema,
-  diarioUpdateSchema,
+  DiarioCreateSchema,
+  DiarioUpdateSchema,
 } from "@/modules/ensino/diario/domain/diario.schemas";
+import { DiarioFindOneQueryResultFields } from "@/modules/ensino/diario/domain/queries/diario-find-one.query.result";
+import { DiarioListQueryFields } from "@/modules/ensino/diario/domain/queries/diario-list.query";
+import { DiarioGraphqlListInputSchema } from "@/modules/ensino/diario/domain/queries/diario-list.query.schemas";
 import { CalendarioLetivoFindOneOutputGraphQlDto } from "@/modules/horarios/calendario-letivo/presentation.graphql/calendario-letivo.graphql.dto";
 import { ArgsType, Field, InputType, Int, ObjectType } from "@/shared/presentation/graphql";
 
@@ -43,16 +47,31 @@ export class AmbienteFindOneOutputForDiarioGraphQlDto extends EntityBaseGraphQlD
 
 @ObjectType("DiarioFindOneOutputDto")
 export class DiarioFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
-  @Field(() => Boolean) ativo: boolean;
-  @Field(() => CalendarioLetivoFindOneOutputGraphQlDto)
+  @Field(() => Boolean, DiarioFindOneQueryResultFields.ativo.gqlMetadata) ativo: boolean;
+  @Field(
+    () => CalendarioLetivoFindOneOutputGraphQlDto,
+    DiarioFindOneQueryResultFields.calendarioLetivo.gqlMetadata,
+  )
   calendarioLetivo: CalendarioLetivoFindOneOutputGraphQlDto;
-  @Field(() => TurmaFindOneOutputForDiarioGraphQlDto)
+  @Field(
+    () => TurmaFindOneOutputForDiarioGraphQlDto,
+    DiarioFindOneQueryResultFields.turma.gqlMetadata,
+  )
   turma: TurmaFindOneOutputForDiarioGraphQlDto;
-  @Field(() => DisciplinaFindOneOutputForDiarioGraphQlDto)
+  @Field(
+    () => DisciplinaFindOneOutputForDiarioGraphQlDto,
+    DiarioFindOneQueryResultFields.disciplina.gqlMetadata,
+  )
   disciplina: DisciplinaFindOneOutputForDiarioGraphQlDto;
-  @Field(() => AmbienteFindOneOutputForDiarioGraphQlDto, { nullable: true })
+  @Field(() => AmbienteFindOneOutputForDiarioGraphQlDto, {
+    nullable: true,
+    ...DiarioFindOneQueryResultFields.ambientePadrao.gqlMetadata,
+  })
   ambientePadrao: AmbienteFindOneOutputForDiarioGraphQlDto | null;
-  @Field(() => ImagemFindOneOutputGraphQlDto, { nullable: true })
+  @Field(() => ImagemFindOneOutputGraphQlDto, {
+    nullable: true,
+    ...DiarioFindOneQueryResultFields.imagemCapa.gqlMetadata,
+  })
   imagemCapa: ImagemFindOneOutputGraphQlDto | null;
 }
 
@@ -91,23 +110,35 @@ export class ImagemRefInputForDiarioGraphQlDto {
 
 @InputType("DiarioCreateInputDto")
 export class DiarioCreateInputGraphQlDto {
-  static schema = diarioCreateSchema;
+  static schema = DiarioCreateSchema;
 
-  @Field(() => Boolean) ativo: boolean;
+  @Field(() => Boolean, DiarioCreateCommandFields.ativo.gqlMetadata) ativo: boolean;
 
-  @Field(() => CalendarioLetivoRefInputForDiarioGraphQlDto)
+  @Field(
+    () => CalendarioLetivoRefInputForDiarioGraphQlDto,
+    DiarioCreateCommandFields.calendarioLetivo.gqlMetadata,
+  )
   calendarioLetivo: CalendarioLetivoRefInputForDiarioGraphQlDto;
 
-  @Field(() => TurmaRefInputForDiarioGraphQlDto)
+  @Field(() => TurmaRefInputForDiarioGraphQlDto, DiarioCreateCommandFields.turma.gqlMetadata)
   turma: TurmaRefInputForDiarioGraphQlDto;
 
-  @Field(() => DisciplinaRefInputForDiarioGraphQlDto)
+  @Field(
+    () => DisciplinaRefInputForDiarioGraphQlDto,
+    DiarioCreateCommandFields.disciplina.gqlMetadata,
+  )
   disciplina: DisciplinaRefInputForDiarioGraphQlDto;
 
-  @Field(() => AmbienteRefInputForDiarioGraphQlDto, { nullable: true })
+  @Field(() => AmbienteRefInputForDiarioGraphQlDto, {
+    nullable: true,
+    ...DiarioCreateCommandFields.ambientePadrao.gqlMetadata,
+  })
   ambientePadrao?: AmbienteRefInputForDiarioGraphQlDto | null;
 
-  @Field(() => ImagemRefInputForDiarioGraphQlDto, { nullable: true })
+  @Field(() => ImagemRefInputForDiarioGraphQlDto, {
+    nullable: true,
+    ...DiarioCreateCommandFields.imagemCapa.gqlMetadata,
+  })
   imagemCapa?: ImagemRefInputForDiarioGraphQlDto | null;
 }
 
@@ -117,24 +148,39 @@ export class DiarioCreateInputGraphQlDto {
 
 @InputType("DiarioUpdateInputDto")
 export class DiarioUpdateInputGraphQlDto {
-  static schema = diarioUpdateSchema;
+  static schema = DiarioUpdateSchema;
 
-  @Field(() => Boolean, { nullable: true })
+  @Field(() => Boolean, { nullable: true, ...DiarioUpdateCommandFields.ativo.gqlMetadata })
   ativo?: boolean;
 
-  @Field(() => CalendarioLetivoRefInputForDiarioGraphQlDto, { nullable: true })
+  @Field(() => CalendarioLetivoRefInputForDiarioGraphQlDto, {
+    nullable: true,
+    ...DiarioUpdateCommandFields.calendarioLetivo.gqlMetadata,
+  })
   calendarioLetivo?: CalendarioLetivoRefInputForDiarioGraphQlDto;
 
-  @Field(() => TurmaRefInputForDiarioGraphQlDto, { nullable: true })
+  @Field(() => TurmaRefInputForDiarioGraphQlDto, {
+    nullable: true,
+    ...DiarioUpdateCommandFields.turma.gqlMetadata,
+  })
   turma?: TurmaRefInputForDiarioGraphQlDto;
 
-  @Field(() => DisciplinaRefInputForDiarioGraphQlDto, { nullable: true })
+  @Field(() => DisciplinaRefInputForDiarioGraphQlDto, {
+    nullable: true,
+    ...DiarioUpdateCommandFields.disciplina.gqlMetadata,
+  })
   disciplina?: DisciplinaRefInputForDiarioGraphQlDto;
 
-  @Field(() => AmbienteRefInputForDiarioGraphQlDto, { nullable: true })
+  @Field(() => AmbienteRefInputForDiarioGraphQlDto, {
+    nullable: true,
+    ...DiarioUpdateCommandFields.ambientePadrao.gqlMetadata,
+  })
   ambientePadrao?: AmbienteRefInputForDiarioGraphQlDto | null;
 
-  @Field(() => ImagemRefInputForDiarioGraphQlDto, { nullable: true })
+  @Field(() => ImagemRefInputForDiarioGraphQlDto, {
+    nullable: true,
+    ...DiarioUpdateCommandFields.imagemCapa.gqlMetadata,
+  })
   imagemCapa?: ImagemRefInputForDiarioGraphQlDto | null;
 }
 
@@ -144,18 +190,18 @@ export class DiarioUpdateInputGraphQlDto {
 
 @ArgsType()
 export class DiarioListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {
-  static schema = diarioGraphqlListInputSchema;
+  static schema = DiarioGraphqlListInputSchema;
 
-  @Field(() => [String], { nullable: true, description: "Filtro por ID da Turma" })
+  @Field(() => [String], DiarioListQueryFields.filterTurmaId.gqlMetadata)
   filterTurmaId?: string[];
 
-  @Field(() => [String], { nullable: true, description: "Filtro por ID da Disciplina" })
+  @Field(() => [String], DiarioListQueryFields.filterDisciplinaId.gqlMetadata)
   filterDisciplinaId?: string[];
 
-  @Field(() => [String], { nullable: true, description: "Filtro por ID do Calendario Letivo" })
+  @Field(() => [String], DiarioListQueryFields.filterCalendarioLetivoId.gqlMetadata)
   filterCalendarioLetivoId?: string[];
 
-  @Field(() => [String], { nullable: true, description: "Filtro por ID do Ambiente Padrão" })
+  @Field(() => [String], DiarioListQueryFields.filterAmbientePadraoId.gqlMetadata)
   filterAmbientePadraoId?: string[];
 }
 
@@ -165,9 +211,9 @@ export class DiarioListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {
 
 @ObjectType("DiarioListResult")
 export class DiarioListOutputGraphQlDto {
-  @Field(() => PaginationMetaGraphQlDto)
+  @Field(() => PaginationMetaGraphQlDto, DiarioListQueryFields.meta.gqlMetadata)
   meta: PaginationMetaGraphQlDto;
 
-  @Field(() => [DiarioFindOneOutputGraphQlDto])
+  @Field(() => [DiarioFindOneOutputGraphQlDto], DiarioListQueryFields.data.gqlMetadata)
   data: DiarioFindOneOutputGraphQlDto[];
 }

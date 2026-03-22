@@ -3,11 +3,26 @@ import { type GraphQLResolveInfo } from "graphql";
 import { ensureExists } from "@/application/errors";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { graphqlExtractSelection } from "@/infrastructure.graphql";
-import { ITurmaCreateCommandHandler } from "@/modules/ensino/turma/domain/commands/turma-create.command.handler.interface";
-import { ITurmaDeleteCommandHandler } from "@/modules/ensino/turma/domain/commands/turma-delete.command.handler.interface";
-import { ITurmaUpdateCommandHandler } from "@/modules/ensino/turma/domain/commands/turma-update.command.handler.interface";
-import { ITurmaFindOneQueryHandler } from "@/modules/ensino/turma/domain/queries/turma-find-one.query.handler.interface";
-import { ITurmaListQueryHandler } from "@/modules/ensino/turma/domain/queries/turma-list.query.handler.interface";
+import {
+  ITurmaCreateCommandHandler,
+  TurmaCreateCommandMetadata,
+} from "@/modules/ensino/turma/domain/commands/turma-create.command.handler.interface";
+import {
+  ITurmaDeleteCommandHandler,
+  TurmaDeleteCommandMetadata,
+} from "@/modules/ensino/turma/domain/commands/turma-delete.command.handler.interface";
+import {
+  ITurmaUpdateCommandHandler,
+  TurmaUpdateCommandMetadata,
+} from "@/modules/ensino/turma/domain/commands/turma-update.command.handler.interface";
+import {
+  ITurmaFindOneQueryHandler,
+  TurmaFindOneQueryMetadata,
+} from "@/modules/ensino/turma/domain/queries/turma-find-one.query.handler.interface";
+import {
+  ITurmaListQueryHandler,
+  TurmaListQueryMetadata,
+} from "@/modules/ensino/turma/domain/queries/turma-list.query.handler.interface";
 import { Turma } from "@/modules/ensino/turma/domain/turma";
 import { AccessContext, AccessContextGraphQL } from "@/server/access-context";
 import {
@@ -34,7 +49,7 @@ export class TurmaGraphqlResolver {
     private readonly deleteHandler: ITurmaDeleteCommandHandler,
   ) {}
 
-  @Query(() => TurmaListOutputGraphQlDto, { name: "turmaFindAll" })
+  @Query(() => TurmaListOutputGraphQlDto, TurmaListQueryMetadata.gqlMetadata)
   async findAll(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args() dto: TurmaListInputGraphQlDto,
@@ -49,7 +64,7 @@ export class TurmaGraphqlResolver {
     return TurmaGraphqlMapper.toListOutputDto(result);
   }
 
-  @Query(() => TurmaFindOneOutputGraphQlDto, { name: "turmaFindById" })
+  @Query(() => TurmaFindOneOutputGraphQlDto, TurmaFindOneQueryMetadata.gqlMetadata)
   async findById(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
@@ -61,7 +76,7 @@ export class TurmaGraphqlResolver {
     return TurmaGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => TurmaFindOneOutputGraphQlDto, { name: "turmaCreate" })
+  @Mutation(() => TurmaFindOneOutputGraphQlDto, TurmaCreateCommandMetadata.gqlMetadata)
   async create(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("input") dto: TurmaCreateInputGraphQlDto,
@@ -72,7 +87,7 @@ export class TurmaGraphqlResolver {
     return TurmaGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => TurmaFindOneOutputGraphQlDto, { name: "turmaUpdate" })
+  @Mutation(() => TurmaFindOneOutputGraphQlDto, TurmaUpdateCommandMetadata.gqlMetadata)
   async update(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
@@ -84,7 +99,7 @@ export class TurmaGraphqlResolver {
     return TurmaGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => Boolean, { name: "turmaDeleteOneById" })
+  @Mutation(() => Boolean, TurmaDeleteCommandMetadata.gqlMetadata)
   async deleteOneById(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,

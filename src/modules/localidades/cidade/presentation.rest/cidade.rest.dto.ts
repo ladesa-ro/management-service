@@ -1,16 +1,10 @@
-import {
-  cidadeFindOneInputSchema,
-  cidadePaginationInputSchema,
-} from "@/modules/localidades/cidade/domain/cidade.schemas";
+import { CidadeFindOneQueryFields } from "@/modules/localidades/cidade/domain/queries/cidade-find-one.query";
+import { CidadeFindOneQueryResultFields } from "@/modules/localidades/cidade/domain/queries/cidade-find-one.query.result";
+import { CidadeFindOneInputSchema } from "@/modules/localidades/cidade/domain/queries/cidade-find-one.query.schemas";
+import { CidadeListQueryFields } from "@/modules/localidades/cidade/domain/queries/cidade-list.query";
+import { CidadePaginationInputSchema } from "@/modules/localidades/cidade/domain/queries/cidade-list.query.schemas";
 import { EstadoFindOneOutputRestDto } from "@/modules/localidades/estado/presentation.rest/estado.rest.dto";
-import {
-  ApiProperty,
-  ApiPropertyOptional,
-  ApiSchema,
-  RegisterModel,
-  referenceProperty,
-  simpleProperty,
-} from "@/shared/presentation/rest";
+import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@/shared/presentation/rest";
 import { PaginationMetaRestDto } from "@/shared/presentation/rest/dtos";
 
 // ============================================================================
@@ -18,22 +12,17 @@ import { PaginationMetaRestDto } from "@/shared/presentation/rest/dtos";
 // ============================================================================
 
 @ApiSchema({ name: "CidadeFindOneOutputDto" })
-@RegisterModel({
-  name: "CidadeFindOneQueryResult",
-  properties: [
-    simpleProperty("id"),
-    simpleProperty("nome"),
-    referenceProperty("estado", "EstadoFindOneQueryResult"),
-  ],
-})
 export class CidadeFindOneOutputRestDto {
-  @ApiProperty({ type: "integer", description: "Identificador do registro (numerico)" })
+  @ApiProperty(CidadeFindOneQueryResultFields.id.swaggerMetadata)
   id: number;
 
-  @ApiProperty({ type: "string", description: "Nome oficial da cidade" })
+  @ApiProperty(CidadeFindOneQueryResultFields.nome.swaggerMetadata)
   nome: string;
 
-  @ApiProperty({ type: () => EstadoFindOneOutputRestDto, description: "Estado da cidade" })
+  @ApiProperty({
+    type: () => EstadoFindOneOutputRestDto,
+    ...CidadeFindOneQueryResultFields.estado.swaggerMetadata,
+  })
   estado: EstadoFindOneOutputRestDto;
 }
 
@@ -43,65 +32,47 @@ export class CidadeFindOneOutputRestDto {
 
 @ApiSchema({ name: "CidadeListInputDto" })
 export class CidadeListInputRestDto {
-  static schema = cidadePaginationInputSchema;
+  static schema = CidadePaginationInputSchema;
 
   [key: string]: string | number | string[] | null | undefined;
 
-  @ApiPropertyOptional({
-    type: "integer",
-    description: "Pagina de consulta",
-    minimum: 1,
-    default: 1,
-  })
-  page?: number = 1;
+  @ApiPropertyOptional(CidadeListQueryFields.page.swaggerMetadata)
+  page?: number;
 
-  @ApiPropertyOptional({
-    type: "integer",
-    description: "Limite da quantidade de resultados por pagina",
-    minimum: 1,
-  })
+  @ApiPropertyOptional(CidadeListQueryFields.limit.swaggerMetadata)
   limit?: number;
 
-  @ApiPropertyOptional({ type: "string", description: "Busca textual" })
+  @ApiPropertyOptional(CidadeListQueryFields.search.swaggerMetadata)
   search?: string;
 
-  @ApiPropertyOptional({ description: "Ordenacao (ex: nome:ASC)", isArray: true, type: "string" })
+  @ApiPropertyOptional(CidadeListQueryFields.sortBy.swaggerMetadata)
   sortBy?: string[];
 
-  @ApiPropertyOptional({ description: "Seleção de campos", isArray: true, type: "string" })
+  @ApiPropertyOptional(CidadeListQueryFields.selection.swaggerMetadata)
   selection?: string[];
 
-  @ApiPropertyOptional({ description: "Filtro por ID", type: "string", isArray: true })
+  @ApiPropertyOptional(CidadeListQueryFields.filterId.swaggerMetadata)
   "filter.id"?: string[];
 
-  @ApiPropertyOptional({
-    description: "Filtro por ID do Estado",
-    type: "string",
-    isArray: true,
-  })
+  @ApiPropertyOptional(CidadeListQueryFields.filterEstadoId.swaggerMetadata)
   "filter.estado.id"?: string[];
 
-  @ApiPropertyOptional({
-    description: "Filtro por nome do Estado",
-    type: "string",
-    isArray: true,
-  })
+  @ApiPropertyOptional(CidadeListQueryFields.filterEstadoNome.swaggerMetadata)
   "filter.estado.nome"?: string[];
 
-  @ApiPropertyOptional({
-    description: "Filtro por sigla do Estado",
-    type: "string",
-    isArray: true,
-  })
+  @ApiPropertyOptional(CidadeListQueryFields.filterEstadoSigla.swaggerMetadata)
   "filter.estado.sigla"?: string[];
 }
 
 @ApiSchema({ name: "CidadeListOutputDto" })
 export class CidadeListOutputRestDto {
-  @ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" })
+  @ApiProperty({ type: () => PaginationMetaRestDto, ...CidadeListQueryFields.meta.swaggerMetadata })
   meta: PaginationMetaRestDto;
 
-  @ApiProperty({ type: () => [CidadeFindOneOutputRestDto], description: "Resultados da busca" })
+  @ApiProperty({
+    type: () => [CidadeFindOneOutputRestDto],
+    ...CidadeListQueryFields.data.swaggerMetadata,
+  })
   data: CidadeFindOneOutputRestDto[];
 }
 
@@ -111,8 +82,8 @@ export class CidadeListOutputRestDto {
 
 @ApiSchema({ name: "CidadeFindOneInputDto" })
 export class CidadeFindOneInputRestDto {
-  static schema = cidadeFindOneInputSchema;
+  static schema = CidadeFindOneInputSchema;
 
-  @ApiProperty({ type: "integer", description: "Identificador do registro (numerico)" })
+  @ApiProperty(CidadeFindOneQueryFields.id.swaggerMetadata)
   id: number;
 }

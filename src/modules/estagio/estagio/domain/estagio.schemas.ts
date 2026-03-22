@@ -1,41 +1,37 @@
+/**
+ * Estagio — schemas zod para a entidade e suas operacoes.
+ *
+ * Contem os schemas de referencia, composicao (create/update)
+ * e validacao da entidade. Fonte unica de verdade (SSOT) para
+ * os contratos de dados da entidade.
+ */
 import { z } from "zod";
-import {
-  coerceArray,
-  datedSchema,
-  stringFilterSchema,
-  uuidSchema,
-} from "@/shared/validation/schemas";
+import { datedSchema, uuidSchema } from "@/shared/validation/schemas";
+import { EstagioStatusSchema } from "./estagio.fields";
 
 // ============================================================================
-// Enums
+// Fragments de referência / estruturais
 // ============================================================================
 
-export const estagioStatusValues = ["ABERTA", "EM_ANDAMENTO", "CONCLUIDA"] as const;
-export const estagioStatusSchema = z.enum(estagioStatusValues);
-
-// ============================================================================
-// Fragments reutilizáveis
-// ============================================================================
-
-export const timeFormatSchema = z
+export const TimeFormatSchema = z
   .string()
   .regex(
     /^([01]\d|2[0-3]):([0-5]\d)(:([0-5]\d))?$/,
     "formato de hora inválido (HH:MM ou HH:MM:SS)",
   );
 
-export const horarioEstagioSchema = z.object({
+export const HorarioEstagioSchema = z.object({
   id: z.string().optional(),
   diaSemana: z.number().int().min(0, "dia da semana mínimo é 0").max(6, "dia da semana máximo é 6"),
-  horaInicio: timeFormatSchema,
-  horaFim: timeFormatSchema,
+  horaInicio: TimeFormatSchema,
+  horaFim: TimeFormatSchema,
 });
 
-export const horarioEstagioInputSchema = z
+export const HorarioEstagioInputSchema = z
   .object({
     diaSemana: z.number().int().min(0).max(6),
-    horaInicio: timeFormatSchema,
-    horaFim: timeFormatSchema,
+    horaInicio: TimeFormatSchema,
+    horaFim: TimeFormatSchema,
   })
   .refine(
     (h) => {
@@ -48,36 +44,44 @@ export const horarioEstagioInputSchema = z
     { message: "hora de fim deve ser maior que hora de início", path: ["horaFim"] },
   );
 
-export const dateStringSchema = z
+export const DateStringSchema = z
   .string()
   .refine((val) => !isNaN(new Date(val).getTime()), "data inválida");
+
+export const EstagioEmpresaRefSchema = z.object({
+  id: uuidSchema,
+});
+
+export const EstagioEstagiarioRefSchema = z.object({
+  id: uuidSchema,
+});
 
 // ============================================================================
 // Schemas compostos
 // ============================================================================
 
-export const estagioSchema = z
+export const EstagioSchema = z
   .object({
     id: uuidSchema,
-    idEmpresaFk: uuidSchema,
-    idEstagiarioFk: z.string().uuid().nullable(),
+    empresa: EstagioEmpresaRefSchema,
+    estagiario: EstagioEstagiarioRefSchema.nullable(),
     cargaHoraria: z.number().int().min(1),
     dataInicio: z.string().nullable(),
     dataFim: z.string().nullable(),
-    status: estagioStatusSchema,
-    horariosEstagio: z.array(horarioEstagioSchema),
+    status: EstagioStatusSchema,
+    horariosEstagio: z.array(HorarioEstagioSchema),
   })
   .merge(datedSchema);
 
-export const estagioCreateSchema = z
+export const EstagioCreateSchema = z
   .object({
-    idEmpresaFk: uuidSchema,
-    idEstagiarioFk: uuidSchema.optional(),
+    empresa: EstagioEmpresaRefSchema,
+    estagiario: EstagioEstagiarioRefSchema.optional(),
     cargaHoraria: z.number().int().min(1, "carga horária deve ser maior que zero"),
-    dataInicio: dateStringSchema.optional(),
-    dataFim: dateStringSchema.nullable().optional(),
-    status: estagioStatusSchema.optional(),
-    horariosEstagio: z.array(horarioEstagioInputSchema).optional(),
+    dataInicio: DateStringSchema.optional(),
+    dataFim: DateStringSchema.nullable().optional(),
+    status: EstagioStatusSchema.optional(),
+    horariosEstagio: z.array(HorarioEstagioInputSchema).optional(),
   })
   .superRefine((data, ctx) => {
     const status = data.status ?? "ABERTA";
@@ -93,11 +97,11 @@ export const estagioCreateSchema = z
     }
 
     if (status === "EM_ANDAMENTO" || status === "CONCLUIDA") {
-      if (!data.idEstagiarioFk) {
+      if (!data.estagiario) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message: "estagiário é obrigatório quando o estágio não está aberto",
-          path: ["idEstagiarioFk"],
+          path: ["estagiario"],
         });
       }
       if (!data.dataInicio) {
@@ -120,31 +124,12 @@ export const estagioCreateSchema = z
     }
   });
 
-export const estagioUpdateSchema = z.object({
-  idEmpresaFk: uuidSchema.optional(),
-  idEstagiarioFk: uuidSchema.nullable().optional(),
+export const EstagioUpdateSchema = z.object({
+  empresa: EstagioEmpresaRefSchema.optional(),
+  estagiario: EstagioEstagiarioRefSchema.nullable().optional(),
   cargaHoraria: z.number().int().min(1, "carga horária deve ser maior que zero").optional(),
-  dataInicio: dateStringSchema.nullable().optional(),
-  dataFim: dateStringSchema.nullable().optional(),
-  status: estagioStatusSchema.optional(),
-  horariosEstagio: z.array(horarioEstagioInputSchema).optional(),
-});
-
-// ============================================================================
-// Schemas de input (presentation layer)
-// ============================================================================
-
-export const estagioFindOneInputSchema = z.object({
-  id: uuidSchema,
-});
-
-export const estagioPaginationInputSchema = z.object({
-  page: z.coerce.number().int().min(1).optional().default(1),
-  limit: z.coerce.number().int().min(1).optional(),
-  search: z.string().optional(),
-  sortBy: coerceArray(z.string()),
-  selection: coerceArray(z.string()),
-  "filter.idEmpresaFk": stringFilterSchema,
-  "filter.idEstagiarioFk": stringFilterSchema,
-  "filter.status": coerceArray(estagioStatusSchema),
+  dataInicio: DateStringSchema.nullable().optional(),
+  dataFim: DateStringSchema.nullable().optional(),
+  status: EstagioStatusSchema.optional(),
+  horariosEstagio: z.array(HorarioEstagioInputSchema).optional(),
 });

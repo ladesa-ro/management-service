@@ -2,9 +2,9 @@ import type { z } from "zod";
 import type { IdUuid, ScalarDateTimeString } from "@/domain/abstractions/scalars";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { zodValidate } from "@/shared/validation/index";
-import { enderecoCreateSchema, enderecoSchema, enderecoUpdateSchema } from "./endereco.schemas";
+import { EnderecoCreateSchema, EnderecoSchema, EnderecoUpdateSchema } from "./endereco.schemas";
 
-export type IEndereco = z.infer<typeof enderecoSchema>;
+export type IEndereco = z.infer<typeof EnderecoSchema>;
 
 export class Endereco {
   static readonly entityName = "Endereco";
@@ -24,7 +24,7 @@ export class Endereco {
   private constructor() {}
 
   static create(dados: unknown): Endereco {
-    const parsed = zodValidate(Endereco.entityName, enderecoCreateSchema, dados);
+    const parsed = zodValidate(Endereco.entityName, EnderecoCreateSchema, dados);
 
     const instance = new Endereco();
 
@@ -44,7 +44,7 @@ export class Endereco {
   }
 
   static load(dados: unknown): Endereco {
-    const parsed = zodValidate(Endereco.entityName, enderecoSchema, dados);
+    const parsed = zodValidate(Endereco.entityName, EnderecoSchema, dados);
 
     const instance = new Endereco();
 
@@ -64,7 +64,7 @@ export class Endereco {
   }
 
   update(dados: unknown): void {
-    const parsed = zodValidate(Endereco.entityName, enderecoUpdateSchema, dados);
+    const parsed = zodValidate(Endereco.entityName, EnderecoUpdateSchema, dados);
 
     if (parsed.cep !== undefined) this.cep = parsed.cep;
     if (parsed.logradouro !== undefined) this.logradouro = parsed.logradouro;
@@ -75,7 +75,7 @@ export class Endereco {
     if (parsed.cidade !== undefined) this.cidade = parsed.cidade;
     this.dateUpdated = new Date().toISOString();
 
-    zodValidate(Endereco.entityName, enderecoSchema, this);
+    zodValidate(Endereco.entityName, EnderecoSchema, this);
   }
 
   getEnderecoFormatado(): string {

@@ -18,7 +18,7 @@ export class CalendarioLetivoEtapaTypeOrmRepositoryAdapter
     const repo = this.appTypeormConnection.getRepository(CalendarioLetivoEtapaEntity);
     return repo.find({
       where: {
-        idCalendarioLetivoFk: calendarioLetivoId,
+        calendarioLetivo: { id: calendarioLetivoId },
         dateDeleted: null as any,
       },
       relations: ["ofertaFormacaoPeriodoEtapa"],

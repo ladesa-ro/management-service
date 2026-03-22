@@ -1,41 +1,23 @@
-import {
-  ApiProperty,
-  ApiSchema,
-  commonProperties,
-  PartialType,
-  RegisterModel,
-  simpleProperty,
-} from "@/shared/presentation/rest";
-import {
-  EntityBaseRestDto,
-  PaginatedFilterByIdRestDto,
-  PaginationMetaRestDto,
-} from "@/shared/presentation/rest/dtos";
-import {
-  modalidadeCreateSchema,
-  modalidadeFindOneInputSchema,
-  modalidadePaginationInputSchema,
-} from "../domain/modalidade.schemas";
+import { ModalidadeFindOneInputSchema } from "@/modules/ensino/modalidade/domain/queries/modalidade-find-one.query.schemas";
+import { ModalidadePaginationInputSchema } from "@/modules/ensino/modalidade/domain/queries/modalidade-list.query.schemas";
+import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@/shared/presentation/rest";
+import { EntityBaseRestDto, PaginationMetaRestDto } from "@/shared/presentation/rest/dtos";
+import { ModalidadeCreateCommandFields } from "../domain/commands/modalidade-create.command";
+import { ModalidadeUpdateCommandFields } from "../domain/commands/modalidade-update.command";
+import { ModalidadeCreateSchema } from "../domain/modalidade.schemas";
+import { ModalidadeFindOneQueryResultFields } from "../domain/queries/modalidade-find-one.query.result";
+import { ModalidadeListQueryFields } from "../domain/queries/modalidade-list.query";
 
 // ============================================================================
 // FindOne Output
 // ============================================================================
 
 @ApiSchema({ name: "ModalidadeFindOneOutputDto" })
-@RegisterModel({
-  name: "ModalidadeFindOneQueryResult",
-  properties: [
-    simpleProperty("id"),
-    simpleProperty("nome"),
-    simpleProperty("slug"),
-    ...commonProperties.dated,
-  ],
-})
 export class ModalidadeFindOneOutputRestDto extends EntityBaseRestDto {
-  @ApiProperty({ type: "string", description: "Nome da modalidade", minLength: 1 })
+  @ApiProperty(ModalidadeFindOneQueryResultFields.nome.swaggerMetadata)
   nome: string;
 
-  @ApiProperty({ type: "string", description: "Apelido da modalidade", minLength: 1 })
+  @ApiProperty(ModalidadeFindOneQueryResultFields.slug.swaggerMetadata)
   slug: string;
 }
 
@@ -44,18 +26,41 @@ export class ModalidadeFindOneOutputRestDto extends EntityBaseRestDto {
 // ============================================================================
 
 @ApiSchema({ name: "ModalidadeListInputDto" })
-export class ModalidadeListInputRestDto extends PaginatedFilterByIdRestDto {
-  static schema = modalidadePaginationInputSchema;
+export class ModalidadeListInputRestDto {
+  static schema = ModalidadePaginationInputSchema;
+
+  [key: string]: string | number | string[] | null | undefined;
+
+  @ApiPropertyOptional(ModalidadeListQueryFields.page.swaggerMetadata)
+  page?: number;
+
+  @ApiPropertyOptional(ModalidadeListQueryFields.limit.swaggerMetadata)
+  limit?: number;
+
+  @ApiPropertyOptional(ModalidadeListQueryFields.search.swaggerMetadata)
+  search?: string;
+
+  @ApiPropertyOptional(ModalidadeListQueryFields.sortBy.swaggerMetadata)
+  sortBy?: string[];
+
+  @ApiPropertyOptional(ModalidadeListQueryFields.selection.swaggerMetadata)
+  selection?: string[];
+
+  @ApiPropertyOptional(ModalidadeListQueryFields.filterId.swaggerMetadata)
+  "filter.id"?: string[];
 }
 
 @ApiSchema({ name: "ModalidadeListOutputDto" })
 export class ModalidadeListOutputRestDto {
-  @ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" })
+  @ApiProperty({
+    type: () => PaginationMetaRestDto,
+    ...ModalidadeListQueryFields.meta.swaggerMetadata,
+  })
   meta: PaginationMetaRestDto;
 
   @ApiProperty({
     type: () => [ModalidadeFindOneOutputRestDto],
-    description: "Resultados da busca",
+    ...ModalidadeListQueryFields.data.swaggerMetadata,
   })
   data: ModalidadeFindOneOutputRestDto[];
 }
@@ -66,17 +71,25 @@ export class ModalidadeListOutputRestDto {
 
 @ApiSchema({ name: "ModalidadeCreateInputDto" })
 export class ModalidadeCreateInputRestDto {
-  static readonly schema = modalidadeCreateSchema;
+  static readonly schema = ModalidadeCreateSchema;
 
-  @ApiProperty({ type: "string", description: "Nome da modalidade", minLength: 1 })
+  @ApiProperty(ModalidadeCreateCommandFields.nome.swaggerMetadata)
   nome: string;
 
-  @ApiProperty({ type: "string", description: "Apelido da modalidade", minLength: 1 })
+  @ApiProperty(ModalidadeCreateCommandFields.slug.swaggerMetadata)
   slug: string;
 }
 
 @ApiSchema({ name: "ModalidadeUpdateInputDto" })
-export class ModalidadeUpdateInputRestDto extends PartialType(ModalidadeCreateInputRestDto) {}
+export class ModalidadeUpdateInputRestDto {
+  static readonly schema = ModalidadeCreateSchema;
+
+  @ApiPropertyOptional(ModalidadeUpdateCommandFields.nome.swaggerMetadata)
+  nome?: string;
+
+  @ApiPropertyOptional(ModalidadeUpdateCommandFields.slug.swaggerMetadata)
+  slug?: string;
+}
 
 // ============================================================================
 // FindOne Input (for path params)
@@ -84,12 +97,8 @@ export class ModalidadeUpdateInputRestDto extends PartialType(ModalidadeCreateIn
 
 @ApiSchema({ name: "ModalidadeFindOneInputDto" })
 export class ModalidadeFindOneInputRestDto {
-  static readonly schema = modalidadeFindOneInputSchema;
+  static readonly schema = ModalidadeFindOneInputSchema;
 
-  @ApiProperty({
-    type: "string",
-    description: "Identificador do registro (uuid)",
-    format: "uuid",
-  })
+  @ApiProperty(ModalidadeFindOneQueryResultFields.id.swaggerMetadata)
   id: string;
 }

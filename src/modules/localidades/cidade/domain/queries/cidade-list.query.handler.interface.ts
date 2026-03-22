@@ -1,6 +1,12 @@
 import type { IQueryHandler } from "@/domain/abstractions";
+import { createOperationMetadata } from "@/domain/abstractions";
 import type { CidadeListQuery } from "./cidade-list.query";
 import type { CidadeListQueryResult } from "./cidade-list.query.result";
+
+export const CidadeListQueryMetadata = createOperationMetadata({
+  operationId: "cidadeFindAll",
+  summary: "Lista cidades",
+});
 
 export const ICidadeListQueryHandler = Symbol("ICidadeListQueryHandler");
 

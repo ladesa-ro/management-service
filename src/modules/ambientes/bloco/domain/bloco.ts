@@ -2,9 +2,9 @@ import type { z } from "zod";
 import type { IdUuid, ScalarDateTimeString } from "@/domain/abstractions/scalars";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { zodValidate } from "@/shared/validation/index";
-import { blocoCreateSchema, blocoSchema, blocoUpdateSchema } from "./bloco.schemas";
+import { BlocoCreateSchema, BlocoSchema, BlocoUpdateSchema } from "./bloco.schemas";
 
-export type IBloco = z.infer<typeof blocoSchema>;
+export type IBloco = z.infer<typeof BlocoSchema>;
 
 export class Bloco {
   static readonly entityName = "Bloco";
@@ -21,7 +21,7 @@ export class Bloco {
   private constructor() {}
 
   static create(dados: unknown): Bloco {
-    const parsed = zodValidate(Bloco.entityName, blocoCreateSchema, dados);
+    const parsed = zodValidate(Bloco.entityName, BlocoCreateSchema, dados);
 
     const instance = new Bloco();
 
@@ -37,7 +37,7 @@ export class Bloco {
   }
 
   static load(dados: unknown): Bloco {
-    const parsed = zodValidate(Bloco.entityName, blocoSchema, dados);
+    const parsed = zodValidate(Bloco.entityName, BlocoSchema, dados);
 
     const instance = new Bloco();
 
@@ -54,13 +54,13 @@ export class Bloco {
   }
 
   update(dados: unknown): void {
-    const parsed = zodValidate(Bloco.entityName, blocoUpdateSchema, dados);
+    const parsed = zodValidate(Bloco.entityName, BlocoUpdateSchema, dados);
 
     if (parsed.nome !== undefined) this.nome = parsed.nome;
     if (parsed.codigo !== undefined) this.codigo = parsed.codigo;
 
     this.dateUpdated = new Date().toISOString();
 
-    zodValidate(Bloco.entityName, blocoSchema, this);
+    zodValidate(Bloco.entityName, BlocoSchema, this);
   }
 }

@@ -6,7 +6,7 @@ import type {
   ImagemArquivo,
 } from "@/modules/armazenamento/imagem-arquivo/domain/imagem-arquivo";
 import { zodValidate } from "@/shared/validation/index";
-import { imagemCreateSchema, imagemSchema, imagemUpdateSchema } from "./imagem.schemas";
+import { ImagemCreateSchema, ImagemSchema, ImagemUpdateSchema } from "./imagem.schemas";
 
 export interface IImagem extends IEntityBaseUuid {
   descricao: string | null;
@@ -34,7 +34,7 @@ export class Imagem implements IEntityBaseUuid {
   private constructor() {}
 
   static create(dados: IImagemCreate): Imagem {
-    const parsed = zodValidate(Imagem.entityName, imagemCreateSchema, dados);
+    const parsed = zodValidate(Imagem.entityName, ImagemCreateSchema, dados);
 
     const instance = new Imagem();
 
@@ -49,7 +49,7 @@ export class Imagem implements IEntityBaseUuid {
   }
 
   static load(dados: unknown): Imagem {
-    const parsed = zodValidate(Imagem.entityName, imagemSchema, dados);
+    const parsed = zodValidate(Imagem.entityName, ImagemSchema, dados);
 
     const instance = new Imagem();
 
@@ -64,12 +64,12 @@ export class Imagem implements IEntityBaseUuid {
   }
 
   update(dados: unknown): void {
-    const parsed = zodValidate(Imagem.entityName, imagemUpdateSchema, dados);
+    const parsed = zodValidate(Imagem.entityName, ImagemUpdateSchema, dados);
 
     if (parsed.descricao !== undefined) this.descricao = parsed.descricao?.trim() || null;
 
     this.dateUpdated = new Date().toISOString();
-    zodValidate(Imagem.entityName, imagemSchema, this);
+    zodValidate(Imagem.entityName, ImagemSchema, this);
   }
 
   temDescricao(): boolean {

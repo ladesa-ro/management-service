@@ -1,16 +1,21 @@
+import { PerfilFindOneOutputRestDto } from "@/modules/acesso/perfil/presentation.rest/perfil.rest.dto";
+import { CursoFindOneOutputRestDto } from "@/modules/ensino/curso/presentation.rest/curso.rest.dto";
+import { TurmaFindOneOutputRestDto } from "@/modules/ensino/turma/presentation.rest/turma.rest.dto";
+import { EstagiarioCreateCommandFields } from "@/modules/estagio/estagiario/domain/commands/estagiario-create.command";
+import { EstagiarioUpdateCommandFields } from "@/modules/estagio/estagiario/domain/commands/estagiario-update.command";
 import {
-  estagiarioCreateSchema,
-  estagiarioFindOneInputSchema,
-  estagiarioPaginationInputSchema,
-  estagiarioUpdateSchema,
+  EstagiarioCreateSchema,
+  EstagiarioUpdateSchema,
 } from "@/modules/estagio/estagiario/domain/estagiario.schemas";
+import { EstagiarioFindOneQueryFields } from "@/modules/estagio/estagiario/domain/queries/estagiario-find-one.query";
+import { EstagiarioFindOneQueryResultFields } from "@/modules/estagio/estagiario/domain/queries/estagiario-find-one.query.result";
+import { EstagiarioFindOneInputSchema } from "@/modules/estagio/estagiario/domain/queries/estagiario-find-one.query.schemas";
+import { EstagiarioListQueryFields } from "@/modules/estagio/estagiario/domain/queries/estagiario-list.query";
+import { EstagiarioPaginationInputSchema } from "@/modules/estagio/estagiario/domain/queries/estagiario-list.query.schemas";
 import {
   ApiProperty,
   ApiPropertyOptional,
   ApiSchema,
-  commonProperties,
-  RegisterModel,
-  simpleProperty,
   TransformToArray,
 } from "@/shared/presentation/rest";
 import {
@@ -24,62 +29,38 @@ import {
 // ============================================================================
 
 @ApiSchema({ name: "EstagiarioFindOneOutputDto" })
-@RegisterModel({
-  name: "EstagiarioFindOneQueryResult",
-  properties: [
-    simpleProperty("id"),
-    simpleProperty("idPerfilFk"),
-    simpleProperty("idCursoFk"),
-    simpleProperty("idTurmaFk"),
-    simpleProperty("telefone"),
-    simpleProperty("emailInstitucional"),
-    simpleProperty("dataNascimento"),
-    simpleProperty("ativo"),
-    ...commonProperties.dated,
-  ],
-})
 export class EstagiarioFindOneOutputRestDto extends EntityBaseRestDto {
   @ApiProperty({
-    type: "string",
-    format: "uuid",
-    description: "ID do perfil vinculado ao estagiário",
+    type: () => PerfilFindOneOutputRestDto,
+    ...EstagiarioFindOneQueryResultFields.perfil.swaggerMetadata,
   })
-  idPerfilFk: string;
+  perfil: PerfilFindOneOutputRestDto;
 
   @ApiProperty({
-    type: "string",
-    format: "uuid",
-    description: "ID do curso vinculado ao estagiário",
+    type: () => CursoFindOneOutputRestDto,
+    ...EstagiarioFindOneQueryResultFields.curso.swaggerMetadata,
   })
-  idCursoFk: string;
+  curso: CursoFindOneOutputRestDto;
 
   @ApiProperty({
-    type: "string",
-    format: "uuid",
-    description: "ID da turma vinculada ao estagiário",
+    type: () => TurmaFindOneOutputRestDto,
+    ...EstagiarioFindOneQueryResultFields.turma.swaggerMetadata,
   })
-  idTurmaFk: string;
+  turma: TurmaFindOneOutputRestDto;
 
-  @ApiProperty({
-    type: "string",
-    description: "Telefone do estagiário",
-    minLength: 1,
-    maxLength: 15,
-  })
+  @ApiProperty(EstagiarioFindOneQueryResultFields.telefone.swaggerMetadata)
   telefone: string;
 
   @ApiPropertyOptional({
-    type: "string",
-    format: "email",
+    ...EstagiarioFindOneQueryResultFields.emailInstitucional.swaggerMetadata,
     nullable: true,
-    description: "Email institucional do estagiário",
   })
   emailInstitucional: string | null = null;
 
-  @ApiProperty({ type: "string", format: "date", description: "Data de nascimento do estagiário" })
+  @ApiProperty(EstagiarioFindOneQueryResultFields.dataNascimento.swaggerMetadata)
   dataNascimento: string;
 
-  @ApiProperty({ type: "boolean", description: "Se o estagiário está ativo" })
+  @ApiProperty(EstagiarioFindOneQueryResultFields.ativo.swaggerMetadata)
   ativo: boolean;
 }
 
@@ -89,42 +70,33 @@ export class EstagiarioFindOneOutputRestDto extends EntityBaseRestDto {
 
 @ApiSchema({ name: "EstagiarioListInputDto" })
 export class EstagiarioListInputRestDto extends PaginatedFilterByIdRestDto {
-  static schema = estagiarioPaginationInputSchema;
+  static schema = EstagiarioPaginationInputSchema;
 
-  @ApiPropertyOptional({
-    type: "string",
-    format: "uuid",
-    description: "Filtro por ID de perfil",
-    isArray: true,
-  })
+  @ApiPropertyOptional(EstagiarioListQueryFields.filterPerfilId.swaggerMetadata)
   @TransformToArray()
-  "filter.idPerfilFk"?: string[];
+  "filter.perfil.id"?: string[];
 
-  @ApiPropertyOptional({
-    type: "string",
-    format: "uuid",
-    description: "Filtro por ID de curso",
-    isArray: true,
-  })
+  @ApiPropertyOptional(EstagiarioListQueryFields.filterCursoId.swaggerMetadata)
   @TransformToArray()
-  "filter.idCursoFk"?: string[];
+  "filter.curso.id"?: string[];
 
-  @ApiPropertyOptional({
-    type: "string",
-    format: "uuid",
-    description: "Filtro por ID de turma",
-    isArray: true,
-  })
+  @ApiPropertyOptional(EstagiarioListQueryFields.filterTurmaId.swaggerMetadata)
   @TransformToArray()
-  "filter.idTurmaFk"?: string[];
+  "filter.turma.id"?: string[];
 }
 
 @ApiSchema({ name: "EstagiarioListOutputDto" })
 export class EstagiarioListOutputRestDto {
-  @ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" })
+  @ApiProperty({
+    type: () => PaginationMetaRestDto,
+    ...EstagiarioListQueryFields.meta.swaggerMetadata,
+  })
   meta: PaginationMetaRestDto;
 
-  @ApiProperty({ type: () => [EstagiarioFindOneOutputRestDto], description: "Resultados da busca" })
+  @ApiProperty({
+    type: () => [EstagiarioFindOneOutputRestDto],
+    ...EstagiarioListQueryFields.data.swaggerMetadata,
+  })
   data: EstagiarioFindOneOutputRestDto[];
 }
 
@@ -134,93 +106,47 @@ export class EstagiarioListOutputRestDto {
 
 @ApiSchema({ name: "EstagiarioCreateInputDto" })
 export class EstagiarioCreateInputRestDto {
-  static schema = estagiarioCreateSchema;
+  static schema = EstagiarioCreateSchema;
 
-  @ApiProperty({
-    type: "string",
-    format: "uuid",
-    description: "ID do perfil vinculado ao estagiário",
-  })
-  idPerfilFk: string;
+  @ApiProperty(EstagiarioCreateCommandFields.perfil.swaggerMetadata)
+  perfil: { id: string };
 
-  @ApiProperty({
-    type: "string",
-    format: "uuid",
-    description: "ID do curso vinculado ao estagiário",
-  })
-  idCursoFk: string;
+  @ApiProperty(EstagiarioCreateCommandFields.curso.swaggerMetadata)
+  curso: { id: string };
 
-  @ApiProperty({
-    type: "string",
-    format: "uuid",
-    description: "ID da turma vinculada ao estagiário",
-  })
-  idTurmaFk: string;
+  @ApiProperty(EstagiarioCreateCommandFields.turma.swaggerMetadata)
+  turma: { id: string };
 
-  @ApiProperty({
-    type: "string",
-    description: "Telefone do estagiário",
-    minLength: 1,
-    maxLength: 15,
-  })
+  @ApiProperty(EstagiarioCreateCommandFields.telefone.swaggerMetadata)
   telefone: string;
 
-  @ApiProperty({
-    type: "string",
-    format: "email",
-    description: "Email institucional do estagiário",
-  })
+  @ApiProperty(EstagiarioCreateCommandFields.emailInstitucional.swaggerMetadata)
   emailInstitucional: string;
 
-  @ApiProperty({ type: "string", format: "date", description: "Data de nascimento do estagiário" })
+  @ApiProperty(EstagiarioCreateCommandFields.dataNascimento.swaggerMetadata)
   dataNascimento: string;
 }
 
 @ApiSchema({ name: "EstagiarioUpdateInputDto" })
 export class EstagiarioUpdateInputRestDto {
-  static schema = estagiarioUpdateSchema;
+  static schema = EstagiarioUpdateSchema;
 
-  @ApiPropertyOptional({
-    type: "string",
-    format: "uuid",
-    description: "ID do perfil vinculado ao estagiário",
-  })
-  idPerfilFk?: string;
+  @ApiPropertyOptional(EstagiarioUpdateCommandFields.perfil.swaggerMetadata)
+  perfil?: { id: string };
 
-  @ApiPropertyOptional({
-    type: "string",
-    format: "uuid",
-    description: "ID do curso vinculado ao estagiário",
-  })
-  idCursoFk?: string;
+  @ApiPropertyOptional(EstagiarioUpdateCommandFields.curso.swaggerMetadata)
+  curso?: { id: string };
 
-  @ApiPropertyOptional({
-    type: "string",
-    format: "uuid",
-    description: "ID da turma vinculada ao estagiário",
-  })
-  idTurmaFk?: string;
+  @ApiPropertyOptional(EstagiarioUpdateCommandFields.turma.swaggerMetadata)
+  turma?: { id: string };
 
-  @ApiPropertyOptional({
-    type: "string",
-    description: "Telefone do estagiário",
-    minLength: 1,
-    maxLength: 15,
-  })
+  @ApiPropertyOptional(EstagiarioUpdateCommandFields.telefone.swaggerMetadata)
   telefone?: string;
 
-  @ApiPropertyOptional({
-    type: "string",
-    format: "email",
-    description: "Email institucional do estagiário",
-  })
+  @ApiPropertyOptional(EstagiarioUpdateCommandFields.emailInstitucional.swaggerMetadata)
   emailInstitucional?: string;
 
-  @ApiPropertyOptional({
-    type: "string",
-    format: "date",
-    description: "Data de nascimento do estagiário",
-  })
+  @ApiPropertyOptional(EstagiarioUpdateCommandFields.dataNascimento.swaggerMetadata)
   dataNascimento?: string;
 }
 
@@ -230,12 +156,8 @@ export class EstagiarioUpdateInputRestDto {
 
 @ApiSchema({ name: "EstagiarioFindOneInputDto" })
 export class EstagiarioFindOneInputRestDto {
-  static schema = estagiarioFindOneInputSchema;
+  static schema = EstagiarioFindOneInputSchema;
 
-  @ApiProperty({
-    type: "string",
-    description: "Identificador do registro (uuid)",
-    format: "uuid",
-  })
+  @ApiProperty(EstagiarioFindOneQueryFields.id.swaggerMetadata)
   id: string;
 }

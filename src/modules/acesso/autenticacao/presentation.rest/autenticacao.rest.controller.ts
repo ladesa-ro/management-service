@@ -8,11 +8,27 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { DeclareDependency } from "@/domain/dependency-injection";
-import { IAutenticacaoDefinirSenhaCommandHandler } from "@/modules/acesso/autenticacao/domain/commands/autenticacao-definir-senha.command.handler.interface";
-import { IAutenticacaoLoginCommandHandler } from "@/modules/acesso/autenticacao/domain/commands/autenticacao-login.command.handler.interface";
-import { IAutenticacaoRecoverPasswordCommandHandler } from "@/modules/acesso/autenticacao/domain/commands/autenticacao-recover-password.command.handler.interface";
-import { IAutenticacaoRefreshCommandHandler } from "@/modules/acesso/autenticacao/domain/commands/autenticacao-refresh.command.handler.interface";
-import { IAutenticacaoWhoAmIQueryHandler } from "@/modules/acesso/autenticacao/domain/queries/autenticacao-who-am-i.query.handler.interface";
+import {
+  AutenticacaoDefinirSenhaCommandMetadata,
+  IAutenticacaoDefinirSenhaCommandHandler,
+} from "@/modules/acesso/autenticacao/domain/commands/autenticacao-definir-senha.command.handler.interface";
+import {
+  AutenticacaoLoginCommandMetadata,
+  IAutenticacaoLoginCommandHandler,
+} from "@/modules/acesso/autenticacao/domain/commands/autenticacao-login.command.handler.interface";
+import {
+  AutenticacaoRecoverPasswordCommandMetadata,
+  IAutenticacaoRecoverPasswordCommandHandler,
+} from "@/modules/acesso/autenticacao/domain/commands/autenticacao-recover-password.command.handler.interface";
+import {
+  AutenticacaoRefreshCommandMetadata,
+  IAutenticacaoRefreshCommandHandler,
+} from "@/modules/acesso/autenticacao/domain/commands/autenticacao-refresh.command.handler.interface";
+import {
+  AutenticacaoWhoAmIQueryMetadata,
+  IAutenticacaoWhoAmIQueryHandler,
+} from "@/modules/acesso/autenticacao/domain/queries/autenticacao-who-am-i.query.handler.interface";
+import { AutenticacaoWhoAmIEnsinoQueryMetadata } from "@/modules/acesso/autenticacao/domain/queries/autenticacao-who-am-i-ensino.query.metadata";
 import { IUsuarioEnsinoQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-ensino.query.handler.interface";
 import { UsuarioEnsinoOutputRestDto } from "@/modules/acesso/usuario/presentation.rest";
 import { AccessContext, AccessContextHttp } from "@/server/access-context";
@@ -45,10 +61,7 @@ export class AutenticacaoRestController {
   ) {}
 
   @Get("/quem-sou-eu/ensino")
-  @ApiOperation({
-    summary: "Retorna informacoes de ensino do usuario logado",
-    operationId: "autenticacaoWhoAmIEnsino",
-  })
+  @ApiOperation(AutenticacaoWhoAmIEnsinoQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: UsuarioEnsinoOutputRestDto })
   @ApiForbiddenResponse()
   @ApiBadRequestResponse()
@@ -63,10 +76,7 @@ export class AutenticacaoRestController {
   }
 
   @Get("/quem-sou-eu")
-  @ApiOperation({
-    summary: "Retorna informacoes do usuario logado",
-    operationId: "autenticacaoWhoAmI",
-  })
+  @ApiOperation(AutenticacaoWhoAmIQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: AuthWhoAmIOutputRestDto })
   @ApiForbiddenResponse()
   async whoAmI(
@@ -80,10 +90,7 @@ export class AutenticacaoRestController {
 
   @Post("/login")
   @Public()
-  @ApiOperation({
-    summary: "Realiza login com matricula e senha",
-    operationId: "autenticacaoLogin",
-  })
+  @ApiOperation(AutenticacaoLoginCommandMetadata.swaggerMetadata)
   @ApiCreatedResponse({ type: AuthSessionCredentialsRestDto })
   @ApiForbiddenResponse()
   async login(
@@ -95,10 +102,7 @@ export class AutenticacaoRestController {
 
   @Post("/login/refresh")
   @Public()
-  @ApiOperation({
-    summary: "Atualiza token de acesso usando refresh token",
-    operationId: "autenticacaoRefresh",
-  })
+  @ApiOperation(AutenticacaoRefreshCommandMetadata.swaggerMetadata)
   @ApiCreatedResponse({ type: AuthSessionCredentialsRestDto })
   @ApiForbiddenResponse()
   async refresh(
@@ -109,10 +113,7 @@ export class AutenticacaoRestController {
   }
 
   @Post("/definir-senha")
-  @ApiOperation({
-    summary: "Define senha inicial do usuario",
-    operationId: "autenticacaoSetInitialPassword",
-  })
+  @ApiOperation(AutenticacaoDefinirSenhaCommandMetadata.swaggerMetadata)
   @ApiCreatedResponse({ type: Boolean })
   @ApiForbiddenResponse()
   async definirSenha(
@@ -123,10 +124,7 @@ export class AutenticacaoRestController {
   }
 
   @Post("/redefinir-senha")
-  @ApiOperation({
-    summary: "Envia email para redefinir senha",
-    operationId: "autenticacaoRequestPasswordReset",
-  })
+  @ApiOperation(AutenticacaoRecoverPasswordCommandMetadata.swaggerMetadata)
   @ApiCreatedResponse({ type: Boolean })
   @ApiForbiddenResponse()
   async redefinirSenha(

@@ -2,9 +2,9 @@ import type { z } from "zod";
 import type { IdUuid, ScalarDateTimeString } from "@/domain/abstractions/scalars";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { zodValidate } from "@/shared/validation/index";
-import { cursoCreateSchema, cursoSchema, cursoUpdateSchema } from "./curso.schemas";
+import { CursoCreateSchema, CursoSchema, CursoUpdateSchema } from "./curso.schemas";
 
-export type ICurso = z.infer<typeof cursoSchema>;
+export type ICurso = z.infer<typeof CursoSchema>;
 
 export class Curso {
   static readonly entityName = "Curso";
@@ -22,7 +22,7 @@ export class Curso {
   private constructor() {}
 
   static create(dados: unknown): Curso {
-    const parsed = zodValidate(Curso.entityName, cursoCreateSchema, dados);
+    const parsed = zodValidate(Curso.entityName, CursoCreateSchema, dados);
 
     const instance = new Curso();
 
@@ -40,7 +40,7 @@ export class Curso {
   }
 
   static load(dados: unknown): Curso {
-    const parsed = zodValidate(Curso.entityName, cursoSchema, dados);
+    const parsed = zodValidate(Curso.entityName, CursoSchema, dados);
 
     const instance = new Curso();
 
@@ -58,7 +58,7 @@ export class Curso {
   }
 
   update(dados: unknown): void {
-    const parsed = zodValidate(Curso.entityName, cursoUpdateSchema, dados);
+    const parsed = zodValidate(Curso.entityName, CursoUpdateSchema, dados);
 
     if (parsed.nome !== undefined) this.nome = parsed.nome;
     if (parsed.nomeAbreviado !== undefined) this.nomeAbreviado = parsed.nomeAbreviado;
@@ -68,7 +68,7 @@ export class Curso {
 
     this.dateUpdated = new Date().toISOString();
 
-    zodValidate(Curso.entityName, cursoSchema, this);
+    zodValidate(Curso.entityName, CursoSchema, this);
   }
 
   temImagemCapa(): boolean {

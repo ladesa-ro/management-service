@@ -1,19 +1,23 @@
+/**
+ * Perfil — schemas zod para a entidade e suas operacoes.
+ *
+ * Contem os schemas de referencia, composicao (create/update)
+ * e validacao da entidade. Fonte unica de verdade (SSOT) para
+ * os contratos de dados da entidade.
+ */
 import { z } from "zod";
-import { datedSchema, stringFilterSchema, uuidSchema } from "@/shared/validation/schemas";
+import { datedSchema, uuidSchema } from "@/shared/validation/schemas";
+import { PerfilFields } from "./perfil.fields";
 
 // ============================================================================
-// Fragments reutilizáveis
+// Fragments de referência
 // ============================================================================
 
-export const perfilCargoSchema = z.string().min(1, "cargo é obrigatório");
-
-export const perfilAtivoSchema = z.boolean();
-
-export const perfilCampusRefSchema = z.object({
+export const PerfilCampusRefSchema = z.object({
   id: uuidSchema,
 });
 
-export const perfilUsuarioRefSchema = z.object({
+export const PerfilUsuarioRefSchema = z.object({
   id: uuidSchema,
 });
 
@@ -21,65 +25,31 @@ export const perfilUsuarioRefSchema = z.object({
 // Schemas compostos
 // ============================================================================
 
-export const perfilSchema = z
+export const PerfilSchema = z
   .object({
     id: uuidSchema,
-    ativo: perfilAtivoSchema,
-    cargo: perfilCargoSchema,
-    campus: perfilCampusRefSchema,
-    usuario: perfilUsuarioRefSchema,
+    ativo: PerfilFields.ativo.schema,
+    cargo: PerfilFields.cargo.schema,
+    campus: PerfilCampusRefSchema,
+    usuario: PerfilUsuarioRefSchema,
   })
   .merge(datedSchema);
 
-export const perfilCreateSchema = z.object({
-  cargo: perfilCargoSchema,
-  campus: perfilCampusRefSchema,
-  usuario: perfilUsuarioRefSchema,
+export const PerfilCreateSchema = z.object({
+  cargo: PerfilFields.cargo.schema,
+  campus: PerfilCampusRefSchema,
+  usuario: PerfilUsuarioRefSchema,
 });
 
-export const perfilUpdateSchema = z.object({
-  ativo: perfilAtivoSchema.optional(),
-  cargo: perfilCargoSchema.optional(),
-  campus: perfilCampusRefSchema.optional(),
-  usuario: perfilUsuarioRefSchema.optional(),
+export const PerfilUpdateSchema = z.object({
+  ativo: PerfilFields.ativo.schema.optional(),
+  cargo: PerfilFields.cargo.schema.optional(),
+  campus: PerfilCampusRefSchema.optional(),
+  usuario: PerfilUsuarioRefSchema.optional(),
 });
 
-// ============================================================================
-// Schemas de input (presentation layer)
-// ============================================================================
-
-export const perfilFindOneInputSchema = z.object({
-  id: uuidSchema,
-});
-
-export const perfilPaginationInputSchema = z.object({
-  page: z.coerce.number().int().min(1).optional().default(1),
-  limit: z.coerce.number().int().min(1).optional(),
-  search: z.string().optional(),
-  sortBy: z.array(z.string()).optional(),
-  selection: z.array(z.string()).optional(),
-  "filter.id": stringFilterSchema,
-  "filter.ativo": stringFilterSchema,
-  "filter.cargo": stringFilterSchema,
-  "filter.campus.id": stringFilterSchema,
-  "filter.usuario.id": stringFilterSchema,
-});
-
-export const perfilGraphqlListInputSchema = z.object({
-  page: z.number().int().min(1).optional().default(1),
-  limit: z.number().int().min(1).optional(),
-  search: z.string().optional(),
-  sortBy: z.array(z.string()).optional(),
-  selection: z.array(z.string()).optional(),
-  filterId: z.array(z.string()).optional(),
-  filterAtivo: z.array(z.string()).optional(),
-  filterCargo: z.array(z.string()).optional(),
-  filterCampusId: z.array(z.string()).optional(),
-  filterUsuarioId: z.array(z.string()).optional(),
-});
-
-export const perfilSetVinculosInputSchema = z.object({
+export const PerfilSetVinculosInputSchema = z.object({
   cargos: z.array(z.string().min(1)),
-  campus: perfilCampusRefSchema,
-  usuario: perfilUsuarioRefSchema,
+  campus: PerfilCampusRefSchema,
+  usuario: PerfilUsuarioRefSchema,
 });

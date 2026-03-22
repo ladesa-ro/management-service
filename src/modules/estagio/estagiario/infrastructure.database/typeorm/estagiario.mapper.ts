@@ -25,9 +25,9 @@ export class EstagiarioMapper {
 
     const estagiario = Estagiario.load({
       id: entity.id,
-      idPerfilFk: entity.idPerfilFk,
-      idCursoFk: entity.idCursoFk,
-      idTurmaFk: entity.idTurmaFk,
+      perfil: { id: entity.perfil?.id ?? (entity as any).id_perfil_fk },
+      curso: { id: entity.curso?.id ?? (entity as any).id_curso_fk },
+      turma: { id: entity.turma?.id ?? (entity as any).id_turma_fk },
       telefone: entity.telefone,
       emailInstitucional: entity.emailInstitucional,
       dataNascimento:
@@ -47,15 +47,12 @@ export class EstagiarioMapper {
   static toPersistence(estagiario: Estagiario): EstagiarioTypeormEntity {
     const entity = new EstagiarioTypeormEntity();
     entity.id = estagiario.id || generateUuidV7();
-    entity.idPerfilFk = estagiario.idPerfilFk;
-    entity.idCursoFk = estagiario.idCursoFk;
-    entity.idTurmaFk = estagiario.idTurmaFk;
     entity.telefone = estagiario.telefone;
     entity.emailInstitucional = estagiario.emailInstitucional || null;
     entity.dataNascimento = new Date(estagiario.dataNascimento);
-    entity.perfil = { id: estagiario.idPerfilFk } as any;
-    entity.curso = { id: estagiario.idCursoFk } as any;
-    entity.turma = { id: estagiario.idTurmaFk } as any;
+    entity.perfil = { id: estagiario.perfil.id } as any;
+    entity.curso = { id: estagiario.curso.id } as any;
+    entity.turma = { id: estagiario.turma.id } as any;
     entity.dateCreated = new Date(estagiario.dateCreated);
     entity.dateUpdated = new Date(estagiario.dateUpdated);
     entity.dateDeleted = estagiario.dateDeleted ? new Date(estagiario.dateDeleted) : null;
@@ -79,9 +76,9 @@ export class EstagiarioMapper {
 
     return {
       id: entity.id,
-      idPerfilFk: entity.idPerfilFk,
-      idCursoFk: entity.idCursoFk,
-      idTurmaFk: entity.idTurmaFk,
+      perfil: (entity.perfil ?? { id: (entity as any).id_perfil_fk }) as any,
+      curso: (entity.curso ?? { id: (entity as any).id_curso_fk }) as any,
+      turma: (entity.turma ?? { id: (entity as any).id_turma_fk }) as any,
       telefone: entity.telefone,
       emailInstitucional: entity.emailInstitucional,
       dataNascimento: dataNascimentoFormatted,
@@ -98,9 +95,9 @@ export class EstagiarioMapper {
   static domainToOutputDto(estagiario: Estagiario): EstagiarioFindOneQueryResult {
     return {
       id: estagiario.id!,
-      idPerfilFk: estagiario.idPerfilFk,
-      idCursoFk: estagiario.idCursoFk,
-      idTurmaFk: estagiario.idTurmaFk,
+      perfil: estagiario.perfil as any,
+      curso: estagiario.curso as any,
+      turma: estagiario.turma as any,
       telefone: estagiario.telefone,
       emailInstitucional: estagiario.emailInstitucional || null,
       dataNascimento: estagiario.dataNascimento,

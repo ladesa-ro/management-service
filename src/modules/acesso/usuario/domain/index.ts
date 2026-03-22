@@ -5,3 +5,5 @@ export * from "./queries";
 export * from "./repositories";
 export * from "./shared";
 export * from "./usuario";
+export * from "./usuario.fields";
+export * from "./usuario.schemas";

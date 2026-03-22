@@ -18,13 +18,13 @@ export class OfertaFormacaoPeriodoTypeOrmRepositoryAdapter
 
   async findByOfertaFormacaoId(ofertaFormacaoId: string): Promise<OfertaFormacaoPeriodoEntity[]> {
     return this.repository.find({
-      where: { idOfertaFormacaoFk: ofertaFormacaoId },
+      where: { ofertaFormacao: { id: ofertaFormacaoId } } as any,
       order: { numeroPeriodo: "ASC" },
     });
   }
 
   async deleteByOfertaFormacaoId(ofertaFormacaoId: string): Promise<void> {
-    await this.repository.delete({ idOfertaFormacaoFk: ofertaFormacaoId });
+    await this.repository.delete({ ofertaFormacao: { id: ofertaFormacaoId } } as any);
   }
 
   async save(entity: OfertaFormacaoPeriodoEntity): Promise<OfertaFormacaoPeriodoEntity> {

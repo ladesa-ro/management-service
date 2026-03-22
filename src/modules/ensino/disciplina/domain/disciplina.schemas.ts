@@ -1,73 +1,44 @@
+/**
+ * Disciplina — schemas zod para a entidade e suas operacoes.
+ *
+ * Contem os schemas de referencia, composicao (create/update)
+ * e validacao da entidade. Fonte unica de verdade (SSOT) para
+ * os contratos de dados da entidade.
+ */
 import { z } from "zod";
-import { datedSchema, stringFilterSchema, uuidSchema } from "@/shared/validation/schemas";
+import { datedSchema, uuidSchema } from "@/shared/validation/schemas";
+import { DisciplinaFields } from "./disciplina.fields";
 
 // ============================================================================
-// Fragments reutilizáveis
+// Fragments de referência
 // ============================================================================
 
-export const disciplinaNomeSchema = z.string().min(1, "nome é obrigatório");
-
-export const disciplinaNomeAbreviadoSchema = z.string().min(1, "nomeAbreviado é obrigatório");
-
-export const disciplinaCargaHorariaSchema = z
-  .number()
-  .int()
-  .min(1, "cargaHoraria deve ser no mínimo 1");
-
-export const disciplinaImagemCapaRefSchema = z.object({ id: uuidSchema }).nullable().optional();
+export const DisciplinaImagemCapaRefSchema = z.object({ id: uuidSchema }).nullable().optional();
 
 // ============================================================================
 // Schemas compostos
 // ============================================================================
 
-export const disciplinaSchema = z
+export const DisciplinaSchema = z
   .object({
     id: uuidSchema,
-    nome: disciplinaNomeSchema,
-    nomeAbreviado: disciplinaNomeAbreviadoSchema,
-    cargaHoraria: disciplinaCargaHorariaSchema,
+    nome: DisciplinaFields.nome.schema,
+    nomeAbreviado: DisciplinaFields.nomeAbreviado.schema,
+    cargaHoraria: DisciplinaFields.cargaHoraria.schema,
     imagemCapa: z.object({ id: uuidSchema }).nullable(),
   })
   .merge(datedSchema);
 
-export const disciplinaCreateSchema = z.object({
-  nome: disciplinaNomeSchema,
-  nomeAbreviado: disciplinaNomeAbreviadoSchema,
-  cargaHoraria: disciplinaCargaHorariaSchema,
-  imagemCapa: disciplinaImagemCapaRefSchema,
+export const DisciplinaCreateSchema = z.object({
+  nome: DisciplinaFields.nome.schema,
+  nomeAbreviado: DisciplinaFields.nomeAbreviado.schema,
+  cargaHoraria: DisciplinaFields.cargaHoraria.schema,
+  imagemCapa: DisciplinaImagemCapaRefSchema,
 });
 
-export const disciplinaUpdateSchema = z.object({
-  nome: disciplinaNomeSchema.optional(),
-  nomeAbreviado: disciplinaNomeAbreviadoSchema.optional(),
-  cargaHoraria: disciplinaCargaHorariaSchema.optional(),
-  imagemCapa: disciplinaImagemCapaRefSchema,
-});
-
-// ============================================================================
-// Schemas de input (presentation layer)
-// ============================================================================
-
-export const disciplinaFindOneInputSchema = z.object({
-  id: uuidSchema,
-});
-
-export const disciplinaPaginationInputSchema = z.object({
-  page: z.coerce.number().int().min(1).optional().default(1),
-  limit: z.coerce.number().int().min(1).optional(),
-  search: z.string().optional(),
-  sortBy: z.array(z.string()).optional(),
-  selection: z.array(z.string()).optional(),
-  "filter.id": stringFilterSchema,
-  "filter.diarios.id": stringFilterSchema,
-});
-
-export const disciplinaGraphqlListInputSchema = z.object({
-  page: z.number().int().min(1).optional().default(1),
-  limit: z.number().int().min(1).optional(),
-  search: z.string().optional(),
-  sortBy: z.array(z.string()).optional(),
-  selection: z.array(z.string()).optional(),
-  filterId: z.array(z.string()).optional(),
-  filterDiariosId: z.array(z.string()).optional(),
+export const DisciplinaUpdateSchema = z.object({
+  nome: DisciplinaFields.nome.schema.optional(),
+  nomeAbreviado: DisciplinaFields.nomeAbreviado.schema.optional(),
+  cargaHoraria: DisciplinaFields.cargaHoraria.schema.optional(),
+  imagemCapa: DisciplinaImagemCapaRefSchema,
 });

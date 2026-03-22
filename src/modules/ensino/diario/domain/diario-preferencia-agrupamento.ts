@@ -4,9 +4,9 @@ import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import type { IDiario } from "@/modules/ensino/diario/domain/diario";
 import { zodValidate } from "@/shared/validation/index";
 import {
-  diarioPreferenciaAgrupamentoCreateSchema,
-  diarioPreferenciaAgrupamentoSchema,
-  diarioPreferenciaAgrupamentoUpdateSchema,
+  DiarioPreferenciaAgrupamentoCreateSchema,
+  DiarioPreferenciaAgrupamentoSchema,
+  DiarioPreferenciaAgrupamentoUpdateSchema,
 } from "./diario-preferencia-agrupamento.schemas";
 
 export interface IDiarioPreferenciaAgrupamento extends IEntityBaseUuid {
@@ -51,7 +51,7 @@ export class DiarioPreferenciaAgrupamento implements IEntityBaseUuid {
   static create(dados: IDiarioPreferenciaAgrupamentoCreate): DiarioPreferenciaAgrupamento {
     const parsed = zodValidate(
       DiarioPreferenciaAgrupamento.entityName,
-      diarioPreferenciaAgrupamentoCreateSchema,
+      DiarioPreferenciaAgrupamentoCreateSchema,
       dados,
     );
 
@@ -90,7 +90,7 @@ export class DiarioPreferenciaAgrupamento implements IEntityBaseUuid {
   update(dados: unknown): void {
     const parsed = zodValidate(
       DiarioPreferenciaAgrupamento.entityName,
-      diarioPreferenciaAgrupamentoUpdateSchema,
+      DiarioPreferenciaAgrupamentoUpdateSchema,
       dados,
     );
 
@@ -100,6 +100,6 @@ export class DiarioPreferenciaAgrupamento implements IEntityBaseUuid {
     if (parsed.aulasSeguidas !== undefined) this.aulasSeguidas = parsed.aulasSeguidas;
 
     this.dateUpdated = new Date().toISOString();
-    zodValidate(DiarioPreferenciaAgrupamento.entityName, diarioPreferenciaAgrupamentoSchema, this);
+    zodValidate(DiarioPreferenciaAgrupamento.entityName, DiarioPreferenciaAgrupamentoSchema, this);
   }
 }

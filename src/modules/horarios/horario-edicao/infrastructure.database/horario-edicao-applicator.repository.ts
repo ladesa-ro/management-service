@@ -43,9 +43,9 @@ export class HorarioEdicaoApplicatorTypeOrmAdapter implements IHorarioEdicaoAppl
         }
 
         case HorarioEdicaoMudancaTipoOperacao.MOVER: {
-          if (!mudanca.idCalendarioAgendamentoFk) break;
+          if (!mudanca.calendarioAgendamento?.id) break;
           const existing = await this.calendarioAgendamentoRepository.findById(
-            mudanca.idCalendarioAgendamentoFk,
+            mudanca.calendarioAgendamento?.id,
           );
           if (!existing) break;
 
@@ -63,9 +63,9 @@ export class HorarioEdicaoApplicatorTypeOrmAdapter implements IHorarioEdicaoAppl
         }
 
         case HorarioEdicaoMudancaTipoOperacao.REMOVER: {
-          if (!mudanca.idCalendarioAgendamentoFk) break;
+          if (!mudanca.calendarioAgendamento?.id) break;
           const toRemove = await this.calendarioAgendamentoRepository.findById(
-            mudanca.idCalendarioAgendamentoFk,
+            mudanca.calendarioAgendamento?.id,
           );
           if (!toRemove) break;
           toRemove.status = CalendarioAgendamentoStatus.INATIVO;

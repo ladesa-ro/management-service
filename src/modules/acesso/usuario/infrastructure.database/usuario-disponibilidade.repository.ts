@@ -132,8 +132,6 @@ export class UsuarioDisponibilidadeTypeOrmRepositoryAdapter
 
       const junction = new CalendarioAgendamentoProfessorEntity();
       junction.id = generateUuidV7();
-      junction.idPerfilFk = perfilId;
-      junction.idCalendarioAgendamentoFk = agendamento.id;
       (junction as any).perfil = { id: perfilId };
       (junction as any).calendarioAgendamento = { id: agendamento.id };
       await junctionRepo.save(junction);

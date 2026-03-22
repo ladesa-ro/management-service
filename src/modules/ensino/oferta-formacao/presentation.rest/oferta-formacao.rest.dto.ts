@@ -1,14 +1,12 @@
 import { ModalidadeFindOneOutputRestDto } from "@/modules/ensino/modalidade/presentation.rest/modalidade.rest.dto";
+import { OfertaFormacaoFindOneInputSchema } from "@/modules/ensino/oferta-formacao/domain/queries/oferta-formacao-find-one.query.schemas";
+import { OfertaFormacaoPaginationInputSchema } from "@/modules/ensino/oferta-formacao/domain/queries/oferta-formacao-list.query.schemas";
 import { DuracaoPeriodo } from "@/modules/ensino/oferta-formacao/infrastructure.database/typeorm/oferta-formacao.typeorm.entity";
 import {
   ApiProperty,
   ApiPropertyOptional,
   ApiSchema,
-  commonProperties,
   PartialType,
-  RegisterModel,
-  referenceProperty,
-  simpleProperty,
   TransformToArray,
 } from "@/shared/presentation/rest";
 import {
@@ -16,44 +14,41 @@ import {
   PaginatedFilterByIdRestDto,
   PaginationMetaRestDto,
 } from "@/shared/presentation/rest/dtos";
-import {
-  ofertaFormacaoCreateSchema,
-  ofertaFormacaoFindOneInputSchema,
-  ofertaFormacaoPaginationInputSchema,
-} from "../domain/oferta-formacao.schemas";
+import { OfertaFormacaoCreateCommandFields } from "../domain/commands/oferta-formacao-create.command";
+import { OfertaFormacaoCreateSchema } from "../domain/oferta-formacao.schemas";
+import { OfertaFormacaoFindOneQueryResultFields } from "../domain/queries/oferta-formacao-find-one.query.result";
+import { OfertaFormacaoListQueryFields } from "../domain/queries/oferta-formacao-list.query";
 
 // ============================================================================
 // FindOne Output
 // ============================================================================
 
 @ApiSchema({ name: "OfertaFormacaoFindOneOutputDto" })
-@RegisterModel({
-  name: "OfertaFormacaoFindOneQueryResult",
-  properties: [
-    simpleProperty("id"),
-    simpleProperty("nome"),
-    simpleProperty("slug"),
-    referenceProperty("modalidade", "ModalidadeFindOneQueryResult"),
-    ...commonProperties.dated,
-  ],
-})
 export class OfertaFormacaoFindOneOutputRestDto extends EntityBaseRestDto {
-  @ApiProperty({ type: "string", description: "Nome da oferta de formacao", minLength: 1 })
+  @ApiProperty({
+    type: "string",
+    ...OfertaFormacaoFindOneQueryResultFields.nome.swaggerMetadata,
+    minLength: 1,
+  })
   nome: string;
 
-  @ApiProperty({ type: "string", description: "Apelido da oferta de formacao", minLength: 1 })
+  @ApiProperty({
+    type: "string",
+    ...OfertaFormacaoFindOneQueryResultFields.slug.swaggerMetadata,
+    minLength: 1,
+  })
   slug: string;
 
   @ApiPropertyOptional({
     enum: DuracaoPeriodo,
-    description: "Duracao de cada periodo",
+    ...OfertaFormacaoFindOneQueryResultFields.duracaoPeriodo.swaggerMetadata,
     nullable: true,
   })
   duracaoPeriodo: DuracaoPeriodo | null;
 
   @ApiProperty({
     type: () => ModalidadeFindOneOutputRestDto,
-    description: "Modalidade da oferta de formacao",
+    ...OfertaFormacaoFindOneQueryResultFields.modalidade.swaggerMetadata,
   })
   modalidade: ModalidadeFindOneOutputRestDto;
 }
@@ -64,12 +59,12 @@ export class OfertaFormacaoFindOneOutputRestDto extends EntityBaseRestDto {
 
 @ApiSchema({ name: "OfertaFormacaoListInputDto" })
 export class OfertaFormacaoListInputRestDto extends PaginatedFilterByIdRestDto {
-  static schema = ofertaFormacaoPaginationInputSchema;
+  static schema = OfertaFormacaoPaginationInputSchema;
 
   @ApiPropertyOptional({
     type: "string",
     isArray: true,
-    description: "Filtro por ID da Modalidade",
+    ...OfertaFormacaoListQueryFields.filterModalidadeId.swaggerMetadata,
   })
   @TransformToArray()
   "filter.modalidade.id"?: string[];
@@ -77,12 +72,15 @@ export class OfertaFormacaoListInputRestDto extends PaginatedFilterByIdRestDto {
 
 @ApiSchema({ name: "OfertaFormacaoListOutputDto" })
 export class OfertaFormacaoListOutputRestDto {
-  @ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" })
+  @ApiProperty({
+    type: () => PaginationMetaRestDto,
+    ...OfertaFormacaoListQueryFields.meta.swaggerMetadata,
+  })
   meta: PaginationMetaRestDto;
 
   @ApiProperty({
     type: () => [OfertaFormacaoFindOneOutputRestDto],
-    description: "Resultados da busca",
+    ...OfertaFormacaoListQueryFields.data.swaggerMetadata,
   })
   data: OfertaFormacaoFindOneOutputRestDto[];
 }
@@ -93,24 +91,32 @@ export class OfertaFormacaoListOutputRestDto {
 
 @ApiSchema({ name: "OfertaFormacaoCreateInputDto" })
 export class OfertaFormacaoCreateInputRestDto {
-  static readonly schema = ofertaFormacaoCreateSchema;
+  static readonly schema = OfertaFormacaoCreateSchema;
 
-  @ApiProperty({ type: "string", description: "Nome da oferta de formacao", minLength: 1 })
+  @ApiProperty({
+    type: "string",
+    ...OfertaFormacaoCreateCommandFields.nome.swaggerMetadata,
+    minLength: 1,
+  })
   nome: string;
 
-  @ApiProperty({ type: "string", description: "Apelido da oferta de formacao", minLength: 1 })
+  @ApiProperty({
+    type: "string",
+    ...OfertaFormacaoCreateCommandFields.slug.swaggerMetadata,
+    minLength: 1,
+  })
   slug: string;
 
   @ApiPropertyOptional({
     enum: DuracaoPeriodo,
-    description: "Duracao de cada periodo",
+    ...OfertaFormacaoCreateCommandFields.duracaoPeriodo.swaggerMetadata,
     nullable: true,
   })
   duracaoPeriodo?: DuracaoPeriodo | null;
 
   @ApiProperty({
     type: "object",
-    description: "Modalidade da oferta de formacao",
+    ...OfertaFormacaoCreateCommandFields.modalidade.swaggerMetadata,
     properties: { id: { type: "string", format: "uuid" } },
   })
   modalidade: { id: string };
@@ -127,11 +133,11 @@ export class OfertaFormacaoUpdateInputRestDto extends PartialType(
 
 @ApiSchema({ name: "OfertaFormacaoFindOneInputDto" })
 export class OfertaFormacaoFindOneInputRestDto {
-  static readonly schema = ofertaFormacaoFindOneInputSchema;
+  static readonly schema = OfertaFormacaoFindOneInputSchema;
 
   @ApiProperty({
     type: "string",
-    description: "Identificador do registro (uuid)",
+    ...OfertaFormacaoFindOneQueryResultFields.id.swaggerMetadata,
     format: "uuid",
   })
   id: string;

@@ -3,10 +3,14 @@ import {
   PaginatedFilterByIdGraphQlDto,
   PaginationMetaGraphQlDto,
 } from "@/infrastructure.graphql/dtos";
+import { UsuarioCreateCommandFields } from "@/modules/acesso/usuario/domain/commands/usuario-create.command";
+import { UsuarioUpdateCommandFields } from "@/modules/acesso/usuario/domain/commands/usuario-update.command";
+import { UsuarioFindOneQueryResultFields } from "@/modules/acesso/usuario/domain/queries/usuario-find-one.query.result";
+import { UsuarioListQueryFields } from "@/modules/acesso/usuario/domain/queries/usuario-list.query";
+import { UsuarioGraphqlListInputSchema } from "@/modules/acesso/usuario/domain/queries/usuario-list.query.schemas";
 import {
-  usuarioCreateSchema,
-  usuarioGraphqlListInputSchema,
-  usuarioUpdateSchema,
+  UsuarioCreateSchema,
+  UsuarioUpdateSchema,
 } from "@/modules/acesso/usuario/domain/usuario.schemas";
 import { ImagemFindOneOutputGraphQlDto } from "@/modules/armazenamento/imagem-arquivo/presentation.graphql/imagem-arquivo.graphql.dto";
 import { ArgsType, Field, InputType, ObjectType } from "@/shared/presentation/graphql";
@@ -17,13 +21,23 @@ import { ArgsType, Field, InputType, ObjectType } from "@/shared/presentation/gr
 
 @ObjectType("UsuarioFindOneOutputDto")
 export class UsuarioFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
-  @Field(() => String, { nullable: true }) nome: string | null;
-  @Field(() => String, { nullable: true }) matricula: string | null;
-  @Field(() => String, { nullable: true }) email: string | null;
-  @Field(() => Boolean) isSuperUser: boolean;
-  @Field(() => ImagemFindOneOutputGraphQlDto, { nullable: true })
+  @Field(() => String, { nullable: true, ...UsuarioFindOneQueryResultFields.nome.gqlMetadata })
+  nome: string | null;
+  @Field(() => String, { nullable: true, ...UsuarioFindOneQueryResultFields.matricula.gqlMetadata })
+  matricula: string | null;
+  @Field(() => String, { nullable: true, ...UsuarioFindOneQueryResultFields.email.gqlMetadata })
+  email: string | null;
+  @Field(() => Boolean, UsuarioFindOneQueryResultFields.isSuperUser.gqlMetadata)
+  isSuperUser: boolean;
+  @Field(() => ImagemFindOneOutputGraphQlDto, {
+    nullable: true,
+    ...UsuarioFindOneQueryResultFields.imagemCapa.gqlMetadata,
+  })
   imagemCapa: ImagemFindOneOutputGraphQlDto | null;
-  @Field(() => ImagemFindOneOutputGraphQlDto, { nullable: true })
+  @Field(() => ImagemFindOneOutputGraphQlDto, {
+    nullable: true,
+    ...UsuarioFindOneQueryResultFields.imagemPerfil.gqlMetadata,
+  })
   imagemPerfil: ImagemFindOneOutputGraphQlDto | null;
 }
 
@@ -33,11 +47,16 @@ export class UsuarioFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
 
 @InputType("UsuarioCreateInputDto")
 export class UsuarioCreateInputGraphQlDto {
-  static schema = usuarioCreateSchema;
+  static schema = UsuarioCreateSchema;
 
-  @Field(() => String, { nullable: true }) nome?: string | null;
-  @Field(() => String, { nullable: true }) matricula?: string | null;
-  @Field(() => String, { nullable: true }) email?: string | null;
+  @Field(() => String, { nullable: true, ...UsuarioCreateCommandFields.nome.gqlMetadata }) nome?:
+    | string
+    | null;
+  @Field(() => String, { nullable: true, ...UsuarioCreateCommandFields.matricula.gqlMetadata })
+  matricula?: string | null;
+  @Field(() => String, { nullable: true, ...UsuarioCreateCommandFields.email.gqlMetadata }) email?:
+    | string
+    | null;
 }
 
 // ============================================================================
@@ -46,13 +65,13 @@ export class UsuarioCreateInputGraphQlDto {
 
 @InputType("UsuarioUpdateInputDto")
 export class UsuarioUpdateInputGraphQlDto {
-  static schema = usuarioUpdateSchema;
+  static schema = UsuarioUpdateSchema;
 
-  @Field(() => String, { nullable: true })
+  @Field(() => String, { nullable: true, ...UsuarioUpdateCommandFields.nome.gqlMetadata })
   nome?: string | null;
-  @Field(() => String, { nullable: true })
+  @Field(() => String, { nullable: true, ...UsuarioUpdateCommandFields.matricula.gqlMetadata })
   matricula?: string | null;
-  @Field(() => String, { nullable: true })
+  @Field(() => String, { nullable: true, ...UsuarioUpdateCommandFields.email.gqlMetadata })
   email?: string | null;
 }
 
@@ -62,7 +81,7 @@ export class UsuarioUpdateInputGraphQlDto {
 
 @ArgsType()
 export class UsuarioListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {
-  static schema = usuarioGraphqlListInputSchema;
+  static schema = UsuarioGraphqlListInputSchema;
 }
 
 // ============================================================================
@@ -71,9 +90,9 @@ export class UsuarioListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {
 
 @ObjectType("UsuarioListResult")
 export class UsuarioListOutputGraphQlDto {
-  @Field(() => PaginationMetaGraphQlDto)
+  @Field(() => PaginationMetaGraphQlDto, UsuarioListQueryFields.meta.gqlMetadata)
   meta: PaginationMetaGraphQlDto;
 
-  @Field(() => [UsuarioFindOneOutputGraphQlDto])
+  @Field(() => [UsuarioFindOneOutputGraphQlDto], UsuarioListQueryFields.data.gqlMetadata)
   data: UsuarioFindOneOutputGraphQlDto[];
 }

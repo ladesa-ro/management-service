@@ -2,8 +2,14 @@ import { Body, Controller, Get, Param, Put, Query } from "@nestjs/common";
 import { ApiForbiddenResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextHttp } from "@/server/access-context";
-import { IOfertaFormacaoNivelFormacaoBulkReplaceCommandHandler } from "../domain/commands/oferta-formacao-nivel-formacao-bulk-replace.command.handler.interface";
-import { IOfertaFormacaoNivelFormacaoListQueryHandler } from "../domain/queries/oferta-formacao-nivel-formacao-list.query.handler.interface";
+import {
+  IOfertaFormacaoNivelFormacaoBulkReplaceCommandHandler,
+  OfertaFormacaoNivelFormacaoBulkReplaceCommandMetadata,
+} from "../domain/commands/oferta-formacao-nivel-formacao-bulk-replace.command.handler.interface";
+import {
+  IOfertaFormacaoNivelFormacaoListQueryHandler,
+  OfertaFormacaoNivelFormacaoListQueryMetadata,
+} from "../domain/queries/oferta-formacao-nivel-formacao-list.query.handler.interface";
 import {
   OfertaFormacaoNivelFormacaoBulkReplaceInputRestDto,
   OfertaFormacaoNivelFormacaoListInputRestDto,
@@ -23,10 +29,7 @@ export class OfertaFormacaoNivelFormacaoRestController {
   ) {}
 
   @Get("/")
-  @ApiOperation({
-    summary: "Lista niveis de formacao de uma oferta de formacao",
-    operationId: "ofertaFormacaoNivelFormacaoFindAll",
-  })
+  @ApiOperation(OfertaFormacaoNivelFormacaoListQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: OfertaFormacaoNivelFormacaoListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
@@ -40,10 +43,7 @@ export class OfertaFormacaoNivelFormacaoRestController {
   }
 
   @Put("/")
-  @ApiOperation({
-    summary: "Substitui niveis de formacao de uma oferta de formacao",
-    operationId: "ofertaFormacaoNivelFormacaoBulkReplace",
-  })
+  @ApiOperation(OfertaFormacaoNivelFormacaoBulkReplaceCommandMetadata.swaggerMetadata)
   @ApiOkResponse({ type: OfertaFormacaoNivelFormacaoListOutputRestDto })
   @ApiForbiddenResponse()
   async bulkReplace(

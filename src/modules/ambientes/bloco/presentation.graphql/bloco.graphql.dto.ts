@@ -1,12 +1,16 @@
 import { EntityBaseGraphQlDto, PaginationMetaGraphQlDto } from "@/infrastructure.graphql/dtos";
+import {
+  BlocoCreateSchema,
+  BlocoUpdateSchema,
+} from "@/modules/ambientes/bloco/domain/bloco.schemas";
+import { BlocoGraphqlListInputSchema } from "@/modules/ambientes/bloco/domain/queries/bloco-list.query.schemas";
 import { CampusFindOneOutputGraphQlDto } from "@/modules/ambientes/campus/presentation.graphql/campus.graphql.dto";
 import { ImagemFindOneOutputGraphQlDto } from "@/modules/armazenamento/imagem-arquivo/presentation.graphql/imagem-arquivo.graphql.dto";
 import { ArgsType, Field, InputType, ObjectType } from "@/shared/presentation/graphql";
-import {
-  blocoGraphqlListInputSchema,
-  blocoInputCreateSchema,
-  blocoInputUpdateSchema,
-} from "../domain/bloco.schemas";
+import { BlocoCreateCommandFields } from "../domain/commands/bloco-create.command";
+import { BlocoUpdateCommandFields } from "../domain/commands/bloco-update.command";
+import { BlocoFindOneQueryResultFields } from "../domain/queries/bloco-find-one.query.result";
+import { BlocoListQueryFields } from "../domain/queries/bloco-list.query";
 
 // ============================================================================
 // FindOne Output
@@ -14,10 +18,14 @@ import {
 
 @ObjectType("BlocoFindOneOutputDto")
 export class BlocoFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
-  @Field(() => String) nome: string;
-  @Field(() => String) codigo: string;
-  @Field(() => CampusFindOneOutputGraphQlDto) campus: CampusFindOneOutputGraphQlDto;
-  @Field(() => ImagemFindOneOutputGraphQlDto, { nullable: true })
+  @Field(() => String, BlocoFindOneQueryResultFields.nome.gqlMetadata) nome: string;
+  @Field(() => String, BlocoFindOneQueryResultFields.codigo.gqlMetadata) codigo: string;
+  @Field(() => CampusFindOneOutputGraphQlDto, BlocoFindOneQueryResultFields.campus.gqlMetadata)
+  campus: CampusFindOneOutputGraphQlDto;
+  @Field(() => ImagemFindOneOutputGraphQlDto, {
+    nullable: true,
+    ...BlocoFindOneQueryResultFields.imagemCapa.gqlMetadata,
+  })
   imagemCapa: ImagemFindOneOutputGraphQlDto | null;
 }
 
@@ -36,11 +44,12 @@ export class ObjectUuidRefInputGraphQlDto {
 
 @InputType("BlocoCreateInputDto")
 export class BlocoCreateInputGraphQlDto {
-  static schema = blocoInputCreateSchema;
+  static schema = BlocoCreateSchema;
 
-  @Field(() => String) nome: string;
-  @Field(() => String) codigo: string;
-  @Field(() => ObjectUuidRefInputGraphQlDto) campus: ObjectUuidRefInputGraphQlDto;
+  @Field(() => String, BlocoCreateCommandFields.nome.gqlMetadata) nome: string;
+  @Field(() => String, BlocoCreateCommandFields.codigo.gqlMetadata) codigo: string;
+  @Field(() => ObjectUuidRefInputGraphQlDto, BlocoCreateCommandFields.campus.gqlMetadata)
+  campus: ObjectUuidRefInputGraphQlDto;
 }
 
 // ============================================================================
@@ -49,11 +58,16 @@ export class BlocoCreateInputGraphQlDto {
 
 @InputType("BlocoUpdateInputDto")
 export class BlocoUpdateInputGraphQlDto {
-  static schema = blocoInputUpdateSchema;
+  static schema = BlocoUpdateSchema;
 
-  @Field(() => String, { nullable: true }) nome?: string;
-  @Field(() => String, { nullable: true }) codigo?: string;
-  @Field(() => ObjectUuidRefInputGraphQlDto, { nullable: true })
+  @Field(() => String, { nullable: true, ...BlocoUpdateCommandFields.nome.gqlMetadata })
+  nome?: string;
+  @Field(() => String, { nullable: true, ...BlocoUpdateCommandFields.codigo.gqlMetadata })
+  codigo?: string;
+  @Field(() => ObjectUuidRefInputGraphQlDto, {
+    nullable: true,
+    ...BlocoUpdateCommandFields.campus.gqlMetadata,
+  })
   campus?: ObjectUuidRefInputGraphQlDto;
 }
 
@@ -63,15 +77,21 @@ export class BlocoUpdateInputGraphQlDto {
 
 @ArgsType()
 export class BlocoListInputGraphQlDto {
-  static schema = blocoGraphqlListInputSchema;
+  static schema = BlocoGraphqlListInputSchema;
 
-  @Field(() => Number, { nullable: true, defaultValue: 1 }) page?: number = 1;
-  @Field(() => Number, { nullable: true }) limit?: number;
-  @Field(() => String, { nullable: true }) search?: string;
-  @Field(() => [String], { nullable: true }) sortBy?: string[];
-  @Field(() => [String], { nullable: true }) selection?: string[];
-  @Field(() => [String], { nullable: true, description: "Filtro por ID" }) filterId?: string[];
-  @Field(() => [String], { nullable: true, description: "Filtro por ID do Campus" })
+  @Field(() => Number, BlocoListQueryFields.page.gqlMetadata)
+  page?: number;
+  @Field(() => Number, BlocoListQueryFields.limit.gqlMetadata)
+  limit?: number;
+  @Field(() => String, BlocoListQueryFields.search.gqlMetadata)
+  search?: string;
+  @Field(() => [String], BlocoListQueryFields.sortBy.gqlMetadata)
+  sortBy?: string[];
+  @Field(() => [String], BlocoListQueryFields.selection.gqlMetadata)
+  selection?: string[];
+  @Field(() => [String], BlocoListQueryFields.filterId.gqlMetadata)
+  filterId?: string[];
+  @Field(() => [String], BlocoListQueryFields.filterCampusId.gqlMetadata)
   filterCampusId?: string[];
 }
 
@@ -81,9 +101,9 @@ export class BlocoListInputGraphQlDto {
 
 @ObjectType("BlocoListResult")
 export class BlocoListOutputGraphQlDto {
-  @Field(() => PaginationMetaGraphQlDto)
+  @Field(() => PaginationMetaGraphQlDto, BlocoListQueryFields.meta.gqlMetadata)
   meta: PaginationMetaGraphQlDto;
 
-  @Field(() => [BlocoFindOneOutputGraphQlDto])
+  @Field(() => [BlocoFindOneOutputGraphQlDto], BlocoListQueryFields.data.gqlMetadata)
   data: BlocoFindOneOutputGraphQlDto[];
 }

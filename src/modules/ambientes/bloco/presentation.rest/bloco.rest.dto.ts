@@ -1,20 +1,17 @@
+import { SharedFields } from "@/domain/abstractions";
+import {
+  BlocoCreateSchema,
+  BlocoUpdateSchema,
+} from "@/modules/ambientes/bloco/domain/bloco.schemas";
+import { BlocoFindOneInputSchema } from "@/modules/ambientes/bloco/domain/queries/bloco-find-one.query.schemas";
+import { BlocoPaginationInputSchema } from "@/modules/ambientes/bloco/domain/queries/bloco-list.query.schemas";
 import { CampusFindOneOutputRestDto } from "@/modules/ambientes/campus/presentation.rest";
-import {
-  ApiProperty,
-  ApiPropertyOptional,
-  ApiSchema,
-  commonProperties,
-  RegisterModel,
-  referenceProperty,
-  simpleProperty,
-} from "@/shared/presentation/rest";
+import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@/shared/presentation/rest";
 import { EntityBaseRestDto, PaginationMetaRestDto } from "@/shared/presentation/rest/dtos";
-import {
-  blocoFindOneInputSchema,
-  blocoInputCreateSchema,
-  blocoInputUpdateSchema,
-  blocoPaginationInputSchema,
-} from "../domain/bloco.schemas";
+import { BlocoCreateCommandFields } from "../domain/commands/bloco-create.command";
+import { BlocoUpdateCommandFields } from "../domain/commands/bloco-update.command";
+import { BlocoFindOneQueryResultFields } from "../domain/queries/bloco-find-one.query.result";
+import { BlocoListQueryFields } from "../domain/queries/bloco-list.query";
 
 // ============================================================================
 // Imagem Stub DTOs (forward reference until imagem module has DTOs)
@@ -22,21 +19,13 @@ import {
 
 @ApiSchema({ name: "ArquivoFindOneOutputFromBlocoDto" })
 export class ArquivoFindOneOutputFromBlocoRestDto {
-  @ApiProperty({
-    type: "string",
-    description: "Identificador do registro (uuid)",
-    format: "uuid",
-  })
+  @ApiProperty(SharedFields.idUuid.swaggerMetadata)
   id: string;
 }
 
 @ApiSchema({ name: "ImagemArquivoFindOneFromImagemOutputFromBlocoDto" })
 export class ImagemArquivoFindOneFromImagemOutputRestDto {
-  @ApiProperty({
-    type: "string",
-    description: "Identificador do registro (uuid)",
-    format: "uuid",
-  })
+  @ApiProperty(SharedFields.idUuid.swaggerMetadata)
   id: string;
 
   @ApiProperty({ type: "integer", description: "Largura da imagem" })
@@ -72,30 +61,22 @@ export class ImagemFindOneOutputRestDto extends EntityBaseRestDto {
 // ============================================================================
 
 @ApiSchema({ name: "BlocoFindOneOutputDto" })
-@RegisterModel({
-  name: "BlocoFindOneQueryResult",
-  properties: [
-    simpleProperty("id"),
-    simpleProperty("nome"),
-    simpleProperty("codigo"),
-    referenceProperty("campus", "CampusFindOneQueryResult"),
-    referenceProperty("imagemCapa", "ImagemFindOneQueryResult", { nullable: true }),
-    ...commonProperties.dated,
-  ],
-})
 export class BlocoFindOneOutputRestDto extends EntityBaseRestDto {
-  @ApiProperty({ type: "string", description: "Nome do bloco", minLength: 1 })
+  @ApiProperty(BlocoFindOneQueryResultFields.nome.swaggerMetadata)
   nome: string;
 
-  @ApiProperty({ type: "string", description: "Codigo do bloco", minLength: 1 })
+  @ApiProperty(BlocoFindOneQueryResultFields.codigo.swaggerMetadata)
   codigo: string;
 
-  @ApiProperty({ type: () => CampusFindOneOutputRestDto, description: "Campus do bloco" })
+  @ApiProperty({
+    type: () => CampusFindOneOutputRestDto,
+    ...BlocoFindOneQueryResultFields.campus.swaggerMetadata,
+  })
   campus: CampusFindOneOutputRestDto;
 
   @ApiPropertyOptional({
     type: () => ImagemFindOneOutputRestDto,
-    description: "Imagem de capa do bloco",
+    ...BlocoFindOneQueryResultFields.imagemCapa.swaggerMetadata,
     nullable: true,
   })
   imagemCapa: ImagemFindOneOutputRestDto | null;
@@ -107,51 +88,41 @@ export class BlocoFindOneOutputRestDto extends EntityBaseRestDto {
 
 @ApiSchema({ name: "BlocoListInputDto" })
 export class BlocoListInputRestDto {
-  static schema = blocoPaginationInputSchema;
+  static schema = BlocoPaginationInputSchema;
 
   [key: string]: string | number | string[] | null | undefined;
 
-  @ApiPropertyOptional({
-    type: "integer",
-    description: "Pagina de consulta",
-    minimum: 1,
-    default: 1,
-  })
-  page?: number = 1;
+  @ApiPropertyOptional(BlocoListQueryFields.page.swaggerMetadata)
+  page?: number;
 
-  @ApiPropertyOptional({
-    type: "integer",
-    description: "Limite da quantidade de resultados por pagina",
-    minimum: 1,
-  })
+  @ApiPropertyOptional(BlocoListQueryFields.limit.swaggerMetadata)
   limit?: number;
 
-  @ApiPropertyOptional({ type: "string", description: "Busca textual" })
+  @ApiPropertyOptional(BlocoListQueryFields.search.swaggerMetadata)
   search?: string;
 
-  @ApiPropertyOptional({ description: "Ordenacao (ex: nome:ASC)", isArray: true, type: "string" })
+  @ApiPropertyOptional(BlocoListQueryFields.sortBy.swaggerMetadata)
   sortBy?: string[];
 
-  @ApiPropertyOptional({ description: "Seleção de campos", isArray: true, type: "string" })
+  @ApiPropertyOptional(BlocoListQueryFields.selection.swaggerMetadata)
   selection?: string[];
 
-  @ApiPropertyOptional({ description: "Filtro por ID", type: "string", isArray: true })
+  @ApiPropertyOptional(BlocoListQueryFields.filterId.swaggerMetadata)
   "filter.id"?: string[];
 
-  @ApiPropertyOptional({
-    description: "Filtro por ID de Campus",
-    type: "string",
-    isArray: true,
-  })
+  @ApiPropertyOptional(BlocoListQueryFields.filterCampusId.swaggerMetadata)
   "filter.campus.id"?: string[];
 }
 
 @ApiSchema({ name: "BlocoListOutputDto" })
 export class BlocoListOutputRestDto {
-  @ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" })
+  @ApiProperty({ type: () => PaginationMetaRestDto, ...BlocoListQueryFields.meta.swaggerMetadata })
   meta: PaginationMetaRestDto;
 
-  @ApiProperty({ type: () => [BlocoFindOneOutputRestDto], description: "Resultados da busca" })
+  @ApiProperty({
+    type: () => [BlocoFindOneOutputRestDto],
+    ...BlocoListQueryFields.data.swaggerMetadata,
+  })
   data: BlocoFindOneOutputRestDto[];
 }
 
@@ -161,39 +132,41 @@ export class BlocoListOutputRestDto {
 
 @ApiSchema({ name: "BlocoCampusRefInputDto" })
 export class BlocoCampusRefInputRestDto {
-  @ApiProperty({
-    type: "string",
-    description: "Identificador do campus (uuid)",
-    format: "uuid",
-  })
+  @ApiProperty(SharedFields.idUuid.swaggerMetadata)
   id: string;
 }
 
 @ApiSchema({ name: "BlocoCreateInputDto" })
 export class BlocoCreateInputRestDto {
-  static schema = blocoInputCreateSchema;
+  static schema = BlocoCreateSchema;
 
-  @ApiProperty({ type: "string", description: "Nome do bloco", minLength: 1 })
+  @ApiProperty(BlocoCreateCommandFields.nome.swaggerMetadata)
   nome: string;
 
-  @ApiProperty({ type: "string", description: "Codigo do bloco", minLength: 1 })
+  @ApiProperty(BlocoCreateCommandFields.codigo.swaggerMetadata)
   codigo: string;
 
-  @ApiProperty({ type: () => BlocoCampusRefInputRestDto, description: "Campus do bloco" })
+  @ApiProperty({
+    type: () => BlocoCampusRefInputRestDto,
+    ...BlocoCreateCommandFields.campus.swaggerMetadata,
+  })
   campus: BlocoCampusRefInputRestDto;
 }
 
 @ApiSchema({ name: "BlocoUpdateInputDto" })
 export class BlocoUpdateInputRestDto {
-  static schema = blocoInputUpdateSchema;
+  static schema = BlocoUpdateSchema;
 
-  @ApiPropertyOptional({ type: "string", description: "Nome do bloco", minLength: 1 })
+  @ApiPropertyOptional(BlocoUpdateCommandFields.nome.swaggerMetadata)
   nome?: string;
 
-  @ApiPropertyOptional({ type: "string", description: "Codigo do bloco", minLength: 1 })
+  @ApiPropertyOptional(BlocoUpdateCommandFields.codigo.swaggerMetadata)
   codigo?: string;
 
-  @ApiPropertyOptional({ type: () => BlocoCampusRefInputRestDto, description: "Campus do bloco" })
+  @ApiPropertyOptional({
+    type: () => BlocoCampusRefInputRestDto,
+    ...BlocoUpdateCommandFields.campus.swaggerMetadata,
+  })
   campus?: BlocoCampusRefInputRestDto;
 }
 
@@ -203,12 +176,8 @@ export class BlocoUpdateInputRestDto {
 
 @ApiSchema({ name: "BlocoFindOneInputDto" })
 export class BlocoFindOneInputRestDto {
-  static schema = blocoFindOneInputSchema;
+  static schema = BlocoFindOneInputSchema;
 
-  @ApiProperty({
-    type: "string",
-    description: "Identificador do registro (uuid)",
-    format: "uuid",
-  })
+  @ApiProperty(SharedFields.idUuid.swaggerMetadata)
   id: string;
 }

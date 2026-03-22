@@ -56,6 +56,8 @@ export class EstagioTypeOrmRepositoryAdapter implements IEstagioRepository {
 
     const query = this.repository
       .createQueryBuilder("estagio")
+      .leftJoinAndSelect("estagio.empresa", "empresa")
+      .leftJoinAndSelect("estagio.estagiario", "estagiario")
       .leftJoinAndSelect(
         "estagio.horariosEstagio",
         "horarioEstagio",
@@ -70,26 +72,26 @@ export class EstagioTypeOrmRepositoryAdapter implements IEstagioRepository {
     }
 
     if (
-      dto?.filterIdEmpresaFk &&
-      Array.isArray(dto.filterIdEmpresaFk) &&
-      dto.filterIdEmpresaFk.length > 0
+      dto?.filterEmpresaId &&
+      Array.isArray(dto.filterEmpresaId) &&
+      dto.filterEmpresaId.length > 0
     ) {
-      const validIds = dto.filterIdEmpresaFk.filter((id) => id && id.trim());
+      const validIds = dto.filterEmpresaId.filter((id) => id && id.trim());
       if (validIds.length > 0) {
-        query.andWhere("estagio.idEmpresaFk IN (:...idEmpresas)", {
+        query.andWhere("empresa.id IN (:...idEmpresas)", {
           idEmpresas: validIds,
         });
       }
     }
 
     if (
-      dto?.filterIdEstagiarioFk &&
-      Array.isArray(dto.filterIdEstagiarioFk) &&
-      dto.filterIdEstagiarioFk.length > 0
+      dto?.filterEstagiarioId &&
+      Array.isArray(dto.filterEstagiarioId) &&
+      dto.filterEstagiarioId.length > 0
     ) {
-      const validIds = dto.filterIdEstagiarioFk.filter((id) => id && id.trim());
+      const validIds = dto.filterEstagiarioId.filter((id) => id && id.trim());
       if (validIds.length > 0) {
-        query.andWhere("estagio.idEstagiarioFk IN (:...idEstagiarios)", {
+        query.andWhere("estagiario.id IN (:...idEstagiarios)", {
           idEstagiarios: validIds,
         });
       }
@@ -123,7 +125,7 @@ export class EstagioTypeOrmRepositoryAdapter implements IEstagioRepository {
   ): Promise<EstagioFindOneQueryResult | null> {
     const entity = await this.repository.findOne({
       where: { id: dto.id, dateDeleted: null as any },
-      relations: { horariosEstagio: true },
+      relations: { empresa: true, estagiario: true, horariosEstagio: true },
     });
 
     if (!entity) {
@@ -138,17 +140,17 @@ export class EstagioTypeOrmRepositoryAdapter implements IEstagioRepository {
     dto: EstagioCreateCommand,
   ): Promise<EstagioFindOneQueryResult> {
     const empresa = await this.empresaRepository.findOne({
-      where: { id: dto.idEmpresaFk, dateDeleted: null as any },
+      where: { id: dto.empresa.id, dateDeleted: null as any },
     });
 
-    ensureExists(empresa, Empresa.entityName, dto.idEmpresaFk);
+    ensureExists(empresa, Empresa.entityName, dto.empresa.id);
 
-    if (dto.idEstagiarioFk) {
+    if (dto.estagiario) {
       const estagiario = await this.estagiarioRepository.findOne({
-        where: { id: dto.idEstagiarioFk, dateDeleted: null as any },
+        where: { id: dto.estagiario.id, dateDeleted: null as any },
       });
 
-      ensureExists(estagiario, Estagiario.entityName, dto.idEstagiarioFk);
+      ensureExists(estagiario, Estagiario.entityName, dto.estagiario.id);
     }
 
     const estagio = Estagio.create(dto);
@@ -165,7 +167,7 @@ export class EstagioTypeOrmRepositoryAdapter implements IEstagioRepository {
 
     const outputEntity = await this.repository.findOne({
       where: { id: saved.id, dateDeleted: null as any },
-      relations: { horariosEstagio: true },
+      relations: { empresa: true, estagiario: true, horariosEstagio: true },
     });
 
     ensureExists(outputEntity, Estagio.entityName, saved.id);
@@ -180,27 +182,27 @@ export class EstagioTypeOrmRepositoryAdapter implements IEstagioRepository {
   ): Promise<EstagioFindOneQueryResult> {
     const entity = await this.repository.findOne({
       where: { id, dateDeleted: null as any },
-      relations: { horariosEstagio: true },
+      relations: { empresa: true, estagiario: true, horariosEstagio: true },
     });
 
     ensureExists(entity, Estagio.entityName, id);
 
     const estagio = EstagioMapper.toDomain(entity);
 
-    if (dto.idEmpresaFk) {
+    if (dto.empresa) {
       const empresa = await this.empresaRepository.findOne({
-        where: { id: dto.idEmpresaFk, dateDeleted: null as any },
+        where: { id: dto.empresa.id, dateDeleted: null as any },
       });
 
-      ensureExists(empresa, Empresa.entityName, dto.idEmpresaFk);
+      ensureExists(empresa, Empresa.entityName, dto.empresa.id);
     }
 
-    if (dto.idEstagiarioFk) {
+    if (dto.estagiario) {
       const estagiario = await this.estagiarioRepository.findOne({
-        where: { id: dto.idEstagiarioFk, dateDeleted: null as any },
+        where: { id: dto.estagiario.id, dateDeleted: null as any },
       });
 
-      ensureExists(estagiario, Estagiario.entityName, dto.idEstagiarioFk);
+      ensureExists(estagiario, Estagiario.entityName, dto.estagiario.id);
     }
 
     estagio.update(dto);
@@ -211,7 +213,7 @@ export class EstagioTypeOrmRepositoryAdapter implements IEstagioRepository {
     if (dto.horariosEstagio !== undefined) {
       const now = new Date();
       await this.horarioRepository.update(
-        { idEstagioFk: id, dateDeleted: null as any },
+        { estagio: { id }, dateDeleted: null as any },
         { dateDeleted: now, dateUpdated: now },
       );
 
@@ -225,7 +227,7 @@ export class EstagioTypeOrmRepositoryAdapter implements IEstagioRepository {
 
     const outputEntity = await this.repository.findOne({
       where: { id, dateDeleted: null as any },
-      relations: { horariosEstagio: true },
+      relations: { empresa: true, estagiario: true, horariosEstagio: true },
     });
 
     ensureExists(outputEntity, Estagio.entityName, id);
@@ -245,7 +247,7 @@ export class EstagioTypeOrmRepositoryAdapter implements IEstagioRepository {
     await this.repository.save(entity);
 
     await this.horarioRepository.update(
-      { idEstagioFk: id, dateDeleted: null as any },
+      { estagio: { id }, dateDeleted: null as any },
       { dateDeleted: now, dateUpdated: now },
     );
   }

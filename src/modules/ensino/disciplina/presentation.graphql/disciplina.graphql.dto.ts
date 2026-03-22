@@ -4,12 +4,13 @@ import {
   PaginationMetaGraphQlDto,
 } from "@/infrastructure.graphql/dtos";
 import { ImagemFindOneOutputGraphQlDto } from "@/modules/armazenamento/imagem-arquivo/presentation.graphql/imagem-arquivo.graphql.dto";
+import { DisciplinaGraphqlListInputSchema } from "@/modules/ensino/disciplina/domain/queries/disciplina-list.query.schemas";
 import { ArgsType, Field, InputType, Int, ObjectType } from "@/shared/presentation/graphql";
-import {
-  disciplinaCreateSchema,
-  disciplinaGraphqlListInputSchema,
-  disciplinaUpdateSchema,
-} from "../domain/disciplina.schemas";
+import { DisciplinaCreateCommandFields } from "../domain/commands/disciplina-create.command";
+import { DisciplinaUpdateCommandFields } from "../domain/commands/disciplina-update.command";
+import { DisciplinaCreateSchema, DisciplinaUpdateSchema } from "../domain/disciplina.schemas";
+import { DisciplinaFindOneQueryResultFields } from "../domain/queries/disciplina-find-one.query.result";
+import { DisciplinaListQueryFields } from "../domain/queries/disciplina-list.query";
 
 // ============================================================================
 // FindOne Output
@@ -17,10 +18,15 @@ import {
 
 @ObjectType("DisciplinaFindOneOutputDto")
 export class DisciplinaFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
-  @Field(() => String) nome: string;
-  @Field(() => String) nomeAbreviado: string;
-  @Field(() => Int) cargaHoraria: number;
-  @Field(() => ImagemFindOneOutputGraphQlDto, { nullable: true })
+  @Field(() => String, DisciplinaFindOneQueryResultFields.nome.gqlMetadata) nome: string;
+  @Field(() => String, DisciplinaFindOneQueryResultFields.nomeAbreviado.gqlMetadata)
+  nomeAbreviado: string;
+  @Field(() => Int, DisciplinaFindOneQueryResultFields.cargaHoraria.gqlMetadata)
+  cargaHoraria: number;
+  @Field(() => ImagemFindOneOutputGraphQlDto, {
+    nullable: true,
+    ...DisciplinaFindOneQueryResultFields.imagemCapa.gqlMetadata,
+  })
   imagemCapa: ImagemFindOneOutputGraphQlDto | null;
 }
 
@@ -35,12 +41,16 @@ export class DisciplinaImagemCapaRefInputGraphQlDto {
 
 @InputType("DisciplinaCreateInputDto")
 export class DisciplinaCreateInputGraphQlDto {
-  static readonly schema = disciplinaCreateSchema;
+  static readonly schema = DisciplinaCreateSchema;
 
-  @Field(() => String) nome: string;
-  @Field(() => String) nomeAbreviado: string;
-  @Field(() => Int) cargaHoraria: number;
-  @Field(() => DisciplinaImagemCapaRefInputGraphQlDto, { nullable: true })
+  @Field(() => String, DisciplinaCreateCommandFields.nome.gqlMetadata) nome: string;
+  @Field(() => String, DisciplinaCreateCommandFields.nomeAbreviado.gqlMetadata)
+  nomeAbreviado: string;
+  @Field(() => Int, DisciplinaCreateCommandFields.cargaHoraria.gqlMetadata) cargaHoraria: number;
+  @Field(() => DisciplinaImagemCapaRefInputGraphQlDto, {
+    nullable: true,
+    ...DisciplinaFindOneQueryResultFields.imagemCapa.gqlMetadata,
+  })
   imagemCapa?: DisciplinaImagemCapaRefInputGraphQlDto | null;
 }
 
@@ -50,15 +60,21 @@ export class DisciplinaCreateInputGraphQlDto {
 
 @InputType("DisciplinaUpdateInputDto")
 export class DisciplinaUpdateInputGraphQlDto {
-  static readonly schema = disciplinaUpdateSchema;
+  static readonly schema = DisciplinaUpdateSchema;
 
-  @Field(() => String, { nullable: true })
+  @Field(() => String, { nullable: true, ...DisciplinaUpdateCommandFields.nome.gqlMetadata })
   nome?: string;
-  @Field(() => String, { nullable: true })
+  @Field(() => String, {
+    nullable: true,
+    ...DisciplinaUpdateCommandFields.nomeAbreviado.gqlMetadata,
+  })
   nomeAbreviado?: string;
-  @Field(() => Int, { nullable: true })
+  @Field(() => Int, { nullable: true, ...DisciplinaUpdateCommandFields.cargaHoraria.gqlMetadata })
   cargaHoraria?: number;
-  @Field(() => DisciplinaImagemCapaRefInputGraphQlDto, { nullable: true })
+  @Field(() => DisciplinaImagemCapaRefInputGraphQlDto, {
+    nullable: true,
+    ...DisciplinaFindOneQueryResultFields.imagemCapa.gqlMetadata,
+  })
   imagemCapa?: DisciplinaImagemCapaRefInputGraphQlDto | null;
 }
 
@@ -68,9 +84,9 @@ export class DisciplinaUpdateInputGraphQlDto {
 
 @ArgsType()
 export class DisciplinaListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {
-  static schema = disciplinaGraphqlListInputSchema;
+  static schema = DisciplinaGraphqlListInputSchema;
 
-  @Field(() => [String], { nullable: true, description: "Filtro por ID dos Diários" })
+  @Field(() => [String], DisciplinaListQueryFields.filterDiariosId.gqlMetadata)
   filterDiariosId?: string[];
 }
 
@@ -80,9 +96,9 @@ export class DisciplinaListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto
 
 @ObjectType("DisciplinaListResult")
 export class DisciplinaListOutputGraphQlDto {
-  @Field(() => PaginationMetaGraphQlDto)
+  @Field(() => PaginationMetaGraphQlDto, DisciplinaListQueryFields.meta.gqlMetadata)
   meta: PaginationMetaGraphQlDto;
 
-  @Field(() => [DisciplinaFindOneOutputGraphQlDto])
+  @Field(() => [DisciplinaFindOneOutputGraphQlDto], DisciplinaListQueryFields.data.gqlMetadata)
   data: DisciplinaFindOneOutputGraphQlDto[];
 }

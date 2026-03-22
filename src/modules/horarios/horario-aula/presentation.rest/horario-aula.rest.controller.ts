@@ -11,6 +11,13 @@ import { ensureExists } from "@/application/errors";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { AccessContext, AccessContextHttp } from "@/server/access-context";
+import {
+  HorarioAulaCreateCommandMetadata,
+  HorarioAulaDeleteCommandMetadata,
+  HorarioAulaFindAllQueryMetadata,
+  HorarioAulaFindByIdQueryMetadata,
+  HorarioAulaUpdateCommandMetadata,
+} from "../domain/horario-aula.operations";
 import { IHorarioAulaRepository } from "../domain/repositories";
 import { HorarioAulaEntity } from "../infrastructure.database/typeorm/horario-aula.typeorm.entity";
 import {
@@ -30,10 +37,7 @@ export class HorarioAulaRestController {
   ) {}
 
   @Get("/")
-  @ApiOperation({
-    summary: "Lista horarios de aula (intervalos)",
-    operationId: "horarioAulaFindAll",
-  })
+  @ApiOperation(HorarioAulaFindAllQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: HorarioAulaListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
@@ -42,7 +46,7 @@ export class HorarioAulaRestController {
   ): Promise<HorarioAulaListOutputRestDto> {
     const where: Record<string, unknown> = {};
     if (configuracaoId) {
-      where.idHorarioAulaConfiguracaoFk = configuracaoId;
+      where.horarioAulaConfiguracao = { id: configuracaoId };
     }
 
     const entities = await this.repository.findAll(where);
@@ -53,7 +57,7 @@ export class HorarioAulaRestController {
   }
 
   @Get("/:id")
-  @ApiOperation({ summary: "Busca um horario de aula por ID", operationId: "horarioAulaFindById" })
+  @ApiOperation(HorarioAulaFindByIdQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: HorarioAulaFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -67,7 +71,7 @@ export class HorarioAulaRestController {
   }
 
   @Post("/")
-  @ApiOperation({ summary: "Cria um horario de aula", operationId: "horarioAulaCreate" })
+  @ApiOperation(HorarioAulaCreateCommandMetadata.swaggerMetadata)
   @ApiCreatedResponse({ type: HorarioAulaFindOneOutputRestDto })
   @ApiForbiddenResponse()
   async create(
@@ -78,14 +82,13 @@ export class HorarioAulaRestController {
     entity.id = generateUuidV7();
     entity.inicio = dto.inicio;
     entity.fim = dto.fim;
-    entity.idHorarioAulaConfiguracaoFk = dto.horarioAulaConfiguracaoId;
-    (entity as any).horarioAulaConfiguracao = { id: dto.horarioAulaConfiguracaoId };
+    entity.horarioAulaConfiguracao = { id: dto.horarioAulaConfiguracaoId } as any;
     await this.repository.save(entity);
     return this.toOutputDto(entity);
   }
 
   @Patch("/:id")
-  @ApiOperation({ summary: "Atualiza um horario de aula", operationId: "horarioAulaUpdate" })
+  @ApiOperation(HorarioAulaUpdateCommandMetadata.swaggerMetadata)
   @ApiOkResponse({ type: HorarioAulaFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -100,7 +103,7 @@ export class HorarioAulaRestController {
     if (dto.inicio !== undefined) entity!.inicio = dto.inicio;
     if (dto.fim !== undefined) entity!.fim = dto.fim;
     if (dto.horarioAulaConfiguracaoId !== undefined) {
-      entity!.idHorarioAulaConfiguracaoFk = dto.horarioAulaConfiguracaoId;
+      entity!.horarioAulaConfiguracao = { id: dto.horarioAulaConfiguracaoId } as any;
     }
 
     await this.repository.save(entity!);
@@ -108,7 +111,7 @@ export class HorarioAulaRestController {
   }
 
   @Delete("/:id")
-  @ApiOperation({ summary: "Remove um horario de aula", operationId: "horarioAulaDelete" })
+  @ApiOperation(HorarioAulaDeleteCommandMetadata.swaggerMetadata)
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -127,7 +130,7 @@ export class HorarioAulaRestController {
       id: entity.id,
       inicio: entity.inicio,
       fim: entity.fim,
-      horarioAulaConfiguracaoId: entity.idHorarioAulaConfiguracaoFk,
+      horarioAulaConfiguracaoId: entity.horarioAulaConfiguracao?.id,
     };
   }
 }

@@ -18,12 +18,12 @@ export class OfertaFormacaoPeriodoEtapaTypeOrmRepositoryAdapter
 
   async findByPeriodoId(periodoId: string): Promise<OfertaFormacaoPeriodoEtapaEntity[]> {
     return this.repository.find({
-      where: { idOfertaFormacaoPeriodoFk: periodoId },
+      where: { ofertaFormacaoPeriodo: { id: periodoId } } as any,
     });
   }
 
   async deleteByPeriodoId(periodoId: string): Promise<void> {
-    await this.repository.delete({ idOfertaFormacaoPeriodoFk: periodoId });
+    await this.repository.delete({ ofertaFormacaoPeriodo: { id: periodoId } } as any);
   }
 
   async save(entity: OfertaFormacaoPeriodoEtapaEntity): Promise<OfertaFormacaoPeriodoEtapaEntity> {

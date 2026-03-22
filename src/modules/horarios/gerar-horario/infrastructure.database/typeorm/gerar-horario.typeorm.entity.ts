@@ -38,9 +38,6 @@ export class GerarHorarioEntity {
   @Column({ name: "resposta_gerador", type: "jsonb", nullable: true })
   respostaGerador!: Record<string, unknown> | null;
 
-  @Column({ name: "id_usuario_geracao_fk", type: "uuid", nullable: true })
-  idUsuarioGeracaoFk!: string | null;
-
   @ManyToOne(() => UsuarioEntity, { nullable: true })
   @JoinColumn({ name: "id_usuario_geracao_fk" })
   usuarioGeracao!: Relation<UsuarioEntity> | null;

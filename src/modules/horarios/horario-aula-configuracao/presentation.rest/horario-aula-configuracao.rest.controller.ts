@@ -11,6 +11,13 @@ import { ensureExists } from "@/application/errors";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { AccessContext, AccessContextHttp } from "@/server/access-context";
+import {
+  HorarioAulaConfiguracaoCreateCommandMetadata,
+  HorarioAulaConfiguracaoDeleteCommandMetadata,
+  HorarioAulaConfiguracaoFindAllQueryMetadata,
+  HorarioAulaConfiguracaoFindByIdQueryMetadata,
+  HorarioAulaConfiguracaoUpdateCommandMetadata,
+} from "../domain/horario-aula-configuracao.operations";
 import { IHorarioAulaConfiguracaoRepository } from "../domain/repositories";
 import { HorarioAulaConfiguracaoEntity } from "../infrastructure.database/typeorm/horario-aula-configuracao.typeorm.entity";
 import {
@@ -30,10 +37,7 @@ export class HorarioAulaConfiguracaoRestController {
   ) {}
 
   @Get("/")
-  @ApiOperation({
-    summary: "Lista configuracoes de horario de aula",
-    operationId: "horarioAulaConfiguracaoFindAll",
-  })
+  @ApiOperation(HorarioAulaConfiguracaoFindAllQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: HorarioAulaConfiguracaoListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
@@ -42,7 +46,7 @@ export class HorarioAulaConfiguracaoRestController {
   ): Promise<HorarioAulaConfiguracaoListOutputRestDto> {
     const where: Record<string, unknown> = {};
     if (campusId) {
-      where.idCampusFk = campusId;
+      where.campus = { id: campusId };
     }
 
     const entities = await this.repository.findAll(where);
@@ -53,10 +57,7 @@ export class HorarioAulaConfiguracaoRestController {
   }
 
   @Get("/:id")
-  @ApiOperation({
-    summary: "Busca uma configuracao de horario de aula por ID",
-    operationId: "horarioAulaConfiguracaoFindById",
-  })
+  @ApiOperation(HorarioAulaConfiguracaoFindByIdQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: HorarioAulaConfiguracaoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -70,10 +71,7 @@ export class HorarioAulaConfiguracaoRestController {
   }
 
   @Post("/")
-  @ApiOperation({
-    summary: "Cria uma configuracao de horario de aula",
-    operationId: "horarioAulaConfiguracaoCreate",
-  })
+  @ApiOperation(HorarioAulaConfiguracaoCreateCommandMetadata.swaggerMetadata)
   @ApiCreatedResponse({ type: HorarioAulaConfiguracaoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   async create(
@@ -85,17 +83,13 @@ export class HorarioAulaConfiguracaoRestController {
     entity.dataInicio = new Date(dto.dataInicio);
     entity.dataFim = dto.dataFim ? new Date(dto.dataFim) : null;
     entity.ativo = dto.ativo;
-    entity.idCampusFk = dto.campusId;
-    (entity as any).campus = { id: dto.campusId };
+    entity.campus = { id: dto.campusId } as any;
     await this.repository.save(entity);
     return this.toOutputDto(entity);
   }
 
   @Patch("/:id")
-  @ApiOperation({
-    summary: "Atualiza uma configuracao de horario de aula",
-    operationId: "horarioAulaConfiguracaoUpdate",
-  })
+  @ApiOperation(HorarioAulaConfiguracaoUpdateCommandMetadata.swaggerMetadata)
   @ApiOkResponse({ type: HorarioAulaConfiguracaoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -110,17 +104,14 @@ export class HorarioAulaConfiguracaoRestController {
     if (dto.dataInicio !== undefined) entity!.dataInicio = new Date(dto.dataInicio);
     if (dto.dataFim !== undefined) entity!.dataFim = dto.dataFim ? new Date(dto.dataFim) : null;
     if (dto.ativo !== undefined) entity!.ativo = dto.ativo;
-    if (dto.campusId !== undefined) entity!.idCampusFk = dto.campusId;
+    if (dto.campusId !== undefined) entity!.campus = { id: dto.campusId } as any;
 
     await this.repository.save(entity!);
     return this.toOutputDto(entity!);
   }
 
   @Delete("/:id")
-  @ApiOperation({
-    summary: "Remove uma configuracao de horario de aula",
-    operationId: "horarioAulaConfiguracaoDelete",
-  })
+  @ApiOperation(HorarioAulaConfiguracaoDeleteCommandMetadata.swaggerMetadata)
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -146,7 +137,7 @@ export class HorarioAulaConfiguracaoRestController {
       dataInicio: formatDate(entity.dataInicio) ?? "",
       dataFim: formatDate(entity.dataFim),
       ativo: entity.ativo,
-      campusId: entity.idCampusFk,
+      campusId: entity.campus?.id,
     };
   }
 }

@@ -3,12 +3,27 @@ import { type GraphQLResolveInfo } from "graphql";
 import { ensureExists } from "@/application/errors";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { graphqlExtractSelection } from "@/infrastructure.graphql";
-import { IDiarioCreateCommandHandler } from "@/modules/ensino/diario/domain/commands/diario-create.command.handler.interface";
-import { IDiarioDeleteCommandHandler } from "@/modules/ensino/diario/domain/commands/diario-delete.command.handler.interface";
-import { IDiarioUpdateCommandHandler } from "@/modules/ensino/diario/domain/commands/diario-update.command.handler.interface";
+import {
+  DiarioCreateCommandMetadata,
+  IDiarioCreateCommandHandler,
+} from "@/modules/ensino/diario/domain/commands/diario-create.command.handler.interface";
+import {
+  DiarioDeleteCommandMetadata,
+  IDiarioDeleteCommandHandler,
+} from "@/modules/ensino/diario/domain/commands/diario-delete.command.handler.interface";
+import {
+  DiarioUpdateCommandMetadata,
+  IDiarioUpdateCommandHandler,
+} from "@/modules/ensino/diario/domain/commands/diario-update.command.handler.interface";
 import { Diario } from "@/modules/ensino/diario/domain/diario";
-import { IDiarioFindOneQueryHandler } from "@/modules/ensino/diario/domain/queries/diario-find-one.query.handler.interface";
-import { IDiarioListQueryHandler } from "@/modules/ensino/diario/domain/queries/diario-list.query.handler.interface";
+import {
+  DiarioFindOneQueryMetadata,
+  IDiarioFindOneQueryHandler,
+} from "@/modules/ensino/diario/domain/queries/diario-find-one.query.handler.interface";
+import {
+  DiarioListQueryMetadata,
+  IDiarioListQueryHandler,
+} from "@/modules/ensino/diario/domain/queries/diario-list.query.handler.interface";
 import { AccessContext, AccessContextGraphQL } from "@/server/access-context";
 import {
   DiarioCreateInputGraphQlDto,
@@ -34,7 +49,7 @@ export class DiarioGraphqlResolver {
     private readonly deleteHandler: IDiarioDeleteCommandHandler,
   ) {}
 
-  @Query(() => DiarioListOutputGraphQlDto, { name: "diarioFindAll" })
+  @Query(() => DiarioListOutputGraphQlDto, DiarioListQueryMetadata.gqlMetadata)
   async findAll(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args() dto: DiarioListInputGraphQlDto,
@@ -49,7 +64,7 @@ export class DiarioGraphqlResolver {
     return DiarioGraphqlMapper.toListOutputDto(result);
   }
 
-  @Query(() => DiarioFindOneOutputGraphQlDto, { name: "diarioFindById" })
+  @Query(() => DiarioFindOneOutputGraphQlDto, DiarioFindOneQueryMetadata.gqlMetadata)
   async findById(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
@@ -61,7 +76,7 @@ export class DiarioGraphqlResolver {
     return DiarioGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => DiarioFindOneOutputGraphQlDto, { name: "diarioCreate" })
+  @Mutation(() => DiarioFindOneOutputGraphQlDto, DiarioCreateCommandMetadata.gqlMetadata)
   async create(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("data") dto: DiarioCreateInputGraphQlDto,
@@ -72,7 +87,7 @@ export class DiarioGraphqlResolver {
     return DiarioGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => DiarioFindOneOutputGraphQlDto, { name: "diarioUpdate" })
+  @Mutation(() => DiarioFindOneOutputGraphQlDto, DiarioUpdateCommandMetadata.gqlMetadata)
   async update(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
@@ -84,7 +99,7 @@ export class DiarioGraphqlResolver {
     return DiarioGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => Boolean, { name: "diarioDeleteOneById" })
+  @Mutation(() => Boolean, DiarioDeleteCommandMetadata.gqlMetadata)
   async deleteOneById(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,

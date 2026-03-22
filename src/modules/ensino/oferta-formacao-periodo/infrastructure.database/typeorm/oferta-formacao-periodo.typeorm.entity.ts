@@ -6,9 +6,6 @@ export class OfertaFormacaoPeriodoEntity {
   @PrimaryColumn("uuid")
   id!: string;
 
-  @Column({ name: "id_oferta_formacao_fk", type: "uuid", nullable: false })
-  idOfertaFormacaoFk!: string;
-
   @ManyToOne(() => OfertaFormacaoEntity, {})
   @JoinColumn({ name: "id_oferta_formacao_fk" })
   ofertaFormacao!: Relation<OfertaFormacaoEntity>;

@@ -1,16 +1,19 @@
+import { EmpresaCreateCommandFields } from "@/modules/estagio/empresa/domain/commands/empresa-create.command";
+import { EmpresaUpdateCommandFields } from "@/modules/estagio/empresa/domain/commands/empresa-update.command";
 import {
-  empresaCreateSchema,
-  empresaFindOneInputSchema,
-  empresaPaginationInputSchema,
-  empresaUpdateSchema,
+  EmpresaCreateSchema,
+  EmpresaUpdateSchema,
 } from "@/modules/estagio/empresa/domain/empresa.schemas";
+import { EmpresaFindOneQueryFields } from "@/modules/estagio/empresa/domain/queries/empresa-find-one.query";
+import { EmpresaFindOneQueryResultFields } from "@/modules/estagio/empresa/domain/queries/empresa-find-one.query.result";
+import { EmpresaFindOneInputSchema } from "@/modules/estagio/empresa/domain/queries/empresa-find-one.query.schemas";
+import { EmpresaListQueryFields } from "@/modules/estagio/empresa/domain/queries/empresa-list.query";
+import { EmpresaPaginationInputSchema } from "@/modules/estagio/empresa/domain/queries/empresa-list.query.schemas";
+import { EnderecoFindOneOutputRestDto } from "@/modules/localidades/endereco/presentation.rest";
 import {
   ApiProperty,
   ApiPropertyOptional,
   ApiSchema,
-  commonProperties,
-  RegisterModel,
-  simpleProperty,
   TransformToArray,
 } from "@/shared/presentation/rest";
 import {
@@ -24,44 +27,29 @@ import {
 // ============================================================================
 
 @ApiSchema({ name: "EmpresaFindOneOutputDto" })
-@RegisterModel({
-  name: "EmpresaFindOneQueryResult",
-  properties: [
-    simpleProperty("id"),
-    simpleProperty("razaoSocial"),
-    simpleProperty("nomeFantasia"),
-    simpleProperty("cnpj"),
-    simpleProperty("telefone"),
-    simpleProperty("email"),
-    simpleProperty("idEnderecoFk"),
-    simpleProperty("ativo"),
-    ...commonProperties.dated,
-  ],
-})
 export class EmpresaFindOneOutputRestDto extends EntityBaseRestDto {
-  @ApiProperty({ type: "string", description: "Razão social da empresa", minLength: 1 })
+  @ApiProperty(EmpresaFindOneQueryResultFields.razaoSocial.swaggerMetadata)
   razaoSocial: string;
 
-  @ApiProperty({ type: "string", description: "Nome fantasia da empresa", minLength: 1 })
+  @ApiProperty(EmpresaFindOneQueryResultFields.nomeFantasia.swaggerMetadata)
   nomeFantasia: string;
 
-  @ApiProperty({ type: "string", description: "CNPJ sem pontuação", minLength: 14, maxLength: 14 })
+  @ApiProperty(EmpresaFindOneQueryResultFields.cnpj.swaggerMetadata)
   cnpj: string;
 
-  @ApiProperty({ type: "string", description: "Telefone da empresa", minLength: 1, maxLength: 15 })
+  @ApiProperty(EmpresaFindOneQueryResultFields.telefone.swaggerMetadata)
   telefone: string;
 
-  @ApiProperty({ type: "string", description: "E-mail da empresa" })
+  @ApiProperty(EmpresaFindOneQueryResultFields.email.swaggerMetadata)
   email: string;
 
   @ApiProperty({
-    type: "string",
-    format: "uuid",
-    description: "ID do endereço vinculado à empresa",
+    type: () => EnderecoFindOneOutputRestDto,
+    ...EmpresaFindOneQueryResultFields.endereco.swaggerMetadata,
   })
-  idEnderecoFk: string;
+  endereco: EnderecoFindOneOutputRestDto;
 
-  @ApiProperty({ type: "boolean", description: "Se a empresa está ativa" })
+  @ApiProperty(EmpresaFindOneQueryResultFields.ativo.swaggerMetadata)
   ativo: boolean;
 }
 
@@ -71,32 +59,33 @@ export class EmpresaFindOneOutputRestDto extends EntityBaseRestDto {
 
 @ApiSchema({ name: "EmpresaListInputDto" })
 export class EmpresaListInputRestDto extends PaginatedFilterByIdRestDto {
-  static schema = empresaPaginationInputSchema;
+  static schema = EmpresaPaginationInputSchema;
 
-  @ApiPropertyOptional({ type: "string", description: "Filtro por CNPJ", isArray: true })
+  @ApiPropertyOptional(EmpresaListQueryFields.filterCnpj.swaggerMetadata)
   @TransformToArray()
   "filter.cnpj"?: string[];
 
-  @ApiPropertyOptional({ type: "string", description: "Filtro por nome fantasia", isArray: true })
+  @ApiPropertyOptional(EmpresaListQueryFields.filterNomeFantasia.swaggerMetadata)
   @TransformToArray()
   "filter.nomeFantasia"?: string[];
 
-  @ApiPropertyOptional({
-    type: "string",
-    format: "uuid",
-    description: "Filtro por ID de endereço",
-    isArray: true,
-  })
+  @ApiPropertyOptional(EmpresaListQueryFields.filterEnderecoId.swaggerMetadata)
   @TransformToArray()
-  "filter.idEnderecoFk"?: string[];
+  "filter.endereco.id"?: string[];
 }
 
 @ApiSchema({ name: "EmpresaListOutputDto" })
 export class EmpresaListOutputRestDto {
-  @ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" })
+  @ApiProperty({
+    type: () => PaginationMetaRestDto,
+    ...EmpresaListQueryFields.meta.swaggerMetadata,
+  })
   meta: PaginationMetaRestDto;
 
-  @ApiProperty({ type: () => [EmpresaFindOneOutputRestDto], description: "Resultados da busca" })
+  @ApiProperty({
+    type: () => [EmpresaFindOneOutputRestDto],
+    ...EmpresaListQueryFields.data.swaggerMetadata,
+  })
   data: EmpresaFindOneOutputRestDto[];
 }
 
@@ -106,66 +95,48 @@ export class EmpresaListOutputRestDto {
 
 @ApiSchema({ name: "EmpresaCreateInputDto" })
 export class EmpresaCreateInputRestDto {
-  static schema = empresaCreateSchema;
+  static schema = EmpresaCreateSchema;
 
-  @ApiProperty({ type: "string", description: "Razão social da empresa", minLength: 1 })
+  @ApiProperty(EmpresaCreateCommandFields.razaoSocial.swaggerMetadata)
   razaoSocial: string;
 
-  @ApiProperty({ type: "string", description: "Nome fantasia da empresa", minLength: 1 })
+  @ApiProperty(EmpresaCreateCommandFields.nomeFantasia.swaggerMetadata)
   nomeFantasia: string;
 
-  @ApiProperty({ type: "string", description: "CNPJ sem pontuação", minLength: 14, maxLength: 14 })
+  @ApiProperty(EmpresaCreateCommandFields.cnpj.swaggerMetadata)
   cnpj: string;
 
-  @ApiProperty({ type: "string", description: "Telefone da empresa", minLength: 1, maxLength: 15 })
+  @ApiProperty(EmpresaCreateCommandFields.telefone.swaggerMetadata)
   telefone: string;
 
-  @ApiProperty({ type: "string", description: "E-mail da empresa" })
+  @ApiProperty(EmpresaCreateCommandFields.email.swaggerMetadata)
   email: string;
 
-  @ApiProperty({
-    type: "string",
-    format: "uuid",
-    description: "ID do endereço vinculado à empresa",
-  })
-  idEnderecoFk: string;
+  @ApiProperty(EmpresaCreateCommandFields.endereco.swaggerMetadata)
+  endereco: { id: string };
 }
 
 @ApiSchema({ name: "EmpresaUpdateInputDto" })
 export class EmpresaUpdateInputRestDto {
-  static schema = empresaUpdateSchema;
+  static schema = EmpresaUpdateSchema;
 
-  @ApiPropertyOptional({ type: "string", description: "Razão social da empresa", minLength: 1 })
+  @ApiPropertyOptional(EmpresaUpdateCommandFields.razaoSocial.swaggerMetadata)
   razaoSocial?: string;
 
-  @ApiPropertyOptional({ type: "string", description: "Nome fantasia da empresa", minLength: 1 })
+  @ApiPropertyOptional(EmpresaUpdateCommandFields.nomeFantasia.swaggerMetadata)
   nomeFantasia?: string;
 
-  @ApiPropertyOptional({
-    type: "string",
-    description: "CNPJ sem pontuação",
-    minLength: 14,
-    maxLength: 14,
-  })
+  @ApiPropertyOptional(EmpresaUpdateCommandFields.cnpj.swaggerMetadata)
   cnpj?: string;
 
-  @ApiPropertyOptional({
-    type: "string",
-    description: "Telefone da empresa",
-    minLength: 1,
-    maxLength: 15,
-  })
+  @ApiPropertyOptional(EmpresaUpdateCommandFields.telefone.swaggerMetadata)
   telefone?: string;
 
-  @ApiPropertyOptional({ type: "string", description: "E-mail da empresa" })
+  @ApiPropertyOptional(EmpresaUpdateCommandFields.email.swaggerMetadata)
   email?: string;
 
-  @ApiPropertyOptional({
-    type: "string",
-    format: "uuid",
-    description: "ID do endereço vinculado à empresa",
-  })
-  idEnderecoFk?: string;
+  @ApiPropertyOptional(EmpresaUpdateCommandFields.endereco.swaggerMetadata)
+  endereco?: { id: string };
 }
 
 // ============================================================================
@@ -174,12 +145,8 @@ export class EmpresaUpdateInputRestDto {
 
 @ApiSchema({ name: "EmpresaFindOneInputDto" })
 export class EmpresaFindOneInputRestDto {
-  static schema = empresaFindOneInputSchema;
+  static schema = EmpresaFindOneInputSchema;
 
-  @ApiProperty({
-    type: "string",
-    description: "Identificador do registro (uuid)",
-    format: "uuid",
-  })
+  @ApiProperty(EmpresaFindOneQueryFields.id.swaggerMetadata)
   id: string;
 }

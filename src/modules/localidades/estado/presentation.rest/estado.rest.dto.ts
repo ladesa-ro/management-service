@@ -1,17 +1,9 @@
-import {
-  estadoFindOneInputSchema,
-  estadoNomeSchema,
-  estadoPaginationInputSchema,
-  estadoSiglaSchema,
-} from "@/modules/localidades/estado/domain/estado.schemas";
-import { zodApiProperty } from "@/shared/presentation";
-import {
-  ApiProperty,
-  ApiPropertyOptional,
-  ApiSchema,
-  RegisterModel,
-  simpleProperty,
-} from "@/shared/presentation/rest";
+import { EstadoFindOneQueryFields } from "@/modules/localidades/estado/domain/queries/estado-find-one.query";
+import { EstadoFindOneQueryResultFields } from "@/modules/localidades/estado/domain/queries/estado-find-one.query.result";
+import { EstadoFindOneInputSchema } from "@/modules/localidades/estado/domain/queries/estado-find-one.query.schemas";
+import { EstadoListQueryFields } from "@/modules/localidades/estado/domain/queries/estado-list.query";
+import { EstadoPaginationInputSchema } from "@/modules/localidades/estado/domain/queries/estado-list.query.schemas";
+import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@/shared/presentation/rest";
 import { PaginationMetaRestDto } from "@/shared/presentation/rest/dtos";
 
 // ============================================================================
@@ -19,18 +11,14 @@ import { PaginationMetaRestDto } from "@/shared/presentation/rest/dtos";
 // ============================================================================
 
 @ApiSchema({ name: "EstadoFindOneOutputDto" })
-@RegisterModel({
-  name: "EstadoFindOneQueryResult",
-  properties: [simpleProperty("id"), simpleProperty("nome"), simpleProperty("sigla")],
-})
 export class EstadoFindOneOutputRestDto {
-  @ApiProperty({ type: "integer", description: "Identificador do registro (numerico)" })
+  @ApiProperty({ type: "integer", ...EstadoFindOneQueryResultFields.id.swaggerMetadata })
   id: number;
 
-  @ApiProperty(zodApiProperty(estadoNomeSchema, { description: "Nome oficial do estado" }))
+  @ApiProperty(EstadoFindOneQueryResultFields.nome.swaggerMetadata)
   nome: string;
 
-  @ApiProperty(zodApiProperty(estadoSiglaSchema, { description: "Sigla do estado" }))
+  @ApiProperty(EstadoFindOneQueryResultFields.sigla.swaggerMetadata)
   sigla: string;
 }
 
@@ -40,44 +28,38 @@ export class EstadoFindOneOutputRestDto {
 
 @ApiSchema({ name: "EstadoListInputDto" })
 export class EstadoListInputRestDto {
-  static schema = estadoPaginationInputSchema;
+  static schema = EstadoPaginationInputSchema;
 
   [key: string]: string | number | string[] | null | undefined;
 
-  @ApiPropertyOptional({
-    type: "integer",
-    description: "Pagina de consulta",
-    minimum: 1,
-    default: 1,
-  })
-  page?: number = 1;
+  @ApiPropertyOptional(EstadoListQueryFields.page.swaggerMetadata)
+  page?: number;
 
-  @ApiPropertyOptional({
-    type: "integer",
-    description: "Limite da quantidade de resultados por pagina",
-    minimum: 1,
-  })
+  @ApiPropertyOptional(EstadoListQueryFields.limit.swaggerMetadata)
   limit?: number;
 
-  @ApiPropertyOptional({ type: "string", description: "Busca textual" })
+  @ApiPropertyOptional(EstadoListQueryFields.search.swaggerMetadata)
   search?: string;
 
-  @ApiPropertyOptional({ description: "Ordenacao (ex: nome:ASC)", isArray: true, type: "string" })
+  @ApiPropertyOptional(EstadoListQueryFields.sortBy.swaggerMetadata)
   sortBy?: string[];
 
-  @ApiPropertyOptional({ description: "Seleção de campos", isArray: true, type: "string" })
+  @ApiPropertyOptional(EstadoListQueryFields.selection.swaggerMetadata)
   selection?: string[];
 
-  @ApiPropertyOptional({ description: "Filtro por ID", type: "string", isArray: true })
+  @ApiPropertyOptional(EstadoListQueryFields.filterId.swaggerMetadata)
   "filter.id"?: string[];
 }
 
 @ApiSchema({ name: "EstadoListOutputDto" })
 export class EstadoListOutputRestDto {
-  @ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" })
+  @ApiProperty({ type: () => PaginationMetaRestDto, ...EstadoListQueryFields.meta.swaggerMetadata })
   meta: PaginationMetaRestDto;
 
-  @ApiProperty({ type: () => [EstadoFindOneOutputRestDto], description: "Resultados da busca" })
+  @ApiProperty({
+    type: () => [EstadoFindOneOutputRestDto],
+    ...EstadoListQueryFields.data.swaggerMetadata,
+  })
   data: EstadoFindOneOutputRestDto[];
 }
 
@@ -87,8 +69,8 @@ export class EstadoListOutputRestDto {
 
 @ApiSchema({ name: "EstadoFindOneInputDto" })
 export class EstadoFindOneInputRestDto {
-  static schema = estadoFindOneInputSchema;
+  static schema = EstadoFindOneInputSchema;
 
-  @ApiProperty({ type: "integer", description: "Identificador do registro (numerico)" })
+  @ApiProperty({ type: "integer", ...EstadoFindOneQueryFields.id.swaggerMetadata })
   id: number;
 }

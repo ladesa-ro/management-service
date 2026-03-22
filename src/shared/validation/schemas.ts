@@ -47,6 +47,26 @@ export const graphqlPaginationInputSchema = z.object({
   selection: z.array(z.string()).optional(),
 });
 
+/**
+ * Cria schema de paginação REST com filtros adicionais.
+ */
+export function createPaginationInputSchema(filters: Record<string, z.ZodType> = {}) {
+  return paginationInputSchema.extend({
+    "filter.id": stringFilterSchema,
+    ...filters,
+  });
+}
+
+/**
+ * Cria schema de paginação GraphQL com filtros adicionais.
+ */
+export function createGraphqlListInputSchema(filters: Record<string, z.ZodType> = {}) {
+  return graphqlPaginationInputSchema.extend({
+    filterId: z.array(z.string()).optional(),
+    ...filters,
+  });
+}
+
 // ============================================================================
 // Dated entity fields
 // ============================================================================

@@ -1,9 +1,5 @@
 import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@/shared/presentation/rest";
-
-export enum GerarHorarioDuracao {
-  TEMPORARIO = "TEMPORARIO",
-  PERMANENTE = "PERMANENTE",
-}
+import { GerarHorarioFields } from "../domain/gerar-horario.fields";
 
 // ============================================================================
 // Create Input
@@ -11,29 +7,17 @@ export enum GerarHorarioDuracao {
 
 @ApiSchema({ name: "GerarHorarioCreateInputDto" })
 export class GerarHorarioCreateInputRestDto {
-  @ApiProperty({ type: "string", format: "date", description: "Data inicio do periodo" })
+  @ApiProperty(GerarHorarioFields.dataInicio.swaggerMetadata)
   dataInicio: string;
 
-  @ApiPropertyOptional({
-    type: "string",
-    format: "date",
-    description: "Data termino do periodo",
-    nullable: true,
-  })
+  @ApiPropertyOptional(GerarHorarioFields.dataTermino.swaggerMetadata)
   dataTermino?: string;
 
-  @ApiPropertyOptional({
-    type: "string",
-    isArray: true,
-    description: "IDs das ofertas de formacao",
-  })
+  @ApiPropertyOptional(GerarHorarioFields.ofertaFormacaoIds.swaggerMetadata)
   ofertaFormacaoIds?: string[];
 
-  @ApiPropertyOptional({
-    enum: GerarHorarioDuracao,
-    description: "Duracao: TEMPORARIO ou PERMANENTE",
-  })
-  duracao?: GerarHorarioDuracao;
+  @ApiPropertyOptional(GerarHorarioFields.duracao.swaggerMetadata)
+  duracao?: string;
 }
 
 // ============================================================================
@@ -42,7 +26,7 @@ export class GerarHorarioCreateInputRestDto {
 
 @ApiSchema({ name: "GerarHorarioFindOneParamsDto" })
 export class GerarHorarioFindOneParamsRestDto {
-  @ApiProperty({ type: "string", format: "uuid", description: "ID da solicitacao" })
+  @ApiProperty(GerarHorarioFields.id.swaggerMetadata)
   id: string;
 }
 
@@ -52,17 +36,23 @@ export class GerarHorarioFindOneParamsRestDto {
 
 @ApiSchema({ name: "GerarHorarioFindOneOutputDto" })
 export class GerarHorarioFindOneOutputRestDto {
-  @ApiProperty({ type: "string" }) id: string;
-  @ApiProperty({
-    type: "string",
-    enum: ["SOLICITADO", "PENDENTE", "SUCESSO", "ERRO", "ACEITO", "REJEITADO"],
-  })
+  @ApiProperty(GerarHorarioFields.id.swaggerMetadata) id: string;
+
+  @ApiProperty(GerarHorarioFields.status.swaggerMetadata)
   status: string;
-  @ApiProperty({ type: "string" }) duracao: string;
-  @ApiProperty({ type: "string", format: "date" }) dataInicio: string;
-  @ApiPropertyOptional({ type: "string", format: "date", nullable: true }) dataTermino:
-    | string
-    | null;
-  @ApiPropertyOptional({ nullable: true }) respostaGerador: Record<string, unknown> | null;
-  @ApiProperty({ type: "string", format: "date-time" }) dateCreated: string;
+
+  @ApiProperty(GerarHorarioFields.duracao.swaggerMetadata)
+  duracao: string;
+
+  @ApiProperty(GerarHorarioFields.dataInicio.swaggerMetadata)
+  dataInicio: string;
+
+  @ApiPropertyOptional(GerarHorarioFields.dataTermino.swaggerMetadata)
+  dataTermino: string | null;
+
+  @ApiPropertyOptional(GerarHorarioFields.respostaGerador.swaggerMetadata)
+  respostaGerador: Record<string, unknown> | null;
+
+  @ApiProperty(GerarHorarioFields.dateCreated.swaggerMetadata)
+  dateCreated: string;
 }

@@ -5,8 +5,8 @@ import type { ICampus } from "@/modules/ambientes/campus";
 import type { IOfertaFormacao } from "@/modules/ensino/oferta-formacao";
 import { zodValidate } from "@/shared/validation/index";
 import {
-  calendarioLetivoCreateSchema,
-  calendarioLetivoUpdateSchema,
+  CalendarioLetivoCreateSchema,
+  CalendarioLetivoUpdateSchema,
 } from "./calendario-letivo.schemas";
 
 export interface ICalendarioLetivo extends IEntityBaseUuid {
@@ -45,7 +45,7 @@ export class CalendarioLetivo implements IEntityBaseUuid {
   private constructor() {}
 
   static create(dados: ICalendarioLetivoCreate): CalendarioLetivo {
-    const parsed = zodValidate(CalendarioLetivo.entityName, calendarioLetivoCreateSchema, dados);
+    const parsed = zodValidate(CalendarioLetivo.entityName, CalendarioLetivoCreateSchema, dados);
 
     const instance = new CalendarioLetivo();
 
@@ -74,7 +74,7 @@ export class CalendarioLetivo implements IEntityBaseUuid {
   }
 
   update(dados: unknown): void {
-    const parsed = zodValidate(CalendarioLetivo.entityName, calendarioLetivoUpdateSchema, dados);
+    const parsed = zodValidate(CalendarioLetivo.entityName, CalendarioLetivoUpdateSchema, dados);
 
     if (parsed.nome !== undefined) this.nome = parsed.nome;
     if (parsed.ano !== undefined) this.ano = parsed.ano;

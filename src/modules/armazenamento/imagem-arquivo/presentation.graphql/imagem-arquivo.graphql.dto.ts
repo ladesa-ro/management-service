@@ -3,8 +3,10 @@ import {
   PaginatedFilterByIdGraphQlDto,
   PaginationMetaGraphQlDto,
 } from "@/infrastructure.graphql/dtos";
-import { imagemArquivoGraphqlListInputSchema } from "@/modules/armazenamento/imagem-arquivo/domain/imagem-arquivo.schemas";
+import { ImagemArquivoGraphqlListInputSchema } from "@/modules/armazenamento/imagem-arquivo/domain/queries/imagem-arquivo-list.query.schemas";
 import { ArgsType, Field, ID, Int, ObjectType } from "@/shared/presentation/graphql";
+import { ImagemArquivoFindOneQueryResultFields } from "../domain/queries/imagem-arquivo-find-one.query.result";
+import { ImagemArquivoListQueryFields } from "../domain/queries/imagem-arquivo-list.query";
 
 // ============================================================================
 // Arquivo nested output for GraphQL
@@ -25,11 +27,28 @@ export class ArquivoFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
 @ObjectType("ImagemArquivoFindOneFromImagemOutputDto")
 export class ImagemArquivoFindOneFromImagemOutputGraphQlDto {
   @Field(() => ID) id: string;
-  @Field(() => Int, { nullable: true }) largura: number | null;
-  @Field(() => Int, { nullable: true }) altura: number | null;
-  @Field(() => String, { nullable: true }) formato: string | null;
-  @Field(() => String, { nullable: true }) mimeType: string | null;
-  @Field(() => ArquivoFindOneOutputGraphQlDto) arquivo: ArquivoFindOneOutputGraphQlDto;
+  @Field(() => Int, {
+    nullable: true,
+    ...ImagemArquivoFindOneQueryResultFields.largura.gqlMetadata,
+  })
+  largura: number | null;
+  @Field(() => Int, { nullable: true, ...ImagemArquivoFindOneQueryResultFields.altura.gqlMetadata })
+  altura: number | null;
+  @Field(() => String, {
+    nullable: true,
+    ...ImagemArquivoFindOneQueryResultFields.formato.gqlMetadata,
+  })
+  formato: string | null;
+  @Field(() => String, {
+    nullable: true,
+    ...ImagemArquivoFindOneQueryResultFields.mimeType.gqlMetadata,
+  })
+  mimeType: string | null;
+  @Field(
+    () => ArquivoFindOneOutputGraphQlDto,
+    ImagemArquivoFindOneQueryResultFields.arquivo.gqlMetadata,
+  )
+  arquivo: ArquivoFindOneOutputGraphQlDto;
   @Field(() => Date) dateCreated: Date;
   @Field(() => Date) dateUpdated: Date;
   @Field(() => Date, { nullable: true }) dateDeleted: Date | null;
@@ -61,13 +80,20 @@ export class ImagemFindOneFromImagemArquivoOutputGraphQlDto {
 
 @ObjectType("ImagemArquivoFindOneOutputDto")
 export class ImagemArquivoFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
-  @Field(() => Int) largura: number;
-  @Field(() => Int) altura: number;
-  @Field(() => String) formato: string;
-  @Field(() => String) mimeType: string;
-  @Field(() => ImagemFindOneFromImagemArquivoOutputGraphQlDto)
+  @Field(() => Int, ImagemArquivoFindOneQueryResultFields.largura.gqlMetadata) largura: number;
+  @Field(() => Int, ImagemArquivoFindOneQueryResultFields.altura.gqlMetadata) altura: number;
+  @Field(() => String, ImagemArquivoFindOneQueryResultFields.formato.gqlMetadata) formato: string;
+  @Field(() => String, ImagemArquivoFindOneQueryResultFields.mimeType.gqlMetadata) mimeType: string;
+  @Field(
+    () => ImagemFindOneFromImagemArquivoOutputGraphQlDto,
+    ImagemArquivoFindOneQueryResultFields.imagem.gqlMetadata,
+  )
   imagem: ImagemFindOneFromImagemArquivoOutputGraphQlDto;
-  @Field(() => ArquivoFindOneOutputGraphQlDto) arquivo: ArquivoFindOneOutputGraphQlDto;
+  @Field(
+    () => ArquivoFindOneOutputGraphQlDto,
+    ImagemArquivoFindOneQueryResultFields.arquivo.gqlMetadata,
+  )
+  arquivo: ArquivoFindOneOutputGraphQlDto;
 }
 
 // ============================================================================
@@ -76,7 +102,7 @@ export class ImagemArquivoFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
 
 @ArgsType()
 export class ImagemArquivoListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {
-  static schema = imagemArquivoGraphqlListInputSchema;
+  static schema = ImagemArquivoGraphqlListInputSchema;
 }
 
 // ============================================================================
@@ -85,9 +111,12 @@ export class ImagemArquivoListInputGraphQlDto extends PaginatedFilterByIdGraphQl
 
 @ObjectType("ImagemArquivoListResult")
 export class ImagemArquivoListOutputGraphQlDto {
-  @Field(() => PaginationMetaGraphQlDto)
+  @Field(() => PaginationMetaGraphQlDto, ImagemArquivoListQueryFields.meta.gqlMetadata)
   meta: PaginationMetaGraphQlDto;
 
-  @Field(() => [ImagemArquivoFindOneOutputGraphQlDto])
+  @Field(
+    () => [ImagemArquivoFindOneOutputGraphQlDto],
+    ImagemArquivoListQueryFields.data.gqlMetadata,
+  )
   data: ImagemArquivoFindOneOutputGraphQlDto[];
 }

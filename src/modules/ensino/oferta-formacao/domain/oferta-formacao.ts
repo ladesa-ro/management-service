@@ -3,12 +3,12 @@ import type { IdUuid, ScalarDateTimeString } from "@/domain/abstractions/scalars
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { zodValidate } from "@/shared/validation/index";
 import {
-  ofertaFormacaoCreateSchema,
-  ofertaFormacaoSchema,
-  ofertaFormacaoUpdateSchema,
+  OfertaFormacaoCreateSchema,
+  OfertaFormacaoSchema,
+  OfertaFormacaoUpdateSchema,
 } from "./oferta-formacao.schemas";
 
-export type IOfertaFormacao = z.infer<typeof ofertaFormacaoSchema>;
+export type IOfertaFormacao = z.infer<typeof OfertaFormacaoSchema>;
 
 export class OfertaFormacao {
   static readonly entityName = "OfertaFormacao";
@@ -24,7 +24,7 @@ export class OfertaFormacao {
   private constructor() {}
 
   static create(dados: unknown): OfertaFormacao {
-    const parsed = zodValidate(OfertaFormacao.entityName, ofertaFormacaoCreateSchema, dados);
+    const parsed = zodValidate(OfertaFormacao.entityName, OfertaFormacaoCreateSchema, dados);
 
     const instance = new OfertaFormacao();
 
@@ -40,7 +40,7 @@ export class OfertaFormacao {
   }
 
   static load(dados: unknown): OfertaFormacao {
-    const parsed = zodValidate(OfertaFormacao.entityName, ofertaFormacaoSchema, dados);
+    const parsed = zodValidate(OfertaFormacao.entityName, OfertaFormacaoSchema, dados);
 
     const instance = new OfertaFormacao();
 
@@ -56,7 +56,7 @@ export class OfertaFormacao {
   }
 
   update(dados: unknown): void {
-    const parsed = zodValidate(OfertaFormacao.entityName, ofertaFormacaoUpdateSchema, dados);
+    const parsed = zodValidate(OfertaFormacao.entityName, OfertaFormacaoUpdateSchema, dados);
 
     if (parsed.nome !== undefined) this.nome = parsed.nome;
     if (parsed.slug !== undefined) this.slug = parsed.slug;
@@ -64,6 +64,6 @@ export class OfertaFormacao {
 
     this.dateUpdated = new Date().toISOString();
 
-    zodValidate(OfertaFormacao.entityName, ofertaFormacaoSchema, this);
+    zodValidate(OfertaFormacao.entityName, OfertaFormacaoSchema, this);
   }
 }

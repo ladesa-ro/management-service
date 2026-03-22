@@ -2,8 +2,8 @@ import type { IdUuid, ScalarDateTimeString } from "@/domain/abstractions/scalars
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { zodValidate } from "@/shared/validation/index";
 import {
-  ofertaFormacaoNivelFormacaoCreateSchema,
-  ofertaFormacaoNivelFormacaoSchema,
+  OfertaFormacaoNivelFormacaoCreateSchema,
+  OfertaFormacaoNivelFormacaoSchema,
 } from "./oferta-formacao-nivel-formacao.schemas";
 
 export type IOfertaFormacaoNivelFormacao = OfertaFormacaoNivelFormacao;
@@ -23,7 +23,7 @@ export class OfertaFormacaoNivelFormacao {
   static create(dados: unknown): OfertaFormacaoNivelFormacao {
     const parsed = zodValidate(
       OfertaFormacaoNivelFormacao.entityName,
-      ofertaFormacaoNivelFormacaoCreateSchema,
+      OfertaFormacaoNivelFormacaoCreateSchema,
       dados,
     );
 
@@ -42,7 +42,7 @@ export class OfertaFormacaoNivelFormacao {
   static load(dados: unknown): OfertaFormacaoNivelFormacao {
     const parsed = zodValidate(
       OfertaFormacaoNivelFormacao.entityName,
-      ofertaFormacaoNivelFormacaoSchema,
+      OfertaFormacaoNivelFormacaoSchema,
       dados,
     );
 

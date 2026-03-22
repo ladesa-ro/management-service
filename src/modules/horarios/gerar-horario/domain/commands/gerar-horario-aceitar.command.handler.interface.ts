@@ -1,9 +1,15 @@
+import { createOperationMetadata } from "@/domain/abstractions";
 import type { AccessContext } from "@/server/access-context";
 import type { GerarHorarioEntity } from "../../infrastructure.database/typeorm/gerar-horario.typeorm.entity";
 
 export interface IGerarHorarioAceitarCommand {
   id: string;
 }
+
+export const GerarHorarioAceitarCommandMetadata = createOperationMetadata({
+  operationId: "gerarHorarioAceitar",
+  summary: "Aceita o horario gerado e aplica ao calendario",
+});
 
 export const IGerarHorarioAceitarCommandHandler = Symbol("IGerarHorarioAceitarCommandHandler");
 

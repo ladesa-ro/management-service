@@ -9,12 +9,27 @@ import {
 } from "@nestjs/swagger";
 import { ensureExists } from "@/application/errors";
 import { DeclareDependency } from "@/domain/dependency-injection";
-import { IOfertaFormacaoCreateCommandHandler } from "@/modules/ensino/oferta-formacao/domain/commands/oferta-formacao-create.command.handler.interface";
-import { IOfertaFormacaoDeleteCommandHandler } from "@/modules/ensino/oferta-formacao/domain/commands/oferta-formacao-delete.command.handler.interface";
-import { IOfertaFormacaoUpdateCommandHandler } from "@/modules/ensino/oferta-formacao/domain/commands/oferta-formacao-update.command.handler.interface";
+import {
+  IOfertaFormacaoCreateCommandHandler,
+  OfertaFormacaoCreateCommandMetadata,
+} from "@/modules/ensino/oferta-formacao/domain/commands/oferta-formacao-create.command.handler.interface";
+import {
+  IOfertaFormacaoDeleteCommandHandler,
+  OfertaFormacaoDeleteCommandMetadata,
+} from "@/modules/ensino/oferta-formacao/domain/commands/oferta-formacao-delete.command.handler.interface";
+import {
+  IOfertaFormacaoUpdateCommandHandler,
+  OfertaFormacaoUpdateCommandMetadata,
+} from "@/modules/ensino/oferta-formacao/domain/commands/oferta-formacao-update.command.handler.interface";
 import { OfertaFormacao } from "@/modules/ensino/oferta-formacao/domain/oferta-formacao";
-import { IOfertaFormacaoFindOneQueryHandler } from "@/modules/ensino/oferta-formacao/domain/queries/oferta-formacao-find-one.query.handler.interface";
-import { IOfertaFormacaoListQueryHandler } from "@/modules/ensino/oferta-formacao/domain/queries/oferta-formacao-list.query.handler.interface";
+import {
+  IOfertaFormacaoFindOneQueryHandler,
+  OfertaFormacaoFindOneQueryMetadata,
+} from "@/modules/ensino/oferta-formacao/domain/queries/oferta-formacao-find-one.query.handler.interface";
+import {
+  IOfertaFormacaoListQueryHandler,
+  OfertaFormacaoListQueryMetadata,
+} from "@/modules/ensino/oferta-formacao/domain/queries/oferta-formacao-list.query.handler.interface";
 import { AccessContext, AccessContextHttp } from "@/server/access-context";
 import {
   OfertaFormacaoCreateInputRestDto,
@@ -43,7 +58,7 @@ export class OfertaFormacaoRestController {
   ) {}
 
   @Get("/")
-  @ApiOperation({ summary: "Lista ofertas de formacao", operationId: "ofertaFormacaoFindAll" })
+  @ApiOperation(OfertaFormacaoListQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: OfertaFormacaoListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
@@ -56,10 +71,7 @@ export class OfertaFormacaoRestController {
   }
 
   @Get("/:id")
-  @ApiOperation({
-    summary: "Busca uma oferta de formacao por ID",
-    operationId: "ofertaFormacaoFindById",
-  })
+  @ApiOperation(OfertaFormacaoFindOneQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: OfertaFormacaoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -74,7 +86,7 @@ export class OfertaFormacaoRestController {
   }
 
   @Post("/")
-  @ApiOperation({ summary: "Cria uma oferta de formacao", operationId: "ofertaFormacaoCreate" })
+  @ApiOperation(OfertaFormacaoCreateCommandMetadata.swaggerMetadata)
   @ApiCreatedResponse({ type: OfertaFormacaoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   async create(
@@ -87,7 +99,7 @@ export class OfertaFormacaoRestController {
   }
 
   @Patch("/:id")
-  @ApiOperation({ summary: "Atualiza uma oferta de formacao", operationId: "ofertaFormacaoUpdate" })
+  @ApiOperation(OfertaFormacaoUpdateCommandMetadata.swaggerMetadata)
   @ApiOkResponse({ type: OfertaFormacaoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -102,10 +114,7 @@ export class OfertaFormacaoRestController {
   }
 
   @Delete("/:id")
-  @ApiOperation({
-    summary: "Remove uma oferta de formacao",
-    operationId: "ofertaFormacaoDeleteOneById",
-  })
+  @ApiOperation(OfertaFormacaoDeleteCommandMetadata.swaggerMetadata)
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()

@@ -5,6 +5,7 @@ import {
   EmpresaListQuery,
   EmpresaUpdateCommand,
 } from "@/modules/estagio/empresa";
+import { EnderecoGraphqlMapper } from "@/modules/localidades/endereco/presentation.graphql/endereco.graphql.mapper";
 import { createListOutputMapper, mapDatedFields } from "@/shared/mapping";
 import {
   EmpresaCreateInputGraphQlDto,
@@ -28,7 +29,7 @@ export class EmpresaGraphqlMapper {
     input["filter.id"] = dto.filterId;
     input["filter.cnpj"] = dto.filterCnpj;
     input["filter.nomeFantasia"] = dto.filterNomeFantasia;
-    input["filter.idEnderecoFk"] = dto.filterIdEnderecoFk;
+    input["filter.endereco.id"] = dto.filterEnderecoId;
     return input;
   }
 
@@ -46,7 +47,7 @@ export class EmpresaGraphqlMapper {
     input.cnpj = dto.cnpj;
     input.telefone = dto.telefone;
     input.email = dto.email;
-    input.idEnderecoFk = dto.idEnderecoFk;
+    input.endereco = { id: dto.endereco.id };
     return input;
   }
 
@@ -71,8 +72,8 @@ export class EmpresaGraphqlMapper {
     if (dto.email !== undefined) {
       input.email = dto.email;
     }
-    if (dto.idEnderecoFk !== undefined) {
-      input.idEnderecoFk = dto.idEnderecoFk;
+    if (dto.endereco !== undefined) {
+      input.endereco = { id: dto.endereco.id };
     }
     return input;
   }
@@ -85,7 +86,7 @@ export class EmpresaGraphqlMapper {
     dto.cnpj = output.cnpj;
     dto.telefone = output.telefone;
     dto.email = output.email;
-    dto.idEnderecoFk = output.idEnderecoFk;
+    dto.endereco = EnderecoGraphqlMapper.toFindOneOutputDto(output.endereco);
     dto.ativo = output.ativo;
     mapDatedFields(dto, output);
     return dto;

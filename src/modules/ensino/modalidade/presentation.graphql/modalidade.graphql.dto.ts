@@ -3,12 +3,13 @@ import {
   PaginatedFilterByIdGraphQlDto,
   PaginationMetaGraphQlDto,
 } from "@/infrastructure.graphql/dtos";
+import { ModalidadeGraphqlListInputSchema } from "@/modules/ensino/modalidade/domain/queries/modalidade-list.query.schemas";
 import { ArgsType, Field, InputType, ObjectType } from "@/shared/presentation/graphql";
-import {
-  modalidadeCreateSchema,
-  modalidadeGraphqlListInputSchema,
-  modalidadeUpdateSchema,
-} from "../domain/modalidade.schemas";
+import { ModalidadeCreateCommandFields } from "../domain/commands/modalidade-create.command";
+import { ModalidadeUpdateCommandFields } from "../domain/commands/modalidade-update.command";
+import { ModalidadeCreateSchema, ModalidadeUpdateSchema } from "../domain/modalidade.schemas";
+import { ModalidadeFindOneQueryResultFields } from "../domain/queries/modalidade-find-one.query.result";
+import { ModalidadeListQueryFields } from "../domain/queries/modalidade-list.query";
 
 // ============================================================================
 // FindOne Output
@@ -16,8 +17,8 @@ import {
 
 @ObjectType("ModalidadeFindOneOutputDto")
 export class ModalidadeFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
-  @Field(() => String) nome: string;
-  @Field(() => String) slug: string;
+  @Field(() => String, ModalidadeFindOneQueryResultFields.nome.gqlMetadata) nome: string;
+  @Field(() => String, ModalidadeFindOneQueryResultFields.slug.gqlMetadata) slug: string;
 }
 
 // ============================================================================
@@ -26,10 +27,10 @@ export class ModalidadeFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
 
 @InputType("ModalidadeCreateInputDto")
 export class ModalidadeCreateInputGraphQlDto {
-  static readonly schema = modalidadeCreateSchema;
+  static readonly schema = ModalidadeCreateSchema;
 
-  @Field(() => String) nome: string;
-  @Field(() => String) slug: string;
+  @Field(() => String, ModalidadeCreateCommandFields.nome.gqlMetadata) nome: string;
+  @Field(() => String, ModalidadeCreateCommandFields.slug.gqlMetadata) slug: string;
 }
 
 // ============================================================================
@@ -38,11 +39,11 @@ export class ModalidadeCreateInputGraphQlDto {
 
 @InputType("ModalidadeUpdateInputDto")
 export class ModalidadeUpdateInputGraphQlDto {
-  static readonly schema = modalidadeUpdateSchema;
+  static readonly schema = ModalidadeUpdateSchema;
 
-  @Field(() => String, { nullable: true })
+  @Field(() => String, { nullable: true, ...ModalidadeUpdateCommandFields.nome.gqlMetadata })
   nome?: string;
-  @Field(() => String, { nullable: true })
+  @Field(() => String, { nullable: true, ...ModalidadeUpdateCommandFields.slug.gqlMetadata })
   slug?: string;
 }
 
@@ -52,7 +53,7 @@ export class ModalidadeUpdateInputGraphQlDto {
 
 @ArgsType()
 export class ModalidadeListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {
-  static schema = modalidadeGraphqlListInputSchema;
+  static schema = ModalidadeGraphqlListInputSchema;
 }
 
 // ============================================================================
@@ -61,9 +62,9 @@ export class ModalidadeListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto
 
 @ObjectType("ModalidadeListResult")
 export class ModalidadeListOutputGraphQlDto {
-  @Field(() => PaginationMetaGraphQlDto)
+  @Field(() => PaginationMetaGraphQlDto, ModalidadeListQueryFields.meta.gqlMetadata)
   meta: PaginationMetaGraphQlDto;
 
-  @Field(() => [ModalidadeFindOneOutputGraphQlDto])
+  @Field(() => [ModalidadeFindOneOutputGraphQlDto], ModalidadeListQueryFields.data.gqlMetadata)
   data: ModalidadeFindOneOutputGraphQlDto[];
 }

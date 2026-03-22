@@ -1,15 +1,13 @@
 import { AmbienteFindOneOutputRestDto } from "@/modules/ambientes/ambiente/presentation.rest";
 import { ImagemFindOneOutputRestDto } from "@/modules/ambientes/bloco/presentation.rest";
 import { CursoFindOneOutputRestDto } from "@/modules/ensino/curso/presentation.rest";
+import { TurmaFindOneInputSchema } from "@/modules/ensino/turma/domain/queries/turma-find-one.query.schemas";
+import { TurmaPaginationInputSchema } from "@/modules/ensino/turma/domain/queries/turma-list.query.schemas";
 import {
   ApiProperty,
   ApiPropertyOptional,
   ApiSchema,
-  commonProperties,
   PartialType,
-  RegisterModel,
-  referenceProperty,
-  simpleProperty,
   TransformToArray,
 } from "@/shared/presentation/rest";
 import {
@@ -17,49 +15,38 @@ import {
   PaginatedFilterByIdRestDto,
   PaginationMetaRestDto,
 } from "@/shared/presentation/rest/dtos";
-import {
-  turmaCreateSchema,
-  turmaFindOneInputSchema,
-  turmaPaginationInputSchema,
-} from "../domain/turma.schemas";
+import { TurmaCreateCommandFields } from "../domain/commands/turma-create.command";
+import { TurmaFindOneQueryResultFields } from "../domain/queries/turma-find-one.query.result";
+import { TurmaListQueryFields } from "../domain/queries/turma-list.query";
+import { TurmaCreateSchema } from "../domain/turma.schemas";
 
 // ============================================================================
 // FindOne Output
 // ============================================================================
 
 @ApiSchema({ name: "TurmaFindOneOutputDto" })
-@RegisterModel({
-  name: "TurmaFindOneQueryResult",
-  properties: [
-    simpleProperty("id"),
-    simpleProperty("periodo"),
-    referenceProperty("curso", "CursoFindOneQueryResult"),
-    referenceProperty("ambientePadraoAula", "AmbienteFindOneQueryResult", { nullable: true }),
-    referenceProperty("imagemCapa", "ImagemFindOneQueryResult", { nullable: true }),
-    ...commonProperties.dated,
-  ],
-})
 export class TurmaFindOneOutputRestDto extends EntityBaseRestDto {
-  @ApiProperty({ type: "string", description: "Periodo da turma", minLength: 1 })
+  @ApiProperty(TurmaFindOneQueryResultFields.periodo.swaggerMetadata)
   periodo: string;
 
-  @ApiPropertyOptional({ type: "string", description: "Nome da turma", nullable: true })
+  @ApiPropertyOptional(TurmaFindOneQueryResultFields.nome.swaggerMetadata)
   nome: string | null;
 
-  @ApiProperty({ type: () => CursoFindOneOutputRestDto, description: "Curso da turma" })
+  @ApiProperty({
+    type: () => CursoFindOneOutputRestDto,
+    ...TurmaFindOneQueryResultFields.curso.swaggerMetadata,
+  })
   curso: CursoFindOneOutputRestDto;
 
   @ApiPropertyOptional({
     type: () => AmbienteFindOneOutputRestDto,
-    description: "Ambiente padrao da sala de aula",
-    nullable: true,
+    ...TurmaFindOneQueryResultFields.ambientePadraoAula.swaggerMetadata,
   })
   ambientePadraoAula: AmbienteFindOneOutputRestDto | null;
 
   @ApiPropertyOptional({
     type: () => ImagemFindOneOutputRestDto,
-    description: "Imagem de capa da turma",
-    nullable: true,
+    ...TurmaFindOneQueryResultFields.imagemCapa.swaggerMetadata,
   })
   imagemCapa: ImagemFindOneOutputRestDto | null;
 }
@@ -70,111 +57,66 @@ export class TurmaFindOneOutputRestDto extends EntityBaseRestDto {
 
 @ApiSchema({ name: "TurmaListInputDto" })
 export class TurmaListInputRestDto extends PaginatedFilterByIdRestDto {
-  static schema = turmaPaginationInputSchema;
+  static schema = TurmaPaginationInputSchema;
 
-  @ApiPropertyOptional({
-    type: "string",
-    isArray: true,
-    description: "Filtro por periodo da turma",
-  })
+  @ApiPropertyOptional(TurmaListQueryFields.filterPeriodo.swaggerMetadata)
   @TransformToArray()
   "filter.periodo"?: string[];
 
-  @ApiPropertyOptional({
-    type: "string",
-    isArray: true,
-    description: "Filtro por nome do Ambiente Padrao de Aula",
-  })
+  @ApiPropertyOptional(TurmaListQueryFields.filterAmbientePadraoAulaNome.swaggerMetadata)
   @TransformToArray()
   "filter.ambientePadraoAula.nome"?: string[];
 
-  @ApiPropertyOptional({
-    type: "string",
-    isArray: true,
-    description: "Filtro por codigo do Ambiente Padrao de Aula",
-  })
+  @ApiPropertyOptional(TurmaListQueryFields.filterAmbientePadraoAulaCodigo.swaggerMetadata)
   @TransformToArray()
   "filter.ambientePadraoAula.codigo"?: string[];
 
-  @ApiPropertyOptional({
-    type: "string",
-    isArray: true,
-    description: "Filtro por capacidade do Ambiente Padrao de Aula",
-  })
+  @ApiPropertyOptional(TurmaListQueryFields.filterAmbientePadraoAulaCapacidade.swaggerMetadata)
   @TransformToArray()
   "filter.ambientePadraoAula.capacidade"?: string[];
 
-  @ApiPropertyOptional({
-    type: "string",
-    isArray: true,
-    description: "Filtro por tipo do Ambiente Padrao de Aula",
-  })
+  @ApiPropertyOptional(TurmaListQueryFields.filterAmbientePadraoAulaTipo.swaggerMetadata)
   @TransformToArray()
   "filter.ambientePadraoAula.tipo"?: string[];
 
-  @ApiPropertyOptional({
-    type: "string",
-    isArray: true,
-    description: "Filtro por ID do Curso",
-  })
+  @ApiPropertyOptional(TurmaListQueryFields.filterCursoId.swaggerMetadata)
   @TransformToArray()
   "filter.curso.id"?: string[];
 
-  @ApiPropertyOptional({
-    type: "string",
-    isArray: true,
-    description: "Filtro por nome do Curso",
-  })
+  @ApiPropertyOptional(TurmaListQueryFields.filterCursoNome.swaggerMetadata)
   @TransformToArray()
   "filter.curso.nome"?: string[];
 
-  @ApiPropertyOptional({
-    type: "string",
-    isArray: true,
-    description: "Filtro por nome abreviado do Curso",
-  })
+  @ApiPropertyOptional(TurmaListQueryFields.filterCursoNomeAbreviado.swaggerMetadata)
   @TransformToArray()
   "filter.curso.nomeAbreviado"?: string[];
 
-  @ApiPropertyOptional({
-    type: "string",
-    isArray: true,
-    description: "Filtro por ID do Campus do Curso",
-  })
+  @ApiPropertyOptional(TurmaListQueryFields.filterCursoCampusId.swaggerMetadata)
   @TransformToArray()
   "filter.curso.campus.id"?: string[];
 
-  @ApiPropertyOptional({
-    type: "string",
-    isArray: true,
-    description: "Filtro por ID da Oferta de Formacao do Curso",
-  })
+  @ApiPropertyOptional(TurmaListQueryFields.filterCursoOfertaFormacaoId.swaggerMetadata)
   @TransformToArray()
   "filter.curso.ofertaFormacao.id"?: string[];
 
-  @ApiPropertyOptional({
-    type: "string",
-    isArray: true,
-    description: "Filtro por nome da Oferta de Formacao do Curso",
-  })
+  @ApiPropertyOptional(TurmaListQueryFields.filterCursoOfertaFormacaoNome.swaggerMetadata)
   @TransformToArray()
   "filter.curso.ofertaFormacao.nome"?: string[];
 
-  @ApiPropertyOptional({
-    type: "string",
-    isArray: true,
-    description: "Filtro por slug da Oferta de Formacao do Curso",
-  })
+  @ApiPropertyOptional(TurmaListQueryFields.filterCursoOfertaFormacaoSlug.swaggerMetadata)
   @TransformToArray()
   "filter.curso.ofertaFormacao.slug"?: string[];
 }
 
 @ApiSchema({ name: "TurmaListOutputDto" })
 export class TurmaListOutputRestDto {
-  @ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" })
+  @ApiProperty({ type: () => PaginationMetaRestDto, ...TurmaListQueryFields.meta.swaggerMetadata })
   meta: PaginationMetaRestDto;
 
-  @ApiProperty({ type: () => [TurmaFindOneOutputRestDto], description: "Resultados da busca" })
+  @ApiProperty({
+    type: () => [TurmaFindOneOutputRestDto],
+    ...TurmaListQueryFields.data.swaggerMetadata,
+  })
   data: TurmaFindOneOutputRestDto[];
 }
 
@@ -184,27 +126,18 @@ export class TurmaListOutputRestDto {
 
 @ApiSchema({ name: "TurmaCreateInputDto" })
 export class TurmaCreateInputRestDto {
-  static readonly schema = turmaCreateSchema;
+  static readonly schema = TurmaCreateSchema;
 
-  @ApiProperty({ type: "string", description: "Periodo da turma", minLength: 1 })
+  @ApiProperty(TurmaCreateCommandFields.periodo.swaggerMetadata)
   periodo: string;
 
-  @ApiPropertyOptional({ type: "string", description: "Nome da turma", nullable: true })
+  @ApiPropertyOptional(TurmaCreateCommandFields.nome.swaggerMetadata)
   nome?: string | null;
 
-  @ApiProperty({
-    type: "object",
-    description: "Curso da turma",
-    properties: { id: { type: "string", format: "uuid" } },
-  })
+  @ApiProperty(TurmaCreateCommandFields.curso.swaggerMetadata)
   curso: { id: string };
 
-  @ApiPropertyOptional({
-    type: "object",
-    description: "Ambiente padrao da sala de aula",
-    nullable: true,
-    properties: { id: { type: "string", format: "uuid" } },
-  })
+  @ApiPropertyOptional(TurmaCreateCommandFields.ambientePadraoAula.swaggerMetadata)
   ambientePadraoAula?: { id: string } | null;
 }
 
@@ -217,12 +150,8 @@ export class TurmaUpdateInputRestDto extends PartialType(TurmaCreateInputRestDto
 
 @ApiSchema({ name: "TurmaFindOneInputDto" })
 export class TurmaFindOneInputRestDto {
-  static readonly schema = turmaFindOneInputSchema;
+  static readonly schema = TurmaFindOneInputSchema;
 
-  @ApiProperty({
-    type: "string",
-    description: "Identificador do registro (uuid)",
-    format: "uuid",
-  })
+  @ApiProperty(TurmaFindOneQueryResultFields.id.swaggerMetadata)
   id: string;
 }

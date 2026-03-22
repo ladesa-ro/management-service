@@ -1,55 +1,37 @@
 import { ImagemFindOneOutputRestDto } from "@/modules/ambientes/bloco/presentation.rest";
+import { DisciplinaFindOneInputSchema } from "@/modules/ensino/disciplina/domain/queries/disciplina-find-one.query.schemas";
+import { DisciplinaPaginationInputSchema } from "@/modules/ensino/disciplina/domain/queries/disciplina-list.query.schemas";
 import {
   ApiProperty,
   ApiPropertyOptional,
   ApiSchema,
-  commonProperties,
-  PartialType,
-  RegisterModel,
-  referenceProperty,
-  simpleProperty,
   TransformToArray,
 } from "@/shared/presentation/rest";
-import {
-  EntityBaseRestDto,
-  PaginatedFilterByIdRestDto,
-  PaginationMetaRestDto,
-} from "@/shared/presentation/rest/dtos";
-import {
-  disciplinaCreateSchema,
-  disciplinaFindOneInputSchema,
-  disciplinaPaginationInputSchema,
-} from "../domain/disciplina.schemas";
+import { EntityBaseRestDto, PaginationMetaRestDto } from "@/shared/presentation/rest/dtos";
+import { DisciplinaCreateCommandFields } from "../domain/commands/disciplina-create.command";
+import { DisciplinaUpdateCommandFields } from "../domain/commands/disciplina-update.command";
+import { DisciplinaCreateSchema } from "../domain/disciplina.schemas";
+import { DisciplinaFindOneQueryResultFields } from "../domain/queries/disciplina-find-one.query.result";
+import { DisciplinaListQueryFields } from "../domain/queries/disciplina-list.query";
 
 // ============================================================================
 // FindOne Output
 // ============================================================================
 
 @ApiSchema({ name: "DisciplinaFindOneOutputDto" })
-@RegisterModel({
-  name: "DisciplinaFindOneQueryResult",
-  properties: [
-    simpleProperty("id"),
-    simpleProperty("nome"),
-    simpleProperty("nomeAbreviado"),
-    simpleProperty("cargaHoraria"),
-    referenceProperty("imagemCapa", "ImagemFindOneQueryResult", { nullable: true }),
-    ...commonProperties.dated,
-  ],
-})
 export class DisciplinaFindOneOutputRestDto extends EntityBaseRestDto {
-  @ApiProperty({ type: "string", description: "Nome da disciplina", minLength: 1 })
+  @ApiProperty(DisciplinaFindOneQueryResultFields.nome.swaggerMetadata)
   nome: string;
 
-  @ApiProperty({ type: "string", description: "Nome abreviado da disciplina", minLength: 1 })
+  @ApiProperty(DisciplinaFindOneQueryResultFields.nomeAbreviado.swaggerMetadata)
   nomeAbreviado: string;
 
-  @ApiProperty({ type: "integer", description: "Carga horaria da disciplina", minimum: 1 })
+  @ApiProperty(DisciplinaFindOneQueryResultFields.cargaHoraria.swaggerMetadata)
   cargaHoraria: number;
 
   @ApiPropertyOptional({
     type: () => ImagemFindOneOutputRestDto,
-    description: "Imagem de capa da disciplina",
+    ...DisciplinaFindOneQueryResultFields.imagemCapa.swaggerMetadata,
     nullable: true,
   })
   imagemCapa: ImagemFindOneOutputRestDto | null;
@@ -60,26 +42,45 @@ export class DisciplinaFindOneOutputRestDto extends EntityBaseRestDto {
 // ============================================================================
 
 @ApiSchema({ name: "DisciplinaListInputDto" })
-export class DisciplinaListInputRestDto extends PaginatedFilterByIdRestDto {
-  static schema = disciplinaPaginationInputSchema;
+export class DisciplinaListInputRestDto {
+  static schema = DisciplinaPaginationInputSchema;
 
-  @ApiPropertyOptional({
-    type: "string",
-    isArray: true,
-    description: "Filtro por ID dos Diarios",
-  })
+  [key: string]: string | number | string[] | null | undefined;
+
+  @ApiPropertyOptional(DisciplinaListQueryFields.page.swaggerMetadata)
+  page?: number;
+
+  @ApiPropertyOptional(DisciplinaListQueryFields.limit.swaggerMetadata)
+  limit?: number;
+
+  @ApiPropertyOptional(DisciplinaListQueryFields.search.swaggerMetadata)
+  search?: string;
+
+  @ApiPropertyOptional(DisciplinaListQueryFields.sortBy.swaggerMetadata)
+  sortBy?: string[];
+
+  @ApiPropertyOptional(DisciplinaListQueryFields.selection.swaggerMetadata)
+  selection?: string[];
+
+  @ApiPropertyOptional(DisciplinaListQueryFields.filterId.swaggerMetadata)
+  "filter.id"?: string[];
+
+  @ApiPropertyOptional(DisciplinaListQueryFields.filterDiariosId.swaggerMetadata)
   @TransformToArray()
   "filter.diarios.id"?: string[];
 }
 
 @ApiSchema({ name: "DisciplinaListOutputDto" })
 export class DisciplinaListOutputRestDto {
-  @ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" })
+  @ApiProperty({
+    type: () => PaginationMetaRestDto,
+    ...DisciplinaListQueryFields.meta.swaggerMetadata,
+  })
   meta: PaginationMetaRestDto;
 
   @ApiProperty({
     type: () => [DisciplinaFindOneOutputRestDto],
-    description: "Resultados da busca",
+    ...DisciplinaListQueryFields.data.swaggerMetadata,
   })
   data: DisciplinaFindOneOutputRestDto[];
 }
@@ -90,20 +91,31 @@ export class DisciplinaListOutputRestDto {
 
 @ApiSchema({ name: "DisciplinaCreateInputDto" })
 export class DisciplinaCreateInputRestDto {
-  static readonly schema = disciplinaCreateSchema;
+  static readonly schema = DisciplinaCreateSchema;
 
-  @ApiProperty({ type: "string", description: "Nome da disciplina", minLength: 1 })
+  @ApiProperty(DisciplinaCreateCommandFields.nome.swaggerMetadata)
   nome: string;
 
-  @ApiProperty({ type: "string", description: "Nome abreviado da disciplina", minLength: 1 })
+  @ApiProperty(DisciplinaCreateCommandFields.nomeAbreviado.swaggerMetadata)
   nomeAbreviado: string;
 
-  @ApiProperty({ type: "integer", description: "Carga horaria da disciplina", minimum: 1 })
+  @ApiProperty(DisciplinaCreateCommandFields.cargaHoraria.swaggerMetadata)
   cargaHoraria: number;
 }
 
 @ApiSchema({ name: "DisciplinaUpdateInputDto" })
-export class DisciplinaUpdateInputRestDto extends PartialType(DisciplinaCreateInputRestDto) {}
+export class DisciplinaUpdateInputRestDto {
+  static readonly schema = DisciplinaCreateSchema;
+
+  @ApiPropertyOptional(DisciplinaUpdateCommandFields.nome.swaggerMetadata)
+  nome?: string;
+
+  @ApiPropertyOptional(DisciplinaUpdateCommandFields.nomeAbreviado.swaggerMetadata)
+  nomeAbreviado?: string;
+
+  @ApiPropertyOptional(DisciplinaUpdateCommandFields.cargaHoraria.swaggerMetadata)
+  cargaHoraria?: number;
+}
 
 // ============================================================================
 // FindOne Input (for path params)
@@ -111,12 +123,8 @@ export class DisciplinaUpdateInputRestDto extends PartialType(DisciplinaCreateIn
 
 @ApiSchema({ name: "DisciplinaFindOneInputDto" })
 export class DisciplinaFindOneInputRestDto {
-  static readonly schema = disciplinaFindOneInputSchema;
+  static readonly schema = DisciplinaFindOneInputSchema;
 
-  @ApiProperty({
-    type: "string",
-    description: "Identificador do registro (uuid)",
-    format: "uuid",
-  })
+  @ApiProperty(DisciplinaFindOneQueryResultFields.id.swaggerMetadata)
   id: string;
 }

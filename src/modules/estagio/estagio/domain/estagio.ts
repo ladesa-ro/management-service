@@ -1,7 +1,8 @@
+import type { ObjectUuidRef } from "@/domain/abstractions";
 import type { IdUuid, ScalarDateTimeString } from "@/domain/abstractions/scalars";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { zodValidate } from "@/shared/validation/index";
-import { estagioCreateSchema, estagioSchema, estagioUpdateSchema } from "./estagio.schemas";
+import { EstagioCreateSchema, EstagioSchema, EstagioUpdateSchema } from "./estagio.schemas";
 
 export enum EstagioStatus {
   ABERTA = "ABERTA",
@@ -18,8 +19,8 @@ export interface IHorarioEstagio {
 
 export interface IEstagio {
   id: string;
-  idEmpresaFk: string;
-  idEstagiarioFk: string | null;
+  empresa: { id: string };
+  estagiario: { id: string } | null;
   cargaHoraria: number;
   dataInicio: string | null;
   dataFim: string | null;
@@ -34,8 +35,8 @@ export class Estagio {
   static readonly entityName = "Estagio";
 
   id!: IdUuid;
-  idEmpresaFk!: string;
-  idEstagiarioFk!: string | null;
+  empresa!: ObjectUuidRef;
+  estagiario!: ObjectUuidRef | null;
   cargaHoraria!: number;
   dataInicio!: string | null;
   dataFim!: string | null;
@@ -52,13 +53,13 @@ export class Estagio {
   }
 
   static create(dados: unknown): Estagio {
-    const parsed = zodValidate(Estagio.entityName, estagioCreateSchema, dados);
+    const parsed = zodValidate(Estagio.entityName, EstagioCreateSchema, dados);
 
     const instance = new Estagio();
 
     instance.id = generateUuidV7();
-    instance.idEmpresaFk = parsed.idEmpresaFk;
-    instance.idEstagiarioFk = parsed.idEstagiarioFk ?? null;
+    instance.empresa = parsed.empresa;
+    instance.estagiario = parsed.estagiario ?? null;
     instance.cargaHoraria = parsed.cargaHoraria;
     instance.dataInicio = parsed.dataInicio ?? null;
     instance.dataFim = parsed.dataFim ?? null;
@@ -72,13 +73,13 @@ export class Estagio {
   }
 
   static load(dados: unknown): Estagio {
-    const parsed = zodValidate(Estagio.entityName, estagioSchema, dados);
+    const parsed = zodValidate(Estagio.entityName, EstagioSchema, dados);
 
     const instance = new Estagio();
 
     instance.id = parsed.id;
-    instance.idEmpresaFk = parsed.idEmpresaFk;
-    instance.idEstagiarioFk = parsed.idEstagiarioFk;
+    instance.empresa = parsed.empresa;
+    instance.estagiario = parsed.estagiario;
     instance.cargaHoraria = parsed.cargaHoraria;
     instance.dataInicio = parsed.dataInicio;
     instance.dataFim = parsed.dataFim;
@@ -92,10 +93,10 @@ export class Estagio {
   }
 
   update(dados: unknown): void {
-    const parsed = zodValidate(Estagio.entityName, estagioUpdateSchema, dados);
+    const parsed = zodValidate(Estagio.entityName, EstagioUpdateSchema, dados);
 
-    if (parsed.idEmpresaFk !== undefined) this.idEmpresaFk = parsed.idEmpresaFk;
-    if (parsed.idEstagiarioFk !== undefined) this.idEstagiarioFk = parsed.idEstagiarioFk ?? null;
+    if (parsed.empresa !== undefined) this.empresa = parsed.empresa;
+    if (parsed.estagiario !== undefined) this.estagiario = parsed.estagiario ?? null;
     if (parsed.cargaHoraria !== undefined) this.cargaHoraria = parsed.cargaHoraria;
     if (parsed.dataInicio !== undefined) this.dataInicio = parsed.dataInicio ?? null;
     if (parsed.dataFim !== undefined) this.dataFim = parsed.dataFim ?? null;
@@ -104,6 +105,6 @@ export class Estagio {
 
     this.dateUpdated = new Date().toISOString();
 
-    zodValidate(Estagio.entityName, estagioSchema, this);
+    zodValidate(Estagio.entityName, EstagioSchema, this);
   }
 }

@@ -1,25 +1,23 @@
+/**
+ * Ambiente — schemas zod para a entidade e suas operacoes.
+ *
+ * Contem os schemas de referencia, composicao (create/update)
+ * e validacao da entidade. Fonte unica de verdade (SSOT) para
+ * os contratos de dados da entidade.
+ */
 import { z } from "zod";
-import { datedSchema, stringFilterSchema, uuidSchema } from "@/shared/validation/schemas";
+import { datedSchema, uuidSchema } from "@/shared/validation/schemas";
+import { AmbienteFields } from "./ambiente.fields";
 
 // ============================================================================
-// Fragments reutilizáveis
+// Fragments de referência
 // ============================================================================
 
-export const ambienteNomeSchema = z.string().min(1, "nome é obrigatório");
-
-export const ambienteDescricaoSchema = z.string().nullable().optional();
-
-export const ambienteCodigoSchema = z.string().min(1, "codigo é obrigatório");
-
-export const ambienteCapacidadeSchema = z.number().int().min(0).nullable().optional();
-
-export const ambienteTipoSchema = z.string().nullable().optional();
-
-export const ambienteBlocoRefSchema = z.object({
+export const AmbienteBlocoRefSchema = z.object({
   id: uuidSchema,
 });
 
-export const ambienteImagemCapaRefSchema = z
+export const AmbienteImagemCapaRefSchema = z
   .object({
     id: uuidSchema,
   })
@@ -29,12 +27,12 @@ export const ambienteImagemCapaRefSchema = z
 // Schemas compostos
 // ============================================================================
 
-export const ambienteSchema = z
+export const AmbienteSchema = z
   .object({
     id: uuidSchema,
-    nome: ambienteNomeSchema,
+    nome: AmbienteFields.nome.schema,
     descricao: z.string().nullable(),
-    codigo: ambienteCodigoSchema,
+    codigo: AmbienteFields.codigo.schema,
     capacidade: z.number().int().nullable(),
     tipo: z.string().nullable(),
     bloco: z.object({ id: uuidSchema }).passthrough(),
@@ -42,72 +40,20 @@ export const ambienteSchema = z
   })
   .merge(datedSchema);
 
-export const ambienteCreateSchema = z.object({
-  nome: ambienteNomeSchema,
-  descricao: ambienteDescricaoSchema,
-  codigo: ambienteCodigoSchema,
-  capacidade: ambienteCapacidadeSchema,
-  tipo: ambienteTipoSchema,
-  bloco: ambienteBlocoRefSchema,
+export const AmbienteCreateSchema = z.object({
+  nome: AmbienteFields.nome.schema,
+  descricao: AmbienteFields.descricao.schema,
+  codigo: AmbienteFields.codigo.schema,
+  capacidade: AmbienteFields.capacidade.schema,
+  tipo: AmbienteFields.tipo.schema,
+  bloco: AmbienteBlocoRefSchema,
 });
 
-export const ambienteUpdateSchema = z.object({
-  nome: ambienteNomeSchema.optional(),
-  descricao: ambienteDescricaoSchema,
-  codigo: ambienteCodigoSchema.optional(),
-  capacidade: ambienteCapacidadeSchema,
-  tipo: ambienteTipoSchema,
-  bloco: ambienteBlocoRefSchema.optional(),
-});
-
-// ============================================================================
-// Schemas de input (presentation layer)
-// ============================================================================
-
-export const ambienteFindOneInputSchema = z.object({
-  id: uuidSchema,
-});
-
-export const ambientePaginationInputSchema = z.object({
-  page: z.coerce.number().int().min(1).optional().default(1),
-  limit: z.coerce.number().int().min(1).optional(),
-  search: z.string().optional(),
-  sortBy: z.array(z.string()).optional(),
-  selection: z.array(z.string()).optional(),
-  "filter.id": stringFilterSchema,
-  "filter.bloco.id": stringFilterSchema,
-  "filter.bloco.campus.id": stringFilterSchema,
-});
-
-export const ambienteGraphqlListInputSchema = z.object({
-  page: z.number().int().min(1).optional().default(1),
-  limit: z.number().int().min(1).optional(),
-  search: z.string().optional(),
-  sortBy: z.array(z.string()).optional(),
-  selection: z.array(z.string()).optional(),
-  filterId: z.array(z.string()).optional(),
-  filterBlocoId: z.array(z.string()).optional(),
-  filterBlocoCampusId: z.array(z.string()).optional(),
-});
-
-// ============================================================================
-// Schemas de input para create/update (presentation layer)
-// ============================================================================
-
-export const ambienteInputCreateSchema = z.object({
-  nome: ambienteNomeSchema,
-  descricao: ambienteDescricaoSchema,
-  codigo: ambienteCodigoSchema,
-  capacidade: ambienteCapacidadeSchema,
-  tipo: ambienteTipoSchema,
-  bloco: ambienteBlocoRefSchema,
-});
-
-export const ambienteInputUpdateSchema = z.object({
-  nome: ambienteNomeSchema.optional(),
-  descricao: ambienteDescricaoSchema,
-  codigo: ambienteCodigoSchema.optional(),
-  capacidade: ambienteCapacidadeSchema,
-  tipo: ambienteTipoSchema,
-  bloco: ambienteBlocoRefSchema.optional(),
+export const AmbienteUpdateSchema = z.object({
+  nome: AmbienteFields.nome.schema.optional(),
+  descricao: AmbienteFields.descricao.schema,
+  codigo: AmbienteFields.codigo.schema.optional(),
+  capacidade: AmbienteFields.capacidade.schema,
+  tipo: AmbienteFields.tipo.schema,
+  bloco: AmbienteBlocoRefSchema.optional(),
 });

@@ -3,12 +3,12 @@ import type { IdUuid, ScalarDateTimeString } from "@/domain/abstractions/scalars
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { zodValidate } from "@/shared/validation/index";
 import {
-  disciplinaCreateSchema,
-  disciplinaSchema,
-  disciplinaUpdateSchema,
+  DisciplinaCreateSchema,
+  DisciplinaSchema,
+  DisciplinaUpdateSchema,
 } from "./disciplina.schemas";
 
-export type IDisciplina = z.infer<typeof disciplinaSchema>;
+export type IDisciplina = z.infer<typeof DisciplinaSchema>;
 
 export class Disciplina {
   static readonly entityName = "Disciplina";
@@ -25,7 +25,7 @@ export class Disciplina {
   private constructor() {}
 
   static create(dados: unknown): Disciplina {
-    const parsed = zodValidate(Disciplina.entityName, disciplinaCreateSchema, dados);
+    const parsed = zodValidate(Disciplina.entityName, DisciplinaCreateSchema, dados);
 
     const instance = new Disciplina();
 
@@ -42,7 +42,7 @@ export class Disciplina {
   }
 
   static load(dados: unknown): Disciplina {
-    const parsed = zodValidate(Disciplina.entityName, disciplinaSchema, dados);
+    const parsed = zodValidate(Disciplina.entityName, DisciplinaSchema, dados);
 
     const instance = new Disciplina();
 
@@ -59,7 +59,7 @@ export class Disciplina {
   }
 
   update(dados: unknown): void {
-    const parsed = zodValidate(Disciplina.entityName, disciplinaUpdateSchema, dados);
+    const parsed = zodValidate(Disciplina.entityName, DisciplinaUpdateSchema, dados);
 
     if (parsed.nome !== undefined) this.nome = parsed.nome;
     if (parsed.nomeAbreviado !== undefined) this.nomeAbreviado = parsed.nomeAbreviado;
@@ -68,7 +68,7 @@ export class Disciplina {
 
     this.dateUpdated = new Date().toISOString();
 
-    zodValidate(Disciplina.entityName, disciplinaSchema, this);
+    zodValidate(Disciplina.entityName, DisciplinaSchema, this);
   }
 
   temImagemCapa(): boolean {

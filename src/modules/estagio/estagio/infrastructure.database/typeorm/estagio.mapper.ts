@@ -21,8 +21,8 @@ export class EstagioMapper {
 
     return Estagio.load({
       id: entity.id,
-      idEmpresaFk: entity.idEmpresaFk,
-      idEstagiarioFk: entity.idEstagiarioFk,
+      empresa: { id: entity.empresa?.id ?? (entity as any).idEmpresaFk },
+      estagiario: entity.estagiario ? { id: entity.estagiario.id } : null,
       cargaHoraria: entity.cargaHoraria,
       dataInicio: formatDateOnly(entity.dataInicio),
       dataFim: formatDateOnly(entity.dataFim),
@@ -44,14 +44,12 @@ export class EstagioMapper {
   static toPersistence(estagio: Estagio): EstagioTypeormEntity {
     const entity = new EstagioTypeormEntity();
     entity.id = estagio.id || generateUuidV7();
-    entity.idEmpresaFk = estagio.idEmpresaFk;
-    entity.idEstagiarioFk = estagio.idEstagiarioFk;
+    entity.empresa = { id: estagio.empresa.id } as any;
+    entity.estagiario = estagio.estagiario ? ({ id: estagio.estagiario.id } as any) : null;
     entity.cargaHoraria = estagio.cargaHoraria;
     entity.dataInicio = estagio.dataInicio ? new Date(estagio.dataInicio) : null;
     entity.dataFim = estagio.dataFim ? new Date(estagio.dataFim) : null;
     entity.status = estagio.status;
-    entity.empresa = { id: estagio.idEmpresaFk } as any;
-    entity.estagiario = estagio.idEstagiarioFk ? ({ id: estagio.idEstagiarioFk } as any) : null;
     entity.dateCreated = new Date(estagio.dateCreated);
     entity.dateUpdated = new Date(estagio.dateUpdated);
     entity.dateDeleted = estagio.dateDeleted ? new Date(estagio.dateDeleted) : null;
@@ -64,7 +62,6 @@ export class EstagioMapper {
   ): HorarioEstagioTypeormEntity {
     const entity = new HorarioEstagioTypeormEntity();
     entity.id = horario.id || generateUuidV7();
-    entity.idEstagioFk = idEstagioFk;
     entity.estagio = { id: idEstagioFk } as any;
     entity.diaSemana = horario.diaSemana;
     entity.horaInicio = horario.horaInicio;
@@ -90,8 +87,8 @@ export class EstagioMapper {
 
     return {
       id: entity.id,
-      idEmpresaFk: entity.idEmpresaFk,
-      idEstagiarioFk: entity.idEstagiarioFk,
+      empresa: { id: entity.empresa?.id ?? (entity as any).idEmpresaFk },
+      estagiario: entity.estagiario ? { id: entity.estagiario.id } : null,
       cargaHoraria: entity.cargaHoraria,
       dataInicio: formatDateOnly(entity.dataInicio),
       dataFim: formatDateOnly(entity.dataFim),

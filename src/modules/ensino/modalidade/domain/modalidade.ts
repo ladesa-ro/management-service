@@ -3,12 +3,12 @@ import type { IdUuid, ScalarDateTimeString } from "@/domain/abstractions/scalars
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { zodValidate } from "@/shared/validation/index";
 import {
-  modalidadeCreateSchema,
-  modalidadeSchema,
-  modalidadeUpdateSchema,
+  ModalidadeCreateSchema,
+  ModalidadeSchema,
+  ModalidadeUpdateSchema,
 } from "./modalidade.schemas";
 
-export type IModalidade = z.infer<typeof modalidadeSchema>;
+export type IModalidade = z.infer<typeof ModalidadeSchema>;
 
 export class Modalidade {
   static readonly entityName = "Modalidade";
@@ -23,7 +23,7 @@ export class Modalidade {
   private constructor() {}
 
   static create(dados: unknown): Modalidade {
-    const parsed = zodValidate(Modalidade.entityName, modalidadeCreateSchema, dados);
+    const parsed = zodValidate(Modalidade.entityName, ModalidadeCreateSchema, dados);
 
     const instance = new Modalidade();
 
@@ -38,7 +38,7 @@ export class Modalidade {
   }
 
   static load(dados: unknown): Modalidade {
-    const parsed = zodValidate(Modalidade.entityName, modalidadeSchema, dados);
+    const parsed = zodValidate(Modalidade.entityName, ModalidadeSchema, dados);
 
     const instance = new Modalidade();
 
@@ -53,13 +53,13 @@ export class Modalidade {
   }
 
   update(dados: unknown): void {
-    const parsed = zodValidate(Modalidade.entityName, modalidadeUpdateSchema, dados);
+    const parsed = zodValidate(Modalidade.entityName, ModalidadeUpdateSchema, dados);
 
     if (parsed.nome !== undefined) this.nome = parsed.nome;
     if (parsed.slug !== undefined) this.slug = parsed.slug;
 
     this.dateUpdated = new Date().toISOString();
 
-    zodValidate(Modalidade.entityName, modalidadeSchema, this);
+    zodValidate(Modalidade.entityName, ModalidadeSchema, this);
   }
 }

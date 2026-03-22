@@ -1,6 +1,12 @@
 import type { ICommandHandler } from "@/domain/abstractions";
+import { createOperationMetadata } from "@/domain/abstractions";
 import type { ModalidadeFindOneQueryResult } from "../queries";
 import type { ModalidadeCreateCommand } from "./modalidade-create.command";
+
+export const ModalidadeCreateCommandMetadata = createOperationMetadata({
+  operationId: "modalidadeCreate",
+  summary: "Cria uma modalidade",
+});
 
 export const IModalidadeCreateCommandHandler = Symbol("IModalidadeCreateCommandHandler");
 

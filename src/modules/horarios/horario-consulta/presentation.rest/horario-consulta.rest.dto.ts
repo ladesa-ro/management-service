@@ -1,4 +1,5 @@
 import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@/shared/presentation/rest";
+import { HorarioSemanalQueryFields } from "../domain/queries/horario-semanal.query";
 
 // ============================================================================
 // Query Params
@@ -8,8 +9,7 @@ import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@/shared/presentati
 export class HorarioSemanalQueryParamsRestDto {
   @ApiProperty({
     type: "string",
-    description:
-      "Data da semana desejada (YYYY-MM-DD). Qualquer dia da semana; a API calcula seg-dom.",
+    ...HorarioSemanalQueryFields.semana.swaggerMetadata,
     format: "date",
   })
   semana: string;
@@ -19,13 +19,13 @@ export class HorarioSemanalQueryParamsRestDto {
 export class HorarioMescladoQueryParamsRestDto extends HorarioSemanalQueryParamsRestDto {
   @ApiProperty({
     type: "string",
-    description: "IDs das turmas, separados por virgula",
+    ...HorarioSemanalQueryFields.turmaIds.swaggerMetadata,
   })
   ids: string;
 
   @ApiPropertyOptional({
     type: "string",
-    description: "IDs dos professores (perfil), separados por virgula",
+    ...HorarioSemanalQueryFields.professorIds.swaggerMetadata,
   })
   professorIds?: string;
 }

@@ -1,33 +1,20 @@
-import {
-  ApiProperty,
-  ApiSchema,
-  commonProperties,
-  PartialType,
-  RegisterModel,
-  simpleProperty,
-} from "@/shared/presentation/rest";
-import {
-  EntityBaseRestDto,
-  PaginatedFilterByIdRestDto,
-  PaginationMetaRestDto,
-} from "@/shared/presentation/rest/dtos";
-import {
-  nivelFormacaoCreateSchema,
-  nivelFormacaoFindOneInputSchema,
-  nivelFormacaoPaginationInputSchema,
-} from "../domain/nivel-formacao.schemas";
+import { NivelFormacaoFindOneInputSchema } from "@/modules/ensino/nivel-formacao/domain/queries/nivel-formacao-find-one.query.schemas";
+import { NivelFormacaoPaginationInputSchema } from "@/modules/ensino/nivel-formacao/domain/queries/nivel-formacao-list.query.schemas";
+import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@/shared/presentation/rest";
+import { EntityBaseRestDto, PaginationMetaRestDto } from "@/shared/presentation/rest/dtos";
+import { NivelFormacaoCreateCommandFields } from "../domain/commands/nivel-formacao-create.command";
+import { NivelFormacaoUpdateCommandFields } from "../domain/commands/nivel-formacao-update.command";
+import { NivelFormacaoCreateSchema } from "../domain/nivel-formacao.schemas";
+import { NivelFormacaoFindOneQueryResultFields } from "../domain/queries/nivel-formacao-find-one.query.result";
+import { NivelFormacaoListQueryFields } from "../domain/queries/nivel-formacao-list.query";
 
 // ============================================================================
 // FindOne Output
 // ============================================================================
 
 @ApiSchema({ name: "NivelFormacaoFindOneOutputDto" })
-@RegisterModel({
-  name: "NivelFormacaoFindOneQueryResult",
-  properties: [simpleProperty("id"), simpleProperty("slug"), ...commonProperties.dated],
-})
 export class NivelFormacaoFindOneOutputRestDto extends EntityBaseRestDto {
-  @ApiProperty({ type: "string", description: "Apelido do nivel de formacao", minLength: 1 })
+  @ApiProperty(NivelFormacaoFindOneQueryResultFields.slug.swaggerMetadata)
   slug: string;
 }
 
@@ -36,18 +23,41 @@ export class NivelFormacaoFindOneOutputRestDto extends EntityBaseRestDto {
 // ============================================================================
 
 @ApiSchema({ name: "NivelFormacaoListInputDto" })
-export class NivelFormacaoListInputRestDto extends PaginatedFilterByIdRestDto {
-  static schema = nivelFormacaoPaginationInputSchema;
+export class NivelFormacaoListInputRestDto {
+  static schema = NivelFormacaoPaginationInputSchema;
+
+  [key: string]: string | number | string[] | null | undefined;
+
+  @ApiPropertyOptional(NivelFormacaoListQueryFields.page.swaggerMetadata)
+  page?: number;
+
+  @ApiPropertyOptional(NivelFormacaoListQueryFields.limit.swaggerMetadata)
+  limit?: number;
+
+  @ApiPropertyOptional(NivelFormacaoListQueryFields.search.swaggerMetadata)
+  search?: string;
+
+  @ApiPropertyOptional(NivelFormacaoListQueryFields.sortBy.swaggerMetadata)
+  sortBy?: string[];
+
+  @ApiPropertyOptional(NivelFormacaoListQueryFields.selection.swaggerMetadata)
+  selection?: string[];
+
+  @ApiPropertyOptional(NivelFormacaoListQueryFields.filterId.swaggerMetadata)
+  "filter.id"?: string[];
 }
 
 @ApiSchema({ name: "NivelFormacaoListOutputDto" })
 export class NivelFormacaoListOutputRestDto {
-  @ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" })
+  @ApiProperty({
+    type: () => PaginationMetaRestDto,
+    ...NivelFormacaoListQueryFields.meta.swaggerMetadata,
+  })
   meta: PaginationMetaRestDto;
 
   @ApiProperty({
     type: () => [NivelFormacaoFindOneOutputRestDto],
-    description: "Resultados da busca",
+    ...NivelFormacaoListQueryFields.data.swaggerMetadata,
   })
   data: NivelFormacaoFindOneOutputRestDto[];
 }
@@ -58,14 +68,19 @@ export class NivelFormacaoListOutputRestDto {
 
 @ApiSchema({ name: "NivelFormacaoCreateInputDto" })
 export class NivelFormacaoCreateInputRestDto {
-  static readonly schema = nivelFormacaoCreateSchema;
+  static readonly schema = NivelFormacaoCreateSchema;
 
-  @ApiProperty({ type: "string", description: "Apelido do nivel de formacao", minLength: 1 })
+  @ApiProperty(NivelFormacaoCreateCommandFields.slug.swaggerMetadata)
   slug: string;
 }
 
 @ApiSchema({ name: "NivelFormacaoUpdateInputDto" })
-export class NivelFormacaoUpdateInputRestDto extends PartialType(NivelFormacaoCreateInputRestDto) {}
+export class NivelFormacaoUpdateInputRestDto {
+  static readonly schema = NivelFormacaoCreateSchema;
+
+  @ApiPropertyOptional(NivelFormacaoUpdateCommandFields.slug.swaggerMetadata)
+  slug?: string;
+}
 
 // ============================================================================
 // FindOne Input (for path params)
@@ -73,12 +88,8 @@ export class NivelFormacaoUpdateInputRestDto extends PartialType(NivelFormacaoCr
 
 @ApiSchema({ name: "NivelFormacaoFindOneInputDto" })
 export class NivelFormacaoFindOneInputRestDto {
-  static readonly schema = nivelFormacaoFindOneInputSchema;
+  static readonly schema = NivelFormacaoFindOneInputSchema;
 
-  @ApiProperty({
-    type: "string",
-    description: "Identificador do registro (uuid)",
-    format: "uuid",
-  })
+  @ApiProperty(NivelFormacaoFindOneQueryResultFields.id.swaggerMetadata)
   id: string;
 }

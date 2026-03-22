@@ -7,6 +7,7 @@ import {
   type EmpresaFindOneQueryResult,
   EmpresaListQuery,
 } from "@/modules/estagio/empresa/domain/queries";
+import { EnderecoRestMapper } from "@/modules/localidades/endereco/presentation.rest";
 import {
   createFindOneInputMapper,
   createListInputMapper,
@@ -29,7 +30,7 @@ export class EmpresaRestMapper {
     "filter.id",
     "filter.cnpj",
     "filter.nomeFantasia",
-    "filter.idEnderecoFk",
+    "filter.endereco.id",
   ]);
 
   static toCreateInput(dto: EmpresaCreateInputRestDto): EmpresaCreateCommand {
@@ -39,7 +40,7 @@ export class EmpresaRestMapper {
     input.cnpj = dto.cnpj;
     input.telefone = dto.telefone;
     input.email = dto.email;
-    input.idEnderecoFk = dto.idEnderecoFk;
+    input.endereco = { id: dto.endereco.id };
     return input;
   }
 
@@ -49,14 +50,10 @@ export class EmpresaRestMapper {
   ): EmpresaFindOneQuery & EmpresaUpdateCommand {
     const input = new EmpresaFindOneQuery() as EmpresaFindOneQuery & EmpresaUpdateCommand;
     input.id = params.id;
-    mapFieldsIfDefined(input, dto, [
-      "razaoSocial",
-      "nomeFantasia",
-      "cnpj",
-      "telefone",
-      "email",
-      "idEnderecoFk",
-    ]);
+    mapFieldsIfDefined(input, dto, ["razaoSocial", "nomeFantasia", "cnpj", "telefone", "email"]);
+    if (dto.endereco !== undefined) {
+      input.endereco = { id: dto.endereco.id };
+    }
     return input;
   }
 
@@ -68,7 +65,7 @@ export class EmpresaRestMapper {
     dto.cnpj = output.cnpj;
     dto.telefone = output.telefone;
     dto.email = output.email;
-    dto.idEnderecoFk = output.idEnderecoFk;
+    dto.endereco = EnderecoRestMapper.toFindOneOutputDto(output.endereco);
     dto.ativo = output.ativo;
     mapDatedFields(dto, output);
     return dto;

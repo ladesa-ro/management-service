@@ -3,7 +3,7 @@ import {
   CidadeFindOneInputGraphQlDto,
   CidadeFindOneOutputGraphQlDto,
 } from "@/modules/localidades/cidade/presentation.graphql/cidade.graphql.dto";
-import { enderecoInputSchema } from "@/modules/localidades/endereco/domain/endereco.schemas";
+import { EnderecoInputSchema } from "@/modules/localidades/endereco/domain/endereco.schemas";
 import { Field, InputType, Int, ObjectType } from "@/shared/presentation/graphql";
 
 // ============================================================================
@@ -27,7 +27,7 @@ export class EnderecoFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
 
 @InputType("EnderecoInputDto")
 export class EnderecoInputGraphQlDto {
-  static schema = enderecoInputSchema;
+  static schema = EnderecoInputSchema;
 
   @Field(() => String) declare cep: string;
   @Field(() => String) declare logradouro: string;

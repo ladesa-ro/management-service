@@ -24,16 +24,51 @@ import {
 } from "@nestjs/swagger";
 import { ensureExists } from "@/application/errors";
 import { DeclareDependency } from "@/domain/dependency-injection";
-import { IUsuarioCreateCommandHandler } from "@/modules/acesso/usuario/domain/commands/usuario-create.command.handler.interface";
-import { IUsuarioDeleteCommandHandler } from "@/modules/acesso/usuario/domain/commands/usuario-delete.command.handler.interface";
-import { IUsuarioUpdateCommandHandler } from "@/modules/acesso/usuario/domain/commands/usuario-update.command.handler.interface";
-import { IUsuarioUpdateImagemCapaCommandHandler } from "@/modules/acesso/usuario/domain/commands/usuario-update-imagem-capa.command.handler.interface";
-import { IUsuarioUpdateImagemPerfilCommandHandler } from "@/modules/acesso/usuario/domain/commands/usuario-update-imagem-perfil.command.handler.interface";
-import { IUsuarioEnsinoQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-ensino.query.handler.interface";
-import { IUsuarioFindOneQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-find-one.query.handler.interface";
-import { IUsuarioGetImagemCapaQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-get-imagem-capa.query.handler.interface";
-import { IUsuarioGetImagemPerfilQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-get-imagem-perfil.query.handler.interface";
-import { IUsuarioListQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-list.query.handler.interface";
+import {
+  IUsuarioCreateCommandHandler,
+  UsuarioCreateCommandMetadata,
+} from "@/modules/acesso/usuario/domain/commands/usuario-create.command.handler.interface";
+import {
+  IUsuarioDeleteCommandHandler,
+  UsuarioDeleteCommandMetadata,
+} from "@/modules/acesso/usuario/domain/commands/usuario-delete.command.handler.interface";
+import {
+  IUsuarioUpdateCommandHandler,
+  UsuarioUpdateCommandMetadata,
+} from "@/modules/acesso/usuario/domain/commands/usuario-update.command.handler.interface";
+import {
+  IUsuarioUpdateImagemCapaCommandHandler,
+  UsuarioUpdateImagemCapaCommandMetadata,
+} from "@/modules/acesso/usuario/domain/commands/usuario-update-imagem-capa.command.handler.interface";
+import {
+  IUsuarioUpdateImagemPerfilCommandHandler,
+  UsuarioUpdateImagemPerfilCommandMetadata,
+} from "@/modules/acesso/usuario/domain/commands/usuario-update-imagem-perfil.command.handler.interface";
+import {
+  UsuarioDisponibilidadeQueryMetadata,
+  UsuarioSetDisponibilidadeCommandMetadata,
+} from "@/modules/acesso/usuario/domain/queries/usuario-disponibilidade.query.metadata";
+import {
+  IUsuarioEnsinoQueryHandler,
+  UsuarioEnsinoQueryMetadata,
+} from "@/modules/acesso/usuario/domain/queries/usuario-ensino.query.handler.interface";
+import {
+  IUsuarioFindOneQueryHandler,
+  UsuarioFindOneQueryMetadata,
+} from "@/modules/acesso/usuario/domain/queries/usuario-find-one.query.handler.interface";
+import {
+  IUsuarioGetImagemCapaQueryHandler,
+  UsuarioGetImagemCapaQueryMetadata,
+} from "@/modules/acesso/usuario/domain/queries/usuario-get-imagem-capa.query.handler.interface";
+import {
+  IUsuarioGetImagemPerfilQueryHandler,
+  UsuarioGetImagemPerfilQueryMetadata,
+} from "@/modules/acesso/usuario/domain/queries/usuario-get-imagem-perfil.query.handler.interface";
+import { UsuarioHorarioSemanalQueryMetadata } from "@/modules/acesso/usuario/domain/queries/usuario-horario-semanal.query.metadata";
+import {
+  IUsuarioListQueryHandler,
+  UsuarioListQueryMetadata,
+} from "@/modules/acesso/usuario/domain/queries/usuario-list.query.handler.interface";
 import { IUsuarioDisponibilidadeRepository } from "@/modules/acesso/usuario/domain/repositories/usuario-disponibilidade.repository.interface";
 import { Usuario } from "@/modules/acesso/usuario/domain/usuario";
 import { IHorarioConsultaQueryHandler } from "@/modules/horarios/horario-consulta";
@@ -84,7 +119,7 @@ export class UsuarioRestController {
   ) {}
 
   @Get("/")
-  @ApiOperation({ summary: "Lista usuarios", operationId: "usuarioFindAll" })
+  @ApiOperation(UsuarioListQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: UsuarioListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
@@ -97,7 +132,7 @@ export class UsuarioRestController {
   }
 
   @Get("/:id")
-  @ApiOperation({ summary: "Busca um usuario por ID", operationId: "usuarioFindById" })
+  @ApiOperation(UsuarioFindOneQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: UsuarioFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -112,10 +147,7 @@ export class UsuarioRestController {
   }
 
   @Get("/:id/ensino")
-  @ApiOperation({
-    summary: "Busca dados de ensino de um usuario (disciplinas, cursos e turmas onde leciona)",
-    operationId: "usuarioEnsinoById",
-  })
+  @ApiOperation(UsuarioEnsinoQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: UsuarioEnsinoOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -129,7 +161,7 @@ export class UsuarioRestController {
   }
 
   @Post("/")
-  @ApiOperation({ summary: "Cria um usuario", operationId: "usuarioCreate" })
+  @ApiOperation(UsuarioCreateCommandMetadata.swaggerMetadata)
   @ApiCreatedResponse({ type: UsuarioFindOneOutputRestDto })
   @ApiForbiddenResponse()
   async create(
@@ -142,7 +174,7 @@ export class UsuarioRestController {
   }
 
   @Patch("/:id")
-  @ApiOperation({ summary: "Atualiza um usuario", operationId: "usuarioUpdate" })
+  @ApiOperation(UsuarioUpdateCommandMetadata.swaggerMetadata)
   @ApiOkResponse({ type: UsuarioFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -157,10 +189,7 @@ export class UsuarioRestController {
   }
 
   @Get("/:id/horario")
-  @ApiOperation({
-    summary: "Consulta horario semanal de um usuario (professor)",
-    operationId: "usuarioHorarioSemanal",
-  })
+  @ApiOperation(UsuarioHorarioSemanalQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: HorarioSemanalOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -176,10 +205,7 @@ export class UsuarioRestController {
   }
 
   @Get("/:id/disponibilidade")
-  @ApiOperation({
-    summary: "Consulta grade de disponibilidade de um usuario por campus",
-    operationId: "usuarioDisponibilidade",
-  })
+  @ApiOperation(UsuarioDisponibilidadeQueryMetadata.swaggerMetadata)
   @ApiOkResponse()
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -204,10 +230,7 @@ export class UsuarioRestController {
   }
 
   @Put("/:id/disponibilidade")
-  @ApiOperation({
-    summary: "Define grade de disponibilidade de um usuario por campus (bulk replace)",
-    operationId: "usuarioSetDisponibilidade",
-  })
+  @ApiOperation(UsuarioSetDisponibilidadeCommandMetadata.swaggerMetadata)
   @ApiOkResponse()
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -242,10 +265,7 @@ export class UsuarioRestController {
   }
 
   @Get("/:id/imagem/capa")
-  @ApiOperation({
-    summary: "Busca imagem de capa de um usuario",
-    operationId: "usuarioGetImagemCapa",
-  })
+  @ApiOperation(UsuarioGetImagemCapaQueryMetadata.swaggerMetadata)
   @ApiOkResponse()
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -257,10 +277,7 @@ export class UsuarioRestController {
   }
 
   @Put("/:id/imagem/capa")
-  @ApiOperation({
-    summary: "Define imagem de capa de um usuario",
-    operationId: "usuarioUpdateImagemCapa",
-  })
+  @ApiOperation(UsuarioUpdateImagemCapaCommandMetadata.swaggerMetadata)
   @ApiConsumes("multipart/form-data")
   @ApiBody({
     schema: {
@@ -284,10 +301,7 @@ export class UsuarioRestController {
   }
 
   @Get("/:id/imagem/perfil")
-  @ApiOperation({
-    summary: "Busca imagem de perfil de um usuario",
-    operationId: "usuarioGetImagemPerfil",
-  })
+  @ApiOperation(UsuarioGetImagemPerfilQueryMetadata.swaggerMetadata)
   @ApiOkResponse()
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -299,10 +313,7 @@ export class UsuarioRestController {
   }
 
   @Put("/:id/imagem/perfil")
-  @ApiOperation({
-    summary: "Define imagem de perfil de um usuario",
-    operationId: "usuarioUpdateImagemPerfil",
-  })
+  @ApiOperation(UsuarioUpdateImagemPerfilCommandMetadata.swaggerMetadata)
   @ApiConsumes("multipart/form-data")
   @ApiBody({
     schema: {
@@ -326,7 +337,7 @@ export class UsuarioRestController {
   }
 
   @Delete("/:id")
-  @ApiOperation({ summary: "Remove um usuario", operationId: "usuarioDeleteOneById" })
+  @ApiOperation(UsuarioDeleteCommandMetadata.swaggerMetadata)
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()

@@ -3,12 +3,27 @@ import { type GraphQLResolveInfo } from "graphql";
 import { ensureExists } from "@/application/errors";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { graphqlExtractSelection } from "@/infrastructure.graphql";
-import { ICursoCreateCommandHandler } from "@/modules/ensino/curso/domain/commands/curso-create.command.handler.interface";
-import { ICursoDeleteCommandHandler } from "@/modules/ensino/curso/domain/commands/curso-delete.command.handler.interface";
-import { ICursoUpdateCommandHandler } from "@/modules/ensino/curso/domain/commands/curso-update.command.handler.interface";
+import {
+  CursoCreateCommandMetadata,
+  ICursoCreateCommandHandler,
+} from "@/modules/ensino/curso/domain/commands/curso-create.command.handler.interface";
+import {
+  CursoDeleteCommandMetadata,
+  ICursoDeleteCommandHandler,
+} from "@/modules/ensino/curso/domain/commands/curso-delete.command.handler.interface";
+import {
+  CursoUpdateCommandMetadata,
+  ICursoUpdateCommandHandler,
+} from "@/modules/ensino/curso/domain/commands/curso-update.command.handler.interface";
 import { Curso } from "@/modules/ensino/curso/domain/curso";
-import { ICursoFindOneQueryHandler } from "@/modules/ensino/curso/domain/queries/curso-find-one.query.handler.interface";
-import { ICursoListQueryHandler } from "@/modules/ensino/curso/domain/queries/curso-list.query.handler.interface";
+import {
+  CursoFindOneQueryMetadata,
+  ICursoFindOneQueryHandler,
+} from "@/modules/ensino/curso/domain/queries/curso-find-one.query.handler.interface";
+import {
+  CursoListQueryMetadata,
+  ICursoListQueryHandler,
+} from "@/modules/ensino/curso/domain/queries/curso-list.query.handler.interface";
 import { AccessContext, AccessContextGraphQL } from "@/server/access-context";
 import {
   CursoCreateInputGraphQlDto,
@@ -34,7 +49,7 @@ export class CursoGraphqlResolver {
     private readonly deleteHandler: ICursoDeleteCommandHandler,
   ) {}
 
-  @Query(() => CursoListOutputGraphQlDto, { name: "cursoFindAll" })
+  @Query(() => CursoListOutputGraphQlDto, CursoListQueryMetadata.gqlMetadata)
   async findAll(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args() dto: CursoListInputGraphQlDto,
@@ -49,7 +64,7 @@ export class CursoGraphqlResolver {
     return CursoGraphqlMapper.toListOutputDto(result);
   }
 
-  @Query(() => CursoFindOneOutputGraphQlDto, { name: "cursoFindById" })
+  @Query(() => CursoFindOneOutputGraphQlDto, CursoFindOneQueryMetadata.gqlMetadata)
   async findById(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
@@ -61,7 +76,7 @@ export class CursoGraphqlResolver {
     return CursoGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => CursoFindOneOutputGraphQlDto, { name: "cursoCreate" })
+  @Mutation(() => CursoFindOneOutputGraphQlDto, CursoCreateCommandMetadata.gqlMetadata)
   async create(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("input") dto: CursoCreateInputGraphQlDto,
@@ -72,7 +87,7 @@ export class CursoGraphqlResolver {
     return CursoGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => CursoFindOneOutputGraphQlDto, { name: "cursoUpdate" })
+  @Mutation(() => CursoFindOneOutputGraphQlDto, CursoUpdateCommandMetadata.gqlMetadata)
   async update(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
@@ -84,7 +99,7 @@ export class CursoGraphqlResolver {
     return CursoGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => Boolean, { name: "cursoDeleteOneById" })
+  @Mutation(() => Boolean, CursoDeleteCommandMetadata.gqlMetadata)
   async deleteOneById(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,

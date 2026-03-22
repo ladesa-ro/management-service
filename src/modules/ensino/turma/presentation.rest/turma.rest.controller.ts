@@ -25,15 +25,39 @@ import {
 import type { Express } from "express";
 import { ensureExists } from "@/application/errors";
 import { DeclareDependency } from "@/domain/dependency-injection";
-import { ITurmaCreateCommandHandler } from "@/modules/ensino/turma/domain/commands/turma-create.command.handler.interface";
-import { ITurmaDeleteCommandHandler } from "@/modules/ensino/turma/domain/commands/turma-delete.command.handler.interface";
-import { ITurmaUpdateCommandHandler } from "@/modules/ensino/turma/domain/commands/turma-update.command.handler.interface";
-import { ITurmaUpdateImagemCapaCommandHandler } from "@/modules/ensino/turma/domain/commands/turma-update-imagem-capa.command.handler.interface";
-import { ITurmaFindOneQueryHandler } from "@/modules/ensino/turma/domain/queries/turma-find-one.query.handler.interface";
-import { ITurmaGetImagemCapaQueryHandler } from "@/modules/ensino/turma/domain/queries/turma-get-imagem-capa.query.handler.interface";
-import { ITurmaListQueryHandler } from "@/modules/ensino/turma/domain/queries/turma-list.query.handler.interface";
+import {
+  ITurmaCreateCommandHandler,
+  TurmaCreateCommandMetadata,
+} from "@/modules/ensino/turma/domain/commands/turma-create.command.handler.interface";
+import {
+  ITurmaDeleteCommandHandler,
+  TurmaDeleteCommandMetadata,
+} from "@/modules/ensino/turma/domain/commands/turma-delete.command.handler.interface";
+import {
+  ITurmaUpdateCommandHandler,
+  TurmaUpdateCommandMetadata,
+} from "@/modules/ensino/turma/domain/commands/turma-update.command.handler.interface";
+import {
+  ITurmaUpdateImagemCapaCommandHandler,
+  TurmaUpdateImagemCapaCommandMetadata,
+} from "@/modules/ensino/turma/domain/commands/turma-update-imagem-capa.command.handler.interface";
+import {
+  ITurmaFindOneQueryHandler,
+  TurmaFindOneQueryMetadata,
+} from "@/modules/ensino/turma/domain/queries/turma-find-one.query.handler.interface";
+import {
+  ITurmaGetImagemCapaQueryHandler,
+  TurmaGetImagemCapaQueryMetadata,
+} from "@/modules/ensino/turma/domain/queries/turma-get-imagem-capa.query.handler.interface";
+import {
+  ITurmaListQueryHandler,
+  TurmaListQueryMetadata,
+} from "@/modules/ensino/turma/domain/queries/turma-list.query.handler.interface";
 import { Turma } from "@/modules/ensino/turma/domain/turma";
-import { IHorarioConsultaQueryHandler } from "@/modules/horarios/horario-consulta";
+import {
+  IHorarioConsultaQueryHandler,
+  TurmaHorarioSemanalQueryMetadata,
+} from "@/modules/horarios/horario-consulta";
 import {
   HorarioSemanalOutputRestDto,
   HorarioSemanalQueryParamsRestDto,
@@ -72,7 +96,7 @@ export class TurmaRestController {
   ) {}
 
   @Get("/")
-  @ApiOperation({ summary: "Lista turmas", operationId: "turmaFindAll" })
+  @ApiOperation(TurmaListQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: TurmaListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
@@ -85,7 +109,7 @@ export class TurmaRestController {
   }
 
   @Get("/:id")
-  @ApiOperation({ summary: "Busca uma turma por ID", operationId: "turmaFindById" })
+  @ApiOperation(TurmaFindOneQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: TurmaFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -100,7 +124,7 @@ export class TurmaRestController {
   }
 
   @Post("/")
-  @ApiOperation({ summary: "Cria uma turma", operationId: "turmaCreate" })
+  @ApiOperation(TurmaCreateCommandMetadata.swaggerMetadata)
   @ApiCreatedResponse({ type: TurmaFindOneOutputRestDto })
   @ApiForbiddenResponse()
   async create(
@@ -113,7 +137,7 @@ export class TurmaRestController {
   }
 
   @Patch("/:id")
-  @ApiOperation({ summary: "Atualiza uma turma", operationId: "turmaUpdate" })
+  @ApiOperation(TurmaUpdateCommandMetadata.swaggerMetadata)
   @ApiOkResponse({ type: TurmaFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -128,10 +152,7 @@ export class TurmaRestController {
   }
 
   @Get("/:id/horario")
-  @ApiOperation({
-    summary: "Consulta horario semanal de uma turma",
-    operationId: "turmaHorarioSemanal",
-  })
+  @ApiOperation(TurmaHorarioSemanalQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: HorarioSemanalOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -147,10 +168,7 @@ export class TurmaRestController {
   }
 
   @Get("/:id/imagem/capa")
-  @ApiOperation({
-    summary: "Busca a imagem de capa de uma turma",
-    operationId: "turmaGetImagemCapa",
-  })
+  @ApiOperation(TurmaGetImagemCapaQueryMetadata.swaggerMetadata)
   @ApiOkResponse()
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -162,10 +180,7 @@ export class TurmaRestController {
   }
 
   @Put("/:id/imagem/capa")
-  @ApiOperation({
-    summary: "Define a imagem de capa de uma turma",
-    operationId: "turmaUpdateImagemCapa",
-  })
+  @ApiOperation(TurmaUpdateImagemCapaCommandMetadata.swaggerMetadata)
   @ApiConsumes("multipart/form-data")
   @ApiBody({
     schema: {
@@ -189,7 +204,7 @@ export class TurmaRestController {
   }
 
   @Delete("/:id")
-  @ApiOperation({ summary: "Remove uma turma", operationId: "turmaDeleteOneById" })
+  @ApiOperation(TurmaDeleteCommandMetadata.swaggerMetadata)
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()

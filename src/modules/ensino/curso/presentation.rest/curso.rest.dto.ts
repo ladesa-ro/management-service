@@ -1,67 +1,48 @@
 import { ImagemFindOneOutputRestDto } from "@/modules/ambientes/bloco/presentation.rest";
 import { CampusFindOneOutputRestDto } from "@/modules/ambientes/campus/presentation.rest";
+import { CursoFindOneInputSchema } from "@/modules/ensino/curso/domain/queries/curso-find-one.query.schemas";
+import { CursoPaginationInputSchema } from "@/modules/ensino/curso/domain/queries/curso-list.query.schemas";
 import { OfertaFormacaoFindOneOutputRestDto } from "@/modules/ensino/oferta-formacao/presentation.rest";
 import {
   ApiProperty,
   ApiPropertyOptional,
   ApiSchema,
-  commonProperties,
-  PartialType,
-  RegisterModel,
-  referenceProperty,
-  simpleProperty,
   TransformToArray,
 } from "@/shared/presentation/rest";
-import {
-  EntityBaseRestDto,
-  PaginatedFilterByIdRestDto,
-  PaginationMetaRestDto,
-} from "@/shared/presentation/rest/dtos";
-import {
-  cursoCreateSchema,
-  cursoFindOneInputSchema,
-  cursoPaginationInputSchema,
-} from "../domain/curso.schemas";
+import { EntityBaseRestDto, PaginationMetaRestDto } from "@/shared/presentation/rest/dtos";
+import { CursoCreateCommandFields } from "../domain/commands/curso-create.command";
+import { CursoUpdateCommandFields } from "../domain/commands/curso-update.command";
+import { CursoCreateSchema } from "../domain/curso.schemas";
+import { CursoFindOneQueryResultFields } from "../domain/queries/curso-find-one.query.result";
+import { CursoListQueryFields } from "../domain/queries/curso-list.query";
 
 // ============================================================================
 // FindOne Output
 // ============================================================================
 
 @ApiSchema({ name: "CursoFindOneOutputDto" })
-@RegisterModel({
-  name: "CursoFindOneQueryResult",
-  properties: [
-    simpleProperty("id"),
-    simpleProperty("nome"),
-    simpleProperty("nomeAbreviado"),
-    referenceProperty("campus", "CampusFindOneQueryResult"),
-    referenceProperty("ofertaFormacao", "OfertaFormacaoFindOneQueryResult"),
-    referenceProperty("imagemCapa", "ImagemFindOneQueryResult", { nullable: true }),
-    ...commonProperties.dated,
-  ],
-})
 export class CursoFindOneOutputRestDto extends EntityBaseRestDto {
-  @ApiProperty({ type: "string", description: "Nome do curso", minLength: 1 })
+  @ApiProperty(CursoFindOneQueryResultFields.nome.swaggerMetadata)
   nome: string;
 
-  @ApiProperty({ type: "string", description: "Nome abreviado do curso", minLength: 1 })
+  @ApiProperty(CursoFindOneQueryResultFields.nomeAbreviado.swaggerMetadata)
   nomeAbreviado: string;
 
   @ApiProperty({
     type: () => CampusFindOneOutputRestDto,
-    description: "Campus que o curso pertence",
+    ...CursoFindOneQueryResultFields.campus.swaggerMetadata,
   })
   campus: CampusFindOneOutputRestDto;
 
   @ApiProperty({
     type: () => OfertaFormacaoFindOneOutputRestDto,
-    description: "Oferta de formacao do curso",
+    ...CursoFindOneQueryResultFields.ofertaFormacao.swaggerMetadata,
   })
   ofertaFormacao: OfertaFormacaoFindOneOutputRestDto;
 
   @ApiPropertyOptional({
     type: () => ImagemFindOneOutputRestDto,
-    description: "Imagem de capa do curso",
+    ...CursoFindOneQueryResultFields.imagemCapa.swaggerMetadata,
     nullable: true,
   })
   imagemCapa: ImagemFindOneOutputRestDto | null;
@@ -72,32 +53,47 @@ export class CursoFindOneOutputRestDto extends EntityBaseRestDto {
 // ============================================================================
 
 @ApiSchema({ name: "CursoListInputDto" })
-export class CursoListInputRestDto extends PaginatedFilterByIdRestDto {
-  static schema = cursoPaginationInputSchema;
+export class CursoListInputRestDto {
+  static schema = CursoPaginationInputSchema;
 
-  @ApiPropertyOptional({
-    type: "string",
-    isArray: true,
-    description: "Filtro por ID do Campus",
-  })
+  [key: string]: string | number | string[] | null | undefined;
+
+  @ApiPropertyOptional(CursoListQueryFields.page.swaggerMetadata)
+  page?: number;
+
+  @ApiPropertyOptional(CursoListQueryFields.limit.swaggerMetadata)
+  limit?: number;
+
+  @ApiPropertyOptional(CursoListQueryFields.search.swaggerMetadata)
+  search?: string;
+
+  @ApiPropertyOptional(CursoListQueryFields.sortBy.swaggerMetadata)
+  sortBy?: string[];
+
+  @ApiPropertyOptional(CursoListQueryFields.selection.swaggerMetadata)
+  selection?: string[];
+
+  @ApiPropertyOptional(CursoListQueryFields.filterId.swaggerMetadata)
+  "filter.id"?: string[];
+
+  @ApiPropertyOptional(CursoListQueryFields.filterCampusId.swaggerMetadata)
   @TransformToArray()
   "filter.campus.id"?: string[];
 
-  @ApiPropertyOptional({
-    type: "string",
-    isArray: true,
-    description: "Filtro por ID da Oferta de Formacao",
-  })
+  @ApiPropertyOptional(CursoListQueryFields.filterOfertaFormacaoId.swaggerMetadata)
   @TransformToArray()
   "filter.ofertaFormacao.id"?: string[];
 }
 
 @ApiSchema({ name: "CursoListOutputDto" })
 export class CursoListOutputRestDto {
-  @ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" })
+  @ApiProperty({ type: () => PaginationMetaRestDto, ...CursoListQueryFields.meta.swaggerMetadata })
   meta: PaginationMetaRestDto;
 
-  @ApiProperty({ type: () => [CursoFindOneOutputRestDto], description: "Resultados da busca" })
+  @ApiProperty({
+    type: () => [CursoFindOneOutputRestDto],
+    ...CursoListQueryFields.data.swaggerMetadata,
+  })
   data: CursoFindOneOutputRestDto[];
 }
 
@@ -107,31 +103,37 @@ export class CursoListOutputRestDto {
 
 @ApiSchema({ name: "CursoCreateInputDto" })
 export class CursoCreateInputRestDto {
-  static readonly schema = cursoCreateSchema;
+  static readonly schema = CursoCreateSchema;
 
-  @ApiProperty({ type: "string", description: "Nome do curso", minLength: 1 })
+  @ApiProperty(CursoCreateCommandFields.nome.swaggerMetadata)
   nome: string;
 
-  @ApiProperty({ type: "string", description: "Nome abreviado do curso", minLength: 1 })
+  @ApiProperty(CursoCreateCommandFields.nomeAbreviado.swaggerMetadata)
   nomeAbreviado: string;
 
-  @ApiProperty({
-    type: "object",
-    description: "Campus que o curso pertence",
-    properties: { id: { type: "string", format: "uuid" } },
-  })
+  @ApiProperty(CursoCreateCommandFields.campus.swaggerMetadata)
   campus: { id: string };
 
-  @ApiProperty({
-    type: "object",
-    description: "Oferta de formacao do curso",
-    properties: { id: { type: "string", format: "uuid" } },
-  })
+  @ApiProperty(CursoCreateCommandFields.ofertaFormacao.swaggerMetadata)
   ofertaFormacao: { id: string };
 }
 
 @ApiSchema({ name: "CursoUpdateInputDto" })
-export class CursoUpdateInputRestDto extends PartialType(CursoCreateInputRestDto) {}
+export class CursoUpdateInputRestDto {
+  static readonly schema = CursoCreateSchema;
+
+  @ApiPropertyOptional(CursoUpdateCommandFields.nome.swaggerMetadata)
+  nome?: string;
+
+  @ApiPropertyOptional(CursoUpdateCommandFields.nomeAbreviado.swaggerMetadata)
+  nomeAbreviado?: string;
+
+  @ApiPropertyOptional(CursoUpdateCommandFields.campus.swaggerMetadata)
+  campus?: { id: string };
+
+  @ApiPropertyOptional(CursoUpdateCommandFields.ofertaFormacao.swaggerMetadata)
+  ofertaFormacao?: { id: string };
+}
 
 // ============================================================================
 // FindOne Input (for path params)
@@ -139,12 +141,8 @@ export class CursoUpdateInputRestDto extends PartialType(CursoCreateInputRestDto
 
 @ApiSchema({ name: "CursoFindOneInputDto" })
 export class CursoFindOneInputRestDto {
-  static readonly schema = cursoFindOneInputSchema;
+  static readonly schema = CursoFindOneInputSchema;
 
-  @ApiProperty({
-    type: "string",
-    description: "Identificador do registro (uuid)",
-    format: "uuid",
-  })
+  @ApiProperty(CursoFindOneQueryResultFields.id.swaggerMetadata)
   id: string;
 }

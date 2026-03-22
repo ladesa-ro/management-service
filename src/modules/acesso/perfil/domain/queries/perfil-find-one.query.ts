@@ -1,3 +1,6 @@
-import { FindOneQuery } from "@/domain/abstractions";
+import { FindOneQuery, SharedFields } from "@/domain/abstractions";
+export const PerfilFindOneQueryFields = {
+  id: SharedFields.idUuid,
+};
 
 export class PerfilFindOneQuery extends FindOneQuery {}

@@ -1,6 +1,18 @@
-import { EntityQueryResult } from "@/domain/abstractions";
+import { EntityQueryResult, SharedFields } from "@/domain/abstractions";
+import { fieldsToProperties } from "@/infrastructure.database/typeorm/metadata/model-from-fields";
+import {
+  commonProperties,
+  defineModel,
+  referenceProperty,
+} from "@/infrastructure.database/typeorm/metadata/model-registry";
 import { BlocoFindOneQueryResult } from "@/modules/ambientes/bloco";
 import { ImagemFindOneQueryResult } from "@/modules/armazenamento/imagem";
+import { AmbienteFields } from "../ambiente.fields";
+
+export const AmbienteFindOneQueryResultFields = {
+  id: SharedFields.idUuid,
+  ...AmbienteFields,
+};
 
 export class AmbienteFindOneQueryResult extends EntityQueryResult {
   nome!: string;
@@ -11,3 +23,10 @@ export class AmbienteFindOneQueryResult extends EntityQueryResult {
   bloco!: BlocoFindOneQueryResult;
   imagemCapa!: ImagemFindOneQueryResult | null;
 }
+
+defineModel("AmbienteFindOneQueryResult", [
+  ...fieldsToProperties(AmbienteFindOneQueryResultFields),
+  referenceProperty("bloco", "BlocoFindOneQueryResult"),
+  referenceProperty("imagemCapa", "ImagemFindOneQueryResult", { nullable: true }),
+  ...commonProperties.dated,
+]);

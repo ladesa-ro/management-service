@@ -1,81 +1,51 @@
+import { SharedFields } from "@/domain/abstractions";
+import {
+  AmbienteCreateSchema,
+  AmbienteUpdateSchema,
+} from "@/modules/ambientes/ambiente/domain/ambiente.schemas";
+import { AmbienteFindOneInputSchema } from "@/modules/ambientes/ambiente/domain/queries/ambiente-find-one.query.schemas";
+import { AmbientePaginationInputSchema } from "@/modules/ambientes/ambiente/domain/queries/ambiente-list.query.schemas";
 import {
   BlocoFindOneOutputRestDto,
   ImagemFindOneOutputRestDto,
 } from "@/modules/ambientes/bloco/presentation.rest";
-import {
-  ApiProperty,
-  ApiPropertyOptional,
-  ApiSchema,
-  commonProperties,
-  RegisterModel,
-  referenceProperty,
-  simpleProperty,
-} from "@/shared/presentation/rest";
+import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@/shared/presentation/rest";
 import { EntityBaseRestDto, PaginationMetaRestDto } from "@/shared/presentation/rest/dtos";
-import {
-  ambienteFindOneInputSchema,
-  ambienteInputCreateSchema,
-  ambienteInputUpdateSchema,
-  ambientePaginationInputSchema,
-} from "../domain/ambiente.schemas";
+import { AmbienteCreateCommandFields } from "../domain/commands/ambiente-create.command";
+import { AmbienteUpdateCommandFields } from "../domain/commands/ambiente-update.command";
+import { AmbienteFindOneQueryResultFields } from "../domain/queries/ambiente-find-one.query.result";
+import { AmbienteListQueryFields } from "../domain/queries/ambiente-list.query";
 
 // ============================================================================
 // FindOne Output
 // ============================================================================
 
 @ApiSchema({ name: "AmbienteFindOneOutputDto" })
-@RegisterModel({
-  name: "AmbienteFindOneQueryResult",
-  properties: [
-    simpleProperty("id"),
-    simpleProperty("nome"),
-    simpleProperty("descricao", { nullable: true }),
-    simpleProperty("codigo"),
-    simpleProperty("capacidade", { nullable: true }),
-    simpleProperty("tipo", { nullable: true }),
-    referenceProperty("bloco", "BlocoFindOneQueryResult"),
-    referenceProperty("imagemCapa", "ImagemFindOneQueryResult", { nullable: true }),
-    ...commonProperties.dated,
-  ],
-})
 export class AmbienteFindOneOutputRestDto extends EntityBaseRestDto {
-  @ApiProperty({ type: "string", description: "Nome do ambiente/sala", minLength: 1 })
+  @ApiProperty(AmbienteFindOneQueryResultFields.nome.swaggerMetadata)
   nome: string;
 
-  @ApiPropertyOptional({
-    type: "string",
-    description: "Descricao do ambiente/sala",
-    nullable: true,
-  })
+  @ApiPropertyOptional(AmbienteFindOneQueryResultFields.descricao.swaggerMetadata)
   descricao: string | null;
 
-  @ApiProperty({ type: "string", description: "Codigo do ambiente/sala", minLength: 1 })
+  @ApiProperty(AmbienteFindOneQueryResultFields.codigo.swaggerMetadata)
   codigo: string;
 
-  @ApiPropertyOptional({
-    type: "integer",
-    description: "Capacidade do ambiente/sala",
-    nullable: true,
-  })
+  @ApiPropertyOptional(AmbienteFindOneQueryResultFields.capacidade.swaggerMetadata)
   capacidade: number | null;
 
-  @ApiPropertyOptional({
-    type: "string",
-    description: "Tipo do ambiente/sala. Ex.: sala aula, auditorio, laboratorio de quimica",
-    nullable: true,
-  })
+  @ApiPropertyOptional(AmbienteFindOneQueryResultFields.tipo.swaggerMetadata)
   tipo: string | null;
 
   @ApiProperty({
     type: () => BlocoFindOneOutputRestDto,
-    description: "Bloco que o ambiente/sala pertence",
+    ...AmbienteFindOneQueryResultFields.bloco.swaggerMetadata,
   })
   bloco: BlocoFindOneOutputRestDto;
 
   @ApiPropertyOptional({
     type: () => ImagemFindOneOutputRestDto,
-    description: "Imagem de capa do ambiente",
-    nullable: true,
+    ...AmbienteFindOneQueryResultFields.imagemCapa.swaggerMetadata,
   })
   imagemCapa: ImagemFindOneOutputRestDto | null;
 }
@@ -86,58 +56,47 @@ export class AmbienteFindOneOutputRestDto extends EntityBaseRestDto {
 
 @ApiSchema({ name: "AmbienteListInputDto" })
 export class AmbienteListInputRestDto {
-  static schema = ambientePaginationInputSchema;
+  static schema = AmbientePaginationInputSchema;
 
   [key: string]: string | number | string[] | null | undefined;
 
-  @ApiPropertyOptional({
-    type: "integer",
-    description: "Pagina de consulta",
-    minimum: 1,
-    default: 1,
-  })
-  page?: number = 1;
+  @ApiPropertyOptional(AmbienteListQueryFields.page.swaggerMetadata)
+  page?: number;
 
-  @ApiPropertyOptional({
-    type: "integer",
-    description: "Limite da quantidade de resultados por pagina",
-    minimum: 1,
-  })
+  @ApiPropertyOptional(AmbienteListQueryFields.limit.swaggerMetadata)
   limit?: number;
 
-  @ApiPropertyOptional({ type: "string", description: "Busca textual" })
+  @ApiPropertyOptional(AmbienteListQueryFields.search.swaggerMetadata)
   search?: string;
 
-  @ApiPropertyOptional({ description: "Ordenacao (ex: nome:ASC)", isArray: true, type: "string" })
+  @ApiPropertyOptional(AmbienteListQueryFields.sortBy.swaggerMetadata)
   sortBy?: string[];
 
-  @ApiPropertyOptional({ description: "Seleção de campos", isArray: true, type: "string" })
+  @ApiPropertyOptional(AmbienteListQueryFields.selection.swaggerMetadata)
   selection?: string[];
 
-  @ApiPropertyOptional({ description: "Filtro por ID", type: "string", isArray: true })
+  @ApiPropertyOptional(AmbienteListQueryFields.filterId.swaggerMetadata)
   "filter.id"?: string[];
 
-  @ApiPropertyOptional({
-    description: "Filtro por ID do Bloco",
-    type: "string",
-    isArray: true,
-  })
+  @ApiPropertyOptional(AmbienteListQueryFields.filterBlocoId.swaggerMetadata)
   "filter.bloco.id"?: string[];
 
-  @ApiPropertyOptional({
-    description: "Filtro por ID do Campus do Bloco",
-    type: "string",
-    isArray: true,
-  })
+  @ApiPropertyOptional(AmbienteListQueryFields.filterBlocoCampusId.swaggerMetadata)
   "filter.bloco.campus.id"?: string[];
 }
 
 @ApiSchema({ name: "AmbienteListOutputDto" })
 export class AmbienteListOutputRestDto {
-  @ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" })
+  @ApiProperty({
+    type: () => PaginationMetaRestDto,
+    ...AmbienteListQueryFields.meta.swaggerMetadata,
+  })
   meta: PaginationMetaRestDto;
 
-  @ApiProperty({ type: () => [AmbienteFindOneOutputRestDto], description: "Resultados da busca" })
+  @ApiProperty({
+    type: () => [AmbienteFindOneOutputRestDto],
+    ...AmbienteListQueryFields.data.swaggerMetadata,
+  })
   data: AmbienteFindOneOutputRestDto[];
 }
 
@@ -147,86 +106,58 @@ export class AmbienteListOutputRestDto {
 
 @ApiSchema({ name: "AmbienteBlocoRefInputDto" })
 export class AmbienteBlocoRefInputRestDto {
-  @ApiProperty({
-    type: "string",
-    description: "Identificador do bloco (uuid)",
-    format: "uuid",
-  })
+  @ApiProperty(SharedFields.idUuid.swaggerMetadata)
   id: string;
 }
 
 @ApiSchema({ name: "AmbienteCreateInputDto" })
 export class AmbienteCreateInputRestDto {
-  static schema = ambienteInputCreateSchema;
+  static schema = AmbienteCreateSchema;
 
-  @ApiProperty({ type: "string", description: "Nome do ambiente/sala", minLength: 1 })
+  @ApiProperty(AmbienteCreateCommandFields.nome.swaggerMetadata)
   nome: string;
 
-  @ApiPropertyOptional({
-    type: "string",
-    description: "Descricao do ambiente/sala",
-    nullable: true,
-  })
+  @ApiPropertyOptional(AmbienteCreateCommandFields.descricao.swaggerMetadata)
   descricao?: string | null;
 
-  @ApiProperty({ type: "string", description: "Codigo do ambiente/sala", minLength: 1 })
+  @ApiProperty(AmbienteCreateCommandFields.codigo.swaggerMetadata)
   codigo: string;
 
-  @ApiPropertyOptional({
-    type: "integer",
-    description: "Capacidade do ambiente/sala",
-    nullable: true,
-  })
+  @ApiPropertyOptional(AmbienteCreateCommandFields.capacidade.swaggerMetadata)
   capacidade?: number | null;
 
-  @ApiPropertyOptional({
-    type: "string",
-    description: "Tipo do ambiente/sala. Ex.: sala aula, auditorio, laboratorio de quimica",
-    nullable: true,
-  })
+  @ApiPropertyOptional(AmbienteCreateCommandFields.tipo.swaggerMetadata)
   tipo?: string | null;
 
   @ApiProperty({
     type: () => AmbienteBlocoRefInputRestDto,
-    description: "Bloco que o ambiente/sala pertence",
+    ...AmbienteCreateCommandFields.bloco.swaggerMetadata,
   })
   bloco: AmbienteBlocoRefInputRestDto;
 }
 
 @ApiSchema({ name: "AmbienteUpdateInputDto" })
 export class AmbienteUpdateInputRestDto {
-  static schema = ambienteInputUpdateSchema;
+  static schema = AmbienteUpdateSchema;
 
-  @ApiPropertyOptional({ type: "string", description: "Nome do ambiente/sala", minLength: 1 })
+  @ApiPropertyOptional(AmbienteUpdateCommandFields.nome.swaggerMetadata)
   nome?: string;
 
-  @ApiPropertyOptional({
-    type: "string",
-    description: "Descricao do ambiente/sala",
-    nullable: true,
-  })
+  @ApiPropertyOptional(AmbienteUpdateCommandFields.descricao.swaggerMetadata)
   descricao?: string | null;
 
-  @ApiPropertyOptional({ type: "string", description: "Codigo do ambiente/sala", minLength: 1 })
+  @ApiPropertyOptional(AmbienteUpdateCommandFields.codigo.swaggerMetadata)
   codigo?: string;
 
-  @ApiPropertyOptional({
-    type: "integer",
-    description: "Capacidade do ambiente/sala",
-    nullable: true,
-  })
+  @ApiPropertyOptional(AmbienteUpdateCommandFields.capacidade.swaggerMetadata)
   capacidade?: number | null;
 
-  @ApiPropertyOptional({
-    type: "string",
-    description: "Tipo do ambiente/sala. Ex.: sala aula, auditorio, laboratorio de quimica",
-    nullable: true,
-  })
+  @ApiPropertyOptional(AmbienteUpdateCommandFields.tipo.swaggerMetadata)
   tipo?: string | null;
 
   @ApiPropertyOptional({
     type: () => AmbienteBlocoRefInputRestDto,
-    description: "Bloco que o ambiente/sala pertence",
+    ...AmbienteUpdateCommandFields.bloco.swaggerMetadata,
   })
   bloco?: AmbienteBlocoRefInputRestDto;
 }
@@ -237,12 +168,8 @@ export class AmbienteUpdateInputRestDto {
 
 @ApiSchema({ name: "AmbienteFindOneInputDto" })
 export class AmbienteFindOneInputRestDto {
-  static schema = ambienteFindOneInputSchema;
+  static schema = AmbienteFindOneInputSchema;
 
-  @ApiProperty({
-    type: "string",
-    description: "Identificador do registro (uuid)",
-    format: "uuid",
-  })
+  @ApiProperty(SharedFields.idUuid.swaggerMetadata)
   id: string;
 }

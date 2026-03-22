@@ -9,8 +9,14 @@ import {
 import { ensureExists } from "@/application/errors";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { Estado } from "@/modules/localidades/estado/domain/estado";
-import { IEstadoFindOneQueryHandler } from "@/modules/localidades/estado/domain/queries/estado-find-one.query.handler.interface";
-import { IEstadoListQueryHandler } from "@/modules/localidades/estado/domain/queries/estado-list.query.handler.interface";
+import {
+  EstadoFindOneQueryMetadata,
+  IEstadoFindOneQueryHandler,
+} from "@/modules/localidades/estado/domain/queries/estado-find-one.query.handler.interface";
+import {
+  EstadoListQueryMetadata,
+  IEstadoListQueryHandler,
+} from "@/modules/localidades/estado/domain/queries/estado-list.query.handler.interface";
 import { AccessContext, AccessContextHttp } from "@/server/access-context";
 import {
   EstadoFindOneInputRestDto,
@@ -31,7 +37,7 @@ export class EstadoRestController {
   ) {}
 
   @Get("/")
-  @ApiOperation({ summary: "Lista estados", operationId: "estadoFindAll" })
+  @ApiOperation(EstadoListQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: EstadoListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
@@ -44,7 +50,7 @@ export class EstadoRestController {
   }
 
   @Get("/:id")
-  @ApiOperation({ summary: "Busca um estado por ID", operationId: "estadoFindById" })
+  @ApiOperation(EstadoFindOneQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: EstadoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()

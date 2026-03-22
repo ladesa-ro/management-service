@@ -25,13 +25,38 @@ import {
 import { ensureExists } from "@/application/errors";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente";
-import { IAmbienteCreateCommandHandler } from "@/modules/ambientes/ambiente/domain/commands/ambiente-create.command.handler.interface";
-import { IAmbienteDeleteCommandHandler } from "@/modules/ambientes/ambiente/domain/commands/ambiente-delete.command.handler.interface";
-import { IAmbienteUpdateCommandHandler } from "@/modules/ambientes/ambiente/domain/commands/ambiente-update.command.handler.interface";
-import { IAmbienteUpdateImagemCapaCommandHandler } from "@/modules/ambientes/ambiente/domain/commands/ambiente-update-imagem-capa.command.handler.interface";
-import { IAmbienteFindOneQueryHandler } from "@/modules/ambientes/ambiente/domain/queries/ambiente-find-one.query.handler.interface";
-import { IAmbienteGetImagemCapaQueryHandler } from "@/modules/ambientes/ambiente/domain/queries/ambiente-get-imagem-capa.query.handler.interface";
-import { IAmbienteListQueryHandler } from "@/modules/ambientes/ambiente/domain/queries/ambiente-list.query.handler.interface";
+import {
+  AmbienteCreateCommandMetadata,
+  IAmbienteCreateCommandHandler,
+} from "@/modules/ambientes/ambiente/domain/commands/ambiente-create.command.handler.interface";
+import {
+  AmbienteDeleteCommandMetadata,
+  IAmbienteDeleteCommandHandler,
+} from "@/modules/ambientes/ambiente/domain/commands/ambiente-delete.command.handler.interface";
+import {
+  AmbienteUpdateCommandMetadata,
+  IAmbienteUpdateCommandHandler,
+} from "@/modules/ambientes/ambiente/domain/commands/ambiente-update.command.handler.interface";
+import {
+  AmbienteUpdateImagemCapaCommandMetadata,
+  IAmbienteUpdateImagemCapaCommandHandler,
+} from "@/modules/ambientes/ambiente/domain/commands/ambiente-update-imagem-capa.command.handler.interface";
+import {
+  AmbienteGetDisponibilidadeQueryMetadata,
+  AmbienteListDisponiveisQueryMetadata,
+} from "@/modules/ambientes/ambiente/domain/queries/ambiente-disponibilidade.query.metadata";
+import {
+  AmbienteFindOneQueryMetadata,
+  IAmbienteFindOneQueryHandler,
+} from "@/modules/ambientes/ambiente/domain/queries/ambiente-find-one.query.handler.interface";
+import {
+  AmbienteGetImagemCapaQueryMetadata,
+  IAmbienteGetImagemCapaQueryHandler,
+} from "@/modules/ambientes/ambiente/domain/queries/ambiente-get-imagem-capa.query.handler.interface";
+import {
+  AmbienteListQueryMetadata,
+  IAmbienteListQueryHandler,
+} from "@/modules/ambientes/ambiente/domain/queries/ambiente-list.query.handler.interface";
 import { AccessContext, AccessContextHttp } from "@/server/access-context";
 import {
   AmbienteCreateInputRestDto,
@@ -64,7 +89,7 @@ export class AmbienteRestController {
   ) {}
 
   @Get("/disponiveis")
-  @ApiOperation({ summary: "Lista ambientes disponiveis", operationId: "ambienteListDisponiveis" })
+  @ApiOperation(AmbienteListDisponiveisQueryMetadata.swaggerMetadata)
   @ApiOkResponse()
   @ApiForbiddenResponse()
   async listDisponiveis(@AccessContextHttp() _accessContext: AccessContext) {
@@ -73,7 +98,7 @@ export class AmbienteRestController {
   }
 
   @Get("/")
-  @ApiOperation({ summary: "Lista ambientes", operationId: "ambienteFindAll" })
+  @ApiOperation(AmbienteListQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: AmbienteListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
@@ -86,10 +111,7 @@ export class AmbienteRestController {
   }
 
   @Get("/:id/disponibilidade")
-  @ApiOperation({
-    summary: "Grade de disponibilidade de um ambiente",
-    operationId: "ambienteGetDisponibilidade",
-  })
+  @ApiOperation(AmbienteGetDisponibilidadeQueryMetadata.swaggerMetadata)
   @ApiOkResponse()
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -102,7 +124,7 @@ export class AmbienteRestController {
   }
 
   @Get("/:id")
-  @ApiOperation({ summary: "Busca um ambiente por ID", operationId: "ambienteFindById" })
+  @ApiOperation(AmbienteFindOneQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: AmbienteFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -117,7 +139,7 @@ export class AmbienteRestController {
   }
 
   @Post("/")
-  @ApiOperation({ summary: "Cria um ambiente", operationId: "ambienteCreate" })
+  @ApiOperation(AmbienteCreateCommandMetadata.swaggerMetadata)
   @ApiCreatedResponse({ type: AmbienteFindOneOutputRestDto })
   @ApiForbiddenResponse()
   async create(
@@ -130,7 +152,7 @@ export class AmbienteRestController {
   }
 
   @Patch("/:id")
-  @ApiOperation({ summary: "Atualiza um ambiente", operationId: "ambienteUpdate" })
+  @ApiOperation(AmbienteUpdateCommandMetadata.swaggerMetadata)
   @ApiOkResponse({ type: AmbienteFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -145,10 +167,7 @@ export class AmbienteRestController {
   }
 
   @Get("/:id/imagem/capa")
-  @ApiOperation({
-    summary: "Obtem a imagem de capa de um ambiente",
-    operationId: "ambienteGetImagemCapa",
-  })
+  @ApiOperation(AmbienteGetImagemCapaQueryMetadata.swaggerMetadata)
   @ApiOkResponse()
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -160,10 +179,7 @@ export class AmbienteRestController {
   }
 
   @Put("/:id/imagem/capa")
-  @ApiOperation({
-    summary: "Define a imagem de capa de um ambiente",
-    operationId: "ambienteUpdateImagemCapa",
-  })
+  @ApiOperation(AmbienteUpdateImagemCapaCommandMetadata.swaggerMetadata)
   @ApiConsumes("multipart/form-data")
   @ApiBody({
     schema: {
@@ -187,7 +203,7 @@ export class AmbienteRestController {
   }
 
   @Delete("/:id")
-  @ApiOperation({ summary: "Remove um ambiente", operationId: "ambienteDeleteOneById" })
+  @ApiOperation(AmbienteDeleteCommandMetadata.swaggerMetadata)
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()

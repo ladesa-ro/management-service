@@ -18,7 +18,7 @@ export class EmpresaMapper {
       cnpj: entity.cnpj,
       telefone: entity.telefone,
       email: entity.email,
-      idEnderecoFk: entity.idEnderecoFk,
+      endereco: { id: entity.endereco?.id ?? (entity as any).idEnderecoFk },
       dateCreated: entity.dateCreated.toISOString(),
       dateUpdated: entity.dateUpdated.toISOString(),
       dateDeleted: entity.dateDeleted ? entity.dateDeleted.toISOString() : null,
@@ -37,8 +37,7 @@ export class EmpresaMapper {
     entity.cnpj = empresa.cnpj;
     entity.telefone = empresa.telefone;
     entity.email = empresa.email;
-    entity.idEnderecoFk = empresa.idEnderecoFk;
-    entity.endereco = { id: empresa.idEnderecoFk } as any;
+    entity.endereco = { id: empresa.endereco.id } as any;
     entity.dateCreated = new Date(empresa.dateCreated);
     entity.dateUpdated = new Date(empresa.dateUpdated);
     entity.dateDeleted = empresa.dateDeleted ? new Date(empresa.dateDeleted) : null;
@@ -56,7 +55,7 @@ export class EmpresaMapper {
       cnpj: entity.cnpj,
       telefone: entity.telefone,
       email: entity.email,
-      idEnderecoFk: entity.idEnderecoFk,
+      endereco: entity.endereco as any,
       ativo: !entity.dateDeleted,
       dateCreated: entity.dateCreated.toISOString(),
       dateUpdated: entity.dateUpdated.toISOString(),
@@ -75,7 +74,7 @@ export class EmpresaMapper {
       cnpj: empresa.cnpj,
       telefone: empresa.telefone,
       email: empresa.email,
-      idEnderecoFk: empresa.idEnderecoFk,
+      endereco: empresa.endereco as any,
       ativo: empresa.ativo,
       dateCreated: empresa.dateCreated,
       dateUpdated: empresa.dateUpdated,

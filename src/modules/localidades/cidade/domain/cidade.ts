@@ -2,9 +2,9 @@ import type { z } from "zod";
 import type { IdNumeric } from "@/domain/abstractions/scalars";
 import type { IEstado } from "@/modules/localidades/estado";
 import { zodValidate } from "@/shared/validation/index";
-import { cidadeCreateSchema, cidadeSchema, cidadeUpdateSchema } from "./cidade.schemas";
+import { CidadeCreateSchema, CidadeSchema, CidadeUpdateSchema } from "./cidade.schemas";
 
-export type ICidade = z.infer<typeof cidadeSchema> & { estado: IEstado };
+export type ICidade = z.infer<typeof CidadeSchema> & { estado: IEstado };
 
 export class Cidade {
   static readonly entityName = "Cidade";
@@ -16,7 +16,7 @@ export class Cidade {
   private constructor() {}
 
   static create(dados: unknown): Cidade {
-    const parsed = zodValidate(Cidade.entityName, cidadeCreateSchema, dados);
+    const parsed = zodValidate(Cidade.entityName, CidadeCreateSchema, dados);
 
     const instance = new Cidade();
 
@@ -27,7 +27,7 @@ export class Cidade {
   }
 
   static load(dados: unknown): Cidade {
-    const parsed = zodValidate(Cidade.entityName, cidadeSchema, dados);
+    const parsed = zodValidate(Cidade.entityName, CidadeSchema, dados);
 
     const instance = new Cidade();
 
@@ -42,11 +42,11 @@ export class Cidade {
   }
 
   update(dados: unknown): void {
-    const parsed = zodValidate(Cidade.entityName, cidadeUpdateSchema, dados);
+    const parsed = zodValidate(Cidade.entityName, CidadeUpdateSchema, dados);
 
     if (parsed.nome !== undefined) this.nome = parsed.nome;
 
-    zodValidate(Cidade.entityName, cidadeSchema, this);
+    zodValidate(Cidade.entityName, CidadeSchema, this);
   }
 
   getNomeCompleto(): string {

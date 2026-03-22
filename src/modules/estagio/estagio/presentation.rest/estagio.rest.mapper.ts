@@ -2,6 +2,7 @@ import type {
   EstagioCreateCommand,
   EstagioUpdateCommand,
 } from "@/modules/estagio/estagio/domain/commands";
+import type { EstagioStatus } from "@/modules/estagio/estagio/domain/estagio";
 import type {
   EstagioFindOneQuery,
   EstagioFindOneQueryResult,
@@ -20,24 +21,24 @@ import {
 export class EstagioRestMapper {
   static toCreateInput(dto: EstagioCreateInputRestDto): EstagioCreateCommand {
     return {
-      idEmpresaFk: dto.idEmpresaFk,
-      idEstagiarioFk: dto.idEstagiarioFk,
+      empresa: dto.empresa,
+      estagiario: dto.estagiario,
       cargaHoraria: dto.cargaHoraria,
       dataInicio: dto.dataInicio,
       dataFim: dto.dataFim,
-      status: dto.status,
+      status: dto.status as EstagioStatus | undefined,
       horariosEstagio: dto.horariosEstagio,
     };
   }
 
   static toUpdateInput(dto: EstagioUpdateInputRestDto): EstagioUpdateCommand {
     return {
-      idEmpresaFk: dto.idEmpresaFk,
-      idEstagiarioFk: dto.idEstagiarioFk,
+      empresa: dto.empresa,
+      estagiario: dto.estagiario,
       cargaHoraria: dto.cargaHoraria,
       dataInicio: dto.dataInicio,
       dataFim: dto.dataFim,
-      status: dto.status,
+      status: dto.status as EstagioStatus | undefined,
       horariosEstagio: dto.horariosEstagio,
     };
   }
@@ -66,17 +67,17 @@ export class EstagioRestMapper {
       page: dto.page,
       limit: dto.limit,
       search: dto.search,
-      filterIdEmpresaFk: normalizeStringArray(dto["filter.idEmpresaFk"]),
-      filterIdEstagiarioFk: normalizeStringArray(dto["filter.idEstagiarioFk"]),
-      filterStatus: normalizeArray(dto["filter.status"]),
+      filterEmpresaId: normalizeStringArray(dto["filter.empresa.id"]),
+      filterEstagiarioId: normalizeStringArray(dto["filter.estagiario.id"]),
+      filterStatus: normalizeArray(dto["filter.status"]) as EstagioStatus[] | undefined,
     };
   }
 
   static toFindOneOutputDto(data: EstagioFindOneQueryResult): EstagioFindOneOutputRestDto {
     return {
       id: data.id,
-      idEmpresaFk: data.idEmpresaFk,
-      idEstagiarioFk: data.idEstagiarioFk,
+      empresa: data.empresa,
+      estagiario: data.estagiario,
       cargaHoraria: data.cargaHoraria,
       dataInicio: data.dataInicio,
       dataFim: data.dataFim,

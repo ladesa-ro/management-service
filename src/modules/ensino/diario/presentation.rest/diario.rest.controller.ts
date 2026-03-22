@@ -9,12 +9,27 @@ import {
 } from "@nestjs/swagger";
 import { ensureExists } from "@/application/errors";
 import { DeclareDependency } from "@/domain/dependency-injection";
-import { IDiarioCreateCommandHandler } from "@/modules/ensino/diario/domain/commands/diario-create.command.handler.interface";
-import { IDiarioDeleteCommandHandler } from "@/modules/ensino/diario/domain/commands/diario-delete.command.handler.interface";
-import { IDiarioUpdateCommandHandler } from "@/modules/ensino/diario/domain/commands/diario-update.command.handler.interface";
+import {
+  DiarioCreateCommandMetadata,
+  IDiarioCreateCommandHandler,
+} from "@/modules/ensino/diario/domain/commands/diario-create.command.handler.interface";
+import {
+  DiarioDeleteCommandMetadata,
+  IDiarioDeleteCommandHandler,
+} from "@/modules/ensino/diario/domain/commands/diario-delete.command.handler.interface";
+import {
+  DiarioUpdateCommandMetadata,
+  IDiarioUpdateCommandHandler,
+} from "@/modules/ensino/diario/domain/commands/diario-update.command.handler.interface";
 import { Diario } from "@/modules/ensino/diario/domain/diario";
-import { IDiarioFindOneQueryHandler } from "@/modules/ensino/diario/domain/queries/diario-find-one.query.handler.interface";
-import { IDiarioListQueryHandler } from "@/modules/ensino/diario/domain/queries/diario-list.query.handler.interface";
+import {
+  DiarioFindOneQueryMetadata,
+  IDiarioFindOneQueryHandler,
+} from "@/modules/ensino/diario/domain/queries/diario-find-one.query.handler.interface";
+import {
+  DiarioListQueryMetadata,
+  IDiarioListQueryHandler,
+} from "@/modules/ensino/diario/domain/queries/diario-list.query.handler.interface";
 import { AccessContext, AccessContextHttp } from "@/server/access-context";
 import {
   DiarioCreateInputRestDto,
@@ -43,7 +58,7 @@ export class DiarioRestController {
   ) {}
 
   @Get("/")
-  @ApiOperation({ summary: "Lista diarios", operationId: "diarioFindAll" })
+  @ApiOperation(DiarioListQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: DiarioListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
@@ -56,7 +71,7 @@ export class DiarioRestController {
   }
 
   @Get("/:id")
-  @ApiOperation({ summary: "Busca um diario por ID", operationId: "diarioFindById" })
+  @ApiOperation(DiarioFindOneQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: DiarioFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -71,7 +86,7 @@ export class DiarioRestController {
   }
 
   @Post("/")
-  @ApiOperation({ summary: "Cria um diario", operationId: "diarioCreate" })
+  @ApiOperation(DiarioCreateCommandMetadata.swaggerMetadata)
   @ApiCreatedResponse({ type: DiarioFindOneOutputRestDto })
   @ApiForbiddenResponse()
   async create(
@@ -84,7 +99,7 @@ export class DiarioRestController {
   }
 
   @Patch("/:id")
-  @ApiOperation({ summary: "Atualiza um diario", operationId: "diarioUpdate" })
+  @ApiOperation(DiarioUpdateCommandMetadata.swaggerMetadata)
   @ApiOkResponse({ type: DiarioFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -99,7 +114,7 @@ export class DiarioRestController {
   }
 
   @Delete("/:id")
-  @ApiOperation({ summary: "Remove um diario", operationId: "diarioDeleteOneById" })
+  @ApiOperation(DiarioDeleteCommandMetadata.swaggerMetadata)
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()

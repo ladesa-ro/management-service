@@ -1,3 +1,9 @@
+import { AutenticacaoFields } from "@/modules/acesso/autenticacao/domain/autenticacao.fields";
+import { AuthCredentialsSetInitialPasswordCommandFields } from "@/modules/acesso/autenticacao/domain/commands/auth-credentials-set-initial-password.command";
+import { AuthLoginCommandFields } from "@/modules/acesso/autenticacao/domain/commands/auth-login.command";
+import { AuthRecoverPasswordCommandFields } from "@/modules/acesso/autenticacao/domain/commands/auth-recover-password.command";
+import { AuthRefreshCommandFields } from "@/modules/acesso/autenticacao/domain/commands/auth-refresh.command";
+import { AuthWhoAmIQueryResultFields } from "@/modules/acesso/autenticacao/domain/queries/auth-who-am-i.query.result";
 import { PerfilFindOneOutputRestDto } from "@/modules/acesso/perfil/presentation.rest";
 import { UsuarioFindOneOutputRestDto } from "@/modules/acesso/usuario/presentation.rest";
 import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@/shared/presentation/rest";
@@ -8,10 +14,10 @@ import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@/shared/presentati
 
 @ApiSchema({ name: "AuthLoginInputDto" })
 export class AuthLoginInputRestDto {
-  @ApiProperty({ type: "string", description: "Matrícula" })
+  @ApiProperty(AuthLoginCommandFields.matricula.swaggerMetadata)
   matricula: string;
 
-  @ApiProperty({ type: "string", description: "Senha" })
+  @ApiProperty(AuthLoginCommandFields.senha.swaggerMetadata)
   senha: string;
 }
 
@@ -21,7 +27,7 @@ export class AuthLoginInputRestDto {
 
 @ApiSchema({ name: "AuthRefreshInputDto" })
 export class AuthRefreshInputRestDto {
-  @ApiProperty({ type: "string", description: "Token de refresh" })
+  @ApiProperty(AuthRefreshCommandFields.refreshToken.swaggerMetadata)
   refreshToken: string;
 }
 
@@ -33,14 +39,13 @@ export class AuthRefreshInputRestDto {
 export class AuthWhoAmIOutputRestDto {
   @ApiPropertyOptional({
     type: () => UsuarioFindOneOutputRestDto,
-    description: "Usuario autenticado",
-    nullable: true,
+    ...AuthWhoAmIQueryResultFields.usuario.swaggerMetadata,
   })
   usuario: UsuarioFindOneOutputRestDto | null;
 
   @ApiProperty({
     type: () => [PerfilFindOneOutputRestDto],
-    description: "Vinculos do usuario logado",
+    ...AuthWhoAmIQueryResultFields.perfisAtivos.swaggerMetadata,
   })
   perfisAtivos: PerfilFindOneOutputRestDto[];
 }
@@ -51,36 +56,28 @@ export class AuthWhoAmIOutputRestDto {
 
 @ApiSchema({ name: "AuthSessionCredentialsDto" })
 export class AuthSessionCredentialsRestDto {
-  @ApiPropertyOptional({ type: "string", description: "Token de acesso", nullable: true })
+  @ApiPropertyOptional(AutenticacaoFields.accessToken.swaggerMetadata)
   access_token: string | null;
 
-  @ApiPropertyOptional({ type: "string", description: "Tipo do token", nullable: true })
+  @ApiPropertyOptional(AutenticacaoFields.tokenType.swaggerMetadata)
   token_type: string | null;
 
-  @ApiPropertyOptional({ type: "string", description: "Token de identificacao", nullable: true })
+  @ApiPropertyOptional(AutenticacaoFields.idToken.swaggerMetadata)
   id_token: string | null;
 
-  @ApiPropertyOptional({ type: "string", description: "Token de refresh", nullable: true })
+  @ApiPropertyOptional(AutenticacaoFields.refreshToken.swaggerMetadata)
   refresh_token: string | null;
 
-  @ApiPropertyOptional({
-    type: "integer",
-    description: "Tempo de expiracao do token",
-    nullable: true,
-  })
+  @ApiPropertyOptional(AutenticacaoFields.expiresIn.swaggerMetadata)
   expires_in: number | null;
 
-  @ApiPropertyOptional({
-    type: "integer",
-    description: "Tempo de expiracao do token",
-    nullable: true,
-  })
+  @ApiPropertyOptional(AutenticacaoFields.expiresAt.swaggerMetadata)
   expires_at: number | null;
 
-  @ApiPropertyOptional({ type: "string", description: "Estado da sessao", nullable: true })
+  @ApiPropertyOptional(AutenticacaoFields.sessionState.swaggerMetadata)
   session_state: string | null;
 
-  @ApiPropertyOptional({ type: "string", description: "Escopo da autenticacao", nullable: true })
+  @ApiPropertyOptional(AutenticacaoFields.scope.swaggerMetadata)
   scope: string | null;
 }
 
@@ -90,10 +87,10 @@ export class AuthSessionCredentialsRestDto {
 
 @ApiSchema({ name: "AuthCredentialsSetInitialPasswordInputDto" })
 export class AuthCredentialsSetInitialPasswordInputRestDto {
-  @ApiProperty({ type: "string", description: "Matrícula" })
+  @ApiProperty(AuthCredentialsSetInitialPasswordCommandFields.matricula.swaggerMetadata)
   matricula: string;
 
-  @ApiProperty({ type: "string", description: "Nova senha" })
+  @ApiProperty(AuthCredentialsSetInitialPasswordCommandFields.senha.swaggerMetadata)
   senha: string;
 }
 
@@ -103,6 +100,6 @@ export class AuthCredentialsSetInitialPasswordInputRestDto {
 
 @ApiSchema({ name: "AuthRecoverPasswordInputDto" })
 export class AuthRecoverPasswordInputRestDto {
-  @ApiProperty({ type: "string", description: "E-mail" })
+  @ApiProperty(AuthRecoverPasswordCommandFields.email.swaggerMetadata)
   email: string;
 }

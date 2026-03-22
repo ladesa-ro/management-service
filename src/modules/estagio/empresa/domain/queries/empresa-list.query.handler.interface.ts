@@ -1,6 +1,12 @@
 import type { IQueryHandler } from "@/domain/abstractions";
+import { createOperationMetadata } from "@/domain/abstractions";
 import type { EmpresaListQuery } from "./empresa-list.query";
 import type { EmpresaListQueryResult } from "./empresa-list.query.result";
+
+export const EmpresaListQueryMetadata = createOperationMetadata({
+  operationId: "empresaFindAll",
+  summary: "Lista empresas",
+});
 
 export const IEmpresaListQueryHandler = Symbol("IEmpresaListQueryHandler");
 

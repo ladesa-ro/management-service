@@ -18,9 +18,6 @@ export class DiarioPreferenciaAgrupamentoAulasEntity {
   @Column({ name: "horario_termino", type: "time", nullable: true })
   horarioTermino!: string | null;
 
-  @Column({ name: "id_diario_preferencia_agrupamento_fk", type: "uuid", nullable: false })
-  idDiarioPreferenciaAgrupamentoFk!: string;
-
   @ManyToOne(() => DiarioPreferenciaAgrupamentoEntity, {})
   @JoinColumn({ name: "id_diario_preferencia_agrupamento_fk" })
   diarioPreferenciaAgrupamento!: Relation<DiarioPreferenciaAgrupamentoEntity>;

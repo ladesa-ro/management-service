@@ -18,14 +18,14 @@ export class CursoPeriodoDisciplinaTypeOrmRepositoryAdapter
 
   async findByCursoId(cursoId: string): Promise<CursoPeriodoDisciplinaEntity[]> {
     return this.repository.find({
-      where: { idCursoFk: cursoId },
+      where: { curso: { id: cursoId } } as any,
       relations: ["disciplina"],
       order: { numeroPeriodo: "ASC" },
     });
   }
 
   async deleteByCursoId(cursoId: string): Promise<void> {
-    await this.repository.delete({ idCursoFk: cursoId });
+    await this.repository.delete({ curso: { id: cursoId } } as any);
   }
 
   async save(entity: CursoPeriodoDisciplinaEntity): Promise<CursoPeriodoDisciplinaEntity> {

@@ -1,29 +1,35 @@
+/**
+ * Diario — schemas zod para a entidade e suas operacoes.
+ *
+ * Contem os schemas de referencia, composicao (create/update)
+ * e validacao da entidade. Fonte unica de verdade (SSOT) para
+ * os contratos de dados da entidade.
+ */
 import { z } from "zod";
-import { datedSchema, stringFilterSchema, uuidSchema } from "@/shared/validation/schemas";
+import { datedSchema, uuidSchema } from "@/shared/validation/schemas";
+import { DiarioFields } from "./diario.fields";
 
 // ============================================================================
-// Fragments reutilizáveis
+// Fragments de referência
 // ============================================================================
 
-export const diarioAtivoSchema = z.boolean();
-
-export const diarioCalendarioLetivoRefSchema = z.object({
+export const DiarioCalendarioLetivoRefSchema = z.object({
   id: uuidSchema,
 });
 
-export const diarioTurmaRefSchema = z.object({
+export const DiarioTurmaRefSchema = z.object({
   id: uuidSchema,
 });
 
-export const diarioDisciplinaRefSchema = z.object({
+export const DiarioDisciplinaRefSchema = z.object({
   id: uuidSchema,
 });
 
-export const diarioAmbientePadraoRefSchema = z.object({
+export const DiarioAmbientePadraoRefSchema = z.object({
   id: uuidSchema,
 });
 
-export const diarioImagemCapaRefSchema = z.object({
+export const DiarioImagemCapaRefSchema = z.object({
   id: uuidSchema,
 });
 
@@ -31,64 +37,30 @@ export const diarioImagemCapaRefSchema = z.object({
 // Schemas compostos
 // ============================================================================
 
-export const diarioSchema = z
+export const DiarioSchema = z
   .object({
     id: uuidSchema,
-    ativo: diarioAtivoSchema,
-    calendarioLetivo: diarioCalendarioLetivoRefSchema,
-    turma: diarioTurmaRefSchema,
-    disciplina: diarioDisciplinaRefSchema,
-    ambientePadrao: diarioAmbientePadraoRefSchema.nullable(),
-    imagemCapa: diarioImagemCapaRefSchema.nullable(),
+    ativo: DiarioFields.ativo.schema,
+    calendarioLetivo: DiarioCalendarioLetivoRefSchema,
+    turma: DiarioTurmaRefSchema,
+    disciplina: DiarioDisciplinaRefSchema,
+    ambientePadrao: DiarioAmbientePadraoRefSchema.nullable(),
+    imagemCapa: DiarioImagemCapaRefSchema.nullable(),
   })
   .merge(datedSchema);
 
-export const diarioCreateSchema = z.object({
-  ativo: diarioAtivoSchema.optional().default(true),
-  calendarioLetivo: diarioCalendarioLetivoRefSchema,
-  turma: diarioTurmaRefSchema,
-  disciplina: diarioDisciplinaRefSchema,
-  ambientePadrao: diarioAmbientePadraoRefSchema.nullable().optional(),
+export const DiarioCreateSchema = z.object({
+  ativo: DiarioFields.ativo.schema.optional().default(true),
+  calendarioLetivo: DiarioCalendarioLetivoRefSchema,
+  turma: DiarioTurmaRefSchema,
+  disciplina: DiarioDisciplinaRefSchema,
+  ambientePadrao: DiarioAmbientePadraoRefSchema.nullable().optional(),
 });
 
-export const diarioUpdateSchema = z.object({
-  ativo: diarioAtivoSchema.optional(),
-  calendarioLetivo: diarioCalendarioLetivoRefSchema.optional(),
-  turma: diarioTurmaRefSchema.optional(),
-  disciplina: diarioDisciplinaRefSchema.optional(),
-  ambientePadrao: diarioAmbientePadraoRefSchema.nullable().optional(),
-});
-
-// ============================================================================
-// Schemas de input (presentation layer)
-// ============================================================================
-
-export const diarioFindOneInputSchema = z.object({
-  id: uuidSchema,
-});
-
-export const diarioPaginationInputSchema = z.object({
-  page: z.coerce.number().int().min(1).optional().default(1),
-  limit: z.coerce.number().int().min(1).optional(),
-  search: z.string().optional(),
-  sortBy: z.array(z.string()).optional(),
-  selection: z.array(z.string()).optional(),
-  "filter.id": stringFilterSchema,
-  "filter.turma.id": stringFilterSchema,
-  "filter.disciplina.id": stringFilterSchema,
-  "filter.ambientePadrao.id": stringFilterSchema,
-  "filter.calendarioLetivo.id": stringFilterSchema,
-});
-
-export const diarioGraphqlListInputSchema = z.object({
-  page: z.number().int().min(1).optional().default(1),
-  limit: z.number().int().min(1).optional(),
-  search: z.string().optional(),
-  sortBy: z.array(z.string()).optional(),
-  selection: z.array(z.string()).optional(),
-  filterId: z.array(z.string()).optional(),
-  filterTurmaId: z.array(z.string()).optional(),
-  filterDisciplinaId: z.array(z.string()).optional(),
-  filterCalendarioLetivoId: z.array(z.string()).optional(),
-  filterAmbientePadraoId: z.array(z.string()).optional(),
+export const DiarioUpdateSchema = z.object({
+  ativo: DiarioFields.ativo.schema.optional(),
+  calendarioLetivo: DiarioCalendarioLetivoRefSchema.optional(),
+  turma: DiarioTurmaRefSchema.optional(),
+  disciplina: DiarioDisciplinaRefSchema.optional(),
+  ambientePadrao: DiarioAmbientePadraoRefSchema.nullable().optional(),
 });

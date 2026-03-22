@@ -4,11 +4,26 @@ import { ensureExists } from "@/application/errors";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { graphqlExtractSelection } from "@/infrastructure.graphql";
 import { CalendarioLetivo } from "@/modules/horarios/calendario-letivo/domain/calendario-letivo";
-import { ICalendarioLetivoCreateCommandHandler } from "@/modules/horarios/calendario-letivo/domain/commands/calendario-letivo-create.command.handler.interface";
-import { ICalendarioLetivoDeleteCommandHandler } from "@/modules/horarios/calendario-letivo/domain/commands/calendario-letivo-delete.command.handler.interface";
-import { ICalendarioLetivoUpdateCommandHandler } from "@/modules/horarios/calendario-letivo/domain/commands/calendario-letivo-update.command.handler.interface";
-import { ICalendarioLetivoFindOneQueryHandler } from "@/modules/horarios/calendario-letivo/domain/queries/calendario-letivo-find-one.query.handler.interface";
-import { ICalendarioLetivoListQueryHandler } from "@/modules/horarios/calendario-letivo/domain/queries/calendario-letivo-list.query.handler.interface";
+import {
+  CalendarioLetivoCreateCommandMetadata,
+  ICalendarioLetivoCreateCommandHandler,
+} from "@/modules/horarios/calendario-letivo/domain/commands/calendario-letivo-create.command.handler.interface";
+import {
+  CalendarioLetivoDeleteCommandMetadata,
+  ICalendarioLetivoDeleteCommandHandler,
+} from "@/modules/horarios/calendario-letivo/domain/commands/calendario-letivo-delete.command.handler.interface";
+import {
+  CalendarioLetivoUpdateCommandMetadata,
+  ICalendarioLetivoUpdateCommandHandler,
+} from "@/modules/horarios/calendario-letivo/domain/commands/calendario-letivo-update.command.handler.interface";
+import {
+  CalendarioLetivoFindOneQueryMetadata,
+  ICalendarioLetivoFindOneQueryHandler,
+} from "@/modules/horarios/calendario-letivo/domain/queries/calendario-letivo-find-one.query.handler.interface";
+import {
+  CalendarioLetivoListQueryMetadata,
+  ICalendarioLetivoListQueryHandler,
+} from "@/modules/horarios/calendario-letivo/domain/queries/calendario-letivo-list.query.handler.interface";
 import { AccessContext, AccessContextGraphQL } from "@/server/access-context";
 import {
   CalendarioLetivoCreateInputGraphQlDto,
@@ -34,7 +49,7 @@ export class CalendarioLetivoGraphqlResolver {
     private readonly deleteHandler: ICalendarioLetivoDeleteCommandHandler,
   ) {}
 
-  @Query(() => CalendarioLetivoListOutputGraphQlDto, { name: "calendarioLetivoFindAll" })
+  @Query(() => CalendarioLetivoListOutputGraphQlDto, CalendarioLetivoListQueryMetadata.gqlMetadata)
   async findAll(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args() dto: CalendarioLetivoListInputGraphQlDto,
@@ -49,7 +64,10 @@ export class CalendarioLetivoGraphqlResolver {
     return CalendarioLetivoGraphqlMapper.toListOutputDto(result);
   }
 
-  @Query(() => CalendarioLetivoFindOneOutputGraphQlDto, { name: "calendarioLetivoFindById" })
+  @Query(
+    () => CalendarioLetivoFindOneOutputGraphQlDto,
+    CalendarioLetivoFindOneQueryMetadata.gqlMetadata,
+  )
   async findById(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
@@ -61,7 +79,10 @@ export class CalendarioLetivoGraphqlResolver {
     return CalendarioLetivoGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => CalendarioLetivoFindOneOutputGraphQlDto, { name: "calendarioLetivoCreate" })
+  @Mutation(
+    () => CalendarioLetivoFindOneOutputGraphQlDto,
+    CalendarioLetivoCreateCommandMetadata.gqlMetadata,
+  )
   async create(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("input") dto: CalendarioLetivoCreateInputGraphQlDto,
@@ -72,7 +93,10 @@ export class CalendarioLetivoGraphqlResolver {
     return CalendarioLetivoGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => CalendarioLetivoFindOneOutputGraphQlDto, { name: "calendarioLetivoUpdate" })
+  @Mutation(
+    () => CalendarioLetivoFindOneOutputGraphQlDto,
+    CalendarioLetivoUpdateCommandMetadata.gqlMetadata,
+  )
   async update(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
@@ -84,7 +108,7 @@ export class CalendarioLetivoGraphqlResolver {
     return CalendarioLetivoGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => Boolean, { name: "calendarioLetivoDeleteOneById" })
+  @Mutation(() => Boolean, CalendarioLetivoDeleteCommandMetadata.gqlMetadata)
   async deleteOneById(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,

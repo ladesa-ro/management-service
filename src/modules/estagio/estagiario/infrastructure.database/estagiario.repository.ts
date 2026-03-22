@@ -70,34 +70,34 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
       );
     }
 
-    if (dto?.["filter.idPerfilFk"]) {
-      const raw = dto["filter.idPerfilFk"];
+    if (dto?.["filter.perfil.id"]) {
+      const raw = dto["filter.perfil.id"];
       const arr = Array.isArray(raw) ? raw : [raw];
       const validIds = arr.map(String).filter((id) => id && id.trim());
       if (validIds.length > 0) {
-        query.andWhere("estagiario.idPerfilFk IN (:...idPerfis)", {
+        query.andWhere("estagiario.perfil.id IN (:...idPerfis)", {
           idPerfis: validIds,
         });
       }
     }
 
-    if (dto?.["filter.idCursoFk"]) {
-      const raw = dto["filter.idCursoFk"];
+    if (dto?.["filter.curso.id"]) {
+      const raw = dto["filter.curso.id"];
       const arr = Array.isArray(raw) ? raw : [raw];
       const validIds = arr.map(String).filter((id) => id && id.trim());
       if (validIds.length > 0) {
-        query.andWhere("estagiario.idCursoFk IN (:...idCursos)", {
+        query.andWhere("estagiario.curso.id IN (:...idCursos)", {
           idCursos: validIds,
         });
       }
     }
 
-    if (dto?.["filter.idTurmaFk"]) {
-      const raw = dto["filter.idTurmaFk"];
+    if (dto?.["filter.turma.id"]) {
+      const raw = dto["filter.turma.id"];
       const arr = Array.isArray(raw) ? raw : [raw];
       const validIds = arr.map(String).filter((id) => id && id.trim());
       if (validIds.length > 0) {
-        query.andWhere("estagiario.idTurmaFk IN (:...idTurmas)", {
+        query.andWhere("estagiario.turma.id IN (:...idTurmas)", {
           idTurmas: validIds,
         });
       }
@@ -140,22 +140,22 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
     dto: EstagiarioCreateCommand,
   ): Promise<EstagiarioFindOneQueryResult> {
     const perfil = await this.perfilRepository.findOne({
-      where: { id: dto.idPerfilFk, dateDeleted: null as any },
+      where: { id: dto.perfil.id, dateDeleted: null as any },
     });
 
-    ensureExists(perfil, Perfil.entityName, dto.idPerfilFk);
+    ensureExists(perfil, Perfil.entityName, dto.perfil.id);
 
     const curso = await this.cursoRepository.findOne({
-      where: { id: dto.idCursoFk, dateDeleted: null as any },
+      where: { id: dto.curso.id, dateDeleted: null as any },
     });
 
-    ensureExists(curso, Curso.entityName, dto.idCursoFk);
+    ensureExists(curso, Curso.entityName, dto.curso.id);
 
     const turma = await this.turmaRepository.findOne({
-      where: { id: dto.idTurmaFk, dateDeleted: null as any },
+      where: { id: dto.turma.id, dateDeleted: null as any },
     });
 
-    ensureExists(turma, Turma.entityName, dto.idTurmaFk);
+    ensureExists(turma, Turma.entityName, dto.turma.id);
 
     const estagiario = Estagiario.create(dto);
 
@@ -178,28 +178,28 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
 
     const estagiario = EstagiarioMapper.toDomain(entity);
 
-    if (dto.idPerfilFk) {
+    if (dto.perfil) {
       const perfil = await this.perfilRepository.findOne({
-        where: { id: dto.idPerfilFk, dateDeleted: null as any },
+        where: { id: dto.perfil.id, dateDeleted: null as any },
       });
 
-      ensureExists(perfil, Perfil.entityName, dto.idPerfilFk);
+      ensureExists(perfil, Perfil.entityName, dto.perfil.id);
     }
 
-    if (dto.idCursoFk) {
+    if (dto.curso) {
       const curso = await this.cursoRepository.findOne({
-        where: { id: dto.idCursoFk, dateDeleted: null as any },
+        where: { id: dto.curso.id, dateDeleted: null as any },
       });
 
-      ensureExists(curso, Curso.entityName, dto.idCursoFk);
+      ensureExists(curso, Curso.entityName, dto.curso.id);
     }
 
-    if (dto.idTurmaFk) {
+    if (dto.turma) {
       const turma = await this.turmaRepository.findOne({
-        where: { id: dto.idTurmaFk, dateDeleted: null as any },
+        where: { id: dto.turma.id, dateDeleted: null as any },
       });
 
-      ensureExists(turma, Turma.entityName, dto.idTurmaFk);
+      ensureExists(turma, Turma.entityName, dto.turma.id);
     }
 
     estagiario.update(dto);

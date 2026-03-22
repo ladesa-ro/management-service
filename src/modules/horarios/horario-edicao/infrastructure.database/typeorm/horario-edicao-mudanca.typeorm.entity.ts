@@ -13,15 +13,9 @@ export class HorarioEdicaoMudancaEntity {
   @PrimaryColumn("uuid")
   id!: string;
 
-  @Column({ name: "id_sessao_fk", type: "uuid", nullable: false })
-  idSessaoFk!: string;
-
   @ManyToOne(() => HorarioEdicaoSessaoEntity, { nullable: false })
   @JoinColumn({ name: "id_sessao_fk" })
   sessao!: Relation<HorarioEdicaoSessaoEntity>;
-
-  @Column({ name: "id_calendario_agendamento_fk", type: "uuid", nullable: true })
-  idCalendarioAgendamentoFk!: string | null;
 
   @ManyToOne(() => CalendarioAgendamentoEntity, { nullable: true })
   @JoinColumn({ name: "id_calendario_agendamento_fk" })

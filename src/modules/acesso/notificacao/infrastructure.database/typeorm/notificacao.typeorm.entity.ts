@@ -15,9 +15,6 @@ export class NotificacaoEntity {
   @Column({ name: "lida", type: "boolean", nullable: false, default: false })
   lida!: boolean;
 
-  @Column({ name: "id_usuario_fk", type: "uuid", nullable: false })
-  idUsuarioFk!: string;
-
   @ManyToOne(() => UsuarioEntity, { nullable: false })
   @JoinColumn({ name: "id_usuario_fk" })
   usuario!: Relation<UsuarioEntity>;

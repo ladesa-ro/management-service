@@ -9,8 +9,14 @@ import {
 import { ensureExists } from "@/application/errors";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { Cidade } from "@/modules/localidades/cidade/domain/cidade";
-import { ICidadeFindOneQueryHandler } from "@/modules/localidades/cidade/domain/queries/cidade-find-one.query.handler.interface";
-import { ICidadeListQueryHandler } from "@/modules/localidades/cidade/domain/queries/cidade-list.query.handler.interface";
+import {
+  CidadeFindOneQueryMetadata,
+  ICidadeFindOneQueryHandler,
+} from "@/modules/localidades/cidade/domain/queries/cidade-find-one.query.handler.interface";
+import {
+  CidadeListQueryMetadata,
+  ICidadeListQueryHandler,
+} from "@/modules/localidades/cidade/domain/queries/cidade-list.query.handler.interface";
 import { AccessContext, AccessContextHttp } from "@/server/access-context";
 import {
   CidadeFindOneInputRestDto,
@@ -31,7 +37,7 @@ export class CidadeRestController {
   ) {}
 
   @Get("/")
-  @ApiOperation({ summary: "Lista cidades", operationId: "cidadeFindAll" })
+  @ApiOperation(CidadeListQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: CidadeListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
@@ -44,7 +50,7 @@ export class CidadeRestController {
   }
 
   @Get("/:id")
-  @ApiOperation({ summary: "Busca uma cidade por ID", operationId: "cidadeFindById" })
+  @ApiOperation(CidadeFindOneQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: CidadeFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()

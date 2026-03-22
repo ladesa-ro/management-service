@@ -83,8 +83,6 @@ export class UsuarioEventoTypeOrmRepositoryAdapter implements IUsuarioEventoRepo
     if (perfilId) {
       const junction = new CalendarioAgendamentoProfessorEntity();
       junction.id = generateUuidV7();
-      junction.idPerfilFk = perfilId;
-      junction.idCalendarioAgendamentoFk = evento.id;
       (junction as any).perfil = { id: perfilId };
       (junction as any).calendarioAgendamento = { id: evento.id };
       await junctionRepo.save(junction);
@@ -130,9 +128,9 @@ export class UsuarioEventoTypeOrmRepositoryAdapter implements IUsuarioEventoRepo
 
     for (const perfil of perfis) {
       await junctionRepo.delete({
-        idPerfilFk: perfil.id,
-        idCalendarioAgendamentoFk: eventoId,
-      });
+        perfil: { id: perfil.id },
+        calendarioAgendamento: { id: eventoId },
+      } as any);
     }
   }
 

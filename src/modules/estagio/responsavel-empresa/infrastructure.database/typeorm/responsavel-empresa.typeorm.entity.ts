@@ -6,9 +6,6 @@ export class ResponsavelEmpresaEntity {
   @PrimaryColumn("uuid")
   id!: string;
 
-  @Column({ name: "id_empresa_fk", type: "uuid", nullable: false })
-  idEmpresaFk!: string;
-
   @ManyToOne(() => EmpresaTypeormEntity, {})
   @JoinColumn({ name: "id_empresa_fk" })
   empresa!: Relation<EmpresaTypeormEntity>;

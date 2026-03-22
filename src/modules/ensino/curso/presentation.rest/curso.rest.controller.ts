@@ -24,14 +24,35 @@ import {
 } from "@nestjs/swagger";
 import { ensureExists } from "@/application/errors";
 import { DeclareDependency } from "@/domain/dependency-injection";
-import { ICursoCreateCommandHandler } from "@/modules/ensino/curso/domain/commands/curso-create.command.handler.interface";
-import { ICursoDeleteCommandHandler } from "@/modules/ensino/curso/domain/commands/curso-delete.command.handler.interface";
-import { ICursoUpdateCommandHandler } from "@/modules/ensino/curso/domain/commands/curso-update.command.handler.interface";
-import { ICursoUpdateImagemCapaCommandHandler } from "@/modules/ensino/curso/domain/commands/curso-update-imagem-capa.command.handler.interface";
+import {
+  CursoCreateCommandMetadata,
+  ICursoCreateCommandHandler,
+} from "@/modules/ensino/curso/domain/commands/curso-create.command.handler.interface";
+import {
+  CursoDeleteCommandMetadata,
+  ICursoDeleteCommandHandler,
+} from "@/modules/ensino/curso/domain/commands/curso-delete.command.handler.interface";
+import {
+  CursoUpdateCommandMetadata,
+  ICursoUpdateCommandHandler,
+} from "@/modules/ensino/curso/domain/commands/curso-update.command.handler.interface";
+import {
+  CursoUpdateImagemCapaCommandMetadata,
+  ICursoUpdateImagemCapaCommandHandler,
+} from "@/modules/ensino/curso/domain/commands/curso-update-imagem-capa.command.handler.interface";
 import { Curso } from "@/modules/ensino/curso/domain/curso";
-import { ICursoFindOneQueryHandler } from "@/modules/ensino/curso/domain/queries/curso-find-one.query.handler.interface";
-import { ICursoGetImagemCapaQueryHandler } from "@/modules/ensino/curso/domain/queries/curso-get-imagem-capa.query.handler.interface";
-import { ICursoListQueryHandler } from "@/modules/ensino/curso/domain/queries/curso-list.query.handler.interface";
+import {
+  CursoFindOneQueryMetadata,
+  ICursoFindOneQueryHandler,
+} from "@/modules/ensino/curso/domain/queries/curso-find-one.query.handler.interface";
+import {
+  CursoGetImagemCapaQueryMetadata,
+  ICursoGetImagemCapaQueryHandler,
+} from "@/modules/ensino/curso/domain/queries/curso-get-imagem-capa.query.handler.interface";
+import {
+  CursoListQueryMetadata,
+  ICursoListQueryHandler,
+} from "@/modules/ensino/curso/domain/queries/curso-list.query.handler.interface";
 import { AccessContext, AccessContextHttp } from "@/server/access-context";
 import {
   CursoCreateInputRestDto,
@@ -64,7 +85,7 @@ export class CursoRestController {
   ) {}
 
   @Get("/")
-  @ApiOperation({ summary: "Lista cursos", operationId: "cursoFindAll" })
+  @ApiOperation(CursoListQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: CursoListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
@@ -77,7 +98,7 @@ export class CursoRestController {
   }
 
   @Get("/:id")
-  @ApiOperation({ summary: "Busca um curso por ID", operationId: "cursoFindById" })
+  @ApiOperation(CursoFindOneQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: CursoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -92,7 +113,7 @@ export class CursoRestController {
   }
 
   @Post("/")
-  @ApiOperation({ summary: "Cria um curso", operationId: "cursoCreate" })
+  @ApiOperation(CursoCreateCommandMetadata.swaggerMetadata)
   @ApiCreatedResponse({ type: CursoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   async create(
@@ -105,7 +126,7 @@ export class CursoRestController {
   }
 
   @Patch("/:id")
-  @ApiOperation({ summary: "Atualiza um curso", operationId: "cursoUpdate" })
+  @ApiOperation(CursoUpdateCommandMetadata.swaggerMetadata)
   @ApiOkResponse({ type: CursoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -120,7 +141,7 @@ export class CursoRestController {
   }
 
   @Get("/:id/imagem/capa")
-  @ApiOperation({ summary: "Busca imagem de capa de um curso", operationId: "cursoGetImagemCapa" })
+  @ApiOperation(CursoGetImagemCapaQueryMetadata.swaggerMetadata)
   @ApiOkResponse()
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -132,10 +153,7 @@ export class CursoRestController {
   }
 
   @Put("/:id/imagem/capa")
-  @ApiOperation({
-    summary: "Define imagem de capa de um curso",
-    operationId: "cursoUpdateImagemCapa",
-  })
+  @ApiOperation(CursoUpdateImagemCapaCommandMetadata.swaggerMetadata)
   @ApiConsumes("multipart/form-data")
   @ApiBody({
     schema: {
@@ -159,7 +177,7 @@ export class CursoRestController {
   }
 
   @Delete("/:id")
-  @ApiOperation({ summary: "Remove um curso", operationId: "cursoDeleteOneById" })
+  @ApiOperation(CursoDeleteCommandMetadata.swaggerMetadata)
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()

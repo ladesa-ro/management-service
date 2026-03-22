@@ -2,7 +2,7 @@ import type { IdUuid, ScalarDateTimeString } from "@/domain/abstractions/scalars
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import type { IImagem } from "@/modules/armazenamento/imagem/domain/imagem";
 import { zodValidate } from "@/shared/validation/index";
-import { usuarioCreateSchema, usuarioSchema, usuarioUpdateSchema } from "./usuario.schemas";
+import { UsuarioCreateSchema, UsuarioSchema, UsuarioUpdateSchema } from "./usuario.schemas";
 
 export interface IUsuario {
   id: string;
@@ -34,7 +34,7 @@ export class Usuario {
   private constructor() {}
 
   static create(dados: unknown): Usuario {
-    const parsed = zodValidate(Usuario.entityName, usuarioCreateSchema, dados);
+    const parsed = zodValidate(Usuario.entityName, UsuarioCreateSchema, dados);
 
     const instance = new Usuario();
 
@@ -53,7 +53,7 @@ export class Usuario {
   }
 
   static load(dados: unknown): Usuario {
-    const parsed = zodValidate(Usuario.entityName, usuarioSchema, dados);
+    const parsed = zodValidate(Usuario.entityName, UsuarioSchema, dados);
 
     const instance = new Usuario();
 
@@ -72,7 +72,7 @@ export class Usuario {
   }
 
   update(dados: unknown): void {
-    const parsed = zodValidate(Usuario.entityName, usuarioUpdateSchema, dados);
+    const parsed = zodValidate(Usuario.entityName, UsuarioUpdateSchema, dados);
 
     if (parsed.nome !== undefined) this.nome = parsed.nome?.trim() || null;
     if (parsed.matricula !== undefined) this.matricula = parsed.matricula?.trim() || null;
@@ -80,7 +80,7 @@ export class Usuario {
 
     this.dateUpdated = new Date().toISOString();
 
-    zodValidate(Usuario.entityName, usuarioSchema, this);
+    zodValidate(Usuario.entityName, UsuarioSchema, this);
   }
 
   podeSerDeletado(): boolean {

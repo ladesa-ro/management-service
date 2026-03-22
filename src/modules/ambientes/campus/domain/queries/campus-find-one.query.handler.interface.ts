@@ -1,6 +1,12 @@
 import type { IQueryHandler } from "@/domain/abstractions";
+import { createOperationMetadata } from "@/domain/abstractions";
 import type { CampusFindOneQuery } from "./campus-find-one.query";
 import type { CampusFindOneQueryResult } from "./campus-find-one.query.result";
+
+export const CampusFindOneQueryMetadata = createOperationMetadata({
+  operationId: "campusFindById",
+  summary: "Busca um campus por ID",
+});
 
 export const ICampusFindOneQueryHandler = Symbol("ICampusFindOneQueryHandler");
 

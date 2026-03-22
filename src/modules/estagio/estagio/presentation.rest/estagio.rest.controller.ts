@@ -10,12 +10,27 @@ import {
 } from "@nestjs/swagger";
 import { ensureExists } from "@/application/errors";
 import { DeclareDependency, IContainer } from "@/domain/dependency-injection";
-import { IEstagioCreateCommandHandler } from "@/modules/estagio/estagio/domain/commands/estagio-create.command.handler.interface";
-import { IEstagioDeleteCommandHandler } from "@/modules/estagio/estagio/domain/commands/estagio-delete.command.handler.interface";
-import { IEstagioUpdateCommandHandler } from "@/modules/estagio/estagio/domain/commands/estagio-update.command.handler.interface";
+import {
+  EstagioCreateCommandMetadata,
+  IEstagioCreateCommandHandler,
+} from "@/modules/estagio/estagio/domain/commands/estagio-create.command.handler.interface";
+import {
+  EstagioDeleteCommandMetadata,
+  IEstagioDeleteCommandHandler,
+} from "@/modules/estagio/estagio/domain/commands/estagio-delete.command.handler.interface";
+import {
+  EstagioUpdateCommandMetadata,
+  IEstagioUpdateCommandHandler,
+} from "@/modules/estagio/estagio/domain/commands/estagio-update.command.handler.interface";
 import { Estagio } from "@/modules/estagio/estagio/domain/estagio";
-import { IEstagioFindOneQueryHandler } from "@/modules/estagio/estagio/domain/queries/estagio-find-one.query.handler.interface";
-import { IEstagioListQueryHandler } from "@/modules/estagio/estagio/domain/queries/estagio-list.query.handler.interface";
+import {
+  EstagioFindOneQueryMetadata,
+  IEstagioFindOneQueryHandler,
+} from "@/modules/estagio/estagio/domain/queries/estagio-find-one.query.handler.interface";
+import {
+  EstagioListQueryMetadata,
+  IEstagioListQueryHandler,
+} from "@/modules/estagio/estagio/domain/queries/estagio-list.query.handler.interface";
 import { AccessContext, AccessContextHttp } from "@/server/access-context";
 import {
   EstagioCreateInputRestDto,
@@ -33,7 +48,7 @@ export class EstagioRestController {
   constructor(@DeclareDependency(IContainer) private readonly container: IContainer) {}
 
   @Get("/")
-  @ApiOperation({ summary: "Lista estágios", operationId: "estagioFindAll" })
+  @ApiOperation(EstagioListQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: EstagioListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
@@ -47,7 +62,7 @@ export class EstagioRestController {
   }
 
   @Get("/:id")
-  @ApiOperation({ summary: "Busca um estágio por ID", operationId: "estagioFindById" })
+  @ApiOperation(EstagioFindOneQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: EstagioFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -65,7 +80,7 @@ export class EstagioRestController {
   }
 
   @Post("/")
-  @ApiOperation({ summary: "Cria um estágio", operationId: "estagioCreate" })
+  @ApiOperation(EstagioCreateCommandMetadata.swaggerMetadata)
   @ApiBody({ type: EstagioCreateInputRestDto })
   @ApiCreatedResponse({ type: EstagioFindOneOutputRestDto })
   @ApiForbiddenResponse()
@@ -82,7 +97,7 @@ export class EstagioRestController {
   }
 
   @Patch("/:id")
-  @ApiOperation({ summary: "Atualiza um estágio", operationId: "estagioUpdate" })
+  @ApiOperation(EstagioUpdateCommandMetadata.swaggerMetadata)
   @ApiBody({ type: EstagioUpdateInputRestDto })
   @ApiOkResponse({ type: EstagioFindOneOutputRestDto })
   @ApiForbiddenResponse()
@@ -101,7 +116,7 @@ export class EstagioRestController {
   }
 
   @Delete("/:id")
-  @ApiOperation({ summary: "Deleta um estágio", operationId: "estagioDelete" })
+  @ApiOperation(EstagioDeleteCommandMetadata.swaggerMetadata)
   @ApiOkResponse({ description: "Estágio deletado com sucesso" })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()

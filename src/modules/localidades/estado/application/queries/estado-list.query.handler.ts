@@ -5,7 +5,7 @@ import type { EstadoListQuery, EstadoListQueryResult } from "../../domain/querie
 import { IEstadoRepository } from "../../domain/repositories";
 
 @DeclareImplementation()
-export class EstadoListQueryHandler implements IEstadoListQueryHandler {
+export class EstadoListQueryHandlerImpl implements IEstadoListQueryHandler {
   constructor(
     @DeclareDependency(IEstadoRepository)
     private readonly repository: IEstadoRepository,

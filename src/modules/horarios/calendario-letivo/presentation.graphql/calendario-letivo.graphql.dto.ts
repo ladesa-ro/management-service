@@ -6,11 +6,15 @@ import {
 import { CampusFindOneOutputGraphQlDto } from "@/modules/ambientes/campus/presentation.graphql/campus.graphql.dto";
 import { OfertaFormacaoFindOneOutputGraphQlDto } from "@/modules/ensino/oferta-formacao/presentation.graphql/oferta-formacao.graphql.dto";
 import {
-  calendarioLetivoCreateSchema,
-  calendarioLetivoGraphqlListInputSchema,
-  calendarioLetivoUpdateSchema,
+  CalendarioLetivoCreateSchema,
+  CalendarioLetivoUpdateSchema,
 } from "@/modules/horarios/calendario-letivo/domain/calendario-letivo.schemas";
+import { CalendarioLetivoGraphqlListInputSchema } from "@/modules/horarios/calendario-letivo/domain/queries/calendario-letivo-list.query.schemas";
 import { ArgsType, Field, InputType, Int, ObjectType } from "@/shared/presentation/graphql";
+import { CalendarioLetivoCreateCommandFields } from "../domain/commands/calendario-letivo-create.command";
+import { CalendarioLetivoUpdateCommandFields } from "../domain/commands/calendario-letivo-update.command";
+import { CalendarioLetivoFindOneQueryResultFields } from "../domain/queries/calendario-letivo-find-one.query.result";
+import { CalendarioLetivoListQueryFields } from "../domain/queries/calendario-letivo-list.query";
 
 // ============================================================================
 // FindOne Output
@@ -18,10 +22,17 @@ import { ArgsType, Field, InputType, Int, ObjectType } from "@/shared/presentati
 
 @ObjectType("CalendarioLetivoFindOneOutputDto")
 export class CalendarioLetivoFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
-  @Field(() => String) nome: string;
-  @Field(() => Int) ano: number;
-  @Field(() => CampusFindOneOutputGraphQlDto) campus: CampusFindOneOutputGraphQlDto;
-  @Field(() => OfertaFormacaoFindOneOutputGraphQlDto)
+  @Field(() => String, CalendarioLetivoFindOneQueryResultFields.nome.gqlMetadata) nome: string;
+  @Field(() => Int, CalendarioLetivoFindOneQueryResultFields.ano.gqlMetadata) ano: number;
+  @Field(
+    () => CampusFindOneOutputGraphQlDto,
+    CalendarioLetivoFindOneQueryResultFields.campus.gqlMetadata,
+  )
+  campus: CampusFindOneOutputGraphQlDto;
+  @Field(
+    () => OfertaFormacaoFindOneOutputGraphQlDto,
+    CalendarioLetivoFindOneQueryResultFields.ofertaFormacao.gqlMetadata,
+  )
   ofertaFormacao: OfertaFormacaoFindOneOutputGraphQlDto;
 }
 
@@ -45,13 +56,19 @@ export class CalendarioLetivoOfertaFormacaoRefInputGraphQlDto {
 
 @InputType("CalendarioLetivoCreateInputDto")
 export class CalendarioLetivoCreateInputGraphQlDto {
-  static schema = calendarioLetivoCreateSchema;
+  static schema = CalendarioLetivoCreateSchema;
 
-  @Field(() => String) nome: string;
-  @Field(() => Int) ano: number;
-  @Field(() => CalendarioLetivoCampusRefInputGraphQlDto)
+  @Field(() => String, CalendarioLetivoCreateCommandFields.nome.gqlMetadata) nome: string;
+  @Field(() => Int, CalendarioLetivoCreateCommandFields.ano.gqlMetadata) ano: number;
+  @Field(
+    () => CalendarioLetivoCampusRefInputGraphQlDto,
+    CalendarioLetivoCreateCommandFields.campus.gqlMetadata,
+  )
   campus: CalendarioLetivoCampusRefInputGraphQlDto;
-  @Field(() => CalendarioLetivoOfertaFormacaoRefInputGraphQlDto)
+  @Field(
+    () => CalendarioLetivoOfertaFormacaoRefInputGraphQlDto,
+    CalendarioLetivoCreateCommandFields.ofertaFormacao.gqlMetadata,
+  )
   ofertaFormacao: CalendarioLetivoOfertaFormacaoRefInputGraphQlDto;
 }
 
@@ -61,15 +78,21 @@ export class CalendarioLetivoCreateInputGraphQlDto {
 
 @InputType("CalendarioLetivoUpdateInputDto")
 export class CalendarioLetivoUpdateInputGraphQlDto {
-  static schema = calendarioLetivoUpdateSchema;
+  static schema = CalendarioLetivoUpdateSchema;
 
-  @Field(() => String, { nullable: true })
+  @Field(() => String, { nullable: true, ...CalendarioLetivoUpdateCommandFields.nome.gqlMetadata })
   nome?: string;
-  @Field(() => Int, { nullable: true })
+  @Field(() => Int, { nullable: true, ...CalendarioLetivoUpdateCommandFields.ano.gqlMetadata })
   ano?: number;
-  @Field(() => CalendarioLetivoCampusRefInputGraphQlDto, { nullable: true })
+  @Field(() => CalendarioLetivoCampusRefInputGraphQlDto, {
+    nullable: true,
+    ...CalendarioLetivoUpdateCommandFields.campus.gqlMetadata,
+  })
   campus?: CalendarioLetivoCampusRefInputGraphQlDto;
-  @Field(() => CalendarioLetivoOfertaFormacaoRefInputGraphQlDto, { nullable: true })
+  @Field(() => CalendarioLetivoOfertaFormacaoRefInputGraphQlDto, {
+    nullable: true,
+    ...CalendarioLetivoUpdateCommandFields.ofertaFormacao.gqlMetadata,
+  })
   ofertaFormacao?: CalendarioLetivoOfertaFormacaoRefInputGraphQlDto;
 }
 
@@ -79,12 +102,12 @@ export class CalendarioLetivoUpdateInputGraphQlDto {
 
 @ArgsType()
 export class CalendarioLetivoListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {
-  static schema = calendarioLetivoGraphqlListInputSchema;
+  static schema = CalendarioLetivoGraphqlListInputSchema;
 
-  @Field(() => [String], { nullable: true, description: "Filtro por ID do Campus" })
+  @Field(() => [String], CalendarioLetivoListQueryFields.filterCampusId.gqlMetadata)
   filterCampusId?: string[];
 
-  @Field(() => [String], { nullable: true, description: "Filtro por ID da Oferta de Formacao" })
+  @Field(() => [String], CalendarioLetivoListQueryFields.filterOfertaFormacaoId.gqlMetadata)
   filterOfertaFormacaoId?: string[];
 }
 
@@ -94,9 +117,12 @@ export class CalendarioLetivoListInputGraphQlDto extends PaginatedFilterByIdGrap
 
 @ObjectType("CalendarioLetivoListResult")
 export class CalendarioLetivoListOutputGraphQlDto {
-  @Field(() => PaginationMetaGraphQlDto)
+  @Field(() => PaginationMetaGraphQlDto, CalendarioLetivoListQueryFields.meta.gqlMetadata)
   meta: PaginationMetaGraphQlDto;
 
-  @Field(() => [CalendarioLetivoFindOneOutputGraphQlDto])
+  @Field(
+    () => [CalendarioLetivoFindOneOutputGraphQlDto],
+    CalendarioLetivoListQueryFields.data.gqlMetadata,
+  )
   data: CalendarioLetivoFindOneOutputGraphQlDto[];
 }

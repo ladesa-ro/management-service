@@ -4,12 +4,16 @@ import {
   PaginationMetaGraphQlDto,
 } from "@/infrastructure.graphql/dtos";
 import { ModalidadeFindOneOutputGraphQlDto } from "@/modules/ensino/modalidade/presentation.graphql/modalidade.graphql.dto";
+import { OfertaFormacaoGraphqlListInputSchema } from "@/modules/ensino/oferta-formacao/domain/queries/oferta-formacao-list.query.schemas";
 import { ArgsType, Field, InputType, ObjectType } from "@/shared/presentation/graphql";
+import { OfertaFormacaoCreateCommandFields } from "../domain/commands/oferta-formacao-create.command";
+import { OfertaFormacaoUpdateCommandFields } from "../domain/commands/oferta-formacao-update.command";
 import {
-  ofertaFormacaoCreateSchema,
-  ofertaFormacaoGraphqlListInputSchema,
-  ofertaFormacaoUpdateSchema,
+  OfertaFormacaoCreateSchema,
+  OfertaFormacaoUpdateSchema,
 } from "../domain/oferta-formacao.schemas";
+import { OfertaFormacaoFindOneQueryResultFields } from "../domain/queries/oferta-formacao-find-one.query.result";
+import { OfertaFormacaoListQueryFields } from "../domain/queries/oferta-formacao-list.query";
 
 // ============================================================================
 // FindOne Output
@@ -17,9 +21,12 @@ import {
 
 @ObjectType("OfertaFormacaoFindOneOutputDto")
 export class OfertaFormacaoFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
-  @Field(() => String) nome: string;
-  @Field(() => String) slug: string;
-  @Field(() => ModalidadeFindOneOutputGraphQlDto)
+  @Field(() => String, OfertaFormacaoFindOneQueryResultFields.nome.gqlMetadata) nome: string;
+  @Field(() => String, OfertaFormacaoFindOneQueryResultFields.slug.gqlMetadata) slug: string;
+  @Field(
+    () => ModalidadeFindOneOutputGraphQlDto,
+    OfertaFormacaoFindOneQueryResultFields.modalidade.gqlMetadata,
+  )
   modalidade: ModalidadeFindOneOutputGraphQlDto;
 }
 
@@ -34,11 +41,14 @@ export class OfertaFormacaoModalidadeRefInputGraphQlDto {
 
 @InputType("OfertaFormacaoCreateInputDto")
 export class OfertaFormacaoCreateInputGraphQlDto {
-  static readonly schema = ofertaFormacaoCreateSchema;
+  static readonly schema = OfertaFormacaoCreateSchema;
 
-  @Field(() => String) nome: string;
-  @Field(() => String) slug: string;
-  @Field(() => OfertaFormacaoModalidadeRefInputGraphQlDto)
+  @Field(() => String, OfertaFormacaoCreateCommandFields.nome.gqlMetadata) nome: string;
+  @Field(() => String, OfertaFormacaoCreateCommandFields.slug.gqlMetadata) slug: string;
+  @Field(
+    () => OfertaFormacaoModalidadeRefInputGraphQlDto,
+    OfertaFormacaoCreateCommandFields.modalidade.gqlMetadata,
+  )
   modalidade: OfertaFormacaoModalidadeRefInputGraphQlDto;
 }
 
@@ -48,13 +58,16 @@ export class OfertaFormacaoCreateInputGraphQlDto {
 
 @InputType("OfertaFormacaoUpdateInputDto")
 export class OfertaFormacaoUpdateInputGraphQlDto {
-  static readonly schema = ofertaFormacaoUpdateSchema;
+  static readonly schema = OfertaFormacaoUpdateSchema;
 
-  @Field(() => String, { nullable: true })
+  @Field(() => String, { nullable: true, ...OfertaFormacaoUpdateCommandFields.nome.gqlMetadata })
   nome?: string;
-  @Field(() => String, { nullable: true })
+  @Field(() => String, { nullable: true, ...OfertaFormacaoUpdateCommandFields.slug.gqlMetadata })
   slug?: string;
-  @Field(() => OfertaFormacaoModalidadeRefInputGraphQlDto, { nullable: true })
+  @Field(() => OfertaFormacaoModalidadeRefInputGraphQlDto, {
+    nullable: true,
+    ...OfertaFormacaoUpdateCommandFields.modalidade.gqlMetadata,
+  })
   modalidade?: OfertaFormacaoModalidadeRefInputGraphQlDto;
 }
 
@@ -64,9 +77,9 @@ export class OfertaFormacaoUpdateInputGraphQlDto {
 
 @ArgsType()
 export class OfertaFormacaoListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {
-  static schema = ofertaFormacaoGraphqlListInputSchema;
+  static schema = OfertaFormacaoGraphqlListInputSchema;
 
-  @Field(() => [String], { nullable: true, description: "Filtro por ID da Modalidade" })
+  @Field(() => [String], OfertaFormacaoListQueryFields.filterModalidadeId.gqlMetadata)
   filterModalidadeId?: string[];
 }
 
@@ -76,9 +89,12 @@ export class OfertaFormacaoListInputGraphQlDto extends PaginatedFilterByIdGraphQ
 
 @ObjectType("OfertaFormacaoListResult")
 export class OfertaFormacaoListOutputGraphQlDto {
-  @Field(() => PaginationMetaGraphQlDto)
+  @Field(() => PaginationMetaGraphQlDto, OfertaFormacaoListQueryFields.meta.gqlMetadata)
   meta: PaginationMetaGraphQlDto;
 
-  @Field(() => [OfertaFormacaoFindOneOutputGraphQlDto])
+  @Field(
+    () => [OfertaFormacaoFindOneOutputGraphQlDto],
+    OfertaFormacaoListQueryFields.data.gqlMetadata,
+  )
   data: OfertaFormacaoFindOneOutputGraphQlDto[];
 }

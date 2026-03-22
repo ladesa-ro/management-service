@@ -1,27 +1,34 @@
+/**
+ * Endereco — schemas zod para a entidade e suas operacoes.
+ *
+ * Contem os schemas de referencia, composicao (create/update)
+ * e validacao da entidade. Fonte unica de verdade (SSOT) para
+ * os contratos de dados da entidade.
+ */
 import { z } from "zod";
-import { datedSchema, stringFilterSchema, uuidSchema } from "@/shared/validation/schemas";
+import { datedSchema, uuidSchema } from "@/shared/validation/schemas";
 
 // ============================================================================
 // Fragments reutilizáveis
 // ============================================================================
 
-export const enderecoCepSchema = z
+export const EnderecoCepSchema = z
   .string()
   .min(1, "cep é obrigatório")
   .transform((val) => val.replace(/\D/g, ""))
   .pipe(z.string().regex(/^\d{8}$/, "cep deve conter exatamente 8 dígitos"));
 
-export const enderecoLogradouroSchema = z.string().min(1, "logradouro é obrigatório");
+export const EnderecoLogradouroSchema = z.string().min(1, "logradouro é obrigatório");
 
-export const enderecoNumeroSchema = z.number().int().min(0).max(99999);
+export const EnderecoNumeroSchema = z.number().int().min(0).max(99999);
 
-export const enderecoBairroSchema = z.string().min(1, "bairro é obrigatório");
+export const EnderecoBairroSchema = z.string().min(1, "bairro é obrigatório");
 
-export const enderecoComplementoSchema = z.string().nullable().optional();
+export const EnderecoComplementoSchema = z.string().nullable().optional();
 
-export const enderecoPontoReferenciaSchema = z.string().nullable().optional();
+export const EnderecoPontoReferenciaSchema = z.string().nullable().optional();
 
-export const enderecoCidadeRefSchema = z.object({
+export const EnderecoCidadeRefSchema = z.object({
   id: z.number().int(),
 });
 
@@ -29,77 +36,45 @@ export const enderecoCidadeRefSchema = z.object({
 // Schemas compostos
 // ============================================================================
 
-export const enderecoSchema = z
+export const EnderecoSchema = z
   .object({
     id: uuidSchema,
-    cep: enderecoCepSchema,
-    logradouro: enderecoLogradouroSchema,
-    numero: enderecoNumeroSchema,
-    bairro: enderecoBairroSchema,
+    cep: EnderecoCepSchema,
+    logradouro: EnderecoLogradouroSchema,
+    numero: EnderecoNumeroSchema,
+    bairro: EnderecoBairroSchema,
     complemento: z.string().nullable(),
     pontoReferencia: z.string().nullable(),
-    cidade: enderecoCidadeRefSchema,
+    cidade: EnderecoCidadeRefSchema,
   })
   .merge(datedSchema);
 
-export const enderecoCreateSchema = z.object({
-  cep: enderecoCepSchema,
-  logradouro: enderecoLogradouroSchema,
-  numero: enderecoNumeroSchema,
-  bairro: enderecoBairroSchema,
-  complemento: enderecoComplementoSchema,
-  pontoReferencia: enderecoPontoReferenciaSchema,
-  cidade: enderecoCidadeRefSchema,
+export const EnderecoCreateSchema = z.object({
+  cep: EnderecoCepSchema,
+  logradouro: EnderecoLogradouroSchema,
+  numero: EnderecoNumeroSchema,
+  bairro: EnderecoBairroSchema,
+  complemento: EnderecoComplementoSchema,
+  pontoReferencia: EnderecoPontoReferenciaSchema,
+  cidade: EnderecoCidadeRefSchema,
 });
 
-export const enderecoUpdateSchema = z.object({
-  cep: enderecoCepSchema.optional(),
-  logradouro: enderecoLogradouroSchema.optional(),
-  numero: enderecoNumeroSchema.optional(),
-  bairro: enderecoBairroSchema.optional(),
-  complemento: enderecoComplementoSchema,
-  pontoReferencia: enderecoPontoReferenciaSchema,
-  cidade: enderecoCidadeRefSchema.optional(),
+export const EnderecoUpdateSchema = z.object({
+  cep: EnderecoCepSchema.optional(),
+  logradouro: EnderecoLogradouroSchema.optional(),
+  numero: EnderecoNumeroSchema.optional(),
+  bairro: EnderecoBairroSchema.optional(),
+  complemento: EnderecoComplementoSchema,
+  pontoReferencia: EnderecoPontoReferenciaSchema,
+  cidade: EnderecoCidadeRefSchema.optional(),
 });
 
-// ============================================================================
-// Schemas de input (presentation layer)
-// ============================================================================
-
-export const enderecoFindOneInputSchema = z.object({
-  id: uuidSchema,
-});
-
-export const enderecoPaginationInputSchema = z.object({
-  page: z.coerce.number().int().min(1).optional().default(1),
-  limit: z.coerce.number().int().min(1).optional(),
-  search: z.string().optional(),
-  sortBy: z.array(z.string()).optional(),
-  selection: z.array(z.string()).optional(),
-  "filter.id": stringFilterSchema,
-  "filter.cidade.id": stringFilterSchema,
-});
-
-export const enderecoGraphqlListInputSchema = z.object({
-  page: z.number().int().min(1).optional().default(1),
-  limit: z.number().int().min(1).optional(),
-  search: z.string().optional(),
-  sortBy: z.array(z.string()).optional(),
-  selection: z.array(z.string()).optional(),
-  filterId: z.array(z.string()).optional(),
-  filterCidadeId: z.array(z.string()).optional(),
-});
-
-// ============================================================================
-// Schemas de input para create/update (presentation layer)
-// ============================================================================
-
-export const enderecoInputSchema = z.object({
-  cep: enderecoCepSchema,
-  logradouro: enderecoLogradouroSchema,
-  numero: enderecoNumeroSchema,
-  bairro: enderecoBairroSchema,
-  complemento: enderecoComplementoSchema,
-  pontoReferencia: enderecoPontoReferenciaSchema,
-  cidade: enderecoCidadeRefSchema,
+export const EnderecoInputSchema = z.object({
+  cep: EnderecoCepSchema,
+  logradouro: EnderecoLogradouroSchema,
+  numero: EnderecoNumeroSchema,
+  bairro: EnderecoBairroSchema,
+  complemento: EnderecoComplementoSchema,
+  pontoReferencia: EnderecoPontoReferenciaSchema,
+  cidade: EnderecoCidadeRefSchema,
 });

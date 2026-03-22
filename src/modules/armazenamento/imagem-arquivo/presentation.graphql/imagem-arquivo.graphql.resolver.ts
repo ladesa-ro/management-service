@@ -4,8 +4,14 @@ import { ensureExists } from "@/application/errors";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { graphqlExtractSelection } from "@/infrastructure.graphql";
 import { ImagemArquivo } from "@/modules/armazenamento/imagem-arquivo/domain/imagem-arquivo";
-import { IImagemArquivoFindOneQueryHandler } from "@/modules/armazenamento/imagem-arquivo/domain/queries/imagem-arquivo-find-one.query.handler.interface";
-import { IImagemArquivoListQueryHandler } from "@/modules/armazenamento/imagem-arquivo/domain/queries/imagem-arquivo-list.query.handler.interface";
+import {
+  IImagemArquivoFindOneQueryHandler,
+  ImagemArquivoFindOneQueryMetadata,
+} from "@/modules/armazenamento/imagem-arquivo/domain/queries/imagem-arquivo-find-one.query.handler.interface";
+import {
+  IImagemArquivoListQueryHandler,
+  ImagemArquivoListQueryMetadata,
+} from "@/modules/armazenamento/imagem-arquivo/domain/queries/imagem-arquivo-list.query.handler.interface";
 import { AccessContext, AccessContextGraphQL } from "@/server/access-context";
 import {
   ImagemArquivoFindOneOutputGraphQlDto,
@@ -23,7 +29,7 @@ export class ImagemArquivoGraphqlResolver {
     private readonly findOneHandler: IImagemArquivoFindOneQueryHandler,
   ) {}
 
-  @Query(() => ImagemArquivoListOutputGraphQlDto, { name: "imagemArquivoFindAll" })
+  @Query(() => ImagemArquivoListOutputGraphQlDto, ImagemArquivoListQueryMetadata.gqlMetadata)
   async findAll(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args() dto: ImagemArquivoListInputGraphQlDto,
@@ -38,7 +44,7 @@ export class ImagemArquivoGraphqlResolver {
     return ImagemArquivoGraphqlMapper.toListOutputDto(result);
   }
 
-  @Query(() => ImagemArquivoFindOneOutputGraphQlDto, { name: "imagemArquivoFindById" })
+  @Query(() => ImagemArquivoFindOneOutputGraphQlDto, ImagemArquivoFindOneQueryMetadata.gqlMetadata)
   async findById(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,

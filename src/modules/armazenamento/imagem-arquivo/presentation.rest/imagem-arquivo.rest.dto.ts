@@ -1,18 +1,11 @@
 import { ArquivoFindOneOutputRestDto } from "@/modules/armazenamento/arquivo/presentation.rest/arquivo.rest.dto";
 import {
-  imagemArquivoCreateSchema,
-  imagemArquivoFindOneInputSchema,
-  imagemArquivoPaginationInputSchema,
-  imagemArquivoUpdateSchema,
+  ImagemArquivoCreateSchema,
+  ImagemArquivoUpdateSchema,
 } from "@/modules/armazenamento/imagem-arquivo/domain/imagem-arquivo.schemas";
-import {
-  ApiProperty,
-  ApiSchema,
-  commonProperties,
-  PartialType,
-  RegisterModel,
-  simpleProperty,
-} from "@/shared/presentation/rest";
+import { ImagemArquivoFindOneInputSchema } from "@/modules/armazenamento/imagem-arquivo/domain/queries/imagem-arquivo-find-one.query.schemas";
+import { ImagemArquivoPaginationInputSchema } from "@/modules/armazenamento/imagem-arquivo/domain/queries/imagem-arquivo-list.query.schemas";
+import { ApiProperty, ApiSchema, PartialType } from "@/shared/presentation/rest";
 import {
   EntityBaseRestDto,
   PaginatedFilterByIdRestDto,
@@ -38,19 +31,6 @@ export class ImagemFindOneFromImagemArquivoOutputRestDto {
 // ============================================================================
 
 @ApiSchema({ name: "ImagemArquivoFindOneOutputDto" })
-@RegisterModel({
-  name: "ImagemArquivoFindOneQueryResult",
-  properties: [
-    simpleProperty("id"),
-    simpleProperty("largura"),
-    simpleProperty("altura"),
-    simpleProperty("formato"),
-    simpleProperty("mimeType"),
-    simpleProperty("imagem"),
-    simpleProperty("arquivo"),
-    ...commonProperties.dated,
-  ],
-})
 export class ImagemArquivoFindOneOutputRestDto extends EntityBaseRestDto {
   @ApiProperty({ type: "integer", description: "Largura da imagem" })
   largura: number;
@@ -99,7 +79,7 @@ export class ImagemArquivoFindOneFromImagemOutputRestDto extends EntityBaseRestD
 
 @ApiSchema({ name: "ImagemArquivoListInputDto" })
 export class ImagemArquivoListInputRestDto extends PaginatedFilterByIdRestDto {
-  static schema = imagemArquivoPaginationInputSchema;
+  static schema = ImagemArquivoPaginationInputSchema;
 }
 
 @ApiSchema({ name: "ImagemArquivoListOutputDto" })
@@ -120,7 +100,7 @@ export class ImagemArquivoListOutputRestDto {
 
 @ApiSchema({ name: "ImagemArquivoCreateInputDto" })
 export class ImagemArquivoCreateInputRestDto {
-  static schema = imagemArquivoCreateSchema;
+  static schema = ImagemArquivoCreateSchema;
 
   @ApiProperty({ type: "integer", description: "Largura da imagem" })
   largura: number;
@@ -143,7 +123,7 @@ export class ImagemArquivoCreateInputRestDto {
 
 @ApiSchema({ name: "ImagemArquivoUpdateInputDto" })
 export class ImagemArquivoUpdateInputRestDto extends PartialType(ImagemArquivoCreateInputRestDto) {
-  static schema = imagemArquivoUpdateSchema;
+  static schema = ImagemArquivoUpdateSchema;
 }
 
 // ============================================================================
@@ -152,7 +132,7 @@ export class ImagemArquivoUpdateInputRestDto extends PartialType(ImagemArquivoCr
 
 @ApiSchema({ name: "ImagemArquivoFindOneInputDto" })
 export class ImagemArquivoFindOneInputRestDto {
-  static schema = imagemArquivoFindOneInputSchema;
+  static schema = ImagemArquivoFindOneInputSchema;
 
   @ApiProperty({
     type: "string",

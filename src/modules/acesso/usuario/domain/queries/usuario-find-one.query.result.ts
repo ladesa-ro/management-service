@@ -1,5 +1,17 @@
-import { EntityQueryResult } from "@/domain/abstractions";
+import { EntityQueryResult, SharedFields } from "@/domain/abstractions";
+import { fieldsToProperties } from "@/infrastructure.database/typeorm/metadata/model-from-fields";
+import {
+  commonProperties,
+  defineModel,
+  referenceProperty,
+} from "@/infrastructure.database/typeorm/metadata/model-registry";
 import { ImagemFindOneQueryResult } from "@/modules/armazenamento/imagem";
+import { UsuarioFields } from "../usuario.fields";
+
+export const UsuarioFindOneQueryResultFields = {
+  id: SharedFields.idUuid,
+  ...UsuarioFields,
+};
 
 export class UsuarioFindOneQueryResult extends EntityQueryResult {
   nome!: string | null;
@@ -9,3 +21,10 @@ export class UsuarioFindOneQueryResult extends EntityQueryResult {
   imagemCapa!: ImagemFindOneQueryResult | null;
   imagemPerfil!: ImagemFindOneQueryResult | null;
 }
+
+defineModel("UsuarioFindOneQueryResult", [
+  ...fieldsToProperties(UsuarioFindOneQueryResultFields),
+  referenceProperty("imagemCapa", "ImagemFindOneQueryResult", { nullable: true }),
+  referenceProperty("imagemPerfil", "ImagemFindOneQueryResult", { nullable: true }),
+  ...commonProperties.dated,
+]);

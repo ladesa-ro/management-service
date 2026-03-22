@@ -1,19 +1,23 @@
+/**
+ * Bloco — schemas zod para a entidade e suas operacoes.
+ *
+ * Contem os schemas de referencia, composicao (create/update)
+ * e validacao da entidade. Fonte unica de verdade (SSOT) para
+ * os contratos de dados da entidade.
+ */
 import { z } from "zod";
-import { datedSchema, stringFilterSchema, uuidSchema } from "@/shared/validation/schemas";
+import { datedSchema, uuidSchema } from "@/shared/validation/schemas";
+import { BlocoFields } from "./bloco.fields";
 
 // ============================================================================
-// Fragments reutilizáveis
+// Fragments de referência
 // ============================================================================
 
-export const blocoNomeSchema = z.string().min(1, "nome é obrigatório");
-
-export const blocoCodigoSchema = z.string().min(1, "codigo é obrigatório");
-
-export const blocoCampusRefSchema = z.object({
+export const BlocoCampusRefSchema = z.object({
   id: uuidSchema,
 });
 
-export const blocoImagemCapaRefSchema = z
+export const BlocoImagemCapaRefSchema = z
   .object({
     id: uuidSchema,
   })
@@ -23,64 +27,24 @@ export const blocoImagemCapaRefSchema = z
 // Schemas compostos
 // ============================================================================
 
-export const blocoSchema = z
+export const BlocoSchema = z
   .object({
     id: uuidSchema,
-    nome: blocoNomeSchema,
-    codigo: blocoCodigoSchema,
+    nome: BlocoFields.nome.schema,
+    codigo: BlocoFields.codigo.schema,
     campus: z.object({ id: uuidSchema }).passthrough(),
     imagemCapa: z.object({ id: uuidSchema }).passthrough().nullable(),
   })
   .merge(datedSchema);
 
-export const blocoCreateSchema = z.object({
-  nome: blocoNomeSchema,
-  codigo: blocoCodigoSchema,
-  campus: blocoCampusRefSchema,
+export const BlocoCreateSchema = z.object({
+  nome: BlocoFields.nome.schema,
+  codigo: BlocoFields.codigo.schema,
+  campus: BlocoCampusRefSchema,
 });
 
-export const blocoUpdateSchema = z.object({
-  nome: blocoNomeSchema.optional(),
-  codigo: blocoCodigoSchema.optional(),
-  campus: blocoCampusRefSchema.optional(),
+export const BlocoUpdateSchema = z.object({
+  nome: BlocoFields.nome.schema.optional(),
+  codigo: BlocoFields.codigo.schema.optional(),
+  campus: BlocoCampusRefSchema.optional(),
 });
-
-// ============================================================================
-// Schemas de input (presentation layer)
-// ============================================================================
-
-export const blocoFindOneInputSchema = z.object({
-  id: uuidSchema,
-});
-
-export const blocoPaginationInputSchema = z.object({
-  page: z.coerce.number().int().min(1).optional().default(1),
-  limit: z.coerce.number().int().min(1).optional(),
-  search: z.string().optional(),
-  sortBy: z.array(z.string()).optional(),
-  selection: z.array(z.string()).optional(),
-  "filter.id": stringFilterSchema,
-  "filter.campus.id": stringFilterSchema,
-});
-
-export const blocoGraphqlListInputSchema = z.object({
-  page: z.number().int().min(1).optional().default(1),
-  limit: z.number().int().min(1).optional(),
-  search: z.string().optional(),
-  sortBy: z.array(z.string()).optional(),
-  selection: z.array(z.string()).optional(),
-  filterId: z.array(z.string()).optional(),
-  filterCampusId: z.array(z.string()).optional(),
-});
-
-// ============================================================================
-// Schemas de input para create/update (presentation layer)
-// ============================================================================
-
-export const blocoInputCreateSchema = z.object({
-  nome: blocoNomeSchema,
-  codigo: blocoCodigoSchema,
-  campus: blocoCampusRefSchema,
-});
-
-export const blocoInputUpdateSchema = blocoInputCreateSchema.partial();

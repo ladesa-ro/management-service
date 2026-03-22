@@ -1,6 +1,17 @@
-import { EntityQueryResult } from "@/domain/abstractions";
+import { EntityQueryResult, SharedFields } from "@/domain/abstractions";
+import { fieldsToProperties } from "@/infrastructure.database/typeorm/metadata/model-from-fields";
+import {
+  commonProperties,
+  defineModel,
+} from "@/infrastructure.database/typeorm/metadata/model-registry";
 import { ArquivoFindOneQueryResult } from "@/modules/armazenamento/arquivo";
 import { ImagemFindOneQueryResult } from "@/modules/armazenamento/imagem";
+import { ImagemArquivoFields } from "../imagem-arquivo.fields";
+
+export const ImagemArquivoFindOneQueryResultFields = {
+  id: SharedFields.idUuid,
+  ...ImagemArquivoFields,
+};
 
 export class ImagemArquivoFindOneQueryResult extends EntityQueryResult {
   largura!: number;
@@ -10,3 +21,8 @@ export class ImagemArquivoFindOneQueryResult extends EntityQueryResult {
   imagem!: ImagemFindOneQueryResult;
   arquivo!: ArquivoFindOneQueryResult;
 }
+
+defineModel("ImagemArquivoFindOneQueryResult", [
+  ...fieldsToProperties(ImagemArquivoFindOneQueryResultFields),
+  ...commonProperties.dated,
+]);

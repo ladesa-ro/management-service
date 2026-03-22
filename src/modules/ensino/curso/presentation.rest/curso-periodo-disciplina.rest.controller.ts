@@ -2,6 +2,10 @@ import { Body, Controller, Get, Param, Put } from "@nestjs/common";
 import { ApiForbiddenResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
+import {
+  CursoDisciplinasPorPeriodoBulkReplaceCommandMetadata,
+  CursoDisciplinasPorPeriodoFindAllQueryMetadata,
+} from "@/modules/ensino/curso/domain/queries/curso-periodo-disciplina.query.metadata";
 import { AccessContext, AccessContextHttp } from "@/server/access-context";
 import { ICursoPeriodoDisciplinaRepository } from "../domain/repositories";
 import { CursoPeriodoDisciplinaEntity } from "../infrastructure.database/typeorm/curso-periodo-disciplina.typeorm.entity";
@@ -21,10 +25,7 @@ export class CursoPeriodoDisciplinaRestController {
   ) {}
 
   @Get("/")
-  @ApiOperation({
-    summary: "Lista disciplinas por periodo de um curso",
-    operationId: "cursoDisciplinasPorPeriodoFindAll",
-  })
+  @ApiOperation(CursoDisciplinasPorPeriodoFindAllQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: CursoPeriodoDisciplinaListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
@@ -44,7 +45,7 @@ export class CursoPeriodoDisciplinaRestController {
       }
       periodo.disciplinas.push({
         id: entry.id,
-        disciplinaId: entry.idDisciplinaFk,
+        disciplinaId: entry.disciplina?.id,
         disciplinaNome: entry.disciplina?.nome ?? null,
         cargaHoraria: entry.cargaHoraria,
       });
@@ -56,10 +57,7 @@ export class CursoPeriodoDisciplinaRestController {
   }
 
   @Put("/")
-  @ApiOperation({
-    summary: "Substitui disciplinas por periodo de um curso",
-    operationId: "cursoDisciplinasPorPeriodoBulkReplace",
-  })
+  @ApiOperation(CursoDisciplinasPorPeriodoBulkReplaceCommandMetadata.swaggerMetadata)
   @ApiOkResponse({ type: CursoPeriodoDisciplinaListOutputRestDto })
   @ApiForbiddenResponse()
   async bulkReplace(
@@ -75,9 +73,9 @@ export class CursoPeriodoDisciplinaRestController {
       for (const discItem of periodoItem.disciplinas) {
         const entity = new CursoPeriodoDisciplinaEntity();
         entity.id = generateUuidV7();
-        entity.idCursoFk = cursoId;
+        entity.curso = { id: cursoId } as any;
         entity.numeroPeriodo = periodoItem.numeroPeriodo;
-        entity.idDisciplinaFk = discItem.disciplinaId;
+        entity.disciplina = { id: discItem.disciplinaId } as any;
         entity.cargaHoraria = discItem.cargaHoraria ?? null;
         await this.cursoPeriodoDisciplinaRepository.save(entity);
       }

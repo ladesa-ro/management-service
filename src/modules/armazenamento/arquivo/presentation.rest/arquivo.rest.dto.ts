@@ -1,44 +1,33 @@
 import {
-  arquivoCreateSchema,
-  arquivoFindOneInputSchema,
-  arquivoPaginationInputSchema,
-  arquivoUpdateSchema,
+  ArquivoCreateSchema,
+  ArquivoUpdateSchema,
 } from "@/modules/armazenamento/arquivo/domain/arquivo.schemas";
+import { ArquivoFindOneInputSchema } from "@/modules/armazenamento/arquivo/domain/queries/arquivo-find-one.query.schemas";
+import { ArquivoPaginationInputSchema } from "@/modules/armazenamento/arquivo/domain/queries/arquivo-list.query.schemas";
 import {
   ApiProperty,
   ApiPropertyOptional,
   ApiSchema,
-  commonProperties,
   PartialType,
-  RegisterModel,
-  simpleProperty,
 } from "@/shared/presentation/rest";
 import {
   EntityBaseRestDto,
   PaginatedFilterByIdRestDto,
   PaginationMetaRestDto,
 } from "@/shared/presentation/rest/dtos";
+import { ArquivoCreateCommandFields } from "../domain/commands/arquivo-create.command";
+import { ArquivoFindOneQueryResultFields } from "../domain/queries/arquivo-find-one.query.result";
+import { ArquivoListQueryFields } from "../domain/queries/arquivo-list.query";
 
 // ============================================================================
 // FindOne Output
 // ============================================================================
 
 @ApiSchema({ name: "ArquivoFindOneOutputDto" })
-@RegisterModel({
-  name: "ArquivoFindOneQueryResult",
-  properties: [
-    simpleProperty("id"),
-    simpleProperty("name"),
-    simpleProperty("mimeType"),
-    simpleProperty("sizeBytes"),
-    simpleProperty("storageType"),
-    ...commonProperties.dated,
-  ],
-})
 export class ArquivoFindOneOutputRestDto extends EntityBaseRestDto {
   @ApiPropertyOptional({
     type: "string",
-    description: "Nome do arquivo",
+    ...ArquivoFindOneQueryResultFields.name.swaggerMetadata,
     nullable: true,
     minLength: 1,
   })
@@ -46,7 +35,7 @@ export class ArquivoFindOneOutputRestDto extends EntityBaseRestDto {
 
   @ApiPropertyOptional({
     type: "string",
-    description: "Formato do arquivo",
+    ...ArquivoFindOneQueryResultFields.mimeType.swaggerMetadata,
     nullable: true,
     minLength: 1,
   })
@@ -54,14 +43,14 @@ export class ArquivoFindOneOutputRestDto extends EntityBaseRestDto {
 
   @ApiPropertyOptional({
     type: "integer",
-    description: "Tamanho do arquivo (em bytes)",
+    ...ArquivoFindOneQueryResultFields.sizeBytes.swaggerMetadata,
     nullable: true,
   })
   sizeBytes: number | null;
 
   @ApiProperty({
     type: "string",
-    description: "Estratégia de armazenamento do conteúdo",
+    ...ArquivoFindOneQueryResultFields.storageType.swaggerMetadata,
     minLength: 1,
   })
   storageType: string;
@@ -73,15 +62,21 @@ export class ArquivoFindOneOutputRestDto extends EntityBaseRestDto {
 
 @ApiSchema({ name: "ArquivoListInputDto" })
 export class ArquivoListInputRestDto extends PaginatedFilterByIdRestDto {
-  static schema = arquivoPaginationInputSchema;
+  static schema = ArquivoPaginationInputSchema;
 }
 
 @ApiSchema({ name: "ArquivoListOutputDto" })
 export class ArquivoListOutputRestDto {
-  @ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" })
+  @ApiProperty({
+    type: () => PaginationMetaRestDto,
+    ...ArquivoListQueryFields.meta.swaggerMetadata,
+  })
   meta: PaginationMetaRestDto;
 
-  @ApiProperty({ type: () => [ArquivoFindOneOutputRestDto], description: "Resultados da busca" })
+  @ApiProperty({
+    type: () => [ArquivoFindOneOutputRestDto],
+    ...ArquivoListQueryFields.data.swaggerMetadata,
+  })
   data: ArquivoFindOneOutputRestDto[];
 }
 
@@ -91,11 +86,11 @@ export class ArquivoListOutputRestDto {
 
 @ApiSchema({ name: "ArquivoCreateInputDto" })
 export class ArquivoCreateInputRestDto {
-  static schema = arquivoCreateSchema;
+  static schema = ArquivoCreateSchema;
 
   @ApiPropertyOptional({
     type: "string",
-    description: "Nome do arquivo",
+    ...ArquivoCreateCommandFields.name.swaggerMetadata,
     nullable: true,
     minLength: 1,
   })
@@ -103,7 +98,7 @@ export class ArquivoCreateInputRestDto {
 
   @ApiPropertyOptional({
     type: "string",
-    description: "Formato do arquivo",
+    ...ArquivoCreateCommandFields.mimeType.swaggerMetadata,
     nullable: true,
     minLength: 1,
   })
@@ -111,14 +106,14 @@ export class ArquivoCreateInputRestDto {
 
   @ApiPropertyOptional({
     type: "integer",
-    description: "Tamanho do arquivo (em bytes)",
+    ...ArquivoCreateCommandFields.sizeBytes.swaggerMetadata,
     nullable: true,
   })
   sizeBytes?: number | null;
 
   @ApiProperty({
     type: "string",
-    description: "Estratégia de armazenamento do conteúdo",
+    ...ArquivoCreateCommandFields.storageType.swaggerMetadata,
     minLength: 1,
   })
   storageType: string;
@@ -126,7 +121,7 @@ export class ArquivoCreateInputRestDto {
 
 @ApiSchema({ name: "ArquivoUpdateInputDto" })
 export class ArquivoUpdateInputRestDto extends PartialType(ArquivoCreateInputRestDto) {
-  static schema = arquivoUpdateSchema;
+  static schema = ArquivoUpdateSchema;
 }
 
 // ============================================================================
@@ -135,11 +130,11 @@ export class ArquivoUpdateInputRestDto extends PartialType(ArquivoCreateInputRes
 
 @ApiSchema({ name: "ArquivoFindOneInputDto" })
 export class ArquivoFindOneInputRestDto {
-  static schema = arquivoFindOneInputSchema;
+  static schema = ArquivoFindOneInputSchema;
 
   @ApiProperty({
     type: "string",
-    description: "Identificador do registro (uuid)",
+    ...ArquivoFindOneQueryResultFields.id.swaggerMetadata,
     format: "uuid",
   })
   id: string;

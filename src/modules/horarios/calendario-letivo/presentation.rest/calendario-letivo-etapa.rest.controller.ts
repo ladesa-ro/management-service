@@ -9,6 +9,11 @@ import {
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { AccessContext, AccessContextHttp } from "@/server/access-context";
+import {
+  CalendarioLetivoDesativarCommandMetadata,
+  CalendarioLetivoEtapaBulkReplaceCommandMetadata,
+  CalendarioLetivoEtapaFindAllQueryMetadata,
+} from "../domain/calendario-letivo-etapa.operations";
 import { ICalendarioLetivoRepository } from "../domain/repositories/calendario-letivo.repository.interface";
 import { ICalendarioLetivoEtapaRepository } from "../domain/repositories/calendario-letivo-etapa.repository.interface";
 import { CalendarioLetivoEtapaEntity } from "../infrastructure.database/typeorm/calendario-letivo-etapa.typeorm.entity";
@@ -28,10 +33,7 @@ export class CalendarioLetivoEtapaRestController {
   ) {}
 
   @Get("/")
-  @ApiOperation({
-    summary: "Lista etapas do calendario letivo",
-    operationId: "calendarioLetivoEtapaFindAll",
-  })
+  @ApiOperation(CalendarioLetivoEtapaFindAllQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: CalendarioLetivoEtapaListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
@@ -45,7 +47,7 @@ export class CalendarioLetivoEtapaRestController {
     return {
       data: etapas.map((e) => ({
         id: e.id,
-        ofertaFormacaoPeriodoEtapaId: e.idOfertaFormacaoPeriodoEtapaFk,
+        ofertaFormacaoPeriodoEtapaId: e.ofertaFormacaoPeriodoEtapa?.id,
         nomeEtapa: e.ofertaFormacaoPeriodoEtapa?.nome ?? "",
         dataInicio:
           e.dataInicio instanceof Date
@@ -60,10 +62,7 @@ export class CalendarioLetivoEtapaRestController {
   }
 
   @Put("/")
-  @ApiOperation({
-    summary: "Substitui datas das etapas do calendario letivo",
-    operationId: "calendarioLetivoEtapaBulkReplace",
-  })
+  @ApiOperation(CalendarioLetivoEtapaBulkReplaceCommandMetadata.swaggerMetadata)
   @ApiOkResponse({ type: CalendarioLetivoEtapaListOutputRestDto })
   @ApiForbiddenResponse()
   async bulkReplace(
@@ -81,19 +80,17 @@ export class CalendarioLetivoEtapaRestController {
     for (const item of dto.etapas) {
       const entity = new CalendarioLetivoEtapaEntity();
       entity.id = generateUuidV7();
-      entity.idCalendarioLetivoFk = calendarioLetivoId;
-      entity.idOfertaFormacaoPeriodoEtapaFk = item.ofertaFormacaoPeriodoEtapaId;
-      entity.dataInicio = new Date(item.dataInicio);
-      entity.dataTermino = new Date(item.dataTermino);
-      entity.dateCreated = now;
-      entity.dateUpdated = now;
-      entity.dateDeleted = null;
       entity.calendarioLetivo = {
         id: calendarioLetivoId,
       } as CalendarioLetivoEtapaEntity["calendarioLetivo"];
       entity.ofertaFormacaoPeriodoEtapa = {
         id: item.ofertaFormacaoPeriodoEtapaId,
       } as CalendarioLetivoEtapaEntity["ofertaFormacaoPeriodoEtapa"];
+      entity.dataInicio = new Date(item.dataInicio);
+      entity.dataTermino = new Date(item.dataTermino);
+      entity.dateCreated = now;
+      entity.dateUpdated = now;
+      entity.dateDeleted = null;
       await this.etapaRepository.save(entity);
     }
 
@@ -111,10 +108,7 @@ export class CalendarioLetivoDesativarRestController {
   ) {}
 
   @Post("/:id/desativar")
-  @ApiOperation({
-    summary: "Desativa um calendario letivo (sem excluir)",
-    operationId: "calendarioLetivoDesativar",
-  })
+  @ApiOperation(CalendarioLetivoDesativarCommandMetadata.swaggerMetadata)
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()

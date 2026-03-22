@@ -1,9 +1,9 @@
 import type { z } from "zod";
 import type { IdNumeric } from "@/domain/abstractions/scalars";
 import { zodValidate } from "@/shared/validation/index";
-import { estadoCreateSchema, estadoSchema, estadoUpdateSchema } from "./estado.schemas";
+import { EstadoCreateSchema, EstadoSchema, EstadoUpdateSchema } from "./estado.schemas";
 
-export type IEstado = z.infer<typeof estadoSchema>;
+export type IEstado = z.infer<typeof EstadoSchema>;
 
 export class Estado {
   static readonly entityName = "Estado";
@@ -15,7 +15,7 @@ export class Estado {
   private constructor() {}
 
   static create(dados: unknown): Estado {
-    const parsed = zodValidate(Estado.entityName, estadoCreateSchema, dados);
+    const parsed = zodValidate(Estado.entityName, EstadoCreateSchema, dados);
 
     const instance = new Estado();
 
@@ -27,7 +27,7 @@ export class Estado {
   }
 
   static load(dados: unknown): Estado {
-    const parsed = zodValidate(Estado.entityName, estadoSchema, dados);
+    const parsed = zodValidate(Estado.entityName, EstadoSchema, dados);
 
     const instance = new Estado();
 
@@ -39,11 +39,11 @@ export class Estado {
   }
 
   update(dados: unknown): void {
-    const parsed = zodValidate(Estado.entityName, estadoUpdateSchema, dados);
+    const parsed = zodValidate(Estado.entityName, EstadoUpdateSchema, dados);
 
     if (parsed.nome !== undefined) this.nome = parsed.nome;
     if (parsed.sigla !== undefined) this.sigla = parsed.sigla;
 
-    zodValidate(Estado.entityName, estadoSchema, this);
+    zodValidate(Estado.entityName, EstadoSchema, this);
   }
 }

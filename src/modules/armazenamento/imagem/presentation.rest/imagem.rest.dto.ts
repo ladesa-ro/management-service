@@ -1,18 +1,15 @@
 import {
-  imagemCreateSchema,
-  imagemFindOneInputSchema,
-  imagemPaginationInputSchema,
-  imagemUpdateSchema,
+  ImagemCreateSchema,
+  ImagemUpdateSchema,
 } from "@/modules/armazenamento/imagem/domain/imagem.schemas";
+import { ImagemFindOneInputSchema } from "@/modules/armazenamento/imagem/domain/queries/imagem-find-one.query.schemas";
+import { ImagemPaginationInputSchema } from "@/modules/armazenamento/imagem/domain/queries/imagem-list.query.schemas";
 import { ImagemArquivoFindOneFromImagemOutputRestDto } from "@/modules/armazenamento/imagem-arquivo/presentation.rest";
 import {
   ApiProperty,
   ApiPropertyOptional,
   ApiSchema,
-  commonProperties,
   PartialType,
-  RegisterModel,
-  simpleProperty,
 } from "@/shared/presentation/rest";
 import {
   EntityBaseRestDto,
@@ -25,15 +22,6 @@ import {
 // ============================================================================
 
 @ApiSchema({ name: "ImagemFindOneOutputDto" })
-@RegisterModel({
-  name: "ImagemFindOneQueryResult",
-  properties: [
-    simpleProperty("id"),
-    simpleProperty("descricao"),
-    // Note: 'versoes' is a OneToMany relation - not loaded via QbEfficientLoad
-    ...commonProperties.dated,
-  ],
-})
 export class ImagemFindOneOutputRestDto extends EntityBaseRestDto {
   @ApiPropertyOptional({
     type: "string",
@@ -56,7 +44,7 @@ export class ImagemFindOneOutputRestDto extends EntityBaseRestDto {
 
 @ApiSchema({ name: "ImagemListInputDto" })
 export class ImagemListInputRestDto extends PaginatedFilterByIdRestDto {
-  static schema = imagemPaginationInputSchema;
+  static schema = ImagemPaginationInputSchema;
 }
 
 @ApiSchema({ name: "ImagemListOutputDto" })
@@ -74,7 +62,7 @@ export class ImagemListOutputRestDto {
 
 @ApiSchema({ name: "ImagemCreateInputDto" })
 export class ImagemCreateInputRestDto {
-  static schema = imagemCreateSchema;
+  static schema = ImagemCreateSchema;
 
   @ApiPropertyOptional({
     type: "string",
@@ -87,7 +75,7 @@ export class ImagemCreateInputRestDto {
 
 @ApiSchema({ name: "ImagemUpdateInputDto" })
 export class ImagemUpdateInputRestDto extends PartialType(ImagemCreateInputRestDto) {
-  static schema = imagemUpdateSchema;
+  static schema = ImagemUpdateSchema;
 }
 
 // ============================================================================
@@ -96,7 +84,7 @@ export class ImagemUpdateInputRestDto extends PartialType(ImagemCreateInputRestD
 
 @ApiSchema({ name: "ImagemFindOneInputDto" })
 export class ImagemFindOneInputRestDto {
-  static schema = imagemFindOneInputSchema;
+  static schema = ImagemFindOneInputSchema;
 
   @ApiProperty({
     type: "string",

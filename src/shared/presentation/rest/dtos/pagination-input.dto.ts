@@ -13,7 +13,7 @@ export class PaginationInputRestDto {
     default: 1,
     example: 1,
   })
-  page?: number = 1;
+  page?: number;
 
   @ApiPropertyOptional({
     type: "integer",

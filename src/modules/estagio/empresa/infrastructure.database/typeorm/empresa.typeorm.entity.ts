@@ -24,10 +24,7 @@ export class EmpresaTypeormEntity {
   @Column({ name: "email", type: "text", nullable: false })
   email!: string;
 
-  @Column({ name: "id_endereco_fk", type: "uuid", nullable: false })
-  idEnderecoFk!: string;
-
-  @ManyToOne(() => EnderecoEntity, {})
+  @ManyToOne(() => EnderecoEntity)
   @JoinColumn({ name: "id_endereco_fk" })
   endereco!: Relation<EnderecoEntity>;
 

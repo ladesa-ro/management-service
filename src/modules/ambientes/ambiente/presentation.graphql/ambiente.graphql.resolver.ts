@@ -4,11 +4,26 @@ import { ensureExists } from "@/application/errors";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { graphqlExtractSelection } from "@/infrastructure.graphql";
 import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente";
-import { IAmbienteCreateCommandHandler } from "@/modules/ambientes/ambiente/domain/commands/ambiente-create.command.handler.interface";
-import { IAmbienteDeleteCommandHandler } from "@/modules/ambientes/ambiente/domain/commands/ambiente-delete.command.handler.interface";
-import { IAmbienteUpdateCommandHandler } from "@/modules/ambientes/ambiente/domain/commands/ambiente-update.command.handler.interface";
-import { IAmbienteFindOneQueryHandler } from "@/modules/ambientes/ambiente/domain/queries/ambiente-find-one.query.handler.interface";
-import { IAmbienteListQueryHandler } from "@/modules/ambientes/ambiente/domain/queries/ambiente-list.query.handler.interface";
+import {
+  AmbienteCreateCommandMetadata,
+  IAmbienteCreateCommandHandler,
+} from "@/modules/ambientes/ambiente/domain/commands/ambiente-create.command.handler.interface";
+import {
+  AmbienteDeleteCommandMetadata,
+  IAmbienteDeleteCommandHandler,
+} from "@/modules/ambientes/ambiente/domain/commands/ambiente-delete.command.handler.interface";
+import {
+  AmbienteUpdateCommandMetadata,
+  IAmbienteUpdateCommandHandler,
+} from "@/modules/ambientes/ambiente/domain/commands/ambiente-update.command.handler.interface";
+import {
+  AmbienteFindOneQueryMetadata,
+  IAmbienteFindOneQueryHandler,
+} from "@/modules/ambientes/ambiente/domain/queries/ambiente-find-one.query.handler.interface";
+import {
+  AmbienteListQueryMetadata,
+  IAmbienteListQueryHandler,
+} from "@/modules/ambientes/ambiente/domain/queries/ambiente-list.query.handler.interface";
 import { AccessContext, AccessContextGraphQL } from "@/server/access-context";
 import {
   AmbienteCreateInputGraphQlDto,
@@ -34,7 +49,7 @@ export class AmbienteGraphqlResolver {
     private readonly deleteHandler: IAmbienteDeleteCommandHandler,
   ) {}
 
-  @Query(() => AmbienteListOutputGraphQlDto, { name: "ambienteFindAll" })
+  @Query(() => AmbienteListOutputGraphQlDto, AmbienteListQueryMetadata.gqlMetadata)
   async findAll(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args() dto: AmbienteListInputGraphQlDto,
@@ -49,7 +64,7 @@ export class AmbienteGraphqlResolver {
     return AmbienteGraphqlMapper.toListOutputDto(result);
   }
 
-  @Query(() => AmbienteFindOneOutputGraphQlDto, { name: "ambienteFindById" })
+  @Query(() => AmbienteFindOneOutputGraphQlDto, AmbienteFindOneQueryMetadata.gqlMetadata)
   async findById(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
@@ -61,7 +76,7 @@ export class AmbienteGraphqlResolver {
     return AmbienteGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => AmbienteFindOneOutputGraphQlDto, { name: "ambienteCreate" })
+  @Mutation(() => AmbienteFindOneOutputGraphQlDto, AmbienteCreateCommandMetadata.gqlMetadata)
   async create(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("input") dto: AmbienteCreateInputGraphQlDto,
@@ -72,7 +87,7 @@ export class AmbienteGraphqlResolver {
     return AmbienteGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => AmbienteFindOneOutputGraphQlDto, { name: "ambienteUpdate" })
+  @Mutation(() => AmbienteFindOneOutputGraphQlDto, AmbienteUpdateCommandMetadata.gqlMetadata)
   async update(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
@@ -84,7 +99,7 @@ export class AmbienteGraphqlResolver {
     return AmbienteGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => Boolean, { name: "ambienteDeleteOneById" })
+  @Mutation(() => Boolean, AmbienteDeleteCommandMetadata.gqlMetadata)
   async deleteOneById(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,

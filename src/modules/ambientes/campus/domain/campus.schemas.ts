@@ -1,23 +1,19 @@
+/**
+ * Campus — schemas zod para a entidade e suas operacoes.
+ *
+ * Contem os schemas de referencia, composicao (create/update)
+ * e validacao da entidade. Fonte unica de verdade (SSOT) para
+ * os contratos de dados da entidade.
+ */
 import { z } from "zod";
-import { datedSchema, stringFilterSchema, uuidSchema } from "@/shared/validation/schemas";
+import { datedSchema, uuidSchema } from "@/shared/validation/schemas";
+import { CampusFields } from "./campus.fields";
 
 // ============================================================================
-// Fragments reutilizáveis
+// Fragments de referência
 // ============================================================================
 
-export const campusNomeFantasiaSchema = z.string().min(1, "nomeFantasia é obrigatório");
-
-export const campusRazaoSocialSchema = z.string().min(1, "razaoSocial é obrigatório");
-
-export const campusApelidoSchema = z.string().min(1, "apelido é obrigatório");
-
-export const campusCnpjSchema = z
-  .string()
-  .min(1, "cnpj é obrigatório")
-  .transform((val) => val.replace(/\D/g, ""))
-  .pipe(z.string().regex(/^\d{14}$/, "cnpj deve conter exatamente 14 dígitos"));
-
-export const campusEnderecoRefSchema = z.object({
+export const CampusEnderecoRefSchema = z.object({
   cep: z.string().min(1),
   logradouro: z.string().min(1),
   numero: z.number().int().min(0),
@@ -31,13 +27,13 @@ export const campusEnderecoRefSchema = z.object({
 // Schemas compostos
 // ============================================================================
 
-export const campusSchema = z
+export const CampusSchema = z
   .object({
     id: uuidSchema,
-    nomeFantasia: campusNomeFantasiaSchema,
-    razaoSocial: campusRazaoSocialSchema,
-    apelido: campusApelidoSchema,
-    cnpj: campusCnpjSchema,
+    nomeFantasia: CampusFields.nomeFantasia.schema,
+    razaoSocial: CampusFields.razaoSocial.schema,
+    apelido: CampusFields.apelido.schema,
+    cnpj: CampusFields.cnpj.schema,
     endereco: z
       .object({
         id: uuidSchema,
@@ -53,58 +49,18 @@ export const campusSchema = z
   })
   .merge(datedSchema);
 
-export const campusCreateSchema = z.object({
-  nomeFantasia: campusNomeFantasiaSchema,
-  razaoSocial: campusRazaoSocialSchema,
-  apelido: campusApelidoSchema,
-  cnpj: campusCnpjSchema,
-  endereco: campusEnderecoRefSchema,
+export const CampusCreateSchema = z.object({
+  nomeFantasia: CampusFields.nomeFantasia.schema,
+  razaoSocial: CampusFields.razaoSocial.schema,
+  apelido: CampusFields.apelido.schema,
+  cnpj: CampusFields.cnpj.schema,
+  endereco: CampusEnderecoRefSchema,
 });
 
-export const campusUpdateSchema = z.object({
-  nomeFantasia: campusNomeFantasiaSchema.optional(),
-  razaoSocial: campusRazaoSocialSchema.optional(),
-  apelido: campusApelidoSchema.optional(),
-  cnpj: campusCnpjSchema.optional(),
-  endereco: campusEnderecoRefSchema.optional(),
+export const CampusUpdateSchema = z.object({
+  nomeFantasia: CampusFields.nomeFantasia.schema.optional(),
+  razaoSocial: CampusFields.razaoSocial.schema.optional(),
+  apelido: CampusFields.apelido.schema.optional(),
+  cnpj: CampusFields.cnpj.schema.optional(),
+  endereco: CampusEnderecoRefSchema.optional(),
 });
-
-// ============================================================================
-// Schemas de input (presentation layer)
-// ============================================================================
-
-export const campusFindOneInputSchema = z.object({
-  id: uuidSchema,
-});
-
-export const campusPaginationInputSchema = z.object({
-  page: z.coerce.number().int().min(1).optional().default(1),
-  limit: z.coerce.number().int().min(1).optional(),
-  search: z.string().optional(),
-  sortBy: z.array(z.string()).optional(),
-  selection: z.array(z.string()).optional(),
-  "filter.id": stringFilterSchema,
-});
-
-export const campusGraphqlListInputSchema = z.object({
-  page: z.number().int().min(1).optional().default(1),
-  limit: z.number().int().min(1).optional(),
-  search: z.string().optional(),
-  sortBy: z.array(z.string()).optional(),
-  selection: z.array(z.string()).optional(),
-  filterId: z.array(z.string()).optional(),
-});
-
-// ============================================================================
-// Schemas de input para create/update (presentation layer)
-// ============================================================================
-
-export const campusInputCreateSchema = z.object({
-  nomeFantasia: campusNomeFantasiaSchema,
-  razaoSocial: campusRazaoSocialSchema,
-  apelido: campusApelidoSchema,
-  cnpj: campusCnpjSchema,
-  endereco: campusEnderecoRefSchema,
-});
-
-export const campusInputUpdateSchema = campusInputCreateSchema.partial();

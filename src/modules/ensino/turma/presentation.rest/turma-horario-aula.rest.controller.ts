@@ -3,6 +3,10 @@ import { ApiForbiddenResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nes
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { ITurmaHorarioAulaRepository } from "@/modules/horarios/turma-horario-aula/domain/repositories";
+import {
+  TurmaHorarioAulaBulkReplaceCommandMetadata,
+  TurmaHorarioAulaFindAllQueryMetadata,
+} from "@/modules/horarios/turma-horario-aula/domain/turma-horario-aula.query.metadata";
 import { TurmaHorarioAulaEntity } from "@/modules/horarios/turma-horario-aula/infrastructure.database/typeorm/turma-horario-aula.typeorm.entity";
 import { AccessContext, AccessContextHttp } from "@/server/access-context";
 import {
@@ -20,10 +24,7 @@ export class TurmaHorarioAulaRestController {
   ) {}
 
   @Get("/")
-  @ApiOperation({
-    summary: "Lista horarios de aula selecionados da turma",
-    operationId: "turmaHorarioAulaFindAll",
-  })
+  @ApiOperation(TurmaHorarioAulaFindAllQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: TurmaHorarioAulaListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
@@ -35,7 +36,7 @@ export class TurmaHorarioAulaRestController {
     return {
       data: entries.map((e) => ({
         id: e.id,
-        horarioAulaId: e.idHorarioAulaFk,
+        horarioAulaId: e.horarioAula?.id,
         inicio: e.horarioAula?.inicio ?? "",
         fim: e.horarioAula?.fim ?? "",
       })),
@@ -43,10 +44,7 @@ export class TurmaHorarioAulaRestController {
   }
 
   @Put("/")
-  @ApiOperation({
-    summary: "Substitui horarios de aula selecionados da turma",
-    operationId: "turmaHorarioAulaBulkReplace",
-  })
+  @ApiOperation(TurmaHorarioAulaBulkReplaceCommandMetadata.swaggerMetadata)
   @ApiOkResponse({ type: TurmaHorarioAulaListOutputRestDto })
   @ApiForbiddenResponse()
   async bulkReplace(
@@ -59,8 +57,8 @@ export class TurmaHorarioAulaRestController {
     for (const horarioAulaId of dto.horarioAulaIds) {
       const entity = new TurmaHorarioAulaEntity();
       entity.id = generateUuidV7();
-      entity.idTurmaFk = parentParams.turmaId;
-      entity.idHorarioAulaFk = horarioAulaId;
+      entity.turma = { id: parentParams.turmaId } as any;
+      entity.horarioAula = { id: horarioAulaId } as any;
       await this.turmaHorarioAulaRepository.save(entity);
     }
 

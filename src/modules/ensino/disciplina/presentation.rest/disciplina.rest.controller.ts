@@ -24,14 +24,35 @@ import {
 } from "@nestjs/swagger";
 import { ensureExists } from "@/application/errors";
 import { DeclareDependency } from "@/domain/dependency-injection";
-import { IDisciplinaCreateCommandHandler } from "@/modules/ensino/disciplina/domain/commands/disciplina-create.command.handler.interface";
-import { IDisciplinaDeleteCommandHandler } from "@/modules/ensino/disciplina/domain/commands/disciplina-delete.command.handler.interface";
-import { IDisciplinaUpdateCommandHandler } from "@/modules/ensino/disciplina/domain/commands/disciplina-update.command.handler.interface";
-import { IDisciplinaUpdateImagemCapaCommandHandler } from "@/modules/ensino/disciplina/domain/commands/disciplina-update-imagem-capa.command.handler.interface";
+import {
+  DisciplinaCreateCommandMetadata,
+  IDisciplinaCreateCommandHandler,
+} from "@/modules/ensino/disciplina/domain/commands/disciplina-create.command.handler.interface";
+import {
+  DisciplinaDeleteCommandMetadata,
+  IDisciplinaDeleteCommandHandler,
+} from "@/modules/ensino/disciplina/domain/commands/disciplina-delete.command.handler.interface";
+import {
+  DisciplinaUpdateCommandMetadata,
+  IDisciplinaUpdateCommandHandler,
+} from "@/modules/ensino/disciplina/domain/commands/disciplina-update.command.handler.interface";
+import {
+  DisciplinaUpdateImagemCapaCommandMetadata,
+  IDisciplinaUpdateImagemCapaCommandHandler,
+} from "@/modules/ensino/disciplina/domain/commands/disciplina-update-imagem-capa.command.handler.interface";
 import { Disciplina } from "@/modules/ensino/disciplina/domain/disciplina";
-import { IDisciplinaFindOneQueryHandler } from "@/modules/ensino/disciplina/domain/queries/disciplina-find-one.query.handler.interface";
-import { IDisciplinaGetImagemCapaQueryHandler } from "@/modules/ensino/disciplina/domain/queries/disciplina-get-imagem-capa.query.handler.interface";
-import { IDisciplinaListQueryHandler } from "@/modules/ensino/disciplina/domain/queries/disciplina-list.query.handler.interface";
+import {
+  DisciplinaFindOneQueryMetadata,
+  IDisciplinaFindOneQueryHandler,
+} from "@/modules/ensino/disciplina/domain/queries/disciplina-find-one.query.handler.interface";
+import {
+  DisciplinaGetImagemCapaQueryMetadata,
+  IDisciplinaGetImagemCapaQueryHandler,
+} from "@/modules/ensino/disciplina/domain/queries/disciplina-get-imagem-capa.query.handler.interface";
+import {
+  DisciplinaListQueryMetadata,
+  IDisciplinaListQueryHandler,
+} from "@/modules/ensino/disciplina/domain/queries/disciplina-list.query.handler.interface";
 import { AccessContext, AccessContextHttp } from "@/server/access-context";
 import {
   DisciplinaCreateInputRestDto,
@@ -64,7 +85,7 @@ export class DisciplinaRestController {
   ) {}
 
   @Get("/")
-  @ApiOperation({ summary: "Lista disciplinas", operationId: "disciplinaFindAll" })
+  @ApiOperation(DisciplinaListQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: DisciplinaListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
@@ -77,7 +98,7 @@ export class DisciplinaRestController {
   }
 
   @Get("/:id")
-  @ApiOperation({ summary: "Busca uma disciplina por ID", operationId: "disciplinaFindById" })
+  @ApiOperation(DisciplinaFindOneQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: DisciplinaFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -92,7 +113,7 @@ export class DisciplinaRestController {
   }
 
   @Post("/")
-  @ApiOperation({ summary: "Cria uma disciplina", operationId: "disciplinaCreate" })
+  @ApiOperation(DisciplinaCreateCommandMetadata.swaggerMetadata)
   @ApiCreatedResponse({ type: DisciplinaFindOneOutputRestDto })
   @ApiForbiddenResponse()
   async create(
@@ -105,7 +126,7 @@ export class DisciplinaRestController {
   }
 
   @Patch("/:id")
-  @ApiOperation({ summary: "Atualiza uma disciplina", operationId: "disciplinaUpdate" })
+  @ApiOperation(DisciplinaUpdateCommandMetadata.swaggerMetadata)
   @ApiOkResponse({ type: DisciplinaFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -120,10 +141,7 @@ export class DisciplinaRestController {
   }
 
   @Get("/:id/imagem/capa")
-  @ApiOperation({
-    summary: "Busca imagem de capa de uma disciplina",
-    operationId: "disciplinaGetImagemCapa",
-  })
+  @ApiOperation(DisciplinaGetImagemCapaQueryMetadata.swaggerMetadata)
   @ApiOkResponse()
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -135,10 +153,7 @@ export class DisciplinaRestController {
   }
 
   @Put("/:id/imagem/capa")
-  @ApiOperation({
-    summary: "Define imagem de capa de uma disciplina",
-    operationId: "disciplinaUpdateImagemCapa",
-  })
+  @ApiOperation(DisciplinaUpdateImagemCapaCommandMetadata.swaggerMetadata)
   @ApiConsumes("multipart/form-data")
   @ApiBody({
     schema: {
@@ -162,7 +177,7 @@ export class DisciplinaRestController {
   }
 
   @Delete("/:id")
-  @ApiOperation({ summary: "Remove uma disciplina", operationId: "disciplinaDeleteOneById" })
+  @ApiOperation(DisciplinaDeleteCommandMetadata.swaggerMetadata)
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()

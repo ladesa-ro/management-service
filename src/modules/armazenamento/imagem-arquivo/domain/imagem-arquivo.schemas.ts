@@ -1,23 +1,23 @@
+/**
+ * Imagem Arquivo — schemas zod para a entidade e suas operacoes.
+ *
+ * Contem os schemas de referencia, composicao (create/update)
+ * e validacao da entidade. Fonte unica de verdade (SSOT) para
+ * os contratos de dados da entidade.
+ */
 import { z } from "zod";
-import { datedSchema, stringFilterSchema, uuidSchema } from "@/shared/validation/schemas";
+import { datedSchema, uuidSchema } from "@/shared/validation/schemas";
+import { ImagemArquivoFields } from "./imagem-arquivo.fields";
 
 // ============================================================================
-// Fragments reutilizáveis
+// Fragments de referência
 // ============================================================================
 
-export const imagemArquivoLarguraSchema = z.number().int().min(1, "largura deve ser >= 1");
-
-export const imagemArquivoAlturaSchema = z.number().int().min(1, "altura deve ser >= 1");
-
-export const imagemArquivoFormatoSchema = z.string().min(1, "formato é obrigatório");
-
-export const imagemArquivoMimeTypeSchema = z.string().min(1, "mimeType é obrigatório");
-
-export const imagemArquivoImagemRefSchema = z.object({
+export const ImagemArquivoImagemRefSchema = z.object({
   id: uuidSchema,
 });
 
-export const imagemArquivoArquivoRefSchema = z.object({
+export const ImagemArquivoArquivoRefSchema = z.object({
   id: uuidSchema,
 });
 
@@ -25,56 +25,30 @@ export const imagemArquivoArquivoRefSchema = z.object({
 // Schemas compostos
 // ============================================================================
 
-export const imagemArquivoSchema = z
+export const ImagemArquivoSchema = z
   .object({
     id: uuidSchema,
-    largura: imagemArquivoLarguraSchema,
-    altura: imagemArquivoAlturaSchema,
-    formato: imagemArquivoFormatoSchema,
-    mimeType: imagemArquivoMimeTypeSchema,
-    imagem: imagemArquivoImagemRefSchema,
-    arquivo: imagemArquivoArquivoRefSchema,
+    largura: ImagemArquivoFields.largura.schema,
+    altura: ImagemArquivoFields.altura.schema,
+    formato: ImagemArquivoFields.formato.schema,
+    mimeType: ImagemArquivoFields.mimeType.schema,
+    imagem: ImagemArquivoImagemRefSchema,
+    arquivo: ImagemArquivoArquivoRefSchema,
   })
   .merge(datedSchema);
 
-export const imagemArquivoCreateSchema = z.object({
-  largura: imagemArquivoLarguraSchema,
-  altura: imagemArquivoAlturaSchema,
-  formato: imagemArquivoFormatoSchema,
-  mimeType: imagemArquivoMimeTypeSchema,
-  imagem: imagemArquivoImagemRefSchema,
-  arquivo: imagemArquivoArquivoRefSchema,
+export const ImagemArquivoCreateSchema = z.object({
+  largura: ImagemArquivoFields.largura.schema,
+  altura: ImagemArquivoFields.altura.schema,
+  formato: ImagemArquivoFields.formato.schema,
+  mimeType: ImagemArquivoFields.mimeType.schema,
+  imagem: ImagemArquivoImagemRefSchema,
+  arquivo: ImagemArquivoArquivoRefSchema,
 });
 
-export const imagemArquivoUpdateSchema = z.object({
-  largura: imagemArquivoLarguraSchema.optional(),
-  altura: imagemArquivoAlturaSchema.optional(),
-  formato: imagemArquivoFormatoSchema.optional(),
-  mimeType: imagemArquivoMimeTypeSchema.optional(),
-});
-
-// ============================================================================
-// Schemas de input (presentation layer)
-// ============================================================================
-
-export const imagemArquivoFindOneInputSchema = z.object({
-  id: uuidSchema,
-});
-
-export const imagemArquivoPaginationInputSchema = z.object({
-  page: z.coerce.number().int().min(1).optional().default(1),
-  limit: z.coerce.number().int().min(1).optional(),
-  search: z.string().optional(),
-  sortBy: z.array(z.string()).optional(),
-  selection: z.array(z.string()).optional(),
-  "filter.id": stringFilterSchema,
-});
-
-export const imagemArquivoGraphqlListInputSchema = z.object({
-  page: z.number().int().min(1).optional().default(1),
-  limit: z.number().int().min(1).optional(),
-  search: z.string().optional(),
-  sortBy: z.array(z.string()).optional(),
-  selection: z.array(z.string()).optional(),
-  filterId: z.array(z.string()).optional(),
+export const ImagemArquivoUpdateSchema = z.object({
+  largura: ImagemArquivoFields.largura.schema.optional(),
+  altura: ImagemArquivoFields.altura.schema.optional(),
+  formato: ImagemArquivoFields.formato.schema.optional(),
+  mimeType: ImagemArquivoFields.mimeType.schema.optional(),
 });

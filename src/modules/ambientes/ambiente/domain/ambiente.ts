@@ -2,9 +2,9 @@ import type { z } from "zod";
 import type { IdUuid, ScalarDateTimeString } from "@/domain/abstractions/scalars";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { zodValidate } from "@/shared/validation/index";
-import { ambienteCreateSchema, ambienteSchema, ambienteUpdateSchema } from "./ambiente.schemas";
+import { AmbienteCreateSchema, AmbienteSchema, AmbienteUpdateSchema } from "./ambiente.schemas";
 
-export type IAmbiente = z.infer<typeof ambienteSchema>;
+export type IAmbiente = z.infer<typeof AmbienteSchema>;
 
 export class Ambiente {
   static readonly entityName = "Ambiente";
@@ -24,7 +24,7 @@ export class Ambiente {
   private constructor() {}
 
   static create(dados: unknown): Ambiente {
-    const parsed = zodValidate(Ambiente.entityName, ambienteCreateSchema, dados);
+    const parsed = zodValidate(Ambiente.entityName, AmbienteCreateSchema, dados);
 
     const instance = new Ambiente();
 
@@ -43,7 +43,7 @@ export class Ambiente {
   }
 
   static load(dados: unknown): Ambiente {
-    const parsed = zodValidate(Ambiente.entityName, ambienteSchema, dados);
+    const parsed = zodValidate(Ambiente.entityName, AmbienteSchema, dados);
 
     const instance = new Ambiente();
 
@@ -63,7 +63,7 @@ export class Ambiente {
   }
 
   update(dados: unknown): void {
-    const parsed = zodValidate(Ambiente.entityName, ambienteUpdateSchema, dados);
+    const parsed = zodValidate(Ambiente.entityName, AmbienteUpdateSchema, dados);
 
     if (parsed.nome !== undefined) this.nome = parsed.nome;
     if (parsed.descricao !== undefined) this.descricao = parsed.descricao ?? null;
@@ -73,6 +73,6 @@ export class Ambiente {
 
     this.dateUpdated = new Date().toISOString();
 
-    zodValidate(Ambiente.entityName, ambienteSchema, this);
+    zodValidate(Ambiente.entityName, AmbienteSchema, this);
   }
 }

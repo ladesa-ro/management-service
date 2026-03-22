@@ -1,6 +1,12 @@
 import type { IQueryHandler } from "@/domain/abstractions";
+import { createOperationMetadata } from "@/domain/abstractions";
 import type { EstadoListQuery } from "./estado-list.query";
 import type { EstadoListQueryResult } from "./estado-list.query.result";
+
+export const EstadoListQueryMetadata = createOperationMetadata({
+  operationId: "estadoFindAll",
+  summary: "Lista estados",
+});
 
 export const IEstadoListQueryHandler = Symbol("IEstadoListQueryHandler");
 

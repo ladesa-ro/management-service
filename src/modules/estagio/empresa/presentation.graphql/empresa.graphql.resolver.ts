@@ -3,12 +3,27 @@ import { type GraphQLResolveInfo } from "graphql";
 import { ensureExists } from "@/application/errors";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { graphqlExtractSelection } from "@/infrastructure.graphql";
-import { IEmpresaCreateCommandHandler } from "@/modules/estagio/empresa/domain/commands/empresa-create.command.handler.interface";
-import { IEmpresaDeleteCommandHandler } from "@/modules/estagio/empresa/domain/commands/empresa-delete.command.handler.interface";
-import { IEmpresaUpdateCommandHandler } from "@/modules/estagio/empresa/domain/commands/empresa-update.command.handler.interface";
+import {
+  EmpresaCreateCommandMetadata,
+  IEmpresaCreateCommandHandler,
+} from "@/modules/estagio/empresa/domain/commands/empresa-create.command.handler.interface";
+import {
+  EmpresaDeleteCommandMetadata,
+  IEmpresaDeleteCommandHandler,
+} from "@/modules/estagio/empresa/domain/commands/empresa-delete.command.handler.interface";
+import {
+  EmpresaUpdateCommandMetadata,
+  IEmpresaUpdateCommandHandler,
+} from "@/modules/estagio/empresa/domain/commands/empresa-update.command.handler.interface";
 import { Empresa } from "@/modules/estagio/empresa/domain/empresa";
-import { IEmpresaFindOneQueryHandler } from "@/modules/estagio/empresa/domain/queries/empresa-find-one.query.handler.interface";
-import { IEmpresaListQueryHandler } from "@/modules/estagio/empresa/domain/queries/empresa-list.query.handler.interface";
+import {
+  EmpresaFindOneQueryMetadata,
+  IEmpresaFindOneQueryHandler,
+} from "@/modules/estagio/empresa/domain/queries/empresa-find-one.query.handler.interface";
+import {
+  EmpresaListQueryMetadata,
+  IEmpresaListQueryHandler,
+} from "@/modules/estagio/empresa/domain/queries/empresa-list.query.handler.interface";
 import { AccessContext, AccessContextGraphQL } from "@/server/access-context";
 import {
   EmpresaCreateInputGraphQlDto,
@@ -34,7 +49,7 @@ export class EmpresaGraphqlResolver {
     private readonly deleteHandler: IEmpresaDeleteCommandHandler,
   ) {}
 
-  @Query(() => EmpresaListOutputGraphQlDto, { name: "empresaFindAll" })
+  @Query(() => EmpresaListOutputGraphQlDto, EmpresaListQueryMetadata.gqlMetadata)
   async findAll(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args() dto: EmpresaListInputGraphQlDto,
@@ -50,7 +65,7 @@ export class EmpresaGraphqlResolver {
     return EmpresaGraphqlMapper.toListOutputDto(result);
   }
 
-  @Query(() => EmpresaFindOneOutputGraphQlDto, { name: "empresaFindById" })
+  @Query(() => EmpresaFindOneOutputGraphQlDto, EmpresaFindOneQueryMetadata.gqlMetadata)
   async findById(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
@@ -62,7 +77,7 @@ export class EmpresaGraphqlResolver {
     return EmpresaGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => EmpresaFindOneOutputGraphQlDto, { name: "empresaCreate" })
+  @Mutation(() => EmpresaFindOneOutputGraphQlDto, EmpresaCreateCommandMetadata.gqlMetadata)
   async create(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("input") dto: EmpresaCreateInputGraphQlDto,
@@ -73,7 +88,7 @@ export class EmpresaGraphqlResolver {
     return EmpresaGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => EmpresaFindOneOutputGraphQlDto, { name: "empresaUpdate" })
+  @Mutation(() => EmpresaFindOneOutputGraphQlDto, EmpresaUpdateCommandMetadata.gqlMetadata)
   async update(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
@@ -85,7 +100,7 @@ export class EmpresaGraphqlResolver {
     return EmpresaGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => Boolean, { name: "empresaDeleteOneById" })
+  @Mutation(() => Boolean, EmpresaDeleteCommandMetadata.gqlMetadata)
   async deleteOneById(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,

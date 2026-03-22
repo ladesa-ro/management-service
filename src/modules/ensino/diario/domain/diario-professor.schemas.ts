@@ -1,17 +1,23 @@
+/**
+ * Diario Professor — schemas zod para a entidade e suas operacoes.
+ *
+ * Contem os schemas de referencia, composicao (create/update)
+ * e validacao da entidade. Fonte unica de verdade (SSOT) para
+ * os contratos de dados da entidade.
+ */
 import { z } from "zod";
 import { datedSchema, uuidSchema } from "@/shared/validation/schemas";
+import { DiarioProfessorFields } from "./diario-professor.fields";
 
 // ============================================================================
-// Fragments reutilizáveis
+// Fragments de referência
 // ============================================================================
 
-export const diarioProfessorSituacaoSchema = z.boolean();
-
-export const diarioProfessorDiarioRefSchema = z.object({
+export const DiarioProfessorDiarioRefSchema = z.object({
   id: uuidSchema,
 });
 
-export const diarioProfessorPerfilRefSchema = z.object({
+export const DiarioProfessorPerfilRefSchema = z.object({
   id: uuidSchema,
 });
 
@@ -19,23 +25,23 @@ export const diarioProfessorPerfilRefSchema = z.object({
 // Schemas compostos
 // ============================================================================
 
-export const diarioProfessorSchema = z
+export const DiarioProfessorSchema = z
   .object({
     id: uuidSchema,
-    situacao: diarioProfessorSituacaoSchema,
-    diario: diarioProfessorDiarioRefSchema,
-    perfil: diarioProfessorPerfilRefSchema,
+    situacao: DiarioProfessorFields.situacao.schema,
+    diario: DiarioProfessorDiarioRefSchema,
+    perfil: DiarioProfessorPerfilRefSchema,
   })
   .merge(datedSchema);
 
-export const diarioProfessorCreateSchema = z.object({
-  situacao: diarioProfessorSituacaoSchema,
-  diario: diarioProfessorDiarioRefSchema,
-  perfil: diarioProfessorPerfilRefSchema,
+export const DiarioProfessorCreateSchema = z.object({
+  situacao: DiarioProfessorFields.situacao.schema,
+  diario: DiarioProfessorDiarioRefSchema,
+  perfil: DiarioProfessorPerfilRefSchema,
 });
 
-export const diarioProfessorUpdateSchema = z.object({
-  situacao: diarioProfessorSituacaoSchema.optional(),
-  diario: diarioProfessorDiarioRefSchema.optional(),
-  perfil: diarioProfessorPerfilRefSchema.optional(),
+export const DiarioProfessorUpdateSchema = z.object({
+  situacao: DiarioProfessorFields.situacao.schema.optional(),
+  diario: DiarioProfessorDiarioRefSchema.optional(),
+  perfil: DiarioProfessorPerfilRefSchema.optional(),
 });

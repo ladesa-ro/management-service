@@ -5,8 +5,8 @@ import type { IPerfil } from "@/modules/acesso/perfil";
 import type { IDiario } from "@/modules/ensino/diario/domain/diario";
 import { zodValidate } from "@/shared/validation/index";
 import {
-  diarioProfessorCreateSchema,
-  diarioProfessorUpdateSchema,
+  DiarioProfessorCreateSchema,
+  DiarioProfessorUpdateSchema,
 } from "./diario-professor.schemas";
 
 export interface IDiarioProfessor extends IEntityBaseUuid {
@@ -41,7 +41,7 @@ export class DiarioProfessor implements IEntityBaseUuid {
   private constructor() {}
 
   static create(dados: IDiarioProfessorCreate): DiarioProfessor {
-    const parsed = zodValidate(DiarioProfessor.entityName, diarioProfessorCreateSchema, dados);
+    const parsed = zodValidate(DiarioProfessor.entityName, DiarioProfessorCreateSchema, dados);
 
     const instance = new DiarioProfessor();
 
@@ -67,7 +67,7 @@ export class DiarioProfessor implements IEntityBaseUuid {
   }
 
   update(dados: unknown): void {
-    const parsed = zodValidate(DiarioProfessor.entityName, diarioProfessorUpdateSchema, dados);
+    const parsed = zodValidate(DiarioProfessor.entityName, DiarioProfessorUpdateSchema, dados);
 
     if (parsed.situacao !== undefined) this.situacao = parsed.situacao;
 

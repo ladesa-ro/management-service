@@ -25,7 +25,7 @@ export class TurmaEventoTypeOrmRepositoryAdapter implements ITurmaEventoReposito
     const junctionRepo = this.appTypeormConnection.getRepository(CalendarioAgendamentoTurmaEntity);
 
     const junctions = await junctionRepo.find({
-      where: { idTurmaFk: turmaId },
+      where: { turma: { id: turmaId } },
       relations: ["calendarioAgendamento"],
     });
 
@@ -65,8 +65,6 @@ export class TurmaEventoTypeOrmRepositoryAdapter implements ITurmaEventoReposito
     const junctionRepo = this.appTypeormConnection.getRepository(CalendarioAgendamentoTurmaEntity);
     const junction = new CalendarioAgendamentoTurmaEntity();
     junction.id = generateUuidV7();
-    junction.idTurmaFk = turmaId;
-    junction.idCalendarioAgendamentoFk = evento.id;
     junction.turma = { id: turmaId } as CalendarioAgendamentoTurmaEntity["turma"];
     junction.calendarioAgendamento = {
       id: evento.id,
@@ -110,8 +108,8 @@ export class TurmaEventoTypeOrmRepositoryAdapter implements ITurmaEventoReposito
     const junctionRepo = this.appTypeormConnection.getRepository(CalendarioAgendamentoTurmaEntity);
 
     await junctionRepo.delete({
-      idTurmaFk: turmaId,
-      idCalendarioAgendamentoFk: eventoId,
-    });
+      turma: { id: turmaId },
+      calendarioAgendamento: { id: eventoId },
+    } as any);
   }
 }

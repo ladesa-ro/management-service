@@ -4,8 +4,14 @@ import { ensureExists } from "@/application/errors";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { graphqlExtractSelection } from "@/infrastructure.graphql";
 import { Cidade } from "@/modules/localidades/cidade/domain/cidade";
-import { ICidadeFindOneQueryHandler } from "@/modules/localidades/cidade/domain/queries/cidade-find-one.query.handler.interface";
-import { ICidadeListQueryHandler } from "@/modules/localidades/cidade/domain/queries/cidade-list.query.handler.interface";
+import {
+  CidadeFindOneQueryMetadata,
+  ICidadeFindOneQueryHandler,
+} from "@/modules/localidades/cidade/domain/queries/cidade-find-one.query.handler.interface";
+import {
+  CidadeListQueryMetadata,
+  ICidadeListQueryHandler,
+} from "@/modules/localidades/cidade/domain/queries/cidade-list.query.handler.interface";
 import { AccessContext, AccessContextGraphQL } from "@/server/access-context";
 import {
   CidadeFindOneOutputGraphQlDto,
@@ -23,7 +29,7 @@ export class CidadeGraphqlResolver {
     private readonly findOneHandler: ICidadeFindOneQueryHandler,
   ) {}
 
-  @Query(() => CidadeListOutputGraphQlDto, { name: "cidadeFindAll" })
+  @Query(() => CidadeListOutputGraphQlDto, CidadeListQueryMetadata.gqlMetadata)
   async findAll(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args() dto: CidadeListInputGraphQlDto,
@@ -38,7 +44,7 @@ export class CidadeGraphqlResolver {
     return CidadeGraphqlMapper.toListOutputDto(result);
   }
 
-  @Query(() => CidadeFindOneOutputGraphQlDto, { name: "cidadeFindById" })
+  @Query(() => CidadeFindOneOutputGraphQlDto, CidadeFindOneQueryMetadata.gqlMetadata)
   async findById(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => Int }) id: number,

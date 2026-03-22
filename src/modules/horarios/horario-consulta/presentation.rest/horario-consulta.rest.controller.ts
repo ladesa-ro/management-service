@@ -2,7 +2,7 @@ import { Controller, Get, Query } from "@nestjs/common";
 import { ApiForbiddenResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextHttp } from "@/server/access-context";
-import { IHorarioConsultaQueryHandler } from "../domain/queries";
+import { HorarioMescladoQueryMetadata, IHorarioConsultaQueryHandler } from "../domain/queries";
 import {
   HorarioMescladoQueryParamsRestDto,
   HorarioSemanalOutputRestDto,
@@ -17,10 +17,7 @@ export class HorarioConsultaRestController {
   ) {}
 
   @Get("/mesclado")
-  @ApiOperation({
-    summary: "Consulta horario mesclado de multiplas turmas",
-    operationId: "horarioMesclado",
-  })
+  @ApiOperation(HorarioMescladoQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: HorarioSemanalOutputRestDto })
   @ApiForbiddenResponse()
   async mesclado(

@@ -1,8 +1,8 @@
 import { PaginationMetaGraphQlDto } from "@/infrastructure.graphql/dtos";
-import {
-  cidadeFindOneInputSchema,
-  cidadeGraphqlListInputSchema,
-} from "@/modules/localidades/cidade/domain/cidade.schemas";
+import { CidadeFindOneQueryResultFields } from "@/modules/localidades/cidade/domain/queries/cidade-find-one.query.result";
+import { CidadeFindOneInputSchema } from "@/modules/localidades/cidade/domain/queries/cidade-find-one.query.schemas";
+import { CidadeListQueryFields } from "@/modules/localidades/cidade/domain/queries/cidade-list.query";
+import { CidadeGraphqlListInputSchema } from "@/modules/localidades/cidade/domain/queries/cidade-list.query.schemas";
 import { EstadoFindOneOutputGraphQlDto } from "@/modules/localidades/estado/presentation.graphql/estado.graphql.dto";
 import { ArgsType, Field, InputType, Int, ObjectType } from "@/shared/presentation/graphql";
 
@@ -12,9 +12,10 @@ import { ArgsType, Field, InputType, Int, ObjectType } from "@/shared/presentati
 
 @ObjectType("CidadeFindOneOutputDto")
 export class CidadeFindOneOutputGraphQlDto {
-  @Field(() => Int) id: number;
-  @Field(() => String) nome: string;
-  @Field(() => EstadoFindOneOutputGraphQlDto) estado: EstadoFindOneOutputGraphQlDto;
+  @Field(() => Int, CidadeFindOneQueryResultFields.id.gqlMetadata) id: number;
+  @Field(() => String, CidadeFindOneQueryResultFields.nome.gqlMetadata) nome: string;
+  @Field(() => EstadoFindOneOutputGraphQlDto, CidadeFindOneQueryResultFields.estado.gqlMetadata)
+  estado: EstadoFindOneOutputGraphQlDto;
 }
 
 // ============================================================================
@@ -23,7 +24,7 @@ export class CidadeFindOneOutputGraphQlDto {
 
 @InputType("CidadeFindOneInputDto")
 export class CidadeFindOneInputGraphQlDto {
-  static schema = cidadeFindOneInputSchema;
+  static schema = CidadeFindOneInputSchema;
 
   @Field(() => Int) id: number;
 }
@@ -34,33 +35,33 @@ export class CidadeFindOneInputGraphQlDto {
 
 @ArgsType()
 export class CidadeListInputGraphQlDto {
-  static schema = cidadeGraphqlListInputSchema;
+  static schema = CidadeGraphqlListInputSchema;
 
-  @Field(() => Int, { nullable: true, defaultValue: 1 })
-  page?: number = 1;
+  @Field(() => Int, CidadeListQueryFields.page.gqlMetadata)
+  page?: number;
 
-  @Field(() => Int, { nullable: true })
+  @Field(() => Int, CidadeListQueryFields.limit.gqlMetadata)
   limit?: number;
 
-  @Field(() => String, { nullable: true })
+  @Field(() => String, CidadeListQueryFields.search.gqlMetadata)
   search?: string;
 
-  @Field(() => [String], { nullable: true })
+  @Field(() => [String], CidadeListQueryFields.sortBy.gqlMetadata)
   sortBy?: string[];
 
-  @Field(() => [String], { nullable: true })
+  @Field(() => [String], CidadeListQueryFields.selection.gqlMetadata)
   selection?: string[];
 
-  @Field(() => [String], { nullable: true, description: "Filtro por ID" })
+  @Field(() => [String], CidadeListQueryFields.filterId.gqlMetadata)
   filterId?: string[];
 
-  @Field(() => [String], { nullable: true, description: "Filtro por ID do Estado" })
+  @Field(() => [String], CidadeListQueryFields.filterEstadoId.gqlMetadata)
   filterEstadoId?: string[];
 
-  @Field(() => [String], { nullable: true, description: "Filtro por nome do Estado" })
+  @Field(() => [String], CidadeListQueryFields.filterEstadoNome.gqlMetadata)
   filterEstadoNome?: string[];
 
-  @Field(() => [String], { nullable: true, description: "Filtro por sigla do Estado" })
+  @Field(() => [String], CidadeListQueryFields.filterEstadoSigla.gqlMetadata)
   filterEstadoSigla?: string[];
 }
 
@@ -70,9 +71,9 @@ export class CidadeListInputGraphQlDto {
 
 @ObjectType("CidadeListResult")
 export class CidadeListOutputGraphQlDto {
-  @Field(() => PaginationMetaGraphQlDto)
+  @Field(() => PaginationMetaGraphQlDto, CidadeListQueryFields.meta.gqlMetadata)
   meta: PaginationMetaGraphQlDto;
 
-  @Field(() => [CidadeFindOneOutputGraphQlDto])
+  @Field(() => [CidadeFindOneOutputGraphQlDto], CidadeListQueryFields.data.gqlMetadata)
   data: CidadeFindOneOutputGraphQlDto[];
 }

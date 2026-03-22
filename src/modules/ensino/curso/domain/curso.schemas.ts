@@ -1,81 +1,55 @@
+/**
+ * Curso — schemas zod para a entidade e suas operacoes.
+ *
+ * Contem os schemas de referencia, composicao (create/update)
+ * e validacao da entidade. Fonte unica de verdade (SSOT) para
+ * os contratos de dados da entidade.
+ */
 import { z } from "zod";
-import { datedSchema, stringFilterSchema, uuidSchema } from "@/shared/validation/schemas";
+import { datedSchema, uuidSchema } from "@/shared/validation/schemas";
+import { CursoFields } from "./curso.fields";
 
 // ============================================================================
-// Fragments reutilizáveis
+// Fragments de referência
 // ============================================================================
 
-export const cursoNomeSchema = z.string().min(1, "nome é obrigatório");
-
-export const cursoNomeAbreviadoSchema = z.string().min(1, "nomeAbreviado é obrigatório");
-
-export const cursoCampusRefSchema = z.object({
+export const CursoCampusRefSchema = z.object({
   id: uuidSchema,
 });
 
-export const cursoOfertaFormacaoRefSchema = z.object({
+export const CursoOfertaFormacaoRefSchema = z.object({
   id: uuidSchema,
 });
 
-export const cursoImagemCapaRefSchema = z.object({ id: uuidSchema }).nullable().optional();
+export const CursoImagemCapaRefSchema = z.object({ id: uuidSchema }).nullable().optional();
 
 // ============================================================================
 // Schemas compostos
 // ============================================================================
 
-export const cursoSchema = z
+export const CursoSchema = z
   .object({
     id: uuidSchema,
-    nome: cursoNomeSchema,
-    nomeAbreviado: cursoNomeAbreviadoSchema,
-    campus: cursoCampusRefSchema,
-    ofertaFormacao: cursoOfertaFormacaoRefSchema,
+    nome: CursoFields.nome.schema,
+    nomeAbreviado: CursoFields.nomeAbreviado.schema,
+    campus: CursoCampusRefSchema,
+    ofertaFormacao: CursoOfertaFormacaoRefSchema,
     imagemCapa: z.object({ id: uuidSchema }).nullable(),
   })
   .merge(datedSchema);
 
-export const cursoCreateSchema = z.object({
-  nome: cursoNomeSchema,
-  nomeAbreviado: cursoNomeAbreviadoSchema,
-  campus: cursoCampusRefSchema,
-  ofertaFormacao: cursoOfertaFormacaoRefSchema,
-  imagemCapa: cursoImagemCapaRefSchema,
+export const CursoCreateSchema = z.object({
+  nome: CursoFields.nome.schema,
+  nomeAbreviado: CursoFields.nomeAbreviado.schema,
+  campus: CursoCampusRefSchema,
+  ofertaFormacao: CursoOfertaFormacaoRefSchema,
+  imagemCapa: CursoImagemCapaRefSchema,
 });
 
-export const cursoUpdateSchema = z.object({
-  nome: cursoNomeSchema.optional(),
-  nomeAbreviado: cursoNomeAbreviadoSchema.optional(),
-  campus: cursoCampusRefSchema.optional(),
-  ofertaFormacao: cursoOfertaFormacaoRefSchema.optional(),
-  imagemCapa: cursoImagemCapaRefSchema,
-});
-
-// ============================================================================
-// Schemas de input (presentation layer)
-// ============================================================================
-
-export const cursoFindOneInputSchema = z.object({
-  id: uuidSchema,
-});
-
-export const cursoPaginationInputSchema = z.object({
-  page: z.coerce.number().int().min(1).optional().default(1),
-  limit: z.coerce.number().int().min(1).optional(),
-  search: z.string().optional(),
-  sortBy: z.array(z.string()).optional(),
-  selection: z.array(z.string()).optional(),
-  "filter.id": stringFilterSchema,
-  "filter.campus.id": stringFilterSchema,
-  "filter.ofertaFormacao.id": stringFilterSchema,
-});
-
-export const cursoGraphqlListInputSchema = z.object({
-  page: z.number().int().min(1).optional().default(1),
-  limit: z.number().int().min(1).optional(),
-  search: z.string().optional(),
-  sortBy: z.array(z.string()).optional(),
-  selection: z.array(z.string()).optional(),
-  filterId: z.array(z.string()).optional(),
-  filterCampusId: z.array(z.string()).optional(),
-  filterOfertaFormacaoId: z.array(z.string()).optional(),
+export const CursoUpdateSchema = z.object({
+  nome: CursoFields.nome.schema.optional(),
+  nomeAbreviado: CursoFields.nomeAbreviado.schema.optional(),
+  campus: CursoCampusRefSchema.optional(),
+  ofertaFormacao: CursoOfertaFormacaoRefSchema.optional(),
+  imagemCapa: CursoImagemCapaRefSchema,
 });

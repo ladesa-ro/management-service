@@ -1,19 +1,23 @@
+/**
+ * Calendario Letivo — schemas zod para a entidade e suas operacoes.
+ *
+ * Contem os schemas de referencia, composicao (create/update)
+ * e validacao da entidade. Fonte unica de verdade (SSOT) para
+ * os contratos de dados da entidade.
+ */
 import { z } from "zod";
-import { datedSchema, stringFilterSchema, uuidSchema } from "@/shared/validation/schemas";
+import { datedSchema, uuidSchema } from "@/shared/validation/schemas";
+import { CalendarioLetivoFields } from "./calendario-letivo.fields";
 
 // ============================================================================
-// Fragments reutilizáveis
+// Fragments de referência
 // ============================================================================
 
-export const calendarioLetivoNomeSchema = z.string().min(1, "nome é obrigatório");
-
-export const calendarioLetivoAnoSchema = z.number().int().min(1, "ano deve ser >= 1");
-
-export const calendarioLetivoCampusRefSchema = z.object({
+export const CalendarioLetivoCampusRefSchema = z.object({
   id: uuidSchema,
 });
 
-export const calendarioLetivoOfertaFormacaoRefSchema = z.object({
+export const CalendarioLetivoOfertaFormacaoRefSchema = z.object({
   id: uuidSchema,
 });
 
@@ -21,57 +25,26 @@ export const calendarioLetivoOfertaFormacaoRefSchema = z.object({
 // Schemas compostos
 // ============================================================================
 
-export const calendarioLetivoSchema = z
+export const CalendarioLetivoSchema = z
   .object({
     id: uuidSchema,
-    nome: calendarioLetivoNomeSchema,
-    ano: calendarioLetivoAnoSchema,
-    campus: calendarioLetivoCampusRefSchema,
-    ofertaFormacao: calendarioLetivoOfertaFormacaoRefSchema.nullable(),
+    nome: CalendarioLetivoFields.nome.schema,
+    ano: CalendarioLetivoFields.ano.schema,
+    campus: CalendarioLetivoCampusRefSchema,
+    ofertaFormacao: CalendarioLetivoOfertaFormacaoRefSchema.nullable(),
   })
   .merge(datedSchema);
 
-export const calendarioLetivoCreateSchema = z.object({
-  nome: calendarioLetivoNomeSchema,
-  ano: calendarioLetivoAnoSchema,
-  campus: calendarioLetivoCampusRefSchema,
-  ofertaFormacao: calendarioLetivoOfertaFormacaoRefSchema.optional(),
+export const CalendarioLetivoCreateSchema = z.object({
+  nome: CalendarioLetivoFields.nome.schema,
+  ano: CalendarioLetivoFields.ano.schema,
+  campus: CalendarioLetivoCampusRefSchema,
+  ofertaFormacao: CalendarioLetivoOfertaFormacaoRefSchema.optional(),
 });
 
-export const calendarioLetivoUpdateSchema = z.object({
-  nome: calendarioLetivoNomeSchema.optional(),
-  ano: calendarioLetivoAnoSchema.optional(),
-  campus: calendarioLetivoCampusRefSchema.optional(),
-  ofertaFormacao: calendarioLetivoOfertaFormacaoRefSchema.nullable().optional(),
-});
-
-// ============================================================================
-// Schemas de input (presentation layer)
-// ============================================================================
-
-export const calendarioLetivoFindOneInputSchema = z.object({
-  id: uuidSchema,
-});
-
-export const calendarioLetivoPaginationInputSchema = z.object({
-  page: z.coerce.number().int().min(1).optional().default(1),
-  limit: z.coerce.number().int().min(1).optional(),
-  search: z.string().optional(),
-  sortBy: z.array(z.string()).optional(),
-  selection: z.array(z.string()).optional(),
-  "filter.id": stringFilterSchema,
-  "filter.ano": stringFilterSchema,
-  "filter.campus.id": stringFilterSchema,
-  "filter.ofertaFormacao.id": stringFilterSchema,
-});
-
-export const calendarioLetivoGraphqlListInputSchema = z.object({
-  page: z.number().int().min(1).optional().default(1),
-  limit: z.number().int().min(1).optional(),
-  search: z.string().optional(),
-  sortBy: z.array(z.string()).optional(),
-  selection: z.array(z.string()).optional(),
-  filterId: z.array(z.string()).optional(),
-  filterCampusId: z.array(z.string()).optional(),
-  filterOfertaFormacaoId: z.array(z.string()).optional(),
+export const CalendarioLetivoUpdateSchema = z.object({
+  nome: CalendarioLetivoFields.nome.schema.optional(),
+  ano: CalendarioLetivoFields.ano.schema.optional(),
+  campus: CalendarioLetivoCampusRefSchema.optional(),
+  ofertaFormacao: CalendarioLetivoOfertaFormacaoRefSchema.nullable().optional(),
 });

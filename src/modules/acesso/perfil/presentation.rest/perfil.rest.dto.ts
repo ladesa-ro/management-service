@@ -1,8 +1,10 @@
-import {
-  perfilFindOneInputSchema,
-  perfilPaginationInputSchema,
-  perfilSetVinculosInputSchema,
-} from "@/modules/acesso/perfil/domain/perfil.schemas";
+import { PerfilSetVinculosCommandFields } from "@/modules/acesso/perfil/domain/commands/perfil-set-vinculos.command";
+import { PerfilSetVinculosInputSchema } from "@/modules/acesso/perfil/domain/perfil.schemas";
+import { PerfilFindOneQueryFields } from "@/modules/acesso/perfil/domain/queries/perfil-find-one.query";
+import { PerfilFindOneQueryResultFields } from "@/modules/acesso/perfil/domain/queries/perfil-find-one.query.result";
+import { PerfilFindOneInputSchema } from "@/modules/acesso/perfil/domain/queries/perfil-find-one.query.schemas";
+import { PerfilListQueryFields } from "@/modules/acesso/perfil/domain/queries/perfil-list.query";
+import { PerfilPaginationInputSchema } from "@/modules/acesso/perfil/domain/queries/perfil-list.query.schemas";
 import {
   UsuarioFindOneInputRestDto,
   UsuarioFindOneOutputRestDto,
@@ -15,10 +17,6 @@ import {
   ApiProperty,
   ApiPropertyOptional,
   ApiSchema,
-  commonProperties,
-  RegisterModel,
-  referenceProperty,
-  simpleProperty,
   TransformToArray,
 } from "@/shared/presentation/rest";
 import {
@@ -46,33 +44,22 @@ export class PerfilParentParamsRestDto {
 // ============================================================================
 
 @ApiSchema({ name: "PerfilFindOneOutputDto" })
-@RegisterModel({
-  name: "PerfilFindOneQueryResult",
-  properties: [
-    simpleProperty("id"),
-    simpleProperty("ativo"),
-    simpleProperty("cargo"),
-    referenceProperty("campus", "CampusFindOneQueryResult"),
-    referenceProperty("usuario", "UsuarioFindOneQueryResult"),
-    ...commonProperties.dated,
-  ],
-})
 export class PerfilFindOneOutputRestDto extends EntityBaseRestDto {
-  @ApiProperty({ type: "boolean", description: "Indica se o vinculo esta ativo" })
+  @ApiProperty(PerfilFindOneQueryResultFields.ativo.swaggerMetadata)
   ativo: boolean;
 
-  @ApiProperty({ type: "string", description: "Cargo do usuario no vinculo" })
+  @ApiProperty(PerfilFindOneQueryResultFields.cargo.swaggerMetadata)
   cargo: string;
 
   @ApiProperty({
     type: () => CampusFindOneOutputRestDto,
-    description: "Campus associado ao vinculo",
+    ...PerfilFindOneQueryResultFields.campus.swaggerMetadata,
   })
   campus: CampusFindOneOutputRestDto;
 
   @ApiProperty({
     type: () => UsuarioFindOneOutputRestDto,
-    description: "Usuario associado ao vinculo",
+    ...PerfilFindOneQueryResultFields.usuario.swaggerMetadata,
   })
   usuario: UsuarioFindOneOutputRestDto;
 }
@@ -83,47 +70,34 @@ export class PerfilFindOneOutputRestDto extends EntityBaseRestDto {
 
 @ApiSchema({ name: "PerfilListInputDto" })
 export class PerfilListInputRestDto extends PaginatedFilterByIdRestDto {
-  static schema = perfilPaginationInputSchema;
+  static schema = PerfilPaginationInputSchema;
 
-  @ApiPropertyOptional({
-    type: "string",
-    isArray: true,
-    description: "Filtro por ativo",
-  })
+  @ApiPropertyOptional(PerfilListQueryFields.filterAtivo.swaggerMetadata)
   @TransformToArray()
   "filter.ativo"?: string[];
 
-  @ApiPropertyOptional({
-    type: "string",
-    isArray: true,
-    description: "Filtro por cargo",
-  })
+  @ApiPropertyOptional(PerfilListQueryFields.filterCargo.swaggerMetadata)
   @TransformToArray()
   "filter.cargo"?: string[];
 
-  @ApiPropertyOptional({
-    type: "string",
-    isArray: true,
-    description: "Filtro por ID do Campus",
-  })
+  @ApiPropertyOptional(PerfilListQueryFields.filterCampusId.swaggerMetadata)
   @TransformToArray()
   "filter.campus.id"?: string[];
 
-  @ApiPropertyOptional({
-    type: "string",
-    isArray: true,
-    description: "Filtro por ID do Usuario",
-  })
+  @ApiPropertyOptional(PerfilListQueryFields.filterUsuarioId.swaggerMetadata)
   @TransformToArray()
   "filter.usuario.id"?: string[];
 }
 
 @ApiSchema({ name: "PerfilListOutputDto" })
 export class PerfilListOutputRestDto {
-  @ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" })
+  @ApiProperty({ type: () => PaginationMetaRestDto, ...PerfilListQueryFields.meta.swaggerMetadata })
   meta: PaginationMetaRestDto;
 
-  @ApiProperty({ type: () => [PerfilFindOneOutputRestDto], description: "Resultados da busca" })
+  @ApiProperty({
+    type: () => [PerfilFindOneOutputRestDto],
+    ...PerfilListQueryFields.data.swaggerMetadata,
+  })
   data: PerfilFindOneOutputRestDto[];
 }
 
@@ -133,25 +107,20 @@ export class PerfilListOutputRestDto {
 
 @ApiSchema({ name: "PerfilSetVinculosInputDto" })
 export class PerfilSetVinculosInputRestDto {
-  static schema = perfilSetVinculosInputSchema;
+  static schema = PerfilSetVinculosInputSchema;
 
-  @ApiProperty({
-    type: "string",
-    isArray: true,
-    description: "Lista de cargos que o usuario tera no campus",
-    example: ["professor", "coordenador"],
-  })
+  @ApiProperty(PerfilSetVinculosCommandFields.cargos.swaggerMetadata)
   cargos: string[];
 
   @ApiProperty({
     type: () => CampusFindOneInputRestDto,
-    description: "Campus onde os vinculos serao definidos",
+    ...PerfilSetVinculosCommandFields.campus.swaggerMetadata,
   })
   campus: CampusFindOneInputRestDto;
 
   @ApiProperty({
     type: () => UsuarioFindOneInputRestDto,
-    description: "Usuario que recebera os vinculos",
+    ...PerfilSetVinculosCommandFields.usuario.swaggerMetadata,
   })
   usuario: UsuarioFindOneInputRestDto;
 }
@@ -162,12 +131,8 @@ export class PerfilSetVinculosInputRestDto {
 
 @ApiSchema({ name: "PerfilFindOneInputDto" })
 export class PerfilFindOneInputRestDto {
-  static schema = perfilFindOneInputSchema;
+  static schema = PerfilFindOneInputSchema;
 
-  @ApiProperty({
-    type: "string",
-    description: "Identificador do registro (uuid)",
-    format: "uuid",
-  })
+  @ApiProperty(PerfilFindOneQueryFields.id.swaggerMetadata)
   id: string;
 }

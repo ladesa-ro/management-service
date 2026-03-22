@@ -3,6 +3,16 @@ import { ImagemInputRef } from "@/modules/armazenamento/imagem";
 import { DisciplinaInputRef } from "@/modules/ensino/disciplina";
 import { TurmaInputRef } from "@/modules/ensino/turma";
 import { CalendarioLetivoInputRef } from "@/modules/horarios/calendario-letivo";
+import { DiarioFields } from "../diario.fields";
+
+export const DiarioCreateCommandFields = {
+  ativo: DiarioFields.ativo,
+  calendarioLetivo: DiarioFields.calendarioLetivo,
+  turma: DiarioFields.turma,
+  disciplina: DiarioFields.disciplina,
+  ambientePadrao: DiarioFields.ambientePadrao,
+  imagemCapa: DiarioFields.imagemCapa,
+};
 
 export class DiarioCreateCommand {
   ativo!: boolean;

@@ -13,15 +13,9 @@ export class CalendarioLetivoEtapaEntity {
   @Column({ name: "data_termino", type: "date", nullable: false })
   dataTermino!: Date;
 
-  @Column({ name: "id_oferta_formacao_periodo_etapa_fk", type: "uuid", nullable: false })
-  idOfertaFormacaoPeriodoEtapaFk!: string;
-
   @ManyToOne(() => OfertaFormacaoPeriodoEtapaEntity, {})
   @JoinColumn({ name: "id_oferta_formacao_periodo_etapa_fk" })
   ofertaFormacaoPeriodoEtapa!: Relation<OfertaFormacaoPeriodoEtapaEntity>;
-
-  @Column({ name: "id_calendario_letivo_fk", type: "uuid", nullable: false })
-  idCalendarioLetivoFk!: string;
 
   @ManyToOne(() => CalendarioLetivoEntity, {})
   @JoinColumn({ name: "id_calendario_letivo_fk" })

@@ -11,24 +11,15 @@ export class EstagiarioTypeormEntity {
   @PrimaryColumn("uuid")
   id!: string;
 
-  @Column({ name: "id_perfil_fk", type: "uuid", nullable: false })
-  idPerfilFk!: string;
-
-  @ManyToOne(() => PerfilEntity, {})
+  @ManyToOne(() => PerfilEntity)
   @JoinColumn({ name: "id_perfil_fk" })
   perfil!: Relation<PerfilEntity>;
 
-  @Column({ name: "id_curso_fk", type: "uuid", nullable: false })
-  idCursoFk!: string;
-
-  @ManyToOne(() => CursoEntity, {})
+  @ManyToOne(() => CursoEntity)
   @JoinColumn({ name: "id_curso_fk" })
   curso!: Relation<CursoEntity>;
 
-  @Column({ name: "id_turma_fk", type: "uuid", nullable: false })
-  idTurmaFk!: string;
-
-  @ManyToOne(() => TurmaEntity, {})
+  @ManyToOne(() => TurmaEntity)
   @JoinColumn({ name: "id_turma_fk" })
   turma!: Relation<TurmaEntity>;
 

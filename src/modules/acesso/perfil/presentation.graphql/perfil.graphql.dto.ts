@@ -3,10 +3,11 @@ import {
   PaginatedFilterByIdGraphQlDto,
   PaginationMetaGraphQlDto,
 } from "@/infrastructure.graphql/dtos";
-import {
-  perfilGraphqlListInputSchema,
-  perfilSetVinculosInputSchema,
-} from "@/modules/acesso/perfil/domain/perfil.schemas";
+import { PerfilSetVinculosCommandFields } from "@/modules/acesso/perfil/domain/commands/perfil-set-vinculos.command";
+import { PerfilSetVinculosInputSchema } from "@/modules/acesso/perfil/domain/perfil.schemas";
+import { PerfilFindOneQueryResultFields } from "@/modules/acesso/perfil/domain/queries/perfil-find-one.query.result";
+import { PerfilListQueryFields } from "@/modules/acesso/perfil/domain/queries/perfil-list.query";
+import { PerfilGraphqlListInputSchema } from "@/modules/acesso/perfil/domain/queries/perfil-list.query.schemas";
 import { UsuarioFindOneOutputGraphQlDto } from "@/modules/acesso/usuario/presentation.graphql/usuario.graphql.dto";
 import { CampusFindOneOutputGraphQlDto } from "@/modules/ambientes/campus/presentation.graphql/campus.graphql.dto";
 import { ArgsType, Field, InputType, ObjectType } from "@/shared/presentation/graphql";
@@ -17,10 +18,12 @@ import { ArgsType, Field, InputType, ObjectType } from "@/shared/presentation/gr
 
 @ObjectType("PerfilFindOneOutputDto")
 export class PerfilFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
-  @Field(() => Boolean) ativo: boolean;
-  @Field(() => String) cargo: string;
-  @Field(() => CampusFindOneOutputGraphQlDto) campus: CampusFindOneOutputGraphQlDto;
-  @Field(() => UsuarioFindOneOutputGraphQlDto) usuario: UsuarioFindOneOutputGraphQlDto;
+  @Field(() => Boolean, PerfilFindOneQueryResultFields.ativo.gqlMetadata) ativo: boolean;
+  @Field(() => String, PerfilFindOneQueryResultFields.cargo.gqlMetadata) cargo: string;
+  @Field(() => CampusFindOneOutputGraphQlDto, PerfilFindOneQueryResultFields.campus.gqlMetadata)
+  campus: CampusFindOneOutputGraphQlDto;
+  @Field(() => UsuarioFindOneOutputGraphQlDto, PerfilFindOneQueryResultFields.usuario.gqlMetadata)
+  usuario: UsuarioFindOneOutputGraphQlDto;
 }
 
 // ============================================================================
@@ -34,13 +37,13 @@ export class PerfilRefInputGraphQlDto {
 
 @InputType("PerfilSetVinculosInputDto")
 export class PerfilSetVinculosInputGraphQlDto {
-  static schema = perfilSetVinculosInputSchema;
+  static schema = PerfilSetVinculosInputSchema;
 
-  @Field(() => [String])
+  @Field(() => [String], PerfilSetVinculosCommandFields.cargos.gqlMetadata)
   cargos: string[];
-  @Field(() => PerfilRefInputGraphQlDto)
+  @Field(() => PerfilRefInputGraphQlDto, PerfilSetVinculosCommandFields.campus.gqlMetadata)
   campus: PerfilRefInputGraphQlDto;
-  @Field(() => PerfilRefInputGraphQlDto)
+  @Field(() => PerfilRefInputGraphQlDto, PerfilSetVinculosCommandFields.usuario.gqlMetadata)
   usuario: PerfilRefInputGraphQlDto;
 }
 
@@ -50,18 +53,18 @@ export class PerfilSetVinculosInputGraphQlDto {
 
 @ArgsType()
 export class PerfilListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {
-  static schema = perfilGraphqlListInputSchema;
+  static schema = PerfilGraphqlListInputSchema;
 
-  @Field(() => [String], { nullable: true, description: "Filtro por ativo" })
+  @Field(() => [String], PerfilListQueryFields.filterAtivo.gqlMetadata)
   filterAtivo?: string[];
 
-  @Field(() => [String], { nullable: true, description: "Filtro por cargo" })
+  @Field(() => [String], PerfilListQueryFields.filterCargo.gqlMetadata)
   filterCargo?: string[];
 
-  @Field(() => [String], { nullable: true, description: "Filtro por ID do Campus" })
+  @Field(() => [String], PerfilListQueryFields.filterCampusId.gqlMetadata)
   filterCampusId?: string[];
 
-  @Field(() => [String], { nullable: true, description: "Filtro por ID do Usuario" })
+  @Field(() => [String], PerfilListQueryFields.filterUsuarioId.gqlMetadata)
   filterUsuarioId?: string[];
 }
 
@@ -71,9 +74,9 @@ export class PerfilListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {
 
 @ObjectType("PerfilListResult")
 export class PerfilListOutputGraphQlDto {
-  @Field(() => PaginationMetaGraphQlDto)
+  @Field(() => PaginationMetaGraphQlDto, PerfilListQueryFields.meta.gqlMetadata)
   meta: PaginationMetaGraphQlDto;
 
-  @Field(() => [PerfilFindOneOutputGraphQlDto])
+  @Field(() => [PerfilFindOneOutputGraphQlDto], PerfilListQueryFields.data.gqlMetadata)
   data: PerfilFindOneOutputGraphQlDto[];
 }

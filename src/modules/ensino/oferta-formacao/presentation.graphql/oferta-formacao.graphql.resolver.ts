@@ -3,12 +3,27 @@ import { type GraphQLResolveInfo } from "graphql";
 import { ensureExists } from "@/application/errors";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { graphqlExtractSelection } from "@/infrastructure.graphql";
-import { IOfertaFormacaoCreateCommandHandler } from "@/modules/ensino/oferta-formacao/domain/commands/oferta-formacao-create.command.handler.interface";
-import { IOfertaFormacaoDeleteCommandHandler } from "@/modules/ensino/oferta-formacao/domain/commands/oferta-formacao-delete.command.handler.interface";
-import { IOfertaFormacaoUpdateCommandHandler } from "@/modules/ensino/oferta-formacao/domain/commands/oferta-formacao-update.command.handler.interface";
+import {
+  IOfertaFormacaoCreateCommandHandler,
+  OfertaFormacaoCreateCommandMetadata,
+} from "@/modules/ensino/oferta-formacao/domain/commands/oferta-formacao-create.command.handler.interface";
+import {
+  IOfertaFormacaoDeleteCommandHandler,
+  OfertaFormacaoDeleteCommandMetadata,
+} from "@/modules/ensino/oferta-formacao/domain/commands/oferta-formacao-delete.command.handler.interface";
+import {
+  IOfertaFormacaoUpdateCommandHandler,
+  OfertaFormacaoUpdateCommandMetadata,
+} from "@/modules/ensino/oferta-formacao/domain/commands/oferta-formacao-update.command.handler.interface";
 import { OfertaFormacao } from "@/modules/ensino/oferta-formacao/domain/oferta-formacao";
-import { IOfertaFormacaoFindOneQueryHandler } from "@/modules/ensino/oferta-formacao/domain/queries/oferta-formacao-find-one.query.handler.interface";
-import { IOfertaFormacaoListQueryHandler } from "@/modules/ensino/oferta-formacao/domain/queries/oferta-formacao-list.query.handler.interface";
+import {
+  IOfertaFormacaoFindOneQueryHandler,
+  OfertaFormacaoFindOneQueryMetadata,
+} from "@/modules/ensino/oferta-formacao/domain/queries/oferta-formacao-find-one.query.handler.interface";
+import {
+  IOfertaFormacaoListQueryHandler,
+  OfertaFormacaoListQueryMetadata,
+} from "@/modules/ensino/oferta-formacao/domain/queries/oferta-formacao-list.query.handler.interface";
 import { AccessContext, AccessContextGraphQL } from "@/server/access-context";
 import {
   OfertaFormacaoCreateInputGraphQlDto,
@@ -34,7 +49,7 @@ export class OfertaFormacaoGraphqlResolver {
     private readonly deleteHandler: IOfertaFormacaoDeleteCommandHandler,
   ) {}
 
-  @Query(() => OfertaFormacaoListOutputGraphQlDto, { name: "ofertaFormacaoFindAll" })
+  @Query(() => OfertaFormacaoListOutputGraphQlDto, OfertaFormacaoListQueryMetadata.gqlMetadata)
   async findAll(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args() dto: OfertaFormacaoListInputGraphQlDto,
@@ -49,7 +64,10 @@ export class OfertaFormacaoGraphqlResolver {
     return OfertaFormacaoGraphqlMapper.toListOutputDto(result);
   }
 
-  @Query(() => OfertaFormacaoFindOneOutputGraphQlDto, { name: "ofertaFormacaoFindById" })
+  @Query(
+    () => OfertaFormacaoFindOneOutputGraphQlDto,
+    OfertaFormacaoFindOneQueryMetadata.gqlMetadata,
+  )
   async findById(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
@@ -61,7 +79,10 @@ export class OfertaFormacaoGraphqlResolver {
     return OfertaFormacaoGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => OfertaFormacaoFindOneOutputGraphQlDto, { name: "ofertaFormacaoCreate" })
+  @Mutation(
+    () => OfertaFormacaoFindOneOutputGraphQlDto,
+    OfertaFormacaoCreateCommandMetadata.gqlMetadata,
+  )
   async create(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("input") dto: OfertaFormacaoCreateInputGraphQlDto,
@@ -72,7 +93,10 @@ export class OfertaFormacaoGraphqlResolver {
     return OfertaFormacaoGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => OfertaFormacaoFindOneOutputGraphQlDto, { name: "ofertaFormacaoUpdate" })
+  @Mutation(
+    () => OfertaFormacaoFindOneOutputGraphQlDto,
+    OfertaFormacaoUpdateCommandMetadata.gqlMetadata,
+  )
   async update(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
@@ -84,7 +108,7 @@ export class OfertaFormacaoGraphqlResolver {
     return OfertaFormacaoGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => Boolean, { name: "ofertaFormacaoDeleteOneById" })
+  @Mutation(() => Boolean, OfertaFormacaoDeleteCommandMetadata.gqlMetadata)
   async deleteOneById(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,

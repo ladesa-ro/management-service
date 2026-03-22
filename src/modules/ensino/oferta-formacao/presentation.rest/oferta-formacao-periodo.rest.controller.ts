@@ -2,6 +2,10 @@ import { Body, Controller, Get, Param, Put } from "@nestjs/common";
 import { ApiForbiddenResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
+import {
+  OfertaFormacaoPeriodoBulkReplaceCommandMetadata,
+  OfertaFormacaoPeriodoFindAllQueryMetadata,
+} from "@/modules/ensino/oferta-formacao/domain/queries/oferta-formacao-periodo.query.metadata";
 import { IOfertaFormacaoPeriodoRepository } from "@/modules/ensino/oferta-formacao-periodo/domain/repositories";
 import { OfertaFormacaoPeriodoEntity } from "@/modules/ensino/oferta-formacao-periodo/infrastructure.database/typeorm/oferta-formacao-periodo.typeorm.entity";
 import { IOfertaFormacaoPeriodoEtapaRepository } from "@/modules/ensino/oferta-formacao-periodo-etapa/domain/repositories";
@@ -25,10 +29,7 @@ export class OfertaFormacaoPeriodoRestController {
   ) {}
 
   @Get("/")
-  @ApiOperation({
-    summary: "Lista periodos de uma oferta de formacao",
-    operationId: "ofertaFormacaoPeriodoFindAll",
-  })
+  @ApiOperation(OfertaFormacaoPeriodoFindAllQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: OfertaFormacaoPeriodoListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
@@ -59,10 +60,7 @@ export class OfertaFormacaoPeriodoRestController {
   }
 
   @Put("/")
-  @ApiOperation({
-    summary: "Substitui periodos e etapas de uma oferta de formacao",
-    operationId: "ofertaFormacaoPeriodoBulkReplace",
-  })
+  @ApiOperation(OfertaFormacaoPeriodoBulkReplaceCommandMetadata.swaggerMetadata)
   @ApiOkResponse({ type: OfertaFormacaoPeriodoListOutputRestDto })
   @ApiForbiddenResponse()
   async bulkReplace(
@@ -88,7 +86,7 @@ export class OfertaFormacaoPeriodoRestController {
     for (const item of dto.periodos) {
       const periodoEntity = new OfertaFormacaoPeriodoEntity();
       periodoEntity.id = generateUuidV7();
-      periodoEntity.idOfertaFormacaoFk = ofertaFormacaoId;
+      periodoEntity.ofertaFormacao = { id: ofertaFormacaoId } as any;
       periodoEntity.numeroPeriodo = item.numeroPeriodo;
       await this.ofertaFormacaoPeriodoRepository.save(periodoEntity);
 
@@ -96,7 +94,7 @@ export class OfertaFormacaoPeriodoRestController {
         for (const etapaItem of item.etapas) {
           const etapaEntity = new OfertaFormacaoPeriodoEtapaEntity();
           etapaEntity.id = generateUuidV7();
-          etapaEntity.idOfertaFormacaoPeriodoFk = periodoEntity.id;
+          etapaEntity.ofertaFormacaoPeriodo = { id: periodoEntity.id } as any;
           etapaEntity.nome = etapaItem.nome;
           etapaEntity.cor = etapaItem.cor ?? "#000000";
           await this.ofertaFormacaoPeriodoEtapaRepository.save(etapaEntity);
