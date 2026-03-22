@@ -68,6 +68,16 @@ export const QbEfficientLoadCore = (
         continue;
       }
 
+      const relationMeta = metadata?.findRelationWithPropertyPath(propertyKey);
+
+      if (!relationMeta) {
+        Logger.warn(
+          `Relation "${propertyKey}" on entity "${metadata?.name}" does not exist in TypeORM metadata. Skipping join.`,
+          "QbEfficientLoad",
+        );
+        continue;
+      }
+
       let childSelection: boolean | string[];
 
       if (typeof rootSelection === "boolean") {
@@ -90,6 +100,16 @@ export const QbEfficientLoadCore = (
         referenceName,
       ]);
     } else {
+      const columnMeta = metadata?.findColumnWithPropertyName(propertyKey);
+
+      if (!columnMeta) {
+        Logger.warn(
+          `Property "${propertyKey}" on entity "${metadata?.name}" does not map to a database column. Skipping select.`,
+          "QbEfficientLoad",
+        );
+        continue;
+      }
+
       qb.addSelect(subPath);
     }
   }
