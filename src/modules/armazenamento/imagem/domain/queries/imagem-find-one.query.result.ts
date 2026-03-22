@@ -1,12 +1,18 @@
 import { EntityQueryResult, SharedFields } from "@/domain/abstractions";
 import { fieldsToProperties } from "@/domain/abstractions/metadata/model-from-fields";
-import { commonProperties, defineModel } from "@/domain/abstractions/metadata/model-registry";
+import {
+  commonProperties,
+  defineModel,
+  referenceProperty,
+} from "@/domain/abstractions/metadata/model-registry";
 import { ImagemFields } from "../imagem.fields";
 import { ImagemArquivoFindOneFromImagemQueryResult } from "./imagem-arquivo-from-imagem.query.result";
 
+const { versoes: _versoes, ...imagemScalarFields } = ImagemFields;
+
 export const ImagemFindOneQueryResultFields = {
   id: SharedFields.idUuid,
-  ...ImagemFields,
+  ...imagemScalarFields,
 };
 
 export class ImagemFindOneQueryResult extends EntityQueryResult {
@@ -16,6 +22,6 @@ export class ImagemFindOneQueryResult extends EntityQueryResult {
 
 defineModel("ImagemFindOneQueryResult", [
   ...fieldsToProperties(ImagemFindOneQueryResultFields),
-  // Note: 'versoes' is a OneToMany relation - not loaded via QbEfficientLoad
+  referenceProperty("versoes", "ImagemArquivoFindOneFromImagemQueryResult"),
   ...commonProperties.dated,
 ]);

@@ -100,7 +100,11 @@ export function defineModel(
   name: string,
   properties: PropertyRepresentation[],
 ): ModelRepresentation {
-  const model: ModelRepresentation = { name, properties };
+  const dedupedMap = new Map<string, PropertyRepresentation>();
+  for (const prop of properties) {
+    dedupedMap.set(prop.name, prop);
+  }
+  const model: ModelRepresentation = { name, properties: Array.from(dedupedMap.values()) };
   modelRegistry.register(model);
   return model;
 }
