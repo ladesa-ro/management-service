@@ -10,14 +10,14 @@ import type {
   IGerarHorarioCreateCommandHandler,
 } from "../../domain/commands/gerar-horario-create.command.handler.interface";
 import {
+  GerarHorarioDuracao,
+  GerarHorarioStatus,
+  type IGerarHorario,
+} from "../../domain/gerar-horario.types";
+import {
   IGerarHorarioRepository,
   type IGerarHorarioRepository as IGerarHorarioRepositoryType,
 } from "../../domain/repositories/gerar-horario.repository.interface";
-import {
-  GerarHorarioDuracao,
-  GerarHorarioEntity,
-  GerarHorarioStatus,
-} from "../../infrastructure.database/typeorm/gerar-horario.typeorm.entity";
 
 @DeclareImplementation()
 export class GerarHorarioCreateCommandHandlerImpl implements IGerarHorarioCreateCommandHandler {
@@ -31,16 +31,17 @@ export class GerarHorarioCreateCommandHandlerImpl implements IGerarHorarioCreate
   async execute(
     _accessContext: AccessContext | null,
     command: IGerarHorarioCreateCommand,
-  ): Promise<GerarHorarioEntity> {
-    const entity = new GerarHorarioEntity();
-    entity.id = generateUuidV7();
-    entity.status = GerarHorarioStatus.SOLICITADO;
-    entity.duracao = GerarHorarioDuracao.TEMPORARIO;
-    entity.dataInicio = new Date(command.dataInicio);
-    entity.dataTermino = command.dataTermino ? new Date(command.dataTermino) : null;
-    entity.requisicaoGerador = null;
-    entity.respostaGerador = null;
-    entity.dateCreated = new Date();
+  ): Promise<IGerarHorario> {
+    const entity: IGerarHorario = {
+      id: generateUuidV7(),
+      status: GerarHorarioStatus.SOLICITADO,
+      duracao: GerarHorarioDuracao.TEMPORARIO,
+      dataInicio: new Date(command.dataInicio),
+      dataTermino: command.dataTermino ? new Date(command.dataTermino) : null,
+      requisicaoGerador: null,
+      respostaGerador: null,
+      dateCreated: new Date(),
+    };
 
     await this.gerarHorarioRepository.save(entity);
 

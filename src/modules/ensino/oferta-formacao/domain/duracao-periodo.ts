@@ -1,0 +1,6 @@
+export enum DuracaoPeriodo {
+  SEMESTRAL = "SEMESTRAL",
+  ANUAL = "ANUAL",
+  TRIMESTRAL = "TRIMESTRAL",
+  QUADRIMESTRAL = "QUADRIMESTRAL",
+}

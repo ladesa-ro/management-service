@@ -8,6 +8,7 @@ import {
   Post,
   Put,
   Query,
+  StreamableFile,
   UploadedFile,
   UseInterceptors,
 } from "@nestjs/common";
@@ -273,7 +274,11 @@ export class UsuarioRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: UsuarioFindOneInputRestDto,
   ) {
-    return this.getImagemCapaHandler.execute(accessContext, { id: params.id });
+    const result = await this.getImagemCapaHandler.execute(accessContext, { id: params.id });
+    return new StreamableFile(result.stream, {
+      type: result.mimeType,
+      disposition: result.disposition,
+    });
   }
 
   @Put("/:id/imagem/capa")
@@ -309,7 +314,11 @@ export class UsuarioRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: UsuarioFindOneInputRestDto,
   ) {
-    return this.getImagemPerfilHandler.execute(accessContext, { id: params.id });
+    const result = await this.getImagemPerfilHandler.execute(accessContext, { id: params.id });
+    return new StreamableFile(result.stream, {
+      type: result.mimeType,
+      disposition: result.disposition,
+    });
   }
 
   @Put("/:id/imagem/perfil")

@@ -1,10 +1,10 @@
 import { EntityQueryResult, SharedFields } from "@/domain/abstractions";
-import { fieldsToProperties } from "@/infrastructure.database/typeorm/metadata/model-from-fields";
+import { fieldsToProperties } from "@/domain/abstractions/metadata/model-from-fields";
 import {
   commonProperties,
   defineModel,
   referenceProperty,
-} from "@/infrastructure.database/typeorm/metadata/model-registry";
+} from "@/domain/abstractions/metadata/model-registry";
 import { CampusFindOneQueryResult } from "@/modules/ambientes/campus";
 import { OfertaFormacaoFindOneQueryResult } from "@/modules/ensino/oferta-formacao";
 import { CalendarioLetivoFields } from "../calendario-letivo.fields";

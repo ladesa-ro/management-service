@@ -1,4 +1,4 @@
-import { ForbiddenException } from "@nestjs/common";
+import { ForbiddenError } from "@/application/errors";
 import { IIdpTokenService } from "@/domain/abstractions/identity-provider";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { IAutenticacaoRefreshCommandHandler } from "@/modules/acesso/autenticacao/domain/commands/autenticacao-refresh.command.handler.interface";
@@ -26,6 +26,6 @@ export class AutenticacaoRefreshCommandHandlerImpl implements IAutenticacaoRefre
       }
     } catch (_error) {}
 
-    throw new ForbiddenException("Credenciais inválidas ou expiradas.");
+    throw new ForbiddenError("Credenciais inválidas ou expiradas.");
   }
 }

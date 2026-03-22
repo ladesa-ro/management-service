@@ -8,7 +8,6 @@ import {
 } from "@/modules/ensino/curso/domain/queries/curso-periodo-disciplina.query.metadata";
 import { AccessContext, AccessContextHttp } from "@/server/access-context";
 import { ICursoPeriodoDisciplinaRepository } from "../domain/repositories";
-import { CursoPeriodoDisciplinaEntity } from "../infrastructure.database/typeorm/curso-periodo-disciplina.typeorm.entity";
 import {
   CursoPeriodoDisciplinaBulkReplaceInputRestDto,
   CursoPeriodoDisciplinaListOutputRestDto,
@@ -71,13 +70,13 @@ export class CursoPeriodoDisciplinaRestController {
 
     for (const periodoItem of dto.periodos) {
       for (const discItem of periodoItem.disciplinas) {
-        const entity = new CursoPeriodoDisciplinaEntity();
-        entity.id = generateUuidV7();
-        entity.curso = { id: cursoId } as any;
-        entity.numeroPeriodo = periodoItem.numeroPeriodo;
-        entity.disciplina = { id: discItem.disciplinaId } as any;
-        entity.cargaHoraria = discItem.cargaHoraria ?? null;
-        await this.cursoPeriodoDisciplinaRepository.save(entity);
+        await this.cursoPeriodoDisciplinaRepository.save({
+          id: generateUuidV7(),
+          curso: { id: cursoId },
+          numeroPeriodo: periodoItem.numeroPeriodo,
+          disciplina: { id: discItem.disciplinaId },
+          cargaHoraria: discItem.cargaHoraria ?? null,
+        });
       }
     }
 

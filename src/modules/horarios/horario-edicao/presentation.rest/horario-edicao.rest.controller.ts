@@ -26,14 +26,14 @@ import {
   HorarioEdicaoCreateCommandMetadata,
   HorarioEdicaoSalvarCommandMetadata,
 } from "../domain/horario-edicao.operations";
+import {
+  HorarioEdicaoSessaoStatus,
+  type IHorarioEdicaoMudanca,
+  type IHorarioEdicaoSessao,
+} from "../domain/horario-edicao.types";
 import { IHorarioEdicaoApplicator } from "../domain/repositories/horario-edicao-applicator.interface";
 import { IHorarioEdicaoMudancaRepository } from "../domain/repositories/horario-edicao-mudanca.repository.interface";
 import { IHorarioEdicaoSessaoRepository } from "../domain/repositories/horario-edicao-sessao.repository.interface";
-import { HorarioEdicaoMudancaEntity } from "../infrastructure.database/typeorm/horario-edicao-mudanca.typeorm.entity";
-import {
-  HorarioEdicaoSessaoEntity,
-  HorarioEdicaoSessaoStatus,
-} from "../infrastructure.database/typeorm/horario-edicao-sessao.typeorm.entity";
 import {
   HorarioEdicaoMudancaInputRestDto,
   HorarioEdicaoMudancaOutputRestDto,
@@ -53,7 +53,7 @@ export class HorarioEdicaoRestController {
     private readonly horarioEdicaoApplicator: IHorarioEdicaoApplicator,
   ) {}
 
-  private toSessaoOutput(entity: HorarioEdicaoSessaoEntity): HorarioEdicaoSessaoOutputRestDto {
+  private toSessaoOutput(entity: IHorarioEdicaoSessao): HorarioEdicaoSessaoOutputRestDto {
     const dto = new HorarioEdicaoSessaoOutputRestDto();
     dto.id = entity.id;
     dto.status = entity.status;
@@ -63,7 +63,7 @@ export class HorarioEdicaoRestController {
     return dto;
   }
 
-  private toMudancaOutput(entity: HorarioEdicaoMudancaEntity): HorarioEdicaoMudancaOutputRestDto {
+  private toMudancaOutput(entity: IHorarioEdicaoMudanca): HorarioEdicaoMudancaOutputRestDto {
     const dto = new HorarioEdicaoMudancaOutputRestDto();
     dto.id = entity.id;
     dto.idSessaoFk = entity.sessao?.id;
@@ -82,16 +82,17 @@ export class HorarioEdicaoRestController {
   async create(
     @AccessContextHttp() accessContext: AccessContext,
   ): Promise<HorarioEdicaoSessaoOutputRestDto> {
-    const entity = new HorarioEdicaoSessaoEntity();
-    entity.id = generateUuidV7();
-    entity.status = HorarioEdicaoSessaoStatus.ABERTA;
-    entity.usuario = { id: accessContext.requestActor!.id } as any;
-    entity.dateCreated = new Date();
-    entity.dateUpdated = new Date();
+    const entity = {
+      id: generateUuidV7(),
+      status: HorarioEdicaoSessaoStatus.ABERTA,
+      usuario: { id: accessContext.requestActor?.id ?? "" },
+      dateCreated: new Date(),
+      dateUpdated: new Date(),
+    };
 
-    await this.sessaoRepository.save(entity);
+    const saved = await this.sessaoRepository.save(entity);
 
-    return this.toSessaoOutput(entity);
+    return this.toSessaoOutput(saved);
   }
 
   @Patch("/:sessaoId")
@@ -108,27 +109,28 @@ export class HorarioEdicaoRestController {
     const sessao = await this.sessaoRepository.findById(params.sessaoId);
     ensureExists(sessao, "HorarioEdicaoSessao", params.sessaoId);
 
-    if (sessao!.status !== HorarioEdicaoSessaoStatus.ABERTA) {
+    if (sessao.status !== HorarioEdicaoSessaoStatus.ABERTA) {
       throw new BadRequestException(
-        `Sessao ${params.sessaoId} nao esta aberta. Status atual: ${sessao!.status}.`,
+        `Sessao ${params.sessaoId} nao esta aberta. Status atual: ${sessao.status}.`,
       );
     }
 
-    const mudanca = new HorarioEdicaoMudancaEntity();
-    mudanca.id = generateUuidV7();
-    mudanca.sessao = { id: params.sessaoId } as any;
-    mudanca.calendarioAgendamento = dto.calendarioAgendamentoId
-      ? ({ id: dto.calendarioAgendamentoId } as any)
-      : null;
-    mudanca.tipoOperacao = dto.tipoOperacao;
-    mudanca.dados = dto.dados;
-    mudanca.dateCreated = new Date();
+    const mudanca = {
+      id: generateUuidV7(),
+      sessao: { id: params.sessaoId },
+      calendarioAgendamento: dto.calendarioAgendamentoId
+        ? { id: dto.calendarioAgendamentoId }
+        : null,
+      tipoOperacao: dto.tipoOperacao,
+      dados: dto.dados,
+      dateCreated: new Date(),
+    };
 
     await this.mudancaRepository.save(mudanca);
 
     // Update sessao dateUpdated
-    sessao!.dateUpdated = new Date();
-    await this.sessaoRepository.save(sessao!);
+    sessao.dateUpdated = new Date();
+    await this.sessaoRepository.save(sessao);
 
     return this.toMudancaOutput(mudanca);
   }
@@ -146,9 +148,9 @@ export class HorarioEdicaoRestController {
     const sessao = await this.sessaoRepository.findById(params.sessaoId);
     ensureExists(sessao, "HorarioEdicaoSessao", params.sessaoId);
 
-    if (sessao!.status !== HorarioEdicaoSessaoStatus.ABERTA) {
+    if (sessao.status !== HorarioEdicaoSessaoStatus.ABERTA) {
       throw new BadRequestException(
-        `Sessao ${params.sessaoId} nao esta aberta. Status atual: ${sessao!.status}.`,
+        `Sessao ${params.sessaoId} nao esta aberta. Status atual: ${sessao.status}.`,
       );
     }
 
@@ -157,11 +159,11 @@ export class HorarioEdicaoRestController {
     await this.horarioEdicaoApplicator.applyMudancas(mudancas);
 
     // Mark session as saved
-    sessao!.status = HorarioEdicaoSessaoStatus.SALVA;
-    sessao!.dateUpdated = new Date();
-    await this.sessaoRepository.save(sessao!);
+    sessao.status = HorarioEdicaoSessaoStatus.SALVA;
+    sessao.dateUpdated = new Date();
+    await this.sessaoRepository.save(sessao);
 
-    return this.toSessaoOutput(sessao!);
+    return this.toSessaoOutput(sessao);
   }
 
   @Post("/:sessaoId/cancelar")
@@ -177,16 +179,16 @@ export class HorarioEdicaoRestController {
     const sessao = await this.sessaoRepository.findById(params.sessaoId);
     ensureExists(sessao, "HorarioEdicaoSessao", params.sessaoId);
 
-    if (sessao!.status !== HorarioEdicaoSessaoStatus.ABERTA) {
+    if (sessao.status !== HorarioEdicaoSessaoStatus.ABERTA) {
       throw new BadRequestException(
-        `Sessao ${params.sessaoId} nao esta aberta. Status atual: ${sessao!.status}.`,
+        `Sessao ${params.sessaoId} nao esta aberta. Status atual: ${sessao.status}.`,
       );
     }
 
-    sessao!.status = HorarioEdicaoSessaoStatus.CANCELADA;
-    sessao!.dateUpdated = new Date();
-    await this.sessaoRepository.save(sessao!);
+    sessao.status = HorarioEdicaoSessaoStatus.CANCELADA;
+    sessao.dateUpdated = new Date();
+    await this.sessaoRepository.save(sessao);
 
-    return this.toSessaoOutput(sessao!);
+    return this.toSessaoOutput(sessao);
   }
 }

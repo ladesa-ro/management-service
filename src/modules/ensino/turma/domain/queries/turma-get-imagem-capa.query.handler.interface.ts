@@ -1,6 +1,6 @@
-import type { StreamableFile } from "@nestjs/common";
 import type { IQueryHandler } from "@/domain/abstractions";
 import { createOperationMetadata } from "@/domain/abstractions";
+import type { IStreamableFileResult } from "@/domain/abstractions/storage";
 import type { TurmaFindOneQuery } from "./turma-find-one.query";
 
 export const TurmaGetImagemCapaQueryMetadata = createOperationMetadata({
@@ -10,4 +10,7 @@ export const TurmaGetImagemCapaQueryMetadata = createOperationMetadata({
 
 export const ITurmaGetImagemCapaQueryHandler = Symbol("ITurmaGetImagemCapaQueryHandler");
 
-export type ITurmaGetImagemCapaQueryHandler = IQueryHandler<TurmaFindOneQuery, StreamableFile>;
+export type ITurmaGetImagemCapaQueryHandler = IQueryHandler<
+  TurmaFindOneQuery,
+  IStreamableFileResult
+>;

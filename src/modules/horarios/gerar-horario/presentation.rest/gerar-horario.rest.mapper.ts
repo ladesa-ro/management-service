@@ -1,8 +1,8 @@
-import type { GerarHorarioEntity } from "../infrastructure.database/typeorm/gerar-horario.typeorm.entity";
+import type { IGerarHorario } from "../domain/gerar-horario.types";
 import { GerarHorarioFindOneOutputRestDto } from "./gerar-horario.rest.dto";
 
 export class GerarHorarioRestMapper {
-  static toFindOneOutputDto(entity: GerarHorarioEntity): GerarHorarioFindOneOutputRestDto {
+  static toFindOneOutputDto(entity: IGerarHorario): GerarHorarioFindOneOutputRestDto {
     const dto = new GerarHorarioFindOneOutputRestDto();
     dto.id = entity.id;
     dto.status = entity.status;

@@ -1,6 +1,6 @@
-import type { StreamableFile } from "@nestjs/common";
 import type { IQueryHandler } from "@/domain/abstractions";
 import { createOperationMetadata } from "@/domain/abstractions";
+import type { IStreamableFileResult } from "@/domain/abstractions/storage";
 import type { AmbienteFindOneQuery } from "./ambiente-find-one.query";
 
 export const AmbienteGetImagemCapaQueryMetadata = createOperationMetadata({
@@ -12,5 +12,5 @@ export const IAmbienteGetImagemCapaQueryHandler = Symbol("IAmbienteGetImagemCapa
 
 export type IAmbienteGetImagemCapaQueryHandler = IQueryHandler<
   AmbienteFindOneQuery,
-  StreamableFile
+  IStreamableFileResult
 >;

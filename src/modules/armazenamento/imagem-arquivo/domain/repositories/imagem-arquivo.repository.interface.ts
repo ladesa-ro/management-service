@@ -1,8 +1,6 @@
-import type { IReadOnlyRepository } from "@/domain/abstractions";
+import type { IRepositoryFindAll, IRepositoryFindById } from "@/domain/abstractions";
 import {
-  ImagemArquivoFindOneQuery,
   ImagemArquivoFindOneQueryResult,
-  ImagemArquivoListQuery,
   ImagemArquivoListQueryResult,
 } from "@/modules/armazenamento/imagem-arquivo";
 
@@ -15,10 +13,5 @@ export const IImagemArquivoQueryRepository = Symbol("IImagemArquivoQueryReposito
  * Port de saída para operações de consulta de ImagemArquivo (read-only)
  * Define o contrato que os adapters de persistência devem implementar
  */
-export interface IImagemArquivoQueryRepository
-  extends IReadOnlyRepository<
-    ImagemArquivoListQuery,
-    ImagemArquivoListQueryResult,
-    ImagemArquivoFindOneQuery,
-    ImagemArquivoFindOneQueryResult
-  > {}
+export type IImagemArquivoQueryRepository = IRepositoryFindAll<ImagemArquivoListQueryResult> &
+  IRepositoryFindById<ImagemArquivoFindOneQueryResult>;

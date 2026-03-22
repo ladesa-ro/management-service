@@ -74,7 +74,7 @@ export class CalendarioEventoRestController {
       CalendarioAgendamentoTipo.EVENTO,
     );
     ensureExists(entity, "CalendarioEvento", params.id);
-    return this.toOutputDtoWithRelations(entity!);
+    return this.toOutputDtoWithRelations(entity);
   }
 
   @Post("/")
@@ -120,19 +120,19 @@ export class CalendarioEventoRestController {
     );
     ensureExists(entity, "CalendarioEvento", params.id);
 
-    if (dto.nome !== undefined) entity!.nome = dto.nome;
-    if (dto.dataInicio !== undefined) entity!.dataInicio = new Date(dto.dataInicio);
-    if (dto.dataFim !== undefined) entity!.dataFim = dto.dataFim ? new Date(dto.dataFim) : null;
-    if (dto.diaInteiro !== undefined) entity!.diaInteiro = dto.diaInteiro;
-    if (dto.horarioInicio !== undefined) entity!.horarioInicio = dto.horarioInicio;
-    if (dto.horarioFim !== undefined) entity!.horarioFim = dto.horarioFim;
-    if (dto.cor !== undefined) entity!.cor = dto.cor ?? null;
-    if (dto.repeticao !== undefined) entity!.repeticao = dto.repeticao ?? null;
+    if (dto.nome !== undefined) entity.nome = dto.nome;
+    if (dto.dataInicio !== undefined) entity.dataInicio = new Date(dto.dataInicio);
+    if (dto.dataFim !== undefined) entity.dataFim = dto.dataFim ? new Date(dto.dataFim) : null;
+    if (dto.diaInteiro !== undefined) entity.diaInteiro = dto.diaInteiro;
+    if (dto.horarioInicio !== undefined) entity.horarioInicio = dto.horarioInicio;
+    if (dto.horarioFim !== undefined) entity.horarioFim = dto.horarioFim;
+    if (dto.cor !== undefined) entity.cor = dto.cor ?? null;
+    if (dto.repeticao !== undefined) entity.repeticao = dto.repeticao ?? null;
 
-    await this.calendarioAgendamentoRepository.save(entity!);
-    await this.calendarioAgendamentoJunctionRepository.syncJunctions(entity!.id, dto);
+    await this.calendarioAgendamentoRepository.save(entity);
+    await this.calendarioAgendamentoJunctionRepository.syncJunctions(entity.id, dto);
 
-    return this.toOutputDtoWithRelations(entity!);
+    return this.toOutputDtoWithRelations(entity);
   }
 
   @Delete("/:id")
@@ -149,8 +149,8 @@ export class CalendarioEventoRestController {
       CalendarioAgendamentoTipo.EVENTO,
     );
     ensureExists(entity, "CalendarioEvento", params.id);
-    entity!.status = CalendarioAgendamentoStatus.INATIVO;
-    await this.calendarioAgendamentoRepository.save(entity!);
+    entity.status = CalendarioAgendamentoStatus.INATIVO;
+    await this.calendarioAgendamentoRepository.save(entity);
     return true;
   }
 

@@ -1,4 +1,5 @@
 import { BrokerAsPromised as Broker, BrokerConfig } from "rascal";
+import { ILoggerPort, ILoggerPort as ILoggerPortToken } from "@/domain/abstractions/logging";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
   IMessageBrokerOptions,
@@ -12,6 +13,8 @@ export class MessageBrokerContainerService {
   constructor(
     @DeclareDependency(IMessageBrokerOptionsToken)
     private readonly messageBrokerOptions: IMessageBrokerOptions,
+    @DeclareDependency(ILoggerPortToken)
+    private readonly logger: ILoggerPort,
   ) {}
 
   async setup() {
@@ -20,7 +23,7 @@ export class MessageBrokerContainerService {
 
       const broker = await Broker.create(config);
 
-      broker.on("error", console.error);
+      broker.on("error", (err) => this.logger.error(String(err), undefined, "MessageBroker"));
 
       this.#broker = broker;
     }

@@ -1,4 +1,5 @@
 import { Logger } from "@nestjs/common";
+import type { SubscriberSessionAsPromised } from "rascal";
 import { IMessageBrokerService } from "@/domain/abstractions/message-broker";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
@@ -33,7 +34,7 @@ export class MessageBrokerService implements IMessageBrokerService {
     const queueResponse = this.messageBrokerOptions.queueTimetableResponse;
 
     return new Promise<TResponse>((resolve, reject) => {
-      let subscription: any;
+      let subscription: SubscriberSessionAsPromised | undefined;
 
       const timeout = setTimeout(() => {
         subscription?.cancel();
@@ -45,10 +46,10 @@ export class MessageBrokerService implements IMessageBrokerService {
         .then((sub) => {
           subscription = sub;
 
-          subscription.on("message", (_message, content, ackOrNoAck) => {
+          sub.on("message", (_message, content, ackOrNoAck) => {
             clearTimeout(timeout);
             ackOrNoAck();
-            subscription.cancel();
+            sub.cancel();
 
             try {
               const response = (
@@ -62,9 +63,9 @@ export class MessageBrokerService implements IMessageBrokerService {
             }
           });
 
-          subscription.on("error", (err) => {
+          sub.on("error", (err) => {
             clearTimeout(timeout);
-            subscription.cancel();
+            sub.cancel();
             reject(err);
           });
 

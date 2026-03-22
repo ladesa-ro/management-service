@@ -1,10 +1,10 @@
-import type { HorarioAulaConfiguracaoEntity } from "@/modules/horarios/horario-aula-configuracao/infrastructure.database/typeorm/horario-aula-configuracao.typeorm.entity";
+import type { IHorarioAulaConfiguracao } from "../horario-aula-configuracao.types";
 
 export const IHorarioAulaConfiguracaoRepository = Symbol("IHorarioAulaConfiguracaoRepository");
 
 export interface IHorarioAulaConfiguracaoRepository {
-  findAll(where?: Record<string, unknown>): Promise<HorarioAulaConfiguracaoEntity[]>;
-  findById(id: string): Promise<HorarioAulaConfiguracaoEntity | null>;
-  save(entity: HorarioAulaConfiguracaoEntity): Promise<HorarioAulaConfiguracaoEntity>;
-  remove(entity: HorarioAulaConfiguracaoEntity): Promise<void>;
+  findAll(where?: Record<string, unknown>): Promise<IHorarioAulaConfiguracao[]>;
+  findById(id: string): Promise<IHorarioAulaConfiguracao | null>;
+  save(entity: Partial<IHorarioAulaConfiguracao>): Promise<IHorarioAulaConfiguracao>;
+  remove(entity: IHorarioAulaConfiguracao): Promise<void>;
 }

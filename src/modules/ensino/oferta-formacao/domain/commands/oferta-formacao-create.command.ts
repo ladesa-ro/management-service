@@ -1,5 +1,5 @@
 import { ModalidadeInputRef } from "@/modules/ensino/modalidade";
-import type { DuracaoPeriodo } from "../../infrastructure.database/typeorm/oferta-formacao.typeorm.entity";
+import type { DuracaoPeriodo } from "../duracao-periodo";
 import { OfertaFormacaoFields } from "../oferta-formacao.fields";
 
 export const OfertaFormacaoCreateCommandFields = {

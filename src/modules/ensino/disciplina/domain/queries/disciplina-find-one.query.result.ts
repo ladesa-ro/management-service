@@ -1,10 +1,10 @@
 import { EntityQueryResult, SharedFields } from "@/domain/abstractions";
-import { fieldsToProperties } from "@/infrastructure.database/typeorm/metadata/model-from-fields";
+import { fieldsToProperties } from "@/domain/abstractions/metadata/model-from-fields";
 import {
   commonProperties,
   defineModel,
   referenceProperty,
-} from "@/infrastructure.database/typeorm/metadata/model-registry";
+} from "@/domain/abstractions/metadata/model-registry";
 import { ImagemFindOneQueryResult } from "@/modules/armazenamento/imagem";
 import { DisciplinaFields } from "../disciplina.fields";
 

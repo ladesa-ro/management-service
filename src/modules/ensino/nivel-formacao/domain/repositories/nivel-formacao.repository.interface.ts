@@ -1,4 +1,10 @@
-import type { IBaseCrudRepository } from "@/domain/abstractions";
+import type {
+  IRepositoryCreate,
+  IRepositoryFindAll,
+  IRepositoryFindById,
+  IRepositorySoftDelete,
+  IRepositoryUpdate,
+} from "@/domain/abstractions";
 import {
   type INivelFormacao,
   NivelFormacaoFindOneQueryResult,
@@ -11,9 +17,8 @@ export const INivelFormacaoRepository = Symbol("INivelFormacaoRepository");
  * Port de saída para operações de persistência de NivelFormacao
  * Estende a interface base de CRUD com operações padrão
  */
-export interface INivelFormacaoRepository
-  extends IBaseCrudRepository<
-    INivelFormacao,
-    NivelFormacaoListQueryResult,
-    NivelFormacaoFindOneQueryResult
-  > {}
+export type INivelFormacaoRepository = IRepositoryFindAll<NivelFormacaoListQueryResult> &
+  IRepositoryFindById<NivelFormacaoFindOneQueryResult> &
+  IRepositoryCreate<INivelFormacao> &
+  IRepositoryUpdate<INivelFormacao> &
+  IRepositorySoftDelete;

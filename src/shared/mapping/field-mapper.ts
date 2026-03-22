@@ -4,7 +4,7 @@ import type { IValidationErrorDetail } from "@/domain/validation";
 // Types
 // ============================================================================
 
-type TransformFn = (value: any) => any;
+type TransformFn = (value: unknown) => unknown;
 
 export type FieldMapping =
   | string
@@ -49,14 +49,14 @@ function parsePath(path: string): PathSegment[] {
   return segments;
 }
 
-function getByPath(obj: any, segments: PathSegment[]): any {
-  let current = obj;
+function getByPath(obj: unknown, segments: PathSegment[]): unknown {
+  let current: unknown = obj;
 
   for (let i = 0; i < segments.length; i++) {
     if (current === undefined || current === null) return undefined;
 
     const seg = segments[i];
-    current = current[seg.key];
+    current = (current as Record<string, unknown>)[seg.key];
 
     if (seg.array) {
       if (!Array.isArray(current)) return undefined;
@@ -65,15 +65,15 @@ function getByPath(obj: any, segments: PathSegment[]): any {
 
       if (remaining.length === 0) return current;
 
-      return current.map((item) => getByPath(item, remaining));
+      return current.map((item: unknown) => getByPath(item, remaining));
     }
   }
 
   return current;
 }
 
-function setByPath(obj: Record<string, any>, segments: PathSegment[], value: any): void {
-  let current = obj;
+function setByPath(obj: Record<string, unknown>, segments: PathSegment[], value: unknown): void {
+  let current: Record<string, unknown> = obj;
 
   for (let i = 0; i < segments.length; i++) {
     const seg = segments[i];
@@ -101,11 +101,12 @@ function setByPath(obj: Record<string, any>, segments: PathSegment[], value: any
         current[seg.key] = [];
       }
 
-      const arr = current[seg.key] as Record<string, any>[];
+      const arr = current[seg.key] as Record<string, unknown>[];
+      const valArr = value as unknown[];
 
-      for (let j = 0; j < value.length; j++) {
+      for (let j = 0; j < valArr.length; j++) {
         if (!arr[j]) arr[j] = {};
-        setByPath(arr[j], remaining, value[j]);
+        setByPath(arr[j], remaining, valArr[j]);
       }
 
       return;
@@ -115,7 +116,7 @@ function setByPath(obj: Record<string, any>, segments: PathSegment[], value: any
       current[seg.key] = {};
     }
 
-    current = current[seg.key];
+    current = current[seg.key] as Record<string, unknown>;
   }
 }
 
@@ -158,8 +159,8 @@ export function createMapping(fields: FieldMapping[]): Mapping {
   }
 
   function mapFrom(source: unknown, skipUndefined: boolean): Record<string, unknown> {
-    const src = source as Record<string, any>;
-    const result: Record<string, any> = {};
+    const src = source as Record<string, unknown>;
+    const result: Record<string, unknown> = {};
 
     for (const m of normalized) {
       const value = getByPath(src, m.sourcePath);

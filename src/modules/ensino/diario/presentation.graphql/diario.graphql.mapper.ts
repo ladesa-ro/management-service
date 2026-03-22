@@ -1,3 +1,4 @@
+import type { AmbienteFindOneQueryResult } from "@/modules/ambientes/ambiente";
 import {
   DiarioCreateCommand,
   DiarioFindOneQuery,
@@ -5,8 +6,10 @@ import {
   DiarioListQuery,
   DiarioUpdateCommand,
 } from "@/modules/ensino/diario";
+import type { DisciplinaFindOneQueryResult } from "@/modules/ensino/disciplina";
+import type { TurmaFindOneQueryResult } from "@/modules/ensino/turma";
 import { CalendarioLetivoGraphqlMapper } from "@/modules/horarios/calendario-letivo/presentation.graphql/calendario-letivo.graphql.mapper";
-import { createListOutputMapper, mapDatedFields } from "@/shared/mapping";
+import { createListOutputMapper, mapDatedFields, mapImagemOutput } from "@/shared/mapping";
 import {
   AmbienteFindOneOutputForDiarioGraphQlDto,
   DiarioCreateInputGraphQlDto,
@@ -17,37 +20,6 @@ import {
   DisciplinaFindOneOutputForDiarioGraphQlDto,
   TurmaFindOneOutputForDiarioGraphQlDto,
 } from "./diario.graphql.dto";
-
-function mapImagemOutput(imagem: any): any {
-  if (!imagem) return null;
-  return {
-    id: imagem.id,
-    descricao: imagem.descricao,
-    versoes: (imagem.versoes || []).map((v: any) => ({
-      id: v.id,
-      largura: v.largura,
-      altura: v.altura,
-      formato: v.formato,
-      mimeType: v.mimeType,
-      arquivo: {
-        id: v.arquivo.id,
-        name: v.arquivo.name,
-        mimeType: v.arquivo.mimeType,
-        sizeBytes: v.arquivo.sizeBytes,
-        storageType: v.arquivo.storageType,
-        dateCreated: v.arquivo.dateCreated,
-        dateUpdated: v.arquivo.dateUpdated,
-        dateDeleted: v.arquivo.dateDeleted,
-      },
-      dateCreated: v.dateCreated,
-      dateUpdated: v.dateUpdated,
-      dateDeleted: v.dateDeleted,
-    })),
-    dateCreated: imagem.dateCreated,
-    dateUpdated: imagem.dateUpdated,
-    dateDeleted: imagem.dateDeleted,
-  };
-}
 
 export class DiarioGraphqlMapper {
   static toListInput(dto: DiarioListInputGraphQlDto | null): DiarioListQuery | null {
@@ -113,7 +85,7 @@ export class DiarioGraphqlMapper {
     return input;
   }
 
-  private static mapTurma(turma: any): TurmaFindOneOutputForDiarioGraphQlDto {
+  private static mapTurma(turma: TurmaFindOneQueryResult): TurmaFindOneOutputForDiarioGraphQlDto {
     const dto = new TurmaFindOneOutputForDiarioGraphQlDto();
     dto.id = turma.id;
     dto.periodo = turma.periodo;
@@ -121,7 +93,9 @@ export class DiarioGraphqlMapper {
     return dto;
   }
 
-  private static mapDisciplina(disciplina: any): DisciplinaFindOneOutputForDiarioGraphQlDto {
+  private static mapDisciplina(
+    disciplina: DisciplinaFindOneQueryResult,
+  ): DisciplinaFindOneOutputForDiarioGraphQlDto {
     const dto = new DisciplinaFindOneOutputForDiarioGraphQlDto();
     dto.id = disciplina.id;
     dto.nome = disciplina.nome;
@@ -132,7 +106,7 @@ export class DiarioGraphqlMapper {
   }
 
   private static mapAmbiente(
-    ambiente: any | null,
+    ambiente: AmbienteFindOneQueryResult | null,
   ): AmbienteFindOneOutputForDiarioGraphQlDto | null {
     if (!ambiente) return null;
     const dto = new AmbienteFindOneOutputForDiarioGraphQlDto();

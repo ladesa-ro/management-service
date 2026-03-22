@@ -1,5 +1,4 @@
-import { InternalServerErrorException } from "@nestjs/common";
-import { ResourceNotFoundError } from "@/application/errors";
+import { InternalError, ResourceNotFoundError } from "@/application/errors";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { EstagioCreateCommand } from "@/modules/estagio/estagio/domain/commands/estagio-create.command";
 import { IEstagioCreateCommandHandler } from "@/modules/estagio/estagio/domain/commands/estagio-create.command.handler.interface";
@@ -24,7 +23,7 @@ export class EstagioCreateCommandHandlerImpl implements IEstagioCreateCommandHan
       if (error instanceof ResourceNotFoundError) {
         throw error;
       }
-      throw new InternalServerErrorException("Erro ao criar estágio");
+      throw new InternalError("Erro ao criar estágio");
     }
   }
 }

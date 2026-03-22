@@ -1,11 +1,11 @@
 import { EntityQueryResult, SharedFields } from "@/domain/abstractions";
-import type { ScalarDate } from "@/domain/abstractions/scalars";
-import { fieldsToProperties } from "@/infrastructure.database/typeorm/metadata/model-from-fields";
+import { fieldsToProperties } from "@/domain/abstractions/metadata/model-from-fields";
 import {
   commonProperties,
   defineModel,
   referenceProperty,
-} from "@/infrastructure.database/typeorm/metadata/model-registry";
+} from "@/domain/abstractions/metadata/model-registry";
+import type { ScalarDate } from "@/domain/abstractions/scalars";
 import { CalendarioLetivoDiaFields } from "../calendario-letivo-dia.fields";
 import { CalendarioLetivoFindOneQueryResult } from "./calendario-letivo-find-one.query.result";
 

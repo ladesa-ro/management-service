@@ -1,4 +1,10 @@
-import type { IBaseCrudRepository } from "@/domain/abstractions";
+import type {
+  IRepositoryCreate,
+  IRepositoryFindAll,
+  IRepositoryFindById,
+  IRepositorySoftDelete,
+  IRepositoryUpdate,
+} from "@/domain/abstractions";
 import type { IAmbiente } from "@/modules/ambientes/ambiente";
 import type { AmbienteFindOneQueryResult, AmbienteListQueryResult } from "../queries";
 /**
@@ -10,5 +16,8 @@ export const IAmbienteRepository = Symbol("IAmbienteRepository");
  * Port de saída para operações de persistência de Ambiente
  * Estende a interface base de CRUD com operações padrão
  */
-export interface IAmbienteRepository
-  extends IBaseCrudRepository<IAmbiente, AmbienteListQueryResult, AmbienteFindOneQueryResult> {}
+export type IAmbienteRepository = IRepositoryFindAll<AmbienteListQueryResult> &
+  IRepositoryFindById<AmbienteFindOneQueryResult> &
+  IRepositoryCreate<IAmbiente> &
+  IRepositoryUpdate<IAmbiente> &
+  IRepositorySoftDelete;

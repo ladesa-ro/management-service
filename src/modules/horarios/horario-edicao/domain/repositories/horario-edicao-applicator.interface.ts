@@ -1,7 +1,7 @@
-import type { HorarioEdicaoMudancaEntity } from "@/modules/horarios/horario-edicao/infrastructure.database/typeorm/horario-edicao-mudanca.typeorm.entity";
+import type { IHorarioEdicaoMudanca } from "../horario-edicao.types";
 
 export const IHorarioEdicaoApplicator = Symbol("IHorarioEdicaoApplicator");
 
 export interface IHorarioEdicaoApplicator {
-  applyMudancas(mudancas: HorarioEdicaoMudancaEntity[]): Promise<void>;
+  applyMudancas(mudancas: IHorarioEdicaoMudanca[]): Promise<void>;
 }

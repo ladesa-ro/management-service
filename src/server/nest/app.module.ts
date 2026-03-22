@@ -1,6 +1,7 @@
 import { Module } from "@nestjs/common";
 import { APP_FILTER, APP_INTERCEPTOR } from "@nestjs/core";
 import { ContainerModule } from "@/infrastructure.dependency-injection";
+import { LoggingModule, RequestLoggingInterceptor } from "@/infrastructure.logging";
 import { InfrastructureModule } from "@/infrastructure.module";
 import { AccessContextCoreModule } from "@/server/access-context";
 import { AppController } from "@/server/nest/app.controller";
@@ -14,10 +15,20 @@ import { TransactionInterceptor } from "@/server/nest/interceptors/transaction.i
 import { ModulesModule } from "@/server/nest/modules/modules.module";
 
 @Module({
-  imports: [ModulesModule, InfrastructureModule, AccessContextCoreModule, ContainerModule],
+  imports: [
+    LoggingModule,
+    ModulesModule,
+    InfrastructureModule,
+    AccessContextCoreModule,
+    ContainerModule,
+  ],
   controllers: [AppController],
   providers: [
     AppService,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: RequestLoggingInterceptor,
+    },
     {
       provide: APP_INTERCEPTOR,
       useClass: TransactionInterceptor,

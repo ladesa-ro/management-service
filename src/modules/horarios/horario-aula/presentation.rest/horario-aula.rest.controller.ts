@@ -18,8 +18,8 @@ import {
   HorarioAulaFindByIdQueryMetadata,
   HorarioAulaUpdateCommandMetadata,
 } from "../domain/horario-aula.operations";
+import type { IHorarioAula } from "../domain/horario-aula.types";
 import { IHorarioAulaRepository } from "../domain/repositories";
-import { HorarioAulaEntity } from "../infrastructure.database/typeorm/horario-aula.typeorm.entity";
 import {
   HorarioAulaCreateInputRestDto,
   HorarioAulaFindOneOutputRestDto,
@@ -67,7 +67,7 @@ export class HorarioAulaRestController {
   ): Promise<HorarioAulaFindOneOutputRestDto> {
     const entity = await this.repository.findById(params.id);
     ensureExists(entity, "HorarioAula", params.id);
-    return this.toOutputDto(entity!);
+    return this.toOutputDto(entity);
   }
 
   @Post("/")
@@ -78,13 +78,14 @@ export class HorarioAulaRestController {
     @AccessContextHttp() _accessContext: AccessContext,
     @Body() dto: HorarioAulaCreateInputRestDto,
   ): Promise<HorarioAulaFindOneOutputRestDto> {
-    const entity = new HorarioAulaEntity();
-    entity.id = generateUuidV7();
-    entity.inicio = dto.inicio;
-    entity.fim = dto.fim;
-    entity.horarioAulaConfiguracao = { id: dto.horarioAulaConfiguracaoId } as any;
-    await this.repository.save(entity);
-    return this.toOutputDto(entity);
+    const entity = {
+      id: generateUuidV7(),
+      inicio: dto.inicio,
+      fim: dto.fim,
+      horarioAulaConfiguracao: { id: dto.horarioAulaConfiguracaoId },
+    };
+    const saved = await this.repository.save(entity);
+    return this.toOutputDto(saved);
   }
 
   @Patch("/:id")
@@ -100,14 +101,14 @@ export class HorarioAulaRestController {
     const entity = await this.repository.findById(params.id);
     ensureExists(entity, "HorarioAula", params.id);
 
-    if (dto.inicio !== undefined) entity!.inicio = dto.inicio;
-    if (dto.fim !== undefined) entity!.fim = dto.fim;
+    if (dto.inicio !== undefined) entity.inicio = dto.inicio;
+    if (dto.fim !== undefined) entity.fim = dto.fim;
     if (dto.horarioAulaConfiguracaoId !== undefined) {
-      entity!.horarioAulaConfiguracao = { id: dto.horarioAulaConfiguracaoId } as any;
+      entity.horarioAulaConfiguracao = { id: dto.horarioAulaConfiguracaoId } as any;
     }
 
-    await this.repository.save(entity!);
-    return this.toOutputDto(entity!);
+    await this.repository.save(entity);
+    return this.toOutputDto(entity);
   }
 
   @Delete("/:id")
@@ -121,11 +122,11 @@ export class HorarioAulaRestController {
   ): Promise<boolean> {
     const entity = await this.repository.findById(params.id);
     ensureExists(entity, "HorarioAula", params.id);
-    await this.repository.remove(entity!);
+    await this.repository.remove(entity);
     return true;
   }
 
-  private toOutputDto(entity: HorarioAulaEntity): HorarioAulaFindOneOutputRestDto {
+  private toOutputDto(entity: IHorarioAula): HorarioAulaFindOneOutputRestDto {
     return {
       id: entity.id,
       inicio: entity.inicio,

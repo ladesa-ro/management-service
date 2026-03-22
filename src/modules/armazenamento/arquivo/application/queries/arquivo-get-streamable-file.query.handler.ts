@@ -1,6 +1,6 @@
 import type { Readable } from "node:stream";
-import { ForbiddenException, ServiceUnavailableException, StreamableFile } from "@nestjs/common";
-import { ensureExists } from "@/application/errors";
+import { ensureExists, ForbiddenError, ServiceUnavailableError } from "@/application/errors";
+import type { IStreamableFileResult } from "@/domain/abstractions/storage";
 import { IStorageService } from "@/domain/abstractions/storage";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { isValidUuid } from "@/domain/validation";
@@ -27,17 +27,18 @@ export class ArquivoGetStreamableFileQueryHandlerImpl
   async execute(
     _accessContext: AccessContext | null,
     input: ArquivoGetFileQuery,
-  ): Promise<StreamableFile> {
+  ): Promise<IStreamableFileResult> {
     const file = await this.getFile(input);
 
     if (!file.stream) {
-      throw new ServiceUnavailableException();
+      throw new ServiceUnavailableError();
     }
 
-    return new StreamableFile(file.stream, {
-      type: file.mimeType ?? undefined,
+    return {
+      stream: file.stream,
+      mimeType: file.mimeType ?? undefined,
       disposition: `attachment; filename="${encodeURIComponent(file.nome ?? file.id)}"`,
-    });
+    };
   }
 
   private async getFile(input: ArquivoGetFileQuery): Promise<{
@@ -91,11 +92,11 @@ export class ArquivoGetStreamableFileQueryHandlerImpl
     const arquivo = await qb.getOne();
 
     if (!arquivo) {
-      throw new ForbiddenException();
+      throw new ForbiddenError();
     }
 
     if (!(await this.storageService.exists(id))) {
-      throw new ServiceUnavailableException();
+      throw new ServiceUnavailableError();
     }
 
     const stream = await this.storageService.readAsStream(id);

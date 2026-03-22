@@ -15,7 +15,14 @@ import {
 const outputMapping = createMapping([
   "id",
   "nome",
-  ["estado", "estado", (estado) => EstadoGraphqlMapper.toFindOneOutputDto(estado)],
+  [
+    "estado",
+    "estado",
+    (estado: unknown) =>
+      EstadoGraphqlMapper.toFindOneOutputDto(
+        estado as import("@/modules/localidades/estado").EstadoFindOneQueryResult,
+      ),
+  ],
 ]);
 
 const listInputMapping = createMapping([

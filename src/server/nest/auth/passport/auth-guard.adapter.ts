@@ -17,7 +17,8 @@ export class AuthGuardAdapter extends AuthGuard(AuthStrategy.ACCESS_TOKEN) {
     return ctx.getContext().req;
   }
 
-  handleRequest(err: any, user: any, _info: any, context: ExecutionContext) {
+  // NOTE: `any` required by Passport AuthGuard base class signature
+  handleRequest(err: Error | null, user: any, _info: unknown, context: ExecutionContext) {
     if (err) {
       throw err;
     }

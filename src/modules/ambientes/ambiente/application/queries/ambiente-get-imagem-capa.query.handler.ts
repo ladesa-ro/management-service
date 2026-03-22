@@ -1,6 +1,6 @@
-import { type StreamableFile } from "@nestjs/common";
 import { ensureExists } from "@/application/errors";
 import { getEntityImagemStreamableFile } from "@/application/helpers";
+import type { IStreamableFileResult } from "@/domain/abstractions/storage";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente";
 import { IAmbienteGetImagemCapaQueryHandler } from "@/modules/ambientes/ambiente/domain/queries/ambiente-get-imagem-capa.query.handler.interface";
@@ -30,7 +30,7 @@ export class AmbienteGetImagemCapaQueryHandlerImpl implements IAmbienteGetImagem
   async execute(
     accessContext: AccessContext | null,
     { id }: AmbienteFindOneQuery,
-  ): Promise<StreamableFile> {
+  ): Promise<IStreamableFileResult> {
     const entity = await this.repository.findById(accessContext, { id });
 
     ensureExists(entity, Ambiente.entityName, id);

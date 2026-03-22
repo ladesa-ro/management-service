@@ -1,7 +1,7 @@
 import type {
-  CalendarioAgendamentoEntity,
   CalendarioAgendamentoTipo,
-} from "@/modules/horarios/calendario-agendamento/infrastructure.database/typeorm/calendario-agendamento.typeorm.entity";
+  ICalendarioAgendamento,
+} from "../calendario-agendamento.types";
 
 /**
  * Token de injecao para o repositorio de CalendarioAgendamento
@@ -20,10 +20,7 @@ export interface ICalendarioAgendamentoFindEventosOptions {
 export interface ICalendarioAgendamentoRepository {
   findEventos(
     options?: ICalendarioAgendamentoFindEventosOptions,
-  ): Promise<CalendarioAgendamentoEntity[]>;
-  findById(
-    id: string,
-    tipo?: CalendarioAgendamentoTipo,
-  ): Promise<CalendarioAgendamentoEntity | null>;
-  save(entity: CalendarioAgendamentoEntity): Promise<CalendarioAgendamentoEntity>;
+  ): Promise<ICalendarioAgendamento[]>;
+  findById(id: string, tipo?: CalendarioAgendamentoTipo): Promise<ICalendarioAgendamento | null>;
+  save(entity: Partial<ICalendarioAgendamento>): Promise<ICalendarioAgendamento>;
 }

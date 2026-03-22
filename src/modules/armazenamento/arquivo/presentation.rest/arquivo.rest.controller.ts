@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query, type StreamableFile } from "@nestjs/common";
+import { Controller, Get, Param, Query, StreamableFile } from "@nestjs/common";
 import {
   ApiForbiddenResponse,
   ApiNotFoundResponse,
@@ -35,6 +35,10 @@ export class ArquivoRestController {
     @Query() query: ArquivoGetFileQueryInputRestDto,
   ): Promise<StreamableFile> {
     const input = ArquivoRestMapper.toGetFileInput(params, query);
-    return this.getStreamableFileHandler.execute(accessContext, input);
+    const result = await this.getStreamableFileHandler.execute(accessContext, input);
+    return new StreamableFile(result.stream, {
+      type: result.mimeType,
+      disposition: result.disposition,
+    });
   }
 }

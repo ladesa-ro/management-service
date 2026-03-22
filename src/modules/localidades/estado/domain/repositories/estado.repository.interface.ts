@@ -1,17 +1,7 @@
-import type { IReadOnlyRepository } from "@/domain/abstractions";
-import {
-  EstadoFindOneQuery,
-  EstadoFindOneQueryResult,
-  EstadoListQuery,
-  EstadoListQueryResult,
-} from "@/modules/localidades/estado";
+import type { IRepositoryFindAll, IRepositoryFindById } from "@/domain/abstractions";
+import { EstadoFindOneQueryResult, EstadoListQueryResult } from "@/modules/localidades/estado";
 
 export const IEstadoRepository = Symbol("IEstadoRepository");
 
-export interface IEstadoRepository
-  extends IReadOnlyRepository<
-    EstadoListQuery,
-    EstadoListQueryResult,
-    EstadoFindOneQuery,
-    EstadoFindOneQueryResult
-  > {}
+export type IEstadoRepository = IRepositoryFindAll<EstadoListQueryResult> &
+  IRepositoryFindById<EstadoFindOneQueryResult>;

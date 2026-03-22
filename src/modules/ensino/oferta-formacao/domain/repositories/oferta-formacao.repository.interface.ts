@@ -1,4 +1,10 @@
-import type { IBaseCrudRepository } from "@/domain/abstractions";
+import type {
+  IRepositoryCreate,
+  IRepositoryFindAll,
+  IRepositoryFindById,
+  IRepositorySoftDelete,
+  IRepositoryUpdate,
+} from "@/domain/abstractions";
 import {
   type IOfertaFormacao,
   OfertaFormacaoFindOneQueryResult,
@@ -11,9 +17,8 @@ export const IOfertaFormacaoRepository = Symbol("IOfertaFormacaoRepository");
  * Port de saída para operações de persistência de OfertaFormacao
  * Estende a interface base de CRUD com operações padrão
  */
-export interface IOfertaFormacaoRepository
-  extends IBaseCrudRepository<
-    IOfertaFormacao,
-    OfertaFormacaoListQueryResult,
-    OfertaFormacaoFindOneQueryResult
-  > {}
+export type IOfertaFormacaoRepository = IRepositoryFindAll<OfertaFormacaoListQueryResult> &
+  IRepositoryFindById<OfertaFormacaoFindOneQueryResult> &
+  IRepositoryCreate<IOfertaFormacao> &
+  IRepositoryUpdate<IOfertaFormacao> &
+  IRepositorySoftDelete;

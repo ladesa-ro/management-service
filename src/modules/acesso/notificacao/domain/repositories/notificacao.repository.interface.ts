@@ -1,18 +1,22 @@
-import type { FindManyOptions, FindOptionsWhere } from "typeorm";
-import type { NotificacaoEntity } from "../../infrastructure.database/typeorm/notificacao.typeorm.entity";
+import type { INotificacao } from "../notificacao.types";
 
 /**
  * Token de injecao para o repositorio de Notificacao
  */
 export const INotificacaoRepository = Symbol("INotificacaoRepository");
 
+export interface INotificacaoFindOptions {
+  where?: Partial<Record<keyof INotificacao, unknown>>;
+  order?: Partial<Record<keyof INotificacao, "ASC" | "DESC">>;
+}
+
 /**
  * Port de saida para operacoes de persistencia de Notificacao
  * Define o contrato que os adapters de persistencia devem implementar
  */
 export interface INotificacaoRepository {
-  find(options?: FindManyOptions<NotificacaoEntity>): Promise<NotificacaoEntity[]>;
-  count(options?: FindManyOptions<NotificacaoEntity>): Promise<number>;
-  findOneBy(where: FindOptionsWhere<NotificacaoEntity>): Promise<NotificacaoEntity | null>;
-  save(entity: NotificacaoEntity): Promise<NotificacaoEntity>;
+  find(options?: INotificacaoFindOptions): Promise<INotificacao[]>;
+  count(options?: INotificacaoFindOptions): Promise<number>;
+  findOneBy(where: Partial<Record<keyof INotificacao, unknown>>): Promise<INotificacao | null>;
+  save(entity: Partial<INotificacao>): Promise<INotificacao>;
 }

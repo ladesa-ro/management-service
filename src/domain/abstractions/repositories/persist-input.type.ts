@@ -32,20 +32,3 @@ export type PersistInput<T> = {
       : { id: I }
     : T[K];
 };
-
-/**
- * Interface para operações de persistência baseadas em dados de domínio
- *
- * @template DomainData - Tipo da interface de domínio (ex: IAmbiente, ICampus)
- */
-export interface IPersistRepository<DomainData> {
-  /**
-   * Cria uma nova entidade a partir de dados de domínio
-   */
-  create(data: Partial<PersistInput<DomainData>>): Promise<{ id: string | number }>;
-
-  /**
-   * Atualiza uma entidade existente a partir de dados parciais de domínio
-   */
-  update(id: string | number, data: Partial<PersistInput<DomainData>>): Promise<void>;
-}

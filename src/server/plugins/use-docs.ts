@@ -12,6 +12,10 @@ import { detectHostAndProtocolFromRequest } from "./detect-host-and-protocol-fro
 export const useDocs = (app: INestApplication) => {
   const runtimeOptions = app.get<IRuntimeOptions>(IRuntimeOptionsToken);
 
+  if (runtimeOptions.nodeEnv === "production") {
+    return;
+  }
+
   const prefix = runtimeOptions.prefix;
 
   const paths = {

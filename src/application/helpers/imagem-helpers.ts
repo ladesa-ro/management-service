@@ -1,9 +1,9 @@
-import type { StreamableFile } from "@nestjs/common";
 import { ResourceNotFoundError } from "@/application/errors";
+import type { IStreamableFileResult } from "@/domain/abstractions/storage";
 import type { AccessContext } from "@/server/access-context";
 
 /**
- * Obtém o StreamableFile de um campo de imagem de uma entidade.
+ * Obtém o IStreamableFileResult de um campo de imagem de uma entidade.
  *
  * Reutilizável por qualquer handler que possua campos de imagem.
  */
@@ -19,9 +19,12 @@ export async function getEntityImagemStreamableFile(
     ): Promise<string | null>;
   },
   getStreamableFileHandler: {
-    execute(accessContext: AccessContext | null, query: { id: string }): Promise<StreamableFile>;
+    execute(
+      accessContext: AccessContext | null,
+      query: { id: string },
+    ): Promise<IStreamableFileResult>;
   },
-): Promise<StreamableFile> {
+): Promise<IStreamableFileResult> {
   const imagem = entity[fieldName];
 
   if (imagem?.id) {

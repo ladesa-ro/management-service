@@ -1,4 +1,4 @@
-import type { Provider } from "@nestjs/common";
+import { Logger, type Provider } from "@nestjs/common";
 import { DataSource, type DataSourceOptions } from "typeorm";
 import { DataSourceAppFactory } from "@/infrastructure.database/data-sources/factories/data-source-app-factory";
 import { IDatabaseOptions } from "@/infrastructure.database/options/database-options.interface";
@@ -11,18 +11,18 @@ export const AppTypeormConnectionProvider: Provider = {
   useFactory: async (opts: IDatabaseOptions) => {
     const dataSource = new DataSource(DataSourceAppFactory.fromOptions(opts) as DataSourceOptions);
 
-    console.log("[INFO] app data source created.");
+    Logger.log("App data source created.", "TypeORM");
 
-    console.log("[INFO] initializing app data source...");
+    Logger.log("Initializing app data source...", "TypeORM");
 
     const initializePromise = dataSource.initialize();
 
     initializePromise
       .then(() => {
-        console.log("[INFO] app data source initialized.");
+        Logger.log("App data source initialized.", "TypeORM");
       })
       .catch(() => {
-        console.log("[INFO] app data source can not be initialized.");
+        Logger.error("App data source can not be initialized.", undefined, "TypeORM");
       });
 
     const initializedDataSource = await initializePromise;

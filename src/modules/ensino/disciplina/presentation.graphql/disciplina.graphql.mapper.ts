@@ -5,7 +5,7 @@ import {
   DisciplinaListQuery,
   DisciplinaUpdateCommand,
 } from "@/modules/ensino/disciplina";
-import { createListOutputMapper, mapDatedFields } from "@/shared/mapping";
+import { createListOutputMapper, mapDatedFields, mapImagemOutput } from "@/shared/mapping";
 import {
   DisciplinaCreateInputGraphQlDto,
   DisciplinaFindOneOutputGraphQlDto,
@@ -13,37 +13,6 @@ import {
   DisciplinaListOutputGraphQlDto,
   DisciplinaUpdateInputGraphQlDto,
 } from "./disciplina.graphql.dto";
-
-function mapImagemOutput(imagem: any): any {
-  if (!imagem) return null;
-  return {
-    id: imagem.id,
-    descricao: imagem.descricao,
-    versoes: (imagem.versoes || []).map((v: any) => ({
-      id: v.id,
-      largura: v.largura,
-      altura: v.altura,
-      formato: v.formato,
-      mimeType: v.mimeType,
-      arquivo: {
-        id: v.arquivo.id,
-        name: v.arquivo.name,
-        mimeType: v.arquivo.mimeType,
-        sizeBytes: v.arquivo.sizeBytes,
-        storageType: v.arquivo.storageType,
-        dateCreated: v.arquivo.dateCreated,
-        dateUpdated: v.arquivo.dateUpdated,
-        dateDeleted: v.arquivo.dateDeleted,
-      },
-      dateCreated: v.dateCreated,
-      dateUpdated: v.dateUpdated,
-      dateDeleted: v.dateDeleted,
-    })),
-    dateCreated: imagem.dateCreated,
-    dateUpdated: imagem.dateUpdated,
-    dateDeleted: imagem.dateDeleted,
-  };
-}
 
 export class DisciplinaGraphqlMapper {
   static toListInput(dto: DisciplinaListInputGraphQlDto | null): DisciplinaListQuery | null {

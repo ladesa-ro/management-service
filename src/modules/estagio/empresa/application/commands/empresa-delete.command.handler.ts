@@ -1,5 +1,4 @@
-import { InternalServerErrorException } from "@nestjs/common";
-import { ResourceNotFoundError } from "@/application/errors";
+import { InternalError, ResourceNotFoundError } from "@/application/errors";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { IEmpresaDeleteCommandHandler } from "@/modules/estagio/empresa/domain/commands/empresa-delete.command.handler.interface";
 import type { EmpresaFindOneQuery } from "@/modules/estagio/empresa/domain/queries";
@@ -20,7 +19,7 @@ export class EmpresaDeleteCommandHandlerImpl implements IEmpresaDeleteCommandHan
       if (error instanceof ResourceNotFoundError) {
         throw error;
       }
-      throw new InternalServerErrorException("Erro ao deletar empresa");
+      throw new InternalError("Erro ao deletar empresa");
     }
   }
 }

@@ -1,9 +1,9 @@
-import type { TurmaHorarioAulaEntity } from "../../infrastructure.database/typeorm/turma-horario-aula.typeorm.entity";
+import type { ITurmaHorarioAula } from "../turma-horario-aula.types";
 
 export const ITurmaHorarioAulaRepository = Symbol("ITurmaHorarioAulaRepository");
 
 export interface ITurmaHorarioAulaRepository {
-  findByTurmaId(turmaId: string): Promise<TurmaHorarioAulaEntity[]>;
+  findByTurmaId(turmaId: string): Promise<ITurmaHorarioAula[]>;
   deleteByTurmaId(turmaId: string): Promise<void>;
-  save(entity: TurmaHorarioAulaEntity): Promise<TurmaHorarioAulaEntity>;
+  save(entity: Partial<ITurmaHorarioAula>): Promise<ITurmaHorarioAula>;
 }

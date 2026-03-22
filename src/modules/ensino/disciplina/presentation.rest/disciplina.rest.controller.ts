@@ -8,6 +8,7 @@ import {
   Post,
   Put,
   Query,
+  StreamableFile,
   UploadedFile,
   UseInterceptors,
 } from "@nestjs/common";
@@ -149,7 +150,11 @@ export class DisciplinaRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: DisciplinaFindOneInputRestDto,
   ) {
-    return this.getImagemCapaHandler.execute(accessContext, { id: params.id });
+    const result = await this.getImagemCapaHandler.execute(accessContext, { id: params.id });
+    return new StreamableFile(result.stream, {
+      type: result.mimeType,
+      disposition: result.disposition,
+    });
   }
 
   @Put("/:id/imagem/capa")

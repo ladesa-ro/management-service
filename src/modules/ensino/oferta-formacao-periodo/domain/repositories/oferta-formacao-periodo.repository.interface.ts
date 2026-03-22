@@ -1,9 +1,9 @@
-import type { OfertaFormacaoPeriodoEntity } from "../../infrastructure.database/typeorm/oferta-formacao-periodo.typeorm.entity";
+import type { IOfertaFormacaoPeriodo } from "../oferta-formacao-periodo.types";
 
 export const IOfertaFormacaoPeriodoRepository = Symbol("IOfertaFormacaoPeriodoRepository");
 
 export interface IOfertaFormacaoPeriodoRepository {
-  findByOfertaFormacaoId(ofertaFormacaoId: string): Promise<OfertaFormacaoPeriodoEntity[]>;
+  findByOfertaFormacaoId(ofertaFormacaoId: string): Promise<IOfertaFormacaoPeriodo[]>;
   deleteByOfertaFormacaoId(ofertaFormacaoId: string): Promise<void>;
-  save(entity: OfertaFormacaoPeriodoEntity): Promise<OfertaFormacaoPeriodoEntity>;
+  save(entity: Partial<IOfertaFormacaoPeriodo>): Promise<IOfertaFormacaoPeriodo>;
 }

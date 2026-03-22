@@ -4,7 +4,7 @@ import {
   defineModel,
   referenceProperty,
   simpleProperty,
-} from "@/infrastructure.database/typeorm/metadata/model-registry";
+} from "@/domain/abstractions/metadata/model-registry";
 import { CidadeFindOneQueryResult } from "@/modules/localidades/cidade";
 
 export class EnderecoFindOneQueryResult extends EntityQueryResult {

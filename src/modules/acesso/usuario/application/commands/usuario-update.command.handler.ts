@@ -1,6 +1,5 @@
-import { ServiceUnavailableException } from "@nestjs/common";
 import { has } from "lodash";
-import { ensureExists, ValidationFailedException } from "@/application/errors";
+import { ensureExists, ServiceUnavailableError, ValidationError } from "@/application/errors";
 import { IIdpUserService } from "@/domain/abstractions/identity-provider";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { UsuarioUpdateCommand } from "@/modules/acesso/usuario/domain/commands/usuario-update.command";
@@ -33,16 +32,16 @@ export class UsuarioUpdateCommandHandlerImpl implements IUsuarioUpdateCommandHan
 
     const currentMatricula =
       currentUsuario.matricula ??
-      (await this.repository.resolveProperty(currentUsuario.id, "matricula"));
+      ((await this.repository.resolveProperty(currentUsuario.id, "matricula")) as string | null);
 
     if (!currentMatricula) {
-      throw new ServiceUnavailableException();
+      throw new ServiceUnavailableError();
     }
 
     const exists = await this.idpUserService.existsByMatricula(currentMatricula);
 
     if (!exists) {
-      throw new ServiceUnavailableException();
+      throw new ServiceUnavailableError();
     }
 
     await this.permissionChecker.ensureCanUpdate(accessContext, { dto }, dto.id);
@@ -100,32 +99,27 @@ export class UsuarioUpdateCommandHandlerImpl implements IUsuarioUpdateCommandHan
     }
 
     if (!isMatriculaAvailable || !isEmailAvailable) {
-      throw new ValidationFailedException([
+      const details = [
         ...(!isEmailAvailable
           ? [
               {
-                scope: "body",
-                path: "email",
-                type: "email-is-available",
-                errors: ["O e-mail informado nao esta disponivel."],
-                name: "ValidationError",
+                field: "email",
                 message: "O e-mail informado nao esta disponivel.",
+                rule: "email-is-available",
               },
             ]
           : []),
         ...(!isMatriculaAvailable
           ? [
               {
-                scope: "body",
-                path: "matricula",
-                type: "matricula-is-available",
-                errors: ["A matricula informada nao esta disponivel."],
-                name: "ValidationError",
+                field: "matricula",
                 message: "A matricula informada nao esta disponivel.",
+                rule: "matricula-is-available",
               },
             ]
           : []),
-      ]);
+      ];
+      throw new ValidationError(details);
     }
   }
 }

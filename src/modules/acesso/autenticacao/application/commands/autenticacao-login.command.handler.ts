@@ -1,4 +1,4 @@
-import { BadRequestException, ForbiddenException } from "@nestjs/common";
+import { ForbiddenError, ValidationError } from "@/application/errors";
 import { IIdpTokenService, IIdpUserService } from "@/domain/abstractions/identity-provider";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { IAutenticacaoLoginCommandHandler } from "@/modules/acesso/autenticacao/domain/commands/autenticacao-login.command.handler.interface";
@@ -23,7 +23,7 @@ export class AutenticacaoLoginCommandHandlerImpl implements IAutenticacaoLoginCo
     dto: AuthLoginCommand,
   ): Promise<AuthSessionCredentials> {
     if (accessContext?.requestActor !== null) {
-      throw new BadRequestException("Você não pode usar a rota de login caso já esteja logado.");
+      throw new ValidationError([], "Você não pode usar a rota de login caso já esteja logado.");
     }
 
     const usuario = await this.usuarioFindByMatriculaHandler.execute(null, {
@@ -39,6 +39,6 @@ export class AutenticacaoLoginCommandHandlerImpl implements IAutenticacaoLoginCo
       }
     } catch (_error) {}
 
-    throw new ForbiddenException("Credenciais inválidas.");
+    throw new ForbiddenError("Credenciais inválidas.");
   }
 }

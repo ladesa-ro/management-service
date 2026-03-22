@@ -1,4 +1,10 @@
-import type { IBaseCrudRepository } from "@/domain/abstractions";
+import type {
+  IRepositoryCreate,
+  IRepositoryFindAll,
+  IRepositoryFindById,
+  IRepositorySoftDelete,
+  IRepositoryUpdate,
+} from "@/domain/abstractions";
 import type { IDiario } from "@/modules/ensino/diario";
 import type { DiarioFindOneQueryResult, DiarioListQueryResult } from "../queries";
 /**
@@ -10,5 +16,8 @@ export const IDiarioRepository = Symbol("IDiarioRepository");
  * Port de saída para operações de persistência de Diario
  * Estende a interface base de CRUD com operações padrão
  */
-export interface IDiarioRepository
-  extends IBaseCrudRepository<IDiario, DiarioListQueryResult, DiarioFindOneQueryResult> {}
+export type IDiarioRepository = IRepositoryFindAll<DiarioListQueryResult> &
+  IRepositoryFindById<DiarioFindOneQueryResult> &
+  IRepositoryCreate<IDiario> &
+  IRepositoryUpdate<IDiario> &
+  IRepositorySoftDelete;

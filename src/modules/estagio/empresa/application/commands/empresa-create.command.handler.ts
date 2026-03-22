@@ -1,5 +1,4 @@
-import { InternalServerErrorException } from "@nestjs/common";
-import { ResourceNotFoundError } from "@/application/errors";
+import { InternalError, ResourceNotFoundError } from "@/application/errors";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { EmpresaCreateCommand } from "@/modules/estagio/empresa/domain/commands/empresa-create.command";
 import { IEmpresaCreateCommandHandler } from "@/modules/estagio/empresa/domain/commands/empresa-create.command.handler.interface";
@@ -24,7 +23,7 @@ export class EmpresaCreateCommandHandlerImpl implements IEmpresaCreateCommandHan
       if (error instanceof ResourceNotFoundError) {
         throw error;
       }
-      throw new InternalServerErrorException("Erro ao criar empresa");
+      throw new InternalError("Erro ao criar empresa");
     }
   }
 }

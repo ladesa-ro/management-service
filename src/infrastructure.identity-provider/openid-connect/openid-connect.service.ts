@@ -1,4 +1,5 @@
 import * as client from "openid-client";
+import { ILoggerPort, ILoggerPort as ILoggerPortToken } from "@/domain/abstractions/logging";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { IAuthOptions } from "../options/auth-options.interface";
 import { IAuthOptions as IAuthOptionsToken } from "../options/auth-options.interface";
@@ -11,6 +12,8 @@ export class OpenidConnectService {
   constructor(
     @DeclareDependency(IAuthOptionsToken)
     readonly authOptions: IAuthOptions,
+    @DeclareDependency(ILoggerPortToken)
+    private readonly logger: ILoggerPort,
   ) {}
 
   async setup(): Promise<boolean> {
@@ -25,7 +28,11 @@ export class OpenidConnectService {
         this.config = config;
         this.#initialized = true;
       } catch (error) {
-        console.log(error);
+        this.logger.error(
+          String(error),
+          error instanceof Error ? error.stack : undefined,
+          "OpenidConnect",
+        );
       }
     }
 

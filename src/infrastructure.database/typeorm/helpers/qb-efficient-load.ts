@@ -1,9 +1,10 @@
+import { Logger } from "@nestjs/common";
 import { uniq } from "lodash";
 import { SelectQueryBuilder } from "typeorm";
 import {
   type ModelRepresentation,
   modelRegistry,
-} from "@/infrastructure.database/typeorm/metadata/model-registry";
+} from "@/domain/abstractions/metadata/model-registry";
 
 export const QbEfficientLoadCore = (
   modelRepresentation: ModelRepresentation,
@@ -37,7 +38,7 @@ export const QbEfficientLoadCore = (
     const propertyKey = propertyRepresentation.name;
 
     if (!Object.hasOwn(propertiesMap, propertyKey)) {
-      console.warn(`-> entity ${metadata?.name} dont have path ${propertyKey}.`);
+      Logger.warn(`Entity ${metadata?.name} does not have path ${propertyKey}.`, "QbEfficientLoad");
       continue;
     }
 
@@ -59,8 +60,11 @@ export const QbEfficientLoadCore = (
       const referenceName = propertyRepresentation.reference.name;
 
       if (parent.includes(referenceName)) {
-        console.warn(`${QbEfficientLoad.name}: detected infinite recursion for ${referenceName}`);
-        console.debug({ propertyNodeEntityId: referenceName, parent });
+        Logger.warn(`Detected infinite recursion for ${referenceName}`, "QbEfficientLoad");
+        Logger.debug(
+          `propertyNodeEntityId=${referenceName}, parent=${JSON.stringify(parent)}`,
+          "QbEfficientLoad",
+        );
         continue;
       }
 

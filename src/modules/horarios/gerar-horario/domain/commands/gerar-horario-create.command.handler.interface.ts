@@ -1,6 +1,6 @@
 import { createOperationMetadata } from "@/domain/abstractions";
 import type { AccessContext } from "@/server/access-context";
-import type { GerarHorarioEntity } from "../../infrastructure.database/typeorm/gerar-horario.typeorm.entity";
+import type { IGerarHorario } from "../gerar-horario.types";
 
 export interface IGerarHorarioCreateCommand {
   dataInicio: string;
@@ -18,5 +18,5 @@ export interface IGerarHorarioCreateCommandHandler {
   execute(
     accessContext: AccessContext | null,
     command: IGerarHorarioCreateCommand,
-  ): Promise<GerarHorarioEntity>;
+  ): Promise<IGerarHorario>;
 }

@@ -1,5 +1,6 @@
 import KeycloakAdminClient from "@keycloak/keycloak-admin-client";
 import type { Credentials } from "@keycloak/keycloak-admin-client/lib/utils/auth";
+import { ILoggerPort, ILoggerPort as ILoggerPortToken } from "@/domain/abstractions/logging";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { wait } from "@/utils/wait";
 import type { IAuthOptions } from "../options/auth-options.interface";
@@ -16,6 +17,8 @@ export class KeycloakService {
   constructor(
     @DeclareDependency(IAuthOptionsToken)
     readonly authOptions: IAuthOptions,
+    @DeclareDependency(ILoggerPortToken)
+    private readonly logger: ILoggerPort,
   ) {}
 
   get keycloakConfigCredentials() {
@@ -48,7 +51,11 @@ export class KeycloakService {
 
         this.#initialized = true;
       } catch (error) {
-        console.error("[KeycloakService::error] Can not connect to KeyCloak.", { error });
+        this.logger.error(
+          "Can not connect to KeyCloak.",
+          error instanceof Error ? error.stack : undefined,
+          "KeycloakService",
+        );
         await this.clearAuthInterval();
       }
     }
@@ -71,7 +78,7 @@ export class KeycloakService {
       try {
         await kcAdminClient.auth(credentials);
       } catch (e) {
-        console.error("[KeycloakService::error] Can not connect to KeyCloak.");
+        this.logger.error("Can not connect to KeyCloak.", undefined, "KeycloakService");
         throw e;
       } finally {
         kcAdminClient.setConfig({ realmName: currentRealm });

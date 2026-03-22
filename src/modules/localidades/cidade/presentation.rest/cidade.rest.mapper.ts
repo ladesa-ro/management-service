@@ -15,7 +15,14 @@ import {
 const outputMapping = createMapping([
   "id",
   "nome",
-  ["estado", "estado", (estado) => EstadoRestMapper.toFindOneOutputDto(estado)],
+  [
+    "estado",
+    "estado",
+    (estado: unknown) =>
+      EstadoRestMapper.toFindOneOutputDto(
+        estado as import("@/modules/localidades/estado").EstadoFindOneQueryResult,
+      ),
+  ],
 ]);
 
 export class CidadeRestMapper {

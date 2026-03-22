@@ -6,7 +6,7 @@ import {
   BlocoUpdateCommand,
 } from "@/modules/ambientes/bloco";
 import { CampusGraphqlMapper } from "@/modules/ambientes/campus/presentation.graphql/campus.graphql.mapper";
-import { createListOutputMapper, mapDatedFields } from "@/shared/mapping";
+import { createListOutputMapper, mapDatedFields, mapImagemOutput } from "@/shared/mapping";
 import {
   BlocoCreateInputGraphQlDto,
   BlocoFindOneOutputGraphQlDto,
@@ -14,38 +14,6 @@ import {
   BlocoListOutputGraphQlDto,
   BlocoUpdateInputGraphQlDto,
 } from "./bloco.graphql.dto";
-
-// Helper to map imagem output
-function mapImagemOutput(imagem: any): any {
-  if (!imagem) return null;
-  return {
-    id: imagem.id,
-    descricao: imagem.descricao,
-    versoes: (imagem.versoes || []).map((v: any) => ({
-      id: v.id,
-      largura: v.largura,
-      altura: v.altura,
-      formato: v.formato,
-      mimeType: v.mimeType,
-      arquivo: {
-        id: v.arquivo.id,
-        name: v.arquivo.name,
-        mimeType: v.arquivo.mimeType,
-        sizeBytes: v.arquivo.sizeBytes,
-        storageType: v.arquivo.storageType,
-        dateCreated: v.arquivo.dateCreated,
-        dateUpdated: v.arquivo.dateUpdated,
-        dateDeleted: v.arquivo.dateDeleted,
-      },
-      dateCreated: v.dateCreated,
-      dateUpdated: v.dateUpdated,
-      dateDeleted: v.dateDeleted,
-    })),
-    dateCreated: imagem.dateCreated,
-    dateUpdated: imagem.dateUpdated,
-    dateDeleted: imagem.dateDeleted,
-  };
-}
 
 export class BlocoGraphqlMapper {
   static toListInput(dto: BlocoListInputGraphQlDto | null): BlocoListQuery | null {

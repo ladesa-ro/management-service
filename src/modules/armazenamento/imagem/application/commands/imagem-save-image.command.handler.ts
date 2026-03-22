@@ -1,5 +1,6 @@
-import { ServiceUnavailableException, UnprocessableEntityException } from "@nestjs/common";
 import sharp from "sharp";
+import { ServiceUnavailableError, ValidationError } from "@/application/errors";
+import { ILoggerPort, ILoggerPort as ILoggerPortToken } from "@/domain/abstractions/logging";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { IArquivoCreateCommandHandler } from "@/modules/armazenamento/arquivo/domain/commands";
@@ -22,6 +23,8 @@ export class ImagemSaveImageCommandHandlerImpl implements IImagemSaveImageComman
     private readonly imagemRepository: IImagemRepository,
     @DeclareDependency(IImagemArquivoRepository)
     private readonly imagemArquivoRepository: IImagemArquivoRepository,
+    @DeclareDependency(ILoggerPortToken)
+    private readonly logger: ILoggerPort,
   ) {}
 
   async execute(
@@ -37,14 +40,15 @@ export class ImagemSaveImageCommandHandlerImpl implements IImagemSaveImageComman
     const metadata = await originalImage.metadata().catch(() => null);
 
     if (!metadata) {
-      throw new UnprocessableEntityException("Formato de imagem não suportada ou inválida.");
+      throw new ValidationError([], "Formato de imagem não suportada ou inválida.");
     }
 
     if (
       (options.minWidth !== null && (!metadata.width || metadata.width < options.minWidth)) ||
       (options.minHeight !== null && (!metadata.height || metadata.height < options.minHeight))
     ) {
-      throw new UnprocessableEntityException(
+      throw new ValidationError(
+        [],
         `A imagem deve conter largura mínima de ${options.minWidth}px e altura mínima de ${options.minHeight}px.`,
       );
     }
@@ -107,8 +111,12 @@ export class ImagemSaveImageCommandHandlerImpl implements IImagemSaveImageComman
         },
       };
     } catch (err) {
-      console.error(err);
-      throw new ServiceUnavailableException();
+      this.logger.error(
+        String(err),
+        err instanceof Error ? err.stack : undefined,
+        "ImagemSaveImage",
+      );
+      throw new ServiceUnavailableError();
     }
   }
 }

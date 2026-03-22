@@ -1,4 +1,11 @@
-import type { IBaseCrudRepository } from "@/domain/abstractions";
+import type {
+  IRepositoryCreate,
+  IRepositoryFindAll,
+  IRepositoryFindById,
+  IRepositoryFindByIdSimple,
+  IRepositorySoftDelete,
+  IRepositoryUpdate,
+} from "@/domain/abstractions";
 import type { AccessContext } from "@/server/access-context";
 import type { ICalendarioLetivoDia } from "../calendario-letivo-dia";
 import type {
@@ -8,22 +15,17 @@ import type {
 
 export const ICalendarioLetivoDiaRepository = Symbol("ICalendarioLetivoDiaRepository");
 
-export interface ICalendarioLetivoDiaRepository
-  extends IBaseCrudRepository<
-    ICalendarioLetivoDia,
-    CalendarioLetivoDiaListQueryResult,
-    CalendarioLetivoDiaFindOneQueryResult
-  > {
-  findByCalendarioAndDate(
-    accessContext: AccessContext | null,
-    calendarioLetivoId: string,
-    data: string,
-    selection?: string[],
-  ): Promise<CalendarioLetivoDiaFindOneQueryResult | null>;
-
-  findByIdSimple(
-    accessContext: AccessContext | null,
-    id: string,
-    selection?: string[],
-  ): Promise<CalendarioLetivoDiaFindOneQueryResult | null>;
-}
+export type ICalendarioLetivoDiaRepository =
+  IRepositoryFindAll<CalendarioLetivoDiaListQueryResult> &
+    IRepositoryFindById<CalendarioLetivoDiaFindOneQueryResult> &
+    IRepositoryFindByIdSimple<CalendarioLetivoDiaFindOneQueryResult> &
+    IRepositoryCreate<ICalendarioLetivoDia> &
+    IRepositoryUpdate<ICalendarioLetivoDia> &
+    IRepositorySoftDelete & {
+      findByCalendarioAndDate(
+        accessContext: AccessContext | null,
+        calendarioLetivoId: string,
+        data: string,
+        selection?: string[],
+      ): Promise<CalendarioLetivoDiaFindOneQueryResult | null>;
+    };

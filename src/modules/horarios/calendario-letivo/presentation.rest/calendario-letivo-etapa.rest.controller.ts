@@ -16,7 +16,6 @@ import {
 } from "../domain/calendario-letivo-etapa.operations";
 import { ICalendarioLetivoRepository } from "../domain/repositories/calendario-letivo.repository.interface";
 import { ICalendarioLetivoEtapaRepository } from "../domain/repositories/calendario-letivo-etapa.repository.interface";
-import { CalendarioLetivoEtapaEntity } from "../infrastructure.database/typeorm/calendario-letivo-etapa.typeorm.entity";
 import { CalendarioLetivoFindOneInputRestDto } from "./calendario-letivo.rest.dto";
 import {
   CalendarioLetivoEtapaBulkReplaceInputRestDto,
@@ -78,20 +77,16 @@ export class CalendarioLetivoEtapaRestController {
     // Insert new
     const now = new Date();
     for (const item of dto.etapas) {
-      const entity = new CalendarioLetivoEtapaEntity();
-      entity.id = generateUuidV7();
-      entity.calendarioLetivo = {
-        id: calendarioLetivoId,
-      } as CalendarioLetivoEtapaEntity["calendarioLetivo"];
-      entity.ofertaFormacaoPeriodoEtapa = {
-        id: item.ofertaFormacaoPeriodoEtapaId,
-      } as CalendarioLetivoEtapaEntity["ofertaFormacaoPeriodoEtapa"];
-      entity.dataInicio = new Date(item.dataInicio);
-      entity.dataTermino = new Date(item.dataTermino);
-      entity.dateCreated = now;
-      entity.dateUpdated = now;
-      entity.dateDeleted = null;
-      await this.etapaRepository.save(entity);
+      await this.etapaRepository.save({
+        id: generateUuidV7(),
+        calendarioLetivo: { id: calendarioLetivoId },
+        ofertaFormacaoPeriodoEtapa: { id: item.ofertaFormacaoPeriodoEtapaId },
+        dataInicio: new Date(item.dataInicio),
+        dataTermino: new Date(item.dataTermino),
+        dateCreated: now,
+        dateUpdated: now,
+        dateDeleted: null,
+      });
     }
 
     return this.findAll(_accessContext, parentParams);

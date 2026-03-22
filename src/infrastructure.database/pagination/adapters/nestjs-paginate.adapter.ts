@@ -22,10 +22,11 @@ export class NestJsPaginateAdapter {
     const paginateQuery: PaginateQuery = this.buildPaginateQuery(criteria);
 
     // Converte IPaginationConfig para PaginateConfig do nestjs-paginate
-    const paginateConfigMerged: PaginateConfig<T> = {
+    // Cast needed because paginateConfig base defaults are spread with entity-specific config
+    const paginateConfigMerged = {
       ...paginateConfig,
       ...config,
-    };
+    } as PaginateConfig<T>;
 
     // Executa a paginação usando nestjs-paginate
     const result = await paginate(paginateQuery, queryBuilder.clone(), paginateConfigMerged);

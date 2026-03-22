@@ -1,6 +1,6 @@
-import type { StreamableFile } from "@nestjs/common";
 import type { IQueryHandler } from "@/domain/abstractions";
 import { createOperationMetadata } from "@/domain/abstractions";
+import type { IStreamableFileResult } from "@/domain/abstractions/storage";
 import type { UsuarioFindOneQuery } from "./usuario-find-one.query";
 
 export const UsuarioGetImagemCapaQueryMetadata = createOperationMetadata({
@@ -10,4 +10,7 @@ export const UsuarioGetImagemCapaQueryMetadata = createOperationMetadata({
 
 export const IUsuarioGetImagemCapaQueryHandler = Symbol("IUsuarioGetImagemCapaQueryHandler");
 
-export type IUsuarioGetImagemCapaQueryHandler = IQueryHandler<UsuarioFindOneQuery, StreamableFile>;
+export type IUsuarioGetImagemCapaQueryHandler = IQueryHandler<
+  UsuarioFindOneQuery,
+  IStreamableFileResult
+>;

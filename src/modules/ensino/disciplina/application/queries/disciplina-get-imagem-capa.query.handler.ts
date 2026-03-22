@@ -1,6 +1,6 @@
-import { type StreamableFile } from "@nestjs/common";
 import { ensureExists } from "@/application/errors";
 import { getEntityImagemStreamableFile } from "@/application/helpers";
+import type { IStreamableFileResult } from "@/domain/abstractions/storage";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
   IArquivoGetStreamableFileQueryHandler,
@@ -32,7 +32,7 @@ export class DisciplinaGetImagemCapaQueryHandlerImpl
   async execute(
     accessContext: AccessContext | null,
     { id }: DisciplinaFindOneQuery,
-  ): Promise<StreamableFile> {
+  ): Promise<IStreamableFileResult> {
     const entity = await this.repository.findById(accessContext, { id });
 
     ensureExists(entity, Disciplina.entityName, id);

@@ -1,9 +1,9 @@
-import type { CursoPeriodoDisciplinaEntity } from "../../infrastructure.database/typeorm/curso-periodo-disciplina.typeorm.entity";
+import type { ICursoPeriodoDisciplina } from "../curso-periodo-disciplina.types";
 
 export const ICursoPeriodoDisciplinaRepository = Symbol("ICursoPeriodoDisciplinaRepository");
 
 export interface ICursoPeriodoDisciplinaRepository {
-  findByCursoId(cursoId: string): Promise<CursoPeriodoDisciplinaEntity[]>;
+  findByCursoId(cursoId: string): Promise<ICursoPeriodoDisciplina[]>;
   deleteByCursoId(cursoId: string): Promise<void>;
-  save(entity: CursoPeriodoDisciplinaEntity): Promise<CursoPeriodoDisciplinaEntity>;
+  save(entity: Partial<ICursoPeriodoDisciplina>): Promise<ICursoPeriodoDisciplina>;
 }

@@ -7,7 +7,7 @@ import {
   TurmaListQuery,
   TurmaUpdateCommand,
 } from "@/modules/ensino/turma";
-import { createListOutputMapper, mapDatedFields } from "@/shared/mapping";
+import { createListOutputMapper, mapDatedFields, mapImagemOutput } from "@/shared/mapping";
 import {
   TurmaCreateInputGraphQlDto,
   TurmaFindOneOutputGraphQlDto,
@@ -15,38 +15,6 @@ import {
   TurmaListOutputGraphQlDto,
   TurmaUpdateInputGraphQlDto,
 } from "./turma.graphql.dto";
-
-// Helper to map imagem output
-function mapImagemOutput(imagem: any): any {
-  if (!imagem) return null;
-  return {
-    id: imagem.id,
-    descricao: imagem.descricao,
-    versoes: (imagem.versoes || []).map((v: any) => ({
-      id: v.id,
-      largura: v.largura,
-      altura: v.altura,
-      formato: v.formato,
-      mimeType: v.mimeType,
-      arquivo: {
-        id: v.arquivo.id,
-        name: v.arquivo.name,
-        mimeType: v.arquivo.mimeType,
-        sizeBytes: v.arquivo.sizeBytes,
-        storageType: v.arquivo.storageType,
-        dateCreated: v.arquivo.dateCreated,
-        dateUpdated: v.arquivo.dateUpdated,
-        dateDeleted: v.arquivo.dateDeleted,
-      },
-      dateCreated: v.dateCreated,
-      dateUpdated: v.dateUpdated,
-      dateDeleted: v.dateDeleted,
-    })),
-    dateCreated: imagem.dateCreated,
-    dateUpdated: imagem.dateUpdated,
-    dateDeleted: imagem.dateDeleted,
-  };
-}
 
 export class TurmaGraphqlMapper {
   static toListInput(dto: TurmaListInputGraphQlDto | null): TurmaListQuery | null {

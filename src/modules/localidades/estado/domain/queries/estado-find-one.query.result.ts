@@ -1,7 +1,7 @@
 import { SharedFields } from "@/domain/abstractions";
+import { fieldsToProperties } from "@/domain/abstractions/metadata/model-from-fields";
+import { defineModel } from "@/domain/abstractions/metadata/model-registry";
 import type { IdNumeric } from "@/domain/abstractions/scalars";
-import { fieldsToProperties } from "@/infrastructure.database/typeorm/metadata/model-from-fields";
-import { defineModel } from "@/infrastructure.database/typeorm/metadata/model-registry";
 import { EstadoFields } from "../estado.fields";
 
 export const EstadoFindOneQueryResultFields = {

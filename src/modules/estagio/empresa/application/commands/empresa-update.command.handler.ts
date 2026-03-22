@@ -1,5 +1,4 @@
-import { InternalServerErrorException } from "@nestjs/common";
-import { ResourceNotFoundError } from "@/application/errors";
+import { InternalError, ResourceNotFoundError } from "@/application/errors";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { EmpresaUpdateCommand } from "@/modules/estagio/empresa/domain/commands/empresa-update.command";
 import { IEmpresaUpdateCommandHandler } from "@/modules/estagio/empresa/domain/commands/empresa-update.command.handler.interface";
@@ -26,7 +25,7 @@ export class EmpresaUpdateCommandHandlerImpl implements IEmpresaUpdateCommandHan
       if (error instanceof ResourceNotFoundError) {
         throw error;
       }
-      throw new InternalServerErrorException("Erro ao atualizar empresa");
+      throw new InternalError("Erro ao atualizar empresa");
     }
   }
 }

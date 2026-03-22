@@ -64,8 +64,8 @@ export class NotificacaoRestController {
   async marcarLida(@AccessContextHttp() _accessContext: AccessContext, @Param("id") id: string) {
     const entity = await this.notificacaoRepository.findOneBy({ id });
     ensureExists(entity, "Notificacao", id);
-    entity!.lida = true;
-    await this.notificacaoRepository.save(entity!);
+    entity.lida = true;
+    await this.notificacaoRepository.save(entity);
     return { success: true };
   }
 }

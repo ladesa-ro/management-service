@@ -1,5 +1,4 @@
-import { InternalServerErrorException } from "@nestjs/common";
-import { ResourceNotFoundError } from "@/application/errors";
+import { InternalError, ResourceNotFoundError } from "@/application/errors";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { IEstagioDeleteCommandHandler } from "@/modules/estagio/estagio/domain/commands/estagio-delete.command.handler.interface";
 import type { EstagioFindOneQuery } from "@/modules/estagio/estagio/domain/queries";
@@ -20,7 +19,7 @@ export class EstagioDeleteCommandHandlerImpl implements IEstagioDeleteCommandHan
       if (error instanceof ResourceNotFoundError) {
         throw error;
       }
-      throw new InternalServerErrorException("Erro ao deletar estágio");
+      throw new InternalError("Erro ao deletar estágio");
     }
   }
 }

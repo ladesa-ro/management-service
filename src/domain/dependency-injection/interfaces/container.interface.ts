@@ -1,5 +1,5 @@
 export const IContainer = Symbol("IContainer");
 
 export interface IContainer {
-  get<T>(token: any): T;
+  get<T>(token: string | symbol | (abstract new (...args: unknown[]) => T)): T;
 }

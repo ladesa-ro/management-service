@@ -90,17 +90,17 @@ export class TurmaEventoTypeOrmRepositoryAdapter implements ITurmaEventoReposito
     const entity = await this.calendarioAgendamentoRepository.findById(eventoId);
     ensureExists(entity, "TurmaEvento", eventoId);
 
-    if (data.nome !== undefined) entity!.nome = data.nome;
-    if (data.dataInicio !== undefined) entity!.dataInicio = new Date(data.dataInicio);
-    if (data.dataFim !== undefined) entity!.dataFim = data.dataFim ? new Date(data.dataFim) : null;
-    if (data.diaInteiro !== undefined) entity!.diaInteiro = data.diaInteiro;
-    if (data.horarioInicio !== undefined) entity!.horarioInicio = data.horarioInicio;
-    if (data.horarioFim !== undefined) entity!.horarioFim = data.horarioFim;
-    if (data.cor !== undefined) entity!.cor = data.cor ?? null;
-    if (data.repeticao !== undefined) entity!.repeticao = data.repeticao ?? null;
+    if (data.nome !== undefined) entity.nome = data.nome;
+    if (data.dataInicio !== undefined) entity.dataInicio = new Date(data.dataInicio);
+    if (data.dataFim !== undefined) entity.dataFim = data.dataFim ? new Date(data.dataFim) : null;
+    if (data.diaInteiro !== undefined) entity.diaInteiro = data.diaInteiro;
+    if (data.horarioInicio !== undefined) entity.horarioInicio = data.horarioInicio;
+    if (data.horarioFim !== undefined) entity.horarioFim = data.horarioFim;
+    if (data.cor !== undefined) entity.cor = data.cor ?? null;
+    if (data.repeticao !== undefined) entity.repeticao = data.repeticao ?? null;
 
-    await this.calendarioAgendamentoRepository.save(entity!);
-    return entity!;
+    await this.calendarioAgendamentoRepository.save(entity);
+    return entity;
   }
 
   // cross-module: uses TypeORM directly for junction delete (CalendarioAgendamentoTurmaEntity)

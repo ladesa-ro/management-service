@@ -1,10 +1,10 @@
 import { EntityQueryResult, SharedFields } from "@/domain/abstractions";
-import { fieldsToProperties } from "@/infrastructure.database/typeorm/metadata/model-from-fields";
+import { fieldsToProperties } from "@/domain/abstractions/metadata/model-from-fields";
 import {
   commonProperties,
   defineModel,
   referenceProperty,
-} from "@/infrastructure.database/typeorm/metadata/model-registry";
+} from "@/domain/abstractions/metadata/model-registry";
 import { NivelFormacaoFindOneQueryResult } from "@/modules/ensino/nivel-formacao";
 import { OfertaFormacaoFindOneQueryResult } from "@/modules/ensino/oferta-formacao";
 import { OfertaFormacaoNivelFormacaoFields } from "../oferta-formacao-nivel-formacao.fields";

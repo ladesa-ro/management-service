@@ -1,9 +1,9 @@
-import type { CalendarioLetivoEtapaEntity } from "@/modules/horarios/calendario-letivo/infrastructure.database/typeorm/calendario-letivo-etapa.typeorm.entity";
+import type { ICalendarioLetivoEtapa } from "../calendario-letivo-etapa.types";
 
 export const ICalendarioLetivoEtapaRepository = Symbol("ICalendarioLetivoEtapaRepository");
 
 export interface ICalendarioLetivoEtapaRepository {
-  findByCalendarioLetivoId(calendarioLetivoId: string): Promise<CalendarioLetivoEtapaEntity[]>;
+  findByCalendarioLetivoId(calendarioLetivoId: string): Promise<ICalendarioLetivoEtapa[]>;
   softDeleteByCalendarioLetivoId(calendarioLetivoId: string): Promise<void>;
-  save(entity: CalendarioLetivoEtapaEntity): Promise<CalendarioLetivoEtapaEntity>;
+  save(entity: Partial<ICalendarioLetivoEtapa>): Promise<ICalendarioLetivoEtapa>;
 }

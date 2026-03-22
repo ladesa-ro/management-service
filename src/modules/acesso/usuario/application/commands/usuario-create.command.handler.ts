@@ -1,5 +1,9 @@
-import { InternalServerErrorException } from "@nestjs/common";
-import { ensureExists, ValidationFailedException } from "@/application/errors";
+import {
+  ApplicationError,
+  ensureExists,
+  InternalError,
+  ValidationError,
+} from "@/application/errors";
 import { IIdpUserService } from "@/domain/abstractions/identity-provider";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { UsuarioCreateCommand } from "@/modules/acesso/usuario/domain/commands/usuario-create.command";
@@ -52,11 +56,10 @@ export class UsuarioCreateCommandHandlerImpl implements IUsuarioCreateCommandHan
 
       return result;
     } catch (err) {
-      if (err instanceof ensureExists || err instanceof ValidationFailedException) {
+      if (err instanceof ApplicationError) {
         throw err;
       }
-      console.debug("Erro ao cadastrar usuario:", err);
-      throw new InternalServerErrorException();
+      throw new InternalError("Erro ao cadastrar usuario.", err instanceof Error ? err : undefined);
     }
   }
 
@@ -83,32 +86,27 @@ export class UsuarioCreateCommandHandlerImpl implements IUsuarioCreateCommandHan
     }
 
     if (!isMatriculaAvailable || !isEmailAvailable) {
-      throw new ValidationFailedException([
+      const details = [
         ...(!isEmailAvailable
           ? [
               {
-                scope: "body",
-                path: "email",
-                type: "email-is-available",
-                errors: ["O e-mail informado nao esta disponivel."],
-                name: "ValidationError",
+                field: "email",
                 message: "O e-mail informado nao esta disponivel.",
+                rule: "email-is-available",
               },
             ]
           : []),
         ...(!isMatriculaAvailable
           ? [
               {
-                scope: "body",
-                path: "matricula",
-                type: "matricula-is-available",
-                errors: ["A matricula informada nao esta disponivel."],
-                name: "ValidationError",
+                field: "matricula",
                 message: "A matricula informada nao esta disponivel.",
+                rule: "matricula-is-available",
               },
             ]
           : []),
-      ]);
+      ];
+      throw new ValidationError(details);
     }
   }
 }

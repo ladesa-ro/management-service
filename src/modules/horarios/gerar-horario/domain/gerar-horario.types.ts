@@ -1,27 +1,24 @@
-/**
- * Tipos do domínio de Geração de Horário
- * Define conceitos relacionados à geração automática de horários
- */
-
-/**
- * Status de uma solicitação de geração de horário
- */
-export type GerarHorarioStatus = "pendente" | "processando" | "concluido" | "erro";
-
-/**
- * Solicitação de geração de horário
- */
-export interface IGerarHorarioSolicitacao {
-  calendarioLetivoId: string;
-  status: GerarHorarioStatus;
-  mensagem?: string;
+export enum GerarHorarioStatus {
+  SOLICITADO = "SOLICITADO",
+  PENDENTE = "PENDENTE",
+  SUCESSO = "SUCESSO",
+  ERRO = "ERRO",
+  ACEITO = "ACEITO",
+  REJEITADO = "REJEITADO",
 }
 
-/**
- * Resultado da geração de horário
- */
-export interface IGerarHorarioResultado {
-  sucesso: boolean;
-  mensagem?: string;
-  horarioGeradoId?: string;
+export enum GerarHorarioDuracao {
+  TEMPORARIO = "TEMPORARIO",
+  PERMANENTE = "PERMANENTE",
+}
+
+export interface IGerarHorario {
+  id: string;
+  status: GerarHorarioStatus;
+  duracao: GerarHorarioDuracao;
+  dataInicio: Date;
+  dataTermino: Date | null;
+  requisicaoGerador: Record<string, unknown> | null;
+  respostaGerador: Record<string, unknown> | null;
+  dateCreated: Date;
 }

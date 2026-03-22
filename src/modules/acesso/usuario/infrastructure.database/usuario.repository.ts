@@ -149,11 +149,11 @@ export class UsuarioTypeOrmRepositoryAdapter implements IUsuarioRepository {
   // cross-module: uses TypeORM directly for join query (DisciplinaEntity, CursoEntity, TurmaEntity)
   async findUsuarioEnsino(usuarioId: string): Promise<{
     disciplinas: Array<{
-      disciplina: any;
+      disciplina: DisciplinaEntity;
       cursos: Array<{
-        curso: any;
+        curso: CursoEntity;
         turmas: Array<{
-          turma: any;
+          turma: TurmaEntity;
         }>;
       }>;
     }>;
@@ -175,22 +175,22 @@ export class UsuarioTypeOrmRepositoryAdapter implements IUsuarioRepository {
     });
 
     const result: Array<{
-      disciplina: any;
+      disciplina: DisciplinaEntity;
       cursos: Array<{
-        curso: any;
+        curso: CursoEntity;
         turmas: Array<{
-          turma: any;
+          turma: TurmaEntity;
         }>;
       }>;
     }> = [];
 
     for (const disciplina of disciplinas) {
       const vinculoDisciplina: {
-        disciplina: any;
+        disciplina: DisciplinaEntity;
         cursos: Array<{
-          curso: any;
+          curso: CursoEntity;
           turmas: Array<{
-            turma: any;
+            turma: TurmaEntity;
           }>;
         }>;
       } = {
@@ -221,9 +221,9 @@ export class UsuarioTypeOrmRepositoryAdapter implements IUsuarioRepository {
 
       for (const curso of cursos) {
         const vinculoCurso: {
-          curso: any;
+          curso: CursoEntity;
           turmas: Array<{
-            turma: any;
+            turma: TurmaEntity;
           }>;
         } = {
           curso: curso,
@@ -266,11 +266,11 @@ export class UsuarioTypeOrmRepositoryAdapter implements IUsuarioRepository {
     return { disciplinas: result };
   }
 
-  create(data: Record<string, any>) {
+  create(data: Record<string, unknown>) {
     return typeormCreate(this.appTypeormConnection, UsuarioEntity, data);
   }
 
-  update(id: string | number, data: Record<string, any>) {
+  update(id: string | number, data: Record<string, unknown>) {
     return typeormUpdate(this.appTypeormConnection, UsuarioEntity, id, data);
   }
 

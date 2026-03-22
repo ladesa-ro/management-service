@@ -7,7 +7,6 @@ import {
   TurmaHorarioAulaBulkReplaceCommandMetadata,
   TurmaHorarioAulaFindAllQueryMetadata,
 } from "@/modules/horarios/turma-horario-aula/domain/turma-horario-aula.query.metadata";
-import { TurmaHorarioAulaEntity } from "@/modules/horarios/turma-horario-aula/infrastructure.database/typeorm/turma-horario-aula.typeorm.entity";
 import { AccessContext, AccessContextHttp } from "@/server/access-context";
 import {
   TurmaHorarioAulaBulkReplaceInputRestDto,
@@ -55,11 +54,11 @@ export class TurmaHorarioAulaRestController {
     await this.turmaHorarioAulaRepository.deleteByTurmaId(parentParams.turmaId);
 
     for (const horarioAulaId of dto.horarioAulaIds) {
-      const entity = new TurmaHorarioAulaEntity();
-      entity.id = generateUuidV7();
-      entity.turma = { id: parentParams.turmaId } as any;
-      entity.horarioAula = { id: horarioAulaId } as any;
-      await this.turmaHorarioAulaRepository.save(entity);
+      await this.turmaHorarioAulaRepository.save({
+        id: generateUuidV7(),
+        turma: { id: parentParams.turmaId },
+        horarioAula: { id: horarioAulaId },
+      });
     }
 
     return this.findAll(_accessContext, parentParams);

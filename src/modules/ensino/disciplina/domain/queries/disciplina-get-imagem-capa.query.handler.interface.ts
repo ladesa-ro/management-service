@@ -1,6 +1,6 @@
-import type { StreamableFile } from "@nestjs/common";
 import type { IQueryHandler } from "@/domain/abstractions";
 import { createOperationMetadata } from "@/domain/abstractions";
+import type { IStreamableFileResult } from "@/domain/abstractions/storage";
 import type { DisciplinaFindOneQuery } from "./disciplina-find-one.query";
 
 export const DisciplinaGetImagemCapaQueryMetadata = createOperationMetadata({
@@ -12,5 +12,5 @@ export const IDisciplinaGetImagemCapaQueryHandler = Symbol("IDisciplinaGetImagem
 
 export type IDisciplinaGetImagemCapaQueryHandler = IQueryHandler<
   DisciplinaFindOneQuery,
-  StreamableFile
+  IStreamableFileResult
 >;

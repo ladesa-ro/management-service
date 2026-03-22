@@ -3,9 +3,11 @@ import {
   Catch,
   type ExceptionFilter,
   HttpException,
-  Logger,
+  Inject,
 } from "@nestjs/common";
 import type { Request, Response } from "express";
+import type { ILoggerPort } from "@/domain/abstractions/logging";
+import { ILoggerPort as ILoggerPortToken } from "@/domain/abstractions/logging";
 import type { HttpErrorResponse } from "./error-http.mapper";
 import { getHttpStatusName } from "./utils";
 
@@ -15,7 +17,10 @@ import { getHttpStatusName } from "./utils";
  */
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {
-  private readonly logger = new Logger(GlobalExceptionFilter.name);
+  constructor(
+    @Inject(ILoggerPortToken)
+    private readonly logger: ILoggerPort,
+  ) {}
 
   catch(exception: unknown, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
@@ -49,7 +54,14 @@ export class GlobalExceptionFilter implements ExceptionFilter {
   }
 
   private handleUnknownException(exception: unknown, request: Request, response: Response): void {
-    this.logger.error("Unhandled exception:", exception);
+    const correlationId = (request as any).correlationId as string | undefined;
+
+    this.logger.error(
+      "Unhandled exception",
+      exception instanceof Error ? exception.stack : String(exception),
+      "GlobalExceptionFilter",
+      { path: request.url, correlationId },
+    );
 
     const errorResponse: HttpErrorResponse = {
       statusCode: 500,

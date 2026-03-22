@@ -1,4 +1,10 @@
-import type { IBaseCrudRepository } from "@/domain/abstractions";
+import type {
+  IRepositoryCreate,
+  IRepositoryFindAll,
+  IRepositoryFindById,
+  IRepositorySoftDelete,
+  IRepositoryUpdate,
+} from "@/domain/abstractions";
 import {
   type IModalidade,
   ModalidadeFindOneQueryResult,
@@ -11,9 +17,8 @@ export const IModalidadeRepository = Symbol("IModalidadeRepository");
  * Port de saída para operações de persistência de Modalidade
  * Estende a interface base de CRUD com operações padrão
  */
-export interface IModalidadeRepository
-  extends IBaseCrudRepository<
-    IModalidade,
-    ModalidadeListQueryResult,
-    ModalidadeFindOneQueryResult
-  > {}
+export type IModalidadeRepository = IRepositoryFindAll<ModalidadeListQueryResult> &
+  IRepositoryFindById<ModalidadeFindOneQueryResult> &
+  IRepositoryCreate<IModalidade> &
+  IRepositoryUpdate<IModalidade> &
+  IRepositorySoftDelete;

@@ -8,6 +8,7 @@ export enum ApplicationErrorCode {
   VALIDATION = "APP.VALIDATION",
   CONFLICT = "APP.CONFLICT",
   INTERNAL = "APP.INTERNAL",
+  SERVICE_UNAVAILABLE = "APP.SERVICE_UNAVAILABLE",
 }
 
 /**
@@ -136,6 +137,20 @@ export class InternalError extends ApplicationError {
   constructor(
     message = "Ocorreu um erro interno. Tente novamente mais tarde.",
     readonly cause?: Error,
+  ) {
+    super(message);
+  }
+}
+
+/**
+ * Serviço externo indisponível.
+ */
+export class ServiceUnavailableError extends ApplicationError {
+  readonly code = ApplicationErrorCode.SERVICE_UNAVAILABLE;
+
+  constructor(
+    message = "Serviço temporariamente indisponível. Tente novamente mais tarde.",
+    readonly serviceName?: string,
   ) {
     super(message);
   }

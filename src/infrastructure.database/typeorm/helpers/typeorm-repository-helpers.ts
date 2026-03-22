@@ -66,7 +66,9 @@ export async function typeormFindAll<Entity extends IEntityWithId, ListInputDto,
 
   const criteria: IPaginationCriteria = {
     ...(dto as object),
-    sortBy: (dto as any)?.sortBy ? ((dto as any).sortBy as unknown as string[]) : undefined,
+    sortBy: (dto as Record<string, unknown>)?.sortBy
+      ? ((dto as Record<string, unknown>).sortBy as string[])
+      : undefined,
     filters: extractFilters(dto as Record<string, unknown> | null),
   };
 
@@ -76,7 +78,7 @@ export async function typeormFindAll<Entity extends IEntityWithId, ListInputDto,
   QbEfficientLoad(config.outputDtoName, qb, config.alias, selection);
 
   const pageItemsView = await qb.andWhereInIds(map(paginated.data, "id")).getMany();
-  paginated.data = paginated.data.map((p: any) => pageItemsView.find((i) => i.id === p.id)!);
+  paginated.data = paginated.data.map((p) => pageItemsView.find((i) => i.id === p.id)!);
 
   return paginated as unknown as ListOutputDto;
 }
@@ -110,7 +112,7 @@ export async function typeormFindById<
 export async function typeormCreate<Entity extends IEntityWithId>(
   conn: IAppTypeormConnection,
   entity: EntityTarget<Entity>,
-  data: Record<string, any>,
+  data: Record<string, unknown>,
 ): Promise<{ id: string | number }> {
   const repo = getRepository(conn, entity);
   const created = repo.create(data as DeepPartial<Entity>);
@@ -122,7 +124,7 @@ export async function typeormUpdate<Entity extends IEntityWithId>(
   conn: IAppTypeormConnection,
   entity: EntityTarget<Entity>,
   id: string | number,
-  data: Record<string, any>,
+  data: Record<string, unknown>,
 ): Promise<void> {
   const repo = getRepository(conn, entity);
   const created = repo.create({ id, ...data } as DeepPartial<Entity>);
@@ -139,7 +141,7 @@ export async function typeormSoftDeleteById<Entity extends ObjectLiteral>(
   await repo
     .createQueryBuilder(alias)
     .update()
-    .set({ dateDeleted: () => "NOW()" } as any)
+    .set({ dateDeleted: () => "NOW()" } as unknown as Partial<Entity>)
     .where("id = :id", { id })
     .andWhere("dateDeleted IS NULL")
     .execute();

@@ -1,9 +1,6 @@
 import { EntityQueryResult, SharedFields } from "@/domain/abstractions";
-import { fieldsToProperties } from "@/infrastructure.database/typeorm/metadata/model-from-fields";
-import {
-  commonProperties,
-  defineModel,
-} from "@/infrastructure.database/typeorm/metadata/model-registry";
+import { fieldsToProperties } from "@/domain/abstractions/metadata/model-from-fields";
+import { commonProperties, defineModel } from "@/domain/abstractions/metadata/model-registry";
 import { ImagemFields } from "../imagem.fields";
 import { ImagemArquivoFindOneFromImagemQueryResult } from "./imagem-arquivo-from-imagem.query.result";
 

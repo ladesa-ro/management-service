@@ -6,7 +6,7 @@ import { IContainer } from "@/domain/dependency-injection/interfaces/container.i
 export class NestContainerAdapter implements IContainer {
   constructor(private readonly moduleRef: ModuleRef) {}
 
-  get<T>(token: any): T {
+  get<T>(token: string | symbol | (abstract new (...args: unknown[]) => T)): T {
     return this.moduleRef.get<T>(token, { strict: false });
   }
 }

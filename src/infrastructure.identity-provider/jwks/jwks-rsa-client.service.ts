@@ -1,12 +1,17 @@
 import { JwksClient, SigningKey } from "jwks-rsa";
-import { DeclareImplementation } from "@/domain/dependency-injection";
+import { ILoggerPort, ILoggerPort as ILoggerPortToken } from "@/domain/abstractions/logging";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { OpenidConnectService } from "../openid-connect/openid-connect.service";
 
 @DeclareImplementation()
 export class JwksRsaClientService {
   #jwksClient: JwksClient | null = null;
 
-  constructor(private openidConnectService: OpenidConnectService) {}
+  constructor(
+    private openidConnectService: OpenidConnectService,
+    @DeclareDependency(ILoggerPortToken)
+    private readonly logger: ILoggerPort,
+  ) {}
 
   async getJwksClient(): Promise<JwksClient> {
     await this.setup();
@@ -25,8 +30,8 @@ export class JwksRsaClientService {
         const signingKey = await jwksClient.getSigningKey(kid);
         return signingKey;
       }
-    } catch (_) {
-      console.debug(_);
+    } catch (err) {
+      this.logger.debug(String(err), "JwksRsaClient");
     }
 
     return null;

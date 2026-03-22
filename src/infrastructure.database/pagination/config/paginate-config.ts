@@ -2,7 +2,23 @@
  * Default pagination configuration for TypeORM repositories.
  * Used by nestjs-paginate adapter.
  */
-export const paginateConfig: any = {
+/**
+ * Default pagination configuration for TypeORM repositories.
+ * Used by nestjs-paginate adapter.
+ *
+ * NOTE: Typed as IPaginationConfig with extra nestjs-paginate fields.
+ * The spread into PaginateConfig<T> handles type widening at the call site.
+ */
+import type { IPaginationConfig } from "@/application/pagination";
+
+interface IDefaultPaginateConfig extends IPaginationConfig {
+  withDeleted: boolean;
+  relativePath: boolean;
+  origin: string;
+  multiWordSearch: boolean;
+}
+
+export const paginateConfig: IDefaultPaginateConfig = {
   /**
    * Required: true (must have a minimum of one column)
    * Type: (keyof Entity)[]

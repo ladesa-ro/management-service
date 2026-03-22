@@ -1,5 +1,6 @@
-import { ForbiddenException, HttpException, ServiceUnavailableException } from "@nestjs/common";
+import { ApplicationError, ForbiddenError, ServiceUnavailableError } from "@/application/errors";
 import { IIdpUserService } from "@/domain/abstractions/identity-provider";
+import { ILoggerPort, ILoggerPort as ILoggerPortToken } from "@/domain/abstractions/logging";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { IAutenticacaoDefinirSenhaCommandHandler } from "@/modules/acesso/autenticacao/domain/commands/autenticacao-definir-senha.command.handler.interface";
 import type { AuthCredentialsSetInitialPasswordCommand } from "@/modules/acesso/autenticacao/domain/commands/auth-credentials-set-initial-password.command";
@@ -15,6 +16,8 @@ export class AutenticacaoDefinirSenhaCommandHandlerImpl
     private readonly usuarioFindByMatriculaHandler: IUsuarioFindByMatriculaQueryHandler,
     @DeclareDependency(IIdpUserService)
     private readonly idpUserService: IIdpUserService,
+    @DeclareDependency(ILoggerPortToken)
+    private readonly logger: ILoggerPort,
   ) {}
 
   async execute(
@@ -28,26 +31,26 @@ export class AutenticacaoDefinirSenhaCommandHandlerImpl
       const exists = await this.idpUserService.existsByMatricula(dto.matricula);
 
       if (!usuario || !exists) {
-        throw new ForbiddenException("Usuário indisponível.");
+        throw new ForbiddenError("Usuário indisponível.");
       }
 
       const canSet = await this.idpUserService.canSetInitialPassword(dto.matricula);
 
       if (!canSet) {
-        throw new ForbiddenException("A senha do usuário já foi definida.");
+        throw new ForbiddenError("A senha do usuário já foi definida.");
       }
 
       await this.idpUserService.setInitialPassword(dto.matricula, dto.senha);
 
       return true;
     } catch (error) {
-      if (error instanceof HttpException) {
+      if (error instanceof ApplicationError) {
         throw error;
       }
 
-      console.debug("AutenticacaoDefinirSenhaCommandHandler#execute::err", error);
+      this.logger.debug(String(error), "AutenticacaoDefinirSenhaCommandHandler");
 
-      throw new ServiceUnavailableException();
+      throw new ServiceUnavailableError();
     }
   }
 }
