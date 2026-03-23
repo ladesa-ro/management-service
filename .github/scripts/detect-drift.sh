@@ -27,7 +27,10 @@ fi
 
 extract_source_of_trust_blocks() {
   awk '
-    /<!-- *Source of Trust/     { in_block=1; block=""; next }
+    /^<!--$/                    { maybe_block=1; next }
+    maybe_block && /Source of Trust/ { in_block=1; maybe_block=0; block=""; next }
+    maybe_block                 { maybe_block=0 }
+    /<!-- *Source of Trust/      { in_block=1; block=""; next }
     /-->/                       { if (in_block) { print block; in_block=0 }; next }
     in_block                    { block = block $0 "\n" }
   ' "$README"
@@ -127,8 +130,9 @@ find_section_for_block() {
   local block_index="$1"
 
   # Encontrar a linha do N-ésimo bloco Source of Trust
+  # Suporta tanto "<!-- Source of Trust" (mesma linha) quanto "<!--\nSource of Trust" (separado)
   local block_line
-  block_line=$(grep -n '<!-- *Source of Trust' "$README" | sed -n "${block_index}p" | cut -d: -f1)
+  block_line=$(grep -n 'Source of Trust' "$README" | sed -n "${block_index}p" | cut -d: -f1)
 
   if [[ -z "$block_line" ]]; then
     echo "seção desconhecida"
@@ -148,12 +152,16 @@ check_deterministic() {
 
   # Contagem de migrações
   local migration_count
-  migration_count=$(find src/infrastructure.database/migrations -name '*.ts' 2>/dev/null | wc -l || echo "0")
+  migration_count=$(find src/infrastructure.database/migrations -name '*.ts' 2>/dev/null | wc -l | tr -d ' ' || echo "0")
   local readme_count
-  readme_count=$(grep -oP '\*\*(\d+) migrações\*\*|possui \*\*(\d+) migrações\*\*|\*\*(\d+)\*\* migrações' "$README" | grep -oP '\d+' | head -1 || echo "0")
+  readme_count=$(grep -oP '\*\*\d+ migrações\*\*|\*\*\d+\*\* migrações|\(\d+ migrações\)' "$README" | grep -oP '\d+' | head -1 || echo "0")
 
-  if [[ "$migration_count" -ne "$readme_count" && "$readme_count" -ne "0" ]]; then
-    echo "🔴 Drift: contagem de migrações (README: $readme_count, real: $migration_count)"
+  # Garantir que temos números válidos
+  migration_count="${migration_count:-0}"
+  readme_count="${readme_count:-0}"
+
+  if [[ "$migration_count" -ne "$readme_count" && "$readme_count" -ne "0" ]] 2>/dev/null; then
+    echo "🔴 Drift: contagem de migrações (README: $readme_count, real: $migration_count)" >&2
     extra_drifts+=("$(jq -n \
       --arg type "migration_count" \
       --arg readme_value "$readme_count" \
@@ -164,12 +172,15 @@ check_deterministic() {
 
   # Contagem de módulos
   local module_count
-  module_count=$(find src/modules -mindepth 2 -maxdepth 2 -type d -name 'domain' 2>/dev/null | wc -l || echo "0")
+  module_count=$(find src/modules -mindepth 2 -maxdepth 2 -type d -name 'domain' 2>/dev/null | wc -l | tr -d ' ' || echo "0")
   local readme_module_count
-  readme_module_count=$(grep -oP '\((\d+) módulos' "$README" | grep -oP '\d+' | head -1 || echo "0")
+  readme_module_count=$(grep -oP '\(\d+ módulos' "$README" | grep -oP '\d+' | head -1 || echo "0")
 
-  if [[ "$module_count" -ne "$readme_module_count" && "$readme_module_count" -ne "0" ]]; then
-    echo "🔴 Drift: contagem de módulos (README: $readme_module_count, real: $module_count)"
+  module_count="${module_count:-0}"
+  readme_module_count="${readme_module_count:-0}"
+
+  if [[ "$module_count" -ne "$readme_module_count" && "$readme_module_count" -ne "0" ]] 2>/dev/null; then
+    echo "🔴 Drift: contagem de módulos (README: $readme_module_count, real: $module_count)" >&2
     extra_drifts+=("$(jq -n \
       --arg type "module_count" \
       --arg readme_value "$readme_module_count" \
@@ -186,14 +197,27 @@ check_deterministic() {
       actual_ver=$(jq -r --arg d "$dep" '(.dependencies[$d] // .devDependencies[$d]) // empty' src/package.json 2>/dev/null | sed 's/[\^~]//')
 
       if [[ -n "$actual_ver" ]]; then
-        # Verificar se essa versão aparece no README
-        local clean_ver="${actual_ver%%.*}"  # major version
-        # Não checar se é mencionada — só registrar para o relatório
+        # Procurar a versão no README (tabela de stack tecnológico)
+        local escaped_dep
+        escaped_dep=$(printf '%s' "$dep" | sed 's/[[\.*^$()+?{}|/]/\\&/g')
+        local readme_ver
+        readme_ver=$(grep -P "$escaped_dep" "$README" | grep -oP '\d+\.\d+(\.\d+)?' | head -1 || echo "")
+
+        if [[ -n "$readme_ver" && "$readme_ver" != "$actual_ver" ]]; then
+          echo "🔴 Drift: versão de $dep (README: $readme_ver, real: $actual_ver)" >&2
+          extra_drifts+=("$(jq -n \
+            --arg type "dependency_version" \
+            --arg dependency "$dep" \
+            --arg readme_value "$readme_ver" \
+            --arg actual_value "$actual_ver" \
+            '{type: $type, dependency: $dependency, readme_value: $readme_value, actual_value: $actual_value}'
+          )")
+        fi
       fi
     done
   fi
 
-  # Exportar extra drifts
+  # Exportar APENAS JSON para stdout (logs vão para stderr via >&2 acima)
   if [[ ${#extra_drifts[@]} -gt 0 ]]; then
     printf '%s\n' "${extra_drifts[@]}"
   fi
