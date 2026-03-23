@@ -159,7 +159,7 @@ presentation.graphql/        # Resolvers GraphQL (quando aplicável)
 | `src/domain/` | Abstrações compartilhadas: entidades base, scalars (`IdUuid`, `ScalarDateTimeString`), DI, metadata |
 | `src/application/` | Erros de aplicação, helpers, contratos de paginação |
 | `src/shared/` | Utilitários cross-cutting: validação Zod, mappers, decorators de apresentação |
-| `src/infrastructure.database/` | TypeORM config, migrações, paginação (caminho preferido) |
+| `src/infrastructure.database/` | TypeORM config, migrações, paginação, database command services (caminho preferido) |
 | `src/infrastructure.graphql/` | Apollo Server config, DTOs GraphQL base |
 | `src/infrastructure.identity-provider/` | Keycloak, OIDC, JWKS |
 | `src/infrastructure.authorization/` | Implementações de permissão |
@@ -554,6 +554,32 @@ NestJsPaginateAdapter.paginate(repo, dto, paginateConfig({
 
 Contratos de paginação ficam em `src/application/pagination/`.
 
+### Database command services
+
+Operações programáticas sobre o banco (migrações, schema drop) ficam em `src/infrastructure.database/services/`:
+
+```
+services/
+├── interfaces/
+│   ├── database-command.interface.ts       # IDatabaseCommand { execute(): Promise<void> }
+│   ├── migration-run.service.interface.ts  # IMigrationRunService extends IDatabaseCommand
+│   ├── migration-revert.service.interface.ts
+│   └── schema-drop.service.interface.ts
+├── migration-run.service.ts                # MigrationRunService — dataSource.runMigrations()
+├── migration-revert.service.ts             # MigrationRevertService — dataSource.undoLastMigration()
+├── schema-drop.service.ts                  # SchemaDropService — dataSource.dropDatabase()
+└── entrypoints/
+    ├── migration-run.ts                    # Entrypoint executável via bun run
+    ├── migration-revert.ts
+    └── db-reset.ts                         # Compõe SchemaDropService + MigrationRunService
+```
+
+**Regras:**
+- Cada service recebe um `DataSource` inicializado no constructor.
+- Entrypoints gerenciam o lifecycle (initialize/destroy) do DataSource.
+- Shell scripts em `src/commands/` chamam `bun run` nos entrypoints .ts.
+- Scripts de scaffolding (`typeorm-generate`, `typeorm-create`, `typeorm-entity`) continuam usando o CLI do TypeORM diretamente.
+
 ---
 
 ## Convenções de código
@@ -581,6 +607,8 @@ Contratos de paginação ficam em `src/application/pagination/`.
 | Resolver GraphQL | `{nome}.resolver.ts` | `campus.resolver.ts` |
 | Repositório (domínio) | `{nome}.repository.ts` | `campus.repository.ts` (em `domain/repositories/`) |
 | Repositório (infra) | `{nome}.repository.ts` | `campus.repository.ts` (em `infrastructure.database/`) |
+| Database command service | `{nome}.service.ts` | `migration-run.service.ts` (em `infrastructure.database/services/`) |
+| Database command interface | `{nome}.service.interface.ts` | `migration-run.service.interface.ts` (em `infrastructure.database/services/interfaces/`) |
 
 ### Imports
 
@@ -674,6 +702,7 @@ Estas decisões são intencionais e **não devem ser questionadas ou alteradas**
 9. **Constructor privado** em entidades de domínio — instanciação apenas via `create`/`load`.
 10. **`src/shared/`** é o lar de utilitários cross-cutting — validação, mapping, decorators de apresentação.
 11. **Mapper domain ↔ entity é interno à infraestrutura** — `createEntityDomainMapper` em `src/infrastructure.database/typeorm/helpers/`. Cada módulo define seu mapper em `infrastructure.database/typeorm/{nome}.mapper.ts`. O mapper nunca vaza para a camada de aplicação.
+12. **Database command services** — operações programáticas (migration run/revert, schema drop) ficam em `src/infrastructure.database/services/` implementando `IDatabaseCommand`. Scripts de scaffolding (`typeorm-generate`, `typeorm-create`) continuam usando o CLI do TypeORM.
 
 ---
 

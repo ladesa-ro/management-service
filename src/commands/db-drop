@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Drop all database tables
+exec bun run infrastructure.database/services/entrypoints/db-drop.ts

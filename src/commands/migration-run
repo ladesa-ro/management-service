@@ -2,4 +2,4 @@
 set -euo pipefail
 
 # Run database migrations
-exec bun x --bun typeorm -d infrastructure.database/data-sources/entrypoints/migration.data-source.ts migration:run "$@"
+exec bun run infrastructure.database/services/entrypoints/migration-run.ts
