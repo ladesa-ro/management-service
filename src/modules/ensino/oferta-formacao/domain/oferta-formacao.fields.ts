@@ -24,9 +24,9 @@ export const OfertaFormacaoFields = {
         "slug deve conter apenas letras minúsculas, números e hífens",
       ),
   }),
-  duracaoPeriodo: createFieldMetadata({
-    description: "Duracao de cada periodo",
-    schema: z.enum(["SEMESTRAL", "ANUAL", "TRIMESTRAL", "QUADRIMESTRAL"]).nullable().optional(),
+  duracaoPeriodoEmMeses: createFieldMetadata({
+    description: "Duracao de cada periodo em meses",
+    schema: z.number().int().positive().nullable().optional(),
   }),
   modalidade: createFieldMetadata({
     description: "Modalidade da oferta de formacao",

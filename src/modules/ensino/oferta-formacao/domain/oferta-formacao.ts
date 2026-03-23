@@ -17,6 +17,7 @@ export class OfertaFormacao {
   id!: IdUuid;
   nome!: string;
   slug!: string;
+  duracaoPeriodoEmMeses!: number | null;
   modalidade!: { id: string } | null;
   dateCreated!: ScalarDateTimeString;
   dateUpdated!: ScalarDateTimeString;
@@ -32,6 +33,7 @@ export class OfertaFormacao {
     instance.id = generateUuidV7();
     instance.nome = parsed.nome;
     instance.slug = parsed.slug;
+    instance.duracaoPeriodoEmMeses = parsed.duracaoPeriodoEmMeses ?? null;
     instance.modalidade = parsed.modalidade ?? null;
     instance.dateCreated = getNowISO();
     instance.dateUpdated = getNowISO();
@@ -48,6 +50,7 @@ export class OfertaFormacao {
     instance.id = parsed.id;
     instance.nome = parsed.nome;
     instance.slug = parsed.slug;
+    instance.duracaoPeriodoEmMeses = parsed.duracaoPeriodoEmMeses ?? null;
     instance.modalidade = parsed.modalidade;
     instance.dateCreated = parsed.dateCreated;
     instance.dateUpdated = parsed.dateUpdated;
@@ -61,6 +64,8 @@ export class OfertaFormacao {
 
     if (parsed.nome !== undefined) this.nome = parsed.nome;
     if (parsed.slug !== undefined) this.slug = parsed.slug;
+    if (parsed.duracaoPeriodoEmMeses !== undefined)
+      this.duracaoPeriodoEmMeses = parsed.duracaoPeriodoEmMeses ?? null;
     if (parsed.modalidade !== undefined) this.modalidade = parsed.modalidade ?? null;
 
     this.dateUpdated = getNowISO();

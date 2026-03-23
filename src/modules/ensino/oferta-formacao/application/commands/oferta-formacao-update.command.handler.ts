@@ -35,11 +35,12 @@ export class OfertaFormacaoUpdateCommandHandlerImpl implements IOfertaFormacaoUp
     await this.permissionChecker.ensureCanUpdate(accessContext, { dto }, dto.id);
 
     const domain = OfertaFormacao.load(current);
-    domain.update({ nome: dto.nome, slug: dto.slug });
+    domain.update({
+      nome: dto.nome,
+      slug: dto.slug,
+      duracaoPeriodoEmMeses: dto.duracaoPeriodoEmMeses,
+    });
     const updateData: Partial<PersistInput<IOfertaFormacao>> = { ...domain };
-    if (has(dto, "duracaoPeriodo")) {
-      (updateData as Record<string, unknown>).duracaoPeriodo = dto.duracaoPeriodo ?? null;
-    }
     if (has(dto, "modalidade") && dto.modalidade !== undefined) {
       if (dto.modalidade) {
         const modalidade = await this.modalidadeFindOneHandler.execute(accessContext, {

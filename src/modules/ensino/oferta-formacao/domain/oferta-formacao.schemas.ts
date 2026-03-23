@@ -26,6 +26,7 @@ export const OfertaFormacaoSchema = z
     id: uuidSchema,
     nome: OfertaFormacaoFields.nome.schema,
     slug: OfertaFormacaoFields.slug.schema,
+    duracaoPeriodoEmMeses: OfertaFormacaoFields.duracaoPeriodoEmMeses.schema,
     modalidade: OfertaFormacaoModalidadeRefSchema.nullable(),
   })
   .merge(datedSchema);
@@ -33,13 +34,13 @@ export const OfertaFormacaoSchema = z
 export const OfertaFormacaoCreateSchema = z.object({
   nome: OfertaFormacaoFields.nome.schema,
   slug: OfertaFormacaoFields.slug.schema,
-  duracaoPeriodo: OfertaFormacaoFields.duracaoPeriodo.schema,
+  duracaoPeriodoEmMeses: OfertaFormacaoFields.duracaoPeriodoEmMeses.schema,
   modalidade: OfertaFormacaoModalidadeRefSchema,
 });
 
 export const OfertaFormacaoUpdateSchema = z.object({
   nome: OfertaFormacaoFields.nome.schema.optional(),
   slug: OfertaFormacaoFields.slug.schema.optional(),
-  duracaoPeriodo: OfertaFormacaoFields.duracaoPeriodo.schema,
+  duracaoPeriodoEmMeses: OfertaFormacaoFields.duracaoPeriodoEmMeses.schema,
   modalidade: OfertaFormacaoModalidadeRefSchema.optional(),
 });

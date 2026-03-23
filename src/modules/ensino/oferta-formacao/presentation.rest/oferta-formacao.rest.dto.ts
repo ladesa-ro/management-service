@@ -1,7 +1,6 @@
 import { ModalidadeFindOneOutputRestDto } from "@/modules/ensino/modalidade/presentation.rest/modalidade.rest.dto";
 import { OfertaFormacaoFindOneInputSchema } from "@/modules/ensino/oferta-formacao/domain/queries/oferta-formacao-find-one.query.schemas";
 import { OfertaFormacaoPaginationInputSchema } from "@/modules/ensino/oferta-formacao/domain/queries/oferta-formacao-list.query.schemas";
-import { DuracaoPeriodo } from "@/modules/ensino/oferta-formacao/infrastructure.database/typeorm/oferta-formacao.typeorm.entity";
 import {
   ApiProperty,
   ApiPropertyOptional,
@@ -40,11 +39,11 @@ export class OfertaFormacaoFindOneOutputRestDto extends EntityBaseRestDto {
   slug: string;
 
   @ApiPropertyOptional({
-    enum: DuracaoPeriodo,
-    ...OfertaFormacaoFindOneQueryResultFields.duracaoPeriodo.swaggerMetadata,
+    type: Number,
+    ...OfertaFormacaoFindOneQueryResultFields.duracaoPeriodoEmMeses.swaggerMetadata,
     nullable: true,
   })
-  duracaoPeriodo: DuracaoPeriodo | null;
+  duracaoPeriodoEmMeses: number | null;
 
   @ApiProperty({
     type: () => ModalidadeFindOneOutputRestDto,
@@ -108,11 +107,11 @@ export class OfertaFormacaoCreateInputRestDto {
   slug: string;
 
   @ApiPropertyOptional({
-    enum: DuracaoPeriodo,
-    ...OfertaFormacaoCreateCommandFields.duracaoPeriodo.swaggerMetadata,
+    type: Number,
+    ...OfertaFormacaoCreateCommandFields.duracaoPeriodoEmMeses.swaggerMetadata,
     nullable: true,
   })
-  duracaoPeriodo?: DuracaoPeriodo | null;
+  duracaoPeriodoEmMeses?: number | null;
 
   @ApiProperty({
     type: "object",

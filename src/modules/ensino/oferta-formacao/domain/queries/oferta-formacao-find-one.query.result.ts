@@ -6,7 +6,6 @@ import {
   referenceProperty,
 } from "@/domain/abstractions/metadata/model-registry";
 import { ModalidadeFindOneQueryResult } from "@/modules/ensino/modalidade";
-import type { DuracaoPeriodo } from "../duracao-periodo";
 import { OfertaFormacaoFields } from "../oferta-formacao.fields";
 
 export const OfertaFormacaoFindOneQueryResultFields = {
@@ -17,7 +16,7 @@ export const OfertaFormacaoFindOneQueryResultFields = {
 export class OfertaFormacaoFindOneQueryResult extends EntityQueryResult {
   nome!: string;
   slug!: string;
-  duracaoPeriodo!: DuracaoPeriodo | null;
+  duracaoPeriodoEmMeses!: number | null;
   modalidade!: ModalidadeFindOneQueryResult;
 }
 

@@ -38,12 +38,12 @@ export class OfertaFormacaoCreateCommandHandlerImpl implements IOfertaFormacaoCr
     const domain = OfertaFormacao.create({
       nome: dto.nome,
       slug: dto.slug,
+      duracaoPeriodoEmMeses: dto.duracaoPeriodoEmMeses,
       modalidade: modalidadeRef,
     });
     const { id } = await this.repository.create({
       ...domain,
       ...(modalidadeRef ? { modalidade: modalidadeRef } : {}),
-      ...(dto.duracaoPeriodo !== undefined ? { duracaoPeriodo: dto.duracaoPeriodo } : {}),
     });
 
     const result = await this.repository.findById(accessContext, { id });

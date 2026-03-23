@@ -36,7 +36,7 @@ export class OfertaFormacaoRestMapper {
     const input = new OfertaFormacaoCreateCommand();
     input.nome = dto.nome;
     input.slug = dto.slug;
-    input.duracaoPeriodo = dto.duracaoPeriodo ?? null;
+    input.duracaoPeriodoEmMeses = dto.duracaoPeriodoEmMeses ?? null;
     input.modalidade = { id: dto.modalidade.id };
     return input;
   }
@@ -54,8 +54,8 @@ export class OfertaFormacaoRestMapper {
     if (dto.slug !== undefined) {
       input.slug = dto.slug;
     }
-    if (dto.duracaoPeriodo !== undefined) {
-      input.duracaoPeriodo = dto.duracaoPeriodo ?? null;
+    if (dto.duracaoPeriodoEmMeses !== undefined) {
+      input.duracaoPeriodoEmMeses = dto.duracaoPeriodoEmMeses ?? null;
     }
     if (dto.modalidade !== undefined) {
       input.modalidade = { id: dto.modalidade.id };
@@ -74,7 +74,7 @@ export class OfertaFormacaoRestMapper {
     dto.id = output.id;
     dto.nome = output.nome;
     dto.slug = output.slug;
-    dto.duracaoPeriodo = output.duracaoPeriodo ?? null;
+    dto.duracaoPeriodoEmMeses = output.duracaoPeriodoEmMeses ?? null;
     dto.modalidade = ModalidadeRestMapper.toFindOneOutputDto(output.modalidade);
     mapDatedFields(dto, output);
     return dto;
