@@ -52,13 +52,15 @@ just exec <comando>
 
 # Exemplos
 just exec bun run code:fix
-just exec bun run typecheck
+just exec bun run check
 just exec bun run test
 just exec bun run migration:run
 just exec bun add <pkg>
 ```
 
 > **Nunca** rodar comandos diretamente no host. O container possui as versões corretas de todas as ferramentas.
+
+> **Se o container não estiver rodando** quando um comando precisar ser executado, suba-o primeiro com `just` (que inicia os serviços do ambiente) antes de executar `just exec`.
 
 ### Package manager
 
@@ -69,9 +71,10 @@ Sempre use `bun` — nunca `npm`, `npx`, `yarn`, `pnpm` ou `node` diretamente.
 Sempre executar os dois passos abaixo, nesta ordem, após toda e qualquer modificação de código:
 
 1. **`just exec bun run code:fix`** — formata e corrige linting (Biome). Garante que o código segue as regras de estilo do projeto.
-2. **`just exec bun run typecheck`** — verifica tipagem TypeScript. Garante que nada está quebrado.
+2. **`just exec bun run check`** — verifica tipagem TypeScript. Garante que nada está quebrado.
+3. **Mapear testes** — sempre que código novo for criado ou código existente for alterado, crie ou atualize os testes correspondentes. A cobertura de testes deve acompanhar toda mudança de código.
 
-> Esses dois comandos são **obrigatórios**. Não considere uma tarefa finalizada sem tê-los executado com sucesso.
+> Esses três passos são **obrigatórios**. Não considere uma tarefa finalizada sem tê-los executado com sucesso.
 
 ### Outros comandos úteis
 
