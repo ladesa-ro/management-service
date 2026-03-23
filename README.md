@@ -2,7 +2,7 @@
 
 # Management Service
 
-API REST/GraphQL de gerenciamento acadêmico desenvolvida com NestJS, TypeORM e PostgreSQL, seguindo princípios de arquitetura hexagonal (ports & adapters).
+API REST/GraphQL de gerenciamento acadêmico desenvolvida com NestJS, TypeORM e PostgreSQL, seguindo princípios de **arquitetura hexagonal** (um estilo de organização de código onde a lógica de negócio fica isolada no centro, sem depender de frameworks ou bancos de dados — explicado em detalhes na seção [Arquitetura](#arquitetura)).
 
 [![CI/CD - Management Service][action-build-deploy-dev-src]][action-build-deploy-dev-href]
 
@@ -27,9 +27,21 @@ O **Ladesa** (Laboratório de Desenvolvimento de Software Acadêmico) é um ecos
 
 A aplicação expõe uma **API REST** (com documentação interativa via Swagger/Scalar) e uma **API GraphQL** (com playground GraphiQL), permitindo que front-ends e outros serviços consumam os dados de forma flexível.
 
-**Tecnologias principais:** roda sobre o runtime [Bun](https://bun.sh/), utiliza o framework [NestJS](https://nestjs.com/) v11 e persiste dados em [PostgreSQL 15](https://www.postgresql.org/) via [TypeORM](https://typeorm.io/) 0.3. A autenticação é delegada a um servidor [Keycloak](https://www.keycloak.org/) via OAuth2/OIDC, e a comunicação assíncrona com outros serviços acontece por meio de filas [RabbitMQ](https://www.rabbitmq.com/).
+> **O que é uma API?** API (Application Programming Interface) é uma forma padronizada de dois programas se comunicarem. Neste caso, o front-end (a interface visual que o usuário vê no navegador) envia requisições HTTP para a API, e ela responde com dados em formato JSON. Pense como um garçom: ele recebe pedidos (requisições) e traz pratos (respostas) da cozinha (banco de dados).
+
+**Tecnologias principais:** roda sobre o runtime [Bun](https://bun.sh/) (um runtime JavaScript/TypeScript rápido, alternativa ao Node.js), utiliza o framework [NestJS](https://nestjs.com/) v11 (framework que organiza o código em módulos, controllers e serviços — detalhado na seção [NestJS — conceitos fundamentais](#nestjs--conceitos-fundamentais)) e persiste dados em [PostgreSQL 15](https://www.postgresql.org/) (banco de dados relacional — armazena dados em tabelas com linhas e colunas) via [TypeORM](https://typeorm.io/) 0.3 (ferramenta que traduz objetos TypeScript para tabelas SQL — explicado na seção [ORM](#orm-object-relational-mapping)). A autenticação é delegada a um servidor [Keycloak](https://www.keycloak.org/) via OAuth2/OIDC (protocolos de autenticação delegada — explicados na seção [OAuth2 e OIDC](#oauth2-e-oidc)), e a comunicação assíncrona com outros serviços acontece por meio de filas [RabbitMQ](https://www.rabbitmq.com/) (um intermediário de mensagens entre serviços — explicado na seção [Message broker](#message-broker-rabbitmq)).
 
 Todo o ambiente de desenvolvimento é containerizado — você **não precisa instalar** Bun, Node.js, PostgreSQL nem nenhuma outra dependência diretamente na sua máquina.
+
+<!--
+Source of Trust
+commit_hash: ebb2cb05b8e21e5d4aae2cfcf0429805ebc7f344
+verified_at: 2026-03-23T12:30:00Z
+source_patterns:
+  - src/package.json
+  - .docker/compose.yml
+confidence_scope: Versões das tecnologias principais (NestJS ^11.1.17, TypeORM ^0.3.28, Apollo Server ^5.4.0, PostgreSQL 15, Zod ^4.3.6, Vitest ^4.1.0)
+-->
 
 ---
 
@@ -147,7 +159,16 @@ graph LR
     style HOST fill:#4a90d9,stroke:#2c5f8a,color:#fff
 ```
 
-**Neste projeto**, o Docker Compose sobe três containers: a aplicação NestJS, o PostgreSQL e o RabbitMQ. O código-fonte da sua máquina é **montado como volume** dentro do container — isso significa que quando você edita um arquivo no seu editor (VS Code, WebStorm, etc.), a alteração aparece instantaneamente dentro do container, sem precisar reconstruí-lo. É como se o container tivesse uma "janela" apontando para a pasta do projeto na sua máquina.
+**Neste projeto**, o Docker Compose (uma ferramenta que orquestra múltiplos containers a partir de um arquivo de configuração) sobe três containers: a aplicação NestJS, o PostgreSQL e o RabbitMQ. O código-fonte da sua máquina é **montado como volume** dentro do container — isso significa que quando você edita um arquivo no seu editor (VS Code, WebStorm, etc.), a alteração aparece instantaneamente dentro do container, sem precisar reconstruí-lo. É como se o container tivesse uma "janela" apontando para a pasta do projeto na sua máquina.
+
+<!--
+Source of Trust
+commit_hash: ebb2cb05b8e21e5d4aae2cfcf0429805ebc7f344
+verified_at: 2026-03-23T12:30:00Z
+source_patterns:
+  - .docker/compose.yml
+confidence_scope: Serviços do Docker Compose (management-service, db/PostgreSQL 15, rabbitmq), portas (3701, 9229, 5432), volumes e bind mounts
+-->
 
 ```mermaid
 graph TD
@@ -221,6 +242,8 @@ Você vai precisar usar o terminal para clonar o repositório, executar comandos
 ---
 
 ## Clonando o repositório
+
+Com todas as ferramentas instaladas, o próximo passo é baixar o código-fonte do projeto para a sua máquina.
 
 ```bash
 git clone https://github.com/ladesa-ro/management-service.git
@@ -353,7 +376,9 @@ bun run dev
 
 ## Primeiros passos após o setup
 
-Após rodar `just up` (ou abrir o Dev Container) e iniciar o servidor com `bun run dev`, siga estes passos para verificar que tudo está funcionando:
+Se você chegou até aqui, o projeto já está rodando na sua máquina. Agora vamos verificar que tudo funciona e fazer sua primeira interação com a API.
+
+Após rodar `just up` (ou abrir o Dev Container) e iniciar o servidor com `bun run dev`, siga estes passos:
 
 1. **Aplique as migrações do banco de dados:**
    ```bash
@@ -379,9 +404,22 @@ Após rodar `just up` (ou abrir o Dev Container) e iniciar o servidor com `bun r
    bun run test
    ```
 
+<!--
+Source of Trust
+commit_hash: ebb2cb05b8e21e5d4aae2cfcf0429805ebc7f344
+verified_at: 2026-03-23T12:30:00Z
+source_patterns:
+  - src/infrastructure.database/migrations/**/*.ts
+  - src/infrastructure.config/options/app-config-mock-access-token/**/*.ts
+  - .docker/compose.yml
+confidence_scope: Contagem de migrações (58 arquivos), portas da API (3701), mock de autenticação (ENABLE_MOCK_ACCESS_TOKEN, formato mock.matricula.*)
+-->
+
 ---
 
 ## Acessando a aplicação
+
+Agora que você tem o projeto rodando e verificado, vamos explorar o que cada URL oferece e como interagir com a API.
 
 Após iniciar o servidor com `bun run dev`, acesse:
 
@@ -430,11 +468,22 @@ A documentação da API REST é gerada automaticamente a partir dos decorators d
 | Arquivos | `/api/arquivos` | GET /, POST / |
 | Gerar horário | `/api/gerar-horario` | POST /, GET /:id, POST /:id/aceitar, POST /:id/rejeitar |
 
+<!--
+Source of Trust
+commit_hash: ebb2cb05b8e21e5d4aae2cfcf0429805ebc7f344
+verified_at: 2026-03-23T12:30:00Z
+source_patterns:
+  - src/modules/*/presentation.rest/*.controller.ts
+  - src/infrastructure.graphql/**/*.ts
+  - src/server/nest/setup/**/*.ts
+confidence_scope: URLs da aplicação (porta 3701, prefixo /api/, endpoints /docs, /graphql, /health), endpoints REST listados por módulo
+-->
+
 ---
 
 ## Serviços do ambiente
 
-Quando você sobe o ambiente (via Dev Container ou `just up`), os seguintes serviços são iniciados:
+Para entender de onde vêm todas essas URLs, é útil saber quais serviços rodam por trás do projeto. Quando você sobe o ambiente (via Dev Container ou `just up`), o Docker Compose inicia vários containers que trabalham juntos:
 
 ```mermaid
 graph TB
@@ -463,7 +512,16 @@ graph TB
 - `management-service-uploaded-files` — arquivos enviados
 - `management-service-shell-history` — histórico do shell
 
-**Rede:** `ladesa-net` (bridge) — todos os serviços se comunicam por nome de container.
+**Rede:** `ladesa-net` (bridge — uma rede virtual interna do Docker que permite que os containers se encontrem pelo nome) — todos os serviços se comunicam por nome de container.
+
+<!--
+Source of Trust
+commit_hash: ebb2cb05b8e21e5d4aae2cfcf0429805ebc7f344
+verified_at: 2026-03-23T12:30:00Z
+source_patterns:
+  - .docker/compose.yml
+confidence_scope: Nomes de containers, portas expostas (3701, 9229, 5432, 15672), credenciais PostgreSQL (main/7f226...), credenciais RabbitMQ (admin/admin), volumes e rede
+-->
 
 ---
 
@@ -543,9 +601,21 @@ O `API_PREFIX` define o prefixo **global** de todas as rotas da aplicação — 
 
 > **Nota:** o ambiente de produção/desenvolvimento público (`dev.ladesa.com.br`) pode usar um prefixo diferente (ex.: `/api/v1/`), configurado via variável de ambiente no deploy. Localmente, o padrão é `/api/`.
 
+<!--
+Source of Trust
+commit_hash: ebb2cb05b8e21e5d4aae2cfcf0429805ebc7f344
+verified_at: 2026-03-23T12:30:00Z
+source_patterns:
+  - .env.example
+  - src/infrastructure.config/**/*.ts
+confidence_scope: Variáveis de ambiente com valores padrão, prefixo de API (API_PREFIX), configuração de OAuth2/Keycloak, mock de autenticação, message broker, armazenamento
+-->
+
 ---
 
 ## Scripts disponíveis
+
+Além de `bun run dev`, o projeto tem diversos scripts para tarefas comuns. Eles são sua caixa de ferramentas do dia a dia.
 
 Todos os scripts são executados **dentro do container** com `bun run <script>`. Se você não estiver no shell do container (via `just up`), use `just exec bun run <script>`.
 
@@ -599,11 +669,22 @@ Todos os scripts são executados **dentro do container** com `bun run <script>`.
 |--------|-----------|
 | `codegen:timetable-generator:fresh` | Gera tipos TypeScript para mensagens do timetable generator |
 
+<!--
+Source of Trust
+commit_hash: ebb2cb05b8e21e5d4aae2cfcf0429805ebc7f344
+verified_at: 2026-03-23T12:30:00Z
+source_patterns:
+  - src/package.json
+confidence_scope: Scripts disponíveis via bun run (dev, build, start, test, migration:run, migration:revert, db:reset, typeorm:generate, code:fix, code:check, typecheck)
+-->
+
 ---
 
 ## Banco de dados e migrações
 
-Para entender como o projeto persiste dados, é importante conhecer os conceitos de ORM, soft delete e transações ACID.
+Até agora você já sabe rodar o projeto, acessar as URLs e executar scripts. Quando você rodou `bun run migration:run` nos primeiros passos, criou as tabelas no banco de dados. Mas como exatamente o projeto armazena e gerencia esses dados?
+
+Esta seção explica os três conceitos fundamentais por trás da camada de dados: como objetos do código viram linhas no banco (ORM), como a exclusão de registros funciona (soft delete) e como múltiplas operações no banco se mantêm consistentes (transações ACID).
 
 ### ORM (Object-Relational Mapping)
 
@@ -877,9 +958,22 @@ CALL ensure_change_date_trigger('campus');
 
 Isso garante que `date_updated` é **sempre** preciso, independentemente de a aplicação se lembrar de atualizá-lo.
 
+<!--
+Source of Trust
+commit_hash: ebb2cb05b8e21e5d4aae2cfcf0429805ebc7f344
+verified_at: 2026-03-23T12:30:00Z
+source_patterns:
+  - src/infrastructure.database/migrations/**/*.ts
+  - src/infrastructure.database/typeorm/**/*.ts
+  - src/modules/*/infrastructure.database/typeorm/*.typeorm.entity.ts
+confidence_scope: ORM (TypeORM 0.3, synchronize:false), 58 migrações, triggers automáticos (change_date_updated, ensure_change_date_trigger), soft delete via dateDeleted, transações automáticas via TransactionInterceptor
+-->
+
 ---
 
 ## Autenticação e autorização
+
+Com o banco de dados entendido, a próxima pergunta é: como a API sabe **quem** está fazendo uma requisição e **se essa pessoa tem permissão** para fazer o que está pedindo? A resposta envolve três conceitos que trabalham juntos: JWT (o "crachá digital" do usuário), JWKS (como a API verifica se o crachá é legítimo) e OAuth2/OIDC (o fluxo de login completo).
 
 Para entender o fluxo de autenticação deste projeto, é importante conhecer os conceitos de JWT, JWKS e OAuth2/OIDC.
 
@@ -978,7 +1072,7 @@ sequenceDiagram
     KC-->>FE: Novo access token
 ```
 
-**Neste projeto**, o Keycloak é o **Identity Provider** (IdP). O fluxo é: (1) o front-end redireciona o usuário para o Keycloak, (2) o usuário faz login, (3) o Keycloak emite um JWT e redireciona de volta, (4) o front-end envia esse JWT em todas as requisições à API no header `Authorization: Bearer <token>`. A implementação fica em `src/infrastructure.identity-provider/`.
+**Neste projeto**, o Keycloak é o **Identity Provider** (IdP — o servidor que gerencia contas de usuário e login). O fluxo é: (1) o front-end redireciona o usuário para o Keycloak, (2) o usuário faz login, (3) o Keycloak emite um JWT e redireciona de volta, (4) o front-end envia esse JWT em todas as requisições à API no header `Authorization: Bearer <token>` (o **Bearer token** é simplesmente a maneira padrão de enviar o JWT numa requisição HTTP — você coloca `Bearer` seguido do token no cabeçalho `Authorization`). A implementação fica em `src/infrastructure.identity-provider/`.
 
 > **Para ir mais fundo:** o OAuth2 define vários **fluxos** (grant types). Para SPAs e apps web, o **Authorization Code** (com PKCE) é o mais seguro — o client troca um código temporário por tokens, evitando que tokens apareçam na URL. O **Client Credentials** é usado para comunicação entre serviços (machine-to-machine). Neste projeto, o Management Service é um **Resource Server** — ele valida tokens mas não os emite. As credenciais de client (`KC_CLIENT_ID`, `KC_CLIENT_SECRET`) são usadas pelo admin client do Keycloak para operações administrativas (como criar usuários).
 
@@ -1068,9 +1162,24 @@ O padrão é **"throw on deny"**: se o usuário não tiver permissão, uma exce�
 
 Operações de **leitura** (queries) atualmente aceitam acesso com ou sem autenticação — o `accessContext` pode ser `null`. No roadmap está prevista a filtragem de resultados por permissão: o usuário verá apenas os registros que tem autorização para acessar.
 
+<!--
+Source of Trust
+commit_hash: ebb2cb05b8e21e5d4aae2cfcf0429805ebc7f344
+verified_at: 2026-03-23T12:30:00Z
+source_patterns:
+  - src/infrastructure.identity-provider/**/*.ts
+  - src/server/nest/auth/**/*.ts
+  - src/infrastructure.config/options/app-config-mock-access-token/**/*.ts
+  - src/modules/*/domain/authorization/**/*.ts
+  - src/modules/*/application/authorization/**/*.ts
+confidence_scope: Fluxo de autenticação (Keycloak, JWKS, OAuth2/OIDC), mock tokens (mock.matricula.*), IPermissionChecker (ensureCanCreate/Update/Delete), pattern throw-on-deny
+-->
+
 ---
 
 ## Qualidade de código
+
+Antes de contribuir com código, é essencial entender as regras de qualidade que o projeto segue. Toda alteração precisa passar por validação automática e formatação — o projeto não aceita código fora desses padrões.
 
 Para entender como o projeto garante a integridade dos dados em todas as camadas, é importante conhecer o Zod.
 
@@ -1179,9 +1288,22 @@ bun run code:check
 
 O Dev Container já configura o Biome como formatador padrão com **auto-format ao salvar** — ou seja, ao salvar um arquivo no VS Code, ele é formatado automaticamente.
 
+<!--
+Source of Trust
+commit_hash: ebb2cb05b8e21e5d4aae2cfcf0429805ebc7f344
+verified_at: 2026-03-23T12:30:00Z
+source_patterns:
+  - src/biome.jsonc
+  - src/shared/validation/**/*.ts
+  - src/modules/*/domain/*.schemas.ts
+confidence_scope: Configuração Biome (largura 100, 2 espaços, semicolons, trailing commas), validação Zod em duas camadas (apresentação + domínio), ZodGlobalValidationPipe
+-->
+
 ---
 
 ## Como contribuir
+
+Com o projeto rodando, as ferramentas entendidas e as regras de qualidade claras, você está pronto para contribuir. Esta seção guia você desde os conceitos básicos de Git (se nunca usou) até abrir seu primeiro Pull Request.
 
 ### Conceitos básicos de Git (para quem está começando)
 
@@ -1719,9 +1841,48 @@ Link para a issue: Closes #123
 
 ## Arquitetura
 
+Com o fluxo de contribuição claro, agora vamos entender **como o código é organizado internamente**. Isso vai ajudar você a saber onde colocar cada alteração e por que os arquivos estão onde estão.
+
+### Por que o código é organizado assim?
+
+Imagine um restaurante. Se o cozinheiro, o garçom, o caixa e o fornecedor estivessem todos na mesma sala fazendo tudo junto, qualquer mudança (trocar o fornecedor, mudar o cardápio, aceitar um novo tipo de pagamento) afetaria todo mundo. Agora imagine que cada um tem seu espaço separado e se comunicam por pedidos padronizados — mudar o fornecedor não afeta o garçom, e o cozinheiro não precisa saber como o pagamento funciona.
+
+Este projeto segue essa mesma ideia: cada parte do código tem uma responsabilidade clara e se comunica com as outras através de **contratos** (interfaces). Isso permite trocar peças sem quebrar o resto.
+
+```mermaid
+graph LR
+    subgraph "Sem organização"
+        MONO["Todo o código junto\n(banco, lógica, HTTP, auth)\n→ mudar uma coisa quebra outra"]
+    end
+
+    subgraph "Com arquitetura hexagonal"
+        PRES["Apresentação\n(recebe requisições)"]
+        APP["Aplicação\n(orquestra a lógica)"]
+        DOM["Domínio\n(regras de negócio)"]
+        INFRA["Infraestrutura\n(banco, auth, filas)"]
+        PRES --> APP --> DOM
+        INFRA --> DOM
+    end
+
+    style MONO fill:#e74c3c,stroke:#c0392b,color:#fff,text-align:left
+    style DOM fill:#e8a838,stroke:#b07c1e,color:#fff,text-align:left
+    style PRES fill:#4a90d9,stroke:#2c5f8a,color:#fff,text-align:left
+    style INFRA fill:#50b86c,stroke:#3a8a50,color:#fff,text-align:left
+```
+
+**Na prática, quando você precisa adicionar um novo campo a uma entidade (ex.: "telefone" no Campus):**
+
+1. Adiciona o campo no **domínio** (`campus.ts` e `campus.schemas.ts`)
+2. Atualiza a entidade do banco na **infraestrutura** (`campus.typeorm.entity.ts`)
+3. Gera uma **migração** (`bun run typeorm:generate`)
+4. Atualiza os DTOs na **apresentação** (REST e/ou GraphQL)
+5. Pronto — os handlers da aplicação não mudam porque delegam para o domínio
+
+Essa separação é o que chamamos de **arquitetura hexagonal**.
+
 ### Arquitetura hexagonal
 
-O projeto segue a **arquitetura hexagonal** (também conhecida como _ports & adapters_). A ideia central é que a lógica de negócio (domínio) não depende de frameworks, bancos de dados ou protocolos — ela define **contratos** (interfaces/ports), e as camadas externas fornecem **implementações** (adapters).
+O projeto segue a **arquitetura hexagonal** (também conhecida como _ports & adapters_). Em termos simples: a lógica de negócio (domínio) fica no "centro" e não sabe nada sobre o mundo exterior. Ela define **contratos** — como "preciso de um repositório que salve Campus" — e as camadas externas fornecem **implementações** — como "aqui está um repositório que usa PostgreSQL". O termo **port** (porta) se refere ao contrato/interface, e **adapter** (adaptador) se refere à implementação concreta.
 
 **O que isso significa na prática?** Se amanhã o banco de dados mudar de PostgreSQL para outro, ou se o Keycloak for substituído por outro provedor de autenticação, apenas a camada de infraestrutura precisa ser alterada — a lógica de negócio permanece intacta.
 
@@ -1872,7 +2033,9 @@ graph TD
 
 ### NestJS — conceitos fundamentais
 
-O projeto usa o [NestJS](https://nestjs.com/) v11 como framework. Se você nunca usou NestJS, aqui estão os conceitos essenciais para entender o código:
+O projeto usa o [NestJS](https://nestjs.com/) v11 como framework. O NestJS é um framework para construir aplicações server-side em TypeScript — ele fornece uma estrutura opinada para organizar o código, gerenciar dependências e lidar com requisições HTTP e GraphQL. Se você já usou frameworks como Spring (Java) ou Django (Python), o NestJS segue uma filosofia similar.
+
+Se você nunca usou NestJS, aqui estão os conceitos essenciais para entender o código:
 
 #### Building blocks
 
@@ -1916,7 +2079,17 @@ graph TD
 
 #### Pipeline de uma requisição HTTP
 
-Quando uma requisição chega ao NestJS, ela passa por várias camadas antes de chegar ao controller:
+Quando uma requisição chega ao NestJS, ela não vai direto para o controller — ela passa por uma "esteira" de etapas, onde cada etapa tem um papel específico. Pense como uma linha de montagem: cada estação verifica ou transforma algo antes de passar adiante.
+
+As etapas dessa esteira são:
+
+- **Middleware** — código que executa antes de tudo. Pode modificar a requisição ou resposta. Exemplo: adicionar um ID de rastreamento.
+- **Guard** (guarda) — decide se a requisição pode prosseguir. É onde a autenticação acontece. Se o token for inválido, a requisição para aqui.
+- **Pipe** (tubo/filtro) — transforma e/ou valida os dados de entrada. Se o body da requisição estiver malformado, a requisição é rejeitada aqui.
+- **Interceptor** (interceptador) — envolve a execução do handler. Pode agir antes e depois da lógica principal. Usado para transações e logging.
+- **Filter** (filtro de exceção) — captura erros que ocorreram em qualquer etapa e formata uma resposta de erro padronizada.
+
+Visualmente:
 
 ```mermaid
 graph LR
@@ -1955,6 +2128,8 @@ graph LR
 
 #### Dependency Injection no NestJS
 
+**Dependency Injection** (DI — Injeção de Dependência) é um padrão onde uma classe **não cria** suas dependências — ela apenas declara "preciso de X" e o framework fornece X automaticamente. Isso é fundamental para a arquitetura hexagonal: o handler diz "preciso de um repositório" sem saber se é PostgreSQL, memória ou qualquer outra coisa.
+
 O NestJS resolve dependências automaticamente. Você declara o que precisa no constructor, e o framework injeta:
 
 ```typescript
@@ -1965,7 +2140,7 @@ constructor(
 ) {}
 ```
 
-Neste projeto, usamos **Symbols** como tokens de injeção (em vez de classes), o que permite desacoplar interface de implementação:
+Neste projeto, usamos **Symbols** como tokens de injeção. Um **Symbol** no TypeScript é um identificador único e imutável — como um número de CPF, que garante que nunca haverá confusão entre duas coisas com o mesmo nome. Usamos Symbols em vez de classes porque TypeScript não emite interfaces em tempo de execução — o Symbol é a referência concreta que o container usa para saber qual implementação entregar:
 
 - `Symbol("ICampusRepository")` — token de injeção (definido no domínio)
 - `@DeclareDependency(token)` — solicita a injeção de uma dependência (wrapper para `@Inject`)
@@ -2525,15 +2700,34 @@ erDiagram
 
 > **Nota:** este diagrama mostra os relacionamentos principais. Entidades de agendamento de calendário (`calendario-agendamento-*`) e geração de horários (`gerar-horario-*`) possuem tabelas junction adicionais não representadas para manter a legibilidade.
 
+<!--
+Source of Trust
+commit_hash: ebb2cb05b8e21e5d4aae2cfcf0429805ebc7f344
+verified_at: 2026-03-23T12:30:00Z
+source_patterns:
+  - src/domain/**/*.ts
+  - src/application/**/*.ts
+  - src/infrastructure.*/**/*.ts
+  - src/modules/*/domain/**/*.ts
+  - src/modules/*/application/**/*.ts
+  - src/modules/*/infrastructure.database/**/*.ts
+  - src/modules/*/presentation.rest/**/*.ts
+  - src/modules/*/presentation.graphql/**/*.ts
+  - src/server/nest/**/*.ts
+confidence_scope: Arquitetura hexagonal (4 camadas), pipeline NestJS (Middleware → Guard → Pipe → Controller → Interceptor → Filter), DI via Symbols, estrutura de diretórios, 38 módulos organizados por área, diagrama ER
+-->
+
 ---
 
 ## Principais abstrações e padrões
 
-Esta seção documenta as abstrações mais reutilizadas do projeto, com código real extraído do repositório.
+Agora que você entende a arquitetura em alto nível (as camadas e como elas se comunicam), esta seção mergulha nos **padrões de código concretos** — as "peças de Lego" que se repetem em todos os módulos. Se você vai contribuir com código, esses padrões são o que você vai encontrar e reproduzir no dia a dia.
 
 ### Entidade de domínio
 
-Toda entidade de domínio segue o mesmo padrão: constructor **privado**, factory methods estáticos (`create`, `load`, `update`) e validação Zod em cada operação.
+Uma **entidade de domínio** é uma classe TypeScript que representa um conceito do mundo real (como um Campus, uma Turma ou um Diário). Diferente de uma classe comum, ela protege seus dados: você não cria uma instância diretamente com `new Campus()` — em vez disso, usa métodos especiais chamados **factory methods** (`create` para novos registros, `load` para reconstituir do banco, `update` para modificar).
+
+Toda entidade segue o mesmo padrão: constructor **privado** (só a própria classe pode se instanciar), factory methods estáticos e validação Zod em cada operação.
 
 ```mermaid
 graph TD
@@ -2950,7 +3144,9 @@ export const DeclareImplementation = (): ClassDecorator => {
 
 ### Scalars semânticos
 
-Type aliases em `src/domain/abstractions/scalars/` que adicionam **significado semântico** a tipos primitivos:
+Um **scalar** (escalar) neste contexto é um tipo simples que representa um único valor (como uma string ou um número). O problema é que `string` é genérico demais — um `id`, um `nome` e uma `data` são todos `string`, mas representam coisas completamente diferentes. **Scalars semânticos** são type aliases (apelidos de tipo) que adicionam significado ao tipo primitivo, para que o TypeScript te avise se você tentar usar um no lugar do outro.
+
+Eles ficam em `src/domain/abstractions/scalars/`:
 
 ```mermaid
 graph LR
@@ -3178,11 +3374,36 @@ NestJsPaginateAdapter.paginate(repo, dto, paginateConfig({
 
 Configuração padrão (`src/infrastructure.database/pagination/config/paginate-config.ts`): `maxLimit: 100`, `defaultLimit: 20`, `multiWordSearch: true`.
 
+<!--
+Source of Trust
+commit_hash: ebb2cb05b8e21e5d4aae2cfcf0429805ebc7f344
+verified_at: 2026-03-23T12:30:00Z
+source_patterns:
+  - src/modules/*/domain/*.ts
+  - src/modules/*/domain/*.schemas.ts
+  - src/modules/*/domain/shared/*.query-fields.ts
+  - src/modules/*/domain/repositories/*.ts
+  - src/modules/*/application/commands/**/*.ts
+  - src/modules/*/application/queries/**/*.ts
+  - src/modules/*/domain/authorization/**/*.ts
+  - src/domain/dependency-injection/**/*.ts
+  - src/domain/abstractions/scalars/**/*.ts
+  - src/server/nest/interceptors/transaction.interceptor.ts
+  - src/shared/validation/**/*.ts
+  - src/server/nest/filters/**/*.ts
+  - src/infrastructure.database/pagination/**/*.ts
+confidence_scope: Padrões de entidades (private constructor, create/load/update), schemas Zod (EntitySchema/CreateSchema/UpdateSchema), FieldMetadata, interfaces de repositório compostas, command/query handlers, permission checkers, DeclareDependency/DeclareImplementation, scalars semânticos, TransactionInterceptor, ZodGlobalValidationPipe, ApplicationErrorFilter, paginação (nestjs-paginate)
+-->
+
 ---
 
 ## GraphQL
 
-A API GraphQL usa **Apollo Server** v5 com abordagem **code-first** — o schema é gerado automaticamente a partir de classes TypeScript decoradas com `@ObjectType()` e `@Field()`. Não é necessário escrever arquivos `.graphql` manualmente.
+As seções a seguir cobrem tópicos especializados — leia conforme precisar trabalhar com cada área.
+
+**GraphQL** é uma linguagem de consulta alternativa ao REST. A diferença principal: no REST, o servidor decide quais campos retornar; no GraphQL, o **cliente** diz exatamente quais campos quer e recebe apenas esses. É como a diferença entre um buffet (REST — pega tudo) e um pedido à la carte (GraphQL — escolhe item por item).
+
+A API GraphQL usa **Apollo Server** v5 com abordagem **code-first** (o schema GraphQL é gerado automaticamente a partir de classes TypeScript decoradas com `@ObjectType()` e `@Field()`, em vez de ser escrito manualmente em arquivos `.graphql`).
 
 ### Arquitetura GraphQL do projeto
 
@@ -3357,6 +3578,16 @@ graph TD
 
 > **Nota avançada:** o projeto **não** usa DataLoader para resolver o problema N+1 do GraphQL — queries que buscam relações fazem JOINs no repositório TypeORM. A função `graphqlExtractSelection()` (em `src/infrastructure.graphql/graphql-selection.ts`) extrai os campos solicitados da query GraphQL e os passa para o repositório, que faz SELECT apenas das colunas necessárias — otimizando a query SQL.
 
+<!--
+Source of Trust
+commit_hash: ebb2cb05b8e21e5d4aae2cfcf0429805ebc7f344
+verified_at: 2026-03-23T12:30:00Z
+source_patterns:
+  - src/infrastructure.graphql/**/*.ts
+  - src/modules/*/presentation.graphql/**/*.ts
+confidence_scope: Apollo Server v5 code-first, endpoint /api/graphql, GraphiQL habilitado, cache LRU (100MB, 5min TTL), graphqlExtractSelection, módulos com/sem GraphQL
+-->
+
 ---
 
 ## Message broker
@@ -3391,11 +3622,24 @@ A aplicação publica uma mensagem de requisição na fila e consome a resposta 
 
 A UI de gerenciamento do RabbitMQ está disponível em `http://localhost:15672` (usuário `admin`, senha `admin`).
 
+<!--
+Source of Trust
+commit_hash: ebb2cb05b8e21e5d4aae2cfcf0429805ebc7f344
+verified_at: 2026-03-23T12:30:00Z
+source_patterns:
+  - src/infrastructure.message-broker/**/*.ts
+  - src/domain/abstractions/message-broker/**/*.ts
+  - .docker/compose.yml
+confidence_scope: RabbitMQ via Rascal v21, filas de timetable (request/response), padrões RPC e fire-and-forget, porta 15672 UI, credenciais admin/admin
+-->
+
 ---
 
 ## Testes
 
-O projeto usa [Vitest](https://vitest.dev/) v4 como framework de testes.
+Testes automatizados são programas que verificam se o código funciona como esperado. Quando você roda `bun run test`, esses programas executam cenários pré-definidos e reportam se algo quebrou.
+
+O projeto usa [Vitest](https://vitest.dev/) v4 como framework de testes (Vitest é similar ao Jest, mas otimizado para projetos que usam Vite/Bun).
 
 ```mermaid
 graph TD
@@ -3465,9 +3709,23 @@ O Vitest está configurado em `src/vitest.config.mts`:
 - **Path alias:** `@/*` → `./` (respeita tsconfig paths).
 - **Bundling:** Zod é bundled (`noExternal: ["zod"]`).
 
+<!--
+Source of Trust
+commit_hash: ebb2cb05b8e21e5d4aae2cfcf0429805ebc7f344
+verified_at: 2026-03-23T12:30:00Z
+source_patterns:
+  - src/vitest.config.mts
+  - src/test/**/*.ts
+  - src/modules/*/application/commands/**/*.spec.ts
+  - src/modules/*/application/queries/**/*.spec.ts
+confidence_scope: Framework Vitest v4, configuração (globals, path alias, noExternal zod), helpers de teste (createMockCrudRepository, createMockPermissionChecker, etc.)
+-->
+
 ---
 
 ## CI/CD
+
+> **O que é CI/CD?** CI (Continuous Integration — Integração Contínua) é o processo automático de compilar e testar o código a cada push. CD (Continuous Deployment — Deploy Contínuo) é a publicação automática do sistema após a CI passar. Juntos, garantem que código novo seja validado e disponibilizado rapidamente.
 
 O pipeline de CI/CD é definido em `.github/workflows/build-deploy.dev.yml`.
 
@@ -3521,9 +3779,22 @@ graph LR
    - Environment: `development` (com `DEPLOY_URL`).
    - Executa `.deploy/development/deploy.sh`.
 
+<!--
+Source of Trust
+commit_hash: ebb2cb05b8e21e5d4aae2cfcf0429805ebc7f344
+verified_at: 2026-03-23T12:30:00Z
+source_patterns:
+  - .github/workflows/build-deploy.dev.yml
+  - .docker/Containerfile
+  - .deploy/**/*
+confidence_scope: Pipeline CI/CD (triggers, etapas build/push/deploy), imagem Docker (target service-runtime, GHCR), concurrency build-deploy-dev
+-->
+
 ---
 
 ## Boas práticas de desenvolvimento
+
+As seções a seguir consolidam as regras e princípios que guiam o desenvolvimento. Se você leu o README até aqui, já encontrou a maioria delas em contexto — aqui estão reunidas para referência rápida.
 
 Estas são as práticas essenciais que todo contribuidor deve seguir:
 
@@ -3556,6 +3827,8 @@ Estas são as práticas essenciais que todo contribuidor deve seguir:
 ---
 
 ## Princípios de engenharia
+
+Esta é a seção mais formal e densa do README — ela documenta os princípios de design que guiam todas as decisões de código. Não é necessário memorizar tudo; use como referência quando tiver dúvidas sobre "qual abordagem escolher".
 
 O projeto segue princípios rigorosos de engenharia de software para garantir qualidade, manutenibilidade e escalabilidade:
 
@@ -3743,6 +4016,16 @@ export class CampusCreateCommandHandlerImpl {
 | Linting/Formatação | [Biome](https://biomejs.dev/) | 2.4.8 |
 | Testes | [Vitest](https://vitest.dev/) + [Supertest](https://github.com/ladjs/supertest) | 4.1.0 / 7.2.2 |
 | Coverage | [@vitest/coverage-v8](https://vitest.dev/guide/coverage) | 4.1.0 |
+
+<!--
+Source of Trust
+commit_hash: ebb2cb05b8e21e5d4aae2cfcf0429805ebc7f344
+verified_at: 2026-03-23T12:30:00Z
+source_patterns:
+  - src/package.json
+  - .docker/compose.yml
+confidence_scope: Versões de todas as tecnologias listadas na tabela de stack (extraídas de package.json e compose.yml)
+-->
 
 ---
 
