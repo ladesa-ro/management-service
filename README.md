@@ -8,87 +8,6 @@ API REST/GraphQL de gerenciamento acadêmico desenvolvida com NestJS, TypeORM e 
 
 ---
 
-## Sumário
-
-- [Visão geral](#visão-geral)
-- [Conceitos fundamentais](#conceitos-fundamentais)
-  - [Container e Docker](#container-e-docker)
-  - [ORM (Object-Relational Mapping)](#orm-object-relational-mapping)
-  - [DTO (Data Transfer Object)](#dto-data-transfer-object)
-  - [JWT (JSON Web Token)](#jwt-json-web-token)
-  - [JWKS (JSON Web Key Set)](#jwks-json-web-key-set)
-  - [OAuth2 e OIDC](#oauth2-e-oidc)
-  - [UUID v7](#uuid-v7)
-  - [Soft delete (exclusão lógica)](#soft-delete-exclusão-lógica)
-  - [Zod (validação de schemas)](#zod-validação-de-schemas)
-  - [CQRS](#cqrs-command-query-responsibility-segregation)
-  - [Inversão de dependência e Ports & Adapters](#inversão-de-dependência-e-ports--adapters)
-  - [ACID e transações](#acid-e-transações)
-  - [REST e GraphQL](#rest-e-graphql)
-  - [Message broker (RabbitMQ)](#message-broker-rabbitmq)
-- [Arquitetura](#arquitetura)
-  - [Arquitetura hexagonal](#arquitetura-hexagonal)
-  - [NestJS — conceitos fundamentais](#nestjs--conceitos-fundamentais)
-  - [As camadas em detalhe](#as-camadas-em-detalhe)
-  - [Como as camadas conversam](#como-as-camadas-conversam)
-  - [Fluxo de uma requisição](#fluxo-de-uma-requisição)
-  - [Estrutura de diretórios](#estrutura-de-diretórios)
-  - [Módulos de domínio](#módulos-de-domínio)
-  - [Diagrama de entidades e relacionamentos](#diagrama-de-entidades-e-relacionamentos)
-- [Principais abstrações e padrões](#principais-abstrações-e-padrões)
-  - [Entidade de domínio](#entidade-de-domínio)
-  - [Schemas Zod do domínio](#schemas-zod-do-domínio)
-  - [FieldMetadata e QueryFields](#fieldmetadata-e-queryfields)
-  - [Interfaces de repositório](#interfaces-de-repositório)
-  - [Command e Query Handlers](#command-e-query-handlers)
-  - [Permission Checker](#permission-checker)
-  - [DeclareDependency e DeclareImplementation](#declaredependency-e-declareimplementation)
-  - [Scalars semânticos](#scalars-semânticos)
-  - [TransactionInterceptor e ConnectionProxy](#transactioninterceptor-e-connectionproxy)
-  - [ZodGlobalValidationPipe](#zodglobalvalidationpipe)
-  - [ApplicationErrorFilter](#applicationerrorfilter)
-  - [Paginação](#paginação)
-- [Pré-requisitos](#pré-requisitos)
-- [Clonando o repositório](#clonando-o-repositório)
-- [Rodando o projeto](#rodando-o-projeto)
-  - [Caminho A: justfile (recomendado)](#caminho-a-justfile-recomendado)
-  - [Caminho B: Dev Container](#caminho-b-dev-container)
-- [Primeiros passos após o setup](#primeiros-passos-após-o-setup)
-- [Como contribuir](#como-contribuir)
-  - [Conceitos básicos de Git](#conceitos-básicos-de-git-para-quem-está-começando)
-  - [Gitflow do projeto](#gitflow-do-projeto)
-  - [Convenções de nomenclatura](#convenções-de-nomenclatura)
-  - [Trabalhando com Git localmente](#trabalhando-com-git-localmente)
-  - [Trabalhando localmente no desenvolvimento](#trabalhando-localmente-no-desenvolvimento)
-  - [Passo a passo completo](#passo-a-passo-completo)
-  - [Ciclo de vida de um PR](#ciclo-de-vida-de-um-pull-request)
-  - [O que fazer vs. o que NÃO fazer](#o-que-fazer-vs-o-que-não-fazer)
-  - [Como escrever um bom commit](#como-escrever-um-bom-commit)
-  - [Como escrever uma boa issue](#como-escrever-uma-boa-issue)
-  - [Como escrever um bom Pull Request](#como-escrever-um-bom-pull-request)
-- [Boas práticas de desenvolvimento](#boas-práticas-de-desenvolvimento)
-- [Princípios de engenharia](#princípios-de-engenharia)
-  - [Single Source of Truth (SSOT)](#single-source-of-truth-ssot)
-  - [Dependency Injection (DI)](#dependency-injection-di--interfaces-e-implementações)
-- [Acessando a aplicação](#acessando-a-aplicação)
-  - [Documentação Swagger/Scalar](#documentação-swaggerscalar)
-- [Serviços do ambiente](#serviços-do-ambiente)
-- [Variáveis de ambiente](#variáveis-de-ambiente)
-  - [Sobre o prefixo (API_PREFIX)](#sobre-o-prefixo-api_prefix)
-- [Scripts disponíveis](#scripts-disponíveis)
-- [Banco de dados e migrações](#banco-de-dados-e-migrações)
-- [Autenticação e autorização](#autenticação-e-autorização)
-- [GraphQL](#graphql)
-- [Message broker](#message-broker)
-- [Qualidade de código](#qualidade-de-código)
-- [Testes](#testes)
-- [CI/CD](#cicd)
-- [Stack tecnológico](#stack-tecnológico)
-- [Dicas e troubleshooting](#dicas-e-troubleshooting)
-- [Licença](#licença)
-
----
-
 ## Visão geral
 
 O **Ladesa** (Laboratório de Desenvolvimento de Software Acadêmico) é um ecossistema de software voltado para a **gestão acadêmica de instituições de ensino**. O **Management Service** é o back-end principal desse ecossistema — a API que centraliza e gerencia todos os dados acadêmicos da plataforma.
@@ -112,11 +31,90 @@ Todo o ambiente de desenvolvimento é containerizado — você **não precisa in
 
 ---
 
-## Conceitos fundamentais
+## Sumário
 
-Antes de mergulhar na arquitetura e no código, esta seção explica os conceitos que aparecem ao longo do projeto. Cada conceito segue três camadas de profundidade: uma explicação acessível, como funciona neste projeto, e detalhes avançados para quem quer ir mais fundo.
+- [Visão geral](#visão-geral)
+- [Pré-requisitos](#pré-requisitos)
+  - [Container e Docker](#container-e-docker)
+  - [Container runtime](#container-runtime)
+  - [just (command runner) — recomendado](#just-command-runner--recomendado)
+  - [Git](#git)
+  - [Editor de código (escolha um)](#editor-de-código-escolha-um)
+  - [Familiaridade com linha de comando](#familiaridade-com-linha-de-comando)
+- [Clonando o repositório](#clonando-o-repositório)
+- [Rodando o projeto](#rodando-o-projeto)
+  - [Caminho A: justfile (recomendado)](#caminho-a-justfile-recomendado)
+  - [Caminho B: Dev Container](#caminho-b-dev-container)
+- [Primeiros passos após o setup](#primeiros-passos-após-o-setup)
+- [Acessando a aplicação](#acessando-a-aplicação)
+  - [Documentação Swagger/Scalar](#documentação-swaggerscalar)
+- [Serviços do ambiente](#serviços-do-ambiente)
+- [Variáveis de ambiente](#variáveis-de-ambiente)
+  - [Sobre o prefixo (API_PREFIX)](#sobre-o-prefixo-api_prefix)
+- [Scripts disponíveis](#scripts-disponíveis)
+- [Banco de dados e migrações](#banco-de-dados-e-migrações)
+  - [ORM (Object-Relational Mapping)](#orm-object-relational-mapping)
+  - [Soft delete (exclusão lógica)](#soft-delete-exclusão-lógica)
+  - [ACID e transações](#acid-e-transações)
+- [Autenticação e autorização](#autenticação-e-autorização)
+  - [JWT (JSON Web Token)](#jwt-json-web-token)
+  - [JWKS (JSON Web Key Set)](#jwks-json-web-key-set)
+  - [OAuth2 e OIDC](#oauth2-e-oidc)
+- [Qualidade de código](#qualidade-de-código)
+  - [Zod (validação de schemas)](#zod-validação-de-schemas)
+- [Como contribuir](#como-contribuir)
+  - [Conceitos básicos de Git](#conceitos-básicos-de-git-para-quem-está-começando)
+  - [Gitflow do projeto](#gitflow-do-projeto)
+  - [Convenções de nomenclatura](#convenções-de-nomenclatura)
+  - [Trabalhando com Git localmente](#trabalhando-com-git-localmente)
+  - [Trabalhando localmente no desenvolvimento](#trabalhando-localmente-no-desenvolvimento)
+  - [Passo a passo completo](#passo-a-passo-completo)
+  - [Ciclo de vida de um PR](#ciclo-de-vida-de-um-pull-request)
+  - [O que fazer vs. o que NÃO fazer](#o-que-fazer-vs-o-que-não-fazer)
+  - [Como escrever um bom commit](#como-escrever-um-bom-commit)
+  - [Como escrever uma boa issue](#como-escrever-uma-boa-issue)
+  - [Como escrever um bom Pull Request](#como-escrever-um-bom-pull-request)
+- [Arquitetura](#arquitetura)
+  - [Arquitetura hexagonal](#arquitetura-hexagonal)
+  - [Inversão de dependência e Ports & Adapters](#inversão-de-dependência-e-ports--adapters)
+  - [CQRS (Command Query Responsibility Segregation)](#cqrs-command-query-responsibility-segregation)
+  - [NestJS — conceitos fundamentais](#nestjs--conceitos-fundamentais)
+  - [As camadas em detalhe](#as-camadas-em-detalhe)
+  - [Como as camadas conversam](#como-as-camadas-conversam)
+  - [Fluxo de uma requisição](#fluxo-de-uma-requisição)
+  - [Estrutura de diretórios](#estrutura-de-diretórios)
+  - [Módulos de domínio](#módulos-de-domínio)
+  - [Diagrama de entidades e relacionamentos](#diagrama-de-entidades-e-relacionamentos)
+- [Principais abstrações e padrões](#principais-abstrações-e-padrões)
+  - [Entidade de domínio](#entidade-de-domínio)
+  - [Schemas Zod do domínio](#schemas-zod-do-domínio)
+  - [FieldMetadata e QueryFields](#fieldmetadata-e-queryfields)
+  - [Interfaces de repositório](#interfaces-de-repositório)
+  - [Command e Query Handlers](#command-e-query-handlers)
+  - [Permission Checker](#permission-checker)
+  - [DeclareDependency e DeclareImplementation](#declaredependency-e-declareimplementation)
+  - [Scalars semânticos](#scalars-semânticos)
+  - [TransactionInterceptor e ConnectionProxy](#transactioninterceptor-e-connectionproxy)
+  - [ZodGlobalValidationPipe](#zodglobalvalidationpipe)
+  - [ApplicationErrorFilter](#applicationerrorfilter)
+  - [Paginação](#paginação)
+- [GraphQL](#graphql)
+- [Message broker](#message-broker)
+- [Testes](#testes)
+- [CI/CD](#cicd)
+- [Boas práticas de desenvolvimento](#boas-práticas-de-desenvolvimento)
+- [Princípios de engenharia](#princípios-de-engenharia)
+  - [Single Source of Truth (SSOT)](#single-source-of-truth-ssot)
+  - [Dependency Injection (DI)](#dependency-injection-di--interfaces-e-implementações)
+- [Stack tecnológico](#stack-tecnológico)
+- [Dicas e troubleshooting](#dicas-e-troubleshooting)
+- [Licença](#licença)
 
-> **Dica de leitura:** se você já domina um conceito, pule para o próximo. Se algo mais adiante no README não fizer sentido, volte aqui.
+---
+
+## Pré-requisitos
+
+Este projeto roda inteiramente dentro de containers Docker. Antes de instalar as ferramentas, entenda o que são containers:
 
 ### Container e Docker
 
@@ -172,6 +170,438 @@ graph TD
 ```
 
 > **Para ir mais fundo:** quando o Docker Compose declara `volumes: ['./src:/ladesa/management-service/src']`, ele cria um **bind mount** — um mapeamento direto entre um diretório do host e um diretório dentro do container. Qualquer alteração em um lado reflete imediatamente no outro. Já o **port forwarding** (ex.: `ports: ['3701:3701']`) redireciona tráfego de rede da porta do host para a porta do container, permitindo que você acesse `http://localhost:3701` no navegador e a requisição chegue ao NestJS rodando dentro do container. Os **named volumes** (ex.: `management-service-db-data`) persistem dados entre reinicializações do container — sem eles, o banco de dados seria zerado toda vez que o container parasse.
+
+Para contribuir com este projeto, você precisa de:
+
+### Container runtime
+
+| Opção | Instalação |
+|-------|------------|
+| **Docker + Docker Compose** (v2+) **(recomendado)** | [docs.docker.com](https://docs.docker.com/get-docker/) |
+| Podman + Podman Compose | [podman.io](https://podman.io/getting-started/installation) |
+
+> **Nota sobre Podman:** a recomendação oficial é o **Docker**. O projeto possui algumas configurações de compatibilidade com Podman (`userns_mode`, `x-podman`), porém o uso do Podman é **por conta e risco do usuário** — podem haver problemas de compatibilidade não cobertos pelo projeto.
+>
+> Se optar pelo Podman, defina a variável de ambiente `OCI_RUNTIME=podman` antes de rodar os comandos.
+
+### just (command runner) — recomendado
+
+O projeto usa o [just](https://github.com/casey/just) como task runner no lugar do Make. A instalação é **recomendada** para quem pretende usar o [Caminho A (justfile)](#caminho-a-justfile-recomendado), que é o caminho principal de desenvolvimento.
+
+| Plataforma | Instalação |
+|------------|------------|
+| Linux (curl) | `curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh \| bash -s -- --to /usr/local/bin` |
+| macOS (Homebrew) | `brew install just` |
+| Windows (Scoop) | `scoop install just` |
+| Cargo | `cargo install just` |
+
+Mais opções em: <https://github.com/casey/just#installation>
+
+### Git
+
+Necessário para clonar e versionar o código-fonte.
+
+- Tutorial de instalação e configuração: <https://docs.ladesa.com.br/docs/developers-guide/tutorials/source-code/git/>
+
+### Editor de código (escolha um)
+
+| Editor | Dev Container |
+|--------|---------------|
+| **VS Code** | Suporte nativo via extensão [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) |
+| **WebStorm** | Suporte via [Remote Development](https://www.jetbrains.com/help/webstorm/connect-to-devcontainer.html) |
+
+### Familiaridade com linha de comando
+
+Você vai precisar usar o terminal para clonar o repositório, executar comandos e interagir com o container.
+
+- Tutorial básico: <https://docs.ladesa.com.br/docs/developers-guide/tutorials/os/command-line/>
+
+---
+
+## Clonando o repositório
+
+```bash
+git clone https://github.com/ladesa-ro/management-service.git
+cd management-service
+```
+
+> O `just setup` já copia automaticamente os arquivos `.example` para você. Nenhuma configuração manual é necessária para começar.
+
+---
+
+## Rodando o projeto
+
+Existem dois caminhos para subir o ambiente de desenvolvimento. Escolha o que preferir:
+
+| Caminho | Quando usar |
+|---------|-------------|
+| **A: justfile (recomendado)** | Você gerencia os containers pelo terminal com o `just`, independentemente do editor. Funciona com qualquer editor ou IDE. |
+| **B: Dev Container** | Você usa VS Code ou WebStorm e quer que o editor abra diretamente dentro do container, com extensões, terminal e tudo configurado automaticamente. |
+
+### Caminho A: justfile (recomendado)
+
+O `justfile` oferece receitas prontas para gerenciar todo o ciclo de vida dos containers pelo terminal. É o caminho mais direto e flexível — funciona com qualquer editor.
+
+#### 1. Configurar e subir o ambiente
+
+```bash
+just up
+```
+
+Esse único comando faz tudo:
+
+- Copia os arquivos `.env` a partir dos exemplos (se ainda não existirem).
+- Faz o build das imagens dos containers (apenas se houve mudanças).
+- Sobe os containers (aplicação + PostgreSQL + RabbitMQ).
+- Instala as dependências (`bun install`).
+- Abre um shell `zsh` dentro do container da aplicação.
+
+#### 2. Iniciar o servidor de desenvolvimento
+
+Você já estará dentro do container após o `just up`. Basta rodar:
+
+```bash
+bun run dev
+```
+
+#### Receitas disponíveis
+
+| Comando | O que faz |
+|---------|-----------|
+| `just up` | Sobe tudo e abre shell no container |
+| `just start` | Sobe os containers em background (sem abrir shell) |
+| `just stop` | Para os containers (sem remover) |
+| `just down` | Para e remove os containers |
+| `just cleanup` | Para, remove containers **e volumes** (reset completo — pede confirmação) |
+| `just logs` | Mostra logs dos containers em tempo real |
+| `just shell-1000` | Abre shell como usuário `happy` (uid 1000) |
+| `just shell-root` | Abre shell como `root` |
+| `just build` | Faz o build da imagem (apenas se inputs mudaram — verifica hash) |
+| `just rebuild` | Força rebuild da imagem |
+| `just exec <args>` | Executa comando dentro do container |
+| `just compose <args>` | Passa argumentos direto para o `docker compose` |
+
+> **Usando Podman?** Defina a variável `OCI_RUNTIME=podman` antes dos comandos:
+> ```bash
+> OCI_RUNTIME=podman just up
+> ```
+
+---
+
+### Caminho B: Dev Container
+
+O [Dev Container](https://containers.dev/) é uma alternativa que configura automaticamente todo o ambiente de desenvolvimento — extensões, formatação, terminal, portas — dentro do container Docker, integrado ao editor.
+
+#### VS Code
+
+1. Instale a extensão **Dev Containers** (`ms-vscode-remote.remote-containers`).
+2. Abra a pasta do projeto no VS Code.
+3. Quando aparecer a notificação _"Reopen in Container"_, clique nela.
+   - Ou use o Command Palette (`Ctrl+Shift+P`) e selecione **Dev Containers: Reopen in Container**.
+4. Aguarde o build do container e a instalação das dependências (na primeira vez pode demorar alguns minutos).
+5. Abra o terminal integrado (`` Ctrl+` ``) e inicie o servidor:
+
+```bash
+bun run dev
+```
+
+#### WebStorm
+
+1. Abra a pasta do projeto no WebStorm.
+2. Vá em **File > Remote Development > Dev Containers** e selecione o `devcontainer.json` do projeto.
+3. Aguarde o build e a inicialização do container.
+4. Abra o terminal integrado e inicie o servidor:
+
+```bash
+bun run dev
+```
+
+#### O que o Dev Container configura para você
+
+**Extensões pré-instaladas (21 extensões):**
+
+| Categoria | Extensões |
+|-----------|-----------|
+| **TypeScript/JS** | TypeScript Next, Biome (formatter/linter) |
+| **Runtime** | Bun, JS Debug |
+| **Banco de dados** | SQL Tools + Driver PostgreSQL |
+| **Docker** | Docker, Remote Containers |
+| **Git** | GitLens, Git Graph |
+| **API/GraphQL** | GraphQL, OpenAPI (42Crunch) |
+| **Testes** | Vitest Explorer |
+| **Utilidades** | YAML, JSON, Path Intellisense, Spell Checker |
+
+**Configurações do editor:**
+- **Formatador padrão:** Biome — auto-format ao salvar.
+- **Terminal padrão:** `zsh`.
+- **Imports:** modo relativo (sem extensões).
+
+**Portas encaminhadas:**
+- `3701` (API) — `http://localhost:3701`
+- `9229` (debug) — para attach do debugger
+- `5432` (PostgreSQL) — para clientes SQL externos
+
+**Instalação automática:** `bun install` executado no `postCreateCommand`.
+
+**Usuário do container:** `happy` (uid 1000).
+
+**Ferramentas adicionais:** Git (via PPA) e GitHub CLI instalados automaticamente.
+
+---
+
+## Primeiros passos após o setup
+
+Após rodar `just up` (ou abrir o Dev Container) e iniciar o servidor com `bun run dev`, siga estes passos para verificar que tudo está funcionando:
+
+1. **Aplique as migrações do banco de dados:**
+   ```bash
+   bun run migration:run
+   ```
+   Isso cria todas as tabelas (58 migrações), funções/triggers e insere os dados iniciais (estados do Brasil, cidades de Rondônia, campus IFRO Ji-Paraná e superuser).
+
+2. **Acesse a documentação da API:**
+   Abra <http://localhost:3701/api/docs> no navegador. Você verá a documentação interativa Scalar/Swagger com todos os endpoints disponíveis.
+
+3. **Acesse o GraphQL Playground:**
+   Abra <http://localhost:3701/api/graphql> para explorar queries e mutations GraphQL.
+
+4. **Faça sua primeira requisição autenticada (mock):**
+   Em desenvolvimento, com `ENABLE_MOCK_ACCESS_TOKEN=true` (padrão), você pode usar tokens simulados:
+   ```bash
+   # O token mock.matricula.1234 simula um usuário com matrícula 1234
+   curl -H "Authorization: Bearer mock.matricula.1234" http://localhost:3701/api/campi
+   ```
+
+5. **Rode os testes para verificar que está tudo ok:**
+   ```bash
+   bun run test
+   ```
+
+---
+
+## Acessando a aplicação
+
+Após iniciar o servidor com `bun run dev`, acesse:
+
+| Recurso | URL | Descrição |
+|---------|-----|-----------|
+| Health check | <http://localhost:3701/health> | Verificação de saúde da aplicação (fora do prefixo) |
+| Documentação Swagger/Scalar | <http://localhost:3701/api/docs> | Documentação interativa da API REST com Scalar |
+| OpenAPI JSON | <http://localhost:3701/api/docs/openapi.v3.json> | Schema OpenAPI em JSON (para importação em Postman, Insomnia, etc.) |
+| Swagger UI | <http://localhost:3701/api/docs/swagger> | Interface Swagger UI clássica |
+| GraphQL Playground | <http://localhost:3701/api/graphql> | Interface GraphiQL para explorar e testar queries/mutations |
+
+> As URLs acima usam o prefixo padrão `/api/`. Se o `API_PREFIX` for alterado no `.env`, as URLs mudam de acordo. Veja [Sobre o prefixo](#sobre-o-prefixo-api_prefix) para detalhes.
+
+### Documentação Swagger/Scalar
+
+A documentação da API REST é gerada automaticamente a partir dos decorators do NestJS no código-fonte. Ao acessar <http://localhost:3701/api/docs>, você encontra a interface [Scalar](https://scalar.com/) — uma alternativa moderna ao Swagger UI:
+
+**O que você pode fazer na documentação:**
+
+- **Explorar endpoints** — todos os endpoints REST agrupados por módulo (tags `@ApiTags`).
+- **Testar requisições** — enviar requests diretamente pelo navegador, com payload e autenticação.
+- **Ver schemas** — tipos de entrada e saída de cada endpoint, com exemplos.
+- **Autenticar** — clicar em "Authorize" e inserir o Bearer token (ex.: `mock.matricula.1234` em desenvolvimento).
+- **Exportar** — baixar o schema OpenAPI em JSON para importar no Postman, Insomnia ou outra ferramenta.
+
+**Principais endpoints REST:**
+
+| Área | Path base | Métodos |
+|------|-----------|---------|
+| Campi | `/api/campi` | GET /, GET /:id, POST /, PATCH /:id, DELETE /:id |
+| Blocos | `/api/blocos` | GET /, GET /:id, POST /, PATCH /:id, DELETE /:id |
+| Ambientes | `/api/ambientes` | GET /, GET /:id, POST /, PATCH /:id, DELETE /:id |
+| Turmas | `/api/turmas` | GET /, GET /:id, POST /, PATCH /:id, DELETE /:id, GET /:id/horario |
+| Diários | `/api/diarios` | GET /, GET /:id, POST /, PATCH /:id, DELETE /:id |
+| Cursos | `/api/cursos` | GET /, GET /:id, POST /, PATCH /:id |
+| Disciplinas | `/api/disciplinas` | GET /, GET /:id, POST /, PATCH /:id, DELETE /:id |
+| Modalidades | `/api/modalidades` | GET /, GET /:id, POST /, PATCH /:id, DELETE /:id |
+| Usuários | `/api/usuarios` | GET /, GET /:id, POST /, PATCH /:id |
+| Autenticação | `/api/autenticacao` | GET /quem-sou-eu, POST /login, POST /login/refresh |
+| Calendários letivos | `/api/calendarios-letivos` | GET /, GET /:id, POST /, PATCH /:id, DELETE /:id |
+| Horários de aula | `/api/horarios-aula` | GET /, GET /:id, POST /, PATCH /:id, DELETE /:id |
+| Empresas | `/api/empresas` | GET /, GET /:id, POST /, PATCH /:id, DELETE /:id |
+| Estágios | `/api/estagios` | GET /, GET /:id, POST /, PATCH /:id, DELETE /:id |
+| Estados | `/api/base/estados` | GET /, GET /:id |
+| Cidades | `/api/base/cidades` | GET /, GET /:id |
+| Arquivos | `/api/arquivos` | GET /, POST / |
+| Gerar horário | `/api/gerar-horario` | POST /, GET /:id, POST /:id/aceitar, POST /:id/rejeitar |
+
+---
+
+## Serviços do ambiente
+
+Quando você sobe o ambiente (via Dev Container ou `just up`), os seguintes serviços são iniciados:
+
+```mermaid
+graph TB
+    subgraph Docker Compose
+        MS["Management Service\n:3701 (API)\n:9229 (debug)"]
+        DB["PostgreSQL 15\n(bitnamilegacy/postgresql:15)\n:5432"]
+        RMQ["RabbitMQ 3\n(rabbitmq:3-management-alpine)\n:15672 (UI)"]
+    end
+
+    MS --> DB
+    MS --> RMQ
+
+    style MS fill:#4a90d9,stroke:#2c5f8a,color:#fff
+    style DB fill:#336791,stroke:#1e3d5c,color:#fff
+    style RMQ fill:#ff6600,stroke:#b34700,color:#fff
+```
+
+| Serviço | Container | Porta | Credenciais |
+|---------|-----------|-------|-------------|
+| **Management Service** | `ladesa-management-service` | `3701` (API), `9229` (debug) | — |
+| **PostgreSQL 15** | `ladesa-management-service-db` | `5432` | database: `main`, password: `7f22682363b549a389e03b7fe512488b` |
+| **RabbitMQ 3** | `ladesa-rabbitmq` | `5672` (AMQP), `15672` (UI) | admin / admin |
+
+**Volumes persistentes:**
+- `management-service-db-data` — dados do PostgreSQL (persistem entre restarts)
+- `management-service-uploaded-files` — arquivos enviados
+- `management-service-shell-history` — histórico do shell
+
+**Rede:** `ladesa-net` (bridge) — todos os serviços se comunicam por nome de container.
+
+---
+
+## Variáveis de ambiente
+
+As variáveis são definidas no arquivo `.env`, criado automaticamente a partir do `.env.example`. A tabela abaixo lista **todas** as variáveis com seus valores padrão:
+
+### Servidor
+
+| Variável | Valor padrão | Descrição |
+|----------|--------------|-----------|
+| `PORT` | `3701` | Porta da aplicação |
+| `NODE_ENV` | `development` | Ambiente de execução |
+| `API_PREFIX` | `/api/` | Prefixo global de todas as rotas (REST, docs e GraphQL) |
+
+### Banco de dados
+
+| Variável | Valor padrão | Descrição |
+|----------|--------------|-----------|
+| `DB_CONNECTION` | `postgres` | Tipo de conexão |
+| `DATABASE_URL` | `postgresql://postgres:7f22...@ladesa-management-service-db:5432/main` | String de conexão completa com o PostgreSQL |
+| `DATABASE_USE_SSL` | `false` | Habilitar SSL na conexão com o banco |
+| `TYPEORM_LOGGING` | `true` | Logs de queries SQL no console (útil para debug, desabilitar em produção) |
+
+### Autenticação (OAuth2/OIDC)
+
+| Variável | Valor padrão | Descrição |
+|----------|--------------|-----------|
+| `OAUTH2_CLIENT_PROVIDER_OIDC_ISSUER` | `https://sso.ladesa.com.br/realms/sisgea-playground` | URL do issuer OIDC (usada para obter o JWKS endpoint) |
+| `OAUTH2_CLIENT_REGISTRATION_LOGIN_CLIENT_ID` | `luna-backend` | Client ID OAuth2 |
+| `OAUTH2_CLIENT_REGISTRATION_LOGIN_CLIENT_SECRET` | `8c9jOX...` | Client Secret OAuth2 |
+| `OAUTH2_CLIENT_REGISTRATION_LOGIN_SCOPE` | `openid profile` | Scopes OAuth2 solicitados |
+
+### Keycloak (admin client)
+
+| Variável | Valor padrão | Descrição |
+|----------|--------------|-----------|
+| `KC_BASE_URL` | `https://sso.ladesa.com.br` | URL base do Keycloak |
+| `KC_REALM` | `sisgea-playground` | Realm do Keycloak |
+| `KC_CLIENT_ID` | `luna-backend` | Client ID para operações administrativas |
+| `KC_CLIENT_SECRET` | `8c9jOX...` | Client Secret para admin client |
+
+### Mock de autenticação
+
+| Variável | Valor padrão | Descrição |
+|----------|--------------|-----------|
+| `ENABLE_MOCK_ACCESS_TOKEN` | `true` | Habilita tokens simulados no formato `mock.matricula.<número>`. Quando ativo, não é necessário Keycloak para autenticar. **Deve ser `false` em produção.** |
+
+### Message broker
+
+| Variável | Valor padrão | Descrição |
+|----------|--------------|-----------|
+| `MESSAGE_BROKER_URL` | `amqp://admin:admin@ladesa-rabbitmq` | URL de conexão AMQP com o RabbitMQ |
+| `MESSAGE_BROKER_QUEUE_TIMETABLE_REQUEST` | `dev.timetable_generate.request` | Fila para requisições de geração de horário |
+| `MESSAGE_BROKER_QUEUE_TIMETABLE_RESPONSE` | `dev.timetable_generate.response` | Fila para respostas de geração de horário |
+
+### Armazenamento
+
+| Variável | Valor padrão | Descrição |
+|----------|--------------|-----------|
+| `STORAGE_PATH` | `/container/uploaded` | Diretório onde arquivos enviados são armazenados |
+
+### Sobre o prefixo (`API_PREFIX`)
+
+O `API_PREFIX` define o prefixo **global** de todas as rotas da aplicação — REST, documentação e GraphQL. O valor padrão no `.env.example` é `/api/`.
+
+**Todas as URLs ficam sob esse prefixo:**
+
+| Rota | URL resultante com `/api/` |
+|------|---------------------------|
+| Endpoints REST | `http://localhost:3701/api/campi` |
+| Documentação Scalar | `http://localhost:3701/api/docs` |
+| Swagger UI | `http://localhost:3701/api/docs/swagger` |
+| OpenAPI JSON | `http://localhost:3701/api/docs/openapi.v3.json` |
+| GraphQL | `http://localhost:3701/api/graphql` |
+| Health check | `http://localhost:3701/health` (excluído do prefixo) |
+
+> **Nota:** o ambiente de produção/desenvolvimento público (`dev.ladesa.com.br`) pode usar um prefixo diferente (ex.: `/api/v1/`), configurado via variável de ambiente no deploy. Localmente, o padrão é `/api/`.
+
+---
+
+## Scripts disponíveis
+
+Todos os scripts são executados **dentro do container** com `bun run <script>`. Se você não estiver no shell do container (via `just up`), use `just exec bun run <script>`.
+
+### Desenvolvimento
+
+| Script | Descrição |
+|--------|-----------|
+| `dev` | Inicia o servidor em modo de desenvolvimento (com watch/hot reload) |
+| `start` | Inicia o servidor em modo de produção |
+| `debug` | Inicia com debugger na porta 9229 (para attach do editor) |
+
+### Qualidade de código
+
+| Script | Descrição |
+|--------|-----------|
+| `code:fix` | Formata e corrige o código automaticamente (Biome) — **obrigatório após alterações** |
+| `code:check` | Verifica formatação e linting sem alterar arquivos |
+| `code:fix:format` | Apenas formata (sem lint fix) |
+| `code:fix:lint` | Apenas corrige linting (sem format) |
+| `code:check:format` | Apenas verifica formatação |
+| `code:check:lint` | Apenas verifica linting |
+| `typecheck` | Verifica tipagem TypeScript sem compilar — **obrigatório após alterações** |
+| `modulecheck` | Valida as fronteiras entre módulos |
+| `check` | Executa validação completa (typecheck + modulecheck + code:check) |
+
+### Testes
+
+| Script | Descrição |
+|--------|-----------|
+| `test` | Executa os testes unitários uma vez |
+| `test:watch` | Executa os testes em modo watch (re-executa ao salvar) |
+| `test:cov` | Executa os testes com relatório de cobertura (v8) |
+| `test:e2e` | Executa os testes end-to-end (integração com banco e serviços) |
+| `test:debug` | Executa os testes com debugger |
+
+### Banco de dados
+
+| Script | Descrição |
+|--------|-----------|
+| `migration:run` | Aplica migrações pendentes no banco de dados |
+| `migration:revert` | Reverte a última migração aplicada |
+| `db:reset` | Reset completo do banco (drop + create + migrate + seed) |
+| `typeorm` | Executa comandos TypeORM diretamente |
+| `typeorm:create` | Cria um arquivo de migração vazio |
+| `typeorm:entity` | Gera uma entidade TypeORM |
+| `typeorm:generate` | Gera migração a partir do diff entre entidades e banco |
+
+### Outros
+
+| Script | Descrição |
+|--------|-----------|
+| `codegen:timetable-generator:fresh` | Gera tipos TypeScript para mensagens do timetable generator |
+
+---
+
+## Banco de dados e migrações
+
+Para entender como o projeto persiste dados, é importante conhecer os conceitos de ORM, soft delete e transações ACID.
 
 ### ORM (Object-Relational Mapping)
 
@@ -241,62 +671,215 @@ export class CampusEntity {
 
 > **Para ir mais fundo:** o projeto usa `synchronize: false` no TypeORM — isso significa que o ORM **nunca** altera a estrutura do banco automaticamente. Toda alteração no schema do banco é feita via **migrações manuais** (scripts SQL versionados). Essa decisão evita surpresas em produção, onde uma sincronização automática poderia apagar dados ou alterar colunas inesperadamente. O trade-off é que o desenvolvedor precisa criar migrações manualmente a cada mudança em entidades. O TypeORM oferece `typeorm:generate` para gerar a migração automaticamente a partir do diff entre o código e o banco atual.
 
-### DTO (Data Transfer Object)
+### Soft delete (exclusão lógica)
 
-Um **DTO** é um objeto que existe apenas para **transportar dados** entre camadas — ele não contém lógica de negócio. Pense como um formulário padronizado: define quais campos existem e quais são obrigatórios, mas não processa nada.
+**Soft delete** significa que quando você "exclui" um registro, ele **não é removido** fisicamente do banco — apenas recebe uma marcação de exclusão. É como jogar um arquivo na lixeira em vez de deletá-lo permanentemente: ele fica invisível para uso normal, mas pode ser recuperado se necessário.
 
 ```mermaid
 graph LR
-    CLIENT["Cliente\n(front-end)"] -- "JSON de entrada\n{nomeFantasia, cnpj}" --> DTO_IN["DTO de Entrada\nCampusCreateInputRestDto\n+ static schema (Zod)"]
-    DTO_IN -- "dados validados" --> HANDLER["Handler"]
-    HANDLER -- "resultado" --> DTO_OUT["DTO de Saída\nCampusFindOneOutputRestDto\n{\n  id, nomeFantasia,\n  dateCreated...\n}"]
-    DTO_OUT -- "JSON de resposta" --> CLIENT
+    CREATE["Campus.create()"] --> ATIVO["Ativo\ndateDeleted = null\n\nAparece em findAll\ne findById"]
+    ATIVO -- "DELETE endpoint\ndateDeleted = NOW()" --> EXCLUIDO["Excluído\ndateDeleted = 2026-03-22T...\n\nNão aparece em consultas"]
+    EXCLUIDO -- "Restaurar\ndateDeleted = null" --> ATIVO
+    UPDATE["campus.update()"] --> ATIVO
 
-    style CLIENT text-align:left
-    style DTO_IN fill:#4a90d9,stroke:#2c5f8a,color:#fff,text-align:left
-    style DTO_OUT fill:#50b86c,stroke:#3a8a50,color:#fff,text-align:left
-    style HANDLER fill:#7b68ee,stroke:#5a4db0,color:#fff,text-align:left
+    style ATIVO fill:#50b86c,stroke:#3a8a50,color:#fff
+    style EXCLUIDO fill:#e74c3c,stroke:#c0392b,color:#fff
+    style CREATE fill:#4a90d9,stroke:#2c5f8a,color:#fff
+    style UPDATE fill:#e8a838,stroke:#b07c1e,color:#fff
 ```
 
-**Neste projeto**, existem DTOs de **entrada** (o que o cliente envia) e DTOs de **saída** (o que a API retorna). Os DTOs de entrada carregam um `static schema` Zod que é usado automaticamente pelo `ZodGlobalValidationPipe` para validar a requisição antes que ela chegue ao controller.
+**Neste projeto**, toda entidade tem um campo `dateDeleted` (do tipo `timestamptz`, nullable). Quando é `null`, o registro está ativo. Quando preenchido com uma data, o registro é considerado excluído. Queries de listagem filtram automaticamente registros com `dateDeleted IS NOT NULL`.
 
-**Exemplo concreto** — o que o cliente envia vs. o que recebe ao criar um campus:
+> **Para ir mais fundo:** o banco possui **triggers** que gerenciam datas automaticamente. A function `change_date_updated()` (criada na migração `1742515200000`) é executada como trigger `BEFORE UPDATE` em cada tabela, atualizando o campo `date_updated` automaticamente. A stored procedure `ensure_change_date_trigger(table_name)` (migração `1742515260000`) é chamada durante a criação de cada tabela para anexar esse trigger. Isso garante que `date_updated` é sempre preciso, independentemente de o código da aplicação se lembrar de atualizá-lo. O código em `src/infrastructure.database/migrations/1742515200000-create-function-change-date-updated.ts` define essa function PostgreSQL.
+
+### ACID e transações
+
+Uma **transação** agrupa várias operações no banco de dados em uma **unidade atômica** — ou todas acontecem, ou nenhuma. É como uma transferência bancária: se o débito funciona mas o crédito falha, ambos são revertidos automaticamente.
+
+**ACID** são as quatro garantias de uma transação:
+- **Atomicidade** — tudo ou nada.
+- **Consistência** — o banco nunca fica em estado inválido.
+- **Isolamento** — transações paralelas não se atrapalham.
+- **Durabilidade** — depois do commit, o dado sobrevive a quedas.
 
 ```mermaid
 graph TD
-    subgraph "Entrada (CampusCreateInputRestDto)"
-        IN["nomeFantasia: 'IFRO'\nrazaoSocial: 'Instituto Federal'\napelido: 'Ji-Paraná'\ncnpj: '10817343000195'\nendereco: {\n  id: 'uuid-...'\n}"]
+    subgraph "Transação (ACID)"
+        OP1["INSERT campus"]
+        OP2["INSERT endereco"]
+        OP3["UPDATE perfil"]
     end
 
-    PIPE["ZodGlobalValidationPipe\nvalida com CampusCreateSchema"]
+    OP1 --> OP2 --> OP3
 
-    subgraph "Saída (CampusFindOneQueryResult)"
-        OUT["id: '019...' (UUID v7 gerado)\nnomeFantasia: 'IFRO'\nrazaoSocial: 'Instituto Federal'\napelido: 'Ji-Paraná'\ncnpj: '10817343000195'\nendereco: {\n  id, cep, cidade...\n}\ndateCreated: '2026-03-22T...'\ndateUpdated: '2026-03-22T...'"]
+    OP3 --> |"tudo OK"| COMMIT["COMMIT\n(todas as operações\npersistidas)"]
+    OP2 -.-> |"erro no meio"| ROLLBACK["ROLLBACK\n(nenhuma operação\npersistida — tudo volta\nao estado anterior)"]
+
+    style COMMIT fill:#50b86c,stroke:#3a8a50,color:#fff
+    style ROLLBACK fill:#e74c3c,stroke:#c0392b,color:#fff
+```
+
+**Neste projeto**, as transações são **automáticas**. O `TransactionInterceptor` (em `src/server/nest/interceptors/transaction.interceptor.ts`) abre uma transação antes de cada handler. Se o handler completa sem erro → `COMMIT`. Se lança exceção → `ROLLBACK`. Como desenvolvedor, você **nunca** precisa chamar `.transaction()` manualmente.
+
+```mermaid
+sequenceDiagram
+    participant REQ as Requisição HTTP
+    participant TI as TransactionInterceptor
+    participant ALS as AsyncLocalStorage
+    participant H as Handler
+    participant R as Repositório
+    participant DB as PostgreSQL
+
+    REQ->>TI: chega requisição
+    TI->>DB: BEGIN TRANSACTION
+    TI->>ALS: armazena EntityManager transacional
+    TI->>H: executa handler
+    H->>R: repository.create(campus)
+    R->>ALS: getActiveEntityManager()
+    ALS-->>R: EntityManager (transacional)
+    R->>DB: INSERT INTO campus (via EntityManager)
+    DB-->>R: OK
+
+    alt Sucesso
+        H-->>TI: resultado
+        TI->>DB: COMMIT
+        TI-->>REQ: 201 Created
+    else Exceção
+        H-->>TI: ForbiddenError
+        TI->>DB: ROLLBACK
+        TI-->>REQ: 403 Forbidden
     end
-
-    IN --> PIPE --> |"válido"| OUT
-    PIPE -.-> |"inválido"| ERR["400 Bad Request\n{\n  field: 'cnpj',\n  message: 'cnpj é obrigatório'\n}"]
-
-    style IN fill:#4a90d9,stroke:#2c5f8a,color:#fff,text-align:left
-    style OUT fill:#50b86c,stroke:#3a8a50,color:#fff,text-align:left
-    style PIPE text-align:left
-    style ERR fill:#e74c3c,stroke:#c0392b,color:#fff,text-align:left
 ```
 
 ```typescript
-// src/modules/ambientes/campus/presentation.rest/campus.rest.dto.ts (exemplo simplificado)
-export class CampusCreateInputRestDto {
-  static schema = CampusCreateSchema;  // Schema Zod reutilizado do domínio
-
-  nomeFantasia!: string;
-  razaoSocial!: string;
-  apelido!: string;
-  cnpj!: string;
-  endereco!: { ... };
+// src/server/nest/interceptors/transaction.interceptor.ts (código real)
+@Injectable()
+export class TransactionInterceptor implements NestInterceptor {
+  intercept(_context: ExecutionContext, next: CallHandler): Observable<unknown> {
+    return from(
+      this.appTypeormConnection.transaction((entityManager) => {
+        return transactionStorage.run(entityManager, () => {
+          return new Promise<unknown>((resolve, reject) => {
+            next.handle().subscribe({ next: resolve, error: reject });
+          });
+        });
+      }),
+    );
+  }
 }
 ```
 
-> **Para ir mais fundo:** a separação entre DTOs de entrada e saída segue o princípio de que o formato dos dados que o cliente **envia** raramente é idêntico ao que ele **recebe**. Na criação de um campus, o cliente envia `nomeFantasia` e `cnpj`, mas a resposta inclui também `id`, `dateCreated`, `endereco` completo com cidade e estado. O `static schema` no DTO é uma convenção deste projeto — o `ZodGlobalValidationPipe` (em `src/shared/validation/zod-global-validation.pipe.ts`) verifica se o `metatype` do parâmetro tem essa propriedade e, se tiver, executa `schema.safeParse(value)` para validar os dados de entrada automaticamente.
+> **Para ir mais fundo:** o mecanismo usa `AsyncLocalStorage` (Node.js) para propagar o `EntityManager` transacional por toda a call stack da requisição, sem passá-lo explicitamente. O `AppTypeormConnectionProxy` (em `src/infrastructure.database/typeorm/connection/app-typeorm-connection.proxy.ts`) intercepta chamadas a `getRepository()` — se existe um `EntityManager` ativo no `AsyncLocalStorage`, usa-o (participando da transação); caso contrário, usa o `DataSource` global. Esse padrão é uma variação do **Unit of Work** — todos os repositórios dentro de uma requisição compartilham a mesma transação sem saber disso. O trade-off: transação por requisição é simples mas pode manter locks por mais tempo em handlers lentos — por isso handlers devem ser rápidos e focados.
+
+### O que são migrações?
+
+Migrações são scripts que alteram a estrutura do banco de dados de forma **versionada e reproduzível**. Pense como um "Git para o banco de dados": cada alteração é registrada em um arquivo timestamped, pode ser aplicada (up) ou revertida (down), e o banco sabe quais migrações já foram executadas.
+
+### Como funciona neste projeto
+
+O projeto usa **TypeORM** com migrações manuais (`synchronize: false` — o banco **nunca** é alterado automaticamente). As migrações ficam em `src/infrastructure.database/migrations/` e são nomeadas com timestamp (ex.: `1742515200000-create-function-change-date-updated.ts`).
+
+Atualmente o projeto possui **58 migrações** organizadas em categorias:
+
+| Categoria | Quantidade | Exemplos |
+|-----------|-----------|----------|
+| Funções e procedures | 2 | `change_date_updated()`, `ensure_change_date_trigger()` |
+| Tabelas de referência | 2 | `base_estado`, `base_cidade` |
+| Tabelas de infraestrutura | 3 | `endereco`, `arquivo`, `imagem` |
+| Tabelas de acesso | 3 | `usuario`, `perfil`, `notificacao` |
+| Tabelas de ambientes | 3 | `campus`, `bloco`, `ambiente` |
+| Tabelas de ensino | 15 | `modalidade`, `curso`, `disciplina`, `turma`, `diario`, etc. |
+| Tabelas de horários | 18 | `horario_aula`, `calendario_letivo`, `gerar_horario`, etc. |
+| Tabelas de estágio | 5 | `empresa`, `estagiario`, `estagio`, etc. |
+| Dados seed | 4 | Estados do Brasil, cidades de Rondônia, campus IFRO, superuser |
+| Correções | 1 | Colunas e triggers faltantes |
+
+**Comandos:**
+
+```bash
+# Aplicar migrações pendentes (primeira vez ou após pull)
+bun run migration:run
+
+# Reverter a última migração
+bun run migration:revert
+
+# Gerar uma nova migração a partir de alterações nas entidades TypeORM
+bun run typeorm:generate
+
+# Reset completo — apaga tudo e recria (cuidado: perde todos os dados!)
+bun run db:reset
+```
+
+### Fluxo ao alterar uma entidade
+
+```mermaid
+graph LR
+    A["Alterar entidade TypeORM\n(*.typeorm.entity.ts)"] --> B["bun run typeorm:generate\n(gera migração)"]
+    B --> C["Revisar migração\n(em migrations/)"]
+    C --> D["bun run migration:run\n(aplica no banco)"]
+    D --> E["bun run typecheck\n(verificar tipos)"]
+
+    style A fill:#4a90d9,stroke:#2c5f8a,color:#fff,text-align:left
+    style B text-align:left
+    style C text-align:left
+    style D fill:#50b86c,stroke:#3a8a50,color:#fff,text-align:left
+    style E text-align:left
+```
+
+1. Altere a entidade TypeORM em `infrastructure.database/typeorm/`.
+2. Gere a migração: `bun run typeorm:generate`.
+3. Revise o arquivo gerado em `src/infrastructure.database/migrations/`.
+4. Aplique: `bun run migration:run`.
+
+### Dados iniciais (seed)
+
+O banco já vem com dados de seed inseridos via migração — por exemplo, todos os estados do Brasil com códigos IBGE, cidades de Rondônia, o campus do IFRO Ji-Paraná e um superuser. Esses dados são inseridos automaticamente ao rodar `migration:run` pela primeira vez.
+
+### Soft deletes e triggers
+
+As entidades usam **exclusão lógica** (soft delete) — registros nunca são removidos fisicamente do banco. Em vez disso, o campo `dateDeleted` é preenchido com a data da exclusão.
+
+```mermaid
+sequenceDiagram
+    participant APP as Aplicação
+    participant DB as PostgreSQL
+    participant TRIGGER as Trigger change_date_updated
+
+    Note over APP,DB: CREATE
+    APP->>DB: INSERT INTO campus (id, nome_fantasia, date_created, date_updated, date_deleted)\nVALUES ('uuid', 'IFRO', NOW(), NOW(), NULL)
+
+    Note over APP,DB: UPDATE
+    APP->>DB: UPDATE campus SET nome_fantasia = 'IFRO JPA' WHERE id = 'uuid'
+    DB->>TRIGGER: BEFORE UPDATE (automático)
+    TRIGGER->>DB: SET date_updated = NOW()
+
+    Note over APP,DB: SOFT DELETE
+    APP->>DB: UPDATE campus SET date_deleted = NOW() WHERE id = 'uuid'
+    DB->>TRIGGER: BEFORE UPDATE (automático)
+    TRIGGER->>DB: SET date_updated = NOW()
+    Note over DB: Registro marcado como excluído\nmas ainda existe no banco
+
+    Note over APP,DB: LISTAGEM (filtra excluídos)
+    APP->>DB: SELECT * FROM campus WHERE date_deleted IS NULL
+```
+
+O banco possui **triggers automáticos** para controle de datas:
+
+1. **Function `change_date_updated()`** — trigger function que executa `new.date_updated := now()` antes de cada UPDATE.
+2. **Procedure `ensure_change_date_trigger(table_name)`** — cria o trigger automaticamente em qualquer tabela. É chamada durante a criação de cada tabela nas migrações:
+
+```sql
+-- Chamada no final de cada migração de tabela:
+CALL ensure_change_date_trigger('campus');
+```
+
+Isso garante que `date_updated` é **sempre** preciso, independentemente de a aplicação se lembrar de atualizá-lo.
+
+---
+
+## Autenticação e autorização
+
+Para entender o fluxo de autenticação deste projeto, é importante conhecer os conceitos de JWT, JWKS e OAuth2/OIDC.
 
 ### JWT (JSON Web Token)
 
@@ -397,52 +980,97 @@ sequenceDiagram
 
 > **Para ir mais fundo:** o OAuth2 define vários **fluxos** (grant types). Para SPAs e apps web, o **Authorization Code** (com PKCE) é o mais seguro — o client troca um código temporário por tokens, evitando que tokens apareçam na URL. O **Client Credentials** é usado para comunicação entre serviços (machine-to-machine). Neste projeto, o Management Service é um **Resource Server** — ele valida tokens mas não os emite. As credenciais de client (`KC_CLIENT_ID`, `KC_CLIENT_SECRET`) são usadas pelo admin client do Keycloak para operações administrativas (como criar usuários).
 
-### UUID v7
+### Autenticação
 
-Um **UUID** (Universally Unique Identifier) é um identificador de 128 bits que é único no universo — como um CPF para cada registro no banco, mas gerado automaticamente sem coordenação central.
-
-```mermaid
-graph LR
-    subgraph "UUID v4 (aleatório)"
-        V4["550e8400-e29b-41d4-a716-446655440000\n(bits totalmente aleatórios)"]
-    end
-
-    subgraph "UUID v7 (temporal + aleatório)"
-        V7_T["01906b5a-c8e3\n(timestamp)"]
-        V7_R["-7c14-b59a-2f1e4a3b7c9d\n(aleatório)"]
-        V7_T --- V7_R
-    end
-
-    V7_T -.-> |"ordenação\ncronológica"| IDX["Índice B-tree\n(inserções sequenciais\n= menos fragmentação)"]
-
-    style V7_T fill:#50b86c,stroke:#3a8a50,color:#fff
-    style IDX fill:#336791,stroke:#1e3d5c,color:#fff
-```
-
-**Neste projeto**, usamos **UUID v7** (implementado via `uuid` v13, em `src/domain/entities/utils/generate-uuid-v7.ts`). A diferença da versão mais comum (v4, que é aleatória) é que o UUID v7 inclui um **componente temporal** — os primeiros bits codificam o timestamp de criação.
-
-> **Para ir mais fundo:** a vantagem do UUID v7 sobre o v4 é a **ordenação cronológica natural**. Como os primeiros bits são o timestamp, UUIDs mais novos são lexicograficamente maiores que UUIDs mais antigos. Isso melhora significativamente a performance de **índices B-tree** no PostgreSQL — inserções são sequenciais em vez de aleatórias, reduzindo page splits e fragmentação. Na prática, tabelas com milhões de registros indexados por UUID v7 têm performance de leitura e escrita consideravelmente melhor que com UUID v4. A exceção neste projeto são `Estado` e `Cidade`, que usam IDs numéricos do IBGE.
-
-### Soft delete (exclusão lógica)
-
-**Soft delete** significa que quando você "exclui" um registro, ele **não é removido** fisicamente do banco — apenas recebe uma marcação de exclusão. É como jogar um arquivo na lixeira em vez de deletá-lo permanentemente: ele fica invisível para uso normal, mas pode ser recuperado se necessário.
+A aplicação delega autenticação a um servidor **Keycloak** via protocolo **OAuth2/OIDC**:
 
 ```mermaid
-graph LR
-    CREATE["Campus.create()"] --> ATIVO["Ativo\ndateDeleted = null\n\nAparece em findAll\ne findById"]
-    ATIVO -- "DELETE endpoint\ndateDeleted = NOW()" --> EXCLUIDO["Excluído\ndateDeleted = 2026-03-22T...\n\nNão aparece em consultas"]
-    EXCLUIDO -- "Restaurar\ndateDeleted = null" --> ATIVO
-    UPDATE["campus.update()"] --> ATIVO
+sequenceDiagram
+    participant Cliente
+    participant API as Management Service
+    participant KC as Keycloak
+    participant DB as PostgreSQL
 
-    style ATIVO fill:#50b86c,stroke:#3a8a50,color:#fff
-    style EXCLUIDO fill:#e74c3c,stroke:#c0392b,color:#fff
-    style CREATE fill:#4a90d9,stroke:#2c5f8a,color:#fff
-    style UPDATE fill:#e8a838,stroke:#b07c1e,color:#fff
+    Cliente->>API: Requisição com Bearer token
+    API->>API: É mock token? (mock.matricula.*)
+    alt Token mock (dev)
+        API->>API: Extrai matrícula do token
+    else Token real (produção)
+        API->>KC: Obtém JWKS (chaves públicas)
+        KC-->>API: Chaves públicas (JSON Web Key Set)
+        API->>API: Valida assinatura do JWT
+        API->>API: Extrai claims do usuário
+    end
+    API->>DB: Busca Usuario por matrícula
+    DB-->>API: Dados do usuário
+    API->>API: Monta RequestActor (id, nome, matricula, email, isSuperUser)
+    API-->>Cliente: Resposta da API
 ```
 
-**Neste projeto**, toda entidade tem um campo `dateDeleted` (do tipo `timestamptz`, nullable). Quando é `null`, o registro está ativo. Quando preenchido com uma data, o registro é considerado excluído. Queries de listagem filtram automaticamente registros com `dateDeleted IS NOT NULL`.
+**Fluxo de autenticação (código real em `src/server/nest/auth/request-actor-resolver.adapter.ts`):**
 
-> **Para ir mais fundo:** o banco possui **triggers** que gerenciam datas automaticamente. A function `change_date_updated()` (criada na migração `1742515200000`) é executada como trigger `BEFORE UPDATE` em cada tabela, atualizando o campo `date_updated` automaticamente. A stored procedure `ensure_change_date_trigger(table_name)` (migração `1742515260000`) é chamada durante a criação de cada tabela para anexar esse trigger. Isso garante que `date_updated` é sempre preciso, independentemente de o código da aplicação se lembrar de atualizá-lo. O código em `src/infrastructure.database/migrations/1742515200000-create-function-change-date-updated.ts` define essa function PostgreSQL.
+1. O cliente envia um **Bearer token** no header `Authorization`.
+2. Se `ENABLE_MOCK_ACCESS_TOKEN=true` e o token segue o formato `mock.matricula.<número>`:
+   - A matrícula é extraída diretamente do token.
+3. Caso contrário, o token é validado via **JWKS** obtido do Keycloak.
+4. A API busca o `Usuario` no banco pela matrícula.
+5. Se o usuário existe, um `RequestActor` com `id`, `nome`, `matricula`, `email` e `isSuperUser` é injetado nos controllers.
+6. Se o usuário não existe no banco, retorna `ForbiddenException`.
+
+**Tokens mock em desenvolvimento:**
+
+```bash
+# O token mock.matricula.1234 simula um usuário com matrícula 1234
+curl -H "Authorization: Bearer mock.matricula.1234" \
+  http://localhost:3701/api/campi
+
+# Funciona com qualquer matrícula — basta mudar o número
+curl -H "Authorization: Bearer mock.matricula.5678" \
+  http://localhost:3701/api/turmas
+```
+
+> Em produção, `ENABLE_MOCK_ACCESS_TOKEN` deve ser `false`. Tokens reais são emitidos pelo Keycloak e validados via JWKS.
+
+### Autorização
+
+Após a autenticação, cada módulo verifica se o usuário tem **permissão** para realizar a operação solicitada:
+
+```mermaid
+graph TD
+    REQ["Requisição autenticada\n(RequestActor disponível)"]
+    REQ --> CTRL["Controller / Resolver"]
+    CTRL --> HANDLER["Command Handler"]
+    HANDLER --> PC["PermissionChecker\ndo módulo"]
+
+    PC --> |"CREATE"| CAN_C["ensureCanCreate(ac, {dto})"]
+    PC --> |"UPDATE"| CAN_U["ensureCanUpdate(ac, {dto}, id)"]
+    PC --> |"DELETE"| CAN_D["ensureCanDelete(ac, {dto}, id)"]
+
+    CAN_C & CAN_U & CAN_D --> |"OK"| CONTINUE["Continua execução"]
+    CAN_C & CAN_U & CAN_D -.-> |"throw ForbiddenError"| DENIED["403 Forbidden"]
+
+    HANDLER2["Query Handler\n(leitura)"] --> |"accessContext pode\nser null (hoje público;\nroadmap: filtrar por permissão)"| REPO["Repositório"]
+
+    style REQ fill:#4a90d9,stroke:#2c5f8a,color:#fff
+    style CONTINUE fill:#50b86c,stroke:#3a8a50,color:#fff
+    style DENIED fill:#e74c3c,stroke:#c0392b,color:#fff
+```
+
+Isso é feito por um `IPermissionChecker` específico do módulo, com métodos:
+
+- `ensureCanCreate(accessContext, { dto })` — verifica se o usuário pode criar.
+- `ensureCanUpdate(accessContext, { dto }, id)` — verifica se o usuário pode atualizar.
+- `ensureCanDelete(accessContext, { dto }, id)` — verifica se o usuário pode excluir.
+
+O padrão é **"throw on deny"**: se o usuário não tiver permissão, uma exceção `ForbiddenError` (HTTP 403) é lançada automaticamente, e a operação é abortada.
+
+Operações de **leitura** (queries) atualmente aceitam acesso com ou sem autenticação — o `accessContext` pode ser `null`. No roadmap está prevista a filtragem de resultados por permissão: o usuário verá apenas os registros que tem autorização para acessar.
+
+---
+
+## Qualidade de código
+
+Para entender como o projeto garante a integridade dos dados em todas as camadas, é importante conhecer o Zod.
 
 ### Zod (validação de schemas)
 
@@ -507,6 +1135,675 @@ export const CampusCreateSchema = z.object({
 
 > **Para ir mais fundo:** a validação em duas camadas é intencional. A camada de apresentação (`ZodGlobalValidationPipe`) rejeita dados malformados antes que cheguem ao handler — retornando 400 com detalhes por campo. A camada de domínio (`zodValidate()` nos factory methods) atua como **rede de segurança** — se por algum motivo dados inválidos chegarem ao domínio (ex.: chamada direta ao handler sem passar pelo pipe), a entidade rejeita. O tipo `ICampus = z.infer<typeof CampusSchema>` garante type safety: o TypeScript sabe exatamente quais campos existem e seus tipos, derivados automaticamente do schema Zod.
 
+### Fluxo obrigatório após alterações
+
+Após **qualquer** alteração de código, execute estes dois comandos nesta ordem:
+
+```bash
+# 1. Formata e corrige linting automaticamente
+bun run code:fix
+
+# 2. Verifica que nenhum tipo está quebrado
+bun run typecheck
+```
+
+> Ambos devem passar sem erros. Uma alteração **não está concluída** sem esses dois passos.
+
+### Biome (formatação e linting)
+
+O projeto usa o [Biome](https://biomejs.dev/) v2.4 como formatador e linter único:
+
+| Regra | Configuração |
+|-------|-------------|
+| Largura de linha | 100 caracteres |
+| Indentação | 2 espaços |
+| Ponto e vírgula | sempre |
+| Trailing commas | todas |
+| Imports não utilizados | removidos automaticamente |
+| Variáveis não usadas | sinalizadas como erro |
+| `const` | obrigatório quando possível |
+| Organização de imports | automática |
+| Line ending | LF |
+| Bracket spacing | habilitado |
+| Arrow parens | sempre |
+
+```bash
+# Corrigir formatação e linting
+bun run code:fix
+
+# Apenas verificar (sem alterar arquivos)
+bun run code:check
+```
+
+O Dev Container já configura o Biome como formatador padrão com **auto-format ao salvar** — ou seja, ao salvar um arquivo no VS Code, ele é formatado automaticamente.
+
+---
+
+## Como contribuir
+
+### Conceitos básicos de Git (para quem está começando)
+
+Se você já conhece Git, pule para o [Gitflow do projeto](#gitflow-do-projeto).
+
+| Conceito | O que é |
+|----------|---------|
+| **Repositório (repo)** | A pasta do projeto com todo o histórico de alterações. Existe uma cópia remota (no GitHub) e uma local (na sua máquina). |
+| **Branch** | Uma "ramificação" do código. Permite trabalhar em uma alteração sem afetar o código principal. Pense como uma cópia paralela onde você faz suas mudanças. |
+| **Commit** | Um "ponto de salvamento" no histórico. Registra o que mudou, quem mudou e uma mensagem descrevendo a alteração. |
+| **Push** | Envia seus commits locais para o repositório remoto (GitHub), tornando-os visíveis para o time. |
+| **Fetch** | Baixa as referências e objetos do repositório remoto **sem alterar** nenhum arquivo local. Diferente de pull, que baixa e incorpora automaticamente. |
+| **Merge** | O ato de juntar as alterações de uma branch na outra. Acontece quando um PR é aprovado ou quando você incorpora mudanças da main. |
+| **Pull Request (PR)** | Uma solicitação para incorporar suas alterações (da sua branch) na branch principal (`main`). Outros devs revisam antes de aprovar. |
+| **Conflito** | Quando duas pessoas alteraram a mesma parte do código. Precisa ser resolvido manualmente antes do merge. |
+
+### Gitflow do projeto
+
+O projeto usa uma estratégia simples: **branch única `main`** + **feature branches** + **merge via Pull Request**.
+
+```mermaid
+gitGraph
+    commit id: "estado atual"
+    branch feat/cadastro-turma
+    commit id: "criar entidade"
+    commit id: "adicionar handler"
+    commit id: "code:fix + typecheck"
+    checkout main
+    branch fix/corrigir-paginacao
+    commit id: "corrigir offset"
+    checkout main
+    merge fix/corrigir-paginacao id: "PR #42 merged"
+    checkout feat/cadastro-turma
+    commit id: "adicionar testes"
+    checkout main
+    merge feat/cadastro-turma id: "PR #43 merged"
+    commit id: "próximo ciclo..."
+```
+
+**Como funciona:**
+
+1. A branch `main` é a versão **estável** do projeto. Todo código nela deve estar funcionando.
+2. Para cada alteração, você cria uma **feature branch** a partir da `main`.
+3. Trabalha na feature branch (commits, testes, formatação).
+4. Quando terminar, abre um **Pull Request** para a `main`.
+5. Após revisão e aprovação, o PR é **mergeado** na `main`.
+
+### Convenções de nomenclatura
+
+#### Branches
+
+O nome da branch indica o **tipo** da alteração:
+
+| Prefixo | Quando usar | Exemplo |
+|---------|-------------|---------|
+| `feat/` | Nova funcionalidade | `feat/cadastro-estagio` |
+| `fix/` | Correção de bug | `fix/paginacao-campus` |
+| `refactor/` | Refatoração sem mudança de comportamento | `refactor/extrair-handler-turma` |
+| `docs/` | Alteração apenas em documentação | `docs/atualizar-readme` |
+| `test/` | Adição ou correção de testes | `test/handler-diario` |
+| `chore/` | Tarefas de manutenção (deps, CI, config) | `chore/atualizar-nestjs` |
+
+#### Commits
+
+Commits seguem o padrão **Conventional Commits**:
+
+```
+tipo(escopo): descrição curta do que foi feito
+```
+
+| Parte | Descrição | Exemplo |
+|-------|-----------|---------|
+| **tipo** | Categoria da mudança | `feat`, `fix`, `refactor`, `docs`, `test`, `chore` |
+| **escopo** | Módulo ou área afetada (opcional) | `campus`, `turma`, `auth`, `database` |
+| **descrição** | O que foi feito, em imperativo | `adicionar endpoint de listagem` |
+
+**Exemplos bons vs ruins:**
+
+| Bom | Ruim |
+|-----|------|
+| `feat(campus): adicionar endpoint de criação` | `update` |
+| `fix(turma): corrigir paginação na listagem` | `fix bug` |
+| `refactor(auth): extrair validação de token` | `refatoração` |
+| `docs: atualizar variáveis de ambiente no README` | `docs` |
+| `test(diario): adicionar testes do create handler` | `add tests` |
+
+### Trabalhando com Git localmente
+
+Manter a branch local sincronizada é fundamental para evitar conflitos. O fluxo recomendado neste projeto usa **`git fetch -p` + `git merge origin/main`** em vez de `git pull`.
+
+#### Por que NÃO usar `git pull`
+
+`git pull` é um atalho que faz `git fetch` + `git merge` (ou `rebase`, dependendo da config global) **automaticamente**. Isso pode causar problemas:
+
+- Se o dev tem `pull.rebase = true` na config global e faz `git pull origin main` na branch de feature, os commits locais são **rebaseados** sobre a main — reescrevendo o histórico da feature branch. Se ele já tinha dado push, isso causa divergência.
+- Separar `fetch` e `merge` é mais explícito e seguro: você vê o que mudou antes de incorporar.
+
+#### Fluxo recomendado: `git fetch -p` + `git merge origin/main`
+
+```mermaid
+graph TD
+    A["Início do trabalho"] --> B["git fetch -p"]
+    B --> C["git merge origin/main"]
+    C --> D{Conflitos?}
+    D -- Não --> E["Continua trabalhando"]
+    D -- Sim --> F["Resolve conflitos"]
+    F --> G["git add arquivos-resolvidos"]
+    G --> H["git commit"]
+    H --> E
+
+    style A fill:#4a90d9,stroke:#2c5f8a,color:#fff
+    style D fill:#e8a838,stroke:#b07c1e,color:#fff
+    style E fill:#50b86c,stroke:#3a8a50,color:#fff
+```
+
+**Explicação de cada comando:**
+
+- **`git fetch -p`** — baixa as referências e objetos do repositório remoto **sem alterar nenhum arquivo local**. O `-p` (prune) limpa referências locais de branches remotas que já foram deletadas no GitHub. Após o fetch, `origin/main` aponta para o commit mais recente da main no GitHub, mas sua branch local não muda.
+
+- **`git merge origin/main`** — incorpora as mudanças de `origin/main` na branch onde você está (sua feature branch). Isso é feito **sem trocar para a `main` local** — você referencia diretamente `origin/main`. Se não houver conflitos, o merge acontece automaticamente.
+
+#### Regra: NÃO toque na `main` local
+
+Neste projeto, a convenção é:
+
+- **Nunca faça checkout na `main` local** para atualizar. Use sempre `origin/main` como referência.
+- A `main` local pode ficar desatualizada e isso é OK — ela não é usada para nada.
+- Se a `main` local ficou divergente ou confusa: `git checkout main && git reset --hard origin/main` (após um fetch) — isso faz a branch local apontar exatamente para o mesmo commit de `origin/main`, descartando qualquer divergência local.
+
+#### Fluxo diário
+
+```bash
+# Início do trabalho (na sua feature branch):
+git fetch -p
+git merge origin/main
+
+# Fim do trabalho:
+bun run code:fix
+bun run typecheck
+git add .
+git commit -m "feat(modulo): descrição"
+git push origin feat/minha-feature
+
+# Criando nova branch (a partir do remoto atualizado):
+git fetch -p
+git checkout -b feat/nova-feature origin/main
+```
+
+O `git checkout -b feat/nova-feature origin/main` cria uma nova branch a partir de `origin/main` (a versão mais recente da main no GitHub) — melhor que criar a partir da `main` local, que pode estar desatualizada.
+
+#### O que fazer quando há conflitos
+
+1. O Git marca os conflitos nos arquivos com `<<<<<<<`, `=======`, `>>>>>>>`.
+2. Abra cada arquivo conflitante e escolha qual versão manter (ou combine ambas).
+3. Remova os marcadores de conflito.
+4. Adicione e commite:
+   ```bash
+   git add .
+   git commit -m "merge: resolver conflitos com main"
+   ```
+
+> **Dica:** use o editor (VS Code tem uma interface visual para resolver conflitos) em vez de editar manualmente.
+
+### Trabalhando localmente no desenvolvimento
+
+Todo o desenvolvimento acontece **dentro do container Docker**. Isso garante que todos usam as mesmas versões de ferramentas.
+
+```mermaid
+graph TD
+    subgraph "Sua máquina (host)"
+        EDITOR["Editor de código\n(VS Code, WebStorm, etc.)"]
+        JUST["just (task runner)"]
+    end
+
+    subgraph "Container Docker"
+        BUN["Bun (runtime)"]
+        APP["Aplicação NestJS"]
+        TOOLS["Ferramentas\n(TypeScript, Biome, Vitest)"]
+    end
+
+    subgraph "Containers de serviço"
+        DB["PostgreSQL 15"]
+        RMQ["RabbitMQ 3"]
+    end
+
+    EDITOR -- "edita arquivos\n(volume montado)" --> APP
+    JUST -- "just exec / just up" --> BUN
+    BUN --> APP
+    BUN --> TOOLS
+    APP --> DB
+    APP --> RMQ
+
+    style EDITOR fill:#4a90d9,stroke:#2c5f8a,color:#fff
+    style BUN fill:#e8a838,stroke:#b07c1e,color:#fff
+    style DB fill:#336791,stroke:#1e3d5c,color:#fff
+```
+
+#### Fluxo de trabalho típico
+
+```bash
+# 1. Suba o ambiente (se ainda não estiver rodando)
+just up                        # Sobe containers e abre shell
+
+# 2. Dentro do container, inicie o servidor
+bun run dev                    # Servidor com hot reload
+
+# 3. Em outro terminal, rode comandos conforme necessário
+just exec bun run test         # Testes
+just exec bun run code:fix     # Formatação
+just exec bun run typecheck    # Verificação de tipos
+just exec bun run migration:run  # Migrações
+```
+
+#### Editor + Container: como funciona
+
+O código fica na sua máquina e é **montado como volume** dentro do container. Isso significa:
+
+- Você **edita no editor** normalmente (VS Code, WebStorm, Vim, etc.).
+- As alterações aparecem **instantaneamente** dentro do container (sem rebuild).
+- O `bun run dev` detecta as mudanças e faz **hot reload** automaticamente.
+- Para rodar comandos (testes, lint, migrações), use `just exec` ou o shell dentro do container.
+
+#### Dicas para produtividade
+
+- **Dois terminais:** um para o servidor (`bun run dev`), outro para comandos (`just exec ...`).
+- **Hot reload:** salve o arquivo e veja as mudanças refletidas automaticamente no servidor.
+- **Debug:** use `bun run debug` e conecte o debugger do editor na porta `9229`.
+- **Logs:** se algo não funcionar, veja os logs com `just logs`.
+
+### Passo a passo completo
+
+```mermaid
+sequenceDiagram
+    participant Dev as Desenvolvedor
+    participant Local as Git Local
+    participant Container as Container Docker
+    participant Remote as GitHub
+    participant Team as Time (Review)
+
+    Dev->>Local: git checkout -b feat/minha-feature origin/main
+    Note over Dev: Faz alterações no código
+    Dev->>Container: bun run code:fix
+    Container-->>Dev: Código formatado
+    Dev->>Container: bun run typecheck
+    Container-->>Dev: Tipos OK
+    Dev->>Container: bun run test
+    Container-->>Dev: Testes passando
+    Dev->>Local: git add + git commit
+    Dev->>Remote: git push origin feat/minha-feature
+    Dev->>Remote: Abre Pull Request
+    Remote->>Team: Notifica revisores
+    Team->>Remote: Revisa e aprova
+    Remote->>Remote: Merge na main
+    Note over Remote: CI/CD deploya automaticamente
+```
+
+#### 1. Crie uma feature branch (a partir do remoto)
+
+```bash
+git fetch -p                                     # Atualiza referências
+git checkout -b feat/minha-feature origin/main   # Cria branch a partir do remoto
+```
+
+#### 2. Faça suas alterações
+
+Edite o código seguindo a [estrutura de módulos](#módulos-de-domínio) e as [boas práticas](#boas-práticas-de-desenvolvimento).
+
+#### 3. Formate e valide (obrigatório)
+
+```bash
+bun run code:fix      # Formata o código e corrige problemas de linting
+bun run typecheck     # Verifica que nenhum tipo está quebrado
+```
+
+> **Por que isso é obrigatório?** `code:fix` garante que o código segue o padrão visual do projeto (indentação, imports, etc.). `typecheck` garante que o TypeScript compila sem erros — se falhar, algo está quebrado e não deve ser commitado.
+
+#### 4. Rode os testes
+
+```bash
+bun run test          # Executa os testes unitários
+```
+
+> Se algum teste falhar, corrija antes de commitar. Commits com testes quebrados não devem chegar ao PR.
+
+#### 5. Faça o commit
+
+```bash
+git add .                                           # Adiciona todas as alterações
+git commit -m "feat(campus): adicionar validação de CNPJ"   # Cria o commit com mensagem
+```
+
+> `git add .` adiciona **todos** os arquivos modificados. Se quiser adicionar apenas alguns, use `git add caminho/do/arquivo.ts`.
+
+#### 6. Envie para o GitHub
+
+```bash
+git push origin feat/minha-feature    # Envia a branch para o repositório remoto
+```
+
+> Na primeira vez que fizer push de uma branch nova, o Git pode pedir para configurar o upstream. Use o comando que ele sugerir.
+
+#### 7. Abra um Pull Request
+
+1. Acesse o repositório no GitHub.
+2. Você verá um banner sugerindo abrir um PR para a branch que acabou de enviar — clique nele.
+3. Preencha o título (seguindo a convenção de commit) e a descrição.
+4. Adicione revisores.
+5. Clique em **Create Pull Request**.
+
+### Ciclo de vida de um Pull Request
+
+```mermaid
+stateDiagram-v2
+    [*] --> Draft: Abre PR como rascunho\n(ainda trabalhando)
+    [*] --> ReadyForReview: Abre PR pronto\npara revisão
+    Draft --> ReadyForReview: Marca como pronto
+    ReadyForReview --> InReview: Revisor começa\na analisar
+    InReview --> ChangesRequested: Revisor pede\nalterações
+    InReview --> Approved: Revisor aprova
+    ChangesRequested --> InReview: Dev faz correções\ne pede re-review
+    Approved --> Merged: Merge na main
+    Merged --> [*]
+
+    note right of Draft: Use Draft quando\nainda não terminou
+    note right of Approved: CI deve estar verde\nantes do merge
+```
+
+**Dicas:**
+- Abra o PR como **Draft** se ainda estiver trabalhando e quiser feedback antecipado.
+- PRs menores são revisados mais rápido — prefira PRs focados a PRs gigantes.
+- Responda aos comentários da revisão e faça as correções na mesma branch.
+
+### O que fazer vs. o que NÃO fazer
+
+| Fazer | NÃO fazer |
+|-------|-----------|
+| Criar uma branch por feature/fix | Commitar direto na `main` |
+| Commits pequenos e frequentes com mensagens claras | Um commit gigante com "várias coisas" |
+| Rodar `code:fix` + `typecheck` antes de todo commit | Commitar com erros de tipo ou formatação |
+| Rodar `bun run test` antes de abrir PR | Abrir PR com testes falhando |
+| Manter branch atualizada com `git fetch -p && git merge origin/main` | Trabalhar semanas sem sincronizar |
+| Escrever título de PR descritivo | Título genérico como "Update" |
+| Fazer PRs pequenos e focados | PR com 50 arquivos e 3 features misturadas |
+| Pedir revisão após CI verde | Pedir revisão com CI falhando |
+| Resolver conflitos com cuidado | Forçar push (`--force`) sem entender |
+| Deletar a branch após merge | Acumular branches antigas |
+
+### Checklist pré-commit
+
+Antes de cada `git commit`, verifique:
+
+- [ ] `bun run code:fix` executado (sem erros).
+- [ ] `bun run typecheck` passando.
+- [ ] Mensagem de commit segue o padrão `tipo(escopo): descrição`.
+- [ ] Nenhum `console.log` de debug esquecido.
+- [ ] Nenhum arquivo sensível (`.env`, credenciais) incluído.
+
+### Checklist pré-PR
+
+Antes de abrir o Pull Request:
+
+- [ ] `bun run code:fix` executado.
+- [ ] `bun run typecheck` passando.
+- [ ] `bun run test` passando.
+- [ ] Branch atualizada com a main (`git fetch -p && git merge origin/main`).
+- [ ] Novos endpoints documentados no Swagger (decorators `@ApiOperation`, `@ApiTags`).
+- [ ] Migrações criadas se houve alteração em entidades do banco.
+- [ ] README atualizado se houve mudança em estrutura, variáveis, serviços ou fluxos.
+- [ ] PR com título descritivo seguindo Conventional Commits.
+- [ ] Descrição do PR explicando o que foi feito e por quê.
+
+> **Nota:** todo código roda dentro do container. Se você não estiver no shell do container (via `just up`), use `just exec <comando>` para executar de fora. Exemplo: `just exec bun run typecheck`.
+
+### Como escrever um bom commit
+
+Commits são o **histórico permanente** do projeto. Um bom commit permite que qualquer pessoa entenda o que foi feito, por que, e em qual contexto — mesmo meses depois.
+
+#### Regras obrigatórias
+
+Todos os commits neste projeto **devem** seguir o padrão [Conventional Commits](https://www.conventionalcommits.org/):
+
+```
+tipo(escopo): descrição imperativa curta
+
+Corpo opcional com mais detalhes sobre o que mudou e por quê.
+Pode ter múltiplas linhas.
+
+Refs #123
+```
+
+**Estrutura:**
+
+| Parte | Obrigatório | Descrição |
+|-------|:-----------:|-----------|
+| **tipo** | sim | Categoria da mudança (`feat`, `fix`, `refactor`, etc.) |
+| **escopo** | não (mas recomendado) | Módulo ou área afetada (`campus`, `auth`, `database`) |
+| **descrição** | sim | Frase curta no **imperativo** (ex.: "adicionar", não "adicionado" ou "adicionando") |
+| **corpo** | não | Detalhes adicionais — o _porquê_ da mudança, contexto, decisões |
+| **referência** | não | Link para issue (`Refs #123`, `Closes #45`) |
+
+**Tipos permitidos:**
+
+| Tipo | Quando usar | Exemplo |
+|------|-------------|---------|
+| `feat` | Nova funcionalidade visível ao usuário | `feat(turma): adicionar endpoint de matrícula` |
+| `fix` | Correção de bug | `fix(campus): corrigir filtro de busca por CNPJ` |
+| `refactor` | Mudança interna sem alterar comportamento | `refactor(auth): extrair validação de token para service` |
+| `docs` | Documentação (README, comentários, Swagger) | `docs: atualizar variáveis de ambiente no README` |
+| `test` | Adição ou correção de testes | `test(diario): adicionar testes do create handler` |
+| `chore` | Manutenção (deps, CI, config, build) | `chore: atualizar NestJS para v11` |
+| `style` | Formatação (sem mudança de lógica) | `style: aplicar code:fix no módulo campus` |
+| `perf` | Melhoria de performance | `perf(database): adicionar índice na tabela turma` |
+| `ci` | Alteração em pipelines CI/CD | `ci: adicionar step de typecheck no workflow` |
+
+**Exemplos completos:**
+
+```bash
+# Commit simples (uma linha)
+git commit -m "feat(campus): adicionar validação de CNPJ duplicado"
+
+# Commit com corpo explicativo
+git commit -m "fix(turma): corrigir erro 500 ao listar turmas sem diário
+
+O findAll retornava erro quando a turma não tinha diários associados
+porque o LEFT JOIN não tratava o caso de relação vazia.
+
+Refs #127"
+
+# Commit de refatoração
+git commit -m "refactor(auth): mover mock token para infrastructure.identity-provider
+
+O mock de token estava no controller, violando a separação de concerns.
+Movido para o adapter de identity provider onde pertence."
+```
+
+**O que NÃO fazer em commits:**
+
+| Ruim | Por quê | Bom |
+|------|---------|-----|
+| `fix` | Não diz o que foi corrigido | `fix(campus): corrigir paginação na listagem` |
+| `update` | Genérico demais | `feat(turma): adicionar campo observacao` |
+| `wip` | Não deve ser commitado — use stash | Finalize antes de commitar |
+| `ajustes diversos` | Múltiplas mudanças misturadas | Separe em commits focados |
+| `Adicionado endpoint` | Não segue o padrão (não é imperativo, sem tipo) | `feat(campus): adicionar endpoint de exclusão` |
+
+### Como escrever uma boa issue
+
+Issues são o ponto de partida de qualquer alteração. Uma boa issue permite que qualquer dev (inclusive você mesmo no futuro) entenda o problema ou a necessidade sem precisar perguntar.
+
+#### Estrutura recomendada
+
+**Para bugs:**
+
+```markdown
+## Descrição do bug
+O que está acontecendo de errado? Qual o comportamento atual?
+
+## Comportamento esperado
+O que deveria acontecer?
+
+## Como reproduzir
+1. Acessar endpoint X com payload Y
+2. Observar resposta Z
+
+## Contexto adicional
+- Ambiente: desenvolvimento / produção
+- Endpoint: POST /api/campi
+- Payload de exemplo (se aplicável)
+- Logs de erro (se disponíveis)
+```
+
+**Para features:**
+
+```markdown
+## Descrição
+O que precisa ser implementado e por quê?
+
+## Critérios de aceite
+- [ ] Endpoint POST /api/turmas criado
+- [ ] Validação de campos obrigatórios
+- [ ] Testes unitários do handler
+- [ ] Documentação Swagger
+
+## Contexto técnico (se aplicável)
+Módulo afetado, dependências, decisões de design.
+```
+
+**Dicas:**
+- Título claro e específico — "Erro 500 ao criar campus sem endereço" é melhor que "Bug no campus".
+- Uma issue por problema/feature — não misture assuntos.
+- Use labels para categorizar (`bug`, `feature`, `enhancement`, `docs`).
+- Referencie issues relacionadas quando existirem.
+
+### Como escrever um bom Pull Request
+
+O PR é onde a revisão acontece. Um bom PR facilita a vida do revisor e acelera o merge.
+
+#### Estrutura recomendada
+
+```markdown
+## O que foi feito
+Resumo em 1-3 frases do que esta PR implementa/corrige.
+
+## Por que
+Contexto e motivação — qual problema resolve ou qual necessidade atende.
+Link para a issue: Closes #123
+
+## Como testar
+1. Subir o ambiente com `just up`
+2. Rodar migrações: `bun run migration:run`
+3. Acessar POST /api/campi com payload X
+4. Verificar resposta Y
+
+## Checklist
+- [ ] `code:fix` executado
+- [ ] `typecheck` passando
+- [ ] Testes passando
+- [ ] Swagger atualizado (se aplicável)
+- [ ] README atualizado (se aplicável)
+```
+
+**Regras:**
+
+| Regra | Descrição |
+|-------|-----------|
+| **PRs pequenos** | Máximo ~400 linhas alteradas. Se passou disso, considere dividir. |
+| **Uma responsabilidade** | Cada PR resolve um problema ou implementa uma feature. Não misture. |
+| **Título descritivo** | Segue Conventional Commits: `feat(campus): adicionar validação de CNPJ` |
+| **Descrição completa** | O revisor não deve precisar ler todo o diff para entender o contexto. |
+| **CI verde** | Não peça revisão com CI falhando. |
+| **Branch atualizada** | Faça `git fetch -p && git merge origin/main` antes de pedir revisão. |
+| **Resolva conflitos** | Se houver conflitos com a `main`, resolva antes do merge. |
+
+---
+
+## Arquitetura
+
+### Arquitetura hexagonal
+
+O projeto segue a **arquitetura hexagonal** (também conhecida como _ports & adapters_). A ideia central é que a lógica de negócio (domínio) não depende de frameworks, bancos de dados ou protocolos — ela define **contratos** (interfaces/ports), e as camadas externas fornecem **implementações** (adapters).
+
+**O que isso significa na prática?** Se amanhã o banco de dados mudar de PostgreSQL para outro, ou se o Keycloak for substituído por outro provedor de autenticação, apenas a camada de infraestrutura precisa ser alterada — a lógica de negócio permanece intacta.
+
+```mermaid
+graph TD
+    A["🖥️ Apresentação\n(REST controllers, GraphQL resolvers)"]
+    B["⚙️ Aplicação\n(command handlers, query handlers, autorização)"]
+    C["🏛️ Domínio\n(entidades, contratos de repositório, erros,\nvalidação, abstrações de serviços externos)"]
+    D["🔌 Infraestrutura\n(TypeORM, Keycloak, RabbitMQ, filesystem, config)"]
+
+    A -- "chama" --> B
+    B -- "usa interfaces de" --> C
+    D -- "implementa contratos de" --> C
+
+    style A fill:#4a90d9,stroke:#2c5f8a,color:#fff
+    style B fill:#7b68ee,stroke:#5a4db0,color:#fff
+    style C fill:#e8a838,stroke:#b07c1e,color:#fff
+    style D fill:#50b86c,stroke:#3a8a50,color:#fff
+```
+
+O fluxo de dependência sempre aponta **para dentro**: a apresentação depende da aplicação, que depende do domínio. A infraestrutura implementa os contratos do domínio, mas o domínio nunca referencia a infraestrutura diretamente.
+
+### Inversão de dependência e Ports & Adapters
+
+A arquitetura hexagonal se apoia no princípio de **inversão de dependência**: código de alto nível (lógica de negócio) **não deve depender** de código de baixo nível (banco de dados, frameworks). Em vez disso, ambos dependem de **abstrações** (interfaces).
+
+A analogia: uma tomada elétrica é uma interface padrão. O eletricista (domínio) instala a tomada (interface) sem saber que aparelho será plugado. O aparelho (infraestrutura) precisa ter o plug compatível. Se o aparelho mudar, a tomada continua a mesma.
+
+```mermaid
+graph TD
+    subgraph "Sem inversão (acoplado)"
+        H1["Handler"] --> R1["CampusTypeormRepository"]
+        R1 --> DB1["PostgreSQL"]
+        style H1 fill:#e74c3c,stroke:#c0392b,color:#fff
+    end
+
+    subgraph "Com inversão (desacoplado)"
+        H2["Handler"]
+        I["ICampusRepository\n(interface/port)"]
+        R2["CampusTypeormRepository\n(adapter)"]
+        DB2["PostgreSQL"]
+
+        H2 -- "depende da\nabstração" --> I
+        R2 -- "implementa" --> I
+        R2 --> DB2
+    end
+
+    style I fill:#e8a838,stroke:#b07c1e,color:#fff
+    style H2 fill:#4a90d9,stroke:#2c5f8a,color:#fff
+    style R2 fill:#50b86c,stroke:#3a8a50,color:#fff
+```
+
+**Neste projeto**, o domínio define **Symbols** (tokens de injeção) e **types** (contratos). A infraestrutura registra implementações concretas para esses Symbols. O NestJS injeta a implementação correta em runtime. Exemplo: `ICampusRepository` (Symbol + type no domínio) é implementado por `CampusTypeormRepository` (na infraestrutura).
+
+**Exemplo concreto — trocar a infraestrutura sem tocar no handler:**
+
+```mermaid
+graph LR
+    HANDLER["CampusCreateCommandHandler\n(não muda nunca)"]
+
+    subgraph "Produção"
+        I1["ICampusRepository"] --> IMPL1["CampusTypeormRepository\n→ PostgreSQL"]
+    end
+
+    subgraph "Testes"
+        I2["ICampusRepository"] --> IMPL2["MockCrudRepository\n→ memória (vi.fn)"]
+    end
+
+    subgraph "Futuro hipotético"
+        I3["ICampusRepository"] --> IMPL3["CampusPrismaRepository\n→ Prisma ORM"]
+    end
+
+    HANDLER --> I1
+    HANDLER -.-> I2
+    HANDLER -.-> I3
+
+    style HANDLER fill:#4a90d9,stroke:#2c5f8a,color:#fff,text-align:left
+    style IMPL1 fill:#50b86c,stroke:#3a8a50,color:#fff,text-align:left
+    style IMPL2 fill:#7b68ee,stroke:#5a4db0,color:#fff,text-align:left
+    style IMPL3 fill:#e8a838,stroke:#b07c1e,color:#fff,text-align:left
+```
+
+> **Para ir mais fundo:** a diferença entre **inversão de dependência** e **injeção de dependência** é sutil mas importante. Inversão de dependência é um **princípio de design** — o domínio define interfaces, e a infraestrutura implementa. Injeção de dependência é um **mecanismo técnico** — o container (NestJS) resolve e injeta as implementações via constructor. Neste projeto, os Symbols do TypeScript funcionam como tokens de injeção porque TypeScript não emite interfaces em runtime — o Symbol é a referência concreta que o container usa para resolver a dependência. Essa abordagem é um **pragmatismo aceito**: tecnicamente, `DeclareDependency` (que internamente usa `@Inject` do NestJS) cria um acoplamento do domínio com o NestJS, mas na prática é um decorator fino que não afeta a testabilidade.
+
 ### CQRS (Command Query Responsibility Segregation)
 
 **CQRS** é a prática de separar operações de **leitura** (queries) de operações de **escrita** (commands) em handlers distintos. A analogia: em um restaurante, quem anota os pedidos (garçom) e quem prepara a comida (cozinheiro) são pessoas diferentes com habilidades diferentes — mesmo que ambos trabalhem com "comida".
@@ -570,273 +1867,6 @@ graph TD
     style QF fill:#4a90d9,stroke:#2c5f8a,color:#fff
     style QL fill:#4a90d9,stroke:#2c5f8a,color:#fff
 ```
-
-### Inversão de dependência e Ports & Adapters
-
-**Inversão de dependência** é o princípio de que código de alto nível (lógica de negócio) **não deve depender** de código de baixo nível (banco de dados, frameworks). Em vez disso, ambos dependem de **abstrações** (interfaces).
-
-A analogia: uma tomada elétrica é uma interface padrão. O eletricista (domínio) instala a tomada (interface) sem saber que aparelho será plugado. O aparelho (infraestrutura) precisa ter o plug compatível. Se o aparelho mudar, a tomada continua a mesma.
-
-```mermaid
-graph TD
-    subgraph "Sem inversão (acoplado)"
-        H1["Handler"] --> R1["CampusTypeormRepository"]
-        R1 --> DB1["PostgreSQL"]
-        style H1 fill:#e74c3c,stroke:#c0392b,color:#fff
-    end
-
-    subgraph "Com inversão (desacoplado)"
-        H2["Handler"]
-        I["ICampusRepository\n(interface/port)"]
-        R2["CampusTypeormRepository\n(adapter)"]
-        DB2["PostgreSQL"]
-
-        H2 -- "depende da\nabstração" --> I
-        R2 -- "implementa" --> I
-        R2 --> DB2
-    end
-
-    style I fill:#e8a838,stroke:#b07c1e,color:#fff
-    style H2 fill:#4a90d9,stroke:#2c5f8a,color:#fff
-    style R2 fill:#50b86c,stroke:#3a8a50,color:#fff
-```
-
-**Neste projeto**, o domínio define **Symbols** (tokens de injeção) e **types** (contratos). A infraestrutura registra implementações concretas para esses Symbols. O NestJS injeta a implementação correta em runtime. Exemplo: `ICampusRepository` (Symbol + type no domínio) é implementado por `CampusTypeormRepository` (na infraestrutura).
-
-**Exemplo concreto — trocar a infraestrutura sem tocar no handler:**
-
-```mermaid
-graph LR
-    HANDLER["CampusCreateCommandHandler\n(não muda nunca)"]
-
-    subgraph "Produção"
-        I1["ICampusRepository"] --> IMPL1["CampusTypeormRepository\n→ PostgreSQL"]
-    end
-
-    subgraph "Testes"
-        I2["ICampusRepository"] --> IMPL2["MockCrudRepository\n→ memória (vi.fn)"]
-    end
-
-    subgraph "Futuro hipotético"
-        I3["ICampusRepository"] --> IMPL3["CampusPrismaRepository\n→ Prisma ORM"]
-    end
-
-    HANDLER --> I1
-    HANDLER -.-> I2
-    HANDLER -.-> I3
-
-    style HANDLER fill:#4a90d9,stroke:#2c5f8a,color:#fff,text-align:left
-    style IMPL1 fill:#50b86c,stroke:#3a8a50,color:#fff,text-align:left
-    style IMPL2 fill:#7b68ee,stroke:#5a4db0,color:#fff,text-align:left
-    style IMPL3 fill:#e8a838,stroke:#b07c1e,color:#fff,text-align:left
-```
-
-> **Para ir mais fundo:** a diferença entre **inversão de dependência** e **injeção de dependência** é sutil mas importante. Inversão de dependência é um **princípio de design** — o domínio define interfaces, e a infraestrutura implementa. Injeção de dependência é um **mecanismo técnico** — o container (NestJS) resolve e injeta as implementações via constructor. Neste projeto, os Symbols do TypeScript funcionam como tokens de injeção porque TypeScript não emite interfaces em runtime — o Symbol é a referência concreta que o container usa para resolver a dependência. Essa abordagem é um **pragmatismo aceito**: tecnicamente, `DeclareDependency` (que internamente usa `@Inject` do NestJS) cria um acoplamento do domínio com o NestJS, mas na prática é um decorator fino que não afeta a testabilidade.
-
-### ACID e transações
-
-Uma **transação** agrupa várias operações no banco de dados em uma **unidade atômica** — ou todas acontecem, ou nenhuma. É como uma transferência bancária: se o débito funciona mas o crédito falha, ambos são revertidos automaticamente.
-
-**ACID** são as quatro garantias de uma transação:
-- **Atomicidade** — tudo ou nada.
-- **Consistência** — o banco nunca fica em estado inválido.
-- **Isolamento** — transações paralelas não se atrapalham.
-- **Durabilidade** — depois do commit, o dado sobrevive a quedas.
-
-```mermaid
-graph TD
-    subgraph "Transação (ACID)"
-        OP1["INSERT campus"]
-        OP2["INSERT endereco"]
-        OP3["UPDATE perfil"]
-    end
-
-    OP1 --> OP2 --> OP3
-
-    OP3 --> |"tudo OK"| COMMIT["COMMIT\n(todas as operações\npersistidas)"]
-    OP2 -.-> |"erro no meio"| ROLLBACK["ROLLBACK\n(nenhuma operação\npersistida — tudo volta\nao estado anterior)"]
-
-    style COMMIT fill:#50b86c,stroke:#3a8a50,color:#fff
-    style ROLLBACK fill:#e74c3c,stroke:#c0392b,color:#fff
-```
-
-**Neste projeto**, as transações são **automáticas**. O `TransactionInterceptor` (em `src/server/nest/interceptors/transaction.interceptor.ts`) abre uma transação antes de cada handler. Se o handler completa sem erro → `COMMIT`. Se lança exceção → `ROLLBACK`. Como desenvolvedor, você **nunca** precisa chamar `.transaction()` manualmente.
-
-```mermaid
-sequenceDiagram
-    participant REQ as Requisição HTTP
-    participant TI as TransactionInterceptor
-    participant ALS as AsyncLocalStorage
-    participant H as Handler
-    participant R as Repositório
-    participant DB as PostgreSQL
-
-    REQ->>TI: chega requisição
-    TI->>DB: BEGIN TRANSACTION
-    TI->>ALS: armazena EntityManager transacional
-    TI->>H: executa handler
-    H->>R: repository.create(campus)
-    R->>ALS: getActiveEntityManager()
-    ALS-->>R: EntityManager (transacional)
-    R->>DB: INSERT INTO campus (via EntityManager)
-    DB-->>R: OK
-
-    alt Sucesso
-        H-->>TI: resultado
-        TI->>DB: COMMIT
-        TI-->>REQ: 201 Created
-    else Exceção
-        H-->>TI: ForbiddenError
-        TI->>DB: ROLLBACK
-        TI-->>REQ: 403 Forbidden
-    end
-```
-
-```typescript
-// src/server/nest/interceptors/transaction.interceptor.ts (código real)
-@Injectable()
-export class TransactionInterceptor implements NestInterceptor {
-  intercept(_context: ExecutionContext, next: CallHandler): Observable<unknown> {
-    return from(
-      this.appTypeormConnection.transaction((entityManager) => {
-        return transactionStorage.run(entityManager, () => {
-          return new Promise<unknown>((resolve, reject) => {
-            next.handle().subscribe({ next: resolve, error: reject });
-          });
-        });
-      }),
-    );
-  }
-}
-```
-
-> **Para ir mais fundo:** o mecanismo usa `AsyncLocalStorage` (Node.js) para propagar o `EntityManager` transacional por toda a call stack da requisição, sem passá-lo explicitamente. O `AppTypeormConnectionProxy` (em `src/infrastructure.database/typeorm/connection/app-typeorm-connection.proxy.ts`) intercepta chamadas a `getRepository()` — se existe um `EntityManager` ativo no `AsyncLocalStorage`, usa-o (participando da transação); caso contrário, usa o `DataSource` global. Esse padrão é uma variação do **Unit of Work** — todos os repositórios dentro de uma requisição compartilham a mesma transação sem saber disso. O trade-off: transação por requisição é simples mas pode manter locks por mais tempo em handlers lentos — por isso handlers devem ser rápidos e focados.
-
-### REST e GraphQL
-
-**REST** é um estilo de API onde cada recurso tem um endereço fixo (URL) e operações são mapeadas para verbos HTTP: GET (ler), POST (criar), PATCH (atualizar), DELETE (excluir). A resposta sempre traz todos os campos do recurso, mesmo os que você não precisa. É como pedir um prato fixo no restaurante — você recebe tudo que vem, mesmo o que não quer.
-
-**GraphQL** é uma linguagem de consulta onde o cliente diz **exatamente** quais campos quer e recebe só aquilo. É como pedir à la carte — você especifica cada item. Com REST, se um front-end precisa de dados de 3 endpoints, faz 3 requisições; com GraphQL faz 1 requisição pedindo tudo junto. Em GraphQL, **query** é leitura (equivale a GET) e **mutation** é escrita (equivale a POST/PUT/DELETE).
-
-```mermaid
-graph LR
-    subgraph "REST — 3 requisições"
-        R1["GET /api/campi/1\n→ {\n    id, nomeFantasia,\n    razaoSocial, apelido,\n    cnpj, endereco,\n    dateCreated...\n  }"]
-        R2["GET /api/blocos?campus.id=1\n→ [todos os campos de cada bloco]"]
-        R3["GET /api/turmas?campus.id=1\n→ [todos os campos de cada turma]"]
-    end
-
-    subgraph "GraphQL — 1 requisição"
-        GQL["query {\n  campusFindOne(id: '1') {\n    nomeFantasia\n    blocos { nome }\n    cursos {\n      turmas { periodo }\n    }\n  }\n}\n→ só os campos pedidos"]
-    end
-
-    style R1 fill:#4a90d9,stroke:#2c5f8a,color:#fff,text-align:left
-    style R2 fill:#4a90d9,stroke:#2c5f8a,color:#fff,text-align:left
-    style R3 fill:#4a90d9,stroke:#2c5f8a,color:#fff,text-align:left
-    style GQL fill:#e535ab,stroke:#b0297f,color:#fff,text-align:left
-```
-
-**Neste projeto**, a API oferece **ambos**. REST é a interface principal, com documentação Swagger interativa. GraphQL é uma alternativa flexível para front-ends que precisam de consultas compostas. A abordagem é **code-first**: em vez de escrever arquivos `.graphql`, o schema é gerado automaticamente a partir de classes TypeScript decoradas com `@ObjectType()` e `@Field()`. Ambas as interfaces reutilizam os **mesmos command/query handlers** — a lógica de negócio, validação e autorização são idênticas.
-
-**Configuração do GraphQL** (em `src/infrastructure.graphql/graphql.module.ts`):
-
-| Configuração | Valor |
-|-------------|-------|
-| **Server** | Apollo Server v5.4 com driver NestJS |
-| **Endpoint** | `http://localhost:3701/api/graphql` |
-| **Playground** | GraphiQL habilitado |
-| **Introspection** | habilitada |
-| **Cache** | LRU em memória (100 MB, TTL de 5 minutos) |
-| **Schema** | code-first (`autoSchemaFile: true`) |
-
-> **Para ir mais fundo:** manter REST e GraphQL duplica a camada de apresentação (DTOs, mappers) mas **não** duplica lógica — ambos delegam para os mesmos handlers. O overhead é aceitável porque cada interface serve um propósito diferente: REST para integrações simples e documentação automática, GraphQL para front-ends com necessidades de dados complexas. O projeto **não** usa DataLoader para resolver o problema N+1 do GraphQL — queries que buscam relações fazem JOINs no repositório TypeORM. Módulos que são apenas REST (`autenticacao`, `arquivo`, módulos de `estagio`, `gerar-horario`) não têm resolvers GraphQL.
-
-### Message broker (RabbitMQ)
-
-Um **message broker** é um intermediário de mensagens assíncronas entre serviços. É como um correio: um serviço deposita uma carta (mensagem) na caixa postal (fila) e outro serviço retira quando estiver pronto — os dois não precisam estar online ao mesmo tempo.
-
-```mermaid
-graph LR
-    subgraph "Produtor"
-        P["Management Service\n(publica mensagem)"]
-    end
-
-    subgraph "RabbitMQ (broker)"
-        EX["Exchange\n(roteador)"]
-        Q1["Fila request\ndev.timetable_generate.request"]
-        Q2["Fila response\ndev.timetable_generate.response"]
-        EX --> Q1
-    end
-
-    subgraph "Consumidor"
-        C["Timetable Generator\n(processa e responde)"]
-    end
-
-    P -- "publica" --> EX
-    Q1 -- "entrega" --> C
-    C -- "responde" --> Q2
-    Q2 -- "entrega resposta" --> P
-
-    style P fill:#4a90d9,stroke:#2c5f8a,color:#fff
-    style EX fill:#ff6600,stroke:#b34700,color:#fff
-    style Q1 fill:#ff6600,stroke:#b34700,color:#fff
-    style Q2 fill:#ff6600,stroke:#b34700,color:#fff
-    style C fill:#50b86c,stroke:#3a8a50,color:#fff
-```
-
-**Dois padrões de comunicação:**
-
-```mermaid
-graph TD
-    subgraph "Padrão 1: RPC (Request/Response)"
-        RPC_P["Management Service"] -- "publica request" --> RPC_Q1["Fila request"]
-        RPC_Q1 --> RPC_C["Timetable Generator"]
-        RPC_C -- "publica response" --> RPC_Q2["Fila response"]
-        RPC_Q2 --> RPC_P
-        RPC_P -.-> |"espera com\ntimeout (60s)"| RPC_P
-    end
-
-    subgraph "Padrão 2: Fire-and-Forget"
-        FF_P["Management Service"] -- "publica\n(não espera)" --> FF_Q["Fila request"]
-        FF_Q --> FF_C["Timetable Generator"]
-    end
-
-    style RPC_P fill:#4a90d9,stroke:#2c5f8a,color:#fff
-    style FF_P fill:#4a90d9,stroke:#2c5f8a,color:#fff
-```
-
-**Neste projeto**, o [RabbitMQ](https://www.rabbitmq.com/) é usado via biblioteca [Rascal](https://github.com/guidesmiths/rascal) v21 para **geração automática de horários**. O Management Service publica uma requisição na fila `dev.timetable_generate.request` e consome a resposta de `dev.timetable_generate.response` quando o Timetable Generator (serviço externo) completar o processamento. A interface `IMessageBrokerService` está em `src/domain/abstractions/message-broker/`.
-
-> **Para ir mais fundo:** o Rascal é um wrapper sobre AMQP que adiciona gerenciamento de conexão, retry e configuração declarativa. O projeto implementa dois padrões: **RPC** (request/response — publica e espera resposta com timeout) e **fire-and-forget** (publica sem esperar). As filas são configuráveis via variáveis `MESSAGE_BROKER_QUEUE_TIMETABLE_REQUEST` e `MESSAGE_BROKER_QUEUE_TIMETABLE_RESPONSE`. A UI do RabbitMQ está disponível em `http://localhost:15672` (admin/admin).
-
----
-
-## Arquitetura
-
-### Arquitetura hexagonal
-
-O projeto segue a **arquitetura hexagonal** (também conhecida como _ports & adapters_). A ideia central é que a lógica de negócio (domínio) não depende de frameworks, bancos de dados ou protocolos — ela define **contratos** (interfaces/ports), e as camadas externas fornecem **implementações** (adapters).
-
-**O que isso significa na prática?** Se amanhã o banco de dados mudar de PostgreSQL para outro, ou se o Keycloak for substituído por outro provedor de autenticação, apenas a camada de infraestrutura precisa ser alterada — a lógica de negócio permanece intacta.
-
-```mermaid
-graph TD
-    A["🖥️ Apresentação\n(REST controllers, GraphQL resolvers)"]
-    B["⚙️ Aplicação\n(command handlers, query handlers, autorização)"]
-    C["🏛️ Domínio\n(entidades, contratos de repositório, erros,\nvalidação, abstrações de serviços externos)"]
-    D["🔌 Infraestrutura\n(TypeORM, Keycloak, RabbitMQ, filesystem, config)"]
-
-    A -- "chama" --> B
-    B -- "usa interfaces de" --> C
-    D -- "implementa contratos de" --> C
-
-    style A fill:#4a90d9,stroke:#2c5f8a,color:#fff
-    style B fill:#7b68ee,stroke:#5a4db0,color:#fff
-    style C fill:#e8a838,stroke:#b07c1e,color:#fff
-    style D fill:#50b86c,stroke:#3a8a50,color:#fff
-```
-
-O fluxo de dependência sempre aponta **para dentro**: a apresentação depende da aplicação, que depende do domínio. A infraestrutura implementa os contratos do domínio, mas o domínio nunca referencia a infraestrutura diretamente.
 
 ### NestJS — conceitos fundamentais
 
@@ -975,6 +2005,34 @@ graph TD
 
 **Regra de ouro:** o domínio **nunca** importa de `infrastructure.*`, `server/`, ou qualquer framework. Ele define _o que_ precisa, não _como_ é feito.
 
+Para entender como os identificadores das entidades funcionam neste projeto, veja o conceito de UUID v7:
+
+### UUID v7
+
+Um **UUID** (Universally Unique Identifier) é um identificador de 128 bits que é único no universo — como um CPF para cada registro no banco, mas gerado automaticamente sem coordenação central.
+
+```mermaid
+graph LR
+    subgraph "UUID v4 (aleatório)"
+        V4["550e8400-e29b-41d4-a716-446655440000\n(bits totalmente aleatórios)"]
+    end
+
+    subgraph "UUID v7 (temporal + aleatório)"
+        V7_T["01906b5a-c8e3\n(timestamp)"]
+        V7_R["-7c14-b59a-2f1e4a3b7c9d\n(aleatório)"]
+        V7_T --- V7_R
+    end
+
+    V7_T -.-> |"ordenação\ncronológica"| IDX["Índice B-tree\n(inserções sequenciais\n= menos fragmentação)"]
+
+    style V7_T fill:#50b86c,stroke:#3a8a50,color:#fff
+    style IDX fill:#336791,stroke:#1e3d5c,color:#fff
+```
+
+**Neste projeto**, usamos **UUID v7** (implementado via `uuid` v13, em `src/domain/entities/utils/generate-uuid-v7.ts`). A diferença da versão mais comum (v4, que é aleatória) é que o UUID v7 inclui um **componente temporal** — os primeiros bits codificam o timestamp de criação.
+
+> **Para ir mais fundo:** a vantagem do UUID v7 sobre o v4 é a **ordenação cronológica natural**. Como os primeiros bits são o timestamp, UUIDs mais novos são lexicograficamente maiores que UUIDs mais antigos. Isso melhora significativamente a performance de **índices B-tree** no PostgreSQL — inserções são sequenciais em vez de aleatórias, reduzindo page splits e fragmentação. Na prática, tabelas com milhões de registros indexados por UUID v7 têm performance de leitura e escrita consideravelmente melhor que com UUID v4. A exceção neste projeto são `Estado` e `Cidade`, que usam IDs numéricos do IBGE.
+
 #### Camada de Aplicação (`src/application/`)
 
 Orquestra o domínio. Recebe uma intenção do usuário (command/query), verifica permissões e coordena a execução.
@@ -1059,6 +2117,66 @@ graph TD
 
 **Papel:** é a única camada que "sabe" qual banco de dados, qual provedor de auth, ou qual broker está sendo usado. Se trocar PostgreSQL por MySQL, apenas `infrastructure.database` muda.
 
+Para entender como a comunicação assíncrona funciona na camada de infraestrutura, veja o conceito de message broker:
+
+### Message broker (RabbitMQ)
+
+Um **message broker** é um intermediário de mensagens assíncronas entre serviços. É como um correio: um serviço deposita uma carta (mensagem) na caixa postal (fila) e outro serviço retira quando estiver pronto — os dois não precisam estar online ao mesmo tempo.
+
+```mermaid
+graph LR
+    subgraph "Produtor"
+        P["Management Service\n(publica mensagem)"]
+    end
+
+    subgraph "RabbitMQ (broker)"
+        EX["Exchange\n(roteador)"]
+        Q1["Fila request\ndev.timetable_generate.request"]
+        Q2["Fila response\ndev.timetable_generate.response"]
+        EX --> Q1
+    end
+
+    subgraph "Consumidor"
+        C["Timetable Generator\n(processa e responde)"]
+    end
+
+    P -- "publica" --> EX
+    Q1 -- "entrega" --> C
+    C -- "responde" --> Q2
+    Q2 -- "entrega resposta" --> P
+
+    style P fill:#4a90d9,stroke:#2c5f8a,color:#fff
+    style EX fill:#ff6600,stroke:#b34700,color:#fff
+    style Q1 fill:#ff6600,stroke:#b34700,color:#fff
+    style Q2 fill:#ff6600,stroke:#b34700,color:#fff
+    style C fill:#50b86c,stroke:#3a8a50,color:#fff
+```
+
+**Dois padrões de comunicação:**
+
+```mermaid
+graph TD
+    subgraph "Padrão 1: RPC (Request/Response)"
+        RPC_P["Management Service"] -- "publica request" --> RPC_Q1["Fila request"]
+        RPC_Q1 --> RPC_C["Timetable Generator"]
+        RPC_C -- "publica response" --> RPC_Q2["Fila response"]
+        RPC_Q2 --> RPC_P
+        RPC_P -.-> |"espera com\ntimeout (60s)"| RPC_P
+    end
+
+    subgraph "Padrão 2: Fire-and-Forget"
+        FF_P["Management Service"] -- "publica\n(não espera)" --> FF_Q["Fila request"]
+        FF_Q --> FF_C["Timetable Generator"]
+    end
+
+    style RPC_P fill:#4a90d9,stroke:#2c5f8a,color:#fff
+    style FF_P fill:#4a90d9,stroke:#2c5f8a,color:#fff
+```
+
+**Neste projeto**, o [RabbitMQ](https://www.rabbitmq.com/) é usado via biblioteca [Rascal](https://github.com/guidesmiths/rascal) v21 para **geração automática de horários**. O Management Service publica uma requisição na fila `dev.timetable_generate.request` e consome a resposta de `dev.timetable_generate.response` quando o Timetable Generator (serviço externo) completar o processamento. A interface `IMessageBrokerService` está em `src/domain/abstractions/message-broker/`.
+
+> **Para ir mais fundo:** o Rascal é um wrapper sobre AMQP que adiciona gerenciamento de conexão, retry e configuração declarativa. O projeto implementa dois padrões: **RPC** (request/response — publica e espera resposta com timeout) e **fire-and-forget** (publica sem esperar). As filas são configuráveis via variáveis `MESSAGE_BROKER_QUEUE_TIMETABLE_REQUEST` e `MESSAGE_BROKER_QUEUE_TIMETABLE_RESPONSE`. A UI do RabbitMQ está disponível em `http://localhost:15672` (admin/admin).
+
 #### Camada de Apresentação (`src/modules/*/presentation.*/`)
 
 Traduz protocolos externos (HTTP, GraphQL) em chamadas para a camada de aplicação e formata as respostas.
@@ -1095,6 +2213,106 @@ graph LR
 - **Mappers** — convertem entre formatos de domínio e apresentação.
 
 **Regra:** a apresentação **nunca** acessa o banco diretamente. Ela sempre delega para handlers da aplicação.
+
+Para entender como dados são transportados entre camadas na apresentação, veja o conceito de DTO:
+
+### DTO (Data Transfer Object)
+
+Um **DTO** é um objeto que existe apenas para **transportar dados** entre camadas — ele não contém lógica de negócio. Pense como um formulário padronizado: define quais campos existem e quais são obrigatórios, mas não processa nada.
+
+```mermaid
+graph LR
+    CLIENT["Cliente\n(front-end)"] -- "JSON de entrada\n{nomeFantasia, cnpj}" --> DTO_IN["DTO de Entrada\nCampusCreateInputRestDto\n+ static schema (Zod)"]
+    DTO_IN -- "dados validados" --> HANDLER["Handler"]
+    HANDLER -- "resultado" --> DTO_OUT["DTO de Saída\nCampusFindOneOutputRestDto\n{\n  id, nomeFantasia,\n  dateCreated...\n}"]
+    DTO_OUT -- "JSON de resposta" --> CLIENT
+
+    style CLIENT text-align:left
+    style DTO_IN fill:#4a90d9,stroke:#2c5f8a,color:#fff,text-align:left
+    style DTO_OUT fill:#50b86c,stroke:#3a8a50,color:#fff,text-align:left
+    style HANDLER fill:#7b68ee,stroke:#5a4db0,color:#fff,text-align:left
+```
+
+**Neste projeto**, existem DTOs de **entrada** (o que o cliente envia) e DTOs de **saída** (o que a API retorna). Os DTOs de entrada carregam um `static schema` Zod que é usado automaticamente pelo `ZodGlobalValidationPipe` para validar a requisição antes que ela chegue ao controller.
+
+**Exemplo concreto** — o que o cliente envia vs. o que recebe ao criar um campus:
+
+```mermaid
+graph TD
+    subgraph "Entrada (CampusCreateInputRestDto)"
+        IN["nomeFantasia: 'IFRO'\nrazaoSocial: 'Instituto Federal'\napelido: 'Ji-Paraná'\ncnpj: '10817343000195'\nendereco: {\n  id: 'uuid-...'\n}"]
+    end
+
+    PIPE["ZodGlobalValidationPipe\nvalida com CampusCreateSchema"]
+
+    subgraph "Saída (CampusFindOneQueryResult)"
+        OUT["id: '019...' (UUID v7 gerado)\nnomeFantasia: 'IFRO'\nrazaoSocial: 'Instituto Federal'\napelido: 'Ji-Paraná'\ncnpj: '10817343000195'\nendereco: {\n  id, cep, cidade...\n}\ndateCreated: '2026-03-22T...'\ndateUpdated: '2026-03-22T...'"]
+    end
+
+    IN --> PIPE --> |"válido"| OUT
+    PIPE -.-> |"inválido"| ERR["400 Bad Request\n{\n  field: 'cnpj',\n  message: 'cnpj é obrigatório'\n}"]
+
+    style IN fill:#4a90d9,stroke:#2c5f8a,color:#fff,text-align:left
+    style OUT fill:#50b86c,stroke:#3a8a50,color:#fff,text-align:left
+    style PIPE text-align:left
+    style ERR fill:#e74c3c,stroke:#c0392b,color:#fff,text-align:left
+```
+
+```typescript
+// src/modules/ambientes/campus/presentation.rest/campus.rest.dto.ts (exemplo simplificado)
+export class CampusCreateInputRestDto {
+  static schema = CampusCreateSchema;  // Schema Zod reutilizado do domínio
+
+  nomeFantasia!: string;
+  razaoSocial!: string;
+  apelido!: string;
+  cnpj!: string;
+  endereco!: { ... };
+}
+```
+
+> **Para ir mais fundo:** a separação entre DTOs de entrada e saída segue o princípio de que o formato dos dados que o cliente **envia** raramente é idêntico ao que ele **recebe**. Na criação de um campus, o cliente envia `nomeFantasia` e `cnpj`, mas a resposta inclui também `id`, `dateCreated`, `endereco` completo com cidade e estado. O `static schema` no DTO é uma convenção deste projeto — o `ZodGlobalValidationPipe` (em `src/shared/validation/zod-global-validation.pipe.ts`) verifica se o `metatype` do parâmetro tem essa propriedade e, se tiver, executa `schema.safeParse(value)` para validar os dados de entrada automaticamente.
+
+### REST e GraphQL
+
+A camada de apresentação oferece duas interfaces para consumo da API:
+
+**REST** é um estilo de API onde cada recurso tem um endereço fixo (URL) e operações são mapeadas para verbos HTTP: GET (ler), POST (criar), PATCH (atualizar), DELETE (excluir). A resposta sempre traz todos os campos do recurso, mesmo os que você não precisa. É como pedir um prato fixo no restaurante — você recebe tudo que vem, mesmo o que não quer.
+
+**GraphQL** é uma linguagem de consulta onde o cliente diz **exatamente** quais campos quer e recebe só aquilo. É como pedir à la carte — você especifica cada item. Com REST, se um front-end precisa de dados de 3 endpoints, faz 3 requisições; com GraphQL faz 1 requisição pedindo tudo junto. Em GraphQL, **query** é leitura (equivale a GET) e **mutation** é escrita (equivale a POST/PUT/DELETE).
+
+```mermaid
+graph LR
+    subgraph "REST — 3 requisições"
+        R1["GET /api/campi/1\n→ {\n    id, nomeFantasia,\n    razaoSocial, apelido,\n    cnpj, endereco,\n    dateCreated...\n  }"]
+        R2["GET /api/blocos?campus.id=1\n→ [todos os campos de cada bloco]"]
+        R3["GET /api/turmas?campus.id=1\n→ [todos os campos de cada turma]"]
+    end
+
+    subgraph "GraphQL — 1 requisição"
+        GQL["query {\n  campusFindOne(id: '1') {\n    nomeFantasia\n    blocos { nome }\n    cursos {\n      turmas { periodo }\n    }\n  }\n}\n→ só os campos pedidos"]
+    end
+
+    style R1 fill:#4a90d9,stroke:#2c5f8a,color:#fff,text-align:left
+    style R2 fill:#4a90d9,stroke:#2c5f8a,color:#fff,text-align:left
+    style R3 fill:#4a90d9,stroke:#2c5f8a,color:#fff,text-align:left
+    style GQL fill:#e535ab,stroke:#b0297f,color:#fff,text-align:left
+```
+
+**Neste projeto**, a API oferece **ambos**. REST é a interface principal, com documentação Swagger interativa. GraphQL é uma alternativa flexível para front-ends que precisam de consultas compostas. A abordagem é **code-first**: em vez de escrever arquivos `.graphql`, o schema é gerado automaticamente a partir de classes TypeScript decoradas com `@ObjectType()` e `@Field()`. Ambas as interfaces reutilizam os **mesmos command/query handlers** — a lógica de negócio, validação e autorização são idênticas.
+
+**Configuração do GraphQL** (em `src/infrastructure.graphql/graphql.module.ts`):
+
+| Configuração | Valor |
+|-------------|-------|
+| **Server** | Apollo Server v5.4 com driver NestJS |
+| **Endpoint** | `http://localhost:3701/api/graphql` |
+| **Playground** | GraphiQL habilitado |
+| **Introspection** | habilitada |
+| **Cache** | LRU em memória (100 MB, TTL de 5 minutos) |
+| **Schema** | code-first (`autoSchemaFile: true`) |
+
+> **Para ir mais fundo:** manter REST e GraphQL duplica a camada de apresentação (DTOs, mappers) mas **não** duplica lógica — ambos delegam para os mesmos handlers. O overhead é aceitável porque cada interface serve um propósito diferente: REST para integrações simples e documentação automática, GraphQL para front-ends com necessidades de dados complexas. O projeto **não** usa DataLoader para resolver o problema N+1 do GraphQL — queries que buscam relações fazem JOINs no repositório TypeORM. Módulos que são apenas REST (`autenticacao`, `arquivo`, módulos de `estagio`, `gerar-horario`) não têm resolvers GraphQL.
 
 ### Como as camadas conversam
 
@@ -1960,1360 +3178,6 @@ Configuração padrão (`src/infrastructure.database/pagination/config/paginate-
 
 ---
 
-## Pré-requisitos
-
-Para contribuir com este projeto, você precisa de:
-
-### Container runtime
-
-| Opção | Instalação |
-|-------|------------|
-| **Docker + Docker Compose** (v2+) **(recomendado)** | [docs.docker.com](https://docs.docker.com/get-docker/) |
-| Podman + Podman Compose | [podman.io](https://podman.io/getting-started/installation) |
-
-> **Nota sobre Podman:** a recomendação oficial é o **Docker**. O projeto possui algumas configurações de compatibilidade com Podman (`userns_mode`, `x-podman`), porém o uso do Podman é **por conta e risco do usuário** — podem haver problemas de compatibilidade não cobertos pelo projeto.
->
-> Se optar pelo Podman, defina a variável de ambiente `OCI_RUNTIME=podman` antes de rodar os comandos.
-
-### just (command runner) — recomendado
-
-O projeto usa o [just](https://github.com/casey/just) como task runner no lugar do Make. A instalação é **recomendada** para quem pretende usar o [Caminho A (justfile)](#caminho-a-justfile-recomendado), que é o caminho principal de desenvolvimento.
-
-| Plataforma | Instalação |
-|------------|------------|
-| Linux (curl) | `curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh \| bash -s -- --to /usr/local/bin` |
-| macOS (Homebrew) | `brew install just` |
-| Windows (Scoop) | `scoop install just` |
-| Cargo | `cargo install just` |
-
-Mais opções em: <https://github.com/casey/just#installation>
-
-### Git
-
-Necessário para clonar e versionar o código-fonte.
-
-- Tutorial de instalação e configuração: <https://docs.ladesa.com.br/docs/developers-guide/tutorials/source-code/git/>
-
-### Editor de código (escolha um)
-
-| Editor | Dev Container |
-|--------|---------------|
-| **VS Code** | Suporte nativo via extensão [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) |
-| **WebStorm** | Suporte via [Remote Development](https://www.jetbrains.com/help/webstorm/connect-to-devcontainer.html) |
-
-### Familiaridade com linha de comando
-
-Você vai precisar usar o terminal para clonar o repositório, executar comandos e interagir com o container.
-
-- Tutorial básico: <https://docs.ladesa.com.br/docs/developers-guide/tutorials/os/command-line/>
-
----
-
-## Clonando o repositório
-
-```bash
-git clone https://github.com/ladesa-ro/management-service.git
-cd management-service
-```
-
-> O `just setup` já copia automaticamente os arquivos `.example` para você. Nenhuma configuração manual é necessária para começar.
-
----
-
-## Rodando o projeto
-
-Existem dois caminhos para subir o ambiente de desenvolvimento. Escolha o que preferir:
-
-| Caminho | Quando usar |
-|---------|-------------|
-| **A: justfile (recomendado)** | Você gerencia os containers pelo terminal com o `just`, independentemente do editor. Funciona com qualquer editor ou IDE. |
-| **B: Dev Container** | Você usa VS Code ou WebStorm e quer que o editor abra diretamente dentro do container, com extensões, terminal e tudo configurado automaticamente. |
-
-### Caminho A: justfile (recomendado)
-
-O `justfile` oferece receitas prontas para gerenciar todo o ciclo de vida dos containers pelo terminal. É o caminho mais direto e flexível — funciona com qualquer editor.
-
-#### 1. Configurar e subir o ambiente
-
-```bash
-just up
-```
-
-Esse único comando faz tudo:
-
-- Copia os arquivos `.env` a partir dos exemplos (se ainda não existirem).
-- Faz o build das imagens dos containers (apenas se houve mudanças).
-- Sobe os containers (aplicação + PostgreSQL + RabbitMQ).
-- Instala as dependências (`bun install`).
-- Abre um shell `zsh` dentro do container da aplicação.
-
-#### 2. Iniciar o servidor de desenvolvimento
-
-Você já estará dentro do container após o `just up`. Basta rodar:
-
-```bash
-bun run dev
-```
-
-#### Receitas disponíveis
-
-| Comando | O que faz |
-|---------|-----------|
-| `just up` | Sobe tudo e abre shell no container |
-| `just start` | Sobe os containers em background (sem abrir shell) |
-| `just stop` | Para os containers (sem remover) |
-| `just down` | Para e remove os containers |
-| `just cleanup` | Para, remove containers **e volumes** (reset completo — pede confirmação) |
-| `just logs` | Mostra logs dos containers em tempo real |
-| `just shell-1000` | Abre shell como usuário `happy` (uid 1000) |
-| `just shell-root` | Abre shell como `root` |
-| `just build` | Faz o build da imagem (apenas se inputs mudaram — verifica hash) |
-| `just rebuild` | Força rebuild da imagem |
-| `just exec <args>` | Executa comando dentro do container |
-| `just compose <args>` | Passa argumentos direto para o `docker compose` |
-
-> **Usando Podman?** Defina a variável `OCI_RUNTIME=podman` antes dos comandos:
-> ```bash
-> OCI_RUNTIME=podman just up
-> ```
-
----
-
-### Caminho B: Dev Container
-
-O [Dev Container](https://containers.dev/) é uma alternativa que configura automaticamente todo o ambiente de desenvolvimento — extensões, formatação, terminal, portas — dentro do container Docker, integrado ao editor.
-
-#### VS Code
-
-1. Instale a extensão **Dev Containers** (`ms-vscode-remote.remote-containers`).
-2. Abra a pasta do projeto no VS Code.
-3. Quando aparecer a notificação _"Reopen in Container"_, clique nela.
-   - Ou use o Command Palette (`Ctrl+Shift+P`) e selecione **Dev Containers: Reopen in Container**.
-4. Aguarde o build do container e a instalação das dependências (na primeira vez pode demorar alguns minutos).
-5. Abra o terminal integrado (`` Ctrl+` ``) e inicie o servidor:
-
-```bash
-bun run dev
-```
-
-#### WebStorm
-
-1. Abra a pasta do projeto no WebStorm.
-2. Vá em **File > Remote Development > Dev Containers** e selecione o `devcontainer.json` do projeto.
-3. Aguarde o build e a inicialização do container.
-4. Abra o terminal integrado e inicie o servidor:
-
-```bash
-bun run dev
-```
-
-#### O que o Dev Container configura para você
-
-**Extensões pré-instaladas (21 extensões):**
-
-| Categoria | Extensões |
-|-----------|-----------|
-| **TypeScript/JS** | TypeScript Next, Biome (formatter/linter) |
-| **Runtime** | Bun, JS Debug |
-| **Banco de dados** | SQL Tools + Driver PostgreSQL |
-| **Docker** | Docker, Remote Containers |
-| **Git** | GitLens, Git Graph |
-| **API/GraphQL** | GraphQL, OpenAPI (42Crunch) |
-| **Testes** | Vitest Explorer |
-| **Utilidades** | YAML, JSON, Path Intellisense, Spell Checker |
-
-**Configurações do editor:**
-- **Formatador padrão:** Biome — auto-format ao salvar.
-- **Terminal padrão:** `zsh`.
-- **Imports:** modo relativo (sem extensões).
-
-**Portas encaminhadas:**
-- `3701` (API) — `http://localhost:3701`
-- `9229` (debug) — para attach do debugger
-- `5432` (PostgreSQL) — para clientes SQL externos
-
-**Instalação automática:** `bun install` executado no `postCreateCommand`.
-
-**Usuário do container:** `happy` (uid 1000).
-
-**Ferramentas adicionais:** Git (via PPA) e GitHub CLI instalados automaticamente.
-
----
-
-## Primeiros passos após o setup
-
-Após rodar `just up` (ou abrir o Dev Container) e iniciar o servidor com `bun run dev`, siga estes passos para verificar que tudo está funcionando:
-
-1. **Aplique as migrações do banco de dados:**
-   ```bash
-   bun run migration:run
-   ```
-   Isso cria todas as tabelas (58 migrações), funções/triggers e insere os dados iniciais (estados do Brasil, cidades de Rondônia, campus IFRO Ji-Paraná e superuser).
-
-2. **Acesse a documentação da API:**
-   Abra <http://localhost:3701/api/docs> no navegador. Você verá a documentação interativa Scalar/Swagger com todos os endpoints disponíveis.
-
-3. **Acesse o GraphQL Playground:**
-   Abra <http://localhost:3701/api/graphql> para explorar queries e mutations GraphQL.
-
-4. **Faça sua primeira requisição autenticada (mock):**
-   Em desenvolvimento, com `ENABLE_MOCK_ACCESS_TOKEN=true` (padrão), você pode usar tokens simulados:
-   ```bash
-   # O token mock.matricula.1234 simula um usuário com matrícula 1234
-   curl -H "Authorization: Bearer mock.matricula.1234" http://localhost:3701/api/campi
-   ```
-
-5. **Rode os testes para verificar que está tudo ok:**
-   ```bash
-   bun run test
-   ```
-
----
-
-## Como contribuir
-
-### Conceitos básicos de Git (para quem está começando)
-
-Se você já conhece Git, pule para o [Gitflow do projeto](#gitflow-do-projeto).
-
-| Conceito | O que é |
-|----------|---------|
-| **Repositório (repo)** | A pasta do projeto com todo o histórico de alterações. Existe uma cópia remota (no GitHub) e uma local (na sua máquina). |
-| **Branch** | Uma "ramificação" do código. Permite trabalhar em uma alteração sem afetar o código principal. Pense como uma cópia paralela onde você faz suas mudanças. |
-| **Commit** | Um "ponto de salvamento" no histórico. Registra o que mudou, quem mudou e uma mensagem descrevendo a alteração. |
-| **Push** | Envia seus commits locais para o repositório remoto (GitHub), tornando-os visíveis para o time. |
-| **Fetch** | Baixa as referências e objetos do repositório remoto **sem alterar** nenhum arquivo local. Diferente de pull, que baixa e incorpora automaticamente. |
-| **Merge** | O ato de juntar as alterações de uma branch na outra. Acontece quando um PR é aprovado ou quando você incorpora mudanças da main. |
-| **Pull Request (PR)** | Uma solicitação para incorporar suas alterações (da sua branch) na branch principal (`main`). Outros devs revisam antes de aprovar. |
-| **Conflito** | Quando duas pessoas alteraram a mesma parte do código. Precisa ser resolvido manualmente antes do merge. |
-
-### Gitflow do projeto
-
-O projeto usa uma estratégia simples: **branch única `main`** + **feature branches** + **merge via Pull Request**.
-
-```mermaid
-gitGraph
-    commit id: "estado atual"
-    branch feat/cadastro-turma
-    commit id: "criar entidade"
-    commit id: "adicionar handler"
-    commit id: "code:fix + typecheck"
-    checkout main
-    branch fix/corrigir-paginacao
-    commit id: "corrigir offset"
-    checkout main
-    merge fix/corrigir-paginacao id: "PR #42 merged"
-    checkout feat/cadastro-turma
-    commit id: "adicionar testes"
-    checkout main
-    merge feat/cadastro-turma id: "PR #43 merged"
-    commit id: "próximo ciclo..."
-```
-
-**Como funciona:**
-
-1. A branch `main` é a versão **estável** do projeto. Todo código nela deve estar funcionando.
-2. Para cada alteração, você cria uma **feature branch** a partir da `main`.
-3. Trabalha na feature branch (commits, testes, formatação).
-4. Quando terminar, abre um **Pull Request** para a `main`.
-5. Após revisão e aprovação, o PR é **mergeado** na `main`.
-
-### Convenções de nomenclatura
-
-#### Branches
-
-O nome da branch indica o **tipo** da alteração:
-
-| Prefixo | Quando usar | Exemplo |
-|---------|-------------|---------|
-| `feat/` | Nova funcionalidade | `feat/cadastro-estagio` |
-| `fix/` | Correção de bug | `fix/paginacao-campus` |
-| `refactor/` | Refatoração sem mudança de comportamento | `refactor/extrair-handler-turma` |
-| `docs/` | Alteração apenas em documentação | `docs/atualizar-readme` |
-| `test/` | Adição ou correção de testes | `test/handler-diario` |
-| `chore/` | Tarefas de manutenção (deps, CI, config) | `chore/atualizar-nestjs` |
-
-#### Commits
-
-Commits seguem o padrão **Conventional Commits**:
-
-```
-tipo(escopo): descrição curta do que foi feito
-```
-
-| Parte | Descrição | Exemplo |
-|-------|-----------|---------|
-| **tipo** | Categoria da mudança | `feat`, `fix`, `refactor`, `docs`, `test`, `chore` |
-| **escopo** | Módulo ou área afetada (opcional) | `campus`, `turma`, `auth`, `database` |
-| **descrição** | O que foi feito, em imperativo | `adicionar endpoint de listagem` |
-
-**Exemplos bons vs ruins:**
-
-| Bom | Ruim |
-|-----|------|
-| `feat(campus): adicionar endpoint de criação` | `update` |
-| `fix(turma): corrigir paginação na listagem` | `fix bug` |
-| `refactor(auth): extrair validação de token` | `refatoração` |
-| `docs: atualizar variáveis de ambiente no README` | `docs` |
-| `test(diario): adicionar testes do create handler` | `add tests` |
-
-### Trabalhando com Git localmente
-
-Manter a branch local sincronizada é fundamental para evitar conflitos. O fluxo recomendado neste projeto usa **`git fetch -p` + `git merge origin/main`** em vez de `git pull`.
-
-#### Por que NÃO usar `git pull`
-
-`git pull` é um atalho que faz `git fetch` + `git merge` (ou `rebase`, dependendo da config global) **automaticamente**. Isso pode causar problemas:
-
-- Se o dev tem `pull.rebase = true` na config global e faz `git pull origin main` na branch de feature, os commits locais são **rebaseados** sobre a main — reescrevendo o histórico da feature branch. Se ele já tinha dado push, isso causa divergência.
-- Separar `fetch` e `merge` é mais explícito e seguro: você vê o que mudou antes de incorporar.
-
-#### Fluxo recomendado: `git fetch -p` + `git merge origin/main`
-
-```mermaid
-graph TD
-    A["Início do trabalho"] --> B["git fetch -p"]
-    B --> C["git merge origin/main"]
-    C --> D{Conflitos?}
-    D -- Não --> E["Continua trabalhando"]
-    D -- Sim --> F["Resolve conflitos"]
-    F --> G["git add arquivos-resolvidos"]
-    G --> H["git commit"]
-    H --> E
-
-    style A fill:#4a90d9,stroke:#2c5f8a,color:#fff
-    style D fill:#e8a838,stroke:#b07c1e,color:#fff
-    style E fill:#50b86c,stroke:#3a8a50,color:#fff
-```
-
-**Explicação de cada comando:**
-
-- **`git fetch -p`** — baixa as referências e objetos do repositório remoto **sem alterar nenhum arquivo local**. O `-p` (prune) limpa referências locais de branches remotas que já foram deletadas no GitHub. Após o fetch, `origin/main` aponta para o commit mais recente da main no GitHub, mas sua branch local não muda.
-
-- **`git merge origin/main`** — incorpora as mudanças de `origin/main` na branch onde você está (sua feature branch). Isso é feito **sem trocar para a `main` local** — você referencia diretamente `origin/main`. Se não houver conflitos, o merge acontece automaticamente.
-
-#### Regra: NÃO toque na `main` local
-
-Neste projeto, a convenção é:
-
-- **Nunca faça checkout na `main` local** para atualizar. Use sempre `origin/main` como referência.
-- A `main` local pode ficar desatualizada e isso é OK — ela não é usada para nada.
-- Se a `main` local ficou divergente ou confusa: `git checkout main && git reset --hard origin/main` (após um fetch) — isso faz a branch local apontar exatamente para o mesmo commit de `origin/main`, descartando qualquer divergência local.
-
-#### Fluxo diário
-
-```bash
-# Início do trabalho (na sua feature branch):
-git fetch -p
-git merge origin/main
-
-# Fim do trabalho:
-bun run code:fix
-bun run typecheck
-git add .
-git commit -m "feat(modulo): descrição"
-git push origin feat/minha-feature
-
-# Criando nova branch (a partir do remoto atualizado):
-git fetch -p
-git checkout -b feat/nova-feature origin/main
-```
-
-O `git checkout -b feat/nova-feature origin/main` cria uma nova branch a partir de `origin/main` (a versão mais recente da main no GitHub) — melhor que criar a partir da `main` local, que pode estar desatualizada.
-
-#### O que fazer quando há conflitos
-
-1. O Git marca os conflitos nos arquivos com `<<<<<<<`, `=======`, `>>>>>>>`.
-2. Abra cada arquivo conflitante e escolha qual versão manter (ou combine ambas).
-3. Remova os marcadores de conflito.
-4. Adicione e commite:
-   ```bash
-   git add .
-   git commit -m "merge: resolver conflitos com main"
-   ```
-
-> **Dica:** use o editor (VS Code tem uma interface visual para resolver conflitos) em vez de editar manualmente.
-
-### Trabalhando localmente no desenvolvimento
-
-Todo o desenvolvimento acontece **dentro do container Docker**. Isso garante que todos usam as mesmas versões de ferramentas.
-
-```mermaid
-graph TD
-    subgraph "Sua máquina (host)"
-        EDITOR["Editor de código\n(VS Code, WebStorm, etc.)"]
-        JUST["just (task runner)"]
-    end
-
-    subgraph "Container Docker"
-        BUN["Bun (runtime)"]
-        APP["Aplicação NestJS"]
-        TOOLS["Ferramentas\n(TypeScript, Biome, Vitest)"]
-    end
-
-    subgraph "Containers de serviço"
-        DB["PostgreSQL 15"]
-        RMQ["RabbitMQ 3"]
-    end
-
-    EDITOR -- "edita arquivos\n(volume montado)" --> APP
-    JUST -- "just exec / just up" --> BUN
-    BUN --> APP
-    BUN --> TOOLS
-    APP --> DB
-    APP --> RMQ
-
-    style EDITOR fill:#4a90d9,stroke:#2c5f8a,color:#fff
-    style BUN fill:#e8a838,stroke:#b07c1e,color:#fff
-    style DB fill:#336791,stroke:#1e3d5c,color:#fff
-```
-
-#### Fluxo de trabalho típico
-
-```bash
-# 1. Suba o ambiente (se ainda não estiver rodando)
-just up                        # Sobe containers e abre shell
-
-# 2. Dentro do container, inicie o servidor
-bun run dev                    # Servidor com hot reload
-
-# 3. Em outro terminal, rode comandos conforme necessário
-just exec bun run test         # Testes
-just exec bun run code:fix     # Formatação
-just exec bun run typecheck    # Verificação de tipos
-just exec bun run migration:run  # Migrações
-```
-
-#### Editor + Container: como funciona
-
-O código fica na sua máquina e é **montado como volume** dentro do container. Isso significa:
-
-- Você **edita no editor** normalmente (VS Code, WebStorm, Vim, etc.).
-- As alterações aparecem **instantaneamente** dentro do container (sem rebuild).
-- O `bun run dev` detecta as mudanças e faz **hot reload** automaticamente.
-- Para rodar comandos (testes, lint, migrações), use `just exec` ou o shell dentro do container.
-
-#### Dicas para produtividade
-
-- **Dois terminais:** um para o servidor (`bun run dev`), outro para comandos (`just exec ...`).
-- **Hot reload:** salve o arquivo e veja as mudanças refletidas automaticamente no servidor.
-- **Debug:** use `bun run debug` e conecte o debugger do editor na porta `9229`.
-- **Logs:** se algo não funcionar, veja os logs com `just logs`.
-
-### Passo a passo completo
-
-```mermaid
-sequenceDiagram
-    participant Dev as Desenvolvedor
-    participant Local as Git Local
-    participant Container as Container Docker
-    participant Remote as GitHub
-    participant Team as Time (Review)
-
-    Dev->>Local: git checkout -b feat/minha-feature origin/main
-    Note over Dev: Faz alterações no código
-    Dev->>Container: bun run code:fix
-    Container-->>Dev: Código formatado
-    Dev->>Container: bun run typecheck
-    Container-->>Dev: Tipos OK
-    Dev->>Container: bun run test
-    Container-->>Dev: Testes passando
-    Dev->>Local: git add + git commit
-    Dev->>Remote: git push origin feat/minha-feature
-    Dev->>Remote: Abre Pull Request
-    Remote->>Team: Notifica revisores
-    Team->>Remote: Revisa e aprova
-    Remote->>Remote: Merge na main
-    Note over Remote: CI/CD deploya automaticamente
-```
-
-#### 1. Crie uma feature branch (a partir do remoto)
-
-```bash
-git fetch -p                                     # Atualiza referências
-git checkout -b feat/minha-feature origin/main   # Cria branch a partir do remoto
-```
-
-#### 2. Faça suas alterações
-
-Edite o código seguindo a [estrutura de módulos](#módulos-de-domínio) e as [boas práticas](#boas-práticas-de-desenvolvimento).
-
-#### 3. Formate e valide (obrigatório)
-
-```bash
-bun run code:fix      # Formata o código e corrige problemas de linting
-bun run typecheck     # Verifica que nenhum tipo está quebrado
-```
-
-> **Por que isso é obrigatório?** `code:fix` garante que o código segue o padrão visual do projeto (indentação, imports, etc.). `typecheck` garante que o TypeScript compila sem erros — se falhar, algo está quebrado e não deve ser commitado.
-
-#### 4. Rode os testes
-
-```bash
-bun run test          # Executa os testes unitários
-```
-
-> Se algum teste falhar, corrija antes de commitar. Commits com testes quebrados não devem chegar ao PR.
-
-#### 5. Faça o commit
-
-```bash
-git add .                                           # Adiciona todas as alterações
-git commit -m "feat(campus): adicionar validação de CNPJ"   # Cria o commit com mensagem
-```
-
-> `git add .` adiciona **todos** os arquivos modificados. Se quiser adicionar apenas alguns, use `git add caminho/do/arquivo.ts`.
-
-#### 6. Envie para o GitHub
-
-```bash
-git push origin feat/minha-feature    # Envia a branch para o repositório remoto
-```
-
-> Na primeira vez que fizer push de uma branch nova, o Git pode pedir para configurar o upstream. Use o comando que ele sugerir.
-
-#### 7. Abra um Pull Request
-
-1. Acesse o repositório no GitHub.
-2. Você verá um banner sugerindo abrir um PR para a branch que acabou de enviar — clique nele.
-3. Preencha o título (seguindo a convenção de commit) e a descrição.
-4. Adicione revisores.
-5. Clique em **Create Pull Request**.
-
-### Ciclo de vida de um Pull Request
-
-```mermaid
-stateDiagram-v2
-    [*] --> Draft: Abre PR como rascunho\n(ainda trabalhando)
-    [*] --> ReadyForReview: Abre PR pronto\npara revisão
-    Draft --> ReadyForReview: Marca como pronto
-    ReadyForReview --> InReview: Revisor começa\na analisar
-    InReview --> ChangesRequested: Revisor pede\nalterações
-    InReview --> Approved: Revisor aprova
-    ChangesRequested --> InReview: Dev faz correções\ne pede re-review
-    Approved --> Merged: Merge na main
-    Merged --> [*]
-
-    note right of Draft: Use Draft quando\nainda não terminou
-    note right of Approved: CI deve estar verde\nantes do merge
-```
-
-**Dicas:**
-- Abra o PR como **Draft** se ainda estiver trabalhando e quiser feedback antecipado.
-- PRs menores são revisados mais rápido — prefira PRs focados a PRs gigantes.
-- Responda aos comentários da revisão e faça as correções na mesma branch.
-
-### O que fazer vs. o que NÃO fazer
-
-| Fazer | NÃO fazer |
-|-------|-----------|
-| Criar uma branch por feature/fix | Commitar direto na `main` |
-| Commits pequenos e frequentes com mensagens claras | Um commit gigante com "várias coisas" |
-| Rodar `code:fix` + `typecheck` antes de todo commit | Commitar com erros de tipo ou formatação |
-| Rodar `bun run test` antes de abrir PR | Abrir PR com testes falhando |
-| Manter branch atualizada com `git fetch -p && git merge origin/main` | Trabalhar semanas sem sincronizar |
-| Escrever título de PR descritivo | Título genérico como "Update" |
-| Fazer PRs pequenos e focados | PR com 50 arquivos e 3 features misturadas |
-| Pedir revisão após CI verde | Pedir revisão com CI falhando |
-| Resolver conflitos com cuidado | Forçar push (`--force`) sem entender |
-| Deletar a branch após merge | Acumular branches antigas |
-
-### Checklist pré-commit
-
-Antes de cada `git commit`, verifique:
-
-- [ ] `bun run code:fix` executado (sem erros).
-- [ ] `bun run typecheck` passando.
-- [ ] Mensagem de commit segue o padrão `tipo(escopo): descrição`.
-- [ ] Nenhum `console.log` de debug esquecido.
-- [ ] Nenhum arquivo sensível (`.env`, credenciais) incluído.
-
-### Checklist pré-PR
-
-Antes de abrir o Pull Request:
-
-- [ ] `bun run code:fix` executado.
-- [ ] `bun run typecheck` passando.
-- [ ] `bun run test` passando.
-- [ ] Branch atualizada com a main (`git fetch -p && git merge origin/main`).
-- [ ] Novos endpoints documentados no Swagger (decorators `@ApiOperation`, `@ApiTags`).
-- [ ] Migrações criadas se houve alteração em entidades do banco.
-- [ ] README atualizado se houve mudança em estrutura, variáveis, serviços ou fluxos.
-- [ ] PR com título descritivo seguindo Conventional Commits.
-- [ ] Descrição do PR explicando o que foi feito e por quê.
-
-> **Nota:** todo código roda dentro do container. Se você não estiver no shell do container (via `just up`), use `just exec <comando>` para executar de fora. Exemplo: `just exec bun run typecheck`.
-
-### Como escrever um bom commit
-
-Commits são o **histórico permanente** do projeto. Um bom commit permite que qualquer pessoa entenda o que foi feito, por que, e em qual contexto — mesmo meses depois.
-
-#### Regras obrigatórias
-
-Todos os commits neste projeto **devem** seguir o padrão [Conventional Commits](https://www.conventionalcommits.org/):
-
-```
-tipo(escopo): descrição imperativa curta
-
-Corpo opcional com mais detalhes sobre o que mudou e por quê.
-Pode ter múltiplas linhas.
-
-Refs #123
-```
-
-**Estrutura:**
-
-| Parte | Obrigatório | Descrição |
-|-------|:-----------:|-----------|
-| **tipo** | sim | Categoria da mudança (`feat`, `fix`, `refactor`, etc.) |
-| **escopo** | não (mas recomendado) | Módulo ou área afetada (`campus`, `auth`, `database`) |
-| **descrição** | sim | Frase curta no **imperativo** (ex.: "adicionar", não "adicionado" ou "adicionando") |
-| **corpo** | não | Detalhes adicionais — o _porquê_ da mudança, contexto, decisões |
-| **referência** | não | Link para issue (`Refs #123`, `Closes #45`) |
-
-**Tipos permitidos:**
-
-| Tipo | Quando usar | Exemplo |
-|------|-------------|---------|
-| `feat` | Nova funcionalidade visível ao usuário | `feat(turma): adicionar endpoint de matrícula` |
-| `fix` | Correção de bug | `fix(campus): corrigir filtro de busca por CNPJ` |
-| `refactor` | Mudança interna sem alterar comportamento | `refactor(auth): extrair validação de token para service` |
-| `docs` | Documentação (README, comentários, Swagger) | `docs: atualizar variáveis de ambiente no README` |
-| `test` | Adição ou correção de testes | `test(diario): adicionar testes do create handler` |
-| `chore` | Manutenção (deps, CI, config, build) | `chore: atualizar NestJS para v11` |
-| `style` | Formatação (sem mudança de lógica) | `style: aplicar code:fix no módulo campus` |
-| `perf` | Melhoria de performance | `perf(database): adicionar índice na tabela turma` |
-| `ci` | Alteração em pipelines CI/CD | `ci: adicionar step de typecheck no workflow` |
-
-**Exemplos completos:**
-
-```bash
-# Commit simples (uma linha)
-git commit -m "feat(campus): adicionar validação de CNPJ duplicado"
-
-# Commit com corpo explicativo
-git commit -m "fix(turma): corrigir erro 500 ao listar turmas sem diário
-
-O findAll retornava erro quando a turma não tinha diários associados
-porque o LEFT JOIN não tratava o caso de relação vazia.
-
-Refs #127"
-
-# Commit de refatoração
-git commit -m "refactor(auth): mover mock token para infrastructure.identity-provider
-
-O mock de token estava no controller, violando a separação de concerns.
-Movido para o adapter de identity provider onde pertence."
-```
-
-**O que NÃO fazer em commits:**
-
-| Ruim | Por quê | Bom |
-|------|---------|-----|
-| `fix` | Não diz o que foi corrigido | `fix(campus): corrigir paginação na listagem` |
-| `update` | Genérico demais | `feat(turma): adicionar campo observacao` |
-| `wip` | Não deve ser commitado — use stash | Finalize antes de commitar |
-| `ajustes diversos` | Múltiplas mudanças misturadas | Separe em commits focados |
-| `Adicionado endpoint` | Não segue o padrão (não é imperativo, sem tipo) | `feat(campus): adicionar endpoint de exclusão` |
-
-### Como escrever uma boa issue
-
-Issues são o ponto de partida de qualquer alteração. Uma boa issue permite que qualquer dev (inclusive você mesmo no futuro) entenda o problema ou a necessidade sem precisar perguntar.
-
-#### Estrutura recomendada
-
-**Para bugs:**
-
-```markdown
-## Descrição do bug
-O que está acontecendo de errado? Qual o comportamento atual?
-
-## Comportamento esperado
-O que deveria acontecer?
-
-## Como reproduzir
-1. Acessar endpoint X com payload Y
-2. Observar resposta Z
-
-## Contexto adicional
-- Ambiente: desenvolvimento / produção
-- Endpoint: POST /api/campi
-- Payload de exemplo (se aplicável)
-- Logs de erro (se disponíveis)
-```
-
-**Para features:**
-
-```markdown
-## Descrição
-O que precisa ser implementado e por quê?
-
-## Critérios de aceite
-- [ ] Endpoint POST /api/turmas criado
-- [ ] Validação de campos obrigatórios
-- [ ] Testes unitários do handler
-- [ ] Documentação Swagger
-
-## Contexto técnico (se aplicável)
-Módulo afetado, dependências, decisões de design.
-```
-
-**Dicas:**
-- Título claro e específico — "Erro 500 ao criar campus sem endereço" é melhor que "Bug no campus".
-- Uma issue por problema/feature — não misture assuntos.
-- Use labels para categorizar (`bug`, `feature`, `enhancement`, `docs`).
-- Referencie issues relacionadas quando existirem.
-
-### Como escrever um bom Pull Request
-
-O PR é onde a revisão acontece. Um bom PR facilita a vida do revisor e acelera o merge.
-
-#### Estrutura recomendada
-
-```markdown
-## O que foi feito
-Resumo em 1-3 frases do que esta PR implementa/corrige.
-
-## Por que
-Contexto e motivação — qual problema resolve ou qual necessidade atende.
-Link para a issue: Closes #123
-
-## Como testar
-1. Subir o ambiente com `just up`
-2. Rodar migrações: `bun run migration:run`
-3. Acessar POST /api/campi com payload X
-4. Verificar resposta Y
-
-## Checklist
-- [ ] `code:fix` executado
-- [ ] `typecheck` passando
-- [ ] Testes passando
-- [ ] Swagger atualizado (se aplicável)
-- [ ] README atualizado (se aplicável)
-```
-
-**Regras:**
-
-| Regra | Descrição |
-|-------|-----------|
-| **PRs pequenos** | Máximo ~400 linhas alteradas. Se passou disso, considere dividir. |
-| **Uma responsabilidade** | Cada PR resolve um problema ou implementa uma feature. Não misture. |
-| **Título descritivo** | Segue Conventional Commits: `feat(campus): adicionar validação de CNPJ` |
-| **Descrição completa** | O revisor não deve precisar ler todo o diff para entender o contexto. |
-| **CI verde** | Não peça revisão com CI falhando. |
-| **Branch atualizada** | Faça `git fetch -p && git merge origin/main` antes de pedir revisão. |
-| **Resolva conflitos** | Se houver conflitos com a `main`, resolva antes do merge. |
-
----
-
-## Boas práticas de desenvolvimento
-
-Estas são as práticas essenciais que todo contribuidor deve seguir:
-
-### Qualidade obrigatória
-
-- **Sempre rode `code:fix` → `typecheck`** após qualquer alteração. A tarefa não está concluída sem ambos passando.
-- **Escreva testes** para command/query handlers. Helpers e mocks ficam em `src/test/`.
-- **Nunca delete registros fisicamente** — use soft delete (exclusão lógica). As entidades já têm `dateDeleted`.
-
-### Arquitetura
-
-- **Siga a estrutura hexagonal** dos módulos existentes. Ao criar um novo módulo, replique a estrutura de um módulo já consolidado (ex.: `campus`).
-- **Schemas Zod ficam no domínio** e são reutilizados na apresentação. Nunca duplicar validação.
-- **Validação em duas camadas** — na apresentação (DTO com `static schema`) e no domínio (`zodValidate()`).
-- **Transações são automáticas** — nunca chamar `.transaction()` manualmente. O interceptor global cuida disso.
-- **Não instale `class-validator`** — o projeto usa exclusivamente Zod v4.
-
-### Convenções de linguagem
-
-- **Português (pt-BR):** nomes de entidades de domínio e todas as suas propriedades (`Campus`, `nomeFantasia`, `razaoSocial`).
-- **Inglês:** todo o resto — infraestrutura, métodos, utilitários, variáveis (`findAll`, `CommandHandler`, `dateCreated`).
-
-### O que evitar
-
-- Não use `as any` — defina tipos adequados.
-- Não importe de `modules/@shared` — é legado em remoção. Use `@/domain/`, `@/shared/`, `@/infrastructure.*`.
-- Não adicione extensões `.js` ou `.ts` nos imports.
-- Não proponha code generation ou meta-programação para reduzir boilerplate — consistência é preferida.
-
----
-
-## Princípios de engenharia
-
-O projeto segue princípios rigorosos de engenharia de software para garantir qualidade, manutenibilidade e escalabilidade:
-
-### Design de código
-
-| Princípio | Aplicação no projeto |
-|-----------|---------------------|
-| **SOLID** | Cada handler tem uma responsabilidade. Repositórios são compostos de interfaces granulares (`IRepositoryCreate`, `IRepositoryFindById`). Dependências são invertidas via Symbols. |
-| **DRY** | Schemas Zod definidos uma vez no domínio, reutilizados na apresentação. Metadata de campos definida em `CampusFields`, consumida por REST e GraphQL. |
-| **KISS** | Handlers são funções pequenas e diretas. Sem abstrações desnecessárias. |
-| **YAGNI** | Não implemente o que ninguém pediu. Não adicione parâmetros "por precaução". |
-| **SoC** | Controllers não contêm lógica de negócio. Handlers não fazem queries SQL. Repositórios não validam regras de domínio. |
-
-### Single Source of Truth (SSOT)
-
-Cada dado ou regra tem **uma única origem autoritativa** no projeto. Isso elimina inconsistências e facilita manutenção:
-
-```mermaid
-graph TD
-    subgraph "Fonte única (domínio)"
-        SCHEMA["CampusSchema\n(Zod)"]
-        FIELDS["CampusFields\n(FieldMetadata)"]
-    end
-
-    subgraph "Consumidores"
-        ENT["Entidade de domínio\nCampus.create() / Campus.update()"]
-        DTO_REST["DTO REST\nstatic schema = CampusCreateSchema"]
-        DTO_GQL["DTO GraphQL\n@Field(() => String, field.gqlMetadata)"]
-        SWAGGER["Swagger\n(gerado automaticamente)"]
-    end
-
-    SCHEMA --> ENT
-    SCHEMA --> DTO_REST
-    FIELDS --> DTO_GQL
-    FIELDS --> SWAGGER
-
-    style SCHEMA fill:#e8a838,stroke:#b07c1e,color:#fff
-    style FIELDS fill:#e8a838,stroke:#b07c1e,color:#fff
-```
-
-**Exemplos de SSOT no projeto:**
-
-| Dado/Regra | Fonte única | Quem consome |
-|------------|-------------|-------------|
-| Validação de campos | `CampusSchema` (Zod, no domínio) | Entidade (`zodValidate`), DTO REST (`static schema`), DTO GraphQL |
-| Metadata de campos (descrição, nullable) | `CampusFields` (FieldMetadata) | Decorators GraphQL (`gqlMetadata`), Swagger (`swaggerMetadata`) |
-| Tipagem da entidade | `ICampus = z.infer<typeof CampusSchema>` | Todo o código que manipula Campus |
-| Configuração de paginação | `paginateConfig()` na infraestrutura | `findAll` de cada repositório |
-
-**O que isso significa na prática:** se uma regra de validação do Campus mudar (ex.: CNPJ passa a ser opcional), você altera **apenas** o `CampusFields.cnpj` e o `CampusCreateSchema`. A validação na apresentação (DTO) e no domínio (`zodValidate`) atualiza automaticamente, porque ambos consomem o mesmo schema.
-
-### Dependency Injection (DI) — Interfaces e Implementações
-
-O projeto usa **Inversão de Dependência** para desacoplar as camadas. O domínio define **interfaces** (o que precisa), e a infraestrutura fornece **implementações** (como faz).
-
-```mermaid
-graph LR
-    subgraph "Domínio (interface/port)"
-        SYMBOL["Symbol\nICampusRepository"]
-        TYPE["Type\nICampusRepository"]
-    end
-
-    subgraph "Infraestrutura (implementação/adapter)"
-        IMPL["CampusTypeormRepository\n@DeclareImplementation()"]
-    end
-
-    subgraph "Aplicação (consumidor)"
-        HANDLER["CampusCreateCommandHandlerImpl\n@DeclareDependency(\n  ICampusRepository\n)"]
-    end
-
-    SYMBOL -- "token de injeção" --> HANDLER
-    TYPE -- "contrato (tipos)" --> HANDLER
-    IMPL -- "registra como provider" --> SYMBOL
-
-    style SYMBOL fill:#e8a838,stroke:#b07c1e,color:#fff,text-align:left
-    style TYPE fill:#e8a838,stroke:#b07c1e,color:#fff,text-align:left
-    style IMPL fill:#50b86c,stroke:#3a8a50,color:#fff,text-align:left
-    style HANDLER fill:#4a90d9,stroke:#2c5f8a,color:#fff,text-align:left
-```
-
-**Como funciona passo a passo:**
-
-**1. O domínio define o contrato** (o que o repositório deve fazer):
-
-```typescript
-// src/modules/ambientes/campus/domain/repositories/campus.repository.interface.ts
-export const ICampusRepository = Symbol("ICampusRepository");  // Token de injeção
-
-export type ICampusRepository =                                // Contrato
-  IRepositoryFindAll<CampusListQueryResult> &
-  IRepositoryFindById<CampusFindOneQueryResult> &
-  IRepositoryFindByIdSimple<CampusFindOneQueryResult> &
-  IRepositoryCreate<ICampus> &
-  IRepositoryUpdate<ICampus> &
-  IRepositorySoftDelete;
-```
-
-**2. A infraestrutura implementa** (como o repositório funciona):
-
-```typescript
-// src/modules/ambientes/campus/infrastructure.database/campus.repository.ts
-@DeclareImplementation()
-export class CampusTypeormRepository implements ICampusRepository {
-  constructor(
-    @DeclareDependency(IAppTypeormConnection) private readonly conn: IAppTypeormConnection,
-  ) {}
-
-  async create(entity: ICampus): Promise<{ id: string | number }> { /* ... usa TypeORM */ }
-  async findAll(...) { /* ... usa NestJS-Paginate */ }
-}
-```
-
-**3. O handler consome** (sem saber da implementação):
-
-```typescript
-// src/modules/ambientes/campus/application/commands/campus-create.command.handler.ts
-@DeclareImplementation()
-export class CampusCreateCommandHandlerImpl {
-  constructor(
-    @DeclareDependency(ICampusRepository) private readonly repo: ICampusRepository,
-  ) {}
-
-  async execute(ac: IAccessContext | null, dto: CampusCreateCommand) {
-    const campus = Campus.create(dto);
-    await this.repo.create(campus);  // Não sabe se é TypeORM, Prisma ou mock
-  }
-}
-```
-
-**Por que isso importa?**
-- O handler **nunca sabe** que está usando TypeORM. Ele conhece apenas o contrato.
-- Em testes, você injeta um **mock** que implementa a mesma interface — sem banco de dados.
-- Se o banco mudar de PostgreSQL para outro, apenas o adapter muda — zero alteração no domínio e na aplicação.
-
-### Arquitetura
-
-| Princípio | Aplicação no projeto |
-|-----------|---------------------|
-| **Clean Architecture** | O domínio não depende de frameworks. Dependências apontam para dentro. |
-| **Hexagonal (Ports & Adapters)** | Interfaces no domínio (ports), implementações na infraestrutura (adapters). |
-| **CQRS** | Commands e queries separados em handlers distintos. |
-| **Bounded Context** | Cada módulo é um contexto delimitado com seu modelo de domínio. |
-| **DDD** | Entidades com identidade, factory methods, Ubiquitous Language (pt-BR para o domínio acadêmico). |
-
-### Qualidade técnica
-
-| Princípio | Aplicação no projeto |
-|-----------|---------------------|
-| **Fail Fast** | Validação Zod na entrada (DTO) e no domínio. Erros descritivos imediatos. |
-| **Clean Code** | Nomes semânticos, funções pequenas, early return, sem side effects ocultos. |
-| **POLA** | APIs REST com convenções padrão. Nomes refletem o que fazem. |
-| **Law of Demeter** | Handlers injetam repositórios, não connections. Controllers injetam handlers, não repositórios. |
-| **Immutability** | Entidades mudam apenas via `update()`. Configurações são imutáveis. |
-| **Composition > Inheritance** | DTOs usam mixins (`ts-mixer`), não herança profunda. |
-
----
-
-## Acessando a aplicação
-
-Após iniciar o servidor com `bun run dev`, acesse:
-
-| Recurso | URL | Descrição |
-|---------|-----|-----------|
-| Health check | <http://localhost:3701/health> | Verificação de saúde da aplicação (fora do prefixo) |
-| Documentação Swagger/Scalar | <http://localhost:3701/api/docs> | Documentação interativa da API REST com Scalar |
-| OpenAPI JSON | <http://localhost:3701/api/docs/openapi.v3.json> | Schema OpenAPI em JSON (para importação em Postman, Insomnia, etc.) |
-| Swagger UI | <http://localhost:3701/api/docs/swagger> | Interface Swagger UI clássica |
-| GraphQL Playground | <http://localhost:3701/api/graphql> | Interface GraphiQL para explorar e testar queries/mutations |
-
-> As URLs acima usam o prefixo padrão `/api/`. Se o `API_PREFIX` for alterado no `.env`, as URLs mudam de acordo. Veja [Sobre o prefixo](#sobre-o-prefixo-api_prefix) para detalhes.
-
-### Documentação Swagger/Scalar
-
-A documentação da API REST é gerada automaticamente a partir dos decorators do NestJS no código-fonte. Ao acessar <http://localhost:3701/api/docs>, você encontra a interface [Scalar](https://scalar.com/) — uma alternativa moderna ao Swagger UI:
-
-**O que você pode fazer na documentação:**
-
-- **Explorar endpoints** — todos os endpoints REST agrupados por módulo (tags `@ApiTags`).
-- **Testar requisições** — enviar requests diretamente pelo navegador, com payload e autenticação.
-- **Ver schemas** — tipos de entrada e saída de cada endpoint, com exemplos.
-- **Autenticar** — clicar em "Authorize" e inserir o Bearer token (ex.: `mock.matricula.1234` em desenvolvimento).
-- **Exportar** — baixar o schema OpenAPI em JSON para importar no Postman, Insomnia ou outra ferramenta.
-
-**Principais endpoints REST:**
-
-| Área | Path base | Métodos |
-|------|-----------|---------|
-| Campi | `/api/campi` | GET /, GET /:id, POST /, PATCH /:id, DELETE /:id |
-| Blocos | `/api/blocos` | GET /, GET /:id, POST /, PATCH /:id, DELETE /:id |
-| Ambientes | `/api/ambientes` | GET /, GET /:id, POST /, PATCH /:id, DELETE /:id |
-| Turmas | `/api/turmas` | GET /, GET /:id, POST /, PATCH /:id, DELETE /:id, GET /:id/horario |
-| Diários | `/api/diarios` | GET /, GET /:id, POST /, PATCH /:id, DELETE /:id |
-| Cursos | `/api/cursos` | GET /, GET /:id, POST /, PATCH /:id |
-| Disciplinas | `/api/disciplinas` | GET /, GET /:id, POST /, PATCH /:id, DELETE /:id |
-| Modalidades | `/api/modalidades` | GET /, GET /:id, POST /, PATCH /:id, DELETE /:id |
-| Usuários | `/api/usuarios` | GET /, GET /:id, POST /, PATCH /:id |
-| Autenticação | `/api/autenticacao` | GET /quem-sou-eu, POST /login, POST /login/refresh |
-| Calendários letivos | `/api/calendarios-letivos` | GET /, GET /:id, POST /, PATCH /:id, DELETE /:id |
-| Horários de aula | `/api/horarios-aula` | GET /, GET /:id, POST /, PATCH /:id, DELETE /:id |
-| Empresas | `/api/empresas` | GET /, GET /:id, POST /, PATCH /:id, DELETE /:id |
-| Estágios | `/api/estagios` | GET /, GET /:id, POST /, PATCH /:id, DELETE /:id |
-| Estados | `/api/base/estados` | GET /, GET /:id |
-| Cidades | `/api/base/cidades` | GET /, GET /:id |
-| Arquivos | `/api/arquivos` | GET /, POST / |
-| Gerar horário | `/api/gerar-horario` | POST /, GET /:id, POST /:id/aceitar, POST /:id/rejeitar |
-
----
-
-## Serviços do ambiente
-
-Quando você sobe o ambiente (via Dev Container ou `just up`), os seguintes serviços são iniciados:
-
-```mermaid
-graph TB
-    subgraph Docker Compose
-        MS["Management Service\n:3701 (API)\n:9229 (debug)"]
-        DB["PostgreSQL 15\n(bitnamilegacy/postgresql:15)\n:5432"]
-        RMQ["RabbitMQ 3\n(rabbitmq:3-management-alpine)\n:15672 (UI)"]
-    end
-
-    MS --> DB
-    MS --> RMQ
-
-    style MS fill:#4a90d9,stroke:#2c5f8a,color:#fff
-    style DB fill:#336791,stroke:#1e3d5c,color:#fff
-    style RMQ fill:#ff6600,stroke:#b34700,color:#fff
-```
-
-| Serviço | Container | Porta | Credenciais |
-|---------|-----------|-------|-------------|
-| **Management Service** | `ladesa-management-service` | `3701` (API), `9229` (debug) | — |
-| **PostgreSQL 15** | `ladesa-management-service-db` | `5432` | database: `main`, password: `7f22682363b549a389e03b7fe512488b` |
-| **RabbitMQ 3** | `ladesa-rabbitmq` | `5672` (AMQP), `15672` (UI) | admin / admin |
-
-**Volumes persistentes:**
-- `management-service-db-data` — dados do PostgreSQL (persistem entre restarts)
-- `management-service-uploaded-files` — arquivos enviados
-- `management-service-shell-history` — histórico do shell
-
-**Rede:** `ladesa-net` (bridge) — todos os serviços se comunicam por nome de container.
-
----
-
-## Variáveis de ambiente
-
-As variáveis são definidas no arquivo `.env`, criado automaticamente a partir do `.env.example`. A tabela abaixo lista **todas** as variáveis com seus valores padrão:
-
-### Servidor
-
-| Variável | Valor padrão | Descrição |
-|----------|--------------|-----------|
-| `PORT` | `3701` | Porta da aplicação |
-| `NODE_ENV` | `development` | Ambiente de execução |
-| `API_PREFIX` | `/api/` | Prefixo global de todas as rotas (REST, docs e GraphQL) |
-
-### Banco de dados
-
-| Variável | Valor padrão | Descrição |
-|----------|--------------|-----------|
-| `DB_CONNECTION` | `postgres` | Tipo de conexão |
-| `DATABASE_URL` | `postgresql://postgres:7f22...@ladesa-management-service-db:5432/main` | String de conexão completa com o PostgreSQL |
-| `DATABASE_USE_SSL` | `false` | Habilitar SSL na conexão com o banco |
-| `TYPEORM_LOGGING` | `true` | Logs de queries SQL no console (útil para debug, desabilitar em produção) |
-
-### Autenticação (OAuth2/OIDC)
-
-| Variável | Valor padrão | Descrição |
-|----------|--------------|-----------|
-| `OAUTH2_CLIENT_PROVIDER_OIDC_ISSUER` | `https://sso.ladesa.com.br/realms/sisgea-playground` | URL do issuer OIDC (usada para obter o JWKS endpoint) |
-| `OAUTH2_CLIENT_REGISTRATION_LOGIN_CLIENT_ID` | `luna-backend` | Client ID OAuth2 |
-| `OAUTH2_CLIENT_REGISTRATION_LOGIN_CLIENT_SECRET` | `8c9jOX...` | Client Secret OAuth2 |
-| `OAUTH2_CLIENT_REGISTRATION_LOGIN_SCOPE` | `openid profile` | Scopes OAuth2 solicitados |
-
-### Keycloak (admin client)
-
-| Variável | Valor padrão | Descrição |
-|----------|--------------|-----------|
-| `KC_BASE_URL` | `https://sso.ladesa.com.br` | URL base do Keycloak |
-| `KC_REALM` | `sisgea-playground` | Realm do Keycloak |
-| `KC_CLIENT_ID` | `luna-backend` | Client ID para operações administrativas |
-| `KC_CLIENT_SECRET` | `8c9jOX...` | Client Secret para admin client |
-
-### Mock de autenticação
-
-| Variável | Valor padrão | Descrição |
-|----------|--------------|-----------|
-| `ENABLE_MOCK_ACCESS_TOKEN` | `true` | Habilita tokens simulados no formato `mock.matricula.<número>`. Quando ativo, não é necessário Keycloak para autenticar. **Deve ser `false` em produção.** |
-
-### Message broker
-
-| Variável | Valor padrão | Descrição |
-|----------|--------------|-----------|
-| `MESSAGE_BROKER_URL` | `amqp://admin:admin@ladesa-rabbitmq` | URL de conexão AMQP com o RabbitMQ |
-| `MESSAGE_BROKER_QUEUE_TIMETABLE_REQUEST` | `dev.timetable_generate.request` | Fila para requisições de geração de horário |
-| `MESSAGE_BROKER_QUEUE_TIMETABLE_RESPONSE` | `dev.timetable_generate.response` | Fila para respostas de geração de horário |
-
-### Armazenamento
-
-| Variável | Valor padrão | Descrição |
-|----------|--------------|-----------|
-| `STORAGE_PATH` | `/container/uploaded` | Diretório onde arquivos enviados são armazenados |
-
-### Sobre o prefixo (`API_PREFIX`)
-
-O `API_PREFIX` define o prefixo **global** de todas as rotas da aplicação — REST, documentação e GraphQL. O valor padrão no `.env.example` é `/api/`.
-
-**Todas as URLs ficam sob esse prefixo:**
-
-| Rota | URL resultante com `/api/` |
-|------|---------------------------|
-| Endpoints REST | `http://localhost:3701/api/campi` |
-| Documentação Scalar | `http://localhost:3701/api/docs` |
-| Swagger UI | `http://localhost:3701/api/docs/swagger` |
-| OpenAPI JSON | `http://localhost:3701/api/docs/openapi.v3.json` |
-| GraphQL | `http://localhost:3701/api/graphql` |
-| Health check | `http://localhost:3701/health` (excluído do prefixo) |
-
-> **Nota:** o ambiente de produção/desenvolvimento público (`dev.ladesa.com.br`) pode usar um prefixo diferente (ex.: `/api/v1/`), configurado via variável de ambiente no deploy. Localmente, o padrão é `/api/`.
-
----
-
-## Scripts disponíveis
-
-Todos os scripts são executados **dentro do container** com `bun run <script>`. Se você não estiver no shell do container (via `just up`), use `just exec bun run <script>`.
-
-### Desenvolvimento
-
-| Script | Descrição |
-|--------|-----------|
-| `dev` | Inicia o servidor em modo de desenvolvimento (com watch/hot reload) |
-| `start` | Inicia o servidor em modo de produção |
-| `debug` | Inicia com debugger na porta 9229 (para attach do editor) |
-
-### Qualidade de código
-
-| Script | Descrição |
-|--------|-----------|
-| `code:fix` | Formata e corrige o código automaticamente (Biome) — **obrigatório após alterações** |
-| `code:check` | Verifica formatação e linting sem alterar arquivos |
-| `code:fix:format` | Apenas formata (sem lint fix) |
-| `code:fix:lint` | Apenas corrige linting (sem format) |
-| `code:check:format` | Apenas verifica formatação |
-| `code:check:lint` | Apenas verifica linting |
-| `typecheck` | Verifica tipagem TypeScript sem compilar — **obrigatório após alterações** |
-| `modulecheck` | Valida as fronteiras entre módulos |
-| `check` | Executa validação completa (typecheck + modulecheck + code:check) |
-
-### Testes
-
-| Script | Descrição |
-|--------|-----------|
-| `test` | Executa os testes unitários uma vez |
-| `test:watch` | Executa os testes em modo watch (re-executa ao salvar) |
-| `test:cov` | Executa os testes com relatório de cobertura (v8) |
-| `test:e2e` | Executa os testes end-to-end (integração com banco e serviços) |
-| `test:debug` | Executa os testes com debugger |
-
-### Banco de dados
-
-| Script | Descrição |
-|--------|-----------|
-| `migration:run` | Aplica migrações pendentes no banco de dados |
-| `migration:revert` | Reverte a última migração aplicada |
-| `db:reset` | Reset completo do banco (drop + create + migrate + seed) |
-| `typeorm` | Executa comandos TypeORM diretamente |
-| `typeorm:create` | Cria um arquivo de migração vazio |
-| `typeorm:entity` | Gera uma entidade TypeORM |
-| `typeorm:generate` | Gera migração a partir do diff entre entidades e banco |
-
-### Outros
-
-| Script | Descrição |
-|--------|-----------|
-| `codegen:timetable-generator:fresh` | Gera tipos TypeScript para mensagens do timetable generator |
-
----
-
-## Banco de dados e migrações
-
-### O que são migrações?
-
-Migrações são scripts que alteram a estrutura do banco de dados de forma **versionada e reproduzível**. Pense como um "Git para o banco de dados": cada alteração é registrada em um arquivo timestamped, pode ser aplicada (up) ou revertida (down), e o banco sabe quais migrações já foram executadas.
-
-### Como funciona neste projeto
-
-O projeto usa **TypeORM** com migrações manuais (`synchronize: false` — o banco **nunca** é alterado automaticamente). As migrações ficam em `src/infrastructure.database/migrations/` e são nomeadas com timestamp (ex.: `1742515200000-create-function-change-date-updated.ts`).
-
-Atualmente o projeto possui **58 migrações** organizadas em categorias:
-
-| Categoria | Quantidade | Exemplos |
-|-----------|-----------|----------|
-| Funções e procedures | 2 | `change_date_updated()`, `ensure_change_date_trigger()` |
-| Tabelas de referência | 2 | `base_estado`, `base_cidade` |
-| Tabelas de infraestrutura | 3 | `endereco`, `arquivo`, `imagem` |
-| Tabelas de acesso | 3 | `usuario`, `perfil`, `notificacao` |
-| Tabelas de ambientes | 3 | `campus`, `bloco`, `ambiente` |
-| Tabelas de ensino | 15 | `modalidade`, `curso`, `disciplina`, `turma`, `diario`, etc. |
-| Tabelas de horários | 18 | `horario_aula`, `calendario_letivo`, `gerar_horario`, etc. |
-| Tabelas de estágio | 5 | `empresa`, `estagiario`, `estagio`, etc. |
-| Dados seed | 4 | Estados do Brasil, cidades de Rondônia, campus IFRO, superuser |
-| Correções | 1 | Colunas e triggers faltantes |
-
-**Comandos:**
-
-```bash
-# Aplicar migrações pendentes (primeira vez ou após pull)
-bun run migration:run
-
-# Reverter a última migração
-bun run migration:revert
-
-# Gerar uma nova migração a partir de alterações nas entidades TypeORM
-bun run typeorm:generate
-
-# Reset completo — apaga tudo e recria (cuidado: perde todos os dados!)
-bun run db:reset
-```
-
-### Fluxo ao alterar uma entidade
-
-```mermaid
-graph LR
-    A["Alterar entidade TypeORM\n(*.typeorm.entity.ts)"] --> B["bun run typeorm:generate\n(gera migração)"]
-    B --> C["Revisar migração\n(em migrations/)"]
-    C --> D["bun run migration:run\n(aplica no banco)"]
-    D --> E["bun run typecheck\n(verificar tipos)"]
-
-    style A fill:#4a90d9,stroke:#2c5f8a,color:#fff,text-align:left
-    style B text-align:left
-    style C text-align:left
-    style D fill:#50b86c,stroke:#3a8a50,color:#fff,text-align:left
-    style E text-align:left
-```
-
-1. Altere a entidade TypeORM em `infrastructure.database/typeorm/`.
-2. Gere a migração: `bun run typeorm:generate`.
-3. Revise o arquivo gerado em `src/infrastructure.database/migrations/`.
-4. Aplique: `bun run migration:run`.
-
-### Dados iniciais (seed)
-
-O banco já vem com dados de seed inseridos via migração — por exemplo, todos os estados do Brasil com códigos IBGE, cidades de Rondônia, o campus do IFRO Ji-Paraná e um superuser. Esses dados são inseridos automaticamente ao rodar `migration:run` pela primeira vez.
-
-### Soft deletes e triggers
-
-As entidades usam **exclusão lógica** (soft delete) — registros nunca são removidos fisicamente do banco. Em vez disso, o campo `dateDeleted` é preenchido com a data da exclusão.
-
-```mermaid
-sequenceDiagram
-    participant APP as Aplicação
-    participant DB as PostgreSQL
-    participant TRIGGER as Trigger change_date_updated
-
-    Note over APP,DB: CREATE
-    APP->>DB: INSERT INTO campus (id, nome_fantasia, date_created, date_updated, date_deleted)\nVALUES ('uuid', 'IFRO', NOW(), NOW(), NULL)
-
-    Note over APP,DB: UPDATE
-    APP->>DB: UPDATE campus SET nome_fantasia = 'IFRO JPA' WHERE id = 'uuid'
-    DB->>TRIGGER: BEFORE UPDATE (automático)
-    TRIGGER->>DB: SET date_updated = NOW()
-
-    Note over APP,DB: SOFT DELETE
-    APP->>DB: UPDATE campus SET date_deleted = NOW() WHERE id = 'uuid'
-    DB->>TRIGGER: BEFORE UPDATE (automático)
-    TRIGGER->>DB: SET date_updated = NOW()
-    Note over DB: Registro marcado como excluído\nmas ainda existe no banco
-
-    Note over APP,DB: LISTAGEM (filtra excluídos)
-    APP->>DB: SELECT * FROM campus WHERE date_deleted IS NULL
-```
-
-O banco possui **triggers automáticos** para controle de datas:
-
-1. **Function `change_date_updated()`** — trigger function que executa `new.date_updated := now()` antes de cada UPDATE.
-2. **Procedure `ensure_change_date_trigger(table_name)`** — cria o trigger automaticamente em qualquer tabela. É chamada durante a criação de cada tabela nas migrações:
-
-```sql
--- Chamada no final de cada migração de tabela:
-CALL ensure_change_date_trigger('campus');
-```
-
-Isso garante que `date_updated` é **sempre** preciso, independentemente de a aplicação se lembrar de atualizá-lo.
-
----
-
-## Autenticação e autorização
-
-### Autenticação
-
-A aplicação delega autenticação a um servidor **Keycloak** via protocolo **OAuth2/OIDC**:
-
-```mermaid
-sequenceDiagram
-    participant Cliente
-    participant API as Management Service
-    participant KC as Keycloak
-    participant DB as PostgreSQL
-
-    Cliente->>API: Requisição com Bearer token
-    API->>API: É mock token? (mock.matricula.*)
-    alt Token mock (dev)
-        API->>API: Extrai matrícula do token
-    else Token real (produção)
-        API->>KC: Obtém JWKS (chaves públicas)
-        KC-->>API: Chaves públicas (JSON Web Key Set)
-        API->>API: Valida assinatura do JWT
-        API->>API: Extrai claims do usuário
-    end
-    API->>DB: Busca Usuario por matrícula
-    DB-->>API: Dados do usuário
-    API->>API: Monta RequestActor (id, nome, matricula, email, isSuperUser)
-    API-->>Cliente: Resposta da API
-```
-
-**Fluxo de autenticação (código real em `src/server/nest/auth/request-actor-resolver.adapter.ts`):**
-
-1. O cliente envia um **Bearer token** no header `Authorization`.
-2. Se `ENABLE_MOCK_ACCESS_TOKEN=true` e o token segue o formato `mock.matricula.<número>`:
-   - A matrícula é extraída diretamente do token.
-3. Caso contrário, o token é validado via **JWKS** obtido do Keycloak.
-4. A API busca o `Usuario` no banco pela matrícula.
-5. Se o usuário existe, um `RequestActor` com `id`, `nome`, `matricula`, `email` e `isSuperUser` é injetado nos controllers.
-6. Se o usuário não existe no banco, retorna `ForbiddenException`.
-
-**Tokens mock em desenvolvimento:**
-
-```bash
-# O token mock.matricula.1234 simula um usuário com matrícula 1234
-curl -H "Authorization: Bearer mock.matricula.1234" \
-  http://localhost:3701/api/campi
-
-# Funciona com qualquer matrícula — basta mudar o número
-curl -H "Authorization: Bearer mock.matricula.5678" \
-  http://localhost:3701/api/turmas
-```
-
-> Em produção, `ENABLE_MOCK_ACCESS_TOKEN` deve ser `false`. Tokens reais são emitidos pelo Keycloak e validados via JWKS.
-
-### Autorização
-
-Após a autenticação, cada módulo verifica se o usuário tem **permissão** para realizar a operação solicitada:
-
-```mermaid
-graph TD
-    REQ["Requisição autenticada\n(RequestActor disponível)"]
-    REQ --> CTRL["Controller / Resolver"]
-    CTRL --> HANDLER["Command Handler"]
-    HANDLER --> PC["PermissionChecker\ndo módulo"]
-
-    PC --> |"CREATE"| CAN_C["ensureCanCreate(ac, {dto})"]
-    PC --> |"UPDATE"| CAN_U["ensureCanUpdate(ac, {dto}, id)"]
-    PC --> |"DELETE"| CAN_D["ensureCanDelete(ac, {dto}, id)"]
-
-    CAN_C & CAN_U & CAN_D --> |"OK"| CONTINUE["Continua execução"]
-    CAN_C & CAN_U & CAN_D -.-> |"throw ForbiddenError"| DENIED["403 Forbidden"]
-
-    HANDLER2["Query Handler\n(leitura)"] --> |"accessContext pode\nser null (hoje público;\nroadmap: filtrar por permissão)"| REPO["Repositório"]
-
-    style REQ fill:#4a90d9,stroke:#2c5f8a,color:#fff
-    style CONTINUE fill:#50b86c,stroke:#3a8a50,color:#fff
-    style DENIED fill:#e74c3c,stroke:#c0392b,color:#fff
-```
-
-Isso é feito por um `IPermissionChecker` específico do módulo, com métodos:
-
-- `ensureCanCreate(accessContext, { dto })` — verifica se o usuário pode criar.
-- `ensureCanUpdate(accessContext, { dto }, id)` — verifica se o usuário pode atualizar.
-- `ensureCanDelete(accessContext, { dto }, id)` — verifica se o usuário pode excluir.
-
-O padrão é **"throw on deny"**: se o usuário não tiver permissão, uma exceção `ForbiddenError` (HTTP 403) é lançada automaticamente, e a operação é abortada.
-
-Operações de **leitura** (queries) atualmente aceitam acesso com ou sem autenticação — o `accessContext` pode ser `null`. No roadmap está prevista a filtragem de resultados por permissão: o usuário verá apenas os registros que tem autorização para acessar.
-
----
-
 ## GraphQL
 
 A API GraphQL usa **Apollo Server** v5 com abordagem **code-first** — o schema é gerado automaticamente a partir de classes TypeScript decoradas com `@ObjectType()` e `@Field()`. Não é necessário escrever arquivos `.graphql` manualmente.
@@ -3527,52 +3391,6 @@ A UI de gerenciamento do RabbitMQ está disponível em `http://localhost:15672` 
 
 ---
 
-## Qualidade de código
-
-### Fluxo obrigatório após alterações
-
-Após **qualquer** alteração de código, execute estes dois comandos nesta ordem:
-
-```bash
-# 1. Formata e corrige linting automaticamente
-bun run code:fix
-
-# 2. Verifica que nenhum tipo está quebrado
-bun run typecheck
-```
-
-> Ambos devem passar sem erros. Uma alteração **não está concluída** sem esses dois passos.
-
-### Biome (formatação e linting)
-
-O projeto usa o [Biome](https://biomejs.dev/) v2.4 como formatador e linter único:
-
-| Regra | Configuração |
-|-------|-------------|
-| Largura de linha | 100 caracteres |
-| Indentação | 2 espaços |
-| Ponto e vírgula | sempre |
-| Trailing commas | todas |
-| Imports não utilizados | removidos automaticamente |
-| Variáveis não usadas | sinalizadas como erro |
-| `const` | obrigatório quando possível |
-| Organização de imports | automática |
-| Line ending | LF |
-| Bracket spacing | habilitado |
-| Arrow parens | sempre |
-
-```bash
-# Corrigir formatação e linting
-bun run code:fix
-
-# Apenas verificar (sem alterar arquivos)
-bun run code:check
-```
-
-O Dev Container já configura o Biome como formatador padrão com **auto-format ao salvar** — ou seja, ao salvar um arquivo no VS Code, ele é formatado automaticamente.
-
----
-
 ## Testes
 
 O projeto usa [Vitest](https://vitest.dev/) v4 como framework de testes.
@@ -3700,6 +3518,196 @@ graph LR
    - Depende do CI completar com sucesso.
    - Environment: `development` (com `DEPLOY_URL`).
    - Executa `.deploy/development/deploy.sh`.
+
+---
+
+## Boas práticas de desenvolvimento
+
+Estas são as práticas essenciais que todo contribuidor deve seguir:
+
+### Qualidade obrigatória
+
+- **Sempre rode `code:fix` → `typecheck`** após qualquer alteração. A tarefa não está concluída sem ambos passando.
+- **Escreva testes** para command/query handlers. Helpers e mocks ficam em `src/test/`.
+- **Nunca delete registros fisicamente** — use soft delete (exclusão lógica). As entidades já têm `dateDeleted`.
+
+### Arquitetura
+
+- **Siga a estrutura hexagonal** dos módulos existentes. Ao criar um novo módulo, replique a estrutura de um módulo já consolidado (ex.: `campus`).
+- **Schemas Zod ficam no domínio** e são reutilizados na apresentação. Nunca duplicar validação.
+- **Validação em duas camadas** — na apresentação (DTO com `static schema`) e no domínio (`zodValidate()`).
+- **Transações são automáticas** — nunca chamar `.transaction()` manualmente. O interceptor global cuida disso.
+- **Não instale `class-validator`** — o projeto usa exclusivamente Zod v4.
+
+### Convenções de linguagem
+
+- **Português (pt-BR):** nomes de entidades de domínio e todas as suas propriedades (`Campus`, `nomeFantasia`, `razaoSocial`).
+- **Inglês:** todo o resto — infraestrutura, métodos, utilitários, variáveis (`findAll`, `CommandHandler`, `dateCreated`).
+
+### O que evitar
+
+- Não use `as any` — defina tipos adequados.
+- Não importe de `modules/@shared` — é legado em remoção. Use `@/domain/`, `@/shared/`, `@/infrastructure.*`.
+- Não adicione extensões `.js` ou `.ts` nos imports.
+- Não proponha code generation ou meta-programação para reduzir boilerplate — consistência é preferida.
+
+---
+
+## Princípios de engenharia
+
+O projeto segue princípios rigorosos de engenharia de software para garantir qualidade, manutenibilidade e escalabilidade:
+
+### Design de código
+
+| Princípio | Aplicação no projeto |
+|-----------|---------------------|
+| **SOLID** | Cada handler tem uma responsabilidade. Repositórios são compostos de interfaces granulares (`IRepositoryCreate`, `IRepositoryFindById`). Dependências são invertidas via Symbols. |
+| **DRY** | Schemas Zod definidos uma vez no domínio, reutilizados na apresentação. Metadata de campos definida em `CampusFields`, consumida por REST e GraphQL. |
+| **KISS** | Handlers são funções pequenas e diretas. Sem abstrações desnecessárias. |
+| **YAGNI** | Não implemente o que ninguém pediu. Não adicione parâmetros "por precaução". |
+| **SoC** | Controllers não contêm lógica de negócio. Handlers não fazem queries SQL. Repositórios não validam regras de domínio. |
+
+### Single Source of Truth (SSOT)
+
+Cada dado ou regra tem **uma única origem autoritativa** no projeto. Isso elimina inconsistências e facilita manutenção:
+
+```mermaid
+graph TD
+    subgraph "Fonte única (domínio)"
+        SCHEMA["CampusSchema\n(Zod)"]
+        FIELDS["CampusFields\n(FieldMetadata)"]
+    end
+
+    subgraph "Consumidores"
+        ENT["Entidade de domínio\nCampus.create() / Campus.update()"]
+        DTO_REST["DTO REST\nstatic schema = CampusCreateSchema"]
+        DTO_GQL["DTO GraphQL\n@Field(() => String, field.gqlMetadata)"]
+        SWAGGER["Swagger\n(gerado automaticamente)"]
+    end
+
+    SCHEMA --> ENT
+    SCHEMA --> DTO_REST
+    FIELDS --> DTO_GQL
+    FIELDS --> SWAGGER
+
+    style SCHEMA fill:#e8a838,stroke:#b07c1e,color:#fff
+    style FIELDS fill:#e8a838,stroke:#b07c1e,color:#fff
+```
+
+**Exemplos de SSOT no projeto:**
+
+| Dado/Regra | Fonte única | Quem consome |
+|------------|-------------|-------------|
+| Validação de campos | `CampusSchema` (Zod, no domínio) | Entidade (`zodValidate`), DTO REST (`static schema`), DTO GraphQL |
+| Metadata de campos (descrição, nullable) | `CampusFields` (FieldMetadata) | Decorators GraphQL (`gqlMetadata`), Swagger (`swaggerMetadata`) |
+| Tipagem da entidade | `ICampus = z.infer<typeof CampusSchema>` | Todo o código que manipula Campus |
+| Configuração de paginação | `paginateConfig()` na infraestrutura | `findAll` de cada repositório |
+
+**O que isso significa na prática:** se uma regra de validação do Campus mudar (ex.: CNPJ passa a ser opcional), você altera **apenas** o `CampusFields.cnpj` e o `CampusCreateSchema`. A validação na apresentação (DTO) e no domínio (`zodValidate`) atualiza automaticamente, porque ambos consomem o mesmo schema.
+
+### Dependency Injection (DI) — Interfaces e Implementações
+
+O projeto usa **Inversão de Dependência** para desacoplar as camadas. O domínio define **interfaces** (o que precisa), e a infraestrutura fornece **implementações** (como faz).
+
+```mermaid
+graph LR
+    subgraph "Domínio (interface/port)"
+        SYMBOL["Symbol\nICampusRepository"]
+        TYPE["Type\nICampusRepository"]
+    end
+
+    subgraph "Infraestrutura (implementação/adapter)"
+        IMPL["CampusTypeormRepository\n@DeclareImplementation()"]
+    end
+
+    subgraph "Aplicação (consumidor)"
+        HANDLER["CampusCreateCommandHandlerImpl\n@DeclareDependency(\n  ICampusRepository\n)"]
+    end
+
+    SYMBOL -- "token de injeção" --> HANDLER
+    TYPE -- "contrato (tipos)" --> HANDLER
+    IMPL -- "registra como provider" --> SYMBOL
+
+    style SYMBOL fill:#e8a838,stroke:#b07c1e,color:#fff,text-align:left
+    style TYPE fill:#e8a838,stroke:#b07c1e,color:#fff,text-align:left
+    style IMPL fill:#50b86c,stroke:#3a8a50,color:#fff,text-align:left
+    style HANDLER fill:#4a90d9,stroke:#2c5f8a,color:#fff,text-align:left
+```
+
+**Como funciona passo a passo:**
+
+**1. O domínio define o contrato** (o que o repositório deve fazer):
+
+```typescript
+// src/modules/ambientes/campus/domain/repositories/campus.repository.interface.ts
+export const ICampusRepository = Symbol("ICampusRepository");  // Token de injeção
+
+export type ICampusRepository =                                // Contrato
+  IRepositoryFindAll<CampusListQueryResult> &
+  IRepositoryFindById<CampusFindOneQueryResult> &
+  IRepositoryFindByIdSimple<CampusFindOneQueryResult> &
+  IRepositoryCreate<ICampus> &
+  IRepositoryUpdate<ICampus> &
+  IRepositorySoftDelete;
+```
+
+**2. A infraestrutura implementa** (como o repositório funciona):
+
+```typescript
+// src/modules/ambientes/campus/infrastructure.database/campus.repository.ts
+@DeclareImplementation()
+export class CampusTypeormRepository implements ICampusRepository {
+  constructor(
+    @DeclareDependency(IAppTypeormConnection) private readonly conn: IAppTypeormConnection,
+  ) {}
+
+  async create(entity: ICampus): Promise<{ id: string | number }> { /* ... usa TypeORM */ }
+  async findAll(...) { /* ... usa NestJS-Paginate */ }
+}
+```
+
+**3. O handler consome** (sem saber da implementação):
+
+```typescript
+// src/modules/ambientes/campus/application/commands/campus-create.command.handler.ts
+@DeclareImplementation()
+export class CampusCreateCommandHandlerImpl {
+  constructor(
+    @DeclareDependency(ICampusRepository) private readonly repo: ICampusRepository,
+  ) {}
+
+  async execute(ac: IAccessContext | null, dto: CampusCreateCommand) {
+    const campus = Campus.create(dto);
+    await this.repo.create(campus);  // Não sabe se é TypeORM, Prisma ou mock
+  }
+}
+```
+
+**Por que isso importa?**
+- O handler **nunca sabe** que está usando TypeORM. Ele conhece apenas o contrato.
+- Em testes, você injeta um **mock** que implementa a mesma interface — sem banco de dados.
+- Se o banco mudar de PostgreSQL para outro, apenas o adapter muda — zero alteração no domínio e na aplicação.
+
+### Arquitetura
+
+| Princípio | Aplicação no projeto |
+|-----------|---------------------|
+| **Clean Architecture** | O domínio não depende de frameworks. Dependências apontam para dentro. |
+| **Hexagonal (Ports & Adapters)** | Interfaces no domínio (ports), implementações na infraestrutura (adapters). |
+| **CQRS** | Commands e queries separados em handlers distintos. |
+| **Bounded Context** | Cada módulo é um contexto delimitado com seu modelo de domínio. |
+| **DDD** | Entidades com identidade, factory methods, Ubiquitous Language (pt-BR para o domínio acadêmico). |
+
+### Qualidade técnica
+
+| Princípio | Aplicação no projeto |
+|-----------|---------------------|
+| **Fail Fast** | Validação Zod na entrada (DTO) e no domínio. Erros descritivos imediatos. |
+| **Clean Code** | Nomes semânticos, funções pequenas, early return, sem side effects ocultos. |
+| **POLA** | APIs REST com convenções padrão. Nomes refletem o que fazem. |
+| **Law of Demeter** | Handlers injetam repositórios, não connections. Controllers injetam handlers, não repositórios. |
+| **Immutability** | Entidades mudam apenas via `update()`. Configurações são imutáveis. |
+| **Composition > Inheritance** | DTOs usam mixins (`ts-mixer`), não herança profunda. |
 
 ---
 
