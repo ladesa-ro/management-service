@@ -8,7 +8,32 @@ Este arquivo contém as diretrizes que o Claude Code deve seguir ao trabalhar ne
 
 - **Seja crítico.** Sempre avalie se a mudança proposta respeita a arquitetura hexagonal, as padronizações do projeto e as melhores práticas. Recuse ou questione abordagens que violem esses princípios.
 - **Conteste o usuário ao máximo.** Antes de executar, faça triagem: questione se a mudança é realmente necessária, se não vai causar over-engineering, retrabalho, piora na qualidade do código ou piora na experiência de desenvolvimento (DX). Aponte riscos, trade-offs e consequências. Ofereça alternativas quando houver caminhos melhores. **Porém, a decisão final é sempre do usuário** — após apresentar seus argumentos, acate a escolha dele.
-- **Mantenha o README.md atualizado.** Toda alteração que impacte estrutura, serviços, variáveis de ambiente, scripts, portas, dependências ou fluxos deve ser refletida no `README.md`. Diagramas Mermaid devem ser atualizados quando o fluxo mudar.
+- **Mantenha o README.md completo e atualizado.** O README é a porta de entrada do projeto. Ele deve ser compreensível para dois perfis simultaneamente: (1) um **iniciante** que nunca viu o projeto e precisa de contexto, explicações e passo a passo detalhado para rodar, entender e contribuir; (2) um **desenvolvedor experiente** que precisa rapidamente de detalhes técnicos precisos — arquitetura, integrações, variáveis, endpoints, scripts e fluxos.
+
+  Toda alteração que impacte estrutura, serviços, variáveis de ambiente, scripts, portas, dependências, integrações ou fluxos **deve** ser refletida no README. Diagramas Mermaid devem ser atualizados quando fluxos mudarem.
+
+  **Seções obrigatórias que devem ser mantidas completas:**
+
+  | Seção | O que deve conter |
+  |-------|-------------------|
+  | Visão geral | O que é o projeto, para quem serve, o que ele faz, links do ambiente público |
+  | Arquitetura | Diagrama Mermaid das camadas, explicação da hexagonal/CQRS, estrutura de diretórios completa, lista de módulos por área de negócio |
+  | Por que containers | Explicação didática para iniciantes sobre o que são containers e por que o projeto os usa |
+  | Pré-requisitos | Tudo que precisa instalar (Docker, just, Git, editor), com links de instalação por plataforma |
+  | Clonando e rodando | Passo a passo detalhado dos dois caminhos (justfile e Dev Container), com todos os comandos |
+  | Acessando a aplicação | Tabela com todas as URLs e o que cada uma faz |
+  | Serviços do ambiente | Diagrama Mermaid dos containers + tabela com portas e credenciais |
+  | Variáveis de ambiente | Tabela completa com variável, valor padrão e descrição — incluindo mock de autenticação |
+  | Scripts disponíveis | Tabela com todos os `bun run` scripts e o que cada um faz |
+  | Banco de dados e migrações | Fluxo de migrações, comandos, seed, soft deletes |
+  | Autenticação e autorização | Diagrama Mermaid do fluxo de auth, explicação do Keycloak/OIDC/JWKS, mock tokens, permission checkers |
+  | GraphQL | Abordagem code-first, endpoint, playground, cache |
+  | Message broker | Diagrama Mermaid do fluxo assíncrono, filas, UI do RabbitMQ |
+  | Qualidade de código | Biome, comandos de lint/format, regras |
+  | Testes | Framework, padrões de arquivo, comandos |
+  | CI/CD | Diagrama Mermaid do pipeline, etapas, triggers |
+  | Stack tecnológico | Tabela completa com todas as tecnologias e links |
+  | Licença | Tipo e abrangência |
 - **Mantenha este CLAUDE.md atualizado.** Ao realizar mudanças no projeto que alterem padrões, convenções, decisões arquiteturais ou fluxos de trabalho, atualize este arquivo para refletir o estado atual. Sempre que identificar conhecimento que possa tornar o trabalho futuro mais eficiente e preciso — novos padrões descobertos, atalhos, armadilhas comuns, decisões do usuário — acrescente ao CLAUDE.md. O objetivo é que este arquivo seja a fonte de verdade completa para trabalhar neste repositório.
 - **Mantenha o código documentado e bem escrito.** Código deve ser autoexplicativo. Quando a lógica não for óbvia, adicione comentários concisos explicando o _porquê_, não o _o quê_. Nomes de variáveis, funções e classes devem ser claros e descritivos.
 - **Não invente trabalho.** Faça exatamente o que foi pedido. Não adicione features, refatorações ou melhorias além do escopo solicitado.
