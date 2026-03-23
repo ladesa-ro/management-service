@@ -1,0 +1,361 @@
+# =============================================================================
+# .github/workflows/readme-sync.yml
+#
+# Mantém o README.md sincronizado com o código-fonte.
+#
+# Tier 1 (todo push na main): detecta drift deterministicamente.
+# Tier 2 (quando há drift): usa Claude Code para gerar patches cirúrgicos.
+#
+# O workflow cria/atualiza um único PR consolidado (docs/readme-sync).
+# =============================================================================
+
+name: README Sync
+
+on:
+  # Roda automaticamente quando código relevante muda na main
+  push:
+    branches:
+      - main
+
+  # Permite rodar manualmente (útil para forçar sync)
+  workflow_dispatch:
+    inputs:
+      force_update:
+        description: 'Forçar atualização mesmo sem drift detectado'
+        type: boolean
+        default: false
+
+  # Roda semanalmente como rede de segurança
+  schedule:
+    - cron: '0 6 * * 1'   # Segunda às 06:00 UTC
+
+concurrency:
+  group: readme-sync
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  # ===========================================================================
+  # Tier 1: Detecção de drift (bash puro, sem LLM, sem custo)
+  # ===========================================================================
+  detect-drift:
+    runs-on: ubuntu-latest
+    outputs:
+      has_drift: ${{ steps.drift.outputs.has_drift }}
+      report: ${{ steps.drift.outputs.report }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # Histórico completo para git diff entre commits
+
+      - name: Detectar drift no README
+        id: drift
+        run: |
+          chmod +x .github/scripts/detect-drift.sh
+
+          if .github/scripts/detect-drift.sh README.md; then
+            echo "has_drift=true" >> "$GITHUB_OUTPUT"
+            # Salvar relatório como output (escapar newlines)
+            REPORT=$(cat drift-report.json | jq -c .)
+            echo "report=$REPORT" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_drift=false" >> "$GITHUB_OUTPUT"
+            echo "report={}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Criar issue de drift (se detectado)
+        if: steps.drift.outputs.has_drift == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const report = JSON.parse('${{ steps.drift.outputs.report }}');
+            const sections = report.sections || [];
+            const deterministic = report.deterministic || [];
+
+            let body = `## 📋 README drift detectado\n\n`;
+            body += `**Commit:** \`${report.head_commit}\`\n`;
+            body += `**Verificado em:** ${report.checked_at}\n\n`;
+
+            if (sections.length > 0) {
+              body += `### Seções com source_patterns alterados\n\n`;
+              for (const s of sections) {
+                body += `- **${s.section}** — ${s.changed_files.length} arquivo(s) alterado(s)\n`;
+                body += `  - Escopo: ${s.confidence_scope}\n`;
+                body += `  - Arquivos: ${s.changed_files.slice(0, 5).map(f => `\`${f}\``).join(', ')}\n`;
+              }
+            }
+
+            if (deterministic.length > 0) {
+              body += `\n### Verificações determinísticas\n\n`;
+              for (const d of deterministic) {
+                body += `- **${d.type}**: README diz \`${d.readme_value}\`, real é \`${d.actual_value}\`\n`;
+              }
+            }
+
+            body += `\n---\n_Gerado automaticamente por README Sync. O job de patch será executado em seguida._`;
+
+            // Verificar se já existe uma issue aberta
+            const { data: issues } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'readme-drift',
+              per_page: 1,
+            });
+
+            if (issues.length > 0) {
+              // Atualizar issue existente
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issues[0].number,
+                body,
+              });
+            } else {
+              // Criar nova issue
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: 'docs: README drift detectado — sincronização necessária',
+                body,
+                labels: ['readme-drift', 'docs', 'automated'],
+              });
+            }
+
+  # ===========================================================================
+  # Tier 2: Patch com Claude Code (só roda quando há drift)
+  # ===========================================================================
+  patch-readme:
+    needs: detect-drift
+    if: (needs.detect-drift.outputs.has_drift == 'true' || github.event.inputs.force_update == 'true') && false
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Preparar contexto para o Claude
+        id: context
+        run: |
+          REPORT='${{ needs.detect-drift.outputs.report }}'
+
+          # Extrair seções afetadas do README
+          # (pegar apenas o conteúdo entre os headings relevantes, não o README inteiro)
+          python3 - "$REPORT" << 'PYEOF'
+          import json, sys, re
+
+          report = json.loads(sys.argv[1]) if sys.argv[1] != '{}' else {"sections": [], "deterministic": []}
+
+          with open("README.md", "r") as f:
+              readme = f.read()
+
+          # Extrair seções afetadas pelo nome do heading
+          affected_sections = []
+          for s in report.get("sections", []):
+              section_name = s.get("section", "")
+              if not section_name:
+                  continue
+
+              # Encontrar a seção e extrair até o próximo heading de mesmo nível ou superior
+              pattern = rf'(^##\s+.*{re.escape(section_name)}.*$)(.*?)(?=^##\s|\Z)'
+              match = re.search(pattern, readme, re.MULTILINE | re.DOTALL)
+              if match:
+                  affected_sections.append({
+                      "heading": match.group(1).strip(),
+                      "content_preview": match.group(2)[:500],  # Primeiros 500 chars
+                      "changed_files": s.get("changed_files", []),
+                      "scope": s.get("confidence_scope", ""),
+                  })
+
+          # Gerar diffs dos arquivos alterados
+          diffs = {}
+          all_changed = set()
+          for s in report.get("sections", []):
+              for f in s.get("changed_files", []):
+                  all_changed.add(f)
+
+          # Limitar a 20 arquivos para não estourar contexto
+          import subprocess
+          for filepath in list(all_changed)[:20]:
+              old_commit = report.get("sections", [{}])[0].get("old_commit", "HEAD~1")
+              try:
+                  result = subprocess.run(
+                      ["git", "diff", old_commit, "HEAD", "--", filepath],
+                      capture_output=True, text=True, timeout=10
+                  )
+                  if result.stdout:
+                      # Limitar diff a 200 linhas por arquivo
+                      lines = result.stdout.split('\n')[:200]
+                      diffs[filepath] = '\n'.join(lines)
+              except:
+                  pass
+
+          context = {
+              "affected_sections": affected_sections,
+              "deterministic_issues": report.get("deterministic", []),
+              "diffs": diffs,
+          }
+
+          with open("claude-context.json", "w") as f:
+              json.dump(context, f, indent=2, ensure_ascii=False)
+
+          print(f"Seções afetadas: {len(affected_sections)}")
+          print(f"Diffs coletados: {len(diffs)}")
+          PYEOF
+
+      - name: Gerar prompt para o Claude
+        run: |
+          cat > claude-prompt.md << 'PROMPT'
+          Você é um assistente de documentação para o projeto Ladesa Management Service.
+
+          ## Tarefa
+
+          Atualize APENAS as seções do README.md que estão desatualizadas conforme
+          o relatório de drift abaixo. Faça edições cirúrgicas e mínimas.
+
+          ## Regras obrigatórias
+
+          1. **Preservar toda prosa explicativa** — não reescreva parágrafos conceituais,
+             diagramas mermaid, ou analogias. Eles são conteúdo autoral.
+          2. **Atualizar apenas dados factuais** — versões, contagens, listas de endpoints,
+             nomes de variáveis, portas, nomes de módulos.
+          3. **Atualizar blocos Source of Trust** — em cada seção que você modificar, atualize
+             o `commit_hash` para o commit atual e `verified_at` para a data de hoje.
+          4. **Manter formato idêntico** — mesma indentação, mesma estrutura de tabelas,
+             mesmo estilo de markdown.
+          5. **Não adicionar conteúdo novo** — se um módulo novo apareceu, adicione-o na
+             lista existente, mas não crie seções de documentação novas.
+          6. **Não remover conteúdo** — se algo foi removido do código, comente na PR
+             que a seção pode precisar de revisão manual.
+
+          ## Contexto
+
+          O relatório de drift e os diffs estão em `claude-context.json`.
+          O README completo está em `README.md`.
+
+          Leia o contexto, identifique as mudanças necessárias, e aplique-as.
+          PROMPT
+
+      - name: Aplicar patch com Claude Code
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic-api-key: ${{ secrets.ANTHROPIC_API_KEY }}
+          prompt: |
+            Leia o arquivo claude-prompt.md para entender a tarefa.
+            Depois leia claude-context.json para entender o que mudou.
+            Aplique as correções necessárias no README.md.
+            Ao final, liste as mudanças que fez.
+          claude_args: >-
+            --allowedTools
+            "Edit(README.md)"
+            "Read(*)"
+            "Bash(git diff:*)"
+            "Bash(cat:*)"
+            "Bash(wc:*)"
+            "Bash(find:*)"
+            "Bash(grep:*)"
+            "Bash(jq:*)"
+            "Bash(gh pr:*)"
+          model: claude-sonnet-4-20250514
+          timeout_minutes: 10
+
+      - name: Verificar se houve mudanças
+        id: changes
+        run: |
+          if git diff --quiet README.md; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "ℹ️  Nenhuma mudança aplicada ao README"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "📝 Mudanças detectadas no README:"
+            git diff --stat README.md
+          fi
+
+      - name: Criar ou atualizar PR
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          BRANCH="docs/readme-sync"
+          COMMIT_MSG="docs(readme): sincronizar com código-fonte
+
+          Atualização automática baseada em drift detectado.
+          Seções atualizadas conforme source_patterns alterados.
+
+          Refs: README Sync workflow"
+
+          # Configurar git
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          # Criar ou atualizar branch
+          git checkout -B "$BRANCH"
+          git add README.md
+          git commit -m "$COMMIT_MSG"
+          git push -f origin "$BRANCH"
+
+          # Criar PR se não existir
+          EXISTING_PR=$(gh pr list --head "$BRANCH" --state open --json number -q '.[0].number' || echo "")
+
+          if [[ -n "$EXISTING_PR" ]]; then
+            echo "📋 PR #$EXISTING_PR atualizado com novos commits"
+          else
+            gh pr create \
+              --title "docs(readme): sincronizar README com código-fonte" \
+              --body "## Atualização automática do README
+
+          Este PR foi gerado pelo workflow **README Sync** após detecção de drift
+          entre o README e o código-fonte.
+
+          ### O que mudou
+          As seções foram atualizadas para refletir mudanças em:
+          - Versões de dependências
+          - Contagem de migrações
+          - Lista de endpoints/módulos
+          - Variáveis de ambiente
+          - Configurações de serviços
+
+          ### Revisão necessária
+          Verifique se as atualizações factuais estão corretas antes de aprovar.
+          Prosa explicativa e diagramas **não foram alterados**.
+
+          ---
+          _Gerado automaticamente — [ver workflow](../../actions/workflows/readme-sync.yml)_" \
+              --head "$BRANCH" \
+              --base main \
+              --label "docs,automated"
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Fechar issue de drift (se existir)
+        if: steps.changes.outputs.changed == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: issues } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'readme-drift',
+              per_page: 1,
+            });
+
+            if (issues.length > 0) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issues[0].number,
+                body: '✅ PR de sincronização criado/atualizado. Fechando esta issue.',
+              });
+              await github.rest.issues.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issues[0].number,
+                state: 'closed',
+              });
+            }
