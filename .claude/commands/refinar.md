@@ -23,7 +23,7 @@ Antes de qualquer refatoração, analise os arquivos modificados ou pendentes e 
 - **Efeitos colaterais** — alguma mudança recente quebra comportamento existente ou introduz regressões?
 - **Casos de borda** — cenários limítrofes estão cobertos (listas vazias, valores nulos, permissões, concorrência)?
 
-Se encontrar problemas de lógica, **corrija-os primeiro**. Documente brevemente o que foi encontrado e corrigido.
+Se o problema for pontual e seguro de corrigir (ex: null não tratado, condição invertida), **corrija**. Se exigir refactor mais amplo ou decisão de design, **não corrija** — apenas registre para o relatório final.
 
 ## 3. Refinar arquivos pendentes
 
@@ -63,3 +63,22 @@ Atualize o README.md se as mudanças exigirem. Se estiver correto, não mexa.
 ## 8. Verificar CLAUDE.md
 
 Atualize o CLAUDE.md se alguma convenção nova surgiu ou algo ficou desatualizado. Proponha alterações se necessário.
+
+## 9. Relatório de auditoria
+
+Ao final de tudo, apresente um relatório executivo com três seções:
+
+### Corrigido
+O que foi efetivamente alterado nesta sessão (com arquivo e descrição breve).
+
+### Divergências
+Problemas pré-existentes encontrados que **não foram corrigidos** por exigirem refactor mais amplo ou decisão de design. Para cada item, descrever:
+- Onde está (arquivo/camada)
+- O que foi observado
+- Por que não foi corrigido agora
+
+Exemplo:
+> **Observação (pré-existente, não introduzida):** `duracaoPeriodoEmMeses` não faz parte do domain entity `OfertaFormacao` nem do `OfertaFormacaoSchema` — é tratado como pass-through nos handlers. Corrigir exigiria refactor mais amplo no domínio.
+
+### Recomendações
+Sugestões de próximos passos para resolver as divergências encontradas, priorizadas por impacto.
