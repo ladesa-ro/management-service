@@ -44,7 +44,7 @@ export class Estagiario {
   }
 
   static create(dados: unknown): Estagiario {
-    const parsed = zodValidate(Estagiario.entityName, EstagiarioCreateSchema, dados);
+    const parsed = zodValidate(Estagiario.entityName, EstagiarioCreateSchema.domain, dados);
 
     const instance = new Estagiario();
 
@@ -82,7 +82,7 @@ export class Estagiario {
   }
 
   update(dados: unknown): void {
-    const parsed = zodValidate(Estagiario.entityName, EstagiarioUpdateSchema, dados);
+    const parsed = zodValidate(Estagiario.entityName, EstagiarioUpdateSchema.domain, dados);
 
     if (parsed.perfil !== undefined) this.perfil = parsed.perfil;
     if (parsed.curso !== undefined) this.curso = parsed.curso;

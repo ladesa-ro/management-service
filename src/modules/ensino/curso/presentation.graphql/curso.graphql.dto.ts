@@ -58,7 +58,7 @@ export class CursoImagemCapaRefInputGraphQlDto {
 
 @InputType("CursoCreateInputDto")
 export class CursoCreateInputGraphQlDto {
-  static readonly schema = CursoCreateSchema;
+  static readonly schema = CursoCreateSchema.domain;
 
   @Field(() => String, CursoCreateCommandFields.nome.gqlMetadata) nome: string;
   @Field(() => String, CursoCreateCommandFields.nomeAbreviado.gqlMetadata) nomeAbreviado: string;
@@ -82,7 +82,7 @@ export class CursoCreateInputGraphQlDto {
 
 @InputType("CursoUpdateInputDto")
 export class CursoUpdateInputGraphQlDto {
-  static readonly schema = CursoUpdateSchema;
+  static readonly schema = CursoUpdateSchema.domain;
 
   @Field(() => String, { nullable: true, ...CursoUpdateCommandFields.nome.gqlMetadata })
   nome?: string;

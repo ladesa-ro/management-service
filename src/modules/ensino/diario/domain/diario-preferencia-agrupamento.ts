@@ -52,7 +52,7 @@ export class DiarioPreferenciaAgrupamento implements IEntityBaseUuid {
   static create(dados: IDiarioPreferenciaAgrupamentoCreate): DiarioPreferenciaAgrupamento {
     const parsed = zodValidate(
       DiarioPreferenciaAgrupamento.entityName,
-      DiarioPreferenciaAgrupamentoCreateSchema,
+      DiarioPreferenciaAgrupamentoCreateSchema.domain,
       dados,
     );
 
@@ -91,7 +91,7 @@ export class DiarioPreferenciaAgrupamento implements IEntityBaseUuid {
   update(dados: unknown): void {
     const parsed = zodValidate(
       DiarioPreferenciaAgrupamento.entityName,
-      DiarioPreferenciaAgrupamentoUpdateSchema,
+      DiarioPreferenciaAgrupamentoUpdateSchema.domain,
       dados,
     );
 

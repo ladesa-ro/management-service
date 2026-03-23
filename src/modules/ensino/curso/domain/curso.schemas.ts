@@ -6,6 +6,7 @@
  * os contratos de dados da entidade.
  */
 import { z } from "zod";
+import { createSchema, ObjectIdUuidFactory } from "@/domain/abstractions";
 import { datedSchema, uuidSchema } from "@/shared/validation/schemas";
 import { CursoFields } from "./curso.fields";
 
@@ -13,15 +14,13 @@ import { CursoFields } from "./curso.fields";
 // Fragments de referência
 // ============================================================================
 
-export const CursoCampusRefSchema = z.object({
-  id: uuidSchema,
-});
+export const CursoCampusRefSchema = createSchema(() => z.object({ id: uuidSchema }));
 
-export const CursoOfertaFormacaoRefSchema = z.object({
-  id: uuidSchema,
-});
+export const CursoOfertaFormacaoRefSchema = createSchema(() => z.object({ id: uuidSchema }));
 
-export const CursoImagemCapaRefSchema = z.object({ id: uuidSchema }).nullable().optional();
+export const CursoImagemCapaRefSchema = createSchema((standard) =>
+  ObjectIdUuidFactory.create(standard).nullable().optional(),
+);
 
 // ============================================================================
 // Schemas compostos
@@ -30,26 +29,30 @@ export const CursoImagemCapaRefSchema = z.object({ id: uuidSchema }).nullable().
 export const CursoSchema = z
   .object({
     id: uuidSchema,
-    nome: CursoFields.nome.schema,
-    nomeAbreviado: CursoFields.nomeAbreviado.schema,
-    campus: CursoCampusRefSchema,
-    ofertaFormacao: CursoOfertaFormacaoRefSchema,
+    nome: CursoFields.nome.domainSchema,
+    nomeAbreviado: CursoFields.nomeAbreviado.domainSchema,
+    campus: z.object({ id: uuidSchema }).passthrough(),
+    ofertaFormacao: z.object({ id: uuidSchema }).passthrough(),
     imagemCapa: z.object({ id: uuidSchema }).nullable(),
   })
   .merge(datedSchema);
 
-export const CursoCreateSchema = z.object({
-  nome: CursoFields.nome.schema,
-  nomeAbreviado: CursoFields.nomeAbreviado.schema,
-  campus: CursoCampusRefSchema,
-  ofertaFormacao: CursoOfertaFormacaoRefSchema,
-  imagemCapa: CursoImagemCapaRefSchema,
-});
+export const CursoCreateSchema = createSchema((standard) =>
+  z.object({
+    nome: CursoFields.nome.create(standard),
+    nomeAbreviado: CursoFields.nomeAbreviado.create(standard),
+    campus: CursoCampusRefSchema.create(standard),
+    ofertaFormacao: CursoOfertaFormacaoRefSchema.create(standard),
+    imagemCapa: CursoImagemCapaRefSchema.create(standard),
+  }),
+);
 
-export const CursoUpdateSchema = z.object({
-  nome: CursoFields.nome.schema.optional(),
-  nomeAbreviado: CursoFields.nomeAbreviado.schema.optional(),
-  campus: CursoCampusRefSchema.optional(),
-  ofertaFormacao: CursoOfertaFormacaoRefSchema.optional(),
-  imagemCapa: CursoImagemCapaRefSchema,
-});
+export const CursoUpdateSchema = createSchema((standard) =>
+  z.object({
+    nome: CursoFields.nome.create(standard).optional(),
+    nomeAbreviado: CursoFields.nomeAbreviado.create(standard).optional(),
+    campus: CursoCampusRefSchema.create(standard).optional(),
+    ofertaFormacao: CursoOfertaFormacaoRefSchema.create(standard).optional(),
+    imagemCapa: CursoImagemCapaRefSchema.create(standard),
+  }),
+);

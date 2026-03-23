@@ -46,7 +46,7 @@ export class EmpresaEnderecoRefInputGraphQlDto {
 
 @InputType("EmpresaCreateInputDto")
 export class EmpresaCreateInputGraphQlDto {
-  static schema = EmpresaCreateSchema;
+  static schema = EmpresaCreateSchema.domain;
 
   @Field(() => String, EmpresaCreateCommandFields.razaoSocial.gqlMetadata) razaoSocial: string;
   @Field(() => String, EmpresaCreateCommandFields.nomeFantasia.gqlMetadata) nomeFantasia: string;
@@ -63,7 +63,7 @@ export class EmpresaCreateInputGraphQlDto {
 
 @InputType("EmpresaUpdateInputDto")
 export class EmpresaUpdateInputGraphQlDto {
-  static schema = EmpresaUpdateSchema;
+  static schema = EmpresaUpdateSchema.domain;
 
   @Field(() => String, { nullable: true, ...EmpresaUpdateCommandFields.razaoSocial.gqlMetadata })
   razaoSocial?: string;

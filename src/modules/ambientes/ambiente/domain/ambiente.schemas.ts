@@ -6,6 +6,7 @@
  * os contratos de dados da entidade.
  */
 import { z } from "zod";
+import { createSchema, ObjectIdUuidFactory } from "@/domain/abstractions";
 import { datedSchema, uuidSchema } from "@/shared/validation/schemas";
 import { AmbienteFields } from "./ambiente.fields";
 
@@ -13,15 +14,9 @@ import { AmbienteFields } from "./ambiente.fields";
 // Fragments de referência
 // ============================================================================
 
-export const AmbienteBlocoRefSchema = z.object({
-  id: uuidSchema,
-});
+export const AmbienteBlocoRefSchema = ObjectIdUuidFactory;
 
-export const AmbienteImagemCapaRefSchema = z
-  .object({
-    id: uuidSchema,
-  })
-  .nullable();
+export const AmbienteImagemCapaRefSchema = ObjectIdUuidFactory;
 
 // ============================================================================
 // Schemas compostos
@@ -30,9 +25,9 @@ export const AmbienteImagemCapaRefSchema = z
 export const AmbienteSchema = z
   .object({
     id: uuidSchema,
-    nome: AmbienteFields.nome.schema,
+    nome: AmbienteFields.nome.domainSchema,
     descricao: z.string().nullable(),
-    codigo: AmbienteFields.codigo.schema,
+    codigo: AmbienteFields.codigo.domainSchema,
     capacidade: z.number().int().nullable(),
     tipo: z.string().nullable(),
     bloco: z.object({ id: uuidSchema }).passthrough(),
@@ -40,20 +35,24 @@ export const AmbienteSchema = z
   })
   .merge(datedSchema);
 
-export const AmbienteCreateSchema = z.object({
-  nome: AmbienteFields.nome.schema,
-  descricao: AmbienteFields.descricao.schema,
-  codigo: AmbienteFields.codigo.schema,
-  capacidade: AmbienteFields.capacidade.schema,
-  tipo: AmbienteFields.tipo.schema,
-  bloco: AmbienteBlocoRefSchema,
-});
+export const AmbienteCreateSchema = createSchema((standard) =>
+  z.object({
+    nome: AmbienteFields.nome.create(standard),
+    descricao: AmbienteFields.descricao.create(standard),
+    codigo: AmbienteFields.codigo.create(standard),
+    capacidade: AmbienteFields.capacidade.create(standard),
+    tipo: AmbienteFields.tipo.create(standard),
+    bloco: AmbienteBlocoRefSchema.create(standard),
+  }),
+);
 
-export const AmbienteUpdateSchema = z.object({
-  nome: AmbienteFields.nome.schema.optional(),
-  descricao: AmbienteFields.descricao.schema,
-  codigo: AmbienteFields.codigo.schema.optional(),
-  capacidade: AmbienteFields.capacidade.schema,
-  tipo: AmbienteFields.tipo.schema,
-  bloco: AmbienteBlocoRefSchema.optional(),
-});
+export const AmbienteUpdateSchema = createSchema((standard) =>
+  z.object({
+    nome: AmbienteFields.nome.create(standard).optional(),
+    descricao: AmbienteFields.descricao.create(standard),
+    codigo: AmbienteFields.codigo.create(standard).optional(),
+    capacidade: AmbienteFields.capacidade.create(standard),
+    tipo: AmbienteFields.tipo.create(standard),
+    bloco: AmbienteBlocoRefSchema.create(standard).optional(),
+  }),
+);

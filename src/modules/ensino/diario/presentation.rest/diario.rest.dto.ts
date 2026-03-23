@@ -129,7 +129,7 @@ export class DiarioListOutputRestDto {
 
 @ApiSchema({ name: "DiarioCreateInputDto" })
 export class DiarioCreateInputRestDto {
-  static schema = DiarioCreateSchema;
+  static schema = DiarioCreateSchema.presentation;
 
   @ApiProperty(DiarioCreateCommandFields.ativo.swaggerMetadata)
   ativo: boolean;
@@ -162,7 +162,7 @@ export class DiarioCreateInputRestDto {
 
 @ApiSchema({ name: "DiarioUpdateInputDto" })
 export class DiarioUpdateInputRestDto extends PartialType(DiarioCreateInputRestDto) {
-  static schema = DiarioUpdateSchema;
+  static schema = DiarioUpdateSchema.presentation;
 }
 
 // ============================================================================

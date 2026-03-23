@@ -112,7 +112,7 @@ export class AmbienteBlocoRefInputRestDto {
 
 @ApiSchema({ name: "AmbienteCreateInputDto" })
 export class AmbienteCreateInputRestDto {
-  static schema = AmbienteCreateSchema;
+  static schema = AmbienteCreateSchema.presentation;
 
   @ApiProperty(AmbienteCreateCommandFields.nome.swaggerMetadata)
   nome: string;
@@ -138,7 +138,7 @@ export class AmbienteCreateInputRestDto {
 
 @ApiSchema({ name: "AmbienteUpdateInputDto" })
 export class AmbienteUpdateInputRestDto {
-  static schema = AmbienteUpdateSchema;
+  static schema = AmbienteUpdateSchema.presentation;
 
   @ApiPropertyOptional(AmbienteUpdateCommandFields.nome.swaggerMetadata)
   nome?: string;

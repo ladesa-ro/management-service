@@ -41,7 +41,7 @@ export class EnderecoFindOneOutputRestDto extends EntityBaseRestDto {
 
 @ApiSchema({ name: "EnderecoInputDto" })
 export class EnderecoInputRestDto {
-  static schema = EnderecoInputSchema;
+  static schema = EnderecoInputSchema.presentation;
 
   @ApiProperty({ type: "string", description: "Codigo postal (CEP)" })
   declare cep: string;

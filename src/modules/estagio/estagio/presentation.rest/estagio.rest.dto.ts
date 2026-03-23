@@ -1,4 +1,3 @@
-import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@nestjs/swagger";
 import { EstagioCreateCommandFields } from "@/modules/estagio/estagio/domain/commands/estagio-create.command";
 import { EstagioUpdateCommandFields } from "@/modules/estagio/estagio/domain/commands/estagio-update.command";
 import { EstagioStatusValues } from "@/modules/estagio/estagio/domain/estagio.fields";
@@ -10,6 +9,7 @@ import { EstagioFindOneQueryResultFields } from "@/modules/estagio/estagio/domai
 import { EstagioFindOneInputSchema } from "@/modules/estagio/estagio/domain/queries/estagio-find-one.query.schemas";
 import { EstagioListQueryFields } from "@/modules/estagio/estagio/domain/queries/estagio-list.query";
 import { EstagioPaginationInputSchema } from "@/modules/estagio/estagio/domain/queries/estagio-list.query.schemas";
+import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@/shared/presentation/rest";
 import { PaginationInputRestDto, UuidParamRestDto } from "@/shared/presentation/rest/dtos";
 
 @ApiSchema({ name: "HorarioEstagioInputDto" })
@@ -32,7 +32,7 @@ export class HorarioEstagioOutputRestDto extends HorarioEstagioInputRestDto {
 
 @ApiSchema({ name: "EstagioCreateInputDto" })
 export class EstagioCreateInputRestDto {
-  static schema = EstagioCreateSchema;
+  static schema = EstagioCreateSchema.presentation;
 
   @ApiProperty(EstagioCreateCommandFields.empresa.swaggerMetadata)
   empresa!: { id: string };
@@ -61,7 +61,7 @@ export class EstagioCreateInputRestDto {
 
 @ApiSchema({ name: "EstagioUpdateInputDto" })
 export class EstagioUpdateInputRestDto {
-  static schema = EstagioUpdateSchema;
+  static schema = EstagioUpdateSchema.presentation;
 
   @ApiPropertyOptional(EstagioUpdateCommandFields.empresa.swaggerMetadata)
   empresa?: { id: string };

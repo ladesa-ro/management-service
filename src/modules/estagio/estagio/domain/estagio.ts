@@ -1,9 +1,15 @@
+import type { z } from "zod";
 import type { ObjectUuidRef } from "@/domain/abstractions";
 import type { IdUuid, ScalarDateTimeString } from "@/domain/abstractions/scalars";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { zodValidate } from "@/shared/validation/index";
 import { getNowISO } from "@/utils/date";
-import { EstagioCreateSchema, EstagioSchema, EstagioUpdateSchema } from "./estagio.schemas";
+import {
+  EstagioCreateSchema,
+  EstagioSchema,
+  EstagioUpdateSchema,
+  HorarioEstagioSchema,
+} from "./estagio.schemas";
 
 export enum EstagioStatus {
   ABERTA = "ABERTA",
@@ -11,26 +17,9 @@ export enum EstagioStatus {
   CONCLUIDA = "CONCLUIDA",
 }
 
-export interface IHorarioEstagio {
-  id?: string;
-  diaSemana: number;
-  horaInicio: string;
-  horaFim: string;
-}
+export type IHorarioEstagio = z.infer<typeof HorarioEstagioSchema>;
 
-export interface IEstagio {
-  id: string;
-  empresa: { id: string };
-  estagiario: { id: string } | null;
-  cargaHoraria: number;
-  dataInicio: string | null;
-  dataFim: string | null;
-  status: EstagioStatus;
-  horariosEstagio: IHorarioEstagio[];
-  dateCreated: string;
-  dateUpdated: string;
-  dateDeleted: string | null;
-}
+export type IEstagio = z.infer<typeof EstagioSchema>;
 
 export class Estagio {
   static readonly entityName = "Estagio";
@@ -54,7 +43,7 @@ export class Estagio {
   }
 
   static create(dados: unknown): Estagio {
-    const parsed = zodValidate(Estagio.entityName, EstagioCreateSchema, dados);
+    const parsed = zodValidate(Estagio.entityName, EstagioCreateSchema.domain, dados);
 
     const instance = new Estagio();
 
@@ -94,7 +83,7 @@ export class Estagio {
   }
 
   update(dados: unknown): void {
-    const parsed = zodValidate(Estagio.entityName, EstagioUpdateSchema, dados);
+    const parsed = zodValidate(Estagio.entityName, EstagioUpdateSchema.domain, dados);
 
     if (parsed.empresa !== undefined) this.empresa = parsed.empresa;
     if (parsed.estagiario !== undefined) this.estagiario = parsed.estagiario ?? null;

@@ -106,7 +106,7 @@ export class EstagiarioListOutputRestDto {
 
 @ApiSchema({ name: "EstagiarioCreateInputDto" })
 export class EstagiarioCreateInputRestDto {
-  static schema = EstagiarioCreateSchema;
+  static schema = EstagiarioCreateSchema.presentation;
 
   @ApiProperty(EstagiarioCreateCommandFields.perfil.swaggerMetadata)
   perfil: { id: string };
@@ -129,7 +129,7 @@ export class EstagiarioCreateInputRestDto {
 
 @ApiSchema({ name: "EstagiarioUpdateInputDto" })
 export class EstagiarioUpdateInputRestDto {
-  static schema = EstagiarioUpdateSchema;
+  static schema = EstagiarioUpdateSchema.presentation;
 
   @ApiPropertyOptional(EstagiarioUpdateCommandFields.perfil.swaggerMetadata)
   perfil?: { id: string };

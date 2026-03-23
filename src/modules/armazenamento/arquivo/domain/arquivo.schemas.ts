@@ -6,6 +6,7 @@
  * os contratos de dados da entidade.
  */
 import { z } from "zod";
+import { createSchema } from "@/domain/abstractions";
 import { datedSchema, uuidSchema } from "@/shared/validation/schemas";
 import { ArquivoFields } from "./arquivo.fields";
 
@@ -16,23 +17,27 @@ import { ArquivoFields } from "./arquivo.fields";
 export const ArquivoSchema = z
   .object({
     id: uuidSchema,
-    name: ArquivoFields.name.schema,
-    mimeType: ArquivoFields.mimeType.schema,
-    sizeBytes: ArquivoFields.sizeBytes.schema,
-    storageType: ArquivoFields.storageType.schema,
+    name: ArquivoFields.name.domainSchema,
+    mimeType: ArquivoFields.mimeType.domainSchema,
+    sizeBytes: ArquivoFields.sizeBytes.domainSchema,
+    storageType: ArquivoFields.storageType.domainSchema,
   })
   .merge(datedSchema);
 
-export const ArquivoCreateSchema = z.object({
-  name: ArquivoFields.name.schema,
-  mimeType: ArquivoFields.mimeType.schema,
-  sizeBytes: ArquivoFields.sizeBytes.schema,
-  storageType: ArquivoFields.storageType.schema,
-});
+export const ArquivoCreateSchema = createSchema((standard) =>
+  z.object({
+    name: ArquivoFields.name.create(standard),
+    mimeType: ArquivoFields.mimeType.create(standard),
+    sizeBytes: ArquivoFields.sizeBytes.create(standard),
+    storageType: ArquivoFields.storageType.create(standard),
+  }),
+);
 
-export const ArquivoUpdateSchema = z.object({
-  name: ArquivoFields.name.schema.optional(),
-  mimeType: ArquivoFields.mimeType.schema.optional(),
-  sizeBytes: ArquivoFields.sizeBytes.schema.optional(),
-  storageType: ArquivoFields.storageType.schema.optional(),
-});
+export const ArquivoUpdateSchema = createSchema((standard) =>
+  z.object({
+    name: ArquivoFields.name.create(standard).optional(),
+    mimeType: ArquivoFields.mimeType.create(standard).optional(),
+    sizeBytes: ArquivoFields.sizeBytes.create(standard).optional(),
+    storageType: ArquivoFields.storageType.create(standard).optional(),
+  }),
+);

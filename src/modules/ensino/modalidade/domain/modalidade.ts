@@ -24,7 +24,7 @@ export class Modalidade {
   private constructor() {}
 
   static create(dados: unknown): Modalidade {
-    const parsed = zodValidate(Modalidade.entityName, ModalidadeCreateSchema, dados);
+    const parsed = zodValidate(Modalidade.entityName, ModalidadeCreateSchema.domain, dados);
 
     const instance = new Modalidade();
 
@@ -54,7 +54,7 @@ export class Modalidade {
   }
 
   update(dados: unknown): void {
-    const parsed = zodValidate(Modalidade.entityName, ModalidadeUpdateSchema, dados);
+    const parsed = zodValidate(Modalidade.entityName, ModalidadeUpdateSchema.domain, dados);
 
     if (parsed.nome !== undefined) this.nome = parsed.nome;
     if (parsed.slug !== undefined) this.slug = parsed.slug;

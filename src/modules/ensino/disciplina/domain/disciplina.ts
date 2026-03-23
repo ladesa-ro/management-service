@@ -26,7 +26,7 @@ export class Disciplina {
   private constructor() {}
 
   static create(dados: unknown): Disciplina {
-    const parsed = zodValidate(Disciplina.entityName, DisciplinaCreateSchema, dados);
+    const parsed = zodValidate(Disciplina.entityName, DisciplinaCreateSchema.domain, dados);
 
     const instance = new Disciplina();
 
@@ -60,7 +60,7 @@ export class Disciplina {
   }
 
   update(dados: unknown): void {
-    const parsed = zodValidate(Disciplina.entityName, DisciplinaUpdateSchema, dados);
+    const parsed = zodValidate(Disciplina.entityName, DisciplinaUpdateSchema.domain, dados);
 
     if (parsed.nome !== undefined) this.nome = parsed.nome;
     if (parsed.nomeAbreviado !== undefined) this.nomeAbreviado = parsed.nomeAbreviado;

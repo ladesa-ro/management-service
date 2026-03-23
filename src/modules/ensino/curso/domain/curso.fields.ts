@@ -7,16 +7,16 @@
  * @see createFieldMetadata (domain/abstractions/fields/field-metadata.ts)
  */
 import { z } from "zod";
-import { createFieldMetadata } from "@/domain/abstractions";
+import { createFieldMetadata, createSchema } from "@/domain/abstractions";
 
 export const CursoFields = {
   nome: createFieldMetadata({
     description: "Nome do curso",
-    schema: z.string().min(1, "nome é obrigatório"),
+    schema: createSchema(() => z.string().min(1, "nome é obrigatório")),
   }),
   nomeAbreviado: createFieldMetadata({
     description: "Nome abreviado do curso",
-    schema: z.string().min(1, "nomeAbreviado é obrigatório"),
+    schema: createSchema(() => z.string().min(1, "nomeAbreviado é obrigatório")),
   }),
   campus: createFieldMetadata({
     description: "Campus que o curso pertence",

@@ -71,7 +71,7 @@ export class ModalidadeListOutputRestDto {
 
 @ApiSchema({ name: "ModalidadeCreateInputDto" })
 export class ModalidadeCreateInputRestDto {
-  static readonly schema = ModalidadeCreateSchema;
+  static readonly schema = ModalidadeCreateSchema.presentation;
 
   @ApiProperty(ModalidadeCreateCommandFields.nome.swaggerMetadata)
   nome: string;
@@ -82,7 +82,7 @@ export class ModalidadeCreateInputRestDto {
 
 @ApiSchema({ name: "ModalidadeUpdateInputDto" })
 export class ModalidadeUpdateInputRestDto {
-  static readonly schema = ModalidadeCreateSchema;
+  static readonly schema = ModalidadeCreateSchema.presentation;
 
   @ApiPropertyOptional(ModalidadeUpdateCommandFields.nome.swaggerMetadata)
   nome?: string;

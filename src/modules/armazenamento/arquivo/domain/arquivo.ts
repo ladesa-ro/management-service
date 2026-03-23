@@ -41,7 +41,7 @@ export class Arquivo implements IEntityBaseUuid {
   private constructor() {}
 
   static create(dados: IArquivoCreate): Arquivo {
-    const parsed = zodValidate(Arquivo.entityName, ArquivoCreateSchema, dados);
+    const parsed = zodValidate(Arquivo.entityName, ArquivoCreateSchema.domain, dados);
 
     const instance = new Arquivo();
 
@@ -75,7 +75,7 @@ export class Arquivo implements IEntityBaseUuid {
   }
 
   update(dados: unknown): void {
-    const parsed = zodValidate(Arquivo.entityName, ArquivoUpdateSchema, dados);
+    const parsed = zodValidate(Arquivo.entityName, ArquivoUpdateSchema.domain, dados);
 
     if (parsed.name !== undefined) this.name = parsed.name;
     if (parsed.mimeType !== undefined) this.mimeType = parsed.mimeType;

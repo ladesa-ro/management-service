@@ -23,7 +23,7 @@ export class Curso {
   private constructor() {}
 
   static create(dados: unknown): Curso {
-    const parsed = zodValidate(Curso.entityName, CursoCreateSchema, dados);
+    const parsed = zodValidate(Curso.entityName, CursoCreateSchema.domain, dados);
 
     const instance = new Curso();
 
@@ -59,7 +59,7 @@ export class Curso {
   }
 
   update(dados: unknown): void {
-    const parsed = zodValidate(Curso.entityName, CursoUpdateSchema, dados);
+    const parsed = zodValidate(Curso.entityName, CursoUpdateSchema.domain, dados);
 
     if (parsed.nome !== undefined) this.nome = parsed.nome;
     if (parsed.nomeAbreviado !== undefined) this.nomeAbreviado = parsed.nomeAbreviado;

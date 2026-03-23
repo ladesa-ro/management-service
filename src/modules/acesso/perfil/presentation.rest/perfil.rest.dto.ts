@@ -107,7 +107,7 @@ export class PerfilListOutputRestDto {
 
 @ApiSchema({ name: "PerfilSetVinculosInputDto" })
 export class PerfilSetVinculosInputRestDto {
-  static schema = PerfilSetVinculosInputSchema;
+  static schema = PerfilSetVinculosInputSchema.presentation;
 
   @ApiProperty(PerfilSetVinculosCommandFields.cargos.swaggerMetadata)
   cargos: string[];

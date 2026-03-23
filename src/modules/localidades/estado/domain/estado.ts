@@ -15,7 +15,7 @@ export class Estado {
   private constructor() {}
 
   static create(dados: unknown): Estado {
-    const parsed = zodValidate(Estado.entityName, EstadoCreateSchema, dados);
+    const parsed = zodValidate(Estado.entityName, EstadoCreateSchema.domain, dados);
 
     const instance = new Estado();
 
@@ -39,7 +39,7 @@ export class Estado {
   }
 
   update(dados: unknown): void {
-    const parsed = zodValidate(Estado.entityName, EstadoUpdateSchema, dados);
+    const parsed = zodValidate(Estado.entityName, EstadoUpdateSchema.domain, dados);
 
     if (parsed.nome !== undefined) this.nome = parsed.nome;
     if (parsed.sigla !== undefined) this.sigla = parsed.sigla;

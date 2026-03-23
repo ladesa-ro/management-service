@@ -87,7 +87,7 @@ export class CampusListOutputRestDto {
 
 @ApiSchema({ name: "CampusCreateInputDto" })
 export class CampusCreateInputRestDto {
-  static schema = CampusCreateSchema;
+  static schema = CampusCreateSchema.presentation;
 
   @ApiProperty(CampusCreateCommandFields.nomeFantasia.swaggerMetadata)
   nomeFantasia: string;
@@ -110,7 +110,7 @@ export class CampusCreateInputRestDto {
 
 @ApiSchema({ name: "CampusUpdateInputDto" })
 export class CampusUpdateInputRestDto {
-  static schema = CampusUpdateSchema;
+  static schema = CampusUpdateSchema.presentation;
 
   @ApiPropertyOptional(CampusUpdateCommandFields.nomeFantasia.swaggerMetadata)
   nomeFantasia?: string;

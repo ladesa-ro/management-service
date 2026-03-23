@@ -62,7 +62,7 @@ export class ImagemListOutputRestDto {
 
 @ApiSchema({ name: "ImagemCreateInputDto" })
 export class ImagemCreateInputRestDto {
-  static schema = ImagemCreateSchema;
+  static schema = ImagemCreateSchema.presentation;
 
   @ApiPropertyOptional({
     type: "string",
@@ -75,7 +75,7 @@ export class ImagemCreateInputRestDto {
 
 @ApiSchema({ name: "ImagemUpdateInputDto" })
 export class ImagemUpdateInputRestDto extends PartialType(ImagemCreateInputRestDto) {
-  static schema = ImagemUpdateSchema;
+  static schema = ImagemUpdateSchema.presentation;
 }
 
 // ============================================================================

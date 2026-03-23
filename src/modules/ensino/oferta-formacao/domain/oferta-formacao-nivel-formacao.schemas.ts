@@ -6,12 +6,15 @@
  * os contratos de dados da entidade.
  */
 import { z } from "zod";
+import { createSchema } from "@/domain/abstractions";
 import { datedSchema, uuidSchema } from "@/shared/validation/schemas";
 
-export const OfertaFormacaoNivelFormacaoCreateSchema = z.object({
-  nivelFormacao: z.object({ id: uuidSchema }),
-  ofertaFormacao: z.object({ id: uuidSchema }),
-});
+export const OfertaFormacaoNivelFormacaoCreateSchema = createSchema(() =>
+  z.object({
+    nivelFormacao: z.object({ id: uuidSchema }),
+    ofertaFormacao: z.object({ id: uuidSchema }),
+  }),
+);
 
 export const OfertaFormacaoNivelFormacaoSchema = z
   .object({

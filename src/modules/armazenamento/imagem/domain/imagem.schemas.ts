@@ -6,6 +6,7 @@
  * os contratos de dados da entidade.
  */
 import { z } from "zod";
+import { createSchema } from "@/domain/abstractions";
 import { datedSchema, uuidSchema } from "@/shared/validation/schemas";
 import { ImagemFields } from "./imagem.fields";
 
@@ -20,10 +21,14 @@ export const ImagemSchema = z
   })
   .merge(datedSchema);
 
-export const ImagemCreateSchema = z.object({
-  descricao: ImagemFields.descricao.schema,
-});
+export const ImagemCreateSchema = createSchema((standard) =>
+  z.object({
+    descricao: ImagemFields.descricao.create(standard),
+  }),
+);
 
-export const ImagemUpdateSchema = z.object({
-  descricao: ImagemFields.descricao.schema,
-});
+export const ImagemUpdateSchema = createSchema((standard) =>
+  z.object({
+    descricao: ImagemFields.descricao.create(standard),
+  }),
+);

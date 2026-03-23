@@ -40,7 +40,7 @@ export class Imagem implements IEntityBaseUuid {
   private constructor() {}
 
   static create(dados: IImagemCreate): Imagem {
-    const parsed = zodValidate(Imagem.entityName, ImagemCreateSchema, dados);
+    const parsed = zodValidate(Imagem.entityName, ImagemCreateSchema.domain, dados);
 
     const instance = new Imagem();
 
@@ -70,7 +70,7 @@ export class Imagem implements IEntityBaseUuid {
   }
 
   update(dados: unknown): void {
-    const parsed = zodValidate(Imagem.entityName, ImagemUpdateSchema, dados);
+    const parsed = zodValidate(Imagem.entityName, ImagemUpdateSchema.domain, dados);
 
     if (parsed.descricao !== undefined) this.descricao = parsed.descricao?.trim() || null;
 

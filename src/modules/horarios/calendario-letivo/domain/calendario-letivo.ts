@@ -46,7 +46,11 @@ export class CalendarioLetivo implements IEntityBaseUuid {
   private constructor() {}
 
   static create(dados: ICalendarioLetivoCreate): CalendarioLetivo {
-    const parsed = zodValidate(CalendarioLetivo.entityName, CalendarioLetivoCreateSchema, dados);
+    const parsed = zodValidate(
+      CalendarioLetivo.entityName,
+      CalendarioLetivoCreateSchema.domain,
+      dados,
+    );
 
     const instance = new CalendarioLetivo();
 
@@ -75,7 +79,11 @@ export class CalendarioLetivo implements IEntityBaseUuid {
   }
 
   update(dados: unknown): void {
-    const parsed = zodValidate(CalendarioLetivo.entityName, CalendarioLetivoUpdateSchema, dados);
+    const parsed = zodValidate(
+      CalendarioLetivo.entityName,
+      CalendarioLetivoUpdateSchema.domain,
+      dados,
+    );
 
     if (parsed.nome !== undefined) this.nome = parsed.nome;
     if (parsed.ano !== undefined) this.ano = parsed.ano;

@@ -6,6 +6,7 @@
  * os contratos de dados da entidade.
  */
 import { z } from "zod";
+import { createSchema, safeInt } from "@/domain/abstractions";
 import { CidadeFields } from "./cidade.fields";
 
 // ============================================================================
@@ -14,11 +15,18 @@ import { CidadeFields } from "./cidade.fields";
 
 export const CidadeSchema = z.object({
   id: z.number().int(),
-  nome: CidadeFields.nome.schema,
+  nome: CidadeFields.nome.domainSchema,
 });
 
-export const CidadeCreateSchema = CidadeSchema;
+export const CidadeCreateSchema = createSchema((standard) =>
+  z.object({
+    id: safeInt(standard),
+    nome: CidadeFields.nome.create(standard),
+  }),
+);
 
-export const CidadeUpdateSchema = z.object({
-  nome: CidadeFields.nome.schema.optional(),
-});
+export const CidadeUpdateSchema = createSchema((standard) =>
+  z.object({
+    nome: CidadeFields.nome.create(standard).optional(),
+  }),
+);

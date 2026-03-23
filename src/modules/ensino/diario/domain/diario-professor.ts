@@ -42,7 +42,11 @@ export class DiarioProfessor implements IEntityBaseUuid {
   private constructor() {}
 
   static create(dados: IDiarioProfessorCreate): DiarioProfessor {
-    const parsed = zodValidate(DiarioProfessor.entityName, DiarioProfessorCreateSchema, dados);
+    const parsed = zodValidate(
+      DiarioProfessor.entityName,
+      DiarioProfessorCreateSchema.domain,
+      dados,
+    );
 
     const instance = new DiarioProfessor();
 
@@ -68,7 +72,11 @@ export class DiarioProfessor implements IEntityBaseUuid {
   }
 
   update(dados: unknown): void {
-    const parsed = zodValidate(DiarioProfessor.entityName, DiarioProfessorUpdateSchema, dados);
+    const parsed = zodValidate(
+      DiarioProfessor.entityName,
+      DiarioProfessorUpdateSchema.domain,
+      dados,
+    );
 
     if (parsed.situacao !== undefined) this.situacao = parsed.situacao;
 

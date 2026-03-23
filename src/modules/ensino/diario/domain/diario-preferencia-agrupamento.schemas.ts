@@ -6,6 +6,7 @@
  * os contratos de dados da entidade.
  */
 import { z } from "zod";
+import { createSchema } from "@/domain/abstractions";
 import { datedSchema, uuidSchema } from "@/shared/validation/schemas";
 import { DiarioPreferenciaAgrupamentoFields } from "./diario-preferencia-agrupamento.fields";
 
@@ -13,9 +14,9 @@ import { DiarioPreferenciaAgrupamentoFields } from "./diario-preferencia-agrupam
 // Fragments de referência
 // ============================================================================
 
-export const DiarioPreferenciaAgrupamentoDiarioRefSchema = z.object({
-  id: uuidSchema,
-});
+export const DiarioPreferenciaAgrupamentoDiarioRefSchema = createSchema(() =>
+  z.object({ id: uuidSchema }),
+);
 
 // ============================================================================
 // Schemas compostos
@@ -24,26 +25,30 @@ export const DiarioPreferenciaAgrupamentoDiarioRefSchema = z.object({
 export const DiarioPreferenciaAgrupamentoSchema = z
   .object({
     id: uuidSchema,
-    dataInicio: DiarioPreferenciaAgrupamentoFields.dataInicio.schema,
+    dataInicio: DiarioPreferenciaAgrupamentoFields.dataInicio.domainSchema,
     dataFim: z.string().nullable(),
-    diaSemanaIso: DiarioPreferenciaAgrupamentoFields.diaSemanaIso.schema,
-    aulasSeguidas: DiarioPreferenciaAgrupamentoFields.aulasSeguidas.schema,
-    diario: DiarioPreferenciaAgrupamentoDiarioRefSchema,
+    diaSemanaIso: DiarioPreferenciaAgrupamentoFields.diaSemanaIso.domainSchema,
+    aulasSeguidas: DiarioPreferenciaAgrupamentoFields.aulasSeguidas.domainSchema,
+    diario: z.object({ id: uuidSchema }).passthrough(),
   })
   .merge(datedSchema);
 
-export const DiarioPreferenciaAgrupamentoCreateSchema = z.object({
-  dataInicio: DiarioPreferenciaAgrupamentoFields.dataInicio.schema,
-  dataFim: DiarioPreferenciaAgrupamentoFields.dataFim.schema,
-  diaSemanaIso: DiarioPreferenciaAgrupamentoFields.diaSemanaIso.schema,
-  aulasSeguidas: DiarioPreferenciaAgrupamentoFields.aulasSeguidas.schema,
-  diario: DiarioPreferenciaAgrupamentoDiarioRefSchema,
-});
+export const DiarioPreferenciaAgrupamentoCreateSchema = createSchema((standard) =>
+  z.object({
+    dataInicio: DiarioPreferenciaAgrupamentoFields.dataInicio.create(standard),
+    dataFim: DiarioPreferenciaAgrupamentoFields.dataFim.create(standard),
+    diaSemanaIso: DiarioPreferenciaAgrupamentoFields.diaSemanaIso.create(standard),
+    aulasSeguidas: DiarioPreferenciaAgrupamentoFields.aulasSeguidas.create(standard),
+    diario: DiarioPreferenciaAgrupamentoDiarioRefSchema.create(standard),
+  }),
+);
 
-export const DiarioPreferenciaAgrupamentoUpdateSchema = z.object({
-  dataInicio: DiarioPreferenciaAgrupamentoFields.dataInicio.schema.optional(),
-  dataFim: DiarioPreferenciaAgrupamentoFields.dataFim.schema,
-  diaSemanaIso: DiarioPreferenciaAgrupamentoFields.diaSemanaIso.schema.optional(),
-  aulasSeguidas: DiarioPreferenciaAgrupamentoFields.aulasSeguidas.schema.optional(),
-  diario: DiarioPreferenciaAgrupamentoDiarioRefSchema.optional(),
-});
+export const DiarioPreferenciaAgrupamentoUpdateSchema = createSchema((standard) =>
+  z.object({
+    dataInicio: DiarioPreferenciaAgrupamentoFields.dataInicio.create(standard).optional(),
+    dataFim: DiarioPreferenciaAgrupamentoFields.dataFim.create(standard),
+    diaSemanaIso: DiarioPreferenciaAgrupamentoFields.diaSemanaIso.create(standard).optional(),
+    aulasSeguidas: DiarioPreferenciaAgrupamentoFields.aulasSeguidas.create(standard).optional(),
+    diario: DiarioPreferenciaAgrupamentoDiarioRefSchema.create(standard).optional(),
+  }),
+);

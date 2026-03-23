@@ -6,6 +6,7 @@
  * os contratos de dados da entidade.
  */
 import { z } from "zod";
+import { createSchema, ObjectIdUuidFactory } from "@/domain/abstractions";
 import { datedSchema, uuidSchema } from "@/shared/validation/schemas";
 import { BlocoFields } from "./bloco.fields";
 
@@ -13,15 +14,9 @@ import { BlocoFields } from "./bloco.fields";
 // Fragments de referência
 // ============================================================================
 
-export const BlocoCampusRefSchema = z.object({
-  id: uuidSchema,
-});
+export const BlocoCampusRefSchema = ObjectIdUuidFactory;
 
-export const BlocoImagemCapaRefSchema = z
-  .object({
-    id: uuidSchema,
-  })
-  .nullable();
+export const BlocoImagemCapaRefSchema = ObjectIdUuidFactory;
 
 // ============================================================================
 // Schemas compostos
@@ -30,21 +25,25 @@ export const BlocoImagemCapaRefSchema = z
 export const BlocoSchema = z
   .object({
     id: uuidSchema,
-    nome: BlocoFields.nome.schema,
-    codigo: BlocoFields.codigo.schema,
+    nome: BlocoFields.nome.domainSchema,
+    codigo: BlocoFields.codigo.domainSchema,
     campus: z.object({ id: uuidSchema }).passthrough(),
     imagemCapa: z.object({ id: uuidSchema }).passthrough().nullable(),
   })
   .merge(datedSchema);
 
-export const BlocoCreateSchema = z.object({
-  nome: BlocoFields.nome.schema,
-  codigo: BlocoFields.codigo.schema,
-  campus: BlocoCampusRefSchema,
-});
+export const BlocoCreateSchema = createSchema((standard) =>
+  z.object({
+    nome: BlocoFields.nome.create(standard),
+    codigo: BlocoFields.codigo.create(standard),
+    campus: BlocoCampusRefSchema.create(standard),
+  }),
+);
 
-export const BlocoUpdateSchema = z.object({
-  nome: BlocoFields.nome.schema.optional(),
-  codigo: BlocoFields.codigo.schema.optional(),
-  campus: BlocoCampusRefSchema.optional(),
-});
+export const BlocoUpdateSchema = createSchema((standard) =>
+  z.object({
+    nome: BlocoFields.nome.create(standard).optional(),
+    codigo: BlocoFields.codigo.create(standard).optional(),
+    campus: BlocoCampusRefSchema.create(standard).optional(),
+  }),
+);

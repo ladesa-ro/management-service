@@ -136,7 +136,7 @@ export class UsuarioListOutputRestDto {
 
 @ApiSchema({ name: "UsuarioCreateInputDto" })
 export class UsuarioCreateInputRestDto {
-  static schema = UsuarioCreateSchema;
+  static schema = UsuarioCreateSchema.presentation;
 
   @ApiPropertyOptional(UsuarioCreateCommandFields.nome.swaggerMetadata)
   nome?: string | null;
@@ -150,7 +150,7 @@ export class UsuarioCreateInputRestDto {
 
 @ApiSchema({ name: "UsuarioUpdateInputDto" })
 export class UsuarioUpdateInputRestDto {
-  static schema = UsuarioUpdateSchema;
+  static schema = UsuarioUpdateSchema.presentation;
 
   @ApiPropertyOptional(UsuarioUpdateCommandFields.nome.swaggerMetadata)
   nome?: string | null;

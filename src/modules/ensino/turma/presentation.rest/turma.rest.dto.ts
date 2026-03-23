@@ -126,7 +126,7 @@ export class TurmaListOutputRestDto {
 
 @ApiSchema({ name: "TurmaCreateInputDto" })
 export class TurmaCreateInputRestDto {
-  static readonly schema = TurmaCreateSchema;
+  static readonly schema = TurmaCreateSchema.presentation;
 
   @ApiProperty(TurmaCreateCommandFields.periodo.swaggerMetadata)
   periodo: string;

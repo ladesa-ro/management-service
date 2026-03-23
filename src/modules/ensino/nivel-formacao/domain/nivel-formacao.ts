@@ -23,7 +23,7 @@ export class NivelFormacao {
   private constructor() {}
 
   static create(dados: unknown): NivelFormacao {
-    const parsed = zodValidate(NivelFormacao.entityName, NivelFormacaoCreateSchema, dados);
+    const parsed = zodValidate(NivelFormacao.entityName, NivelFormacaoCreateSchema.domain, dados);
 
     const instance = new NivelFormacao();
 
@@ -51,7 +51,7 @@ export class NivelFormacao {
   }
 
   update(dados: unknown): void {
-    const parsed = zodValidate(NivelFormacao.entityName, NivelFormacaoUpdateSchema, dados);
+    const parsed = zodValidate(NivelFormacao.entityName, NivelFormacaoUpdateSchema.domain, dados);
 
     if (parsed.slug !== undefined) this.slug = parsed.slug;
 

@@ -6,6 +6,7 @@
  * os contratos de dados da entidade.
  */
 import { z } from "zod";
+import { createSchema } from "@/domain/abstractions";
 import { datedSchema, uuidSchema } from "@/shared/validation/schemas";
 import { ImagemArquivoFields } from "./imagem-arquivo.fields";
 
@@ -13,13 +14,9 @@ import { ImagemArquivoFields } from "./imagem-arquivo.fields";
 // Fragments de referência
 // ============================================================================
 
-export const ImagemArquivoImagemRefSchema = z.object({
-  id: uuidSchema,
-});
+export const ImagemArquivoImagemRefSchema = createSchema(() => z.object({ id: uuidSchema }));
 
-export const ImagemArquivoArquivoRefSchema = z.object({
-  id: uuidSchema,
-});
+export const ImagemArquivoArquivoRefSchema = createSchema(() => z.object({ id: uuidSchema }));
 
 // ============================================================================
 // Schemas compostos
@@ -28,27 +25,31 @@ export const ImagemArquivoArquivoRefSchema = z.object({
 export const ImagemArquivoSchema = z
   .object({
     id: uuidSchema,
-    largura: ImagemArquivoFields.largura.schema,
-    altura: ImagemArquivoFields.altura.schema,
-    formato: ImagemArquivoFields.formato.schema,
-    mimeType: ImagemArquivoFields.mimeType.schema,
-    imagem: ImagemArquivoImagemRefSchema,
-    arquivo: ImagemArquivoArquivoRefSchema,
+    largura: ImagemArquivoFields.largura.domainSchema,
+    altura: ImagemArquivoFields.altura.domainSchema,
+    formato: ImagemArquivoFields.formato.domainSchema,
+    mimeType: ImagemArquivoFields.mimeType.domainSchema,
+    imagem: z.object({ id: uuidSchema }),
+    arquivo: z.object({ id: uuidSchema }),
   })
   .merge(datedSchema);
 
-export const ImagemArquivoCreateSchema = z.object({
-  largura: ImagemArquivoFields.largura.schema,
-  altura: ImagemArquivoFields.altura.schema,
-  formato: ImagemArquivoFields.formato.schema,
-  mimeType: ImagemArquivoFields.mimeType.schema,
-  imagem: ImagemArquivoImagemRefSchema,
-  arquivo: ImagemArquivoArquivoRefSchema,
-});
+export const ImagemArquivoCreateSchema = createSchema((standard) =>
+  z.object({
+    largura: ImagemArquivoFields.largura.create(standard),
+    altura: ImagemArquivoFields.altura.create(standard),
+    formato: ImagemArquivoFields.formato.create(standard),
+    mimeType: ImagemArquivoFields.mimeType.create(standard),
+    imagem: ImagemArquivoImagemRefSchema.create(standard),
+    arquivo: ImagemArquivoArquivoRefSchema.create(standard),
+  }),
+);
 
-export const ImagemArquivoUpdateSchema = z.object({
-  largura: ImagemArquivoFields.largura.schema.optional(),
-  altura: ImagemArquivoFields.altura.schema.optional(),
-  formato: ImagemArquivoFields.formato.schema.optional(),
-  mimeType: ImagemArquivoFields.mimeType.schema.optional(),
-});
+export const ImagemArquivoUpdateSchema = createSchema((standard) =>
+  z.object({
+    largura: ImagemArquivoFields.largura.create(standard).optional(),
+    altura: ImagemArquivoFields.altura.create(standard).optional(),
+    formato: ImagemArquivoFields.formato.create(standard).optional(),
+    mimeType: ImagemArquivoFields.mimeType.create(standard).optional(),
+  }),
+);

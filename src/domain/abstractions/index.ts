@@ -1,3 +1,4 @@
+export * from "../schema-factory";
 export * from "./access-context.interface";
 export * from "./entities";
 export * from "./fields";

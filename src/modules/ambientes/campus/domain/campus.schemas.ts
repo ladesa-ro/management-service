@@ -6,6 +6,7 @@
  * os contratos de dados da entidade.
  */
 import { z } from "zod";
+import { createSchema, safeInt } from "@/domain/abstractions";
 import { datedSchema, uuidSchema } from "@/shared/validation/schemas";
 import { CampusFields } from "./campus.fields";
 
@@ -13,14 +14,19 @@ import { CampusFields } from "./campus.fields";
 // Fragments de referência
 // ============================================================================
 
-export const CampusEnderecoRefSchema = z.object({
-  cep: z.string().min(1),
-  logradouro: z.string().min(1),
-  numero: z.number().int().min(0),
-  bairro: z.string().min(1),
-  complemento: z.string().nullable().optional(),
-  pontoReferencia: z.string().nullable().optional(),
-  cidade: z.object({ id: z.number().int() }),
+export const CampusEnderecoRefSchema = createSchema((standard) => {
+  const numero = safeInt(standard, (s) => s.min(0));
+  const cidadeId = safeInt(standard);
+
+  return z.object({
+    cep: z.string().min(1),
+    logradouro: z.string().min(1),
+    numero,
+    bairro: z.string().min(1),
+    complemento: z.string().nullable().optional(),
+    pontoReferencia: z.string().nullable().optional(),
+    cidade: z.object({ id: cidadeId }),
+  });
 });
 
 // ============================================================================
@@ -30,10 +36,10 @@ export const CampusEnderecoRefSchema = z.object({
 export const CampusSchema = z
   .object({
     id: uuidSchema,
-    nomeFantasia: CampusFields.nomeFantasia.schema,
-    razaoSocial: CampusFields.razaoSocial.schema,
-    apelido: CampusFields.apelido.schema,
-    cnpj: CampusFields.cnpj.schema,
+    nomeFantasia: CampusFields.nomeFantasia.domainSchema,
+    razaoSocial: CampusFields.razaoSocial.domainSchema,
+    apelido: CampusFields.apelido.domainSchema,
+    cnpj: CampusFields.cnpj.domainSchema,
     endereco: z
       .object({
         id: uuidSchema,
@@ -49,18 +55,22 @@ export const CampusSchema = z
   })
   .merge(datedSchema);
 
-export const CampusCreateSchema = z.object({
-  nomeFantasia: CampusFields.nomeFantasia.schema,
-  razaoSocial: CampusFields.razaoSocial.schema,
-  apelido: CampusFields.apelido.schema,
-  cnpj: CampusFields.cnpj.schema,
-  endereco: CampusEnderecoRefSchema,
-});
+export const CampusCreateSchema = createSchema((standard) =>
+  z.object({
+    nomeFantasia: CampusFields.nomeFantasia.create(standard),
+    razaoSocial: CampusFields.razaoSocial.create(standard),
+    apelido: CampusFields.apelido.create(standard),
+    cnpj: CampusFields.cnpj.create(standard),
+    endereco: CampusEnderecoRefSchema.create(standard),
+  }),
+);
 
-export const CampusUpdateSchema = z.object({
-  nomeFantasia: CampusFields.nomeFantasia.schema.optional(),
-  razaoSocial: CampusFields.razaoSocial.schema.optional(),
-  apelido: CampusFields.apelido.schema.optional(),
-  cnpj: CampusFields.cnpj.schema.optional(),
-  endereco: CampusEnderecoRefSchema.optional(),
-});
+export const CampusUpdateSchema = createSchema((standard) =>
+  z.object({
+    nomeFantasia: CampusFields.nomeFantasia.create(standard).optional(),
+    razaoSocial: CampusFields.razaoSocial.create(standard).optional(),
+    apelido: CampusFields.apelido.create(standard).optional(),
+    cnpj: CampusFields.cnpj.create(standard).optional(),
+    endereco: CampusEnderecoRefSchema.create(standard).optional(),
+  }),
+);

@@ -39,7 +39,7 @@ export class Empresa {
   }
 
   static create(dados: unknown): Empresa {
-    const parsed = zodValidate(Empresa.entityName, EmpresaCreateSchema, dados);
+    const parsed = zodValidate(Empresa.entityName, EmpresaCreateSchema.domain, dados);
 
     const instance = new Empresa();
 
@@ -77,7 +77,7 @@ export class Empresa {
   }
 
   update(dados: unknown): void {
-    const parsed = zodValidate(Empresa.entityName, EmpresaUpdateSchema, dados);
+    const parsed = zodValidate(Empresa.entityName, EmpresaUpdateSchema.domain, dados);
 
     if (parsed.razaoSocial !== undefined) this.razaoSocial = parsed.razaoSocial;
     if (parsed.nomeFantasia !== undefined) this.nomeFantasia = parsed.nomeFantasia;

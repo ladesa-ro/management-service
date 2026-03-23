@@ -6,6 +6,7 @@
  * os contratos de dados da entidade.
  */
 import { z } from "zod";
+import { createSchema } from "@/domain/abstractions";
 import { datedSchema, uuidSchema } from "@/shared/validation/schemas";
 import { PerfilFields } from "./perfil.fields";
 
@@ -13,13 +14,9 @@ import { PerfilFields } from "./perfil.fields";
 // Fragments de referência
 // ============================================================================
 
-export const PerfilCampusRefSchema = z.object({
-  id: uuidSchema,
-});
+export const PerfilCampusRefSchema = createSchema(() => z.object({ id: uuidSchema }));
 
-export const PerfilUsuarioRefSchema = z.object({
-  id: uuidSchema,
-});
+export const PerfilUsuarioRefSchema = createSchema(() => z.object({ id: uuidSchema }));
 
 // ============================================================================
 // Schemas compostos
@@ -28,28 +25,34 @@ export const PerfilUsuarioRefSchema = z.object({
 export const PerfilSchema = z
   .object({
     id: uuidSchema,
-    ativo: PerfilFields.ativo.schema,
-    cargo: PerfilFields.cargo.schema,
-    campus: PerfilCampusRefSchema,
-    usuario: PerfilUsuarioRefSchema,
+    ativo: PerfilFields.ativo.domainSchema,
+    cargo: PerfilFields.cargo.domainSchema,
+    campus: z.object({ id: uuidSchema }),
+    usuario: z.object({ id: uuidSchema }),
   })
   .merge(datedSchema);
 
-export const PerfilCreateSchema = z.object({
-  cargo: PerfilFields.cargo.schema,
-  campus: PerfilCampusRefSchema,
-  usuario: PerfilUsuarioRefSchema,
-});
+export const PerfilCreateSchema = createSchema((standard) =>
+  z.object({
+    cargo: PerfilFields.cargo.create(standard),
+    campus: PerfilCampusRefSchema.create(standard),
+    usuario: PerfilUsuarioRefSchema.create(standard),
+  }),
+);
 
-export const PerfilUpdateSchema = z.object({
-  ativo: PerfilFields.ativo.schema.optional(),
-  cargo: PerfilFields.cargo.schema.optional(),
-  campus: PerfilCampusRefSchema.optional(),
-  usuario: PerfilUsuarioRefSchema.optional(),
-});
+export const PerfilUpdateSchema = createSchema((standard) =>
+  z.object({
+    ativo: PerfilFields.ativo.create(standard).optional(),
+    cargo: PerfilFields.cargo.create(standard).optional(),
+    campus: PerfilCampusRefSchema.create(standard).optional(),
+    usuario: PerfilUsuarioRefSchema.create(standard).optional(),
+  }),
+);
 
-export const PerfilSetVinculosInputSchema = z.object({
-  cargos: z.array(z.string().min(1)),
-  campus: PerfilCampusRefSchema,
-  usuario: PerfilUsuarioRefSchema,
-});
+export const PerfilSetVinculosInputSchema = createSchema((standard) =>
+  z.object({
+    cargos: z.array(z.string().min(1)),
+    campus: PerfilCampusRefSchema.create(standard),
+    usuario: PerfilUsuarioRefSchema.create(standard),
+  }),
+);

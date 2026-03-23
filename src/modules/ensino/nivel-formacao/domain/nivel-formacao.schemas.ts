@@ -6,6 +6,7 @@
  * os contratos de dados da entidade.
  */
 import { z } from "zod";
+import { createSchema } from "@/domain/abstractions";
 import { datedSchema, uuidSchema } from "@/shared/validation/schemas";
 import { NivelFormacaoFields } from "./nivel-formacao.fields";
 
@@ -16,14 +17,18 @@ import { NivelFormacaoFields } from "./nivel-formacao.fields";
 export const NivelFormacaoSchema = z
   .object({
     id: uuidSchema,
-    slug: NivelFormacaoFields.slug.schema,
+    slug: NivelFormacaoFields.slug.domainSchema,
   })
   .merge(datedSchema);
 
-export const NivelFormacaoCreateSchema = z.object({
-  slug: NivelFormacaoFields.slug.schema,
-});
+export const NivelFormacaoCreateSchema = createSchema((standard) =>
+  z.object({
+    slug: NivelFormacaoFields.slug.create(standard),
+  }),
+);
 
-export const NivelFormacaoUpdateSchema = z.object({
-  slug: NivelFormacaoFields.slug.schema.optional(),
-});
+export const NivelFormacaoUpdateSchema = createSchema((standard) =>
+  z.object({
+    slug: NivelFormacaoFields.slug.create(standard).optional(),
+  }),
+);

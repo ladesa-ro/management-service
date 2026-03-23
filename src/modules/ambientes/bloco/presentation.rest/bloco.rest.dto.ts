@@ -138,7 +138,7 @@ export class BlocoCampusRefInputRestDto {
 
 @ApiSchema({ name: "BlocoCreateInputDto" })
 export class BlocoCreateInputRestDto {
-  static schema = BlocoCreateSchema;
+  static schema = BlocoCreateSchema.presentation;
 
   @ApiProperty(BlocoCreateCommandFields.nome.swaggerMetadata)
   nome: string;
@@ -155,7 +155,7 @@ export class BlocoCreateInputRestDto {
 
 @ApiSchema({ name: "BlocoUpdateInputDto" })
 export class BlocoUpdateInputRestDto {
-  static schema = BlocoUpdateSchema;
+  static schema = BlocoUpdateSchema.presentation;
 
   @ApiPropertyOptional(BlocoUpdateCommandFields.nome.swaggerMetadata)
   nome?: string;

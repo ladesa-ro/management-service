@@ -116,7 +116,7 @@ export class CalendarioLetivoListOutputRestDto {
 
 @ApiSchema({ name: "CalendarioLetivoCreateInputDto" })
 export class CalendarioLetivoCreateInputRestDto {
-  static schema = CalendarioLetivoCreateSchema;
+  static schema = CalendarioLetivoCreateSchema.presentation;
 
   @ApiProperty({
     type: "string",
@@ -150,7 +150,7 @@ export class CalendarioLetivoCreateInputRestDto {
 export class CalendarioLetivoUpdateInputRestDto extends PartialType(
   CalendarioLetivoCreateInputRestDto,
 ) {
-  static schema = CalendarioLetivoUpdateSchema;
+  static schema = CalendarioLetivoUpdateSchema.presentation;
 }
 
 // ============================================================================

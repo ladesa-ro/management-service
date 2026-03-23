@@ -7,26 +7,33 @@
  * @see createFieldMetadata (domain/abstractions/fields/field-metadata.ts)
  */
 import { z } from "zod";
-import { createFieldMetadata } from "@/domain/abstractions";
+import { createFieldMetadata, createSchema, safeInt } from "@/domain/abstractions";
 
 export const OfertaFormacaoFields = {
   nome: createFieldMetadata({
     description: "Nome da oferta de formacao",
-    schema: z.string().min(1, "nome é obrigatório"),
+    schema: createSchema(() => z.string().min(1, "nome é obrigatório")),
   }),
   slug: createFieldMetadata({
     description: "Apelido da oferta de formacao",
-    schema: z
-      .string()
-      .min(1, "slug é obrigatório")
-      .regex(
-        /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
-        "slug deve conter apenas letras minúsculas, números e hífens",
-      ),
+    schema: createSchema(() =>
+      z
+        .string()
+        .min(1, "slug é obrigatório")
+        .regex(
+          /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
+          "slug deve conter apenas letras minúsculas, números e hífens",
+        ),
+    ),
   }),
   duracaoPeriodoEmMeses: createFieldMetadata({
     description: "Duracao de cada periodo em meses",
-    schema: z.number().int().positive().nullable().optional(),
+    schema: createSchema((standard) =>
+      safeInt(standard, (s) => s.positive())
+        .nullable()
+        .optional(),
+    ),
+    nullable: true,
   }),
   modalidade: createFieldMetadata({
     description: "Modalidade da oferta de formacao",

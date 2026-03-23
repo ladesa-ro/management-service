@@ -27,7 +27,7 @@ export class ModalidadeFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
 
 @InputType("ModalidadeCreateInputDto")
 export class ModalidadeCreateInputGraphQlDto {
-  static readonly schema = ModalidadeCreateSchema;
+  static readonly schema = ModalidadeCreateSchema.domain;
 
   @Field(() => String, ModalidadeCreateCommandFields.nome.gqlMetadata) nome: string;
   @Field(() => String, ModalidadeCreateCommandFields.slug.gqlMetadata) slug: string;
@@ -39,7 +39,7 @@ export class ModalidadeCreateInputGraphQlDto {
 
 @InputType("ModalidadeUpdateInputDto")
 export class ModalidadeUpdateInputGraphQlDto {
-  static readonly schema = ModalidadeUpdateSchema;
+  static readonly schema = ModalidadeUpdateSchema.domain;
 
   @Field(() => String, { nullable: true, ...ModalidadeUpdateCommandFields.nome.gqlMetadata })
   nome?: string;

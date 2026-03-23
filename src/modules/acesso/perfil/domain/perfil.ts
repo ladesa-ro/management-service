@@ -32,7 +32,7 @@ export class Perfil {
   private constructor() {}
 
   static create(dados: unknown): Perfil {
-    const parsed = zodValidate(Perfil.entityName, PerfilCreateSchema, dados);
+    const parsed = zodValidate(Perfil.entityName, PerfilCreateSchema.domain, dados);
 
     const instance = new Perfil();
 
@@ -64,7 +64,7 @@ export class Perfil {
   }
 
   update(dados: unknown): void {
-    const parsed = zodValidate(Perfil.entityName, PerfilUpdateSchema, dados);
+    const parsed = zodValidate(Perfil.entityName, PerfilUpdateSchema.domain, dados);
 
     if (parsed.ativo !== undefined) this.ativo = parsed.ativo;
     if (parsed.cargo !== undefined) this.cargo = parsed.cargo;

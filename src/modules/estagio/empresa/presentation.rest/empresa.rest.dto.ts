@@ -95,7 +95,7 @@ export class EmpresaListOutputRestDto {
 
 @ApiSchema({ name: "EmpresaCreateInputDto" })
 export class EmpresaCreateInputRestDto {
-  static schema = EmpresaCreateSchema;
+  static schema = EmpresaCreateSchema.presentation;
 
   @ApiProperty(EmpresaCreateCommandFields.razaoSocial.swaggerMetadata)
   razaoSocial: string;
@@ -118,7 +118,7 @@ export class EmpresaCreateInputRestDto {
 
 @ApiSchema({ name: "EmpresaUpdateInputDto" })
 export class EmpresaUpdateInputRestDto {
-  static schema = EmpresaUpdateSchema;
+  static schema = EmpresaUpdateSchema.presentation;
 
   @ApiPropertyOptional(EmpresaUpdateCommandFields.razaoSocial.swaggerMetadata)
   razaoSocial?: string;

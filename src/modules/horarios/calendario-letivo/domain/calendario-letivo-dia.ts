@@ -1,8 +1,8 @@
+import type { z } from "zod";
 import type { IEntityBaseUuid } from "@/domain/abstractions/entities";
 import type { IdUuid, ScalarDateTimeString } from "@/domain/abstractions/scalars";
 import { zodValidate } from "@/shared/validation/index";
 import { getNowISO } from "@/utils/date";
-import type { CalendarioLetivo, ICalendarioLetivo } from "./calendario-letivo";
 import {
   CalendarioLetivoDiaSchema,
   CalendarioLetivoDiaUpdateSchema,
@@ -19,15 +19,7 @@ export const TIPO_CALENDARIO_LETIVO_DIA_VALUES = [
 
 export type TipoCalendarioLetivoDia = (typeof TIPO_CALENDARIO_LETIVO_DIA_VALUES)[number];
 
-export interface ICalendarioLetivoDia extends IEntityBaseUuid {
-  data: ScalarDateTimeString;
-  diaLetivo: boolean;
-  feriado: string;
-  diaPresencial: boolean;
-  tipo: string;
-  extraCurricular: boolean;
-  calendario: ICalendarioLetivo;
-}
+export type ICalendarioLetivoDia = z.infer<typeof CalendarioLetivoDiaSchema>;
 
 export interface ICalendarioLetivoDiaUpdate {
   data?: ScalarDateTimeString;
@@ -48,31 +40,36 @@ export class CalendarioLetivoDia implements IEntityBaseUuid {
   diaPresencial!: boolean;
   tipo!: string;
   extraCurricular!: boolean;
-  calendario!: CalendarioLetivo;
+  calendario!: ICalendarioLetivoDia["calendario"];
   dateCreated!: ScalarDateTimeString;
   dateUpdated!: ScalarDateTimeString;
   dateDeleted!: ScalarDateTimeString | null;
 
-  static load(dados: Record<string, any>): CalendarioLetivoDia {
-    const instance = Object.create(CalendarioLetivoDia.prototype) as CalendarioLetivoDia;
-    if (dados.id !== undefined) instance.id = dados.id;
-    if (dados.data !== undefined) instance.data = dados.data;
-    if (dados.diaLetivo !== undefined) instance.diaLetivo = dados.diaLetivo;
-    if (dados.feriado !== undefined) instance.feriado = dados.feriado;
-    if (dados.diaPresencial !== undefined) instance.diaPresencial = dados.diaPresencial;
-    if (dados.tipo !== undefined) instance.tipo = dados.tipo;
-    if (dados.extraCurricular !== undefined) instance.extraCurricular = dados.extraCurricular;
-    if (dados.calendario !== undefined) instance.calendario = dados.calendario;
-    if (dados.dateCreated !== undefined) instance.dateCreated = dados.dateCreated;
-    if (dados.dateUpdated !== undefined) instance.dateUpdated = dados.dateUpdated;
-    if (dados.dateDeleted !== undefined) instance.dateDeleted = dados.dateDeleted;
+  private constructor() {}
+
+  static load(dados: unknown): CalendarioLetivoDia {
+    const parsed = zodValidate(CalendarioLetivoDia.entityName, CalendarioLetivoDiaSchema, dados);
+
+    const instance = new CalendarioLetivoDia();
+
+    instance.id = parsed.id;
+    instance.data = parsed.data;
+    instance.diaLetivo = parsed.diaLetivo;
+    instance.feriado = parsed.feriado;
+    instance.diaPresencial = parsed.diaPresencial;
+    instance.tipo = parsed.tipo;
+    instance.extraCurricular = parsed.extraCurricular;
+    instance.calendario = parsed.calendario;
+    instance.dateCreated = parsed.dateCreated;
+    instance.dateUpdated = parsed.dateUpdated;
+    instance.dateDeleted = parsed.dateDeleted;
     return instance;
   }
 
   update(dados: unknown): void {
     const parsed = zodValidate(
       CalendarioLetivoDia.entityName,
-      CalendarioLetivoDiaUpdateSchema,
+      CalendarioLetivoDiaUpdateSchema.domain,
       dados,
     );
 

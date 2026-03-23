@@ -35,7 +35,7 @@ export class Usuario {
   private constructor() {}
 
   static create(dados: unknown): Usuario {
-    const parsed = zodValidate(Usuario.entityName, UsuarioCreateSchema, dados);
+    const parsed = zodValidate(Usuario.entityName, UsuarioCreateSchema.domain, dados);
 
     const instance = new Usuario();
 
@@ -73,7 +73,7 @@ export class Usuario {
   }
 
   update(dados: unknown): void {
-    const parsed = zodValidate(Usuario.entityName, UsuarioUpdateSchema, dados);
+    const parsed = zodValidate(Usuario.entityName, UsuarioUpdateSchema.domain, dados);
 
     if (parsed.nome !== undefined) this.nome = parsed.nome?.trim() || null;
     if (parsed.matricula !== undefined) this.matricula = parsed.matricula?.trim() || null;

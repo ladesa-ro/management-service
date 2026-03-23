@@ -110,7 +110,7 @@ export class ImagemRefInputForDiarioGraphQlDto {
 
 @InputType("DiarioCreateInputDto")
 export class DiarioCreateInputGraphQlDto {
-  static schema = DiarioCreateSchema;
+  static schema = DiarioCreateSchema.domain;
 
   @Field(() => Boolean, DiarioCreateCommandFields.ativo.gqlMetadata) ativo: boolean;
 
@@ -148,7 +148,7 @@ export class DiarioCreateInputGraphQlDto {
 
 @InputType("DiarioUpdateInputDto")
 export class DiarioUpdateInputGraphQlDto {
-  static schema = DiarioUpdateSchema;
+  static schema = DiarioUpdateSchema.domain;
 
   @Field(() => Boolean, { nullable: true, ...DiarioUpdateCommandFields.ativo.gqlMetadata })
   ativo?: boolean;

@@ -6,6 +6,7 @@
  * os contratos de dados da entidade.
  */
 import { z } from "zod";
+import { createSchema, ObjectIdUuidFactory } from "@/domain/abstractions";
 import { datedSchema, uuidSchema } from "@/shared/validation/schemas";
 import { DisciplinaFields } from "./disciplina.fields";
 
@@ -13,7 +14,9 @@ import { DisciplinaFields } from "./disciplina.fields";
 // Fragments de referência
 // ============================================================================
 
-export const DisciplinaImagemCapaRefSchema = z.object({ id: uuidSchema }).nullable().optional();
+export const DisciplinaImagemCapaRefSchema = createSchema((standard) =>
+  ObjectIdUuidFactory.create(standard).nullable().optional(),
+);
 
 // ============================================================================
 // Schemas compostos
@@ -22,23 +25,27 @@ export const DisciplinaImagemCapaRefSchema = z.object({ id: uuidSchema }).nullab
 export const DisciplinaSchema = z
   .object({
     id: uuidSchema,
-    nome: DisciplinaFields.nome.schema,
-    nomeAbreviado: DisciplinaFields.nomeAbreviado.schema,
-    cargaHoraria: DisciplinaFields.cargaHoraria.schema,
+    nome: DisciplinaFields.nome.domainSchema,
+    nomeAbreviado: DisciplinaFields.nomeAbreviado.domainSchema,
+    cargaHoraria: DisciplinaFields.cargaHoraria.domainSchema,
     imagemCapa: z.object({ id: uuidSchema }).nullable(),
   })
   .merge(datedSchema);
 
-export const DisciplinaCreateSchema = z.object({
-  nome: DisciplinaFields.nome.schema,
-  nomeAbreviado: DisciplinaFields.nomeAbreviado.schema,
-  cargaHoraria: DisciplinaFields.cargaHoraria.schema,
-  imagemCapa: DisciplinaImagemCapaRefSchema,
-});
+export const DisciplinaCreateSchema = createSchema((standard) =>
+  z.object({
+    nome: DisciplinaFields.nome.create(standard),
+    nomeAbreviado: DisciplinaFields.nomeAbreviado.create(standard),
+    cargaHoraria: DisciplinaFields.cargaHoraria.create(standard),
+    imagemCapa: DisciplinaImagemCapaRefSchema.create(standard),
+  }),
+);
 
-export const DisciplinaUpdateSchema = z.object({
-  nome: DisciplinaFields.nome.schema.optional(),
-  nomeAbreviado: DisciplinaFields.nomeAbreviado.schema.optional(),
-  cargaHoraria: DisciplinaFields.cargaHoraria.schema.optional(),
-  imagemCapa: DisciplinaImagemCapaRefSchema,
-});
+export const DisciplinaUpdateSchema = createSchema((standard) =>
+  z.object({
+    nome: DisciplinaFields.nome.create(standard).optional(),
+    nomeAbreviado: DisciplinaFields.nomeAbreviado.create(standard).optional(),
+    cargaHoraria: DisciplinaFields.cargaHoraria.create(standard).optional(),
+    imagemCapa: DisciplinaImagemCapaRefSchema.create(standard),
+  }),
+);

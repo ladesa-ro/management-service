@@ -6,6 +6,7 @@
  * os contratos de dados da entidade.
  */
 import { z } from "zod";
+import { createSchema } from "@/domain/abstractions";
 import { datedSchema, uuidSchema } from "@/shared/validation/schemas";
 import { EmpresaFields } from "./empresa.fields";
 
@@ -13,9 +14,7 @@ import { EmpresaFields } from "./empresa.fields";
 // Fragments de referência
 // ============================================================================
 
-export const EmpresaEnderecoRefSchema = z.object({
-  id: uuidSchema,
-});
+export const EmpresaEnderecoRefSchema = createSchema(() => z.object({ id: uuidSchema }));
 
 // ============================================================================
 // Schemas compostos
@@ -29,24 +28,28 @@ export const EmpresaSchema = z
     cnpj: z.string(),
     telefone: z.string().min(1).max(15),
     email: z.string().email(),
-    endereco: EmpresaEnderecoRefSchema,
+    endereco: z.object({ id: uuidSchema }),
   })
   .merge(datedSchema);
 
-export const EmpresaCreateSchema = z.object({
-  razaoSocial: EmpresaFields.razaoSocial.schema,
-  nomeFantasia: EmpresaFields.nomeFantasia.schema,
-  cnpj: EmpresaFields.cnpj.schema,
-  telefone: EmpresaFields.telefone.schema,
-  email: EmpresaFields.email.schema,
-  endereco: EmpresaEnderecoRefSchema,
-});
+export const EmpresaCreateSchema = createSchema((standard) =>
+  z.object({
+    razaoSocial: EmpresaFields.razaoSocial.create(standard),
+    nomeFantasia: EmpresaFields.nomeFantasia.create(standard),
+    cnpj: EmpresaFields.cnpj.create(standard),
+    telefone: EmpresaFields.telefone.create(standard),
+    email: EmpresaFields.email.create(standard),
+    endereco: EmpresaEnderecoRefSchema.create(standard),
+  }),
+);
 
-export const EmpresaUpdateSchema = z.object({
-  razaoSocial: EmpresaFields.razaoSocial.schema.optional(),
-  nomeFantasia: EmpresaFields.nomeFantasia.schema.optional(),
-  cnpj: EmpresaFields.cnpj.schema.optional(),
-  telefone: EmpresaFields.telefone.schema.optional(),
-  email: EmpresaFields.email.schema.optional(),
-  endereco: EmpresaEnderecoRefSchema.optional(),
-});
+export const EmpresaUpdateSchema = createSchema((standard) =>
+  z.object({
+    razaoSocial: EmpresaFields.razaoSocial.create(standard).optional(),
+    nomeFantasia: EmpresaFields.nomeFantasia.create(standard).optional(),
+    cnpj: EmpresaFields.cnpj.create(standard).optional(),
+    telefone: EmpresaFields.telefone.create(standard).optional(),
+    email: EmpresaFields.email.create(standard).optional(),
+    endereco: EmpresaEnderecoRefSchema.create(standard).optional(),
+  }),
+);

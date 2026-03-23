@@ -23,7 +23,7 @@ export class Campus {
   private constructor() {}
 
   static create(dados: unknown): Campus {
-    const parsed = zodValidate(Campus.entityName, CampusCreateSchema, dados);
+    const parsed = zodValidate(Campus.entityName, CampusCreateSchema.domain, dados);
 
     const instance = new Campus();
 
@@ -58,7 +58,7 @@ export class Campus {
   }
 
   update(dados: unknown): void {
-    const parsed = zodValidate(Campus.entityName, CampusUpdateSchema, dados);
+    const parsed = zodValidate(Campus.entityName, CampusUpdateSchema.domain, dados);
 
     if (parsed.nomeFantasia !== undefined) this.nomeFantasia = parsed.nomeFantasia;
     if (parsed.razaoSocial !== undefined) this.razaoSocial = parsed.razaoSocial;

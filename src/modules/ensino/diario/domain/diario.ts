@@ -52,7 +52,7 @@ export class Diario implements IEntityBaseUuid {
   private constructor() {}
 
   static create(dados: IDiarioCreate): Diario {
-    const parsed = zodValidate(Diario.entityName, DiarioCreateSchema, dados);
+    const parsed = zodValidate(Diario.entityName, DiarioCreateSchema.domain, dados);
 
     const instance = new Diario();
 
@@ -83,7 +83,7 @@ export class Diario implements IEntityBaseUuid {
   }
 
   update(dados: unknown): void {
-    const parsed = zodValidate(Diario.entityName, DiarioUpdateSchema, dados);
+    const parsed = zodValidate(Diario.entityName, DiarioUpdateSchema.domain, dados);
 
     if (parsed.ativo !== undefined) this.ativo = parsed.ativo;
 

@@ -29,7 +29,7 @@ export class NivelFormacaoFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
 
 @InputType("NivelFormacaoCreateInputDto")
 export class NivelFormacaoCreateInputGraphQlDto {
-  static readonly schema = NivelFormacaoCreateSchema;
+  static readonly schema = NivelFormacaoCreateSchema.domain;
 
   @Field(() => String, NivelFormacaoCreateCommandFields.slug.gqlMetadata) slug: string;
 }
@@ -40,7 +40,7 @@ export class NivelFormacaoCreateInputGraphQlDto {
 
 @InputType("NivelFormacaoUpdateInputDto")
 export class NivelFormacaoUpdateInputGraphQlDto {
-  static readonly schema = NivelFormacaoUpdateSchema;
+  static readonly schema = NivelFormacaoUpdateSchema.domain;
 
   @Field(() => String, { nullable: true, ...NivelFormacaoUpdateCommandFields.slug.gqlMetadata })
   slug?: string;

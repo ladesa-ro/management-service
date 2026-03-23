@@ -37,7 +37,7 @@ export class PerfilRefInputGraphQlDto {
 
 @InputType("PerfilSetVinculosInputDto")
 export class PerfilSetVinculosInputGraphQlDto {
-  static schema = PerfilSetVinculosInputSchema;
+  static schema = PerfilSetVinculosInputSchema.domain;
 
   @Field(() => [String], PerfilSetVinculosCommandFields.cargos.gqlMetadata)
   cargos: string[];

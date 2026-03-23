@@ -59,7 +59,7 @@ export class ImagemArquivo implements IEntityBaseUuid {
   private constructor() {}
 
   static create(dados: IImagemArquivoCreate): ImagemArquivo {
-    const parsed = zodValidate(ImagemArquivo.entityName, ImagemArquivoCreateSchema, dados);
+    const parsed = zodValidate(ImagemArquivo.entityName, ImagemArquivoCreateSchema.domain, dados);
 
     const instance = new ImagemArquivo();
 
@@ -95,7 +95,7 @@ export class ImagemArquivo implements IEntityBaseUuid {
   }
 
   update(dados: unknown): void {
-    const parsed = zodValidate(ImagemArquivo.entityName, ImagemArquivoUpdateSchema, dados);
+    const parsed = zodValidate(ImagemArquivo.entityName, ImagemArquivoUpdateSchema.domain, dados);
 
     if (parsed.largura !== undefined) this.largura = parsed.largura;
     if (parsed.altura !== undefined) this.altura = parsed.altura;

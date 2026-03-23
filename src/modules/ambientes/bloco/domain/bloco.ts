@@ -22,7 +22,7 @@ export class Bloco {
   private constructor() {}
 
   static create(dados: unknown): Bloco {
-    const parsed = zodValidate(Bloco.entityName, BlocoCreateSchema, dados);
+    const parsed = zodValidate(Bloco.entityName, BlocoCreateSchema.domain, dados);
 
     const instance = new Bloco();
 
@@ -55,7 +55,7 @@ export class Bloco {
   }
 
   update(dados: unknown): void {
-    const parsed = zodValidate(Bloco.entityName, BlocoUpdateSchema, dados);
+    const parsed = zodValidate(Bloco.entityName, BlocoUpdateSchema.domain, dados);
 
     if (parsed.nome !== undefined) this.nome = parsed.nome;
     if (parsed.codigo !== undefined) this.codigo = parsed.codigo;

@@ -6,6 +6,7 @@
  * os contratos de dados da entidade.
  */
 import { z } from "zod";
+import { createSchema } from "@/domain/abstractions";
 import { datedSchema, uuidSchema } from "@/shared/validation/schemas";
 import { EstagiarioFields } from "./estagiario.fields";
 
@@ -13,17 +14,11 @@ import { EstagiarioFields } from "./estagiario.fields";
 // Fragments de referência
 // ============================================================================
 
-export const EstagiarioPerfilRefSchema = z.object({
-  id: uuidSchema,
-});
+export const EstagiarioPerfilRefSchema = createSchema(() => z.object({ id: uuidSchema }));
 
-export const EstagiarioCursoRefSchema = z.object({
-  id: uuidSchema,
-});
+export const EstagiarioCursoRefSchema = createSchema(() => z.object({ id: uuidSchema }));
 
-export const EstagiarioTurmaRefSchema = z.object({
-  id: uuidSchema,
-});
+export const EstagiarioTurmaRefSchema = createSchema(() => z.object({ id: uuidSchema }));
 
 // ============================================================================
 // Schemas compostos
@@ -32,29 +27,33 @@ export const EstagiarioTurmaRefSchema = z.object({
 export const EstagiarioSchema = z
   .object({
     id: uuidSchema,
-    perfil: EstagiarioPerfilRefSchema,
-    curso: EstagiarioCursoRefSchema,
-    turma: EstagiarioTurmaRefSchema,
+    perfil: z.object({ id: uuidSchema }),
+    curso: z.object({ id: uuidSchema }),
+    turma: z.object({ id: uuidSchema }),
     telefone: z.string().min(1).max(15),
     emailInstitucional: z.string().nullable(),
     dataNascimento: z.string(),
   })
   .merge(datedSchema);
 
-export const EstagiarioCreateSchema = z.object({
-  perfil: EstagiarioPerfilRefSchema,
-  curso: EstagiarioCursoRefSchema,
-  turma: EstagiarioTurmaRefSchema,
-  telefone: EstagiarioFields.telefone.schema,
-  emailInstitucional: EstagiarioFields.emailInstitucional.schema,
-  dataNascimento: EstagiarioFields.dataNascimento.schema,
-});
+export const EstagiarioCreateSchema = createSchema((standard) =>
+  z.object({
+    perfil: EstagiarioPerfilRefSchema.create(standard),
+    curso: EstagiarioCursoRefSchema.create(standard),
+    turma: EstagiarioTurmaRefSchema.create(standard),
+    telefone: EstagiarioFields.telefone.create(standard),
+    emailInstitucional: EstagiarioFields.emailInstitucional.create(standard),
+    dataNascimento: EstagiarioFields.dataNascimento.create(standard),
+  }),
+);
 
-export const EstagiarioUpdateSchema = z.object({
-  perfil: EstagiarioPerfilRefSchema.optional(),
-  curso: EstagiarioCursoRefSchema.optional(),
-  turma: EstagiarioTurmaRefSchema.optional(),
-  telefone: EstagiarioFields.telefone.schema.optional(),
-  emailInstitucional: EstagiarioFields.emailInstitucional.schema,
-  dataNascimento: EstagiarioFields.dataNascimento.schema.optional(),
-});
+export const EstagiarioUpdateSchema = createSchema((standard) =>
+  z.object({
+    perfil: EstagiarioPerfilRefSchema.create(standard).optional(),
+    curso: EstagiarioCursoRefSchema.create(standard).optional(),
+    turma: EstagiarioTurmaRefSchema.create(standard).optional(),
+    telefone: EstagiarioFields.telefone.create(standard).optional(),
+    emailInstitucional: EstagiarioFields.emailInstitucional.create(standard),
+    dataNascimento: EstagiarioFields.dataNascimento.create(standard).optional(),
+  }),
+);

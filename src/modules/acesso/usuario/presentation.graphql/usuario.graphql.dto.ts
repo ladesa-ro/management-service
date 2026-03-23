@@ -47,7 +47,7 @@ export class UsuarioFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
 
 @InputType("UsuarioCreateInputDto")
 export class UsuarioCreateInputGraphQlDto {
-  static schema = UsuarioCreateSchema;
+  static schema = UsuarioCreateSchema.domain;
 
   @Field(() => String, { nullable: true, ...UsuarioCreateCommandFields.nome.gqlMetadata }) nome?:
     | string
@@ -65,7 +65,7 @@ export class UsuarioCreateInputGraphQlDto {
 
 @InputType("UsuarioUpdateInputDto")
 export class UsuarioUpdateInputGraphQlDto {
-  static schema = UsuarioUpdateSchema;
+  static schema = UsuarioUpdateSchema.domain;
 
   @Field(() => String, { nullable: true, ...UsuarioUpdateCommandFields.nome.gqlMetadata })
   nome?: string | null;

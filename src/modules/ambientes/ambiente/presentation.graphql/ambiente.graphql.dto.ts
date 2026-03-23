@@ -53,7 +53,7 @@ export class AmbienteRefInputGraphQlDto {
 
 @InputType("AmbienteCreateInputDto")
 export class AmbienteCreateInputGraphQlDto {
-  static schema = AmbienteCreateSchema;
+  static schema = AmbienteCreateSchema.domain;
 
   @Field(() => String, AmbienteCreateCommandFields.nome.gqlMetadata) nome: string;
   @Field(() => String, { nullable: true, ...AmbienteCreateCommandFields.descricao.gqlMetadata })
@@ -74,7 +74,7 @@ export class AmbienteCreateInputGraphQlDto {
 
 @InputType("AmbienteUpdateInputDto")
 export class AmbienteUpdateInputGraphQlDto {
-  static schema = AmbienteUpdateSchema;
+  static schema = AmbienteUpdateSchema.domain;
 
   @Field(() => String, { nullable: true, ...AmbienteUpdateCommandFields.nome.gqlMetadata })
   nome?: string;

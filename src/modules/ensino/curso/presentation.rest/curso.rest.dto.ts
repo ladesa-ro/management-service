@@ -103,7 +103,7 @@ export class CursoListOutputRestDto {
 
 @ApiSchema({ name: "CursoCreateInputDto" })
 export class CursoCreateInputRestDto {
-  static readonly schema = CursoCreateSchema;
+  static readonly schema = CursoCreateSchema.presentation;
 
   @ApiProperty(CursoCreateCommandFields.nome.swaggerMetadata)
   nome: string;
@@ -120,7 +120,7 @@ export class CursoCreateInputRestDto {
 
 @ApiSchema({ name: "CursoUpdateInputDto" })
 export class CursoUpdateInputRestDto {
-  static readonly schema = CursoCreateSchema;
+  static readonly schema = CursoCreateSchema.presentation;
 
   @ApiPropertyOptional(CursoUpdateCommandFields.nome.swaggerMetadata)
   nome?: string;

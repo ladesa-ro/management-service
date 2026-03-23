@@ -6,6 +6,7 @@
  * os contratos de dados da entidade.
  */
 import { z } from "zod";
+import { createSchema, ObjectIdUuidFactory } from "@/domain/abstractions";
 import { datedSchema, uuidSchema } from "@/shared/validation/schemas";
 import { DiarioFields } from "./diario.fields";
 
@@ -13,25 +14,15 @@ import { DiarioFields } from "./diario.fields";
 // Fragments de referência
 // ============================================================================
 
-export const DiarioCalendarioLetivoRefSchema = z.object({
-  id: uuidSchema,
-});
+export const DiarioCalendarioLetivoRefSchema = createSchema(() => z.object({ id: uuidSchema }));
 
-export const DiarioTurmaRefSchema = z.object({
-  id: uuidSchema,
-});
+export const DiarioTurmaRefSchema = createSchema(() => z.object({ id: uuidSchema }));
 
-export const DiarioDisciplinaRefSchema = z.object({
-  id: uuidSchema,
-});
+export const DiarioDisciplinaRefSchema = createSchema(() => z.object({ id: uuidSchema }));
 
-export const DiarioAmbientePadraoRefSchema = z.object({
-  id: uuidSchema,
-});
+export const DiarioAmbientePadraoRefSchema = ObjectIdUuidFactory;
 
-export const DiarioImagemCapaRefSchema = z.object({
-  id: uuidSchema,
-});
+export const DiarioImagemCapaRefSchema = ObjectIdUuidFactory;
 
 // ============================================================================
 // Schemas compostos
@@ -40,27 +31,31 @@ export const DiarioImagemCapaRefSchema = z.object({
 export const DiarioSchema = z
   .object({
     id: uuidSchema,
-    ativo: DiarioFields.ativo.schema,
-    calendarioLetivo: DiarioCalendarioLetivoRefSchema,
-    turma: DiarioTurmaRefSchema,
-    disciplina: DiarioDisciplinaRefSchema,
-    ambientePadrao: DiarioAmbientePadraoRefSchema.nullable(),
-    imagemCapa: DiarioImagemCapaRefSchema.nullable(),
+    ativo: DiarioFields.ativo.domainSchema,
+    calendarioLetivo: z.object({ id: uuidSchema }).passthrough(),
+    turma: z.object({ id: uuidSchema }).passthrough(),
+    disciplina: z.object({ id: uuidSchema }).passthrough(),
+    ambientePadrao: z.object({ id: uuidSchema }).passthrough().nullable(),
+    imagemCapa: z.object({ id: uuidSchema }).passthrough().nullable(),
   })
   .merge(datedSchema);
 
-export const DiarioCreateSchema = z.object({
-  ativo: DiarioFields.ativo.schema.optional().default(true),
-  calendarioLetivo: DiarioCalendarioLetivoRefSchema,
-  turma: DiarioTurmaRefSchema,
-  disciplina: DiarioDisciplinaRefSchema,
-  ambientePadrao: DiarioAmbientePadraoRefSchema.nullable().optional(),
-});
+export const DiarioCreateSchema = createSchema((standard) =>
+  z.object({
+    ativo: DiarioFields.ativo.create(standard).optional().default(true),
+    calendarioLetivo: DiarioCalendarioLetivoRefSchema.create(standard),
+    turma: DiarioTurmaRefSchema.create(standard),
+    disciplina: DiarioDisciplinaRefSchema.create(standard),
+    ambientePadrao: DiarioAmbientePadraoRefSchema.create(standard).optional(),
+  }),
+);
 
-export const DiarioUpdateSchema = z.object({
-  ativo: DiarioFields.ativo.schema.optional(),
-  calendarioLetivo: DiarioCalendarioLetivoRefSchema.optional(),
-  turma: DiarioTurmaRefSchema.optional(),
-  disciplina: DiarioDisciplinaRefSchema.optional(),
-  ambientePadrao: DiarioAmbientePadraoRefSchema.nullable().optional(),
-});
+export const DiarioUpdateSchema = createSchema((standard) =>
+  z.object({
+    ativo: DiarioFields.ativo.create(standard).optional(),
+    calendarioLetivo: DiarioCalendarioLetivoRefSchema.create(standard).optional(),
+    turma: DiarioTurmaRefSchema.create(standard).optional(),
+    disciplina: DiarioDisciplinaRefSchema.create(standard).optional(),
+    ambientePadrao: DiarioAmbientePadraoRefSchema.create(standard).optional(),
+  }),
+);

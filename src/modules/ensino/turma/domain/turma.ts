@@ -22,7 +22,7 @@ export class Turma {
   private constructor() {}
 
   static create(dados: unknown): Turma {
-    const parsed = zodValidate(Turma.entityName, TurmaCreateSchema, dados);
+    const parsed = zodValidate(Turma.entityName, TurmaCreateSchema.domain, dados);
 
     const instance = new Turma();
 
@@ -56,7 +56,7 @@ export class Turma {
   }
 
   update(dados: unknown): void {
-    const parsed = zodValidate(Turma.entityName, TurmaUpdateSchema, dados);
+    const parsed = zodValidate(Turma.entityName, TurmaUpdateSchema.domain, dados);
 
     if (parsed.periodo !== undefined) this.periodo = parsed.periodo;
     if (parsed.curso !== undefined) this.curso = parsed.curso;

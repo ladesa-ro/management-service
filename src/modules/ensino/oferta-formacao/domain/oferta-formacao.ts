@@ -26,7 +26,7 @@ export class OfertaFormacao {
   private constructor() {}
 
   static create(dados: unknown): OfertaFormacao {
-    const parsed = zodValidate(OfertaFormacao.entityName, OfertaFormacaoCreateSchema, dados);
+    const parsed = zodValidate(OfertaFormacao.entityName, OfertaFormacaoCreateSchema.domain, dados);
 
     const instance = new OfertaFormacao();
 
@@ -60,7 +60,7 @@ export class OfertaFormacao {
   }
 
   update(dados: unknown): void {
-    const parsed = zodValidate(OfertaFormacao.entityName, OfertaFormacaoUpdateSchema, dados);
+    const parsed = zodValidate(OfertaFormacao.entityName, OfertaFormacaoUpdateSchema.domain, dados);
 
     if (parsed.nome !== undefined) this.nome = parsed.nome;
     if (parsed.slug !== undefined) this.slug = parsed.slug;

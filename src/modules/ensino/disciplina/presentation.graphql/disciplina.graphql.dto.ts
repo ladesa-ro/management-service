@@ -41,7 +41,7 @@ export class DisciplinaImagemCapaRefInputGraphQlDto {
 
 @InputType("DisciplinaCreateInputDto")
 export class DisciplinaCreateInputGraphQlDto {
-  static readonly schema = DisciplinaCreateSchema;
+  static readonly schema = DisciplinaCreateSchema.domain;
 
   @Field(() => String, DisciplinaCreateCommandFields.nome.gqlMetadata) nome: string;
   @Field(() => String, DisciplinaCreateCommandFields.nomeAbreviado.gqlMetadata)
@@ -60,7 +60,7 @@ export class DisciplinaCreateInputGraphQlDto {
 
 @InputType("DisciplinaUpdateInputDto")
 export class DisciplinaUpdateInputGraphQlDto {
-  static readonly schema = DisciplinaUpdateSchema;
+  static readonly schema = DisciplinaUpdateSchema.domain;
 
   @Field(() => String, { nullable: true, ...DisciplinaUpdateCommandFields.nome.gqlMetadata })
   nome?: string;

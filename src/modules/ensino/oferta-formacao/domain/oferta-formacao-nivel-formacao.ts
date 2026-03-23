@@ -24,7 +24,7 @@ export class OfertaFormacaoNivelFormacao {
   static create(dados: unknown): OfertaFormacaoNivelFormacao {
     const parsed = zodValidate(
       OfertaFormacaoNivelFormacao.entityName,
-      OfertaFormacaoNivelFormacaoCreateSchema,
+      OfertaFormacaoNivelFormacaoCreateSchema.domain,
       dados,
     );
 

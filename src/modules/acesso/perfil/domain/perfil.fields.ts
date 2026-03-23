@@ -7,16 +7,16 @@
  * @see createFieldMetadata (domain/abstractions/fields/field-metadata.ts)
  */
 import { z } from "zod";
-import { createFieldMetadata } from "@/domain/abstractions";
+import { createFieldMetadata, createSchema } from "@/domain/abstractions";
 
 export const PerfilFields = {
   ativo: createFieldMetadata({
     description: "Indica se o vinculo esta ativo",
-    schema: z.boolean(),
+    schema: createSchema(() => z.boolean()),
   }),
   cargo: createFieldMetadata({
     description: "Cargo do usuario no vinculo",
-    schema: z.string().min(1, "cargo é obrigatório"),
+    schema: createSchema(() => z.string().min(1, "cargo é obrigatório")),
   }),
   campus: createFieldMetadata({
     description: "Campus associado ao vinculo",

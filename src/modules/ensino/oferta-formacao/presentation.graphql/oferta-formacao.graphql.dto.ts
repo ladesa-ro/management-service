@@ -41,7 +41,7 @@ export class OfertaFormacaoModalidadeRefInputGraphQlDto {
 
 @InputType("OfertaFormacaoCreateInputDto")
 export class OfertaFormacaoCreateInputGraphQlDto {
-  static readonly schema = OfertaFormacaoCreateSchema;
+  static readonly schema = OfertaFormacaoCreateSchema.domain;
 
   @Field(() => String, OfertaFormacaoCreateCommandFields.nome.gqlMetadata) nome: string;
   @Field(() => String, OfertaFormacaoCreateCommandFields.slug.gqlMetadata) slug: string;
@@ -58,7 +58,7 @@ export class OfertaFormacaoCreateInputGraphQlDto {
 
 @InputType("OfertaFormacaoUpdateInputDto")
 export class OfertaFormacaoUpdateInputGraphQlDto {
-  static readonly schema = OfertaFormacaoUpdateSchema;
+  static readonly schema = OfertaFormacaoUpdateSchema.domain;
 
   @Field(() => String, { nullable: true, ...OfertaFormacaoUpdateCommandFields.nome.gqlMetadata })
   nome?: string;

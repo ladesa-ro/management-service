@@ -68,7 +68,7 @@ export class NivelFormacaoListOutputRestDto {
 
 @ApiSchema({ name: "NivelFormacaoCreateInputDto" })
 export class NivelFormacaoCreateInputRestDto {
-  static readonly schema = NivelFormacaoCreateSchema;
+  static readonly schema = NivelFormacaoCreateSchema.presentation;
 
   @ApiProperty(NivelFormacaoCreateCommandFields.slug.swaggerMetadata)
   slug: string;
@@ -76,7 +76,7 @@ export class NivelFormacaoCreateInputRestDto {
 
 @ApiSchema({ name: "NivelFormacaoUpdateInputDto" })
 export class NivelFormacaoUpdateInputRestDto {
-  static readonly schema = NivelFormacaoCreateSchema;
+  static readonly schema = NivelFormacaoCreateSchema.presentation;
 
   @ApiPropertyOptional(NivelFormacaoUpdateCommandFields.slug.swaggerMetadata)
   slug?: string;

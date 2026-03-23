@@ -56,7 +56,7 @@ export class CalendarioLetivoOfertaFormacaoRefInputGraphQlDto {
 
 @InputType("CalendarioLetivoCreateInputDto")
 export class CalendarioLetivoCreateInputGraphQlDto {
-  static schema = CalendarioLetivoCreateSchema;
+  static schema = CalendarioLetivoCreateSchema.domain;
 
   @Field(() => String, CalendarioLetivoCreateCommandFields.nome.gqlMetadata) nome: string;
   @Field(() => Int, CalendarioLetivoCreateCommandFields.ano.gqlMetadata) ano: number;
@@ -78,7 +78,7 @@ export class CalendarioLetivoCreateInputGraphQlDto {
 
 @InputType("CalendarioLetivoUpdateInputDto")
 export class CalendarioLetivoUpdateInputGraphQlDto {
-  static schema = CalendarioLetivoUpdateSchema;
+  static schema = CalendarioLetivoUpdateSchema.domain;
 
   @Field(() => String, { nullable: true, ...CalendarioLetivoUpdateCommandFields.nome.gqlMetadata })
   nome?: string;

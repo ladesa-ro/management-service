@@ -60,7 +60,7 @@ export class TurmaImagemCapaRefInputGraphQlDto {
 
 @InputType("TurmaCreateInputDto")
 export class TurmaCreateInputGraphQlDto {
-  static readonly schema = TurmaCreateSchema;
+  static readonly schema = TurmaCreateSchema.domain;
 
   @Field(() => String, TurmaCreateCommandFields.periodo.gqlMetadata) periodo: string;
   @Field(() => TurmaCursoRefInputGraphQlDto, TurmaCreateCommandFields.curso.gqlMetadata)
@@ -83,7 +83,7 @@ export class TurmaCreateInputGraphQlDto {
 
 @InputType("TurmaUpdateInputDto")
 export class TurmaUpdateInputGraphQlDto {
-  static readonly schema = TurmaUpdateSchema;
+  static readonly schema = TurmaUpdateSchema.domain;
 
   @Field(() => String, { nullable: true, ...TurmaUpdateCommandFields.periodo.gqlMetadata })
   periodo?: string;

@@ -25,7 +25,7 @@ export class Endereco {
   private constructor() {}
 
   static create(dados: unknown): Endereco {
-    const parsed = zodValidate(Endereco.entityName, EnderecoCreateSchema, dados);
+    const parsed = zodValidate(Endereco.entityName, EnderecoCreateSchema.domain, dados);
 
     const instance = new Endereco();
 
@@ -65,7 +65,7 @@ export class Endereco {
   }
 
   update(dados: unknown): void {
-    const parsed = zodValidate(Endereco.entityName, EnderecoUpdateSchema, dados);
+    const parsed = zodValidate(Endereco.entityName, EnderecoUpdateSchema.domain, dados);
 
     if (parsed.cep !== undefined) this.cep = parsed.cep;
     if (parsed.logradouro !== undefined) this.logradouro = parsed.logradouro;

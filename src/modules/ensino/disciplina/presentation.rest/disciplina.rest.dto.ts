@@ -10,7 +10,7 @@ import {
 import { EntityBaseRestDto, PaginationMetaRestDto } from "@/shared/presentation/rest/dtos";
 import { DisciplinaCreateCommandFields } from "../domain/commands/disciplina-create.command";
 import { DisciplinaUpdateCommandFields } from "../domain/commands/disciplina-update.command";
-import { DisciplinaCreateSchema } from "../domain/disciplina.schemas";
+import { DisciplinaCreateSchema, DisciplinaUpdateSchema } from "../domain/disciplina.schemas";
 import { DisciplinaFindOneQueryResultFields } from "../domain/queries/disciplina-find-one.query.result";
 import { DisciplinaListQueryFields } from "../domain/queries/disciplina-list.query";
 
@@ -91,7 +91,7 @@ export class DisciplinaListOutputRestDto {
 
 @ApiSchema({ name: "DisciplinaCreateInputDto" })
 export class DisciplinaCreateInputRestDto {
-  static readonly schema = DisciplinaCreateSchema;
+  static readonly schema = DisciplinaCreateSchema.presentation;
 
   @ApiProperty(DisciplinaCreateCommandFields.nome.swaggerMetadata)
   nome: string;
@@ -105,7 +105,7 @@ export class DisciplinaCreateInputRestDto {
 
 @ApiSchema({ name: "DisciplinaUpdateInputDto" })
 export class DisciplinaUpdateInputRestDto {
-  static readonly schema = DisciplinaCreateSchema;
+  static readonly schema = DisciplinaUpdateSchema.presentation;
 
   @ApiPropertyOptional(DisciplinaUpdateCommandFields.nome.swaggerMetadata)
   nome?: string;

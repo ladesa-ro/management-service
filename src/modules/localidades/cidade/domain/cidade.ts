@@ -21,7 +21,7 @@ export class Cidade {
   private constructor() {}
 
   static create(dados: unknown): Cidade {
-    const parsed = zodValidate(Cidade.entityName, CidadeCreateSchema, dados);
+    const parsed = zodValidate(Cidade.entityName, CidadeCreateSchema.domain, dados);
 
     const instance = new Cidade();
 
@@ -47,7 +47,7 @@ export class Cidade {
   }
 
   update(dados: unknown): void {
-    const parsed = zodValidate(Cidade.entityName, CidadeUpdateSchema, dados);
+    const parsed = zodValidate(Cidade.entityName, CidadeUpdateSchema.domain, dados);
 
     if (parsed.nome !== undefined) this.nome = parsed.nome;
 

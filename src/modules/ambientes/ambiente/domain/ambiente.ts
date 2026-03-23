@@ -25,7 +25,7 @@ export class Ambiente {
   private constructor() {}
 
   static create(dados: unknown): Ambiente {
-    const parsed = zodValidate(Ambiente.entityName, AmbienteCreateSchema, dados);
+    const parsed = zodValidate(Ambiente.entityName, AmbienteCreateSchema.domain, dados);
 
     const instance = new Ambiente();
 
@@ -64,7 +64,7 @@ export class Ambiente {
   }
 
   update(dados: unknown): void {
-    const parsed = zodValidate(Ambiente.entityName, AmbienteUpdateSchema, dados);
+    const parsed = zodValidate(Ambiente.entityName, AmbienteUpdateSchema.domain, dados);
 
     if (parsed.nome !== undefined) this.nome = parsed.nome;
     if (parsed.descricao !== undefined) this.descricao = parsed.descricao ?? null;

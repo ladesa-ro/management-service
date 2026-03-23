@@ -86,7 +86,7 @@ export class ArquivoListOutputRestDto {
 
 @ApiSchema({ name: "ArquivoCreateInputDto" })
 export class ArquivoCreateInputRestDto {
-  static schema = ArquivoCreateSchema;
+  static schema = ArquivoCreateSchema.presentation;
 
   @ApiPropertyOptional({
     type: "string",
@@ -121,7 +121,7 @@ export class ArquivoCreateInputRestDto {
 
 @ApiSchema({ name: "ArquivoUpdateInputDto" })
 export class ArquivoUpdateInputRestDto extends PartialType(ArquivoCreateInputRestDto) {
-  static schema = ArquivoUpdateSchema;
+  static schema = ArquivoUpdateSchema.presentation;
 }
 
 // ============================================================================

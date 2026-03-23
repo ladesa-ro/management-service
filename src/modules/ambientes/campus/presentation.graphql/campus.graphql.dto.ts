@@ -35,7 +35,7 @@ export class CampusFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
 
 @InputType("CampusCreateInputDto")
 export class CampusCreateInputGraphQlDto {
-  static schema = CampusCreateSchema;
+  static schema = CampusCreateSchema.domain;
 
   @Field(() => String, CampusCreateCommandFields.nomeFantasia.gqlMetadata) nomeFantasia: string;
   @Field(() => String, CampusCreateCommandFields.razaoSocial.gqlMetadata) razaoSocial: string;
@@ -51,7 +51,7 @@ export class CampusCreateInputGraphQlDto {
 
 @InputType("CampusUpdateInputDto")
 export class CampusUpdateInputGraphQlDto {
-  static schema = CampusUpdateSchema;
+  static schema = CampusUpdateSchema.domain;
 
   @Field(() => String, { nullable: true, ...CampusUpdateCommandFields.nomeFantasia.gqlMetadata })
   nomeFantasia?: string;

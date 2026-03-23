@@ -44,7 +44,7 @@ export class ObjectUuidRefInputGraphQlDto {
 
 @InputType("BlocoCreateInputDto")
 export class BlocoCreateInputGraphQlDto {
-  static schema = BlocoCreateSchema;
+  static schema = BlocoCreateSchema.domain;
 
   @Field(() => String, BlocoCreateCommandFields.nome.gqlMetadata) nome: string;
   @Field(() => String, BlocoCreateCommandFields.codigo.gqlMetadata) codigo: string;
@@ -58,7 +58,7 @@ export class BlocoCreateInputGraphQlDto {
 
 @InputType("BlocoUpdateInputDto")
 export class BlocoUpdateInputGraphQlDto {
-  static schema = BlocoUpdateSchema;
+  static schema = BlocoUpdateSchema.domain;
 
   @Field(() => String, { nullable: true, ...BlocoUpdateCommandFields.nome.gqlMetadata })
   nome?: string;

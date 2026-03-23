@@ -6,8 +6,9 @@
  * os contratos de dados da entidade.
  */
 import { z } from "zod";
+import { createSchema, ObjectIdUuidFactory } from "@/domain/abstractions";
 import { datedSchema, uuidSchema } from "@/shared/validation/schemas";
-import { EstagioStatusSchema } from "./estagio.fields";
+import { EstagioFields, EstagioStatusSchema } from "./estagio.fields";
 
 // ============================================================================
 // Fragments de referência / estruturais
@@ -48,13 +49,9 @@ export const DateStringSchema = z
   .string()
   .refine((val) => !isNaN(new Date(val).getTime()), "data inválida");
 
-export const EstagioEmpresaRefSchema = z.object({
-  id: uuidSchema,
-});
+export const EstagioEmpresaRefSchema = createSchema(() => z.object({ id: uuidSchema }));
 
-export const EstagioEstagiarioRefSchema = z.object({
-  id: uuidSchema,
-});
+export const EstagioEstagiarioRefSchema = ObjectIdUuidFactory;
 
 // ============================================================================
 // Schemas compostos
@@ -63,8 +60,8 @@ export const EstagioEstagiarioRefSchema = z.object({
 export const EstagioSchema = z
   .object({
     id: uuidSchema,
-    empresa: EstagioEmpresaRefSchema,
-    estagiario: EstagioEstagiarioRefSchema.nullable(),
+    empresa: z.object({ id: uuidSchema }),
+    estagiario: z.object({ id: uuidSchema }).nullable(),
     cargaHoraria: z.number().int().min(1),
     dataInicio: z.string().nullable(),
     dataFim: z.string().nullable(),
@@ -73,63 +70,67 @@ export const EstagioSchema = z
   })
   .merge(datedSchema);
 
-export const EstagioCreateSchema = z
-  .object({
-    empresa: EstagioEmpresaRefSchema,
-    estagiario: EstagioEstagiarioRefSchema.optional(),
-    cargaHoraria: z.number().int().min(1, "carga horária deve ser maior que zero"),
-    dataInicio: DateStringSchema.optional(),
-    dataFim: DateStringSchema.nullable().optional(),
-    status: EstagioStatusSchema.optional(),
+export const EstagioCreateSchema = createSchema((standard) =>
+  z
+    .object({
+      empresa: EstagioEmpresaRefSchema.create(standard),
+      estagiario: EstagioEstagiarioRefSchema.create(standard).optional(),
+      cargaHoraria: EstagioFields.cargaHoraria.create(standard),
+      dataInicio: EstagioFields.dataInicio.create(standard).optional(),
+      dataFim: EstagioFields.dataFim.create(standard).optional(),
+      status: EstagioFields.status.create(standard).optional(),
+      horariosEstagio: z.array(HorarioEstagioInputSchema).optional(),
+    })
+    .superRefine((data, ctx) => {
+      const status = data.status ?? "ABERTA";
+
+      if (data.dataInicio && data.dataFim) {
+        if (new Date(data.dataFim) < new Date(data.dataInicio)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "data de fim deve ser maior ou igual à data de início",
+            path: ["dataFim"],
+          });
+        }
+      }
+
+      if (status === "EM_ANDAMENTO" || status === "CONCLUIDA") {
+        if (!data.estagiario) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "estagiário é obrigatório quando o estágio não está aberto",
+            path: ["estagiario"],
+          });
+        }
+        if (!data.dataInicio) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "data de início é obrigatória neste status",
+            path: ["dataInicio"],
+          });
+        }
+      }
+
+      if (status === "CONCLUIDA") {
+        if (!data.dataFim) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "data de fim é obrigatória para estágio concluído",
+            path: ["dataFim"],
+          });
+        }
+      }
+    }),
+);
+
+export const EstagioUpdateSchema = createSchema((standard) =>
+  z.object({
+    empresa: EstagioEmpresaRefSchema.create(standard).optional(),
+    estagiario: EstagioEstagiarioRefSchema.create(standard).nullable().optional(),
+    cargaHoraria: EstagioFields.cargaHoraria.create(standard).optional(),
+    dataInicio: EstagioFields.dataInicio.create(standard).nullable().optional(),
+    dataFim: EstagioFields.dataFim.create(standard).optional(),
+    status: EstagioFields.status.create(standard).optional(),
     horariosEstagio: z.array(HorarioEstagioInputSchema).optional(),
-  })
-  .superRefine((data, ctx) => {
-    const status = data.status ?? "ABERTA";
-
-    if (data.dataInicio && data.dataFim) {
-      if (new Date(data.dataFim) < new Date(data.dataInicio)) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "data de fim deve ser maior ou igual à data de início",
-          path: ["dataFim"],
-        });
-      }
-    }
-
-    if (status === "EM_ANDAMENTO" || status === "CONCLUIDA") {
-      if (!data.estagiario) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "estagiário é obrigatório quando o estágio não está aberto",
-          path: ["estagiario"],
-        });
-      }
-      if (!data.dataInicio) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "data de início é obrigatória neste status",
-          path: ["dataInicio"],
-        });
-      }
-    }
-
-    if (status === "CONCLUIDA") {
-      if (!data.dataFim) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "data de fim é obrigatória para estágio concluído",
-          path: ["dataFim"],
-        });
-      }
-    }
-  });
-
-export const EstagioUpdateSchema = z.object({
-  empresa: EstagioEmpresaRefSchema.optional(),
-  estagiario: EstagioEstagiarioRefSchema.nullable().optional(),
-  cargaHoraria: z.number().int().min(1, "carga horária deve ser maior que zero").optional(),
-  dataInicio: DateStringSchema.nullable().optional(),
-  dataFim: DateStringSchema.nullable().optional(),
-  status: EstagioStatusSchema.optional(),
-  horariosEstagio: z.array(HorarioEstagioInputSchema).optional(),
-});
+  }),
+);

@@ -7,12 +7,12 @@
  * @see createFieldMetadata (domain/abstractions/fields/field-metadata.ts)
  */
 import { z } from "zod";
-import { createFieldMetadata } from "@/domain/abstractions";
+import { createFieldMetadata, createSchema } from "@/domain/abstractions";
 
 export const DiarioFields = {
   ativo: createFieldMetadata({
     description: "Situacao do diario",
-    schema: z.boolean(),
+    schema: createSchema(() => z.boolean()),
   }),
   calendarioLetivo: createFieldMetadata({
     description: "Calendario letivo vinculado ao diario",

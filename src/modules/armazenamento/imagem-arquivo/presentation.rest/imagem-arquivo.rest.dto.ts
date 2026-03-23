@@ -100,7 +100,7 @@ export class ImagemArquivoListOutputRestDto {
 
 @ApiSchema({ name: "ImagemArquivoCreateInputDto" })
 export class ImagemArquivoCreateInputRestDto {
-  static schema = ImagemArquivoCreateSchema;
+  static schema = ImagemArquivoCreateSchema.presentation;
 
   @ApiProperty({ type: "integer", description: "Largura da imagem" })
   largura: number;
@@ -123,7 +123,7 @@ export class ImagemArquivoCreateInputRestDto {
 
 @ApiSchema({ name: "ImagemArquivoUpdateInputDto" })
 export class ImagemArquivoUpdateInputRestDto extends PartialType(ImagemArquivoCreateInputRestDto) {
-  static schema = ImagemArquivoUpdateSchema;
+  static schema = ImagemArquivoUpdateSchema.presentation;
 }
 
 // ============================================================================

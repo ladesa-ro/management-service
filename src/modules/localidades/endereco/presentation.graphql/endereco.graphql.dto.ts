@@ -27,7 +27,7 @@ export class EnderecoFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
 
 @InputType("EnderecoInputDto")
 export class EnderecoInputGraphQlDto {
-  static schema = EnderecoInputSchema;
+  static schema = EnderecoInputSchema.domain;
 
   @Field(() => String) declare cep: string;
   @Field(() => String) declare logradouro: string;

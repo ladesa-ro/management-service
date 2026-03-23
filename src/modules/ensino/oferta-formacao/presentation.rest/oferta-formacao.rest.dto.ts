@@ -90,7 +90,7 @@ export class OfertaFormacaoListOutputRestDto {
 
 @ApiSchema({ name: "OfertaFormacaoCreateInputDto" })
 export class OfertaFormacaoCreateInputRestDto {
-  static readonly schema = OfertaFormacaoCreateSchema;
+  static readonly schema = OfertaFormacaoCreateSchema.presentation;
 
   @ApiProperty({
     type: "string",

@@ -6,6 +6,7 @@
  * os contratos de dados da entidade.
  */
 import { z } from "zod";
+import { createSchema, ObjectIdUuidFactory } from "@/domain/abstractions";
 import { datedSchema, uuidSchema } from "@/shared/validation/schemas";
 import { UsuarioFields } from "./usuario.fields";
 
@@ -13,7 +14,9 @@ import { UsuarioFields } from "./usuario.fields";
 // Fragments de referência
 // ============================================================================
 
-export const UsuarioImagemRefSchema = z.object({ id: uuidSchema }).nullable().optional();
+export const UsuarioImagemRefSchema = createSchema((standard) =>
+  ObjectIdUuidFactory.create(standard).nullable().optional(),
+);
 
 // ============================================================================
 // Schemas compostos
@@ -31,14 +34,18 @@ export const UsuarioSchema = z
   })
   .merge(datedSchema);
 
-export const UsuarioCreateSchema = z.object({
-  nome: UsuarioFields.nome.schema,
-  matricula: UsuarioFields.matricula.schema,
-  email: UsuarioFields.email.schema,
-});
+export const UsuarioCreateSchema = createSchema((standard) =>
+  z.object({
+    nome: UsuarioFields.nome.create(standard),
+    matricula: UsuarioFields.matricula.create(standard),
+    email: UsuarioFields.email.create(standard),
+  }),
+);
 
-export const UsuarioUpdateSchema = z.object({
-  nome: UsuarioFields.nome.schema,
-  matricula: UsuarioFields.matricula.schema,
-  email: UsuarioFields.email.schema,
-});
+export const UsuarioUpdateSchema = createSchema((standard) =>
+  z.object({
+    nome: UsuarioFields.nome.create(standard),
+    matricula: UsuarioFields.matricula.create(standard),
+    email: UsuarioFields.email.create(standard),
+  }),
+);
