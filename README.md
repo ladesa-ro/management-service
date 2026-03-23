@@ -104,6 +104,7 @@ confidence_scope: Versões das tecnologias principais (NestJS ^11.1.17, TypeORM 
   - [Schemas Zod do domínio](#schemas-zod-do-domínio)
   - [FieldMetadata e QueryFields](#fieldmetadata-e-queryfields)
   - [Interfaces de repositório](#interfaces-de-repositório)
+  - [Mappers (mapeamento entre camadas)](#mappers-mapeamento-entre-camadas)
   - [Command e Query Handlers](#command-e-query-handlers)
   - [Permission Checker](#permission-checker)
   - [DeclareDependency e DeclareImplementation](#declaredependency-e-declareimplementation)
@@ -2994,6 +2995,127 @@ export type ICampusRepository = IRepositoryFindAll<CampusListQueryResult> &
 - `IRepositoryFindByIdSimple<T>` — `findByIdSimple(ac, id, selection?)` → `T | null`
 
 O type `PersistInput<T>` converte relações em referências `{ id }` para desacoplar a persistência da forma completa da entidade.
+
+### Mappers (mapeamento entre camadas)
+
+**Mappers** são funções que **traduzem dados de um formato para outro** quando eles cruzam fronteiras entre camadas. Como a arquitetura hexagonal isola o domínio da infraestrutura, cada camada pode representar os mesmos dados de formas diferentes — por exemplo, o domínio armazena datas como strings ISO (`"2025-06-15T10:30:00.000Z"`) enquanto o TypeORM usa objetos `Date` do JavaScript. O mapper é quem faz essa conversão.
+
+> **Analogia:** imagine que um hospital brasileiro recebe um paciente estrangeiro. O prontuário interno é em português, mas o paciente trouxe exames em inglês. O **mapper** é o tradutor que converte os exames para português (entrada) e traduz o diagnóstico de volta para inglês (saída) — sem alterar o conteúdo médico, apenas o formato.
+
+O projeto possui mappers em **duas camadas**:
+
+```mermaid
+graph LR
+    subgraph "Apresentação (REST/GraphQL)"
+        DTO_IN["DTO de Entrada\n(CampusCreateInputRestDto)"]
+        DTO_OUT["DTO de Saída\n(CampusFindOneOutputRestDto)"]
+        PMAP["RestMapper / GraphqlMapper\n• toCreateInput(dto) → Command\n• toFindOneOutputDto(result) → DTO\n• toListInput(dto) → Query"]
+    end
+
+    subgraph "Infraestrutura (TypeORM)"
+        ENTITY["TypeORM Entity\n(CampusEntity)\ndatas: Date\nrelações: Relation&lt;T&gt;"]
+        IMAP["EntityDomainMapper\n• toDomainData(entity)\n• toPersistenceData(domain)\n• toOutputData(entity)"]
+    end
+
+    subgraph "Domínio"
+        DOMAIN["Entidade de Domínio\n(Campus)\ndatas: ISO string\nrelações: { id }"]
+        CMD["Command / Query Result"]
+    end
+
+    DTO_IN --> PMAP --> CMD
+    CMD --> DOMAIN
+    DOMAIN --> IMAP --> ENTITY
+    ENTITY --> IMAP --> DOMAIN
+    CMD --> PMAP --> DTO_OUT
+
+    style DOMAIN fill:#27ae60,stroke:#1e8449,color:#fff
+    style IMAP fill:#e67e22,stroke:#d35400,color:#fff
+    style PMAP fill:#3498db,stroke:#2980b9,color:#fff
+```
+
+#### Mapper de infraestrutura (domain ↔ TypeORM entity)
+
+Cada módulo define um mapper declarativo em `infrastructure.database/typeorm/{nome}.mapper.ts` usando o helper `createEntityDomainMapper`. Ele converte automaticamente entre os tipos do domínio (strings ISO, referências `{ id }`) e os tipos do TypeORM (objetos `Date`, relações carregadas):
+
+```typescript
+// src/modules/ambientes/campus/infrastructure.database/typeorm/campus.mapper.ts
+import { createEntityDomainMapper } from "@/infrastructure.database/typeorm/helpers/entity-domain-mapper";
+import type { ICampus } from "@/modules/ambientes/campus/domain/campus";
+
+export const campusEntityDomainMapper = createEntityDomainMapper<ICampus, Record<string, unknown>>({
+  fields: [
+    "id",                                    // campo direto — sem conversão
+    "nomeFantasia",                          // campo direto
+    "razaoSocial",                           // campo direto
+    "apelido",                               // campo direto
+    "cnpj",                                  // campo direto
+    { field: "endereco", type: "relation" }, // { id, logradouro, ... } → { id }
+    { field: "dateCreated", type: "date" },  // Date ↔ ISO string
+    { field: "dateUpdated", type: "date" },  // Date ↔ ISO string
+    { field: "dateDeleted", type: "date" },  // Date | null ↔ ISO string | null
+  ],
+});
+```
+
+**Tipos de campo disponíveis:**
+
+| Tipo | Entity → Domain | Domain → Entity | Quando usar |
+|------|----------------|----------------|-------------|
+| `string` (nome do campo) | passthrough | passthrough | Campos com mesmo tipo em ambas as camadas |
+| `"date"` | `Date` → `"2025-06-15T10:30:00.000Z"` | ISO string → `Date` | `dateCreated`, `dateUpdated`, `dateDeleted` |
+| `"date-only"` | `Date` → `"2025-06-15"` | `"YYYY-MM-DD"` → `Date` | `dataNascimento` e similares |
+| `"relation"` | `{ id, nome, ... }` → `{ id }` | passthrough | Quando o domínio armazena apenas a referência (`{ id }`) |
+| `"relation-loaded"` | passthrough | `{ id, nome, ... }` → `{ id }` | Quando o domínio armazena o objeto completo (ex: `cidade.estado`) |
+| `{ forward, reverse }` | função custom | função custom | Casos especiais |
+
+O mapper é **interno à infraestrutura** — handlers e controllers nunca o acessam diretamente. O repositório usa `toPersistenceData()` para converter dados do domínio antes de salvar:
+
+```typescript
+// Dentro do repositório (infraestrutura)
+create(data: Record<string, unknown>) {
+  const entityData = campusEntityDomainMapper.toPersistenceData(data);
+  return typeormCreate(this.appTypeormConnection, CampusEntity, entityData);
+}
+```
+
+Para módulos com campos computados no output (ex: `ativo = !dateDeleted`), o mapper aceita uma config `output` adicional:
+
+```typescript
+// src/modules/estagio/empresa/infrastructure.database/typeorm/empresa.mapper.ts
+export const empresaEntityDomainMapper = createEntityDomainMapper<...>({
+  fields: [ /* ... campos bidirecionais ... */ ],
+  output: [
+    "id", "razaoSocial", "nomeFantasia", /* ... */
+    ["dateCreated", "dateCreated", dateToISO],
+    ["dateDeleted", "ativo", (v) => !v],     // campo computado
+  ],
+});
+```
+
+#### Mapper de apresentação (DTO ↔ Command/Query)
+
+Os mappers de apresentação ficam em `presentation.rest/{nome}.rest.mapper.ts` e `presentation.graphql/{nome}.graphql.mapper.ts`. Eles usam os helpers de `@/shared/mapping`:
+
+- `createMapping(fields)` — mapeia campos entre objetos (suporta dot notation, transforms)
+- `createListInputMapper(QueryClass, filterKeys)` — mapeia paginação, busca, filtros (REST)
+- `createListOutputMapper(DtoClass, itemMapper)` — mapeia listas paginadas
+- `mapFilterCase("filter.estado.id")` — converte `filterEstadoId` (GraphQL camelCase) → `"filter.estado.id"` (dot notation)
+
+```typescript
+// REST — filtros usam dot notation diretamente
+static toListInput = createListInputMapper(CidadeListQuery, [
+  "filter.id", "filter.estado.id", "filter.estado.nome",
+]);
+
+// GraphQL — converte camelCase para dot notation
+const listInputMapping = createMapping([
+  "page", "limit", "search", "sortBy",
+  mapFilterCase("filter.id"),            // filterId → filter.id
+  mapFilterCase("filter.estado.id"),     // filterEstadoId → filter.estado.id
+]);
+```
+
+> **Para ir mais fundo:** os transforms reutilizáveis ficam em `src/shared/mapping/transforms.ts` (`dateToISO`, `isoToDate`, `normalizeRelationRef`, etc.). O helper `createBidirectionalMapping` em `src/shared/mapping/field-mapper.ts` permite definir um mapeamento uma vez e obter ambas as direções automaticamente — é a base do `createEntityDomainMapper`.
 
 ### Command e Query Handlers
 
