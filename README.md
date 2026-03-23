@@ -1,3 +1,5 @@
+<!-- README last synced with codebase at commit 4ab02ae5f51740012ea0b48f683d67e377f0690f (2026-03-23) -->
+
 # Management Service
 
 API REST/GraphQL de gerenciamento acadêmico desenvolvida com NestJS, TypeORM e PostgreSQL, seguindo princípios de arquitetura hexagonal (ports & adapters).
