@@ -1,42 +1,65 @@
 ---
-description: Reler CLAUDE.md e refinar arquivos pendentes seguindo as diretrizes do projeto
+description: Refinar código para aumentar qualidade, reduzir débito técnico e evitar overengineering
 ---
+
+## Objetivo
+
+Aumentar a qualidade do código, reduzir débito técnico e evitar overengineering. Cada decisão tomada neste comando deve passar por esse filtro:
+
+- **Simples é melhor.** Não adicione abstrações, patterns ou camadas que o projeto não precisa *agora*.
+- **Menos código é mais.** Se dá pra resolver com menos linhas sem perder clareza, resolva.
+- **Não invente problema.** Só corrija o que está errado ou fora do padrão. Não refatore código funcional e limpo só por preferência estética.
 
 ## 1. Reler e aplicar CLAUDE.md
 
 Releia o arquivo CLAUDE.md na raiz do projeto **por completo**. Internalize todas as diretrizes, convenções, padrões e regras descritas. Você **não pode ignorar** nenhuma instrução contida nele. Tudo que seguir neste comando deve estar em conformidade com o CLAUDE.md.
 
-## 2. Refinar arquivos pendentes
+## 2. Pré-validação de lógica
 
-Analise os arquivos do projeto que foram modificados recentemente ou que possuem pendências. Para cada arquivo, aplique as melhores práticas **conforme definidas no CLAUDE.md**, incluindo mas não limitado a:
+Antes de qualquer refatoração, analise os arquivos modificados ou pendentes e valide:
 
-- **DRY** — elimine duplicações
+- **Corretude** — a lógica faz o que deveria? Há bugs, condições erradas, off-by-one, nulls não tratados?
+- **Coerência** — o fluxo faz sentido no contexto do domínio? Os dados passam pelas camadas corretamente?
+- **Efeitos colaterais** — alguma mudança recente quebra comportamento existente ou introduz regressões?
+- **Casos de borda** — cenários limítrofes estão cobertos (listas vazias, valores nulos, permissões, concorrência)?
+
+Se encontrar problemas de lógica, **corrija-os primeiro**. Documente brevemente o que foi encontrado e corrigido.
+
+## 3. Refinar arquivos pendentes
+
+Para cada arquivo modificado ou pendente, aplique as práticas do CLAUDE.md:
+
+- **DRY** — elimine duplicações reais (não force DRY em coisas que só parecem iguais)
 - **Clean Code** — clareza, legibilidade, responsabilidade única
-- **Nomes** — variáveis, funções, classes, arquivos devem seguir as convenções do projeto
+- **Nomes** — variáveis, funções, classes e arquivos nas convenções do projeto
 - **Caminhos** — organização de diretórios e imports conforme a estrutura definida
+- **Tipagem** — elimine `as any`. Sempre tipar corretamente; se necessário, use tipos mais específicos (`unknown`, narrowing, generics simples). `as any` é débito técnico, não solução.
+- **Resíduos** — remova código morto (funções, variáveis, imports não utilizados), comentários desatualizados ou obsoletos, TODOs já resolvidos e arquivos órfãos. Não deixe lixo para trás.
 
-Corrija o que estiver fora do padrão. Se encontrar ambiguidades, siga a interpretação mais conservadora (a que mantém maior consistência com o restante do projeto).
+**Não** introduza generics, abstrações, wrappers ou indireções que não sejam justificados por uso concreto no código atual.
 
-## 3. Code Fix
+## 4. Code Fix
 
-Execute as ferramentas de lint, formatação e type-check do projeto (conforme configuradas no CLAUDE.md ou nos configs do repo). Corrija todos os erros e warnings reportados. Se houver erros que exijam decisão de design, sinalize-os em vez de aplicar um fix arbitrário.
+Execute lint, formatação e type-check do projeto. Corrija todos os erros e warnings. Se houver erros que exijam decisão de design, sinalize-os em vez de aplicar um fix arbitrário.
 
-## 4. Check
+## 5. Check
 
-Rode os comandos de verificação do projeto (build, lint, testes existentes, type-check). Confirme que tudo passa sem erros. Se algo quebrar após as mudanças anteriores, corrija antes de prosseguir.
+Rode build, lint, testes existentes e type-check. Tudo deve passar. Se algo quebrar, corrija antes de prosseguir.
 
-## 5. Escrever testes
+## 6. Escrever testes
 
 Para cada arquivo modificado ou criado nesta sessão, verifique se existem testes correspondentes. Se não existirem ou estiverem incompletos:
 
-- Crie testes unitários seguindo as convenções do projeto (framework, localização, nomenclatura)
-- Cubra os cenários principais: happy path, edge cases e erros esperados
-- Rode os testes e garanta que todos passam
+- Crie testes unitários seguindo as convenções do projeto
+- Cubra: happy path, edge cases e erros esperados
+- Rode os testes e garanta que passam
 
-## 6. Verificar README
+Testes devem ser diretos e objetivos. Não crie helpers, fixtures ou abstrações de teste desnecessárias.
 
-Avalie se o README.md precisa ser atualizado considerando as mudanças feitas. Se precisar, atualize-o. Se estiver correto, não mexa.
+## 7. Verificar README
 
-## 7. Verificar CLAUDE.md
+Atualize o README.md se as mudanças exigirem. Se estiver correto, não mexa.
 
-Avalie se o próprio CLAUDE.md precisa ser atualizado — por exemplo, se alguma convenção nova surgiu durante o refinamento, ou se algo ficou desatualizado. Proponha alterações se necessário.
+## 8. Verificar CLAUDE.md
+
+Atualize o CLAUDE.md se alguma convenção nova surgiu ou algo ficou desatualizado. Proponha alterações se necessário.
