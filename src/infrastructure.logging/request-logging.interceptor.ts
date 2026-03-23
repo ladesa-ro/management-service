@@ -5,6 +5,8 @@ import {
   Injectable,
   type NestInterceptor,
 } from "@nestjs/common";
+import type { GqlContextType } from "@nestjs/graphql";
+import { GqlExecutionContext } from "@nestjs/graphql";
 import type { Request } from "express";
 import type { Observable } from "rxjs";
 import { tap } from "rxjs";
@@ -28,9 +30,15 @@ export class RequestLoggingInterceptor implements NestInterceptor {
   ) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
-    const req = context.switchToHttp().getRequest<Request>();
-    const { method, url } = req;
-    const correlationId = req.correlationId;
+    const isGraphql = context.getType<GqlContextType>() === "graphql";
+
+    const req: Request | undefined = isGraphql
+      ? GqlExecutionContext.create(context).getContext().req
+      : context.switchToHttp().getRequest<Request>();
+
+    const method = req?.method ?? "GRAPHQL";
+    const url = req?.url ?? "graphql";
+    const correlationId = req?.correlationId;
 
     const checkpoint = this.perfHooks.startCheckpoint("http.request", {
       method,

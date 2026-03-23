@@ -1,20 +1,13 @@
-import {
-  type ArgumentsHost,
-  Catch,
-  type ExceptionFilter,
-  HttpException,
-  Inject,
-} from "@nestjs/common";
+import { type ArgumentsHost, Catch, type ExceptionFilter, Inject } from "@nestjs/common";
+import { GqlArgumentsHost, GqlContextType } from "@nestjs/graphql";
 import type { Request, Response } from "express";
 import type { ILoggerPort } from "@/domain/abstractions/logging";
 import { ILoggerPort as ILoggerPortToken } from "@/domain/abstractions/logging";
-import { getNowISO } from "@/utils/date";
-import type { HttpErrorResponse } from "./error-http.mapper";
-import { getHttpStatusName } from "./utils";
+import { buildStandardizedErrorResponse } from "./error-response.mapper";
 
 /**
  * Filtro global que captura exceções não tratadas
- * e as traduz para respostas HTTP padronizadas.
+ * e as traduz para respostas padronizadas.
  */
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {
@@ -24,54 +17,31 @@ export class GlobalExceptionFilter implements ExceptionFilter {
   ) {}
 
   catch(exception: unknown, host: ArgumentsHost) {
-    const ctx = host.switchToHttp();
-    const response = ctx.getResponse<Response>();
-    const request = ctx.getRequest<Request>();
+    const isGraphql = host.getType<GqlContextType>() === "graphql";
 
-    if (exception instanceof HttpException) {
-      return this.handleHttpException(exception, request, response);
+    const request: Request | undefined = isGraphql
+      ? GqlArgumentsHost.create(host).getContext().req
+      : host.switchToHttp().getRequest<Request>();
+
+    this.logException(exception, request);
+
+    if (isGraphql) {
+      throw exception;
     }
 
-    this.handleUnknownException(exception, request, response);
+    const response = host.switchToHttp().getResponse<Response>();
+    const errorResponse = buildStandardizedErrorResponse(exception, request?.url);
+    response.status(errorResponse.statusCode).json(errorResponse);
   }
 
-  private handleHttpException(
-    exception: HttpException,
-    request: Request,
-    response: Response,
-  ): void {
-    const status = exception.getStatus();
-    const exceptionResponse = exception.getResponse();
-
-    const errorResponse: HttpErrorResponse = {
-      statusCode: status,
-      code: `HTTP.${getHttpStatusName(status)}`,
-      message: typeof exceptionResponse === "string" ? exceptionResponse : exception.message,
-      timestamp: getNowISO(),
-      path: request.url,
-    };
-
-    response.status(status).json(errorResponse);
-  }
-
-  private handleUnknownException(exception: unknown, request: Request, response: Response): void {
-    const correlationId = request.correlationId;
+  private logException(exception: unknown, request: Request | undefined): void {
+    const correlationId = request?.correlationId;
 
     this.logger.error(
       "Unhandled exception",
       exception instanceof Error ? exception.stack : String(exception),
       "GlobalExceptionFilter",
-      { path: request.url, correlationId },
+      { path: request?.url, correlationId },
     );
-
-    const errorResponse: HttpErrorResponse = {
-      statusCode: 500,
-      code: "HTTP.INTERNAL_SERVER_ERROR",
-      message: "Ocorreu um erro interno. Tente novamente mais tarde.",
-      timestamp: getNowISO(),
-      path: request.url,
-    };
-
-    response.status(500).json(errorResponse);
   }
 }

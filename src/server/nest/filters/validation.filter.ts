@@ -4,17 +4,14 @@ import {
   Catch,
   type ExceptionFilter,
 } from "@nestjs/common";
+import type { GqlContextType } from "@nestjs/graphql";
 import type { Response } from "express";
-import { getNowISO } from "@/utils/date";
-import type { HttpErrorResponse } from "./error-http.mapper";
-import { buildValidationMessage, extractZodErrors } from "./utils";
+import { buildStandardizedErrorResponse } from "./error-response.mapper";
 
 @Catch(BadRequestException)
 export class ValidationExceptionFilter implements ExceptionFilter {
   catch(exception: BadRequestException, host: ArgumentsHost) {
-    const hostType = host.getType<"http" | "graphql">();
-
-    if (hostType !== "http") {
+    if (host.getType<GqlContextType>() === "graphql") {
       throw exception;
     }
 
@@ -22,29 +19,7 @@ export class ValidationExceptionFilter implements ExceptionFilter {
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<{ url: string }>();
 
-    const exceptionResponse = exception.getResponse();
-    const details = extractZodErrors(exceptionResponse);
-
-    if (details.length === 0) {
-      const errorResponse: HttpErrorResponse = {
-        statusCode: 400,
-        code: "HTTP.BAD_REQUEST",
-        message: exception.message,
-        timestamp: getNowISO(),
-        path: request.url,
-      };
-      response.status(400).json(errorResponse);
-      return;
-    }
-
-    const errorResponse: HttpErrorResponse = {
-      statusCode: 422,
-      code: "APP.VALIDATION",
-      message: buildValidationMessage(details),
-      timestamp: getNowISO(),
-      path: request.url,
-      details,
-    };
-    response.status(422).json(errorResponse);
+    const errorResponse = buildStandardizedErrorResponse(exception, request.url);
+    response.status(errorResponse.statusCode).json(errorResponse);
   }
 }

@@ -1,4 +1,5 @@
 import type { IValidationErrorDetail, ValidationResult } from "@/domain/validation";
+import { PrimitiveException } from "./primitive.exception";
 
 /**
  * Códigos de erro de domínio.
@@ -14,14 +15,8 @@ export enum DomainErrorCode {
  * Classe base para todos os erros de domínio.
  * Erros de domínio representam violações de regras de negócio.
  */
-export abstract class DomainError extends Error {
+export abstract class DomainError extends PrimitiveException {
   abstract readonly code: DomainErrorCode;
-
-  constructor(message: string) {
-    super(message);
-    this.name = this.constructor.name;
-    Error.captureStackTrace(this, this.constructor);
-  }
 }
 
 /**

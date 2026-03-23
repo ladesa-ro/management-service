@@ -1,3 +1,5 @@
+import { PrimitiveException } from "@/domain/errors";
+
 /**
  * Códigos de erro de aplicação.
  */
@@ -15,14 +17,8 @@ export enum ApplicationErrorCode {
  * Classe base para todos os erros de aplicação.
  * Erros de aplicação representam falhas em casos de uso.
  */
-export abstract class ApplicationError extends Error {
+export abstract class ApplicationError extends PrimitiveException {
   abstract readonly code: ApplicationErrorCode;
-
-  constructor(message: string) {
-    super(message);
-    this.name = this.constructor.name;
-    Error.captureStackTrace(this, this.constructor);
-  }
 }
 
 /**
