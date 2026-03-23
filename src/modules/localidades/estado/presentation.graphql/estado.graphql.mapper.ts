@@ -3,8 +3,7 @@ import {
   EstadoFindOneQueryResult,
   EstadoListQuery,
 } from "@/modules/localidades/estado";
-import { createListOutputMapper } from "@/shared/mapping";
-import { createMapping, mapFilterCase } from "@/shared/mapping/index";
+import { createListOutputMapper, createMapping, mapFilterCase } from "@/shared/mapping";
 import {
   EstadoFindOneOutputGraphQlDto,
   EstadoListInputGraphQlDto,

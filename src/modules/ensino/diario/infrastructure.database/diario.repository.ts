@@ -19,7 +19,7 @@ import type {
   DiarioListQueryResult,
 } from "@/modules/ensino/diario/domain/queries";
 import type { IDiarioRepository } from "@/modules/ensino/diario/domain/repositories";
-import { DiarioEntity } from "./typeorm/diario.typeorm.entity";
+import { DiarioEntity, diarioEntityDomainMapper } from "./typeorm";
 
 const config = {
   alias: "diario",
@@ -99,12 +99,14 @@ export class DiarioTypeOrmRepositoryAdapter implements IDiarioRepository {
     return this.findById(accessContext, { id } as DiarioFindOneQuery, selection);
   }
 
-  create(data: Record<string, any>) {
-    return typeormCreate(this.appTypeormConnection, DiarioEntity, data);
+  create(data: Record<string, unknown>) {
+    const entityData = diarioEntityDomainMapper.toPersistenceData(data);
+    return typeormCreate(this.appTypeormConnection, DiarioEntity, entityData);
   }
 
-  update(id: string | number, data: Record<string, any>) {
-    return typeormUpdate(this.appTypeormConnection, DiarioEntity, id, data);
+  update(id: string | number, data: Record<string, unknown>) {
+    const entityData = diarioEntityDomainMapper.toPersistenceData(data);
+    return typeormUpdate(this.appTypeormConnection, DiarioEntity, id, entityData);
   }
 
   softDeleteById(id: string) {

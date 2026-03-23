@@ -19,7 +19,7 @@ import type {
   BlocoListQueryResult,
 } from "@/modules/ambientes/bloco/domain/queries";
 import type { IBlocoRepository } from "@/modules/ambientes/bloco/domain/repositories";
-import { BlocoEntity } from "./typeorm/bloco.typeorm.entity";
+import { BlocoEntity, blocoEntityDomainMapper } from "./typeorm";
 
 const config = {
   alias: "bloco",
@@ -104,11 +104,13 @@ export class BlocoTypeOrmRepositoryAdapter implements IBlocoRepository {
   }
 
   create(data: Record<string, unknown>) {
-    return typeormCreate(this.appTypeormConnection, BlocoEntity, data);
+    const entityData = blocoEntityDomainMapper.toPersistenceData(data);
+    return typeormCreate(this.appTypeormConnection, BlocoEntity, entityData);
   }
 
   update(id: string | number, data: Record<string, unknown>) {
-    return typeormUpdate(this.appTypeormConnection, BlocoEntity, id, data);
+    const entityData = blocoEntityDomainMapper.toPersistenceData(data);
+    return typeormUpdate(this.appTypeormConnection, BlocoEntity, id, entityData);
   }
 
   softDeleteById(id: string) {

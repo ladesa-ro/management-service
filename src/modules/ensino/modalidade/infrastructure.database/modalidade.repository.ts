@@ -18,7 +18,7 @@ import type {
   ModalidadeListQuery,
   ModalidadeListQueryResult,
 } from "@/modules/ensino/modalidade";
-import { ModalidadeEntity } from "./typeorm/modalidade.typeorm.entity";
+import { ModalidadeEntity, modalidadeEntityDomainMapper } from "./typeorm";
 
 const config = {
   alias: "modalidade",
@@ -83,12 +83,14 @@ export class ModalidadeTypeOrmRepositoryAdapter implements IModalidadeRepository
     return this.findById(accessContext, { id } as ModalidadeFindOneQuery, selection);
   }
 
-  create(data: Record<string, any>) {
-    return typeormCreate(this.appTypeormConnection, ModalidadeEntity, data);
+  create(data: Record<string, unknown>) {
+    const entityData = modalidadeEntityDomainMapper.toPersistenceData(data);
+    return typeormCreate(this.appTypeormConnection, ModalidadeEntity, entityData);
   }
 
-  update(id: string | number, data: Record<string, any>) {
-    return typeormUpdate(this.appTypeormConnection, ModalidadeEntity, id, data);
+  update(id: string | number, data: Record<string, unknown>) {
+    const entityData = modalidadeEntityDomainMapper.toPersistenceData(data);
+    return typeormUpdate(this.appTypeormConnection, ModalidadeEntity, id, entityData);
   }
 
   softDeleteById(id: string) {

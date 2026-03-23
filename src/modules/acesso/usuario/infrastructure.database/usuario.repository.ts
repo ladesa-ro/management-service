@@ -23,7 +23,7 @@ import type {
 import { CursoEntity } from "@/modules/ensino/curso/infrastructure.database/typeorm/curso.typeorm.entity";
 import { DisciplinaEntity } from "@/modules/ensino/disciplina/infrastructure.database/typeorm/disciplina.typeorm.entity";
 import { TurmaEntity } from "@/modules/ensino/turma/infrastructure.database/typeorm/turma.typeorm.entity";
-import { UsuarioEntity } from "./typeorm/usuario.typeorm.entity";
+import { UsuarioEntity, usuarioEntityDomainMapper } from "./typeorm";
 
 const config = {
   alias: "usuario",
@@ -272,11 +272,13 @@ export class UsuarioTypeOrmRepositoryAdapter implements IUsuarioRepository {
   }
 
   create(data: Record<string, unknown>) {
-    return typeormCreate(this.appTypeormConnection, UsuarioEntity, data);
+    const entityData = usuarioEntityDomainMapper.toPersistenceData(data);
+    return typeormCreate(this.appTypeormConnection, UsuarioEntity, entityData);
   }
 
   update(id: string | number, data: Record<string, unknown>) {
-    return typeormUpdate(this.appTypeormConnection, UsuarioEntity, id, data);
+    const entityData = usuarioEntityDomainMapper.toPersistenceData(data);
+    return typeormUpdate(this.appTypeormConnection, UsuarioEntity, id, entityData);
   }
 
   softDeleteById(id: string) {

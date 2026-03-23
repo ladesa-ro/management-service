@@ -18,7 +18,7 @@ import type {
   EstadoListQueryResult,
 } from "@/modules/localidades/estado/domain/queries";
 import type { IEstadoRepository } from "@/modules/localidades/estado/domain/repositories";
-import { EstadoEntity } from "./typeorm/estado.typeorm.entity";
+import { EstadoEntity, estadoEntityDomainMapper } from "./typeorm";
 
 const config = {
   alias: "estado",
@@ -81,11 +81,13 @@ export class EstadoTypeOrmRepositoryAdapter implements IEstadoRepository {
   }
 
   create(data: Record<string, unknown>) {
-    return typeormCreate(this.appTypeormConnection, EstadoEntity, data);
+    const entityData = estadoEntityDomainMapper.toPersistenceData(data);
+    return typeormCreate(this.appTypeormConnection, EstadoEntity, entityData);
   }
 
   update(id: string | number, data: Record<string, unknown>) {
-    return typeormUpdate(this.appTypeormConnection, EstadoEntity, id, data);
+    const entityData = estadoEntityDomainMapper.toPersistenceData(data);
+    return typeormUpdate(this.appTypeormConnection, EstadoEntity, id, entityData);
   }
 
   softDeleteById(id: string) {

@@ -18,7 +18,9 @@ import type { IEmpresaRepository } from "@/modules/estagio/empresa/domain/reposi
 import { Endereco } from "@/modules/localidades/endereco/domain/endereco";
 import { EnderecoEntity } from "@/modules/localidades/endereco/infrastructure.database/typeorm/endereco.typeorm.entity";
 import { getNow } from "@/utils/date";
-import { EmpresaMapper, EmpresaTypeormEntity } from "./typeorm";
+import { EmpresaTypeormEntity, empresaEntityDomainMapper } from "./typeorm";
+
+const toRecord = (obj: unknown) => obj as Record<string, unknown>;
 
 @DeclareImplementation()
 export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
@@ -31,7 +33,6 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
     return this.appTypeormConnection.getRepository(EmpresaTypeormEntity);
   }
 
-  // cross-module: uses TypeORM directly for existence check (EnderecoEntity)
   private get enderecoRepository() {
     return this.appTypeormConnection.getRepository(EnderecoEntity);
   }
@@ -104,7 +105,7 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
         filter: {},
         search: dto?.search ?? "",
       },
-      data: data.map((entity) => EmpresaMapper.toOutputDto(entity)),
+      data: data.map((entity) => empresaEntityDomainMapper.toOutputData(toRecord(entity))),
     };
   }
 
@@ -122,7 +123,7 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
       return null;
     }
 
-    return EmpresaMapper.toOutputDto(entity);
+    return empresaEntityDomainMapper.toOutputData(toRecord(entity));
   }
 
   async create(
@@ -137,15 +138,15 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
 
     const empresa = Empresa.create(dto);
 
-    const entity = EmpresaMapper.toPersistence(empresa);
-    const saved = await this.repository.save(entity);
+    const entityData = empresaEntityDomainMapper.toPersistenceData(toRecord(empresa));
+    const saved = await this.repository.save(this.repository.create(entityData));
 
     const result = await this.repository.findOne({
       where: { id: saved.id },
       relations: ["endereco"],
     });
 
-    return EmpresaMapper.toOutputDto(result!);
+    return empresaEntityDomainMapper.toOutputData(toRecord(result!));
   }
 
   async update(
@@ -160,7 +161,7 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
 
     ensureExists(entity, Empresa.entityName, id);
 
-    const empresa = EmpresaMapper.toDomain(entity);
+    const empresa = Empresa.load(empresaEntityDomainMapper.toDomainData(toRecord(entity)));
 
     if (dto.endereco) {
       const endereco = await this.enderecoRepository.findOne({
@@ -172,15 +173,15 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
 
     empresa.update(dto);
 
-    const updated = EmpresaMapper.toPersistence(empresa);
-    const saved = await this.repository.save(updated);
+    const updatedData = empresaEntityDomainMapper.toPersistenceData(toRecord(empresa));
+    await this.repository.save(this.repository.create(updatedData));
 
     const result = await this.repository.findOne({
-      where: { id: saved.id },
+      where: { id },
       relations: ["endereco"],
     });
 
-    return EmpresaMapper.toOutputDto(result!);
+    return empresaEntityDomainMapper.toOutputData(toRecord(result!));
   }
 
   async delete(accessContext: IAccessContext | null, id: string): Promise<void> {

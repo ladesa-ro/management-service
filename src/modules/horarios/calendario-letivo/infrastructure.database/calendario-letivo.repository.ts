@@ -19,7 +19,7 @@ import type {
   CalendarioLetivoListQueryResult,
   ICalendarioLetivoRepository,
 } from "@/modules/horarios/calendario-letivo";
-import { CalendarioLetivoEntity } from "./typeorm/calendario-letivo.typeorm.entity";
+import { CalendarioLetivoEntity, calendarioLetivoEntityDomainMapper } from "./typeorm";
 
 const config = {
   alias: "calendario_letivo",
@@ -120,11 +120,13 @@ export class CalendarioLetivoTypeOrmRepositoryAdapter implements ICalendarioLeti
   }
 
   create(data: Record<string, unknown>) {
-    return typeormCreate(this.appTypeormConnection, CalendarioLetivoEntity, data);
+    const entityData = calendarioLetivoEntityDomainMapper.toPersistenceData(data);
+    return typeormCreate(this.appTypeormConnection, CalendarioLetivoEntity, entityData);
   }
 
   update(id: string | number, data: Record<string, unknown>) {
-    return typeormUpdate(this.appTypeormConnection, CalendarioLetivoEntity, id, data);
+    const entityData = calendarioLetivoEntityDomainMapper.toPersistenceData(data);
+    return typeormUpdate(this.appTypeormConnection, CalendarioLetivoEntity, id, entityData);
   }
 
   softDeleteById(id: string) {

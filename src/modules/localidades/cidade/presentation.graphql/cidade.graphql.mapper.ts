@@ -4,8 +4,7 @@ import {
   CidadeListQuery,
 } from "@/modules/localidades/cidade";
 import { EstadoGraphqlMapper } from "@/modules/localidades/estado/presentation.graphql/estado.graphql.mapper";
-import { createListOutputMapper } from "@/shared/mapping";
-import { createMapping, mapFilterCase } from "@/shared/mapping/index";
+import { createListOutputMapper, createMapping, mapFilterCase } from "@/shared/mapping";
 import {
   CidadeFindOneOutputGraphQlDto,
   CidadeListInputGraphQlDto,

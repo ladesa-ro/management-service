@@ -18,7 +18,7 @@ import type {
   EnderecoListQueryResult,
 } from "@/modules/localidades/endereco/domain/queries";
 import type { IEnderecoRepository } from "@/modules/localidades/endereco/domain/repositories";
-import { EnderecoEntity } from "./typeorm/endereco.typeorm.entity";
+import { EnderecoEntity, enderecoEntityDomainMapper } from "./typeorm";
 
 const config = {
   alias: "endereco",
@@ -96,7 +96,8 @@ export class EnderecoTypeOrmRepositoryAdapter implements IEnderecoRepository {
       relations: ["cidade", "cidade.estado"],
     });
 
-    return endereco as EnderecoFindOneQueryResult | null;
+    if (!endereco) return null;
+    return enderecoEntityDomainMapper.toOutputData(endereco as unknown as Record<string, unknown>);
   }
 
   async exists(id: string): Promise<boolean> {
@@ -105,11 +106,13 @@ export class EnderecoTypeOrmRepositoryAdapter implements IEnderecoRepository {
   }
 
   create(data: Record<string, unknown>) {
-    return typeormCreate(this.appTypeormConnection, EnderecoEntity, data);
+    const entityData = enderecoEntityDomainMapper.toPersistenceData(data);
+    return typeormCreate(this.appTypeormConnection, EnderecoEntity, entityData);
   }
 
   update(id: string | number, data: Record<string, unknown>) {
-    return typeormUpdate(this.appTypeormConnection, EnderecoEntity, id, data);
+    const entityData = enderecoEntityDomainMapper.toPersistenceData(data);
+    return typeormUpdate(this.appTypeormConnection, EnderecoEntity, id, entityData);
   }
 
   softDeleteById(id: string) {

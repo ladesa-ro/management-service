@@ -19,7 +19,7 @@ import type {
   OfertaFormacaoListQueryResult,
 } from "@/modules/ensino/oferta-formacao";
 import type { IOfertaFormacaoRepository } from "@/modules/ensino/oferta-formacao/domain/repositories";
-import { OfertaFormacaoEntity } from "./typeorm/oferta-formacao.typeorm.entity";
+import { OfertaFormacaoEntity, ofertaFormacaoEntityDomainMapper } from "./typeorm";
 
 const config = {
   alias: "oferta_formacao",
@@ -91,12 +91,14 @@ export class OfertaFormacaoTypeOrmRepositoryAdapter implements IOfertaFormacaoRe
     return this.findById(accessContext, { id } as OfertaFormacaoFindOneQuery, selection);
   }
 
-  create(data: Record<string, any>) {
-    return typeormCreate(this.appTypeormConnection, OfertaFormacaoEntity, data);
+  create(data: Record<string, unknown>) {
+    const entityData = ofertaFormacaoEntityDomainMapper.toPersistenceData(data);
+    return typeormCreate(this.appTypeormConnection, OfertaFormacaoEntity, entityData);
   }
 
-  update(id: string | number, data: Record<string, any>) {
-    return typeormUpdate(this.appTypeormConnection, OfertaFormacaoEntity, id, data);
+  update(id: string | number, data: Record<string, unknown>) {
+    const entityData = ofertaFormacaoEntityDomainMapper.toPersistenceData(data);
+    return typeormUpdate(this.appTypeormConnection, OfertaFormacaoEntity, id, entityData);
   }
 
   softDeleteById(id: string) {

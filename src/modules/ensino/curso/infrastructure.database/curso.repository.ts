@@ -19,7 +19,7 @@ import type {
   CursoListQueryResult,
 } from "@/modules/ensino/curso/domain/queries";
 import type { ICursoRepository } from "@/modules/ensino/curso/domain/repositories";
-import { CursoEntity } from "./typeorm/curso.typeorm.entity";
+import { CursoEntity, cursoEntityDomainMapper } from "./typeorm";
 
 const config = {
   alias: "curso",
@@ -104,11 +104,13 @@ export class CursoTypeOrmRepositoryAdapter implements ICursoRepository {
   }
 
   create(data: Record<string, unknown>) {
-    return typeormCreate(this.appTypeormConnection, CursoEntity, data);
+    const entityData = cursoEntityDomainMapper.toPersistenceData(data);
+    return typeormCreate(this.appTypeormConnection, CursoEntity, entityData);
   }
 
   update(id: string | number, data: Record<string, unknown>) {
-    return typeormUpdate(this.appTypeormConnection, CursoEntity, id, data);
+    const entityData = cursoEntityDomainMapper.toPersistenceData(data);
+    return typeormUpdate(this.appTypeormConnection, CursoEntity, id, entityData);
   }
 
   softDeleteById(id: string) {

@@ -19,7 +19,7 @@ import type {
   CampusListQueryResult,
 } from "@/modules/ambientes/campus/domain/queries";
 import type { ICampusRepository } from "@/modules/ambientes/campus/domain/repositories";
-import { CampusEntity } from "./typeorm/campus.typeorm.entity";
+import { CampusEntity, campusEntityDomainMapper } from "./typeorm";
 
 const config = {
   alias: "campus",
@@ -132,11 +132,13 @@ export class CampusTypeOrmRepositoryAdapter implements ICampusRepository {
   }
 
   create(data: Record<string, unknown>) {
-    return typeormCreate(this.appTypeormConnection, CampusEntity, data);
+    const entityData = campusEntityDomainMapper.toPersistenceData(data);
+    return typeormCreate(this.appTypeormConnection, CampusEntity, entityData);
   }
 
   update(id: string | number, data: Record<string, unknown>) {
-    return typeormUpdate(this.appTypeormConnection, CampusEntity, id, data);
+    const entityData = campusEntityDomainMapper.toPersistenceData(data);
+    return typeormUpdate(this.appTypeormConnection, CampusEntity, id, entityData);
   }
 
   softDeleteById(id: string) {

@@ -19,7 +19,7 @@ import type {
   TurmaListQueryResult,
 } from "@/modules/ensino/turma/domain/queries";
 import type { ITurmaRepository } from "@/modules/ensino/turma/domain/repositories";
-import { TurmaEntity } from "./typeorm/turma.typeorm.entity";
+import { TurmaEntity, turmaEntityDomainMapper } from "./typeorm";
 
 const config = {
   alias: "turma",
@@ -119,11 +119,13 @@ export class TurmaTypeOrmRepositoryAdapter implements ITurmaRepository {
   }
 
   create(data: Record<string, unknown>) {
-    return typeormCreate(this.appTypeormConnection, TurmaEntity, data);
+    const entityData = turmaEntityDomainMapper.toPersistenceData(data);
+    return typeormCreate(this.appTypeormConnection, TurmaEntity, entityData);
   }
 
   update(id: string | number, data: Record<string, unknown>) {
-    return typeormUpdate(this.appTypeormConnection, TurmaEntity, id, data);
+    const entityData = turmaEntityDomainMapper.toPersistenceData(data);
+    return typeormUpdate(this.appTypeormConnection, TurmaEntity, id, entityData);
   }
 
   softDeleteById(id: string) {

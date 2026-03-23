@@ -1,86 +1,38 @@
-import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
-import { Empresa } from "@/modules/estagio/empresa/domain/empresa";
+import type { DeepPartial } from "typeorm";
+import { createEntityDomainMapper } from "@/infrastructure.database/typeorm/helpers/entity-domain-mapper";
+import type { IEmpresa } from "@/modules/estagio/empresa/domain/empresa";
 import type { EmpresaFindOneQueryResult } from "@/modules/estagio/empresa/domain/queries";
-import { EmpresaTypeormEntity } from "./empresa.typeorm.entity";
+import { dateToISO } from "@/shared/mapping/transforms";
+import type { EmpresaTypeormEntity } from "./empresa.typeorm.entity";
 
-/**
- * Mapeador de dados entre domínio e TypeORM
- */
-export class EmpresaMapper {
-  /**
-   * Converte entidade TypeORM para domínio
-   */
-  static toDomain(entity: EmpresaTypeormEntity): Empresa {
-    const empresa = Empresa.load({
-      id: entity.id,
-      razaoSocial: entity.razaoSocial,
-      nomeFantasia: entity.nomeFantasia,
-      cnpj: entity.cnpj,
-      telefone: entity.telefone,
-      email: entity.email,
-      endereco: {
-        id: entity.endereco?.id ?? (entity as unknown as Record<string, string>).idEnderecoFk,
-      },
-      dateCreated: entity.dateCreated.toISOString(),
-      dateUpdated: entity.dateUpdated.toISOString(),
-      dateDeleted: entity.dateDeleted ? entity.dateDeleted.toISOString() : null,
-    });
-    return empresa;
-  }
-
-  /**
-   * Converte domínio para TypeORM
-   */
-  static toPersistence(empresa: Empresa): EmpresaTypeormEntity {
-    const entity = new EmpresaTypeormEntity();
-    entity.id = empresa.id || generateUuidV7();
-    entity.razaoSocial = empresa.razaoSocial;
-    entity.nomeFantasia = empresa.nomeFantasia;
-    entity.cnpj = empresa.cnpj;
-    entity.telefone = empresa.telefone;
-    entity.email = empresa.email;
-    entity.endereco = { id: empresa.endereco.id } as unknown as typeof entity.endereco;
-    entity.dateCreated = new Date(empresa.dateCreated);
-    entity.dateUpdated = new Date(empresa.dateUpdated);
-    entity.dateDeleted = empresa.dateDeleted ? new Date(empresa.dateDeleted) : null;
-    return entity;
-  }
-
-  /**
-   * Converte TypeORM para DTO output
-   */
-  static toOutputDto(entity: EmpresaTypeormEntity): EmpresaFindOneQueryResult {
-    return {
-      id: entity.id,
-      razaoSocial: entity.razaoSocial,
-      nomeFantasia: entity.nomeFantasia,
-      cnpj: entity.cnpj,
-      telefone: entity.telefone,
-      email: entity.email,
-      endereco: entity.endereco as unknown as EmpresaFindOneQueryResult["endereco"],
-      ativo: !entity.dateDeleted,
-      dateCreated: entity.dateCreated.toISOString(),
-      dateUpdated: entity.dateUpdated.toISOString(),
-      dateDeleted: entity.dateDeleted ? entity.dateDeleted.toISOString() : null,
-    };
-  }
-
-  /**
-   * Converte domínio para DTO output
-   */
-  static domainToOutputDto(empresa: Empresa): EmpresaFindOneQueryResult {
-    return {
-      id: empresa.id!,
-      razaoSocial: empresa.razaoSocial,
-      nomeFantasia: empresa.nomeFantasia,
-      cnpj: empresa.cnpj,
-      telefone: empresa.telefone,
-      email: empresa.email,
-      endereco: empresa.endereco as unknown as EmpresaFindOneQueryResult["endereco"],
-      ativo: empresa.ativo,
-      dateCreated: empresa.dateCreated,
-      dateUpdated: empresa.dateUpdated,
-      dateDeleted: empresa.dateDeleted ?? null,
-    };
-  }
-}
+export const empresaEntityDomainMapper = createEntityDomainMapper<
+  IEmpresa,
+  DeepPartial<EmpresaTypeormEntity>,
+  EmpresaFindOneQueryResult
+>({
+  fields: [
+    "id",
+    "razaoSocial",
+    "nomeFantasia",
+    "cnpj",
+    "telefone",
+    "email",
+    { field: "endereco", type: "relation" },
+    { field: "dateCreated", type: "date" },
+    { field: "dateUpdated", type: "date" },
+    { field: "dateDeleted", type: "date" },
+  ],
+  output: [
+    "id",
+    "razaoSocial",
+    "nomeFantasia",
+    "cnpj",
+    "telefone",
+    "email",
+    "endereco",
+    ["dateCreated", "dateCreated", dateToISO],
+    ["dateUpdated", "dateUpdated", dateToISO],
+    ["dateDeleted", "dateDeleted", dateToISO],
+    ["dateDeleted", "ativo", (v) => !v],
+  ],
+});

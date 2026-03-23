@@ -197,6 +197,47 @@ export function createMapping(fields: FieldMapping[]): Mapping {
 }
 
 // ============================================================================
+// createBidirectionalMapping
+// ============================================================================
+
+export type BidirectionalField =
+  | string
+  | [field: string, forward: TransformFn, reverse: TransformFn]
+  | [sourceField: string, targetField: string, forward: TransformFn, reverse: TransformFn];
+
+export interface BidirectionalMapping {
+  /** A → B */
+  forward: Mapping;
+  /** B → A */
+  reverse: Mapping;
+}
+
+export function createBidirectionalMapping(fields: BidirectionalField[]): BidirectionalMapping {
+  const forwardFields: FieldMapping[] = [];
+  const reverseFields: FieldMapping[] = [];
+
+  for (const field of fields) {
+    if (typeof field === "string") {
+      forwardFields.push(field);
+      reverseFields.push(field);
+    } else if (field.length === 3) {
+      const [name, forward, reverse] = field;
+      forwardFields.push([name, name, forward]);
+      reverseFields.push([name, name, reverse]);
+    } else {
+      const [source, target, forward, reverse] = field;
+      forwardFields.push([source, target, forward]);
+      reverseFields.push([target, source, reverse]);
+    }
+  }
+
+  return {
+    forward: createMapping(forwardFields),
+    reverse: createMapping(reverseFields),
+  };
+}
+
+// ============================================================================
 // mapFilterCase helper
 // ============================================================================
 

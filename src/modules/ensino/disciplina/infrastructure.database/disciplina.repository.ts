@@ -19,7 +19,7 @@ import type {
   DisciplinaListQueryResult,
 } from "@/modules/ensino/disciplina/domain/queries";
 import type { IDisciplinaRepository } from "@/modules/ensino/disciplina/domain/repositories";
-import { DisciplinaEntity } from "./typeorm/disciplina.typeorm.entity";
+import { DisciplinaEntity, disciplinaEntityDomainMapper } from "./typeorm";
 
 const config = {
   alias: "disciplina",
@@ -84,12 +84,14 @@ export class DisciplinaTypeOrmRepositoryAdapter implements IDisciplinaRepository
     return this.findById(accessContext, { id } as DisciplinaFindOneQuery, selection);
   }
 
-  create(data: Record<string, any>) {
-    return typeormCreate(this.appTypeormConnection, DisciplinaEntity, data);
+  create(data: Record<string, unknown>) {
+    const entityData = disciplinaEntityDomainMapper.toPersistenceData(data);
+    return typeormCreate(this.appTypeormConnection, DisciplinaEntity, entityData);
   }
 
-  update(id: string | number, data: Record<string, any>) {
-    return typeormUpdate(this.appTypeormConnection, DisciplinaEntity, id, data);
+  update(id: string | number, data: Record<string, unknown>) {
+    const entityData = disciplinaEntityDomainMapper.toPersistenceData(data);
+    return typeormUpdate(this.appTypeormConnection, DisciplinaEntity, id, entityData);
   }
 
   softDeleteById(id: string) {

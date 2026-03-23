@@ -23,7 +23,7 @@ import type {
 } from "@/modules/acesso/perfil/domain/queries";
 import type { IPerfilRepository } from "@/modules/acesso/perfil/domain/repositories";
 import type { UsuarioEntity } from "@/modules/acesso/usuario/infrastructure.database";
-import { PerfilEntity } from "./typeorm/perfil.typeorm.entity";
+import { PerfilEntity, perfilEntityDomainMapper } from "./typeorm";
 
 const config = {
   alias: "vinculo",
@@ -185,11 +185,13 @@ export class PerfilTypeOrmRepositoryAdapter implements IPerfilRepository {
   }
 
   create(data: Record<string, unknown>) {
-    return typeormCreate(this.appTypeormConnection, PerfilEntity, data);
+    const entityData = perfilEntityDomainMapper.toPersistenceData(data);
+    return typeormCreate(this.appTypeormConnection, PerfilEntity, entityData);
   }
 
   update(id: string | number, data: Record<string, unknown>) {
-    return typeormUpdate(this.appTypeormConnection, PerfilEntity, id, data);
+    const entityData = perfilEntityDomainMapper.toPersistenceData(data);
+    return typeormUpdate(this.appTypeormConnection, PerfilEntity, id, entityData);
   }
 
   softDeleteById(id: string) {

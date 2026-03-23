@@ -19,7 +19,7 @@ import type {
   AmbienteListQueryResult,
 } from "@/modules/ambientes/ambiente/domain/queries";
 import type { IAmbienteRepository } from "@/modules/ambientes/ambiente/domain/repositories";
-import { AmbienteEntity } from "./typeorm/ambiente.typeorm.entity";
+import { AmbienteEntity, ambienteEntityDomainMapper } from "./typeorm";
 
 const config = {
   alias: "ambiente",
@@ -111,11 +111,13 @@ export class AmbienteTypeOrmRepositoryAdapter implements IAmbienteRepository {
   }
 
   create(data: Record<string, unknown>) {
-    return typeormCreate(this.appTypeormConnection, AmbienteEntity, data);
+    const entityData = ambienteEntityDomainMapper.toPersistenceData(data);
+    return typeormCreate(this.appTypeormConnection, AmbienteEntity, entityData);
   }
 
   update(id: string | number, data: Record<string, unknown>) {
-    return typeormUpdate(this.appTypeormConnection, AmbienteEntity, id, data);
+    const entityData = ambienteEntityDomainMapper.toPersistenceData(data);
+    return typeormUpdate(this.appTypeormConnection, AmbienteEntity, id, entityData);
   }
 
   softDeleteById(id: string) {

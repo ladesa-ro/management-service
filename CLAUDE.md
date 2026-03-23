@@ -134,7 +134,7 @@ application/
 └── queries/                 # Query handlers (FindOne, List)
 
 infrastructure.database/
-└── typeorm/                 # Entidade TypeORM + adapter do repositório
+└── typeorm/                 # Entidade TypeORM + adapter do repositório + mapper domain ↔ entity
 
 presentation.rest/           # Controllers REST (Swagger)
 presentation.graphql/        # Resolvers GraphQL (quando aplicável)
@@ -622,6 +622,41 @@ Contratos de paginação ficam em `src/application/pagination/`.
 - `gqlMetadata` retorna `{ description, nullable, defaultValue }` — DTO não especifica manualmente.
 - Nunca spread `...SharedFields`. Pick explícito: `{ page: SharedFields.page, limit: SharedFields.limit }`.
 
+### Mapeamento domain ↔ entity (infraestrutura)
+
+Cada módulo define um mapper em `infrastructure.database/typeorm/{nome}.mapper.ts` usando `createEntityDomainMapper`:
+
+```typescript
+// src/modules/ambientes/campus/infrastructure.database/typeorm/campus.mapper.ts
+export const campusEntityDomainMapper = createEntityDomainMapper<ICampus, Record<string, unknown>>({
+  fields: [
+    "id", "nomeFantasia", "razaoSocial", "apelido", "cnpj",
+    { field: "endereco", type: "relation" },
+    { field: "dateCreated", type: "date" },
+    { field: "dateUpdated", type: "date" },
+    { field: "dateDeleted", type: "date" },
+  ],
+});
+```
+
+**Tipos de campo disponíveis:**
+
+| Tipo | Forward (entity → domain) | Reverse (domain → entity) | Quando usar |
+|------|--------------------------|--------------------------|-------------|
+| `string` | passthrough | passthrough | Campos diretos sem conversão |
+| `"date"` | `Date` → ISO string | ISO string → `Date` | `dateCreated`, `dateUpdated`, `dateDeleted` |
+| `"date-only"` | `Date` → `"YYYY-MM-DD"` | `"YYYY-MM-DD"` → `Date` | `dataNascimento` e similares |
+| `"relation"` | `{ id, ... }` → `{ id }` | passthrough | Domain armazena `{ id }` (ex: `endereco`) |
+| `"relation-loaded"` | passthrough | `{ id, ... }` → `{ id }` | Domain armazena objeto completo (ex: `cidade.estado`) |
+| custom `{ forward, reverse }` | função custom | função custom | Casos especiais |
+
+**Regras:**
+- O mapper é **interno à infraestrutura** — nunca vaza para a camada de aplicação.
+- Repositórios usam `toPersistenceData()` nos métodos `create`/`update`.
+- Repositórios que usam `typeormFindAll`/`typeormFindById` continuam usando esses helpers para leitura.
+- Config `output` opcional para `toOutputData` com campos computados (ex: `ativo = !dateDeleted`).
+- Transforms comuns ficam em `src/shared/mapping/transforms.ts`.
+
 ---
 
 ## Decisões arquiteturais vigentes
@@ -638,6 +673,7 @@ Estas decisões são intencionais e **não devem ser questionadas ou alteradas**
 8. **Validação Zod em duas camadas** — apresentação + domínio. Sem class-validator.
 9. **Constructor privado** em entidades de domínio — instanciação apenas via `create`/`load`.
 10. **`src/shared/`** é o lar de utilitários cross-cutting — validação, mapping, decorators de apresentação.
+11. **Mapper domain ↔ entity é interno à infraestrutura** — `createEntityDomainMapper` em `src/infrastructure.database/typeorm/helpers/`. Cada módulo define seu mapper em `infrastructure.database/typeorm/{nome}.mapper.ts`. O mapper nunca vaza para a camada de aplicação.
 
 ---
 

@@ -18,7 +18,7 @@ import type {
   NivelFormacaoListQuery,
   NivelFormacaoListQueryResult,
 } from "@/modules/ensino/nivel-formacao";
-import { NivelFormacaoEntity } from "./typeorm/nivel-formacao.typeorm.entity";
+import { NivelFormacaoEntity, nivelFormacaoEntityDomainMapper } from "./typeorm";
 
 const config = {
   alias: "nivel_formacao",
@@ -85,12 +85,14 @@ export class NivelFormacaoTypeOrmRepositoryAdapter implements INivelFormacaoRepo
     return this.findById(accessContext, { id } as NivelFormacaoFindOneQuery, selection);
   }
 
-  create(data: Record<string, any>) {
-    return typeormCreate(this.appTypeormConnection, NivelFormacaoEntity, data);
+  create(data: Record<string, unknown>) {
+    const entityData = nivelFormacaoEntityDomainMapper.toPersistenceData(data);
+    return typeormCreate(this.appTypeormConnection, NivelFormacaoEntity, entityData);
   }
 
-  update(id: string | number, data: Record<string, any>) {
-    return typeormUpdate(this.appTypeormConnection, NivelFormacaoEntity, id, data);
+  update(id: string | number, data: Record<string, unknown>) {
+    const entityData = nivelFormacaoEntityDomainMapper.toPersistenceData(data);
+    return typeormUpdate(this.appTypeormConnection, NivelFormacaoEntity, id, entityData);
   }
 
   softDeleteById(id: string) {
