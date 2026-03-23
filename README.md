@@ -13,6 +13,9 @@ API REST/GraphQL de gerenciamento acadêmico desenvolvida com NestJS, TypeORM e 
 - [Visão geral](#visão-geral)
 - [Arquitetura](#arquitetura)
   - [Arquitetura hexagonal](#arquitetura-hexagonal)
+  - [NestJS — conceitos fundamentais](#nestjs--conceitos-fundamentais)
+  - [As camadas em detalhe](#as-camadas-em-detalhe)
+  - [Como as camadas conversam](#como-as-camadas-conversam)
   - [Fluxo de uma requisição](#fluxo-de-uma-requisição)
   - [CQRS](#cqrs)
   - [Estrutura de diretórios](#estrutura-de-diretórios)
@@ -107,6 +110,302 @@ graph TD
 ```
 
 O fluxo de dependência sempre aponta **para dentro**: a apresentação depende da aplicação, que depende do domínio. A infraestrutura implementa os contratos do domínio, mas o domínio nunca referencia a infraestrutura diretamente.
+
+### NestJS — conceitos fundamentais
+
+O projeto usa o [NestJS](https://nestjs.com/) como framework. Se você nunca usou NestJS, aqui estão os conceitos essenciais para entender o código:
+
+#### Building blocks
+
+O NestJS organiza a aplicação em peças que se encaixam:
+
+```mermaid
+graph TD
+    subgraph "Organização"
+        MOD["Module\nAgrupa e organiza"]
+        CTRL["Controller\nRecebe requisições"]
+        PROV["Provider / Service\nLógica injetável"]
+    end
+
+    subgraph "Pipeline de requisição"
+        MW["Middleware\n(antes de tudo)"]
+        GD["Guard\n(autenticação)"]
+        PP["Pipe\n(validação)"]
+        IT["Interceptor\n(transação, logging)"]
+        FT["Filter\n(tratamento de erros)"]
+    end
+
+    MOD --> CTRL
+    MOD --> PROV
+    CTRL -.-> PROV
+
+    MW --> GD --> PP --> CTRL
+    CTRL --> IT
+    IT -.-> FT
+
+    style MOD fill:#e8a838,stroke:#b07c1e,color:#fff
+    style CTRL fill:#4a90d9,stroke:#2c5f8a,color:#fff
+    style PROV fill:#50b86c,stroke:#3a8a50,color:#fff
+```
+
+| Conceito | O que é | Neste projeto |
+|----------|---------|---------------|
+| **Module** | Unidade organizacional que agrupa controllers e providers. `AppModule` é a raiz, e cada módulo de feature tem seu próprio module. | `AppModule` importa todos os módulos. Cada módulo (ex.: `CampusModule`) registra seus handlers, repositórios e controllers. |
+| **Controller** | Classe que recebe requisições HTTP e delega para providers. Usa decorators como `@Controller('/path')`, `@Get()`, `@Post()`, `@Body()`, `@Param()`. | Controllers ficam em `presentation.rest/`. Delegam para command/query handlers — **nunca** contêm lógica de negócio. |
+| **Provider** | Qualquer classe injetável no container de DI. Inclui services, handlers, repositórios, configs. | Handlers (`CampusCreateCommandHandler`), repositórios (`CampusTypeormRepository`), permission checkers — todos são providers. |
+| **Resolver** | Equivalente ao Controller, mas para GraphQL. Usa `@Resolver()`, `@Query()`, `@Mutation()`. | Resolvers ficam em `presentation.graphql/`. Reutilizam os mesmos handlers do REST. |
+
+#### Pipeline de uma requisição HTTP
+
+Quando uma requisição chega ao NestJS, ela passa por várias camadas antes de chegar ao controller:
+
+```mermaid
+graph LR
+    REQ["Requisição HTTP"] --> MW["Middleware\nCorrelation ID"]
+    MW --> GD["Guard\nExtrai Bearer token\ne valida JWT"]
+    GD --> PP["Pipe\nZodGlobalValidationPipe\nvalida body/params"]
+    PP --> CTRL["Controller\nDelega para handler"]
+    CTRL --> INT["Interceptor\nTransactionInterceptor\nabre transação"]
+    INT --> HANDLER["Handler\nexecuta lógica"]
+    HANDLER --> INT2["Interceptor\ncommit ou rollback"]
+    INT2 --> RESP["Resposta HTTP"]
+
+    HANDLER -.-> |"erro"| FT["Filter\nApplicationErrorFilter\nformata erro HTTP"]
+    FT --> RESP
+
+    style REQ fill:#4a90d9,stroke:#2c5f8a,color:#fff
+    style CTRL fill:#7b68ee,stroke:#5a4db0,color:#fff
+    style HANDLER fill:#e8a838,stroke:#b07c1e,color:#fff
+    style RESP fill:#50b86c,stroke:#3a8a50,color:#fff
+```
+
+| Etapa | Papel | Exemplo neste projeto |
+|-------|-------|-----------------------|
+| **Middleware** | Executa antes de tudo. Pode modificar request/response. | `CorrelationIdMiddleware` — gera um ID único por requisição para rastreamento em logs. |
+| **Guard** | Decide se a requisição pode prosseguir (autenticação). Retorna `true`/`false`. | Valida o Bearer token via JWKS (ou mock token em dev) e popula o `RequestActor`. |
+| **Pipe** | Transforma e/ou valida dados de entrada (body, params, query). | `ZodGlobalValidationPipe` — valida o body contra o `static schema` do DTO. Se inválido, retorna 400. |
+| **Controller** | Recebe a requisição já validada, extrai o ator (`@RequestActor()`) e delega para o handler. | `CampusController.create()` chama `campusCreateCommandHandler.execute()`. |
+| **Interceptor** | Envolve a execução do handler (antes e depois). | `TransactionInterceptor` — abre uma transação antes do handler e faz commit/rollback após. |
+| **Filter** | Captura exceções e formata a resposta de erro. | `ApplicationErrorFilter` — converte `ForbiddenError` em HTTP 403, `ValidationError` em 400 com detalhes por campo. |
+
+#### Dependency Injection no NestJS
+
+O NestJS resolve dependências automaticamente. Você declara o que precisa no constructor, e o framework injeta:
+
+```typescript
+// O NestJS vê que o constructor precisa de ICampusRepository
+// e automaticamente injeta a classe registrada para esse Symbol
+constructor(
+  @Inject(ICampusRepository) private readonly repo: ICampusRepository,
+) {}
+```
+
+Neste projeto, usamos **Symbols** como tokens de injeção (em vez de classes), o que permite desacoplar interface de implementação:
+
+- `Symbol("ICampusRepository")` — token de injeção (definido no domínio)
+- `@DeclareDependency(token)` — marca uma classe como provider desse token
+- `@DeclareImplementation(token)` — registra uma implementação concreta para o token
+- `@Inject(token)` — solicita a injeção da implementação registrada
+
+### As camadas em detalhe
+
+#### Camada de Domínio (`src/domain/`)
+
+A camada mais interna e mais protegida. Contém a **lógica de negócio pura** — sem dependência de frameworks, bancos de dados ou protocolos.
+
+```mermaid
+graph TD
+    subgraph "src/domain/"
+        ENT["Entidades\nCampus, Turma, Diario..."]
+        SCH["Schemas Zod\nCampusSchema, CampusCreateSchema..."]
+        ABS["Abstrações\nIRepositoryCreate, IRepositoryFindAll\nIPermissionChecker, IAccessContext"]
+        SCA["Scalars\nIdUuid, IdNumeric\nScalarDateTimeString"]
+        ERR["Erros\nValidationError, domínio"]
+        DI["Dependency Injection\nDeclareDependency\nDeclareImplementation"]
+    end
+
+    ENT --> SCH
+    ENT --> SCA
+    ENT --> ERR
+
+    style ENT fill:#e8a838,stroke:#b07c1e,color:#fff
+    style ABS fill:#e8a838,stroke:#b07c1e,color:#fff
+```
+
+**O que contém:**
+- **Entidades** — classes com constructor privado, factory methods (`create`, `load`, `update`) e validação Zod interna.
+- **Schemas Zod** — definem a forma dos dados. `EntitySchema`, `CreateSchema` (sem id/datas), `UpdateSchema` (parcial).
+- **Abstrações** — interfaces que definem contratos: `IRepositoryCreate<T>`, `IRepositoryFindAll<T>`, `IPermissionChecker`, `IAccessContext`.
+- **Scalars** — type aliases semânticos: `IdUuid` em vez de `string`, `ScalarDateTimeString` em vez de `string`.
+- **DI decorators** — `DeclareDependency`, `DeclareImplementation` para registrar no container.
+
+**Regra de ouro:** o domínio **nunca** importa de `infrastructure.*`, `server/`, ou qualquer framework. Ele define _o que_ precisa, não _como_ é feito.
+
+#### Camada de Aplicação (`src/application/`)
+
+Orquestra o domínio. Recebe uma intenção do usuário (command/query), verifica permissões e coordena a execução.
+
+```mermaid
+graph LR
+    INPUT["input (unknown)"] --> HANDLER["Command/Query Handler"]
+    AC["AccessContext\n(usuário)"] --> HANDLER
+    HANDLER --> PC["Permission Checker\nensureCanCreate()"]
+    HANDLER --> ENT["Entidade.create(input)\n(domínio)"]
+    HANDLER --> REPO["Repository.create(entity)\n(interface do domínio)"]
+
+    style HANDLER fill:#7b68ee,stroke:#5a4db0,color:#fff
+    style ENT fill:#e8a838,stroke:#b07c1e,color:#fff
+    style REPO fill:#50b86c,stroke:#3a8a50,color:#fff
+```
+
+**O que contém:**
+- **Command handlers** — `CreateCommandHandler`, `UpdateCommandHandler`, `DeleteCommandHandler`. Recebem `accessContext` + `input`, verificam permissão, criam/atualizam entidade, chamam repositório.
+- **Query handlers** — `FindOneQueryHandler`, `ListQueryHandler`. Delegam leitura para o repositório.
+- **Permission checkers** — implementações de `IPermissionChecker`. Verificam se o usuário pode executar a operação.
+- **Erros de aplicação** — `ResourceNotFoundError` (404), `ForbiddenError` (403), `ValidationError` (400), etc.
+- **Helpers** — utilitários de imagem, paginação.
+
+**Papel:** é a camada de "orquestração". Não contém regras de negócio (essas ficam no domínio) nem detalhes de persistência (esses ficam na infraestrutura).
+
+#### Camada de Infraestrutura (`src/infrastructure.*/`)
+
+Implementa os contratos do domínio com tecnologias concretas. Cada _concern_ tem seu próprio diretório `infrastructure.*`:
+
+```mermaid
+graph TD
+    subgraph "Contratos (domínio)"
+        IR["IRepositoryCreate"]
+        IIP["IIdentityProvider"]
+        IMB["IMessageBroker"]
+        IS["IStorageService"]
+    end
+
+    subgraph "Implementações (infraestrutura)"
+        TR["TypeORM Repository\ninfrastructure.database"]
+        KC["Keycloak Service\ninfrastructure.identity-provider"]
+        RMQ["Rascal Service\ninfrastructure.message-broker"]
+        FS["Filesystem Service\ninfrastructure.storage"]
+    end
+
+    IR -.-> TR
+    IIP -.-> KC
+    IMB -.-> RMQ
+    IS -.-> FS
+
+    TR --> PG["PostgreSQL"]
+    KC --> KCS["Keycloak Server"]
+    RMQ --> RMQS["RabbitMQ Server"]
+    FS --> DISK["Filesystem"]
+
+    style IR fill:#e8a838,stroke:#b07c1e,color:#fff
+    style TR fill:#50b86c,stroke:#3a8a50,color:#fff
+```
+
+| Diretório | Tecnologia | O que implementa |
+|-----------|-----------|-----------------|
+| `infrastructure.database` | TypeORM + PostgreSQL | Repositórios, migrações, paginação, connection proxy (transações) |
+| `infrastructure.identity-provider` | Keycloak + JWKS | Validação de tokens, obtenção de info do usuário, admin client |
+| `infrastructure.message-broker` | RabbitMQ via Rascal | Publicação e consumo de mensagens (filas de geração de horário) |
+| `infrastructure.storage` | Filesystem + Sharp | Upload, armazenamento e redimensionamento de imagens/arquivos |
+| `infrastructure.config` | NestJS ConfigModule | Leitura de variáveis de ambiente, opções de runtime |
+| `infrastructure.graphql` | Apollo Server | Configuração do GraphQL, DTOs base, cache |
+| `infrastructure.logging` | Middleware customizado | Correlation ID para rastreamento de requisições |
+| `infrastructure.authorization` | Implementações locais | Permission checkers concretos |
+
+**Papel:** é a única camada que "sabe" qual banco de dados, qual provedor de auth, ou qual broker está sendo usado. Se trocar PostgreSQL por MySQL, apenas `infrastructure.database` muda.
+
+#### Camada de Apresentação (`src/modules/*/presentation.*/`)
+
+Traduz protocolos externos (HTTP, GraphQL) em chamadas para a camada de aplicação e formata as respostas.
+
+```mermaid
+graph LR
+    subgraph "REST (presentation.rest/)"
+        CTRL["Controller\n@Controller('/path')\n@Post, @Get, @Put, @Delete"]
+        DTO_IN["DTO de entrada\nstatic schema (Zod)"]
+        DTO_OUT["DTO de saída\nSwagger decorators"]
+    end
+
+    subgraph "GraphQL (presentation.graphql/)"
+        RES["Resolver\n@Resolver\n@Query, @Mutation"]
+        GQL_DTO["GraphQL DTO\n@ObjectType\n@Field"]
+    end
+
+    CTRL --> HANDLER["Handler\n(aplicação)"]
+    RES --> HANDLER
+
+    style CTRL fill:#4a90d9,stroke:#2c5f8a,color:#fff
+    style RES fill:#4a90d9,stroke:#2c5f8a,color:#fff
+    style HANDLER fill:#7b68ee,stroke:#5a4db0,color:#fff
+```
+
+**O que contém:**
+- **Controllers REST** — recebem HTTP, validam DTO (via Zod pipe), extraem `RequestActor`, delegam para handler. Sempre com `@ApiTags` e `@ApiOperation` para documentação Swagger.
+- **Resolvers GraphQL** — equivalente ao controller, mas para queries/mutations GraphQL. Reutilizam os mesmos handlers.
+- **DTOs de entrada** — classes com `static schema` (Zod) para validação automática. O schema é reutilizado do domínio.
+- **DTOs de saída** — definem a forma da resposta (REST com tipos TypeScript, GraphQL com `@ObjectType`/`@Field`).
+
+**Regra:** a apresentação **nunca** acessa o banco diretamente. Ela sempre delega para handlers da aplicação.
+
+### Como as camadas conversam
+
+Visão completa de como uma requisição de criação flui entre todas as camadas, com os artefatos concretos:
+
+```mermaid
+graph TD
+    subgraph "Apresentação"
+        REQ["POST /api/ambientes/campus\n+ Bearer token + JSON body"]
+        MW["Middleware: CorrelationIdMiddleware\n→ gera requestId"]
+        GD["Guard: extrai token → RequestActor"]
+        PP["Pipe: ZodGlobalValidationPipe\n→ valida body com CampusCreateInputRestDto.schema"]
+        CTRL["CampusController.create()\n→ @RequestActor() actor, @Body() dto"]
+    end
+
+    subgraph "Aplicação"
+        INT["Interceptor: TransactionInterceptor\n→ abre transação"]
+        HANDLER["CampusCreateCommandHandler.execute()\n→ recebe accessContext + input"]
+        PERM["CampusPermissionChecker\n→ ensureCanCreate(accessContext)"]
+    end
+
+    subgraph "Domínio"
+        ENT["Campus.create(input)\n→ zodValidate, gera UUID v7"]
+    end
+
+    subgraph "Infraestrutura"
+        REPO["CampusTypeormRepository.create()\n→ mapeia para TypeORM entity e salva"]
+        DB["PostgreSQL\n→ INSERT INTO campus"]
+    end
+
+    REQ --> MW --> GD --> PP --> CTRL
+    CTRL --> INT --> HANDLER
+    HANDLER --> PERM
+    HANDLER --> ENT
+    HANDLER --> REPO
+    REPO --> DB
+
+    DB --> |"commit"| INT
+    INT --> |"201 Created"| REQ
+
+    style REQ fill:#4a90d9,stroke:#2c5f8a,color:#fff
+    style ENT fill:#e8a838,stroke:#b07c1e,color:#fff
+    style HANDLER fill:#7b68ee,stroke:#5a4db0,color:#fff
+    style REPO fill:#50b86c,stroke:#3a8a50,color:#fff
+```
+
+**Resumo do fluxo:**
+
+1. **Requisição chega** → Middleware adiciona Correlation ID para logs.
+2. **Guard valida token** → extrai `RequestActor` (ou rejeita com 401).
+3. **Pipe valida body** → executa o Zod schema do DTO (ou rejeita com 400).
+4. **Controller delega** → cria `accessContext` e chama o handler.
+5. **Interceptor abre transação** → todas as operações de banco participam dela.
+6. **Handler verifica permissão** → chama `ensureCanCreate` (ou lança 403).
+7. **Handler cria entidade** → `Campus.create()` valida com Zod e gera UUID.
+8. **Handler persiste** → chama o repositório (que internamente usa TypeORM).
+9. **Interceptor faz commit** → se tudo deu certo, commit. Se houve erro, rollback.
+10. **Resposta retorna** → 201 Created com o ID da entidade criada.
+
+**Regra de comunicação:** cada camada só conhece a camada imediatamente abaixo dela (via interfaces). A apresentação não sabe que o banco é PostgreSQL. O handler não sabe que o repositório usa TypeORM. O domínio não sabe que existe NestJS.
 
 ### Fluxo de uma requisição
 
