@@ -180,7 +180,7 @@ Um **ORM** é uma ferramenta que faz a ponte entre objetos do código e tabelas 
 ```mermaid
 graph LR
     subgraph "Código TypeScript"
-        OBJ["Objeto Campus\n{id, nomeFantasia, cnpj}"]
+        OBJ["Objeto Campus\n{\n  id,\n  nomeFantasia,\n  cnpj\n}"]
     end
 
     ORM_ENGINE["ORM\n(TypeORM)"]
@@ -194,9 +194,9 @@ graph LR
     TBL -- "SELECT *\nFROM campus" --> ORM_ENGINE
     ORM_ENGINE -- "instancia\nobjeto" --> OBJ
 
-    style OBJ fill:#4a90d9,stroke:#2c5f8a,color:#fff
-    style ORM_ENGINE fill:#e8a838,stroke:#b07c1e,color:#fff
-    style TBL fill:#336791,stroke:#1e3d5c,color:#fff
+    style OBJ fill:#4a90d9,stroke:#2c5f8a,color:#fff,text-align:left
+    style ORM_ENGINE fill:#e8a838,stroke:#b07c1e,color:#fff,text-align:left
+    style TBL fill:#336791,stroke:#1e3d5c,color:#fff,text-align:left
 ```
 
 **Neste projeto**, usamos o [TypeORM](https://typeorm.io/) v0.3.28. Cada entidade de domínio (como `Campus`) tem uma entidade TypeORM correspondente (como `CampusEntity` em `src/modules/ambientes/campus/infrastructure.database/typeorm/campus.typeorm.entity.ts`) que define como os campos são mapeados para colunas do banco. O mapeamento fica **apenas na camada de infraestrutura** — a entidade de domínio em `domain/campus.ts` não sabe que o TypeORM existe.
@@ -249,12 +249,13 @@ Um **DTO** é um objeto que existe apenas para **transportar dados** entre camad
 graph LR
     CLIENT["Cliente\n(front-end)"] -- "JSON de entrada\n{nomeFantasia, cnpj}" --> DTO_IN["DTO de Entrada\nCampusCreateInputRestDto\n+ static schema (Zod)"]
     DTO_IN -- "dados validados" --> HANDLER["Handler"]
-    HANDLER -- "resultado" --> DTO_OUT["DTO de Saída\nCampusFindOneOutputRestDto\n{id, nomeFantasia, dateCreated...}"]
+    HANDLER -- "resultado" --> DTO_OUT["DTO de Saída\nCampusFindOneOutputRestDto\n{\n  id, nomeFantasia,\n  dateCreated...\n}"]
     DTO_OUT -- "JSON de resposta" --> CLIENT
 
-    style DTO_IN fill:#4a90d9,stroke:#2c5f8a,color:#fff
-    style DTO_OUT fill:#50b86c,stroke:#3a8a50,color:#fff
-    style HANDLER fill:#7b68ee,stroke:#5a4db0,color:#fff
+    style CLIENT text-align:left
+    style DTO_IN fill:#4a90d9,stroke:#2c5f8a,color:#fff,text-align:left
+    style DTO_OUT fill:#50b86c,stroke:#3a8a50,color:#fff,text-align:left
+    style HANDLER fill:#7b68ee,stroke:#5a4db0,color:#fff,text-align:left
 ```
 
 **Neste projeto**, existem DTOs de **entrada** (o que o cliente envia) e DTOs de **saída** (o que a API retorna). Os DTOs de entrada carregam um `static schema` Zod que é usado automaticamente pelo `ZodGlobalValidationPipe` para validar a requisição antes que ela chegue ao controller.
@@ -264,21 +265,22 @@ graph LR
 ```mermaid
 graph TD
     subgraph "Entrada (CampusCreateInputRestDto)"
-        IN["nomeFantasia: 'IFRO'\nrazaoSocial: 'Instituto Federal'\napelido: 'Ji-Paraná'\ncnpj: '10817343000195'\nendereco: { id: 'uuid-...' }"]
+        IN["nomeFantasia: 'IFRO'\nrazaoSocial: 'Instituto Federal'\napelido: 'Ji-Paraná'\ncnpj: '10817343000195'\nendereco: {\n  id: 'uuid-...'\n}"]
     end
 
     PIPE["ZodGlobalValidationPipe\nvalida com CampusCreateSchema"]
 
     subgraph "Saída (CampusFindOneQueryResult)"
-        OUT["id: '019...' (UUID v7 gerado)\nnomeFantasia: 'IFRO'\nrazaoSocial: 'Instituto Federal'\napelido: 'Ji-Paraná'\ncnpj: '10817343000195'\nendereco: { id, cep, cidade... }\ndateCreated: '2026-03-22T...'\ndateUpdated: '2026-03-22T...'"]
+        OUT["id: '019...' (UUID v7 gerado)\nnomeFantasia: 'IFRO'\nrazaoSocial: 'Instituto Federal'\napelido: 'Ji-Paraná'\ncnpj: '10817343000195'\nendereco: {\n  id, cep, cidade...\n}\ndateCreated: '2026-03-22T...'\ndateUpdated: '2026-03-22T...'"]
     end
 
     IN --> PIPE --> |"válido"| OUT
-    PIPE -.-> |"inválido"| ERR["400 Bad Request\n{field: 'cnpj', message: 'cnpj é obrigatório'}"]
+    PIPE -.-> |"inválido"| ERR["400 Bad Request\n{\n  field: 'cnpj',\n  message: 'cnpj é obrigatório'\n}"]
 
-    style IN fill:#4a90d9,stroke:#2c5f8a,color:#fff
-    style OUT fill:#50b86c,stroke:#3a8a50,color:#fff
-    style ERR fill:#e74c3c,stroke:#c0392b,color:#fff
+    style IN fill:#4a90d9,stroke:#2c5f8a,color:#fff,text-align:left
+    style OUT fill:#50b86c,stroke:#3a8a50,color:#fff,text-align:left
+    style PIPE text-align:left
+    style ERR fill:#e74c3c,stroke:#c0392b,color:#fff,text-align:left
 ```
 
 ```typescript
@@ -303,16 +305,16 @@ Um **JWT** é um token (uma string codificada) que carrega informações sobre u
 ```mermaid
 graph LR
     subgraph "JWT (3 partes separadas por '.')"
-        H["Header\n{alg: RS256,\ntyp: JWT,\nkid: 'abc123'}"]
-        P["Payload (claims)\n{sub: 'user-id',\nmatricula: '1234',\nexp: 1711000000}"]
-        S["Signature\nHMAC(header + payload,\nchave secreta)"]
+        H["Header\n{\n  alg: RS256,\n  typ: JWT,\n  kid: 'abc123'\n}"]
+        P["Payload (claims)\n{\n  sub: 'user-id',\n  matricula: '1234',\n  exp: 1711000000\n}"]
+        S["Signature\nHMAC(\n  header + payload,\n  chave secreta\n)"]
     end
 
     H --- P --- S
 
-    style H fill:#4a90d9,stroke:#2c5f8a,color:#fff
-    style P fill:#e8a838,stroke:#b07c1e,color:#fff
-    style S fill:#50b86c,stroke:#3a8a50,color:#fff
+    style H fill:#4a90d9,stroke:#2c5f8a,color:#fff,text-align:left
+    style P fill:#e8a838,stroke:#b07c1e,color:#fff,text-align:left
+    style S fill:#50b86c,stroke:#3a8a50,color:#fff,text-align:left
 ```
 
 A grande vantagem do JWT é que a API **não precisa consultar o banco de dados** para verificar se o token é válido — basta verificar a assinatura usando a chave pública do emissor.
@@ -450,32 +452,33 @@ A particularidade do Zod é que ele funciona tanto em **compile-time** (gerando 
 
 ```mermaid
 graph TD
-    ZOD_SCHEMA["Schema Zod\nz.object({ nomeFantasia: z.string().min(1) })"]
+    ZOD_SCHEMA["Schema Zod\nz.object({\n  nomeFantasia:\n    z.string().min(1)\n})"]
 
-    ZOD_SCHEMA --> COMPILE["Compile-time\nz.infer gera tipo TypeScript\nICampus = { nomeFantasia: string }"]
+    ZOD_SCHEMA --> COMPILE["Compile-time\nz.infer gera tipo TypeScript\nICampus = {\n  nomeFantasia: string\n}"]
     ZOD_SCHEMA --> RUNTIME["Runtime\nschema.safeParse(dados)\nvalida dados reais"]
 
     RUNTIME --> OK["Válido\n→ retorna dados tipados"]
     RUNTIME --> ERR["Inválido\n→ retorna ZodError\ncom detalhes por campo"]
 
-    style ZOD_SCHEMA fill:#e8a838,stroke:#b07c1e,color:#fff
-    style COMPILE fill:#4a90d9,stroke:#2c5f8a,color:#fff
-    style RUNTIME fill:#50b86c,stroke:#3a8a50,color:#fff
-    style ERR fill:#e74c3c,stroke:#c0392b,color:#fff
+    style ZOD_SCHEMA fill:#e8a838,stroke:#b07c1e,color:#fff,text-align:left
+    style COMPILE fill:#4a90d9,stroke:#2c5f8a,color:#fff,text-align:left
+    style RUNTIME fill:#50b86c,stroke:#3a8a50,color:#fff,text-align:left
+    style OK text-align:left
+    style ERR fill:#e74c3c,stroke:#c0392b,color:#fff,text-align:left
 ```
 
 **Neste projeto**, Zod é o **único** sistema de validação — `class-validator` e `class-transformer` não são usados. A validação acontece em **duas camadas**: na apresentação (DTOs com `static schema`) e no domínio (factory methods das entidades). Os schemas ficam em `src/modules/*/domain/*.schemas.ts`.
 
 ```mermaid
 graph LR
-    REQ["Requisição\n{nomeFantasia: ''}"]
+    REQ["Requisição\n{ nomeFantasia: '' }"]
 
     subgraph "Camada 1 — Apresentação"
         PIPE["ZodGlobalValidationPipe\nusa DTO.schema"]
     end
 
     subgraph "Camada 2 — Domínio"
-        FACTORY["Campus.create()\nzodValidate(CampusCreateSchema)"]
+        FACTORY["Campus.create()\nzodValidate(\n  CampusCreateSchema\n)"]
     end
 
     REQ --> PIPE
@@ -484,10 +487,11 @@ graph LR
     FACTORY -- "válido" --> OK["✅ Entidade criada"]
     FACTORY -. "inválido\n(rede de segurança)" .-> RESP2["❌ Erro de domínio"]
 
-    style PIPE fill:#4a90d9,stroke:#2c5f8a,color:#fff
-    style FACTORY fill:#e8a838,stroke:#b07c1e,color:#fff
-    style RESP1 fill:#e74c3c,stroke:#c0392b,color:#fff
-    style RESP2 fill:#e74c3c,stroke:#c0392b,color:#fff
+    style REQ text-align:left
+    style PIPE fill:#4a90d9,stroke:#2c5f8a,color:#fff,text-align:left
+    style FACTORY fill:#e8a838,stroke:#b07c1e,color:#fff,text-align:left
+    style RESP1 fill:#e74c3c,stroke:#c0392b,color:#fff,text-align:left
+    style RESP2 fill:#e74c3c,stroke:#c0392b,color:#fff,text-align:left
 ```
 
 ```typescript
@@ -621,10 +625,10 @@ graph LR
     HANDLER -.-> I2
     HANDLER -.-> I3
 
-    style HANDLER fill:#4a90d9,stroke:#2c5f8a,color:#fff
-    style IMPL1 fill:#50b86c,stroke:#3a8a50,color:#fff
-    style IMPL2 fill:#7b68ee,stroke:#5a4db0,color:#fff
-    style IMPL3 fill:#e8a838,stroke:#b07c1e,color:#fff
+    style HANDLER fill:#4a90d9,stroke:#2c5f8a,color:#fff,text-align:left
+    style IMPL1 fill:#50b86c,stroke:#3a8a50,color:#fff,text-align:left
+    style IMPL2 fill:#7b68ee,stroke:#5a4db0,color:#fff,text-align:left
+    style IMPL3 fill:#e8a838,stroke:#b07c1e,color:#fff,text-align:left
 ```
 
 > **Para ir mais fundo:** a diferença entre **inversão de dependência** e **injeção de dependência** é sutil mas importante. Inversão de dependência é um **princípio de design** — o domínio define interfaces, e a infraestrutura implementa. Injeção de dependência é um **mecanismo técnico** — o container (NestJS) resolve e injeta as implementações via constructor. Neste projeto, os Symbols do TypeScript funcionam como tokens de injeção porque TypeScript não emite interfaces em runtime — o Symbol é a referência concreta que o container usa para resolver a dependência. Essa abordagem é um **pragmatismo aceito**: tecnicamente, `DeclareDependency` (que internamente usa `@Inject` do NestJS) cria um acoplamento do domínio com o NestJS, mas na prática é um decorator fino que não afeta a testabilidade.
@@ -717,19 +721,19 @@ export class TransactionInterceptor implements NestInterceptor {
 ```mermaid
 graph LR
     subgraph "REST — 3 requisições"
-        R1["GET /api/campi/1\n→ { id, nomeFantasia, razaoSocial,\napelido, cnpj, endereco, dateCreated... }"]
+        R1["GET /api/campi/1\n→ {\n    id, nomeFantasia,\n    razaoSocial, apelido,\n    cnpj, endereco,\n    dateCreated...\n  }"]
         R2["GET /api/blocos?campus.id=1\n→ [todos os campos de cada bloco]"]
         R3["GET /api/turmas?campus.id=1\n→ [todos os campos de cada turma]"]
     end
 
     subgraph "GraphQL — 1 requisição"
-        GQL["query {\n  campusFindOne(id: '1') {\n    nomeFantasia\n    blocos { nome }\n    cursos { turmas { periodo } }\n  }\n}\n→ só os campos pedidos"]
+        GQL["query {\n  campusFindOne(id: '1') {\n    nomeFantasia\n    blocos { nome }\n    cursos {\n      turmas { periodo }\n    }\n  }\n}\n→ só os campos pedidos"]
     end
 
-    style R1 fill:#4a90d9,stroke:#2c5f8a,color:#fff
-    style R2 fill:#4a90d9,stroke:#2c5f8a,color:#fff
-    style R3 fill:#4a90d9,stroke:#2c5f8a,color:#fff
-    style GQL fill:#e535ab,stroke:#b0297f,color:#fff
+    style R1 fill:#4a90d9,stroke:#2c5f8a,color:#fff,text-align:left
+    style R2 fill:#4a90d9,stroke:#2c5f8a,color:#fff,text-align:left
+    style R3 fill:#4a90d9,stroke:#2c5f8a,color:#fff,text-align:left
+    style GQL fill:#e535ab,stroke:#b0297f,color:#fff,text-align:left
 ```
 
 **Neste projeto**, a API oferece **ambos**. REST é a interface principal, com documentação Swagger interativa. GraphQL é uma alternativa flexível para front-ends que precisam de consultas compostas. A abordagem é **code-first**: em vez de escrever arquivos `.graphql`, o schema é gerado automaticamente a partir de classes TypeScript decoradas com `@ObjectType()` e `@Field()`. Ambas as interfaces reutilizam os **mesmos command/query handlers** — a lógica de negócio, validação e autorização são idênticas.
@@ -896,10 +900,16 @@ graph LR
     HANDLER -.-> |"erro"| FT["Filter\nApplicationErrorFilter\nformata erro HTTP"]
     FT --> RESP
 
-    style REQ fill:#4a90d9,stroke:#2c5f8a,color:#fff
-    style CTRL fill:#7b68ee,stroke:#5a4db0,color:#fff
-    style HANDLER fill:#e8a838,stroke:#b07c1e,color:#fff
-    style RESP fill:#50b86c,stroke:#3a8a50,color:#fff
+    style REQ fill:#4a90d9,stroke:#2c5f8a,color:#fff,text-align:left
+    style MW text-align:left
+    style GD text-align:left
+    style PP text-align:left
+    style CTRL fill:#7b68ee,stroke:#5a4db0,color:#fff,text-align:left
+    style INT text-align:left
+    style HANDLER fill:#e8a838,stroke:#b07c1e,color:#fff,text-align:left
+    style INT2 text-align:left
+    style RESP fill:#50b86c,stroke:#3a8a50,color:#fff,text-align:left
+    style FT text-align:left
 ```
 
 | Etapa | Papel | Exemplo neste projeto |
@@ -977,9 +987,12 @@ graph LR
     HANDLER --> ENT["Entidade.create(input)\n(domínio)"]
     HANDLER --> REPO["Repository.create(entity)\n(interface do domínio)"]
 
-    style HANDLER fill:#7b68ee,stroke:#5a4db0,color:#fff
-    style ENT fill:#e8a838,stroke:#b07c1e,color:#fff
-    style REPO fill:#50b86c,stroke:#3a8a50,color:#fff
+    style INPUT text-align:left
+    style AC text-align:left
+    style PC text-align:left
+    style HANDLER fill:#7b68ee,stroke:#5a4db0,color:#fff,text-align:left
+    style ENT fill:#e8a838,stroke:#b07c1e,color:#fff,text-align:left
+    style REPO fill:#50b86c,stroke:#3a8a50,color:#fff,text-align:left
 ```
 
 **O que contém:**
@@ -1021,8 +1034,14 @@ graph TD
     RMQ --> RMQS["RabbitMQ Server"]
     FS --> DISK["Filesystem"]
 
-    style IR fill:#e8a838,stroke:#b07c1e,color:#fff
-    style TR fill:#50b86c,stroke:#3a8a50,color:#fff
+    style IR fill:#e8a838,stroke:#b07c1e,color:#fff,text-align:left
+    style IIP text-align:left
+    style IMB text-align:left
+    style IS text-align:left
+    style TR fill:#50b86c,stroke:#3a8a50,color:#fff,text-align:left
+    style KC text-align:left
+    style RMQ text-align:left
+    style FS text-align:left
 ```
 
 | Diretório | Tecnologia | O que implementa |
@@ -1047,7 +1066,7 @@ Traduz protocolos externos (HTTP, GraphQL) em chamadas para a camada de aplicaç
 ```mermaid
 graph LR
     subgraph "REST (presentation.rest/)"
-        CTRL["Controller\n@Controller('/path')\n@Post, @Get, @Patch, @Delete"]
+        CTRL["Controller\n@Controller('/path')\n@Post, @Get,\n@Patch, @Delete"]
         DTO_IN["DTO de entrada\nstatic schema (Zod)"]
         DTO_OUT["DTO de saída\nSwagger decorators"]
     end
@@ -1060,9 +1079,12 @@ graph LR
     CTRL --> HANDLER["Handler\n(aplicação)"]
     RES --> HANDLER
 
-    style CTRL fill:#4a90d9,stroke:#2c5f8a,color:#fff
-    style RES fill:#4a90d9,stroke:#2c5f8a,color:#fff
-    style HANDLER fill:#7b68ee,stroke:#5a4db0,color:#fff
+    style CTRL fill:#4a90d9,stroke:#2c5f8a,color:#fff,text-align:left
+    style RES fill:#4a90d9,stroke:#2c5f8a,color:#fff,text-align:left
+    style HANDLER fill:#7b68ee,stroke:#5a4db0,color:#fff,text-align:left
+    style DTO_IN fill:none,stroke:none,text-align:left
+    style DTO_OUT fill:none,stroke:none,text-align:left
+    style GQL_DTO fill:none,stroke:none,text-align:left
 ```
 
 **O que contém:**
@@ -1081,25 +1103,25 @@ Visão completa de como uma requisição de criação flui entre todas as camada
 ```mermaid
 graph TD
     subgraph "Apresentação"
-        REQ["POST /api/campi\n+ Bearer token + JSON body"]
-        MW["Middleware: correlationIdMiddleware\n→ gera requestId"]
-        GD["Guard: extrai token → RequestActor"]
-        PP["Pipe: ZodGlobalValidationPipe\n→ valida body com CampusCreateInputRestDto.schema"]
-        CTRL["CampusRestController.create()\n→ @AccessContextHttp() ac, @Body() dto"]
+        REQ["POST /api/campi\n+ Bearer token\n+ JSON body"]
+        MW["Middleware:\ncorrelationIdMiddleware\n→ gera requestId"]
+        GD["Guard:\nextrai token →\nRequestActor"]
+        PP["Pipe:\nZodGlobalValidationPipe\n→ valida body com\nCampusCreateInputRestDto\n  .schema"]
+        CTRL["CampusRestController\n  .create()\n→ @AccessContextHttp() ac,\n  @Body() dto"]
     end
 
     subgraph "Aplicação"
-        INT["Interceptor: TransactionInterceptor\n→ abre transação"]
-        HANDLER["CampusCreateCommandHandlerImpl.execute()\n→ recebe accessContext + dto"]
-        PERM["CampusPermissionChecker\n→ ensureCanCreate(accessContext)"]
+        INT["Interceptor:\nTransactionInterceptor\n→ abre transação"]
+        HANDLER["CampusCreateCommand\n  HandlerImpl.execute()\n→ recebe accessContext\n  + dto"]
+        PERM["CampusPermissionChecker\n→ ensureCanCreate(\n    accessContext\n  )"]
     end
 
     subgraph "Domínio"
-        ENT["Campus.create(input)\n→ zodValidate, gera UUID v7"]
+        ENT["Campus.create(input)\n→ zodValidate,\n  gera UUID v7"]
     end
 
     subgraph "Infraestrutura"
-        REPO["CampusTypeormRepository.create()\n→ mapeia para TypeORM entity e salva"]
+        REPO["CampusTypeormRepository\n  .create()\n→ mapeia para TypeORM\n  entity e salva"]
         DB["PostgreSQL\n→ INSERT INTO campus"]
     end
 
@@ -1113,10 +1135,17 @@ graph TD
     DB --> |"commit"| INT
     INT --> |"201 Created"| REQ
 
-    style REQ fill:#4a90d9,stroke:#2c5f8a,color:#fff
-    style ENT fill:#e8a838,stroke:#b07c1e,color:#fff
-    style HANDLER fill:#7b68ee,stroke:#5a4db0,color:#fff
-    style REPO fill:#50b86c,stroke:#3a8a50,color:#fff
+    style REQ fill:#4a90d9,stroke:#2c5f8a,color:#fff,text-align:left
+    style MW text-align:left
+    style GD text-align:left
+    style PP text-align:left
+    style CTRL text-align:left
+    style INT text-align:left
+    style ENT fill:#e8a838,stroke:#b07c1e,color:#fff,text-align:left
+    style HANDLER fill:#7b68ee,stroke:#5a4db0,color:#fff,text-align:left
+    style PERM text-align:left
+    style REPO fill:#50b86c,stroke:#3a8a50,color:#fff,text-align:left
+    style DB text-align:left
 ```
 
 **Resumo do fluxo:**
@@ -1656,7 +1685,7 @@ Decorators customizados em `src/domain/dependency-injection/` que abstraem o Nes
 graph LR
     subgraph "Domínio (define o que precisa)"
         SYM["Symbol('ICampusRepository')\n(token de injeção)"]
-        TYPE["type ICampusRepository =\nIRepositoryCreate & ..."]
+        TYPE["type ICampusRepository =\n  IRepositoryCreate &\n  ..."]
     end
 
     subgraph "Infraestrutura (implementa)"
@@ -1664,20 +1693,22 @@ graph LR
     end
 
     subgraph "Aplicação (consome)"
-        HANDLER["constructor(\n  @DeclareDependency(ICampusRepository)\n  private repo: ICampusRepository\n)"]
+        HANDLER["constructor(\n  @DeclareDependency(\n    ICampusRepository\n  )\n  private repo:\n    ICampusRepository\n)"]
     end
 
     subgraph "NestJS (resolve em runtime)"
-        DI["Container de DI\nresolvea Symbol → Implementação"]
+        DI["Container de DI\nresolve Symbol →\nImplementação"]
     end
 
     SYM --> DI
     IMPL -- "registra como provider\ndo Symbol" --> DI
     DI -- "injeta implementação\nno constructor" --> HANDLER
 
-    style DI fill:#e8a838,stroke:#b07c1e,color:#fff
-    style SYM fill:#4a90d9,stroke:#2c5f8a,color:#fff
-    style IMPL fill:#50b86c,stroke:#3a8a50,color:#fff
+    style DI fill:#e8a838,stroke:#b07c1e,color:#fff,text-align:left
+    style SYM fill:#4a90d9,stroke:#2c5f8a,color:#fff,text-align:left
+    style TYPE fill:none,stroke:none,text-align:left
+    style IMPL fill:#50b86c,stroke:#3a8a50,color:#fff,text-align:left
+    style HANDLER fill:none,stroke:none,text-align:left
 ```
 
 ```typescript
@@ -1713,15 +1744,23 @@ graph LR
     subgraph "Com scalars (semântico)"
         T1["id: IdUuid"]
         T2["nome: string"]
-        T3["dateCreated: ScalarDateTimeString"]
+        T3["dateCreated:\nScalarDateTimeString"]
         T4["codigoIbge: IdNumeric"]
     end
 
     S1 -.-> |"TypeScript permite\nconfundir id com nome\n(ambos string)"| WARN["Bug potencial"]
     T1 -.-> |"TypeScript sinaliza\nse trocar IdUuid por string"| SAFE["Type safety"]
 
-    style WARN fill:#e74c3c,stroke:#c0392b,color:#fff
-    style SAFE fill:#50b86c,stroke:#3a8a50,color:#fff
+    style S1 fill:none,stroke:none,text-align:left
+    style S2 fill:none,stroke:none,text-align:left
+    style S3 fill:none,stroke:none,text-align:left
+    style S4 fill:none,stroke:none,text-align:left
+    style T1 fill:none,stroke:none,text-align:left
+    style T2 fill:none,stroke:none,text-align:left
+    style T3 fill:none,stroke:none,text-align:left
+    style T4 fill:none,stroke:none,text-align:left
+    style WARN fill:#e74c3c,stroke:#c0392b,color:#fff,text-align:left
+    style SAFE fill:#50b86c,stroke:#3a8a50,color:#fff,text-align:left
 ```
 
 | Scalar | Tipo base | Propósito |
@@ -1856,9 +1895,9 @@ graph LR
     E4 --> FILTER --> H4
     E5 --> FILTER --> H5
 
-    style FILTER fill:#e8a838,stroke:#b07c1e,color:#fff
-    style H1 fill:#e74c3c,stroke:#c0392b,color:#fff
-    style H2 fill:#e74c3c,stroke:#c0392b,color:#fff
+    style FILTER fill:#e8a838,stroke:#b07c1e,color:#fff,text-align:left
+    style H1 fill:#e74c3c,stroke:#c0392b,color:#fff,text-align:left
+    style H2 fill:#e74c3c,stroke:#c0392b,color:#fff,text-align:left
 ```
 
 ```typescript
@@ -2767,17 +2806,17 @@ graph LR
     end
 
     subgraph "Aplicação (consumidor)"
-        HANDLER["CampusCreateCommandHandlerImpl\n@DeclareDependency(ICampusRepository)"]
+        HANDLER["CampusCreateCommandHandlerImpl\n@DeclareDependency(\n  ICampusRepository\n)"]
     end
 
     SYMBOL -- "token de injeção" --> HANDLER
     TYPE -- "contrato (tipos)" --> HANDLER
     IMPL -- "registra como provider" --> SYMBOL
 
-    style SYMBOL fill:#e8a838,stroke:#b07c1e,color:#fff
-    style TYPE fill:#e8a838,stroke:#b07c1e,color:#fff
-    style IMPL fill:#50b86c,stroke:#3a8a50,color:#fff
-    style HANDLER fill:#4a90d9,stroke:#2c5f8a,color:#fff
+    style SYMBOL fill:#e8a838,stroke:#b07c1e,color:#fff,text-align:left
+    style TYPE fill:#e8a838,stroke:#b07c1e,color:#fff,text-align:left
+    style IMPL fill:#50b86c,stroke:#3a8a50,color:#fff,text-align:left
+    style HANDLER fill:#4a90d9,stroke:#2c5f8a,color:#fff,text-align:left
 ```
 
 **Como funciona passo a passo:**
@@ -3127,8 +3166,11 @@ graph LR
     C --> D["bun run migration:run\n(aplica no banco)"]
     D --> E["bun run typecheck\n(verificar tipos)"]
 
-    style A fill:#4a90d9,stroke:#2c5f8a,color:#fff
-    style D fill:#50b86c,stroke:#3a8a50,color:#fff
+    style A fill:#4a90d9,stroke:#2c5f8a,color:#fff,text-align:left
+    style B text-align:left
+    style C text-align:left
+    style D fill:#50b86c,stroke:#3a8a50,color:#fff,text-align:left
+    style E text-align:left
 ```
 
 1. Altere a entidade TypeORM em `infrastructure.database/typeorm/`.
@@ -3353,7 +3395,7 @@ graph TD
 ```mermaid
 graph LR
     subgraph "Código TypeScript"
-        OT["@ObjectType('Campus')\nclass CampusFindOneOutputGraphQlDto"]
+        OT["@ObjectType('Campus')\nclass CampusFindOneOutput\n  GraphQlDto"]
         F1["@Field(() => String)\nnomeFantasia!: string"]
         F2["@Field(() => String)\nrazaoSocial!: string"]
     end
@@ -3364,8 +3406,11 @@ graph LR
     OT --> NESTJS_GQL["NestJS GraphQL\n(autoSchemaFile: true)"]
     NESTJS_GQL --> GQL_SCHEMA["Schema GraphQL gerado\ntype Campus {\n  nomeFantasia: String!\n  razaoSocial: String!\n}"]
 
-    style OT fill:#e535ab,stroke:#b0297f,color:#fff
-    style GQL_SCHEMA fill:#50b86c,stroke:#3a8a50,color:#fff
+    style OT fill:#e535ab,stroke:#b0297f,color:#fff,text-align:left
+    style F1 fill:none,stroke:none,text-align:left
+    style F2 fill:none,stroke:none,text-align:left
+    style NESTJS_GQL fill:none,stroke:none,text-align:left
+    style GQL_SCHEMA fill:#50b86c,stroke:#3a8a50,color:#fff,text-align:left
 ```
 
 ### Fluxo completo de uma query GraphQL
@@ -3620,19 +3665,24 @@ graph LR
         CHECKOUT["Checkout"] --> BUILDX["QEMU + Buildx\n(multi-arch)"]
         BUILDX --> LOGIN["Login no GHCR"]
         LOGIN --> BUILD["Build imagem\n(target: service-runtime)"]
-        BUILD --> PUSH_IMG["Push\nghcr.io/.../management-service:development"]
+        BUILD --> PUSH_IMG["Push\nghcr.io/.../\nmanagement-service\n:development"]
     end
 
     CI --> CD
 
     subgraph CD["CD — Deploy"]
         DEPLOY["Runner dedicado\n(dev-deploy)"]
-        DEPLOY --> SCRIPT[".deploy/development/deploy.sh"]
+        DEPLOY --> SCRIPT[".deploy/development/\ndeploy.sh"]
     end
 
-    style PUSH fill:#4a90d9,stroke:#2c5f8a,color:#fff
-    style PUSH_IMG fill:#50b86c,stroke:#3a8a50,color:#fff
-    style SCRIPT fill:#50b86c,stroke:#3a8a50,color:#fff
+    style PUSH fill:#4a90d9,stroke:#2c5f8a,color:#fff,text-align:left
+    style CHECKOUT text-align:left
+    style BUILDX text-align:left
+    style LOGIN text-align:left
+    style BUILD text-align:left
+    style PUSH_IMG fill:#50b86c,stroke:#3a8a50,color:#fff,text-align:left
+    style DEPLOY text-align:left
+    style SCRIPT fill:#50b86c,stroke:#3a8a50,color:#fff,text-align:left
 ```
 
 **Detalhes das etapas:**
