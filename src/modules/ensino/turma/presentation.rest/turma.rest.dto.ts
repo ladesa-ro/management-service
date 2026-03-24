@@ -18,7 +18,7 @@ import {
 import { TurmaCreateCommandFields } from "../domain/commands/turma-create.command";
 import { TurmaFindOneQueryResultFields } from "../domain/queries/turma-find-one.query.result";
 import { TurmaListQueryFields } from "../domain/queries/turma-list.query";
-import { TurmaCreateSchema } from "../domain/turma.schemas";
+import { TurmaCreateSchema, TurmaUpdateSchema } from "../domain/turma.schemas";
 
 // ============================================================================
 // FindOne Output
@@ -142,7 +142,9 @@ export class TurmaCreateInputRestDto {
 }
 
 @ApiSchema({ name: "TurmaUpdateInputDto" })
-export class TurmaUpdateInputRestDto extends PartialType(TurmaCreateInputRestDto) {}
+export class TurmaUpdateInputRestDto extends PartialType(TurmaCreateInputRestDto) {
+  static readonly schema = TurmaUpdateSchema.presentation;
+}
 
 // ============================================================================
 // FindOne Input (for path params)

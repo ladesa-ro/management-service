@@ -16,7 +16,10 @@ import {
   PaginationMetaRestDto,
 } from "@/shared/presentation/rest/dtos";
 import { OfertaFormacaoCreateCommandFields } from "../domain/commands/oferta-formacao-create.command";
-import { OfertaFormacaoCreateSchema } from "../domain/oferta-formacao.schemas";
+import {
+  OfertaFormacaoCreateSchema,
+  OfertaFormacaoUpdateSchema,
+} from "../domain/oferta-formacao.schemas";
 import { OfertaFormacaoFindOneQueryResultFields } from "../domain/queries/oferta-formacao-find-one.query.result";
 import { OfertaFormacaoListQueryFields } from "../domain/queries/oferta-formacao-list.query";
 
@@ -211,7 +214,9 @@ export class OfertaFormacaoCreateInputRestDto {
 @ApiSchema({ name: "OfertaFormacaoUpdateInputDto" })
 export class OfertaFormacaoUpdateInputRestDto extends PartialType(
   OfertaFormacaoCreateInputRestDto,
-) {}
+) {
+  static readonly schema = OfertaFormacaoUpdateSchema.presentation;
+}
 
 // ============================================================================
 // FindOne Input (for path params)
