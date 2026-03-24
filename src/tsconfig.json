@@ -16,10 +16,10 @@
     "declaration": true,
     "sourceMap": true,
     "outDir": "./dist",
-    "baseUrl": ".",
     "paths": {
       "@/*": ["./*"]
     },
+    "types": ["node", "multer", "bun"],
     "incremental": true,
     "skipLibCheck": true
   },
