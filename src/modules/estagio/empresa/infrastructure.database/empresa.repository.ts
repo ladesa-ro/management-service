@@ -1,8 +1,7 @@
-import { FilterOperator } from "nestjs-paginate";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
-import { paginateConfig } from "@/infrastructure.database/pagination/config/paginate-config";
-import type { ITypeOrmPaginationConfig } from "@/infrastructure.database/pagination/interfaces/pagination-config.types";
+import { buildTypeOrmPaginateConfig } from "@/infrastructure.database/pagination/adapters/pagination-spec.adapter";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import {
   typeormCreate,
@@ -17,32 +16,26 @@ import type {
   EmpresaListQuery,
   EmpresaListQueryResult,
 } from "@/modules/estagio/empresa/domain/queries";
+import { empresaPaginationSpec } from "@/modules/estagio/empresa/domain/queries";
 import type { IEmpresaRepository } from "@/modules/estagio/empresa/domain/repositories";
 import { EmpresaTypeormEntity, empresaEntityDomainMapper } from "./typeorm";
 
 const config = {
   alias: "empresa",
-  hasSoftDelete: true,
 } as const;
 
-const empresaPaginateConfig: ITypeOrmPaginationConfig<EmpresaTypeormEntity> = {
-  ...paginateConfig,
-  relations: {
-    endereco: {
-      cidade: {
-        estado: true,
-      },
+const empresaRelations = {
+  endereco: {
+    cidade: {
+      estado: true,
     },
   },
-  sortableColumns: ["razaoSocial", "nomeFantasia", "cnpj", "dateCreated"],
-  searchableColumns: ["razaoSocial", "nomeFantasia", "cnpj", "email"],
-  defaultSortBy: [["nomeFantasia", "ASC"]],
-  filterableColumns: {
-    "endereco.id": [FilterOperator.EQ],
-    cnpj: [FilterOperator.EQ],
-    nomeFantasia: [FilterOperator.EQ],
-  },
 };
+
+const empresaPaginateConfig = buildTypeOrmPaginateConfig<EmpresaTypeormEntity>(
+  empresaPaginationSpec,
+  empresaRelations,
+);
 
 @DeclareImplementation()
 export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
@@ -52,7 +45,7 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
     private readonly paginationAdapter: NestJsPaginateAdapter,
   ) {}
 
-  findAll(accessContext: unknown, dto: EmpresaListQuery | null = null) {
+  findAll(accessContext: IAccessContext | null, dto: EmpresaListQuery | null = null) {
     return typeormFindAll<EmpresaTypeormEntity, EmpresaListQuery, EmpresaListQueryResult>(
       this.appTypeormConnection,
       EmpresaTypeormEntity,
@@ -62,7 +55,7 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
     );
   }
 
-  findById(accessContext: unknown, dto: EmpresaFindOneQuery) {
+  findById(accessContext: IAccessContext | null, dto: EmpresaFindOneQuery) {
     return typeormFindById<EmpresaTypeormEntity, EmpresaFindOneQuery, EmpresaFindOneQueryResult>(
       this.appTypeormConnection,
       EmpresaTypeormEntity,
@@ -71,7 +64,7 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
     );
   }
 
-  findByIdSimple(accessContext: unknown, id: string) {
+  findByIdSimple(accessContext: IAccessContext | null, id: string) {
     return this.findById(accessContext, { id } as EmpresaFindOneQuery);
   }
 

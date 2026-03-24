@@ -1,9 +1,7 @@
-import { FilterOperator } from "nestjs-paginate";
 import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
-import { paginateConfig } from "@/infrastructure.database/pagination/config/paginate-config";
-import type { ITypeOrmPaginationConfig } from "@/infrastructure.database/pagination/interfaces/pagination-config.types";
+import { buildTypeOrmPaginateConfig } from "@/infrastructure.database/pagination/adapters/pagination-spec.adapter";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import {
   typeormFindAll,
@@ -16,6 +14,7 @@ import type {
   CidadeListQueryResult,
   ICidadeRepository,
 } from "@/modules/localidades/cidade";
+import { cidadePaginationSpec } from "@/modules/localidades/cidade/domain/queries";
 import { CidadeEntity } from "./typeorm/cidade.typeorm.entity";
 
 const config = {
@@ -23,23 +22,14 @@ const config = {
   hasSoftDelete: false,
 } as const;
 
-const cidadePaginateConfig: ITypeOrmPaginationConfig<CidadeEntity> = {
-  ...paginateConfig,
-  relations: {
-    estado: true,
-  },
-  sortableColumns: ["id", "nome", "estado.nome", "estado.sigla"],
-  searchableColumns: ["nome", "estado.nome", "estado.sigla"],
-  defaultSortBy: [
-    ["nome", "ASC"],
-    ["estado.nome", "ASC"],
-  ],
-  filterableColumns: {
-    "estado.id": [FilterOperator.EQ],
-    "estado.nome": [FilterOperator.EQ],
-    "estado.sigla": [FilterOperator.EQ],
-  },
+const cidadeRelations = {
+  estado: true,
 };
+
+const cidadePaginateConfig = buildTypeOrmPaginateConfig<CidadeEntity>(
+  cidadePaginationSpec,
+  cidadeRelations,
+);
 
 @DeclareImplementation()
 export class CidadeTypeOrmRepositoryAdapter implements ICidadeRepository {

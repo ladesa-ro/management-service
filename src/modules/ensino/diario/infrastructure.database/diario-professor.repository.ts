@@ -1,10 +1,8 @@
-import { FilterOperator } from "nestjs-paginate";
 import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
-import { paginateConfig } from "@/infrastructure.database/pagination/config/paginate-config";
-import type { ITypeOrmPaginationConfig } from "@/infrastructure.database/pagination/interfaces/pagination-config.types";
+import { buildTypeOrmPaginateConfig } from "@/infrastructure.database/pagination/adapters/pagination-spec.adapter";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import {
   typeormCreate,
@@ -13,11 +11,12 @@ import {
   typeormSoftDeleteById,
   typeormUpdate,
 } from "@/infrastructure.database/typeorm/helpers/typeorm-repository-helpers";
-import type {
-  DiarioProfessorFindOneQuery,
-  DiarioProfessorFindOneQueryResult,
-  DiarioProfessorListQuery,
-  DiarioProfessorListQueryResult,
+import {
+  type DiarioProfessorFindOneQuery,
+  type DiarioProfessorFindOneQueryResult,
+  type DiarioProfessorListQuery,
+  type DiarioProfessorListQueryResult,
+  diarioProfessorPaginationSpec,
 } from "@/modules/ensino/diario/domain/queries";
 import type { IDiarioProfessorRepository } from "@/modules/ensino/diario/domain/repositories";
 import { getNow } from "@/utils/date";
@@ -28,54 +27,48 @@ const config = {
   hasSoftDelete: true,
 } as const;
 
-const diarioProfessorPaginateConfig: ITypeOrmPaginationConfig<DiarioProfessorEntity> = {
-  ...paginateConfig,
-  relations: {
-    diario: {
-      turma: {
-        curso: {
-          campus: {
-            endereco: {
-              cidade: {
-                estado: true,
-              },
-            },
-          },
-        },
-      },
-      disciplina: true,
-      ambientePadrao: {
-        bloco: {
-          campus: {
-            endereco: {
-              cidade: {
-                estado: true,
-              },
+const diarioProfessorRelations = {
+  diario: {
+    turma: {
+      curso: {
+        campus: {
+          endereco: {
+            cidade: {
+              estado: true,
             },
           },
         },
       },
     },
-    perfil: {
-      campus: {
-        endereco: {
-          cidade: {
-            estado: true,
+    disciplina: true,
+    ambientePadrao: {
+      bloco: {
+        campus: {
+          endereco: {
+            cidade: {
+              estado: true,
+            },
           },
         },
       },
-      usuario: true,
     },
   },
-  sortableColumns: ["situacao", "diario.id", "perfil.campus.id", "perfil.usuario.id"],
-  searchableColumns: ["id", "situacao", "diario.id", "perfil.campus.id", "perfil.usuario.id"],
-  defaultSortBy: [],
-  filterableColumns: {
-    "perfil.usuario.id": [FilterOperator.EQ],
-    "perfil.id": [FilterOperator.EQ],
-    "diario.id": [FilterOperator.EQ],
+  perfil: {
+    campus: {
+      endereco: {
+        cidade: {
+          estado: true,
+        },
+      },
+    },
+    usuario: true,
   },
 };
+
+const diarioProfessorPaginateConfig = buildTypeOrmPaginateConfig<DiarioProfessorEntity>(
+  diarioProfessorPaginationSpec,
+  diarioProfessorRelations,
+);
 
 @DeclareImplementation()
 export class DiarioProfessorTypeOrmRepositoryAdapter implements IDiarioProfessorRepository {

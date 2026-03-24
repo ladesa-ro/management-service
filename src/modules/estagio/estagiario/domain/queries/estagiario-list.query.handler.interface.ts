@@ -1,3 +1,5 @@
+import type { IPaginationSpec } from "@/application/pagination";
+import { PaginationFilter } from "@/application/pagination";
 import type { IQueryHandler } from "@/domain/abstractions";
 import { createOperationMetadata } from "@/domain/abstractions";
 import type { EstagiarioListQuery } from "./estagiario-list.query";
@@ -14,3 +16,14 @@ export type IEstagiarioListQueryHandler = IQueryHandler<
   EstagiarioListQuery | null,
   EstagiarioListQueryResult
 >;
+
+export const estagiarioPaginationSpec: IPaginationSpec = {
+  sortableColumns: ["telefone", "dataNascimento", "dateCreated"],
+  searchableColumns: ["telefone", "emailInstitucional"],
+  defaultSortBy: [["dateCreated", "DESC"]],
+  filterableColumns: {
+    "perfil.id": [PaginationFilter.EQ],
+    "curso.id": [PaginationFilter.EQ],
+    "turma.id": [PaginationFilter.EQ],
+  },
+};

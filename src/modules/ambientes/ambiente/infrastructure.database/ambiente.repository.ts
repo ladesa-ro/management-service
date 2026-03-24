@@ -1,9 +1,7 @@
-import { FilterOperator } from "nestjs-paginate";
 import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
-import { paginateConfig } from "@/infrastructure.database/pagination/config/paginate-config";
-import type { ITypeOrmPaginationConfig } from "@/infrastructure.database/pagination/interfaces/pagination-config.types";
+import { buildTypeOrmPaginateConfig } from "@/infrastructure.database/pagination/adapters/pagination-spec.adapter";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import {
   typeormCreate,
@@ -18,6 +16,7 @@ import type {
   AmbienteListQuery,
   AmbienteListQueryResult,
 } from "@/modules/ambientes/ambiente/domain/queries";
+import { ambientePaginationSpec } from "@/modules/ambientes/ambiente/domain/queries";
 import type { IAmbienteRepository } from "@/modules/ambientes/ambiente/domain/repositories";
 import { AmbienteEntity, ambienteEntityDomainMapper } from "./typeorm";
 
@@ -25,39 +24,22 @@ const config = {
   alias: "ambiente",
 } as const;
 
-const ambientePaginateConfig: ITypeOrmPaginationConfig<AmbienteEntity> = {
-  ...paginateConfig,
-  relations: {
-    bloco: {
-      campus: {
-        endereco: {
-          cidade: {
-            estado: true,
-          },
+const ambienteRelations = {
+  bloco: {
+    campus: {
+      endereco: {
+        cidade: {
+          estado: true,
         },
       },
     },
   },
-  sortableColumns: [
-    "nome",
-    "descricao",
-    "codigo",
-    "capacidade",
-    "tipo",
-    "dateCreated",
-    "bloco.id",
-    "bloco.campus.id",
-  ],
-  searchableColumns: ["id", "nome", "descricao", "codigo", "capacidade", "tipo"],
-  defaultSortBy: [
-    ["nome", "ASC"],
-    ["dateCreated", "ASC"],
-  ],
-  filterableColumns: {
-    "bloco.id": [FilterOperator.EQ],
-    "bloco.campus.id": [FilterOperator.EQ],
-  },
 };
+
+const ambientePaginateConfig = buildTypeOrmPaginateConfig<AmbienteEntity>(
+  ambientePaginationSpec,
+  ambienteRelations,
+);
 
 @DeclareImplementation()
 export class AmbienteTypeOrmRepositoryAdapter implements IAmbienteRepository {

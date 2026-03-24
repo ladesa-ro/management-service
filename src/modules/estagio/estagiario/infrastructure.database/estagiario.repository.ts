@@ -1,8 +1,7 @@
-import { FilterOperator } from "nestjs-paginate";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
-import { paginateConfig } from "@/infrastructure.database/pagination/config/paginate-config";
-import type { ITypeOrmPaginationConfig } from "@/infrastructure.database/pagination/interfaces/pagination-config.types";
+import { buildTypeOrmPaginateConfig } from "@/infrastructure.database/pagination/adapters/pagination-spec.adapter";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import {
   typeormCreate,
@@ -17,49 +16,43 @@ import type {
   EstagiarioListQuery,
   EstagiarioListQueryResult,
 } from "@/modules/estagio/estagiario/domain/queries";
+import { estagiarioPaginationSpec } from "@/modules/estagio/estagiario/domain/queries";
 import type { IEstagiarioRepository } from "@/modules/estagio/estagiario/domain/repositories";
 import { EstagiarioTypeormEntity, estagiarioEntityDomainMapper } from "./typeorm";
 
 const config = {
   alias: "estagiario",
-  hasSoftDelete: true,
 } as const;
 
-const estagiarioPaginateConfig: ITypeOrmPaginationConfig<EstagiarioTypeormEntity> = {
-  ...paginateConfig,
-  relations: {
-    perfil: {
-      campus: {
-        endereco: {
-          cidade: {
-            estado: true,
-          },
-        },
-      },
-      usuario: true,
-    },
-    curso: {
-      campus: {
-        endereco: {
-          cidade: {
-            estado: true,
-          },
+const estagiarioRelations = {
+  perfil: {
+    campus: {
+      endereco: {
+        cidade: {
+          estado: true,
         },
       },
     },
-    turma: {
-      curso: true,
+    usuario: true,
+  },
+  curso: {
+    campus: {
+      endereco: {
+        cidade: {
+          estado: true,
+        },
+      },
     },
   },
-  sortableColumns: ["telefone", "dataNascimento", "dateCreated"],
-  searchableColumns: ["telefone", "emailInstitucional"],
-  defaultSortBy: [["dateCreated", "DESC"]],
-  filterableColumns: {
-    "perfil.id": [FilterOperator.EQ],
-    "curso.id": [FilterOperator.EQ],
-    "turma.id": [FilterOperator.EQ],
+  turma: {
+    curso: true,
   },
 };
+
+const estagiarioPaginateConfig = buildTypeOrmPaginateConfig<EstagiarioTypeormEntity>(
+  estagiarioPaginationSpec,
+  estagiarioRelations,
+);
 
 @DeclareImplementation()
 export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository {
@@ -69,7 +62,7 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
     private readonly paginationAdapter: NestJsPaginateAdapter,
   ) {}
 
-  findAll(accessContext: unknown, dto: EstagiarioListQuery | null = null) {
+  findAll(accessContext: IAccessContext | null, dto: EstagiarioListQuery | null = null) {
     return typeormFindAll<EstagiarioTypeormEntity, EstagiarioListQuery, EstagiarioListQueryResult>(
       this.appTypeormConnection,
       EstagiarioTypeormEntity,
@@ -79,7 +72,7 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
     );
   }
 
-  findById(accessContext: unknown, dto: EstagiarioFindOneQuery) {
+  findById(accessContext: IAccessContext | null, dto: EstagiarioFindOneQuery) {
     return typeormFindById<
       EstagiarioTypeormEntity,
       EstagiarioFindOneQuery,
@@ -92,7 +85,7 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
     );
   }
 
-  findByIdSimple(accessContext: unknown, id: string) {
+  findByIdSimple(accessContext: IAccessContext | null, id: string) {
     return this.findById(accessContext, { id } as EstagiarioFindOneQuery);
   }
 

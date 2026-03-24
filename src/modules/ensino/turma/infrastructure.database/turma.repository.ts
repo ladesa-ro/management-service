@@ -1,9 +1,7 @@
-import { FilterOperator } from "nestjs-paginate";
 import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
-import { paginateConfig } from "@/infrastructure.database/pagination/config/paginate-config";
-import type { ITypeOrmPaginationConfig } from "@/infrastructure.database/pagination/interfaces/pagination-config.types";
+import { buildTypeOrmPaginateConfig } from "@/infrastructure.database/pagination/adapters/pagination-spec.adapter";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import {
   typeormCreate,
@@ -12,11 +10,12 @@ import {
   typeormSoftDeleteById,
   typeormUpdate,
 } from "@/infrastructure.database/typeorm/helpers/typeorm-repository-helpers";
-import type {
-  TurmaFindOneQuery,
-  TurmaFindOneQueryResult,
-  TurmaListQuery,
-  TurmaListQueryResult,
+import {
+  type TurmaFindOneQuery,
+  type TurmaFindOneQueryResult,
+  type TurmaListQuery,
+  type TurmaListQueryResult,
+  turmaPaginationSpec,
 } from "@/modules/ensino/turma/domain/queries";
 import type { ITurmaRepository } from "@/modules/ensino/turma/domain/repositories";
 import { TurmaEntity, turmaEntityDomainMapper } from "./typeorm";
@@ -26,23 +25,18 @@ const config = {
   hasSoftDelete: true,
 } as const;
 
-const turmaPaginateConfig: ITypeOrmPaginationConfig<TurmaEntity> = {
-  ...paginateConfig,
-  sortableColumns: [
-    "periodo",
-    "ambientePadraoAula.nome",
-    "ambientePadraoAula.descricao",
-    "ambientePadraoAula.codigo",
-    "ambientePadraoAula.capacidade",
-    "ambientePadraoAula.tipo",
-    "curso.nome",
-    "curso.nomeAbreviado",
-    "curso.campus.id",
-    "curso.modalidade.id",
-    "curso.modalidade.nome",
-  ],
-  relations: {
-    curso: {
+const turmaRelations = {
+  curso: {
+    campus: {
+      endereco: {
+        cidade: {
+          estado: true,
+        },
+      },
+    },
+  },
+  ambientePadraoAula: {
+    bloco: {
       campus: {
         endereco: {
           cidade: {
@@ -51,41 +45,13 @@ const turmaPaginateConfig: ITypeOrmPaginationConfig<TurmaEntity> = {
         },
       },
     },
-    ambientePadraoAula: {
-      bloco: {
-        campus: {
-          endereco: {
-            cidade: {
-              estado: true,
-            },
-          },
-        },
-      },
-    },
-  },
-  searchableColumns: ["id", "periodo"],
-  defaultSortBy: [["periodo", "ASC"]],
-  filterableColumns: {
-    periodo: [FilterOperator.EQ],
-    "ambientePadraoAula.nome": [FilterOperator.EQ],
-    "ambientePadraoAula.codigo": [FilterOperator.EQ],
-    "ambientePadraoAula.capacidade": [
-      FilterOperator.EQ,
-      FilterOperator.GT,
-      FilterOperator.GTE,
-      FilterOperator.LT,
-      FilterOperator.LTE,
-    ],
-    "ambientePadraoAula.tipo": [FilterOperator.EQ],
-    "curso.id": [FilterOperator.EQ],
-    "curso.nome": [FilterOperator.EQ],
-    "curso.nomeAbreviado": [FilterOperator.EQ],
-    "curso.campus.id": [FilterOperator.EQ],
-    "curso.ofertaFormacao.id": [FilterOperator.EQ],
-    "curso.ofertaFormacao.nome": [FilterOperator.EQ],
-    "curso.ofertaFormacao.slug": [FilterOperator.EQ],
   },
 };
+
+const turmaPaginateConfig = buildTypeOrmPaginateConfig<TurmaEntity>(
+  turmaPaginationSpec,
+  turmaRelations,
+);
 
 @DeclareImplementation()
 export class TurmaTypeOrmRepositoryAdapter implements ITurmaRepository {

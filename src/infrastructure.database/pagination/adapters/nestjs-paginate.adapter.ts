@@ -1,38 +1,30 @@
 import { type PaginateConfig, paginate } from "nestjs-paginate";
 import type { PaginateQuery } from "nestjs-paginate/lib/decorator";
 import type { ObjectLiteral, SelectQueryBuilder } from "typeorm";
-import type { IPaginationCriteria, IPaginationResult } from "@/application/pagination";
+import type {
+  IPaginationConfig,
+  IPaginationCriteria,
+  IPaginationPort,
+  IPaginationResult,
+} from "@/application/pagination";
 import { DeclareImplementation } from "@/domain/dependency-injection";
-import { paginateConfig } from "../config/paginate-config";
-import type { ITypeOrmPaginationConfig } from "../interfaces/pagination-config.types";
-
-/**
- * Adapter que implementa paginação usando nestjs-paginate
- * Encapsula toda a lógica do nestjs-paginate, mantendo o domínio limpo
- */
 
 @DeclareImplementation()
-export class NestJsPaginateAdapter {
-  async paginate<T extends ObjectLiteral>(
-    queryBuilder: SelectQueryBuilder<T>,
+export class NestJsPaginateAdapter implements IPaginationPort<SelectQueryBuilder<ObjectLiteral>> {
+  async paginate<T>(
+    queryBuilder: SelectQueryBuilder<ObjectLiteral>,
     criteria: IPaginationCriteria | null,
-    config: ITypeOrmPaginationConfig<T>,
+    config: IPaginationConfig,
   ): Promise<IPaginationResult<T>> {
-    // Converte IPaginationCriteria para PaginateQuery do nestjs-paginate
     const paginateQuery: PaginateQuery = this.buildPaginateQuery(criteria);
 
-    // Converte IPaginationConfig para PaginateConfig do nestjs-paginate
-    // Cast needed because paginateConfig base defaults are spread with entity-specific config
-    const paginateConfigMerged = {
-      ...paginateConfig,
-      ...config,
-    } as PaginateConfig<T>;
+    const result = await paginate(
+      paginateQuery,
+      queryBuilder.clone(),
+      config as PaginateConfig<ObjectLiteral>,
+    );
 
-    // Executa a paginação usando nestjs-paginate
-    const result = await paginate(paginateQuery, queryBuilder.clone(), paginateConfigMerged);
-
-    // Retorna no formato esperado pelo port (já é compatível)
-    return result as IPaginationResult<T>;
+    return result as unknown as IPaginationResult<T>;
   }
 
   /**

@@ -1,10 +1,8 @@
-import { FilterOperator } from "nestjs-paginate";
 import type { IAccessContext } from "@/domain/abstractions";
 import type { ScalarDate } from "@/domain/abstractions/scalars";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
-import { paginateConfig } from "@/infrastructure.database/pagination/config/paginate-config";
-import type { ITypeOrmPaginationConfig } from "@/infrastructure.database/pagination/interfaces/pagination-config.types";
+import { buildTypeOrmPaginateConfig } from "@/infrastructure.database/pagination/adapters/pagination-spec.adapter";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import {
   typeormCreate,
@@ -19,36 +17,23 @@ import type {
   CalendarioLetivoDiaListQuery,
   CalendarioLetivoDiaListQueryResult,
 } from "../domain/queries";
+import { calendarioLetivoDiaPaginationSpec } from "../domain/queries";
 import type { CalendarioLetivoFindOneQueryResult } from "../domain/queries/calendario-letivo-find-one.query.result";
 import type { ICalendarioLetivoDiaRepository } from "../domain/repositories/calendario-letivo-dia.repository.interface";
 import { CalendarioLetivoDiaEntity } from "./typeorm/calendario-letivo-dia.typeorm.entity";
 
 const config = {
   alias: "calendario_letivo_dia",
-  hasSoftDelete: true,
 } as const;
 
-const calendarioLetivoDiaPaginateConfig: ITypeOrmPaginationConfig<CalendarioLetivoDiaEntity> = {
-  ...paginateConfig,
-  sortableColumns: [
-    "data",
-    "diaLetivo",
-    "feriado",
-    "calendario.id",
-    "calendario.nome",
-    "calendario.ano",
-  ],
-  searchableColumns: ["id", "data", "diaLetivo", "feriado", "calendario.nome"],
-  relations: {
-    calendario: true,
-  },
-  defaultSortBy: [["data", "ASC"]],
-  filterableColumns: {
-    "calendario.id": [FilterOperator.EQ],
-    "calendario.nome": [FilterOperator.EQ],
-    "calendario.ano": [FilterOperator.EQ],
-  },
+const calendarioLetivoDiaRelations = {
+  calendario: true,
 };
+
+const calendarioLetivoDiaPaginateConfig = buildTypeOrmPaginateConfig<CalendarioLetivoDiaEntity>(
+  calendarioLetivoDiaPaginationSpec,
+  calendarioLetivoDiaRelations,
+);
 
 @DeclareImplementation()
 export class CalendarioLetivoDiaTypeOrmRepositoryAdapter implements ICalendarioLetivoDiaRepository {

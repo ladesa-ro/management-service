@@ -1,9 +1,7 @@
-import { FilterOperator } from "nestjs-paginate";
 import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
-import { paginateConfig } from "@/infrastructure.database/pagination/config/paginate-config";
-import type { ITypeOrmPaginationConfig } from "@/infrastructure.database/pagination/interfaces/pagination-config.types";
+import { buildTypeOrmPaginateConfig } from "@/infrastructure.database/pagination/adapters/pagination-spec.adapter";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import {
   typeormCreate,
@@ -12,11 +10,12 @@ import {
   typeormSoftDeleteById,
   typeormUpdate,
 } from "@/infrastructure.database/typeorm/helpers/typeorm-repository-helpers";
-import type {
-  CursoFindOneQuery,
-  CursoFindOneQueryResult,
-  CursoListQuery,
-  CursoListQueryResult,
+import {
+  type CursoFindOneQuery,
+  type CursoFindOneQueryResult,
+  type CursoListQuery,
+  type CursoListQueryResult,
+  cursoPaginationSpec,
 } from "@/modules/ensino/curso/domain/queries";
 import type { ICursoRepository } from "@/modules/ensino/curso/domain/repositories";
 import { CursoEntity, cursoEntityDomainMapper } from "./typeorm";
@@ -26,43 +25,23 @@ const config = {
   hasSoftDelete: true,
 } as const;
 
-const cursoPaginateConfig: ITypeOrmPaginationConfig<CursoEntity> = {
-  ...paginateConfig,
-  sortableColumns: [
-    "nome",
-    "nomeAbreviado",
-    "campus.id",
-    "campus.cnpj",
-    "campus.razaoSocial",
-    "campus.nomeFantasia",
-    "ofertaFormacao.id",
-    "ofertaFormacao.nome",
-    "ofertaFormacao.slug",
-  ],
-  searchableColumns: ["id", "nome", "nomeAbreviado", "campus", "ofertaFormacao"],
-  relations: {
-    campus: {
-      endereco: {
-        cidade: {
-          estado: true,
-        },
+const cursoRelations = {
+  campus: {
+    endereco: {
+      cidade: {
+        estado: true,
       },
     },
-    ofertaFormacao: {
-      modalidade: true,
-    },
   },
-  defaultSortBy: [["nome", "ASC"]],
-  filterableColumns: {
-    "campus.id": [FilterOperator.EQ],
-    "campus.cnpj": [FilterOperator.EQ],
-    "campus.razaoSocial": [FilterOperator.EQ],
-    "campus.nomeFantasia": [FilterOperator.EQ],
-    "ofertaFormacao.id": [FilterOperator.EQ],
-    "ofertaFormacao.nome": [FilterOperator.EQ],
-    "ofertaFormacao.slug": [FilterOperator.EQ],
+  ofertaFormacao: {
+    modalidade: true,
   },
 };
+
+const cursoPaginateConfig = buildTypeOrmPaginateConfig<CursoEntity>(
+  cursoPaginationSpec,
+  cursoRelations,
+);
 
 @DeclareImplementation()
 export class CursoTypeOrmRepositoryAdapter implements ICursoRepository {

@@ -1,9 +1,7 @@
-import { FilterOperator } from "nestjs-paginate";
 import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
-import { paginateConfig } from "@/infrastructure.database/pagination/config/paginate-config";
-import type { ITypeOrmPaginationConfig } from "@/infrastructure.database/pagination/interfaces/pagination-config.types";
+import { buildTypeOrmPaginateConfig } from "@/infrastructure.database/pagination/adapters/pagination-spec.adapter";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import {
   typeormCreate,
@@ -18,6 +16,7 @@ import type {
   BlocoListQuery,
   BlocoListQueryResult,
 } from "@/modules/ambientes/bloco/domain/queries";
+import { blocoPaginationSpec } from "@/modules/ambientes/bloco/domain/queries";
 import type { IBlocoRepository } from "@/modules/ambientes/bloco/domain/repositories";
 import { BlocoEntity, blocoEntityDomainMapper } from "./typeorm";
 
@@ -25,34 +24,20 @@ const config = {
   alias: "bloco",
 } as const;
 
-const blocoPaginateConfig: ITypeOrmPaginationConfig<BlocoEntity> = {
-  ...paginateConfig,
-  relations: {
-    campus: {
-      endereco: {
-        cidade: {
-          estado: true,
-        },
+const blocoRelations = {
+  campus: {
+    endereco: {
+      cidade: {
+        estado: true,
       },
     },
   },
-  sortableColumns: [
-    "nome",
-    "codigo",
-    "dateCreated",
-    "campus.id",
-    "campus.razaoSocial",
-    "campus.nomeFantasia",
-  ],
-  searchableColumns: ["id", "nome", "codigo"],
-  defaultSortBy: [
-    ["nome", "ASC"],
-    ["dateCreated", "ASC"],
-  ],
-  filterableColumns: {
-    "campus.id": [FilterOperator.EQ],
-  },
 };
+
+const blocoPaginateConfig = buildTypeOrmPaginateConfig<BlocoEntity>(
+  blocoPaginationSpec,
+  blocoRelations,
+);
 
 @DeclareImplementation()
 export class BlocoTypeOrmRepositoryAdapter implements IBlocoRepository {

@@ -23,6 +23,12 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       ? GqlArgumentsHost.create(host).getContext().req
       : host.switchToHttp().getRequest<Request>();
 
+    // Browsers request /favicon.ico automatically — respond 204 silently
+    if (!isGraphql && request?.url === "/favicon.ico") {
+      host.switchToHttp().getResponse<Response>().status(204).end();
+      return;
+    }
+
     this.logException(exception, request);
 
     if (isGraphql) {

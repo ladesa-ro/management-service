@@ -1,3 +1,5 @@
+import type { IPaginationSpec } from "@/application/pagination";
+import { PaginationFilter } from "@/application/pagination";
 import type { IQueryHandler } from "@/domain/abstractions";
 import { createOperationMetadata } from "@/domain/abstractions";
 import type { OfertaFormacaoListQuery } from "./oferta-formacao-list.query";
@@ -14,3 +16,16 @@ export type IOfertaFormacaoListQueryHandler = IQueryHandler<
   OfertaFormacaoListQuery | null,
   OfertaFormacaoListQueryResult
 >;
+
+export const ofertaFormacaoPaginationSpec: IPaginationSpec = {
+  sortableColumns: ["nome", "slug", "dateCreated"],
+  searchableColumns: ["id", "nome", "slug"],
+  defaultSortBy: [
+    ["nome", "ASC"],
+    ["dateCreated", "ASC"],
+  ],
+  filterableColumns: {
+    "modalidade.id": [PaginationFilter.EQ],
+    "campus.id": [PaginationFilter.EQ],
+  },
+};

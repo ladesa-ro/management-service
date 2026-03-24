@@ -1,3 +1,5 @@
+import type { IPaginationSpec } from "@/application/pagination";
+import { PaginationFilter } from "@/application/pagination";
 import type { IQueryHandler } from "@/domain/abstractions";
 import { createOperationMetadata } from "@/domain/abstractions";
 import type { ImagemArquivoListQuery } from "./imagem-arquivo-list.query";
@@ -14,3 +16,13 @@ export type IImagemArquivoListQueryHandler = IQueryHandler<
   ImagemArquivoListQuery | null,
   ImagemArquivoListQueryResult
 >;
+
+export const imagemArquivoPaginationSpec: IPaginationSpec = {
+  sortableColumns: ["id", "dateCreated"],
+  searchableColumns: ["id"],
+  defaultSortBy: [["dateCreated", "DESC"]],
+  filterableColumns: {
+    id: [PaginationFilter.EQ],
+    "imagem.id": [PaginationFilter.EQ],
+  },
+};

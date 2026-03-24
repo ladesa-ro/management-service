@@ -1,11 +1,9 @@
-import { FilterOperator } from "nestjs-paginate";
 import { IsNull } from "typeorm";
 import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
-import { paginateConfig } from "@/infrastructure.database/pagination/config/paginate-config";
-import type { ITypeOrmPaginationConfig } from "@/infrastructure.database/pagination/interfaces/pagination-config.types";
+import { buildTypeOrmPaginateConfig } from "@/infrastructure.database/pagination/adapters/pagination-spec.adapter";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import {
   typeormFindAll,
@@ -28,6 +26,7 @@ import {
   type IOfertaFormacao,
   OfertaFormacao,
 } from "@/modules/ensino/oferta-formacao/domain/oferta-formacao";
+import { ofertaFormacaoPaginationSpec } from "@/modules/ensino/oferta-formacao/domain/queries";
 import type { IOfertaFormacaoRepository } from "@/modules/ensino/oferta-formacao/domain/repositories";
 import { getNow } from "@/utils/date";
 import {
@@ -43,35 +42,27 @@ const config = {
   hasSoftDelete: true,
 } as const;
 
-const ofertaFormacaoPaginateConfig: ITypeOrmPaginationConfig<OfertaFormacaoEntity> = {
-  ...paginateConfig,
-  relations: {
-    modalidade: true,
-    campus: {
-      endereco: {
-        cidade: {
-          estado: true,
-        },
+const ofertaFormacaoRelations = {
+  modalidade: true,
+  campus: {
+    endereco: {
+      cidade: {
+        estado: true,
       },
     },
-    ofertaFormacaoNiveisFormacoes: {
-      nivelFormacao: true,
-    },
-    periodosEntities: {
-      etapas: true,
-    },
   },
-  sortableColumns: ["nome", "slug", "dateCreated"],
-  searchableColumns: ["id", "nome", "slug"],
-  defaultSortBy: [
-    ["nome", "ASC"],
-    ["dateCreated", "ASC"],
-  ],
-  filterableColumns: {
-    "modalidade.id": [FilterOperator.EQ],
-    "campus.id": [FilterOperator.EQ],
+  ofertaFormacaoNiveisFormacoes: {
+    nivelFormacao: true,
+  },
+  periodosEntities: {
+    etapas: true,
   },
 };
+
+const ofertaFormacaoPaginateConfig = buildTypeOrmPaginateConfig<OfertaFormacaoEntity>(
+  ofertaFormacaoPaginationSpec,
+  ofertaFormacaoRelations,
+);
 
 /**
  * Relations para o write side (loadById).

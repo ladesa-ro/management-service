@@ -1,9 +1,8 @@
-import { FilterOperator } from "nestjs-paginate";
 import { IsNull } from "typeorm";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
-import { paginateConfig } from "@/infrastructure.database/pagination/config/paginate-config";
-import type { ITypeOrmPaginationConfig } from "@/infrastructure.database/pagination/interfaces/pagination-config.types";
+import { buildTypeOrmPaginateConfig } from "@/infrastructure.database/pagination/adapters/pagination-spec.adapter";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import {
   typeormCreate,
@@ -19,31 +18,25 @@ import type {
   EstagioListQuery,
   EstagioListQueryResult,
 } from "@/modules/estagio/estagio/domain/queries";
+import { estagioPaginationSpec } from "@/modules/estagio/estagio/domain/queries";
 import type { IEstagioRepository } from "@/modules/estagio/estagio/domain/repositories";
 import { getNow } from "@/utils/date";
 import { EstagioMapper, EstagioTypeormEntity, HorarioEstagioTypeormEntity } from "./typeorm";
 
 const config = {
   alias: "estagio",
-  hasSoftDelete: true,
 } as const;
 
-const estagioPaginateConfig: ITypeOrmPaginationConfig<EstagioTypeormEntity> = {
-  ...paginateConfig,
-  relations: {
-    empresa: true,
-    estagiario: true,
-    horariosEstagio: true,
-  },
-  sortableColumns: ["status", "cargaHoraria", "dataInicio", "dataFim", "dateCreated"],
-  searchableColumns: ["status"],
-  defaultSortBy: [["dateCreated", "DESC"]],
-  filterableColumns: {
-    "empresa.id": [FilterOperator.EQ],
-    "estagiario.id": [FilterOperator.EQ],
-    status: [FilterOperator.EQ],
-  },
+const estagioRelations = {
+  empresa: true,
+  estagiario: true,
+  horariosEstagio: true,
 };
+
+const estagioPaginateConfig = buildTypeOrmPaginateConfig<EstagioTypeormEntity>(
+  estagioPaginationSpec,
+  estagioRelations,
+);
 
 @DeclareImplementation()
 export class EstagioTypeOrmRepositoryAdapter implements IEstagioRepository {
@@ -53,7 +46,7 @@ export class EstagioTypeOrmRepositoryAdapter implements IEstagioRepository {
     private readonly paginationAdapter: NestJsPaginateAdapter,
   ) {}
 
-  findAll(accessContext: unknown, dto: EstagioListQuery | null = null) {
+  findAll(accessContext: IAccessContext | null, dto: EstagioListQuery | null = null) {
     return typeormFindAll<EstagioTypeormEntity, EstagioListQuery, EstagioListQueryResult>(
       this.appTypeormConnection,
       EstagioTypeormEntity,
@@ -64,7 +57,7 @@ export class EstagioTypeOrmRepositoryAdapter implements IEstagioRepository {
     );
   }
 
-  findById(accessContext: unknown, dto: EstagioFindOneQuery) {
+  findById(accessContext: IAccessContext | null, dto: EstagioFindOneQuery) {
     return typeormFindById<EstagioTypeormEntity, EstagioFindOneQuery, EstagioFindOneQueryResult>(
       this.appTypeormConnection,
       EstagioTypeormEntity,
@@ -74,7 +67,7 @@ export class EstagioTypeOrmRepositoryAdapter implements IEstagioRepository {
     );
   }
 
-  findByIdSimple(accessContext: unknown, id: string) {
+  findByIdSimple(accessContext: IAccessContext | null, id: string) {
     return this.findById(accessContext, { id } as EstagioFindOneQuery);
   }
 

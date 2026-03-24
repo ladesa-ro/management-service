@@ -1,11 +1,10 @@
-import { FilterOperator } from "nestjs-paginate";
 import type { DeepPartial } from "typeorm";
 import { IsNull } from "typeorm";
 import type { IPaginationCriteria, IPaginationResult } from "@/application/pagination";
 import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
-import { paginateConfig } from "@/infrastructure.database/pagination/config/paginate-config";
+import { buildTypeOrmPaginateConfig } from "@/infrastructure.database/pagination/adapters/pagination-spec.adapter";
 import type { ITypeOrmPaginationConfig } from "@/infrastructure.database/pagination/interfaces/pagination-config.types";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import {
@@ -21,29 +20,24 @@ import type {
   PerfilListQuery,
   PerfilListQueryResult,
 } from "@/modules/acesso/perfil/domain/queries";
+import { perfilPaginationSpec } from "@/modules/acesso/perfil/domain/queries";
 import type { IPerfilRepository } from "@/modules/acesso/perfil/domain/repositories";
 import type { UsuarioEntity } from "@/modules/acesso/usuario/infrastructure.database";
 import { PerfilEntity, perfilEntityDomainMapper } from "./typeorm";
 
 const config = {
   alias: "vinculo",
-  hasSoftDelete: true,
 } as const;
 
-const perfilPaginateConfig: ITypeOrmPaginationConfig<PerfilEntity> = {
-  ...paginateConfig,
-  relations: {
-    campus: true,
-    usuario: true,
-  },
-  searchableColumns: ["cargo"],
-  filterableColumns: {
-    ativo: [FilterOperator.EQ],
-    cargo: [FilterOperator.EQ],
-    "campus.id": [FilterOperator.EQ],
-    "usuario.id": [FilterOperator.EQ],
-  },
+const perfilRelations = {
+  campus: true,
+  usuario: true,
 };
+
+const perfilPaginateConfig = buildTypeOrmPaginateConfig<PerfilEntity>(
+  perfilPaginationSpec,
+  perfilRelations,
+);
 
 @DeclareImplementation()
 export class PerfilTypeOrmRepositoryAdapter implements IPerfilRepository {
@@ -83,7 +77,7 @@ export class PerfilTypeOrmRepositoryAdapter implements IPerfilRepository {
     const repo = this.appTypeormConnection.getRepository(PerfilEntity);
     const entities = await repo.find({
       where: { usuario: { id: usuarioId }, ativo: true, dateDeleted: IsNull() },
-      relations: perfilPaginateConfig.relations,
+      relations: perfilRelations,
     });
     return entities as unknown as PerfilFindOneQueryResult[];
   }

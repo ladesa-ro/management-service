@@ -1,10 +1,8 @@
-import { FilterOperator } from "nestjs-paginate";
 import { IsNull } from "typeorm";
 import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
-import { paginateConfig } from "@/infrastructure.database/pagination/config/paginate-config";
-import type { ITypeOrmPaginationConfig } from "@/infrastructure.database/pagination/interfaces/pagination-config.types";
+import { buildTypeOrmPaginateConfig } from "@/infrastructure.database/pagination/adapters/pagination-spec.adapter";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import {
   typeormCreate,
@@ -20,6 +18,7 @@ import type {
   UsuarioListQuery,
   UsuarioListQueryResult,
 } from "@/modules/acesso/usuario";
+import { usuarioPaginationSpec } from "@/modules/acesso/usuario/domain/queries";
 import { CursoEntity } from "@/modules/ensino/curso/infrastructure.database/typeorm/curso.typeorm.entity";
 import { DisciplinaEntity } from "@/modules/ensino/disciplina/infrastructure.database/typeorm/disciplina.typeorm.entity";
 import { TurmaEntity } from "@/modules/ensino/turma/infrastructure.database/typeorm/turma.typeorm.entity";
@@ -27,25 +26,16 @@ import { UsuarioEntity, usuarioEntityDomainMapper } from "./typeorm";
 
 const config = {
   alias: "usuario",
-  hasSoftDelete: true,
 } as const;
 
-const usuarioPaginateConfig: ITypeOrmPaginationConfig<UsuarioEntity> = {
-  ...paginateConfig,
-  sortableColumns: ["nome", "matricula", "email", "dateCreated"],
-  searchableColumns: ["id", "nome", "matricula", "email"],
-  defaultSortBy: [
-    ["nome", "ASC"],
-    ["dateCreated", "ASC"],
-    ["matricula", "ASC"],
-  ],
-  relations: {
-    vinculos: true,
-  },
-  filterableColumns: {
-    "vinculos.cargo": [FilterOperator.EQ],
-  },
+const usuarioRelations = {
+  vinculos: true,
 };
+
+const usuarioPaginateConfig = buildTypeOrmPaginateConfig<UsuarioEntity>(
+  usuarioPaginationSpec,
+  usuarioRelations,
+);
 
 @DeclareImplementation()
 export class UsuarioTypeOrmRepositoryAdapter implements IUsuarioRepository {
@@ -82,7 +72,7 @@ export class UsuarioTypeOrmRepositoryAdapter implements IUsuarioRepository {
     const repo = this.appTypeormConnection.getRepository(UsuarioEntity);
     const entity = await repo.findOne({
       where: { matricula, dateDeleted: IsNull() },
-      relations: usuarioPaginateConfig.relations,
+      relations: usuarioRelations,
     });
     return (entity as unknown as UsuarioFindOneQueryResult) ?? null;
   }

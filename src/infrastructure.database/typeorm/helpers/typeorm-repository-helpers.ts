@@ -4,8 +4,9 @@ import type {
   FindOptionsWhere,
   ObjectLiteral,
   Repository,
+  SelectQueryBuilder,
 } from "typeorm";
-import { IsNull } from "typeorm";
+import { In, IsNull } from "typeorm";
 import type { IPaginationCriteria } from "@/application/pagination";
 import type { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
 import type { ITypeOrmPaginationConfig } from "@/infrastructure.database/pagination/interfaces/pagination-config.types";
@@ -30,6 +31,39 @@ function getRepository<Entity extends ObjectLiteral>(
   entity: EntityTarget<Entity>,
 ): Repository<Entity> {
   return conn.getRepository(entity);
+}
+
+/**
+ * Builds a minimal relations object from column paths used in sort/filter/search.
+ * For "curso.campus.id", extracts the relation path ["curso", "campus"]
+ * and produces { curso: { campus: true } }.
+ * This ensures nestjs-paginate has the JOINs needed for those columns
+ * without including deep display-only relations that cause alias overflow.
+ */
+export function buildRelationsFromColumns(columns: string[]): Record<string, unknown> {
+  const relations: Record<string, unknown> = {};
+
+  for (const column of columns) {
+    const parts = column.split(".");
+
+    if (parts.length < 2) continue;
+
+    // All segments except the last are relation names; the last is the column
+    const relationParts = parts.slice(0, -1);
+
+    let current = relations;
+    for (let i = 0; i < relationParts.length; i++) {
+      const part = relationParts[i];
+      if (current[part] === undefined || current[part] === true) {
+        current[part] = i === relationParts.length - 1 ? true : {};
+      }
+      if (current[part] !== true) {
+        current = current[part] as Record<string, unknown>;
+      }
+    }
+  }
+
+  return relations;
 }
 
 function extractFilters(
@@ -76,11 +110,59 @@ export async function typeormFindAll<Entity extends IEntityWithId, ListInputDto,
     filters: extractFilters(dto as Record<string, unknown> | null),
   };
 
-  const paginated = await paginationAdapter.paginate(qb, criteria, config.paginateConfig);
+  // Replace full display relations with minimal relations derived from
+  // sort/filter/search columns. This avoids nestjs-paginate generating
+  // JOIN aliases that exceed PostgreSQL's 63-character identifier limit,
+  // while still providing the JOINs needed for those columns.
+  const { relations, ...paginateConfigWithoutRelations } = config.paginateConfig;
 
-  if (mapEntity) {
-    (paginated as { data: unknown[] }).data = paginated.data.map(mapEntity);
+  const columnPaths = [
+    ...(config.paginateConfig.sortableColumns ?? []),
+    ...(config.paginateConfig.searchableColumns ?? []),
+    ...Object.keys(config.paginateConfig.filterableColumns ?? {}),
+  ];
+
+  const minimalRelations = buildRelationsFromColumns(columnPaths);
+  const hasMinimalRelations = Object.keys(minimalRelations).length > 0;
+
+  const paginateConfigForQuery = {
+    ...paginateConfigWithoutRelations,
+    ...(hasMinimalRelations ? { relations: minimalRelations } : {}),
+  } as ITypeOrmPaginationConfig<Entity>;
+
+  const paginated = await paginationAdapter.paginate<Entity>(
+    qb as unknown as SelectQueryBuilder<ObjectLiteral>,
+    criteria,
+    paginateConfigForQuery,
+  );
+
+  if (paginated.data.length === 0 || !relations) {
+    if (mapEntity) {
+      (paginated as { data: unknown[] }).data = paginated.data.map(mapEntity);
+    }
+    return paginated as unknown as ListOutputDto;
   }
+
+  // Second query: load full entities with relations using TypeORM's find(),
+  // which generates safe short-hash aliases instead of concatenated paths.
+  const ids = paginated.data.map((e) => (e as IEntityWithId).id);
+
+  const where: FindOptionsWhere<Entity> = { id: In(ids) } as FindOptionsWhere<Entity>;
+  if (hasSoftDelete) {
+    Object.assign(where, { dateDeleted: IsNull() });
+  }
+
+  const fullEntities = await repo.find({ where, relations });
+
+  // Restore paginated order
+  const entityMap = new Map(fullEntities.map((e) => [e.id, e]));
+  const orderedEntities = ids
+    .map((id) => entityMap.get(id))
+    .filter((e): e is Entity => e !== undefined);
+
+  (paginated as { data: unknown[] }).data = mapEntity
+    ? orderedEntities.map(mapEntity)
+    : orderedEntities;
 
   return paginated as unknown as ListOutputDto;
 }

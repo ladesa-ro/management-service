@@ -1,9 +1,7 @@
-import { FilterOperator } from "nestjs-paginate";
 import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
-import { paginateConfig } from "@/infrastructure.database/pagination/config/paginate-config";
-import type { ITypeOrmPaginationConfig } from "@/infrastructure.database/pagination/interfaces/pagination-config.types";
+import { buildTypeOrmPaginateConfig } from "@/infrastructure.database/pagination/adapters/pagination-spec.adapter";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import {
   typeormCreate,
@@ -19,51 +17,30 @@ import type {
   CalendarioLetivoListQueryResult,
   ICalendarioLetivoRepository,
 } from "@/modules/horarios/calendario-letivo";
+import { calendarioLetivoPaginationSpec } from "@/modules/horarios/calendario-letivo/domain/queries";
 import { CalendarioLetivoEntity, calendarioLetivoEntityDomainMapper } from "./typeorm";
 
 const config = {
   alias: "calendario_letivo",
-  hasSoftDelete: true,
 } as const;
 
-const calendarioLetivoPaginateConfig: ITypeOrmPaginationConfig<CalendarioLetivoEntity> = {
-  ...paginateConfig,
-  sortableColumns: [
-    "nome",
-    "ano",
-    "campus.id",
-    "campus.cnpj",
-    "campus.razaoSocial",
-    "campus.nomeFantasia",
-    "ofertaFormacao.id",
-    "ofertaFormacao.nome",
-    "ofertaFormacao.slug",
-  ],
-  searchableColumns: ["id", "nome", "ano", "campus", "ofertaFormacao"],
-  relations: {
-    campus: {
-      endereco: {
-        cidade: {
-          estado: true,
-        },
+const calendarioLetivoRelations = {
+  campus: {
+    endereco: {
+      cidade: {
+        estado: true,
       },
     },
-    ofertaFormacao: {
-      modalidade: true,
-    },
   },
-  defaultSortBy: [],
-  filterableColumns: {
-    ano: [FilterOperator.EQ],
-    "campus.id": [FilterOperator.EQ],
-    "campus.cnpj": [FilterOperator.EQ],
-    "campus.razaoSocial": [FilterOperator.EQ],
-    "campus.nomeFantasia": [FilterOperator.EQ],
-    "ofertaFormacao.id": [FilterOperator.EQ],
-    "ofertaFormacao.nome": [FilterOperator.EQ],
-    "ofertaFormacao.slug": [FilterOperator.EQ],
+  ofertaFormacao: {
+    modalidade: true,
   },
 };
+
+const calendarioLetivoPaginateConfig = buildTypeOrmPaginateConfig<CalendarioLetivoEntity>(
+  calendarioLetivoPaginationSpec,
+  calendarioLetivoRelations,
+);
 
 @DeclareImplementation()
 export class CalendarioLetivoTypeOrmRepositoryAdapter implements ICalendarioLetivoRepository {

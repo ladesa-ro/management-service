@@ -1,9 +1,7 @@
-import { FilterOperator, FilterSuffix } from "nestjs-paginate";
 import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
-import { paginateConfig } from "@/infrastructure.database/pagination/config/paginate-config";
-import type { ITypeOrmPaginationConfig } from "@/infrastructure.database/pagination/interfaces/pagination-config.types";
+import { buildTypeOrmPaginateConfig } from "@/infrastructure.database/pagination/adapters/pagination-spec.adapter";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import {
   typeormCreate,
@@ -12,11 +10,12 @@ import {
   typeormSoftDeleteById,
   typeormUpdate,
 } from "@/infrastructure.database/typeorm/helpers/typeorm-repository-helpers";
-import type {
-  DisciplinaFindOneQuery,
-  DisciplinaFindOneQueryResult,
-  DisciplinaListQuery,
-  DisciplinaListQueryResult,
+import {
+  type DisciplinaFindOneQuery,
+  type DisciplinaFindOneQueryResult,
+  type DisciplinaListQuery,
+  type DisciplinaListQueryResult,
+  disciplinaPaginationSpec,
 } from "@/modules/ensino/disciplina/domain/queries";
 import type { IDisciplinaRepository } from "@/modules/ensino/disciplina/domain/repositories";
 import { DisciplinaEntity, disciplinaEntityDomainMapper } from "./typeorm";
@@ -26,16 +25,12 @@ const config = {
   hasSoftDelete: true,
 } as const;
 
-const disciplinaPaginateConfig: ITypeOrmPaginationConfig<DisciplinaEntity> = {
-  ...paginateConfig,
-  relations: { diarios: true },
-  sortableColumns: ["nome", "cargaHoraria"],
-  searchableColumns: ["id", "nome", "nomeAbreviado", "cargaHoraria"],
-  defaultSortBy: [["nome", "ASC"]],
-  filterableColumns: {
-    "diarios.id": [FilterOperator.EQ, FilterOperator.NULL, FilterSuffix.NOT],
-  },
-};
+const disciplinaRelations = { diarios: true };
+
+const disciplinaPaginateConfig = buildTypeOrmPaginateConfig<DisciplinaEntity>(
+  disciplinaPaginationSpec,
+  disciplinaRelations,
+);
 
 @DeclareImplementation()
 export class DisciplinaTypeOrmRepositoryAdapter implements IDisciplinaRepository {
