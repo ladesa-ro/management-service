@@ -31,10 +31,9 @@ export class BlocoGraphqlMapper {
     return input;
   }
 
-  static toFindOneInput(id: string, selection?: string[]): BlocoFindOneQuery {
+  static toFindOneInput(id: string): BlocoFindOneQuery {
     const input = new BlocoFindOneQuery();
     input.id = id;
-    input.selection = selection;
     return input;
   }
 

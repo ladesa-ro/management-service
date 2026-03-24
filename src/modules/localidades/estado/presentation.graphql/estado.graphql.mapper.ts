@@ -26,10 +26,9 @@ export class EstadoGraphqlMapper {
     return listInputMapping.mapDefined<EstadoListQuery>(dto);
   }
 
-  static toFindOneInput(id: number, selection?: string[]): EstadoFindOneQuery {
+  static toFindOneInput(id: number): EstadoFindOneQuery {
     const input = new EstadoFindOneQuery();
     input.id = id;
-    input.selection = selection;
     return input;
   }
 

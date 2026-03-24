@@ -16,8 +16,8 @@ export class UsuarioFindByMatriculaQueryHandlerImpl implements IUsuarioFindByMat
 
   async execute(
     _accessContext: IAccessContext | null,
-    { matricula, selection }: IUsuarioFindByMatriculaQuery,
+    { matricula }: IUsuarioFindByMatriculaQuery,
   ): Promise<UsuarioFindOneQueryResult | null> {
-    return this.repository.findByMatricula(matricula, selection);
+    return this.repository.findByMatricula(matricula);
   }
 }

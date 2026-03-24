@@ -15,6 +15,6 @@ export class TurmaListQueryHandlerImpl implements ITurmaListQueryHandler {
     accessContext: IAccessContext | null,
     dto: TurmaListQuery | null,
   ): Promise<TurmaListQueryResult> {
-    return this.repository.findAll(accessContext, dto, dto?.selection);
+    return this.repository.findAll(accessContext, dto);
   }
 }

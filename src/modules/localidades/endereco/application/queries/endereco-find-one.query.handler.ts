@@ -15,6 +15,6 @@ export class EnderecoFindOneQueryHandlerImpl implements IEnderecoFindOneQueryHan
     accessContext: IAccessContext | null,
     dto: EnderecoFindOneQuery,
   ): Promise<EnderecoFindOneQueryResult | null> {
-    return this.repository.findById(accessContext, dto, dto?.selection);
+    return this.repository.findById(accessContext, dto);
   }
 }

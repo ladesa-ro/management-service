@@ -22,13 +22,11 @@ import { NivelFormacaoEntity, nivelFormacaoEntityDomainMapper } from "./typeorm"
 
 const config = {
   alias: "nivel_formacao",
-  outputDtoName: "NivelFormacaoFindOneQueryResult",
   hasSoftDelete: true,
 } as const;
 
 const nivelFormacaoPaginateConfig: ITypeOrmPaginationConfig<NivelFormacaoEntity> = {
   ...paginateConfig,
-  select: ["id", "slug", "dateCreated"],
   sortableColumns: ["slug", "dateCreated"],
   searchableColumns: ["id", "slug"],
   defaultSortBy: [
@@ -46,11 +44,7 @@ export class NivelFormacaoTypeOrmRepositoryAdapter implements INivelFormacaoRepo
     private readonly paginationAdapter: NestJsPaginateAdapter,
   ) {}
 
-  findAll(
-    accessContext: IAccessContext | null,
-    dto: NivelFormacaoListQuery | null = null,
-    selection?: string[] | boolean | null,
-  ) {
+  findAll(accessContext: IAccessContext | null, dto: NivelFormacaoListQuery | null = null) {
     return typeormFindAll<
       NivelFormacaoEntity,
       NivelFormacaoListQuery,
@@ -61,28 +55,24 @@ export class NivelFormacaoTypeOrmRepositoryAdapter implements INivelFormacaoRepo
       { ...config, paginateConfig: nivelFormacaoPaginateConfig },
       this.paginationAdapter,
       dto,
-      selection,
     );
   }
 
-  findById(
-    accessContext: IAccessContext | null,
-    dto: NivelFormacaoFindOneQuery,
-    selection?: string[] | boolean | null,
-  ) {
+  findById(accessContext: IAccessContext | null, dto: NivelFormacaoFindOneQuery) {
     return typeormFindById<
       NivelFormacaoEntity,
       NivelFormacaoFindOneQuery,
       NivelFormacaoFindOneQueryResult
-    >(this.appTypeormConnection, NivelFormacaoEntity, config, dto, selection);
+    >(
+      this.appTypeormConnection,
+      NivelFormacaoEntity,
+      { ...config, paginateConfig: nivelFormacaoPaginateConfig },
+      dto,
+    );
   }
 
-  findByIdSimple(
-    accessContext: IAccessContext | null,
-    id: string,
-    selection?: string[] | boolean | null,
-  ) {
-    return this.findById(accessContext, { id } as NivelFormacaoFindOneQuery, selection);
+  findByIdSimple(accessContext: IAccessContext | null, id: string) {
+    return this.findById(accessContext, { id } as NivelFormacaoFindOneQuery);
   }
 
   create(data: Record<string, unknown>) {

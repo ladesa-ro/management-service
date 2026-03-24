@@ -1,9 +1,7 @@
-import { Args, ID, Info, Query, Resolver } from "@nestjs/graphql";
-import { type GraphQLResolveInfo } from "graphql";
+import { Args, ID, Query, Resolver } from "@nestjs/graphql";
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
-import { graphqlExtractSelection } from "@/infrastructure.graphql";
 import { ImagemArquivo } from "@/modules/armazenamento/imagem-arquivo/domain/imagem-arquivo";
 import {
   IImagemArquivoFindOneQueryHandler,
@@ -34,13 +32,8 @@ export class ImagemArquivoGraphqlResolver {
   async findAll(
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args() dto: ImagemArquivoListInputGraphQlDto,
-    @Info() info: GraphQLResolveInfo,
   ): Promise<ImagemArquivoListOutputGraphQlDto> {
     const input = ImagemArquivoGraphqlMapper.toListInput(dto);
-
-    if (input) {
-      input.selection = graphqlExtractSelection(info, "paginated");
-    }
     const result = await this.listHandler.execute(accessContext, input);
     return ImagemArquivoGraphqlMapper.toListOutputDto(result);
   }
@@ -49,10 +42,8 @@ export class ImagemArquivoGraphqlResolver {
   async findById(
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("id", { type: () => ID }) id: string,
-    @Info() info: GraphQLResolveInfo,
   ): Promise<ImagemArquivoFindOneOutputGraphQlDto> {
-    const selection = graphqlExtractSelection(info);
-    const result = await this.findOneHandler.execute(accessContext, { id, selection });
+    const result = await this.findOneHandler.execute(accessContext, { id });
     ensureExists(result, ImagemArquivo.entityName, id);
     return ImagemArquivoGraphqlMapper.toFindOneOutputDto(result);
   }

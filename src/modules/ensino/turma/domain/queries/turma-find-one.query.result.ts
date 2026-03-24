@@ -1,10 +1,4 @@
 import { EntityQueryResult, SharedFields } from "@/domain/abstractions";
-import { fieldsToProperties } from "@/domain/abstractions/metadata/model-from-fields";
-import {
-  commonProperties,
-  defineModel,
-  referenceProperty,
-} from "@/domain/abstractions/metadata/model-registry";
 import { AmbienteFindOneQueryResult } from "@/modules/ambientes/ambiente";
 import { ImagemFindOneQueryResult } from "@/modules/armazenamento/imagem";
 import { CursoFindOneQueryResult } from "@/modules/ensino/curso";
@@ -22,11 +16,3 @@ export class TurmaFindOneQueryResult extends EntityQueryResult {
   curso!: CursoFindOneQueryResult;
   imagemCapa!: ImagemFindOneQueryResult | null;
 }
-
-defineModel("TurmaFindOneQueryResult", [
-  ...fieldsToProperties(TurmaFindOneQueryResultFields),
-  referenceProperty("curso", "CursoFindOneQueryResult"),
-  referenceProperty("ambientePadraoAula", "AmbienteFindOneQueryResult", { nullable: true }),
-  referenceProperty("imagemCapa", "ImagemFindOneQueryResult", { nullable: true }),
-  ...commonProperties.dated,
-]);

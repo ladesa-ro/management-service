@@ -20,22 +20,11 @@ import { ImagemArquivoEntity } from "./typeorm/imagem-arquivo.typeorm.entity";
 
 const config = {
   alias: "imagem_arquivo",
-  outputDtoName: "ImagemArquivoFindOneQueryResult",
   hasSoftDelete: true,
 } as const;
 
 const imagemArquivoPaginateConfig: ITypeOrmPaginationConfig<ImagemArquivoEntity> = {
   ...paginateConfig,
-  select: [
-    "id",
-    "largura",
-    "altura",
-    "formato",
-    "mimeType",
-    "dateCreated",
-    "dateUpdated",
-    "dateDeleted",
-  ],
   relations: {
     imagem: true,
     arquivo: true,
@@ -57,11 +46,7 @@ export class ImagemArquivoQueryTypeOrmRepositoryAdapter implements IImagemArquiv
     private readonly paginationAdapter: NestJsPaginateAdapter,
   ) {}
 
-  findAll(
-    accessContext: IAccessContext | null,
-    dto: ImagemArquivoListQuery | null = null,
-    selection?: string[] | boolean | null,
-  ) {
+  findAll(accessContext: IAccessContext | null, dto: ImagemArquivoListQuery | null = null) {
     return typeormFindAll<
       ImagemArquivoEntity,
       ImagemArquivoListQuery,
@@ -72,19 +57,19 @@ export class ImagemArquivoQueryTypeOrmRepositoryAdapter implements IImagemArquiv
       { ...config, paginateConfig: imagemArquivoPaginateConfig },
       this.paginationAdapter,
       dto,
-      selection,
     );
   }
 
-  findById(
-    accessContext: IAccessContext | null,
-    dto: ImagemArquivoFindOneQuery,
-    selection?: string[] | boolean | null,
-  ) {
+  findById(accessContext: IAccessContext | null, dto: ImagemArquivoFindOneQuery) {
     return typeormFindById<
       ImagemArquivoEntity,
       ImagemArquivoFindOneQuery,
       ImagemArquivoFindOneQueryResult
-    >(this.appTypeormConnection, ImagemArquivoEntity, config, dto, selection);
+    >(
+      this.appTypeormConnection,
+      ImagemArquivoEntity,
+      { ...config, paginateConfig: imagemArquivoPaginateConfig },
+      dto,
+    );
   }
 }

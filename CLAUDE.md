@@ -324,9 +324,8 @@ export class CampusFindOneQueryHandler implements ICampusFindOneQueryHandler {
   async execute(
     accessContext: IAccessContext | null,
     dto: { id: string },
-    selection?: string[] | boolean | null,
   ) {
-    return this.campusRepository.findById(accessContext, dto, selection);
+    return this.campusRepository.findById(accessContext, dto);
   }
 }
 ```
@@ -370,7 +369,7 @@ export class CampusTypeormRepository implements ICampusRepository {
     // ... mapeia domínio → TypeORM e salva
   }
 
-  async findAll(accessContext: IAccessContext | null, dto: unknown, selection?: string[] | boolean | null) {
+  async findAll(accessContext: IAccessContext | null, dto: unknown) {
     const repo = this.conn.getRepository(CampusEntity);
     return NestJsPaginateAdapter.paginate(repo, dto, paginateConfig(/* ... */));
   }
@@ -703,6 +702,9 @@ Estas decisões são intencionais e **não devem ser questionadas ou alteradas**
 10. **`src/shared/`** é o lar de utilitários cross-cutting — validação, mapping, decorators de apresentação.
 11. **Mapper domain ↔ entity é interno à infraestrutura** — `createEntityDomainMapper` em `src/infrastructure.database/typeorm/helpers/`. Cada módulo define seu mapper em `infrastructure.database/typeorm/{nome}.mapper.ts`. O mapper nunca vaza para a camada de aplicação.
 12. **Database command services** — operações programáticas (migration run/revert, schema drop) ficam em `src/infrastructure.database/services/` implementando `IDatabaseCommand`. Scripts de scaffolding (`typeorm-generate`, `typeorm-create`) continuam usando o CLI do TypeORM.
+13. **Separação read/write no repositório (piloto: OfertaFormacao)** — módulos com relações complexas usam interface explícita com `loadById` (write side → retorna aggregate de domínio), `getFindOneQueryResult` / `getFindAllQueryResult` (read side → retorna dados hidratados). O adapter contém dois mappers privados: `toDomainData()` (entity → domínio com `{ id }` para relações, ISO strings) e `toQueryResult()` (entity → query result com objetos completos). Os demais módulos continuam usando as interfaces genéricas (`IRepositoryFindAll`, `IRepositoryFindById`, etc.) até serem migrados.
+14. **Utilitários de mapping** — funções puras em `src/infrastructure.database/typeorm/mapping/utils.ts` (`filterActive`, `toRef`, `toRefRequired`, `dateToISO`, `dateToISONullable`, `isoToDate`, `isoToDateNullable`). Usados nos mappers imperativos dos adapters.
+15. **Relations declaradas explicitamente** — cada repositório declara a profundidade completa das relações no `paginateConfig.relations`. Se a UI precisa de `campus.endereco.cidade.estado`, o repositório deve declarar `campus: { endereco: { cidade: { estado: true } } }`, não apenas `campus: true`.
 
 ---
 

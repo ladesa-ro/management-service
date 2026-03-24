@@ -1,6 +1,4 @@
 import { EntityQueryResult, SharedFields } from "@/domain/abstractions";
-import { fieldsToProperties } from "@/domain/abstractions/metadata/model-from-fields";
-import { commonProperties, defineModel } from "@/domain/abstractions/metadata/model-registry";
 import { ArquivoFields } from "../arquivo.fields";
 
 export const ArquivoFindOneQueryResultFields = {
@@ -14,8 +12,3 @@ export class ArquivoFindOneQueryResult extends EntityQueryResult {
   sizeBytes!: number | null;
   storageType!: string;
 }
-
-defineModel("ArquivoFindOneQueryResult", [
-  ...fieldsToProperties(ArquivoFindOneQueryResultFields),
-  ...commonProperties.dated,
-]);

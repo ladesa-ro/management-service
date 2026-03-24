@@ -15,6 +15,6 @@ export class DisciplinaFindOneQueryHandlerImpl implements IDisciplinaFindOneQuer
     accessContext: IAccessContext | null,
     dto: DisciplinaFindOneQuery,
   ): Promise<DisciplinaFindOneQueryResult | null> {
-    return this.repository.findById(accessContext, dto, dto?.selection);
+    return this.repository.findById(accessContext, dto);
   }
 }

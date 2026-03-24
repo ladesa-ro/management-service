@@ -49,9 +49,6 @@ export class CidadeListInputGraphQlDto {
   @Field(() => [String], CidadeListQueryFields.sortBy.gqlMetadata)
   sortBy?: string[];
 
-  @Field(() => [String], CidadeListQueryFields.selection.gqlMetadata)
-  selection?: string[];
-
   @Field(() => [String], CidadeListQueryFields.filterId.gqlMetadata)
   filterId?: string[];
 

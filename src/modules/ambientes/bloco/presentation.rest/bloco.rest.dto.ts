@@ -104,9 +104,6 @@ export class BlocoListInputRestDto {
   @ApiPropertyOptional(BlocoListQueryFields.sortBy.swaggerMetadata)
   sortBy?: string[];
 
-  @ApiPropertyOptional(BlocoListQueryFields.selection.swaggerMetadata)
-  selection?: string[];
-
   @ApiPropertyOptional(BlocoListQueryFields.filterId.swaggerMetadata)
   "filter.id"?: string[];
 

@@ -20,6 +20,6 @@ export class CalendarioLetivoFindOneQueryHandlerImpl
     accessContext: IAccessContext | null,
     dto: CalendarioLetivoFindOneQuery,
   ): Promise<CalendarioLetivoFindOneQueryResult | null> {
-    return this.repository.findById(accessContext, dto, dto?.selection);
+    return this.repository.findById(accessContext, dto);
   }
 }

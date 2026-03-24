@@ -20,6 +20,6 @@ export class DiarioPreferenciaAgrupamentoFindOneQueryHandlerImpl
     accessContext: IAccessContext | null,
     dto: DiarioPreferenciaAgrupamentoFindOneQuery,
   ): Promise<DiarioPreferenciaAgrupamentoFindOneQueryResult | null> {
-    return this.repository.findById(accessContext, dto, dto?.selection);
+    return this.repository.findById(accessContext, dto);
   }
 }

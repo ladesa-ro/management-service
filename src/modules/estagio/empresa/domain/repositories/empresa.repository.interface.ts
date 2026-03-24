@@ -18,13 +18,11 @@ export interface IEmpresaRepository {
   findAll(
     accessContext: IAccessContext | null,
     dto: EmpresaListQuery | null,
-    selection?: string[] | boolean | null,
   ): Promise<EmpresaListQueryResult>;
 
   findById(
     accessContext: IAccessContext | null,
     dto: EmpresaFindOneQuery,
-    selection?: string[] | boolean | null,
   ): Promise<EmpresaFindOneQueryResult | null>;
 
   create(

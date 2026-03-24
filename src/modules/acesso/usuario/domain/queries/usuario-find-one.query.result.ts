@@ -1,10 +1,4 @@
 import { EntityQueryResult, SharedFields } from "@/domain/abstractions";
-import { fieldsToProperties } from "@/domain/abstractions/metadata/model-from-fields";
-import {
-  commonProperties,
-  defineModel,
-  referenceProperty,
-} from "@/domain/abstractions/metadata/model-registry";
 import { ImagemFindOneQueryResult } from "@/modules/armazenamento/imagem";
 import { UsuarioFields } from "../usuario.fields";
 
@@ -21,10 +15,3 @@ export class UsuarioFindOneQueryResult extends EntityQueryResult {
   imagemCapa!: ImagemFindOneQueryResult | null;
   imagemPerfil!: ImagemFindOneQueryResult | null;
 }
-
-defineModel("UsuarioFindOneQueryResult", [
-  ...fieldsToProperties(UsuarioFindOneQueryResultFields),
-  referenceProperty("imagemCapa", "ImagemFindOneQueryResult", { nullable: true }),
-  referenceProperty("imagemPerfil", "ImagemFindOneQueryResult", { nullable: true }),
-  ...commonProperties.dated,
-]);

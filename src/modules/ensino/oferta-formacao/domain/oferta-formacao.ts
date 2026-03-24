@@ -11,14 +11,29 @@ import {
 
 export type IOfertaFormacao = z.infer<typeof OfertaFormacaoSchema>;
 
+export type IOfertaFormacaoPeriodoEtapa = {
+  nome: string;
+  cor: string;
+};
+
+export type IOfertaFormacaoPeriodo = {
+  numeroPeriodo: number;
+  etapas: IOfertaFormacaoPeriodoEtapa[];
+};
+
 export class OfertaFormacao {
   static readonly entityName = "OfertaFormacao";
 
   id!: IdUuid;
   nome!: string;
   slug!: string;
-  duracaoPeriodoEmMeses!: number | null;
+  duracaoPeriodoEmMeses!: number;
+
   modalidade!: { id: string } | null;
+  campus!: { id: string };
+  niveisFormacoes!: Array<{ id: string }>;
+  periodos!: IOfertaFormacaoPeriodo[];
+
   dateCreated!: ScalarDateTimeString;
   dateUpdated!: ScalarDateTimeString;
   dateDeleted!: ScalarDateTimeString | null;
@@ -33,8 +48,11 @@ export class OfertaFormacao {
     instance.id = generateUuidV7();
     instance.nome = parsed.nome;
     instance.slug = parsed.slug;
-    instance.duracaoPeriodoEmMeses = parsed.duracaoPeriodoEmMeses ?? null;
+    instance.duracaoPeriodoEmMeses = parsed.duracaoPeriodoEmMeses;
     instance.modalidade = parsed.modalidade ?? null;
+    instance.campus = parsed.campus;
+    instance.niveisFormacoes = parsed.niveisFormacoes;
+    instance.periodos = parsed.periodos;
     instance.dateCreated = getNowISO();
     instance.dateUpdated = getNowISO();
     instance.dateDeleted = null;
@@ -42,7 +60,7 @@ export class OfertaFormacao {
     return instance;
   }
 
-  static load(dados: unknown): OfertaFormacao {
+  static load(dados: IOfertaFormacao): OfertaFormacao {
     const parsed = zodValidate(OfertaFormacao.entityName, OfertaFormacaoSchema, dados);
 
     const instance = new OfertaFormacao();
@@ -50,8 +68,11 @@ export class OfertaFormacao {
     instance.id = parsed.id;
     instance.nome = parsed.nome;
     instance.slug = parsed.slug;
-    instance.duracaoPeriodoEmMeses = parsed.duracaoPeriodoEmMeses ?? null;
+    instance.duracaoPeriodoEmMeses = parsed.duracaoPeriodoEmMeses;
     instance.modalidade = parsed.modalidade;
+    instance.campus = parsed.campus;
+    instance.niveisFormacoes = parsed.niveisFormacoes;
+    instance.periodos = parsed.periodos;
     instance.dateCreated = parsed.dateCreated;
     instance.dateUpdated = parsed.dateUpdated;
     instance.dateDeleted = parsed.dateDeleted;
@@ -65,8 +86,11 @@ export class OfertaFormacao {
     if (parsed.nome !== undefined) this.nome = parsed.nome;
     if (parsed.slug !== undefined) this.slug = parsed.slug;
     if (parsed.duracaoPeriodoEmMeses !== undefined)
-      this.duracaoPeriodoEmMeses = parsed.duracaoPeriodoEmMeses ?? null;
+      this.duracaoPeriodoEmMeses = parsed.duracaoPeriodoEmMeses;
     if (parsed.modalidade !== undefined) this.modalidade = parsed.modalidade ?? null;
+    if (parsed.campus !== undefined) this.campus = parsed.campus;
+    if (parsed.niveisFormacoes !== undefined) this.niveisFormacoes = parsed.niveisFormacoes;
+    if (parsed.periodos !== undefined) this.periodos = parsed.periodos;
 
     this.dateUpdated = getNowISO();
 

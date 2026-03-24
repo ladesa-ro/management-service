@@ -1,9 +1,7 @@
-import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
-import { type GraphQLResolveInfo } from "graphql";
+import { Args, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
-import { graphqlExtractSelection } from "@/infrastructure.graphql";
 import {
   CursoCreateCommandMetadata,
   ICursoCreateCommandHandler,
@@ -54,13 +52,8 @@ export class CursoGraphqlResolver {
   async findAll(
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args() dto: CursoListInputGraphQlDto,
-    @Info() info: GraphQLResolveInfo,
   ): Promise<CursoListOutputGraphQlDto> {
     const input = CursoGraphqlMapper.toListInput(dto);
-
-    if (input) {
-      input.selection = graphqlExtractSelection(info, "paginated");
-    }
     const result = await this.listHandler.execute(accessContext, input);
     return CursoGraphqlMapper.toListOutputDto(result);
   }
@@ -69,10 +62,8 @@ export class CursoGraphqlResolver {
   async findById(
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("id", { type: () => ID }) id: string,
-    @Info() info: GraphQLResolveInfo,
   ): Promise<CursoFindOneOutputGraphQlDto> {
-    const selection = graphqlExtractSelection(info);
-    const result = await this.findOneHandler.execute(accessContext, { id, selection });
+    const result = await this.findOneHandler.execute(accessContext, { id });
     ensureExists(result, Curso.entityName, id);
     return CursoGraphqlMapper.toFindOneOutputDto(result);
   }
@@ -81,7 +72,6 @@ export class CursoGraphqlResolver {
   async create(
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("input") dto: CursoCreateInputGraphQlDto,
-    @Info() info: GraphQLResolveInfo,
   ): Promise<CursoFindOneOutputGraphQlDto> {
     const input = CursoGraphqlMapper.toCreateInput(dto);
     const result = await this.createHandler.execute(accessContext, input);
@@ -93,7 +83,6 @@ export class CursoGraphqlResolver {
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Args("input") dto: CursoUpdateInputGraphQlDto,
-    @Info() info: GraphQLResolveInfo,
   ): Promise<CursoFindOneOutputGraphQlDto> {
     const input = CursoGraphqlMapper.toUpdateInput({ id }, dto);
     const result = await this.updateHandler.execute(accessContext, input);

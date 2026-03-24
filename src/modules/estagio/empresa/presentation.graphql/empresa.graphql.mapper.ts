@@ -33,10 +33,9 @@ export class EmpresaGraphqlMapper {
     return input;
   }
 
-  static toFindOneInput(id: string, selection?: string[]): EmpresaFindOneQuery {
+  static toFindOneInput(id: string): EmpresaFindOneQuery {
     const input = new EmpresaFindOneQuery();
     input.id = id;
-    input.selection = selection;
     return input;
   }
 

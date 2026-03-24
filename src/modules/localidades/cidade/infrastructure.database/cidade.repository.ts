@@ -20,13 +20,11 @@ import { CidadeEntity } from "./typeorm/cidade.typeorm.entity";
 
 const config = {
   alias: "cidade",
-  outputDtoName: "CidadeFindOneQueryResult",
   hasSoftDelete: false,
 } as const;
 
 const cidadePaginateConfig: ITypeOrmPaginationConfig<CidadeEntity> = {
   ...paginateConfig,
-  select: ["id", "nome", "estado.id", "estado.sigla", "estado.nome"],
   relations: {
     estado: true,
   },
@@ -51,40 +49,26 @@ export class CidadeTypeOrmRepositoryAdapter implements ICidadeRepository {
     private readonly paginationAdapter: NestJsPaginateAdapter,
   ) {}
 
-  findAll(
-    accessContext: IAccessContext | null,
-    dto: CidadeListQuery | null = null,
-    selection?: string[] | boolean | null,
-  ) {
+  findAll(accessContext: IAccessContext | null, dto: CidadeListQuery | null = null) {
     return typeormFindAll<CidadeEntity, CidadeListQuery, CidadeListQueryResult>(
       this.appTypeormConnection,
       CidadeEntity,
       { ...config, paginateConfig: cidadePaginateConfig },
       this.paginationAdapter,
       dto,
-      selection,
     );
   }
 
-  findById(
-    accessContext: IAccessContext | null,
-    dto: CidadeFindOneQuery,
-    selection?: string[] | boolean | null,
-  ) {
+  findById(accessContext: IAccessContext | null, dto: CidadeFindOneQuery) {
     return typeormFindById<CidadeEntity, CidadeFindOneQuery, CidadeFindOneQueryResult>(
       this.appTypeormConnection,
       CidadeEntity,
-      config,
+      { ...config, paginateConfig: cidadePaginateConfig },
       dto,
-      selection,
     );
   }
 
-  findByIdSimple(
-    accessContext: IAccessContext | null,
-    id: string,
-    selection?: string[] | boolean | null,
-  ) {
-    return this.findById(accessContext, { id: Number(id) } as CidadeFindOneQuery, selection);
+  findByIdSimple(accessContext: IAccessContext | null, id: string) {
+    return this.findById(accessContext, { id: Number(id) } as CidadeFindOneQuery);
   }
 }

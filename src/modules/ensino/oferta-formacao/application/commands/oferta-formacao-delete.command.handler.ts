@@ -22,11 +22,11 @@ export class OfertaFormacaoDeleteCommandHandlerImpl implements IOfertaFormacaoDe
   ): Promise<boolean> {
     await this.permissionChecker.ensureCanDelete(accessContext, { dto }, dto.id);
 
-    const entity = await this.repository.findById(accessContext, dto);
+    const aggregate = await this.repository.loadById(accessContext, dto.id);
 
-    ensureExists(entity, OfertaFormacao.entityName, dto.id);
+    ensureExists(aggregate, OfertaFormacao.entityName, dto.id);
 
-    await this.repository.softDeleteById(entity.id);
+    await this.repository.softDeleteById(aggregate.id);
 
     return true;
   }

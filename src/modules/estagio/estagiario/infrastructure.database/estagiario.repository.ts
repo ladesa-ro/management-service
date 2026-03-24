@@ -53,7 +53,6 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
   async findAll(
     accessContext: IAccessContext | null,
     dto: EstagiarioListQuery | null = null,
-    selection?: string[] | boolean | null,
   ): Promise<EstagiarioListQueryResult> {
     const page = dto?.page || 1;
     const limit = dto?.limit || 10;
@@ -124,7 +123,6 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
   async findById(
     accessContext: IAccessContext | null,
     dto: EstagiarioFindOneQuery,
-    selection?: string[] | boolean | null,
   ): Promise<EstagiarioFindOneQueryResult | null> {
     const entity = await this.repository.findOne({
       where: { id: dto.id, dateDeleted: IsNull() },

@@ -15,6 +15,6 @@ export class AmbienteFindOneQueryHandlerImpl implements IAmbienteFindOneQueryHan
     accessContext: IAccessContext | null,
     dto: AmbienteFindOneQuery,
   ): Promise<AmbienteFindOneQueryResult | null> {
-    return this.repository.findById(accessContext, dto, dto?.selection);
+    return this.repository.findById(accessContext, dto);
   }
 }

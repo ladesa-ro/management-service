@@ -4,10 +4,9 @@ import { mapDatedFields } from "@/shared/mapping";
 import { EnderecoFindOneOutputGraphQlDto } from "./endereco.graphql.dto";
 
 export class EnderecoGraphqlMapper {
-  static toFindOneInput(id: string, selection?: string[]): EnderecoFindOneQuery {
+  static toFindOneInput(id: string): EnderecoFindOneQuery {
     const input = new EnderecoFindOneQuery();
     input.id = id;
-    input.selection = selection;
     return input;
   }
 

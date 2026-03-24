@@ -40,10 +40,9 @@ export class DiarioGraphqlMapper {
     return input;
   }
 
-  static toFindOneInput(id: string, selection?: string[]): DiarioFindOneQuery {
+  static toFindOneInput(id: string): DiarioFindOneQuery {
     const input = new DiarioFindOneQuery();
     input.id = id;
-    input.selection = selection;
     return input;
   }
 

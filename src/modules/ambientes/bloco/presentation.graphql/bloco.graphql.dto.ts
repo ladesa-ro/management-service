@@ -87,8 +87,6 @@ export class BlocoListInputGraphQlDto {
   search?: string;
   @Field(() => [String], BlocoListQueryFields.sortBy.gqlMetadata)
   sortBy?: string[];
-  @Field(() => [String], BlocoListQueryFields.selection.gqlMetadata)
-  selection?: string[];
   @Field(() => [String], BlocoListQueryFields.filterId.gqlMetadata)
   filterId?: string[];
   @Field(() => [String], BlocoListQueryFields.filterCampusId.gqlMetadata)

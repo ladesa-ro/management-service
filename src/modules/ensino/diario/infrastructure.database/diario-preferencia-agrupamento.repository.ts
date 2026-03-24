@@ -26,7 +26,6 @@ import { DiarioPreferenciaAgrupamentoEntity } from "./typeorm/diario-preferencia
 
 const config = {
   alias: "diario_preferencia_agrupamento",
-  outputDtoName: "DiarioPreferenciaAgrupamentoFindOneQueryResult",
   hasSoftDelete: true,
 } as const;
 
@@ -34,17 +33,32 @@ const diarioPreferenciaAgrupamentoPaginateConfig: ITypeOrmPaginationConfig<Diari
   {
     ...paginateConfig,
     relations: {
-      diario: true,
+      diario: {
+        turma: {
+          curso: {
+            campus: {
+              endereco: {
+                cidade: {
+                  estado: true,
+                },
+              },
+            },
+          },
+        },
+        disciplina: true,
+        ambientePadrao: {
+          bloco: {
+            campus: {
+              endereco: {
+                cidade: {
+                  estado: true,
+                },
+              },
+            },
+          },
+        },
+      },
     },
-    select: [
-      "id",
-      "diaSemanaIso",
-      "aulasSeguidas",
-      "dataInicio",
-      "dataFim",
-      "diario.id",
-      "diario.ativo",
-    ],
     sortableColumns: ["diaSemanaIso", "aulasSeguidas", "dataInicio", "dataFim", "diario.id"],
     searchableColumns: ["id", "diaSemanaIso", "aulasSeguidas", "dataInicio", "dataFim"],
     defaultSortBy: [],
@@ -66,7 +80,6 @@ export class DiarioPreferenciaAgrupamentoTypeOrmRepositoryAdapter
   findAll(
     accessContext: IAccessContext | null,
     dto: DiarioPreferenciaAgrupamentoListQuery | null = null,
-    selection?: string[] | boolean | null,
   ) {
     return typeormFindAll<
       DiarioPreferenciaAgrupamentoEntity,
@@ -78,32 +91,24 @@ export class DiarioPreferenciaAgrupamentoTypeOrmRepositoryAdapter
       { ...config, paginateConfig: diarioPreferenciaAgrupamentoPaginateConfig },
       this.paginationAdapter,
       dto,
-      selection,
     );
   }
 
-  findById(
-    accessContext: IAccessContext | null,
-    dto: DiarioPreferenciaAgrupamentoFindOneQuery,
-    selection?: string[] | boolean | null,
-  ) {
+  findById(accessContext: IAccessContext | null, dto: DiarioPreferenciaAgrupamentoFindOneQuery) {
     return typeormFindById<
       DiarioPreferenciaAgrupamentoEntity,
       DiarioPreferenciaAgrupamentoFindOneQuery,
       DiarioPreferenciaAgrupamentoFindOneQueryResult
-    >(this.appTypeormConnection, DiarioPreferenciaAgrupamentoEntity, config, dto, selection);
+    >(
+      this.appTypeormConnection,
+      DiarioPreferenciaAgrupamentoEntity,
+      { ...config, paginateConfig: diarioPreferenciaAgrupamentoPaginateConfig },
+      dto,
+    );
   }
 
-  findByIdSimple(
-    accessContext: IAccessContext | null,
-    id: string,
-    selection?: string[] | boolean | null,
-  ) {
-    return this.findById(
-      accessContext,
-      { id } as DiarioPreferenciaAgrupamentoFindOneQuery,
-      selection,
-    );
+  findByIdSimple(accessContext: IAccessContext | null, id: string) {
+    return this.findById(accessContext, { id } as DiarioPreferenciaAgrupamentoFindOneQuery);
   }
 
   create(data: Record<string, any>) {

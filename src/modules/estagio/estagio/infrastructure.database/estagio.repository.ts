@@ -50,7 +50,6 @@ export class EstagioTypeOrmRepositoryAdapter implements IEstagioRepository {
   async findAll(
     accessContext: IAccessContext | null,
     dto: EstagioListQuery | null = null,
-    selection?: string[] | boolean | null,
   ): Promise<EstagioListQueryResult> {
     const page = dto?.page || 1;
     const limit = dto?.limit || 10;
@@ -123,7 +122,6 @@ export class EstagioTypeOrmRepositoryAdapter implements IEstagioRepository {
   async findById(
     accessContext: IAccessContext | null,
     dto: EstagioFindOneQuery,
-    selection?: string[] | boolean | null,
   ): Promise<EstagioFindOneQueryResult | null> {
     const entity = await this.repository.findOne({
       where: { id: dto.id, dateDeleted: IsNull() },

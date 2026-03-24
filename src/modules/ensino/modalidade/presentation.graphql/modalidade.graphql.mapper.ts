@@ -29,10 +29,9 @@ export class ModalidadeGraphqlMapper {
     return input;
   }
 
-  static toFindOneInput(id: string, selection?: string[]): ModalidadeFindOneQuery {
+  static toFindOneInput(id: string): ModalidadeFindOneQuery {
     const input = new ModalidadeFindOneQuery();
     input.id = id;
-    input.selection = selection;
     return input;
   }
 

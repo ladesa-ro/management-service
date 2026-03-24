@@ -33,10 +33,9 @@ export class PerfilGraphqlMapper {
     return input;
   }
 
-  static toFindOneInput(id: string, selection?: string[]): PerfilFindOneQuery {
+  static toFindOneInput(id: string): PerfilFindOneQuery {
     const input = new PerfilFindOneQuery();
     input.id = id;
-    input.selection = selection;
     return input;
   }
 

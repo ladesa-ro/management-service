@@ -42,10 +42,9 @@ export class TurmaGraphqlMapper {
     return input;
   }
 
-  static toFindOneInput(id: string, selection?: string[]): TurmaFindOneQuery {
+  static toFindOneInput(id: string): TurmaFindOneQuery {
     const input = new TurmaFindOneQuery();
     input.id = id;
-    input.selection = selection;
     return input;
   }
 

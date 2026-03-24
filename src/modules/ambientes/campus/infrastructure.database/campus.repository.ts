@@ -23,24 +23,10 @@ import { CampusEntity, campusEntityDomainMapper } from "./typeorm";
 
 const config = {
   alias: "campus",
-  outputDtoName: "CampusFindOneQueryResult",
 } as const;
 
 const campusPaginateConfig: ITypeOrmPaginationConfig<CampusEntity> = {
   ...paginateConfig,
-  select: [
-    "id",
-    "nomeFantasia",
-    "razaoSocial",
-    "apelido",
-    "cnpj",
-    "dateCreated",
-    "endereco.cidade.id",
-    "endereco.cidade.nome",
-    "endereco.cidade.estado.id",
-    "endereco.cidade.estado.nome",
-    "endereco.cidade.estado.sigla",
-  ],
   relations: {
     endereco: {
       cidade: {
@@ -94,41 +80,27 @@ export class CampusTypeOrmRepositoryAdapter implements ICampusRepository {
     private readonly paginationAdapter: NestJsPaginateAdapter,
   ) {}
 
-  findAll(
-    accessContext: IAccessContext | null,
-    dto: CampusListQuery | null = null,
-    selection?: string[] | boolean | null,
-  ) {
+  findAll(accessContext: IAccessContext | null, dto: CampusListQuery | null = null) {
     return typeormFindAll<CampusEntity, CampusListQuery, CampusListQueryResult>(
       this.appTypeormConnection,
       CampusEntity,
       { ...config, paginateConfig: campusPaginateConfig },
       this.paginationAdapter,
       dto,
-      selection,
     );
   }
 
-  findById(
-    accessContext: IAccessContext | null,
-    dto: CampusFindOneQuery,
-    selection?: string[] | boolean | null,
-  ) {
+  findById(accessContext: IAccessContext | null, dto: CampusFindOneQuery) {
     return typeormFindById<CampusEntity, CampusFindOneQuery, CampusFindOneQueryResult>(
       this.appTypeormConnection,
       CampusEntity,
-      config,
+      { ...config, paginateConfig: campusPaginateConfig },
       dto,
-      selection,
     );
   }
 
-  findByIdSimple(
-    accessContext: IAccessContext | null,
-    id: string,
-    selection?: string[] | boolean | null,
-  ) {
-    return this.findById(accessContext, { id } as CampusFindOneQuery, selection);
+  findByIdSimple(accessContext: IAccessContext | null, id: string) {
+    return this.findById(accessContext, { id } as CampusFindOneQuery);
   }
 
   create(data: Record<string, unknown>) {

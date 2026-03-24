@@ -11,6 +11,7 @@ export const ofertaFormacaoEntityDomainMapper = createEntityDomainMapper<
     "slug",
     "duracaoPeriodoEmMeses",
     { field: "modalidade", type: "relation" },
+    { field: "campus", type: "relation" },
     { field: "dateCreated", type: "date" },
     { field: "dateUpdated", type: "date" },
     { field: "dateDeleted", type: "date" },

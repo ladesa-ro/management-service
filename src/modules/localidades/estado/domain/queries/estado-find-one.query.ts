@@ -7,5 +7,4 @@ export const EstadoFindOneQueryFields = {
 
 export class EstadoFindOneQuery {
   id!: IdNumeric;
-  selection?: string[];
 }

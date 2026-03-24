@@ -1,9 +1,7 @@
-import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
-import { type GraphQLResolveInfo } from "graphql";
+import { Args, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
-import { graphqlExtractSelection } from "@/infrastructure.graphql";
 import {
   EmpresaCreateCommandMetadata,
   IEmpresaCreateCommandHandler,
@@ -54,14 +52,8 @@ export class EmpresaGraphqlResolver {
   async findAll(
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args() dto: EmpresaListInputGraphQlDto,
-    @Info() info: GraphQLResolveInfo,
   ): Promise<EmpresaListOutputGraphQlDto> {
     const input = EmpresaGraphqlMapper.toListInput(dto);
-
-    if (input) {
-      input.selection = graphqlExtractSelection(info, "paginated");
-    }
-
     const result = await this.listHandler.execute(accessContext, input);
     return EmpresaGraphqlMapper.toListOutputDto(result);
   }
@@ -70,10 +62,8 @@ export class EmpresaGraphqlResolver {
   async findById(
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("id", { type: () => ID }) id: string,
-    @Info() info: GraphQLResolveInfo,
   ): Promise<EmpresaFindOneOutputGraphQlDto> {
-    const selection = graphqlExtractSelection(info);
-    const result = await this.findOneHandler.execute(accessContext, { id, selection });
+    const result = await this.findOneHandler.execute(accessContext, { id });
     ensureExists(result, Empresa.entityName, id);
     return EmpresaGraphqlMapper.toFindOneOutputDto(result);
   }
@@ -82,7 +72,6 @@ export class EmpresaGraphqlResolver {
   async create(
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("input") dto: EmpresaCreateInputGraphQlDto,
-    @Info() info: GraphQLResolveInfo,
   ): Promise<EmpresaFindOneOutputGraphQlDto> {
     const input = EmpresaGraphqlMapper.toCreateInput(dto);
     const result = await this.createHandler.execute(accessContext, input);
@@ -94,7 +83,6 @@ export class EmpresaGraphqlResolver {
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Args("input") dto: EmpresaUpdateInputGraphQlDto,
-    @Info() info: GraphQLResolveInfo,
   ): Promise<EmpresaFindOneOutputGraphQlDto> {
     const input = EmpresaGraphqlMapper.toUpdateInput({ id }, dto);
     const result = await this.updateHandler.execute(accessContext, input);

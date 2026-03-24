@@ -18,6 +18,6 @@ export class NivelFormacaoFindOneQueryHandlerImpl implements INivelFormacaoFindO
     accessContext: IAccessContext | null,
     dto: NivelFormacaoFindOneQuery,
   ): Promise<NivelFormacaoFindOneQueryResult | null> {
-    return this.repository.findById(accessContext, dto, dto?.selection);
+    return this.repository.findById(accessContext, dto);
   }
 }

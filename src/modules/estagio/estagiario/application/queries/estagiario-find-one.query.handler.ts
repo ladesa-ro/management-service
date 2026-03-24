@@ -15,6 +15,6 @@ export class EstagiarioFindOneQueryHandlerImpl implements IEstagiarioFindOneQuer
     accessContext: IAccessContext | null,
     dto: EstagiarioFindOneQuery,
   ): Promise<EstagiarioFindOneQueryResult | null> {
-    return this.repository.findById(accessContext, dto, dto?.selection);
+    return this.repository.findById(accessContext, dto);
   }
 }

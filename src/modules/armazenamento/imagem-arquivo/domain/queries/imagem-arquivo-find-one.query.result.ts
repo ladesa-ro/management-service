@@ -1,10 +1,4 @@
 import { EntityQueryResult, SharedFields } from "@/domain/abstractions";
-import { fieldsToProperties } from "@/domain/abstractions/metadata/model-from-fields";
-import {
-  commonProperties,
-  defineModel,
-  referenceProperty,
-} from "@/domain/abstractions/metadata/model-registry";
 import { ArquivoFindOneQueryResult } from "@/modules/armazenamento/arquivo";
 import { ImagemFindOneQueryResult } from "@/modules/armazenamento/imagem";
 import { ImagemArquivoFields } from "../imagem-arquivo.fields";
@@ -22,10 +16,3 @@ export class ImagemArquivoFindOneQueryResult extends EntityQueryResult {
   imagem!: ImagemFindOneQueryResult;
   arquivo!: ArquivoFindOneQueryResult;
 }
-
-defineModel("ImagemArquivoFindOneQueryResult", [
-  ...fieldsToProperties(ImagemArquivoFindOneQueryResultFields),
-  referenceProperty("imagem", "ImagemFindOneQueryResult"),
-  referenceProperty("arquivo", "ArquivoFindOneQueryResult"),
-  ...commonProperties.dated,
-]);

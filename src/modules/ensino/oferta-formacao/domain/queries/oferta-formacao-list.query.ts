@@ -11,9 +11,14 @@ export const OfertaFormacaoListQueryFields = {
     description: "Filtro por ID da Modalidade",
     nullable: true,
   }),
+  filterCampusId: createFieldMetadata({
+    description: "Filtro por ID do Campus",
+    nullable: true,
+  }),
 };
 
 export class OfertaFormacaoListQuery extends PaginationQuery {
   "filter.id"?: IFilterAcceptableValues;
   "filter.modalidade.id"?: IFilterAcceptableValues;
+  "filter.campus.id"?: IFilterAcceptableValues;
 }

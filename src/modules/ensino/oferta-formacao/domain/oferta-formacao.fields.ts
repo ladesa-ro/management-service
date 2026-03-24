@@ -28,14 +28,18 @@ export const OfertaFormacaoFields = {
   }),
   duracaoPeriodoEmMeses: createFieldMetadata({
     description: "Duracao de cada periodo em meses",
-    schema: createSchema((standard) =>
-      safeInt(standard, (s) => s.positive())
-        .nullable()
-        .optional(),
-    ),
-    nullable: true,
+    schema: createSchema((standard) => safeInt(standard, (s) => s.positive())),
   }),
   modalidade: createFieldMetadata({
     description: "Modalidade da oferta de formacao",
+  }),
+  campus: createFieldMetadata({
+    description: "Campus da oferta de formacao",
+  }),
+  niveisFormacoes: createFieldMetadata({
+    description: "Niveis de formacao vinculados a oferta de formacao",
+  }),
+  periodos: createFieldMetadata({
+    description: "Periodos com suas etapas do ano letivo",
   }),
 };

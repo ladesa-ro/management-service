@@ -22,13 +22,11 @@ import { ModalidadeEntity, modalidadeEntityDomainMapper } from "./typeorm";
 
 const config = {
   alias: "modalidade",
-  outputDtoName: "ModalidadeFindOneQueryResult",
   hasSoftDelete: true,
 } as const;
 
 const modalidadePaginateConfig: ITypeOrmPaginationConfig<ModalidadeEntity> = {
   ...paginateConfig,
-  select: ["id", "nome", "slug", "dateCreated"],
   sortableColumns: ["nome", "slug", "dateCreated"],
   searchableColumns: ["id", "nome", "slug"],
   defaultSortBy: [
@@ -46,41 +44,27 @@ export class ModalidadeTypeOrmRepositoryAdapter implements IModalidadeRepository
     private readonly paginationAdapter: NestJsPaginateAdapter,
   ) {}
 
-  findAll(
-    accessContext: IAccessContext | null,
-    dto: ModalidadeListQuery | null = null,
-    selection?: string[] | boolean | null,
-  ) {
+  findAll(accessContext: IAccessContext | null, dto: ModalidadeListQuery | null = null) {
     return typeormFindAll<ModalidadeEntity, ModalidadeListQuery, ModalidadeListQueryResult>(
       this.appTypeormConnection,
       ModalidadeEntity,
       { ...config, paginateConfig: modalidadePaginateConfig },
       this.paginationAdapter,
       dto,
-      selection,
     );
   }
 
-  findById(
-    accessContext: IAccessContext | null,
-    dto: ModalidadeFindOneQuery,
-    selection?: string[] | boolean | null,
-  ) {
+  findById(accessContext: IAccessContext | null, dto: ModalidadeFindOneQuery) {
     return typeormFindById<ModalidadeEntity, ModalidadeFindOneQuery, ModalidadeFindOneQueryResult>(
       this.appTypeormConnection,
       ModalidadeEntity,
-      config,
+      { ...config, paginateConfig: modalidadePaginateConfig },
       dto,
-      selection,
     );
   }
 
-  findByIdSimple(
-    accessContext: IAccessContext | null,
-    id: string,
-    selection?: string[] | boolean | null,
-  ) {
-    return this.findById(accessContext, { id } as ModalidadeFindOneQuery, selection);
+  findByIdSimple(accessContext: IAccessContext | null, id: string) {
+    return this.findById(accessContext, { id } as ModalidadeFindOneQuery);
   }
 
   create(data: Record<string, unknown>) {

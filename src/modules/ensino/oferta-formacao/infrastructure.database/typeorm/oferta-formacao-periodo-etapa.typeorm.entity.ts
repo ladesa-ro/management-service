@@ -1,5 +1,5 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, type Relation } from "typeorm";
-import { OfertaFormacaoPeriodoEntity } from "@/modules/ensino/oferta-formacao-periodo/infrastructure.database/typeorm/oferta-formacao-periodo.typeorm.entity";
+import { OfertaFormacaoPeriodoEntity } from "./oferta-formacao-periodo.typeorm.entity";
 
 @Entity("oferta_formacao_periodo_etapa")
 export class OfertaFormacaoPeriodoEtapaEntity {
@@ -15,4 +15,13 @@ export class OfertaFormacaoPeriodoEtapaEntity {
 
   @Column({ name: "cor", type: "text", nullable: false })
   cor!: string;
+
+  @Column({ name: "date_created", type: "timestamptz", nullable: false })
+  dateCreated!: Date;
+
+  @Column({ name: "date_updated", type: "timestamptz", nullable: false })
+  dateUpdated!: Date;
+
+  @Column({ name: "date_deleted", type: "timestamptz", nullable: true })
+  dateDeleted!: Date | null;
 }

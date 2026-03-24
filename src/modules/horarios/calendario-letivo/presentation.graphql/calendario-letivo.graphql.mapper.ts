@@ -35,10 +35,9 @@ export class CalendarioLetivoGraphqlMapper {
     return input;
   }
 
-  static toFindOneInput(id: string, selection?: string[]): CalendarioLetivoFindOneQuery {
+  static toFindOneInput(id: string): CalendarioLetivoFindOneQuery {
     const input = new CalendarioLetivoFindOneQuery();
     input.id = id;
-    input.selection = selection;
     return input;
   }
 

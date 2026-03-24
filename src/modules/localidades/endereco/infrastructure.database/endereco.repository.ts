@@ -22,12 +22,10 @@ import { EnderecoEntity, enderecoEntityDomainMapper } from "./typeorm";
 
 const config = {
   alias: "endereco",
-  outputDtoName: "EnderecoFindOneQueryResult",
 } as const;
 
 const enderecoPaginateConfig: ITypeOrmPaginationConfig<EnderecoEntity> = {
   ...paginateConfig,
-  select: ["id", "cep", "logradouro", "numero", "bairro", "dateCreated"],
   relations: {
     cidade: {
       estado: true,
@@ -52,41 +50,27 @@ export class EnderecoTypeOrmRepositoryAdapter implements IEnderecoRepository {
     private readonly paginationAdapter: NestJsPaginateAdapter,
   ) {}
 
-  findAll(
-    accessContext: IAccessContext | null,
-    dto: EnderecoListQuery | null = null,
-    selection?: string[] | boolean | null,
-  ) {
+  findAll(accessContext: IAccessContext | null, dto: EnderecoListQuery | null = null) {
     return typeormFindAll<EnderecoEntity, EnderecoListQuery, EnderecoListQueryResult>(
       this.appTypeormConnection,
       EnderecoEntity,
       { ...config, paginateConfig: enderecoPaginateConfig },
       this.paginationAdapter,
       dto,
-      selection,
     );
   }
 
-  findById(
-    accessContext: IAccessContext | null,
-    dto: EnderecoFindOneQuery,
-    selection?: string[] | boolean | null,
-  ) {
+  findById(accessContext: IAccessContext | null, dto: EnderecoFindOneQuery) {
     return typeormFindById<EnderecoEntity, EnderecoFindOneQuery, EnderecoFindOneQueryResult>(
       this.appTypeormConnection,
       EnderecoEntity,
-      config,
+      { ...config, paginateConfig: enderecoPaginateConfig },
       dto,
-      selection,
     );
   }
 
-  findByIdSimple(
-    accessContext: IAccessContext | null,
-    id: string,
-    selection?: string[] | boolean | null,
-  ) {
-    return this.findById(accessContext, { id } as EnderecoFindOneQuery, selection);
+  findByIdSimple(accessContext: IAccessContext | null, id: string) {
+    return this.findById(accessContext, { id } as EnderecoFindOneQuery);
   }
 
   async findOneById(id: string): Promise<EnderecoFindOneQueryResult | null> {

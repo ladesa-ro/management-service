@@ -1,10 +1,4 @@
 import { EntityQueryResult, SharedFields } from "@/domain/abstractions";
-import { fieldsToProperties } from "@/domain/abstractions/metadata/model-from-fields";
-import {
-  commonProperties,
-  defineModel,
-  referenceProperty,
-} from "@/domain/abstractions/metadata/model-registry";
 import { ImagemFindOneQueryResult } from "@/modules/armazenamento/imagem";
 import { DisciplinaFields } from "../disciplina.fields";
 
@@ -19,9 +13,3 @@ export class DisciplinaFindOneQueryResult extends EntityQueryResult {
   cargaHoraria!: number;
   imagemCapa!: ImagemFindOneQueryResult | null;
 }
-
-defineModel("DisciplinaFindOneQueryResult", [
-  ...fieldsToProperties(DisciplinaFindOneQueryResultFields),
-  referenceProperty("imagemCapa", "ImagemFindOneQueryResult", { nullable: true }),
-  ...commonProperties.dated,
-]);

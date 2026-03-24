@@ -5,5 +5,4 @@ import type { IdUuid } from "@/domain/abstractions/scalars";
  */
 export class FindOneQuery {
   id!: IdUuid;
-  selection?: string[] | boolean;
 }

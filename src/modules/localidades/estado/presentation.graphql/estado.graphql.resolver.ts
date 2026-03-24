@@ -1,9 +1,7 @@
-import { Args, Info, Int, Query, Resolver } from "@nestjs/graphql";
-import { type GraphQLResolveInfo } from "graphql";
+import { Args, Int, Query, Resolver } from "@nestjs/graphql";
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
-import { graphqlExtractSelection } from "@/infrastructure.graphql";
 import { Estado } from "@/modules/localidades/estado/domain/estado";
 import {
   EstadoFindOneQueryMetadata,
@@ -34,13 +32,8 @@ export class EstadoGraphqlResolver {
   async findAll(
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args() dto: EstadoListInputGraphQlDto,
-    @Info() info: GraphQLResolveInfo,
   ): Promise<EstadoListOutputGraphQlDto> {
     const input = EstadoGraphqlMapper.toListInput(dto);
-
-    if (input) {
-      input.selection = graphqlExtractSelection(info, "paginated");
-    }
     const result = await this.listHandler.execute(accessContext, input);
     return EstadoGraphqlMapper.toListOutputDto(result);
   }
@@ -49,10 +42,8 @@ export class EstadoGraphqlResolver {
   async findById(
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("id", { type: () => Int }) id: number,
-    @Info() info: GraphQLResolveInfo,
   ): Promise<EstadoFindOneOutputGraphQlDto> {
-    const selection = graphqlExtractSelection(info);
-    const result = await this.findOneHandler.execute(accessContext, { id, selection });
+    const result = await this.findOneHandler.execute(accessContext, { id });
     ensureExists(result, Estado.entityName, id);
     return EstadoGraphqlMapper.toFindOneOutputDto(result);
   }

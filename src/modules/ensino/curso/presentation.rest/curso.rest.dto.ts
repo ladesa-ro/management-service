@@ -70,9 +70,6 @@ export class CursoListInputRestDto {
   @ApiPropertyOptional(CursoListQueryFields.sortBy.swaggerMetadata)
   sortBy?: string[];
 
-  @ApiPropertyOptional(CursoListQueryFields.selection.swaggerMetadata)
-  selection?: string[];
-
   @ApiPropertyOptional(CursoListQueryFields.filterId.swaggerMetadata)
   "filter.id"?: string[];
 

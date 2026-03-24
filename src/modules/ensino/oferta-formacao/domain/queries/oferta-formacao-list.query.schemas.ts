@@ -13,8 +13,10 @@ import {
 
 export const OfertaFormacaoPaginationInputSchema = createPaginationInputSchema({
   "filter.modalidade.id": stringFilterSchema,
+  "filter.campus.id": stringFilterSchema,
 });
 
 export const OfertaFormacaoGraphqlListInputSchema = createGraphqlListInputSchema({
   filterModalidadeId: z.array(z.string()).optional(),
+  filterCampusId: z.array(z.string()).optional(),
 });

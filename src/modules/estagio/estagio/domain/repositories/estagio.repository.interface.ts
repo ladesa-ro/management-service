@@ -13,13 +13,11 @@ export interface IEstagioRepository {
   findAll(
     accessContext: IAccessContext | null,
     dto: EstagioListQuery | null,
-    selection?: string[] | boolean | null,
   ): Promise<EstagioListQueryResult>;
 
   findById(
     accessContext: IAccessContext | null,
     dto: EstagioFindOneQuery,
-    selection?: string[] | boolean | null,
   ): Promise<EstagioFindOneQueryResult | null>;
 
   create(

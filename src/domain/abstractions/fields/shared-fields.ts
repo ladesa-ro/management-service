@@ -2,7 +2,7 @@
  * SharedFields — campos compartilhados entre todas as entidades.
  *
  * Inclui id (uuid/numerico), datas de auditoria, paginacao (page, limit, search,
- * sortBy, selection, filterId) e metadados de resultado (meta, data).
+ * sortBy, filterId) e metadados de resultado (meta, data).
  *
  * Importar { SharedFields } ou { SharedListFields } conforme necessidade.
  */
@@ -13,7 +13,6 @@ const pageSchema = z.number().int().min(1).optional().default(1);
 const limitSchema = z.number().int().min(1).optional();
 const searchSchema = z.string().optional();
 const sortBySchema = z.array(z.string()).optional();
-const selectionSchema = z.array(z.string()).optional();
 const filterIdSchema = z.array(z.string()).optional();
 
 export const SharedFields = {
@@ -38,11 +37,6 @@ export const SharedFields = {
     nullable: true,
   }),
   sortBy: createFieldMetadata({ description: "Ordenação", schema: sortBySchema, nullable: true }),
-  selection: createFieldMetadata({
-    description: "Seleção de campos",
-    schema: selectionSchema,
-    nullable: true,
-  }),
   filterId: createFieldMetadata({
     description: "Filtro por ID",
     schema: filterIdSchema,
@@ -57,7 +51,6 @@ export const SharedListFields = {
   limit: SharedFields.limit,
   search: SharedFields.search,
   sortBy: SharedFields.sortBy,
-  selection: SharedFields.selection,
   filterId: SharedFields.filterId,
   meta: SharedFields.meta,
   data: SharedFields.data,

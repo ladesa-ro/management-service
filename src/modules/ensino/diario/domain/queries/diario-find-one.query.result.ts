@@ -1,10 +1,4 @@
 import { EntityQueryResult, SharedFields } from "@/domain/abstractions";
-import { fieldsToProperties } from "@/domain/abstractions/metadata/model-from-fields";
-import {
-  commonProperties,
-  defineModel,
-  referenceProperty,
-} from "@/domain/abstractions/metadata/model-registry";
 import { AmbienteFindOneQueryResult } from "@/modules/ambientes/ambiente";
 import { ImagemFindOneQueryResult } from "@/modules/armazenamento/imagem";
 import { DisciplinaFindOneQueryResult } from "@/modules/ensino/disciplina";
@@ -25,13 +19,3 @@ export class DiarioFindOneQueryResult extends EntityQueryResult {
   ambientePadrao!: AmbienteFindOneQueryResult | null;
   imagemCapa!: ImagemFindOneQueryResult | null;
 }
-
-defineModel("DiarioFindOneQueryResult", [
-  ...fieldsToProperties(DiarioFindOneQueryResultFields),
-  referenceProperty("calendarioLetivo", "CalendarioLetivoFindOneQueryResult"),
-  referenceProperty("turma", "TurmaFindOneQueryResult"),
-  referenceProperty("disciplina", "DisciplinaFindOneQueryResult"),
-  referenceProperty("ambientePadrao", "AmbienteFindOneQueryResult", { nullable: true }),
-  referenceProperty("imagemCapa", "ImagemFindOneQueryResult", { nullable: true }),
-  ...commonProperties.dated,
-]);

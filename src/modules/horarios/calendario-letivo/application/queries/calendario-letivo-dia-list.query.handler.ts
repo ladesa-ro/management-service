@@ -20,6 +20,6 @@ export class CalendarioLetivoDiaListQueryHandlerImpl
     accessContext: IAccessContext | null,
     dto: CalendarioLetivoDiaListQuery | null,
   ): Promise<CalendarioLetivoDiaListQueryResult> {
-    return this.repository.findAll(accessContext, dto, dto?.selection);
+    return this.repository.findAll(accessContext, dto);
   }
 }

@@ -5,7 +5,7 @@ export * from "./fields";
 export * from "./identity-provider";
 export * from "./logging";
 export * from "./message-broker";
-export * from "./metadata";
+
 export * from "./operations";
 export * from "./permission-checker.interface";
 export * from "./queries";

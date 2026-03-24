@@ -48,9 +48,6 @@ export class CidadeListInputRestDto {
   @ApiPropertyOptional(CidadeListQueryFields.sortBy.swaggerMetadata)
   sortBy?: string[];
 
-  @ApiPropertyOptional(CidadeListQueryFields.selection.swaggerMetadata)
-  selection?: string[];
-
   @ApiPropertyOptional(CidadeListQueryFields.filterId.swaggerMetadata)
   "filter.id"?: string[];
 

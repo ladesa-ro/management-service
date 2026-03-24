@@ -15,6 +15,6 @@ export class UsuarioFindByIdSimpleQueryHandlerImpl implements IUsuarioFindByIdSi
     accessContext: IAccessContext | null,
     dto: UsuarioFindOneQuery,
   ): Promise<UsuarioFindOneQueryResult | null> {
-    return this.repository.findByIdSimple(accessContext, dto.id, dto.selection);
+    return this.repository.findByIdSimple(accessContext, dto.id);
   }
 }

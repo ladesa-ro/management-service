@@ -6,5 +6,4 @@ export const CidadeFindOneQueryFields = {
 
 export class CidadeFindOneQuery {
   id!: IdNumeric;
-  selection?: string[];
 }

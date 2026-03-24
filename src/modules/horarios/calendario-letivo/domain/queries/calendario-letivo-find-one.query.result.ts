@@ -1,10 +1,4 @@
 import { EntityQueryResult, SharedFields } from "@/domain/abstractions";
-import { fieldsToProperties } from "@/domain/abstractions/metadata/model-from-fields";
-import {
-  commonProperties,
-  defineModel,
-  referenceProperty,
-} from "@/domain/abstractions/metadata/model-registry";
 import { CampusFindOneQueryResult } from "@/modules/ambientes/campus";
 import { OfertaFormacaoFindOneQueryResult } from "@/modules/ensino/oferta-formacao";
 import { CalendarioLetivoFields } from "../calendario-letivo.fields";
@@ -20,10 +14,3 @@ export class CalendarioLetivoFindOneQueryResult extends EntityQueryResult {
   campus!: CampusFindOneQueryResult;
   ofertaFormacao!: OfertaFormacaoFindOneQueryResult;
 }
-
-defineModel("CalendarioLetivoFindOneQueryResult", [
-  ...fieldsToProperties(CalendarioLetivoFindOneQueryResultFields),
-  referenceProperty("campus", "CampusFindOneQueryResult"),
-  referenceProperty("ofertaFormacao", "OfertaFormacaoFindOneQueryResult"),
-  ...commonProperties.dated,
-]);

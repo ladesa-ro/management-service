@@ -23,22 +23,18 @@ import { BlocoEntity, blocoEntityDomainMapper } from "./typeorm";
 
 const config = {
   alias: "bloco",
-  outputDtoName: "BlocoFindOneQueryResult",
 } as const;
 
 const blocoPaginateConfig: ITypeOrmPaginationConfig<BlocoEntity> = {
   ...paginateConfig,
-  select: [
-    "id",
-    "nome",
-    "codigo",
-    "dateCreated",
-    "campus.id",
-    "campus.razaoSocial",
-    "campus.nomeFantasia",
-  ],
   relations: {
-    campus: true,
+    campus: {
+      endereco: {
+        cidade: {
+          estado: true,
+        },
+      },
+    },
   },
   sortableColumns: [
     "nome",
@@ -66,41 +62,27 @@ export class BlocoTypeOrmRepositoryAdapter implements IBlocoRepository {
     private readonly paginationAdapter: NestJsPaginateAdapter,
   ) {}
 
-  findAll(
-    accessContext: IAccessContext | null,
-    dto: BlocoListQuery | null = null,
-    selection?: string[] | boolean | null,
-  ) {
+  findAll(accessContext: IAccessContext | null, dto: BlocoListQuery | null = null) {
     return typeormFindAll<BlocoEntity, BlocoListQuery, BlocoListQueryResult>(
       this.appTypeormConnection,
       BlocoEntity,
       { ...config, paginateConfig: blocoPaginateConfig },
       this.paginationAdapter,
       dto,
-      selection,
     );
   }
 
-  findById(
-    accessContext: IAccessContext | null,
-    dto: BlocoFindOneQuery,
-    selection?: string[] | boolean | null,
-  ) {
+  findById(accessContext: IAccessContext | null, dto: BlocoFindOneQuery) {
     return typeormFindById<BlocoEntity, BlocoFindOneQuery, BlocoFindOneQueryResult>(
       this.appTypeormConnection,
       BlocoEntity,
-      config,
+      { ...config, paginateConfig: blocoPaginateConfig },
       dto,
-      selection,
     );
   }
 
-  findByIdSimple(
-    accessContext: IAccessContext | null,
-    id: string,
-    selection?: string[] | boolean | null,
-  ) {
-    return this.findById(accessContext, { id } as BlocoFindOneQuery, selection);
+  findByIdSimple(accessContext: IAccessContext | null, id: string) {
+    return this.findById(accessContext, { id } as BlocoFindOneQuery);
   }
 
   create(data: Record<string, unknown>) {

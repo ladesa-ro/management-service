@@ -1,9 +1,7 @@
-import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
-import { type GraphQLResolveInfo } from "graphql";
+import { Args, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
-import { graphqlExtractSelection } from "@/infrastructure.graphql";
 import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente";
 import {
   AmbienteCreateCommandMetadata,
@@ -54,13 +52,8 @@ export class AmbienteGraphqlResolver {
   async findAll(
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args() dto: AmbienteListInputGraphQlDto,
-    @Info() info: GraphQLResolveInfo,
   ): Promise<AmbienteListOutputGraphQlDto> {
     const input = AmbienteGraphqlMapper.toListInput(dto);
-
-    if (input) {
-      input.selection = graphqlExtractSelection(info, "paginated");
-    }
     const result = await this.listHandler.execute(accessContext, input);
     return AmbienteGraphqlMapper.toListOutputDto(result);
   }
@@ -69,10 +62,8 @@ export class AmbienteGraphqlResolver {
   async findById(
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("id", { type: () => ID }) id: string,
-    @Info() info: GraphQLResolveInfo,
   ): Promise<AmbienteFindOneOutputGraphQlDto> {
-    const selection = graphqlExtractSelection(info);
-    const result = await this.findOneHandler.execute(accessContext, { id, selection });
+    const result = await this.findOneHandler.execute(accessContext, { id });
     ensureExists(result, Ambiente.entityName, id);
     return AmbienteGraphqlMapper.toFindOneOutputDto(result);
   }
@@ -81,7 +72,6 @@ export class AmbienteGraphqlResolver {
   async create(
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("input") dto: AmbienteCreateInputGraphQlDto,
-    @Info() info: GraphQLResolveInfo,
   ): Promise<AmbienteFindOneOutputGraphQlDto> {
     const input = AmbienteGraphqlMapper.toCreateInput(dto);
     const result = await this.createHandler.execute(accessContext, input);
@@ -93,7 +83,6 @@ export class AmbienteGraphqlResolver {
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Args("input") dto: AmbienteUpdateInputGraphQlDto,
-    @Info() info: GraphQLResolveInfo,
   ): Promise<AmbienteFindOneOutputGraphQlDto> {
     const input = AmbienteGraphqlMapper.toUpdateInput({ id }, dto);
     const result = await this.updateHandler.execute(accessContext, input);

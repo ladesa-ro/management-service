@@ -72,9 +72,6 @@ export class AmbienteListInputRestDto {
   @ApiPropertyOptional(AmbienteListQueryFields.sortBy.swaggerMetadata)
   sortBy?: string[];
 
-  @ApiPropertyOptional(AmbienteListQueryFields.selection.swaggerMetadata)
-  selection?: string[];
-
   @ApiPropertyOptional(AmbienteListQueryFields.filterId.swaggerMetadata)
   "filter.id"?: string[];
 

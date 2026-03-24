@@ -1,10 +1,15 @@
-import { map } from "lodash";
-import type { DeepPartial, EntityTarget, ObjectLiteral, Repository } from "typeorm";
+import type {
+  DeepPartial,
+  EntityTarget,
+  FindOptionsWhere,
+  ObjectLiteral,
+  Repository,
+} from "typeorm";
+import { IsNull } from "typeorm";
 import type { IPaginationCriteria } from "@/application/pagination";
 import type { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
 import type { ITypeOrmPaginationConfig } from "@/infrastructure.database/pagination/interfaces/pagination-config.types";
 import type { IAppTypeormConnection } from "../connection/app-typeorm-connection.interface";
-import { QbEfficientLoad } from "./qb-efficient-load";
 
 interface IEntityWithId {
   id: string | number;
@@ -16,7 +21,6 @@ interface IFindOneInputDto {
 
 export interface TypeormResourceConfig<Entity extends ObjectLiteral> {
   alias: string;
-  outputDtoName: string;
   hasSoftDelete?: boolean;
   paginateConfig: ITypeOrmPaginationConfig<Entity>;
 }
@@ -54,7 +58,7 @@ export async function typeormFindAll<Entity extends IEntityWithId, ListInputDto,
   config: TypeormResourceConfig<Entity>,
   paginationAdapter: NestJsPaginateAdapter,
   dto: ListInputDto | null,
-  selection?: string[] | boolean | null,
+  mapEntity?: (entity: Entity) => unknown,
 ): Promise<ListOutputDto> {
   const repo = getRepository(conn, entity);
   const qb = repo.createQueryBuilder(config.alias);
@@ -74,11 +78,9 @@ export async function typeormFindAll<Entity extends IEntityWithId, ListInputDto,
 
   const paginated = await paginationAdapter.paginate(qb, criteria, config.paginateConfig);
 
-  qb.select([]);
-  QbEfficientLoad(config.outputDtoName, qb, config.alias, selection);
-
-  const pageItemsView = await qb.andWhereInIds(map(paginated.data, "id")).getMany();
-  paginated.data = paginated.data.map((p) => pageItemsView.find((i) => i.id === p.id)!);
+  if (mapEntity) {
+    (paginated as { data: unknown[] }).data = paginated.data.map(mapEntity);
+  }
 
   return paginated as unknown as ListOutputDto;
 }
@@ -90,23 +92,30 @@ export async function typeormFindById<
 >(
   conn: IAppTypeormConnection,
   entity: EntityTarget<Entity>,
-  config: Pick<TypeormResourceConfig<Entity>, "alias" | "outputDtoName" | "hasSoftDelete">,
+  config: Pick<TypeormResourceConfig<Entity>, "alias" | "hasSoftDelete" | "paginateConfig">,
   dto: FindOneQuery,
-  selection?: string[] | boolean | null,
+  mapEntity?: (entity: Entity) => unknown,
 ): Promise<FindOneOutputDto | null> {
   const repo = getRepository(conn, entity);
-  const qb = repo.createQueryBuilder(config.alias);
   const hasSoftDelete = config.hasSoftDelete ?? true;
 
+  const where: FindOptionsWhere<Entity> = { id: dto.id } as FindOptionsWhere<Entity>;
   if (hasSoftDelete) {
-    qb.andWhere(`${config.alias}.dateDeleted IS NULL`);
+    Object.assign(where, { dateDeleted: IsNull() });
   }
 
-  qb.andWhere(`${config.alias}.id = :id`, { id: dto.id });
-  qb.select([]);
-  QbEfficientLoad(config.outputDtoName, qb, config.alias, selection);
+  const result = await repo.findOne({
+    where,
+    relations: config.paginateConfig.relations,
+  });
 
-  return (await qb.getOne()) as FindOneOutputDto | null;
+  if (!result) return null;
+
+  if (mapEntity) {
+    return mapEntity(result) as FindOneOutputDto;
+  }
+
+  return result as unknown as FindOneOutputDto;
 }
 
 export async function typeormCreate<Entity extends IEntityWithId>(

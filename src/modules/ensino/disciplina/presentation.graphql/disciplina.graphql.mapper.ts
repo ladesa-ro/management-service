@@ -30,10 +30,9 @@ export class DisciplinaGraphqlMapper {
     return input;
   }
 
-  static toFindOneInput(id: string, selection?: string[]): DisciplinaFindOneQuery {
+  static toFindOneInput(id: string): DisciplinaFindOneQuery {
     const input = new DisciplinaFindOneQuery();
     input.id = id;
-    input.selection = selection;
     return input;
   }
 

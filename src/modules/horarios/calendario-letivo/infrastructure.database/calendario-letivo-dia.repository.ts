@@ -25,24 +25,11 @@ import { CalendarioLetivoDiaEntity } from "./typeorm/calendario-letivo-dia.typeo
 
 const config = {
   alias: "calendario_letivo_dia",
-  outputDtoName: "CalendarioLetivoDiaFindOneQueryResult",
   hasSoftDelete: true,
 } as const;
 
 const calendarioLetivoDiaPaginateConfig: ITypeOrmPaginationConfig<CalendarioLetivoDiaEntity> = {
   ...paginateConfig,
-  select: [
-    "id",
-    "data",
-    "diaLetivo",
-    "feriado",
-    "calendario.id",
-    "calendario.nome",
-    "calendario.ano",
-    "diaPresencial",
-    "tipo",
-    "extraCurricular",
-  ],
   sortableColumns: [
     "data",
     "diaLetivo",
@@ -71,11 +58,7 @@ export class CalendarioLetivoDiaTypeOrmRepositoryAdapter implements ICalendarioL
     private readonly paginationAdapter: NestJsPaginateAdapter,
   ) {}
 
-  findAll(
-    accessContext: IAccessContext | null,
-    dto: CalendarioLetivoDiaListQuery | null = null,
-    selection?: string[] | boolean | null,
-  ) {
+  findAll(accessContext: IAccessContext | null, dto: CalendarioLetivoDiaListQuery | null = null) {
     return typeormFindAll<
       CalendarioLetivoDiaEntity,
       CalendarioLetivoDiaListQuery,
@@ -86,31 +69,30 @@ export class CalendarioLetivoDiaTypeOrmRepositoryAdapter implements ICalendarioL
       { ...config, paginateConfig: calendarioLetivoDiaPaginateConfig },
       this.paginationAdapter,
       dto,
-      selection,
     );
   }
 
-  findById(
-    accessContext: IAccessContext | null,
-    dto: CalendarioLetivoDiaFindOneQuery,
-    selection?: string[] | boolean | null,
-  ) {
+  findById(accessContext: IAccessContext | null, dto: CalendarioLetivoDiaFindOneQuery) {
     return typeormFindById<
       CalendarioLetivoDiaEntity,
       CalendarioLetivoDiaFindOneQuery,
       CalendarioLetivoDiaFindOneQueryResult
-    >(this.appTypeormConnection, CalendarioLetivoDiaEntity, config, dto, selection);
+    >(
+      this.appTypeormConnection,
+      CalendarioLetivoDiaEntity,
+      { ...config, paginateConfig: calendarioLetivoDiaPaginateConfig },
+      dto,
+    );
   }
 
-  findByIdSimple(accessContext: IAccessContext | null, id: string, selection?: string[]) {
-    return this.findById(accessContext, { id } as CalendarioLetivoDiaFindOneQuery, selection);
+  findByIdSimple(accessContext: IAccessContext | null, id: string) {
+    return this.findById(accessContext, { id } as CalendarioLetivoDiaFindOneQuery);
   }
 
   async findByCalendarioAndDate(
     accessContext: IAccessContext | null,
     calendarioLetivoId: string,
     data: string,
-    selection?: string[],
   ): Promise<CalendarioLetivoDiaFindOneQueryResult | null> {
     const repo = this.appTypeormConnection.getRepository(CalendarioLetivoDiaEntity);
     const qb = repo.createQueryBuilder(config.alias);

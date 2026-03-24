@@ -40,9 +40,6 @@ export class NivelFormacaoListInputRestDto {
   @ApiPropertyOptional(NivelFormacaoListQueryFields.sortBy.swaggerMetadata)
   sortBy?: string[];
 
-  @ApiPropertyOptional(NivelFormacaoListQueryFields.selection.swaggerMetadata)
-  selection?: string[];
-
   @ApiPropertyOptional(NivelFormacaoListQueryFields.filterId.swaggerMetadata)
   "filter.id"?: string[];
 }

@@ -33,10 +33,9 @@ export class CursoGraphqlMapper {
     return input;
   }
 
-  static toFindOneInput(id: string, selection?: string[]): CursoFindOneQuery {
+  static toFindOneInput(id: string): CursoFindOneQuery {
     const input = new CursoFindOneQuery();
     input.id = id;
-    input.selection = selection;
     return input;
   }
 

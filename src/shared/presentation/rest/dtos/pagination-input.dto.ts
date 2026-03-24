@@ -37,11 +37,4 @@ export class PaginationInputRestDto {
     example: ["dateCreated:ASC"],
   })
   sortBy?: string[];
-
-  @ApiPropertyOptional({
-    description: "Seleção de campos",
-    isArray: true,
-    type: "string",
-  })
-  selection?: string[];
 }

@@ -5,9 +5,5 @@ import type { IAccessContext } from "@/domain/abstractions";
  * para que cada repositório declare apenas as operações que implementa (Interface Segregation).
  */
 export interface IRepositoryFindAll<ListOutputDto> {
-  findAll(
-    accessContext: IAccessContext | null,
-    dto: unknown,
-    selection?: string[] | boolean | null,
-  ): Promise<ListOutputDto>;
+  findAll(accessContext: IAccessContext | null, dto: unknown): Promise<ListOutputDto>;
 }

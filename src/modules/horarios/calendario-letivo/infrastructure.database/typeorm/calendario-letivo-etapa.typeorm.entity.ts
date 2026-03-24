@@ -1,5 +1,5 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, type Relation } from "typeorm";
-import { OfertaFormacaoPeriodoEtapaEntity } from "@/modules/ensino/oferta-formacao-periodo-etapa/infrastructure.database/typeorm/oferta-formacao-periodo-etapa.typeorm.entity";
+import { OfertaFormacaoPeriodoEtapaEntity } from "@/modules/ensino/oferta-formacao/infrastructure.database/typeorm/oferta-formacao-periodo-etapa.typeorm.entity";
 import { CalendarioLetivoEntity } from "./calendario-letivo.typeorm.entity";
 
 @Entity("calendario_letivo_etapa")

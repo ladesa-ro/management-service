@@ -25,17 +25,45 @@ import { DiarioProfessorEntity } from "./typeorm/diario-professor.typeorm.entity
 
 const config = {
   alias: "diario_professor",
-  outputDtoName: "DiarioProfessorFindOneQueryResult",
   hasSoftDelete: true,
 } as const;
 
 const diarioProfessorPaginateConfig: ITypeOrmPaginationConfig<DiarioProfessorEntity> = {
   ...paginateConfig,
-  select: ["id", "situacao", "diario.id", "perfil.id", "perfil.campus.id", "perfil.usuario.id"],
   relations: {
-    diario: true,
+    diario: {
+      turma: {
+        curso: {
+          campus: {
+            endereco: {
+              cidade: {
+                estado: true,
+              },
+            },
+          },
+        },
+      },
+      disciplina: true,
+      ambientePadrao: {
+        bloco: {
+          campus: {
+            endereco: {
+              cidade: {
+                estado: true,
+              },
+            },
+          },
+        },
+      },
+    },
     perfil: {
-      campus: true,
+      campus: {
+        endereco: {
+          cidade: {
+            estado: true,
+          },
+        },
+      },
       usuario: true,
     },
   },
@@ -57,11 +85,7 @@ export class DiarioProfessorTypeOrmRepositoryAdapter implements IDiarioProfessor
     private readonly paginationAdapter: NestJsPaginateAdapter,
   ) {}
 
-  findAll(
-    accessContext: IAccessContext | null,
-    dto: DiarioProfessorListQuery | null = null,
-    selection?: string[] | boolean | null,
-  ) {
+  findAll(accessContext: IAccessContext | null, dto: DiarioProfessorListQuery | null = null) {
     return typeormFindAll<
       DiarioProfessorEntity,
       DiarioProfessorListQuery,
@@ -72,28 +96,24 @@ export class DiarioProfessorTypeOrmRepositoryAdapter implements IDiarioProfessor
       { ...config, paginateConfig: diarioProfessorPaginateConfig },
       this.paginationAdapter,
       dto,
-      selection,
     );
   }
 
-  findById(
-    accessContext: IAccessContext | null,
-    dto: DiarioProfessorFindOneQuery,
-    selection?: string[] | boolean | null,
-  ) {
+  findById(accessContext: IAccessContext | null, dto: DiarioProfessorFindOneQuery) {
     return typeormFindById<
       DiarioProfessorEntity,
       DiarioProfessorFindOneQuery,
       DiarioProfessorFindOneQueryResult
-    >(this.appTypeormConnection, DiarioProfessorEntity, config, dto, selection);
+    >(
+      this.appTypeormConnection,
+      DiarioProfessorEntity,
+      { ...config, paginateConfig: diarioProfessorPaginateConfig },
+      dto,
+    );
   }
 
-  findByIdSimple(
-    accessContext: IAccessContext | null,
-    id: string,
-    selection?: string[] | boolean | null,
-  ) {
-    return this.findById(accessContext, { id } as DiarioProfessorFindOneQuery, selection);
+  findByIdSimple(accessContext: IAccessContext | null, id: string) {
+    return this.findById(accessContext, { id } as DiarioProfessorFindOneQuery);
   }
 
   create(data: Record<string, any>) {

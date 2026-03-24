@@ -84,8 +84,6 @@ export class CampusListInputGraphQlDto {
   search?: string;
   @Field(() => [String], CampusListQueryFields.sortBy.gqlMetadata)
   sortBy?: string[];
-  @Field(() => [String], CampusListQueryFields.selection.gqlMetadata)
-  selection?: string[];
   @Field(() => [String], CampusListQueryFields.filterId.gqlMetadata)
   filterId?: string[];
 }

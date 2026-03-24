@@ -30,10 +30,9 @@ export class CampusGraphqlMapper {
     return input;
   }
 
-  static toFindOneInput(id: string, selection?: string[]): CampusFindOneQuery {
+  static toFindOneInput(id: string): CampusFindOneQuery {
     const input = new CampusFindOneQuery();
     input.id = id;
-    input.selection = selection;
     return input;
   }
 

@@ -23,13 +23,11 @@ import { TurmaEntity, turmaEntityDomainMapper } from "./typeorm";
 
 const config = {
   alias: "turma",
-  outputDtoName: "TurmaFindOneQueryResult",
   hasSoftDelete: true,
 } as const;
 
 const turmaPaginateConfig: ITypeOrmPaginationConfig<TurmaEntity> = {
   ...paginateConfig,
-  select: ["id", "periodo"],
   sortableColumns: [
     "periodo",
     "ambientePadraoAula.nome",
@@ -45,9 +43,25 @@ const turmaPaginateConfig: ITypeOrmPaginationConfig<TurmaEntity> = {
   ],
   relations: {
     curso: {
-      campus: true,
+      campus: {
+        endereco: {
+          cidade: {
+            estado: true,
+          },
+        },
+      },
     },
-    ambientePadraoAula: true,
+    ambientePadraoAula: {
+      bloco: {
+        campus: {
+          endereco: {
+            cidade: {
+              estado: true,
+            },
+          },
+        },
+      },
+    },
   },
   searchableColumns: ["id", "periodo"],
   defaultSortBy: [["periodo", "ASC"]],
@@ -81,41 +95,27 @@ export class TurmaTypeOrmRepositoryAdapter implements ITurmaRepository {
     private readonly paginationAdapter: NestJsPaginateAdapter,
   ) {}
 
-  findAll(
-    accessContext: IAccessContext | null,
-    dto: TurmaListQuery | null = null,
-    selection?: string[] | boolean | null,
-  ) {
+  findAll(accessContext: IAccessContext | null, dto: TurmaListQuery | null = null) {
     return typeormFindAll<TurmaEntity, TurmaListQuery, TurmaListQueryResult>(
       this.appTypeormConnection,
       TurmaEntity,
       { ...config, paginateConfig: turmaPaginateConfig },
       this.paginationAdapter,
       dto,
-      selection,
     );
   }
 
-  findById(
-    accessContext: IAccessContext | null,
-    dto: TurmaFindOneQuery,
-    selection?: string[] | boolean | null,
-  ) {
+  findById(accessContext: IAccessContext | null, dto: TurmaFindOneQuery) {
     return typeormFindById<TurmaEntity, TurmaFindOneQuery, TurmaFindOneQueryResult>(
       this.appTypeormConnection,
       TurmaEntity,
-      config,
+      { ...config, paginateConfig: turmaPaginateConfig },
       dto,
-      selection,
     );
   }
 
-  findByIdSimple(
-    accessContext: IAccessContext | null,
-    id: string,
-    selection?: string[] | boolean | null,
-  ) {
-    return this.findById(accessContext, { id } as TurmaFindOneQuery, selection);
+  findByIdSimple(accessContext: IAccessContext | null, id: string) {
+    return this.findById(accessContext, { id } as TurmaFindOneQuery);
   }
 
   create(data: Record<string, unknown>) {

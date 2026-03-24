@@ -116,7 +116,6 @@ export function createListInputMapper<TCore>(
     rec.limit = dto.limit;
     rec.search = dto.search;
     rec.sortBy = dto.sortBy;
-    rec.selection = dto.selection;
     for (const key of filterKeys) {
       rec[key] = dto[key];
     }

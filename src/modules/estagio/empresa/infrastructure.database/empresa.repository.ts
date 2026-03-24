@@ -40,7 +40,6 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
   async findAll(
     accessContext: IAccessContext | null,
     dto: EmpresaListQuery | null = null,
-    selection?: string[] | boolean | null,
   ): Promise<EmpresaListQueryResult> {
     const page = dto?.page || 1;
     const limit = dto?.limit || 10;
@@ -112,7 +111,6 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
   async findById(
     accessContext: IAccessContext | null,
     dto: EmpresaFindOneQuery,
-    selection?: string[] | boolean | null,
   ): Promise<EmpresaFindOneQueryResult | null> {
     const entity = await this.repository.findOne({
       where: { id: dto.id, dateDeleted: IsNull() },

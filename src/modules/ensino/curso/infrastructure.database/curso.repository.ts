@@ -23,13 +23,11 @@ import { CursoEntity, cursoEntityDomainMapper } from "./typeorm";
 
 const config = {
   alias: "curso",
-  outputDtoName: "CursoFindOneQueryResult",
   hasSoftDelete: true,
 } as const;
 
 const cursoPaginateConfig: ITypeOrmPaginationConfig<CursoEntity> = {
   ...paginateConfig,
-  select: ["id", "nome", "nomeAbreviado", "campus", "ofertaFormacao"],
   sortableColumns: [
     "nome",
     "nomeAbreviado",
@@ -43,8 +41,16 @@ const cursoPaginateConfig: ITypeOrmPaginationConfig<CursoEntity> = {
   ],
   searchableColumns: ["id", "nome", "nomeAbreviado", "campus", "ofertaFormacao"],
   relations: {
-    campus: true,
-    ofertaFormacao: true,
+    campus: {
+      endereco: {
+        cidade: {
+          estado: true,
+        },
+      },
+    },
+    ofertaFormacao: {
+      modalidade: true,
+    },
   },
   defaultSortBy: [["nome", "ASC"]],
   filterableColumns: {
@@ -66,41 +72,27 @@ export class CursoTypeOrmRepositoryAdapter implements ICursoRepository {
     private readonly paginationAdapter: NestJsPaginateAdapter,
   ) {}
 
-  findAll(
-    accessContext: IAccessContext | null,
-    dto: CursoListQuery | null = null,
-    selection?: string[] | boolean | null,
-  ) {
+  findAll(accessContext: IAccessContext | null, dto: CursoListQuery | null = null) {
     return typeormFindAll<CursoEntity, CursoListQuery, CursoListQueryResult>(
       this.appTypeormConnection,
       CursoEntity,
       { ...config, paginateConfig: cursoPaginateConfig },
       this.paginationAdapter,
       dto,
-      selection,
     );
   }
 
-  findById(
-    accessContext: IAccessContext | null,
-    dto: CursoFindOneQuery,
-    selection?: string[] | boolean | null,
-  ) {
+  findById(accessContext: IAccessContext | null, dto: CursoFindOneQuery) {
     return typeormFindById<CursoEntity, CursoFindOneQuery, CursoFindOneQueryResult>(
       this.appTypeormConnection,
       CursoEntity,
-      config,
+      { ...config, paginateConfig: cursoPaginateConfig },
       dto,
-      selection,
     );
   }
 
-  findByIdSimple(
-    accessContext: IAccessContext | null,
-    id: string,
-    selection?: string[] | boolean | null,
-  ) {
-    return this.findById(accessContext, { id } as CursoFindOneQuery, selection);
+  findByIdSimple(accessContext: IAccessContext | null, id: string) {
+    return this.findById(accessContext, { id } as CursoFindOneQuery);
   }
 
   create(data: Record<string, unknown>) {

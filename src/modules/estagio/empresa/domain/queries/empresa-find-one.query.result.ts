@@ -1,11 +1,4 @@
 import { EntityQueryResult, SharedFields } from "@/domain/abstractions";
-import { fieldsToProperties } from "@/domain/abstractions/metadata/model-from-fields";
-import {
-  commonProperties,
-  defineModel,
-  referenceProperty,
-  simpleProperty,
-} from "@/domain/abstractions/metadata/model-registry";
 import { EnderecoFindOneQueryResult } from "@/modules/localidades/endereco";
 import { EmpresaFields } from "../empresa.fields";
 
@@ -23,10 +16,3 @@ export class EmpresaFindOneQueryResult extends EntityQueryResult {
   endereco!: EnderecoFindOneQueryResult;
   ativo!: boolean;
 }
-
-defineModel("EmpresaFindOneQueryResult", [
-  ...fieldsToProperties(EmpresaFindOneQueryResultFields),
-  referenceProperty("endereco", "EnderecoFindOneQueryResult"),
-  simpleProperty("ativo"),
-  ...commonProperties.dated,
-]);

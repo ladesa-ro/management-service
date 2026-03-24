@@ -59,9 +59,6 @@ export class DisciplinaListInputRestDto {
   @ApiPropertyOptional(DisciplinaListQueryFields.sortBy.swaggerMetadata)
   sortBy?: string[];
 
-  @ApiPropertyOptional(DisciplinaListQueryFields.selection.swaggerMetadata)
-  selection?: string[];
-
   @ApiPropertyOptional(DisciplinaListQueryFields.filterId.swaggerMetadata)
   "filter.id"?: string[];
 

@@ -15,6 +15,6 @@ export class OfertaFormacaoListQueryHandlerImpl implements IOfertaFormacaoListQu
     accessContext: IAccessContext | null,
     dto: OfertaFormacaoListQuery | null,
   ): Promise<OfertaFormacaoListQueryResult> {
-    return this.repository.findAll(accessContext, dto, dto?.selection);
+    return this.repository.getFindAllQueryResult(accessContext, dto);
   }
 }

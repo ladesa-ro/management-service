@@ -9,7 +9,6 @@ export const UsuarioFindByMatriculaQueryMetadata = createOperationMetadata({
 
 export type IUsuarioFindByMatriculaQuery = {
   matricula: string;
-  selection?: string[] | boolean;
 };
 
 export const IUsuarioFindByMatriculaQueryHandler = Symbol("IUsuarioFindByMatriculaQueryHandler");

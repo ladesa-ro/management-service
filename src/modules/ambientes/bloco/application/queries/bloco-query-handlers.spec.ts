@@ -17,7 +17,7 @@ describe("BlocoFindOneQueryHandler", () => {
     const result = await handler.execute(accessContext, { id });
 
     expect(result).toEqual(entity);
-    expect(repository.findById).toHaveBeenCalledWith(accessContext, { id }, undefined);
+    expect(repository.findById).toHaveBeenCalledWith(accessContext, { id });
   });
 
   it("should return null when entity does not exist", async () => {
@@ -45,6 +45,6 @@ describe("BlocoListQueryHandler", () => {
     const result = await handler.execute(accessContext, null);
 
     expect(result).toEqual(expected);
-    expect(repository.findAll).toHaveBeenCalledWith(accessContext, null, undefined);
+    expect(repository.findAll).toHaveBeenCalledWith(accessContext, null);
   });
 });

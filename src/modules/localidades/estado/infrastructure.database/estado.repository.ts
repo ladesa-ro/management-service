@@ -22,13 +22,11 @@ import { EstadoEntity, estadoEntityDomainMapper } from "./typeorm";
 
 const config = {
   alias: "estado",
-  outputDtoName: "EstadoFindOneQueryResult",
   hasSoftDelete: false,
 } as const;
 
 const estadoPaginateConfig: ITypeOrmPaginationConfig<EstadoEntity> = {
   ...paginateConfig,
-  select: ["id"],
   searchableColumns: ["nome", "sigla"],
   sortableColumns: ["id", "nome", "sigla"],
   defaultSortBy: [["nome", "ASC"]],
@@ -43,41 +41,27 @@ export class EstadoTypeOrmRepositoryAdapter implements IEstadoRepository {
     private readonly paginationAdapter: NestJsPaginateAdapter,
   ) {}
 
-  findAll(
-    accessContext: IAccessContext | null,
-    dto: EstadoListQuery | null = null,
-    selection?: string[] | boolean | null,
-  ) {
+  findAll(accessContext: IAccessContext | null, dto: EstadoListQuery | null = null) {
     return typeormFindAll<EstadoEntity, EstadoListQuery, EstadoListQueryResult>(
       this.appTypeormConnection,
       EstadoEntity,
       { ...config, paginateConfig: estadoPaginateConfig },
       this.paginationAdapter,
       dto,
-      selection,
     );
   }
 
-  findById(
-    accessContext: IAccessContext | null,
-    dto: EstadoFindOneQuery,
-    selection?: string[] | boolean | null,
-  ) {
+  findById(accessContext: IAccessContext | null, dto: EstadoFindOneQuery) {
     return typeormFindById<EstadoEntity, EstadoFindOneQuery, EstadoFindOneQueryResult>(
       this.appTypeormConnection,
       EstadoEntity,
-      config,
+      { ...config, paginateConfig: estadoPaginateConfig },
       dto,
-      selection,
     );
   }
 
-  findByIdSimple(
-    accessContext: IAccessContext | null,
-    id: string,
-    selection?: string[] | boolean | null,
-  ) {
-    return this.findById(accessContext, { id: Number(id) } as EstadoFindOneQuery, selection);
+  findByIdSimple(accessContext: IAccessContext | null, id: string) {
+    return this.findById(accessContext, { id: Number(id) } as EstadoFindOneQuery);
   }
 
   create(data: Record<string, unknown>) {

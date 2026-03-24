@@ -15,6 +15,6 @@ export class DisciplinaListQueryHandlerImpl implements IDisciplinaListQueryHandl
     accessContext: IAccessContext | null,
     dto: DisciplinaListQuery | null,
   ): Promise<DisciplinaListQueryResult> {
-    return this.repository.findAll(accessContext, dto, dto?.selection);
+    return this.repository.findAll(accessContext, dto);
   }
 }

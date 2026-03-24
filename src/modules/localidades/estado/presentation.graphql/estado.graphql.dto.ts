@@ -35,9 +35,6 @@ export class EstadoListInputGraphQlDto {
   @Field(() => [String], EstadoListQueryFields.sortBy.gqlMetadata)
   sortBy?: string[];
 
-  @Field(() => [String], EstadoListQueryFields.selection.gqlMetadata)
-  selection?: string[];
-
   @Field(() => [String], EstadoListQueryFields.filterId.gqlMetadata)
   filterId?: string[];
 }

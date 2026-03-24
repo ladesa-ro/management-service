@@ -1,10 +1,4 @@
 import { EntityQueryResult, SharedFields } from "@/domain/abstractions";
-import { fieldsToProperties } from "@/domain/abstractions/metadata/model-from-fields";
-import {
-  commonProperties,
-  defineModel,
-  referenceProperty,
-} from "@/domain/abstractions/metadata/model-registry";
 import { PerfilFindOneQueryResult } from "@/modules/acesso/perfil";
 import { DiarioFindOneQueryResult } from "@/modules/ensino/diario";
 import { DiarioProfessorFields } from "../diario-professor.fields";
@@ -19,10 +13,3 @@ export class DiarioProfessorFindOneQueryResult extends EntityQueryResult {
   diario!: DiarioFindOneQueryResult;
   perfil!: PerfilFindOneQueryResult;
 }
-
-defineModel("DiarioProfessorFindOneQueryResult", [
-  ...fieldsToProperties(DiarioProfessorFindOneQueryResultFields),
-  referenceProperty("perfil", "PerfilFindOneQueryResult"),
-  referenceProperty("diario", "DiarioFindOneQueryResult"),
-  ...commonProperties.dated,
-]);

@@ -29,10 +29,9 @@ export class NivelFormacaoGraphqlMapper {
     return input;
   }
 
-  static toFindOneInput(id: string, selection?: string[]): NivelFormacaoFindOneQuery {
+  static toFindOneInput(id: string): NivelFormacaoFindOneQuery {
     const input = new NivelFormacaoFindOneQuery();
     input.id = id;
-    input.selection = selection;
     return input;
   }
 

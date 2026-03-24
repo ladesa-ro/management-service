@@ -15,6 +15,6 @@ export class BlocoListQueryHandlerImpl implements IBlocoListQueryHandler {
     accessContext: IAccessContext | null,
     dto: BlocoListQuery | null,
   ): Promise<BlocoListQueryResult> {
-    return this.repository.findAll(accessContext, dto, dto?.selection);
+    return this.repository.findAll(accessContext, dto);
   }
 }

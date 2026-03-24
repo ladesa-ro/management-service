@@ -110,8 +110,6 @@ export class AmbienteListInputGraphQlDto {
   search?: string;
   @Field(() => [String], AmbienteListQueryFields.sortBy.gqlMetadata)
   sortBy?: string[];
-  @Field(() => [String], AmbienteListQueryFields.selection.gqlMetadata)
-  selection?: string[];
   @Field(() => [String], AmbienteListQueryFields.filterId.gqlMetadata)
   filterId?: string[];
   @Field(() => [String], AmbienteListQueryFields.filterBlocoId.gqlMetadata)

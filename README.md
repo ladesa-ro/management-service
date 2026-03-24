@@ -2953,8 +2953,8 @@ graph TD
         IC["IRepositoryCreate&lt;T&gt;\ncreate(data) → {id}"]
         IU["IRepositoryUpdate&lt;T&gt;\nupdate(id, data) → void"]
         ISD["IRepositorySoftDelete\nsoftDeleteById(id) → void"]
-        IFA["IRepositoryFindAll&lt;T&gt;\nfindAll(ac, dto, selection?)"]
-        IFB["IRepositoryFindById&lt;T&gt;\nfindById(ac, {id}, selection?)"]
+        IFA["IRepositoryFindAll&lt;T&gt;\nfindAll(ac, dto)"]
+        IFB["IRepositoryFindById&lt;T&gt;\nfindById(ac, {id})"]
         IFBS["IRepositoryFindByIdSimple&lt;T&gt;\nfindByIdSimple(ac, id)"]
     end
 
@@ -2990,9 +2990,9 @@ export type ICampusRepository = IRepositoryFindAll<CampusListQueryResult> &
 - `IRepositoryCreate<T>` — `create(data)` → `{ id }`
 - `IRepositoryUpdate<T>` — `update(id, data)` → `void`
 - `IRepositorySoftDelete` — `softDeleteById(id)` → `void`
-- `IRepositoryFindAll<T>` — `findAll(ac, dto, selection?)` → `T`
-- `IRepositoryFindById<T>` — `findById(ac, { id }, selection?)` → `T | null`
-- `IRepositoryFindByIdSimple<T>` — `findByIdSimple(ac, id, selection?)` → `T | null`
+- `IRepositoryFindAll<T>` — `findAll(ac, dto)` → `T`
+- `IRepositoryFindById<T>` — `findById(ac, { id })` → `T | null`
+- `IRepositoryFindByIdSimple<T>` — `findByIdSimple(ac, id)` → `T | null`
 
 O type `PersistInput<T>` converte relações em referências `{ id }` para desacoplar a persistência da forma completa da entidade.
 
@@ -3135,8 +3135,8 @@ graph TD
     end
 
     subgraph "Query Handler (leitura)"
-        QRY_IN["execute(accessContext, {id}, selection)"]
-        QRY_REPO["1. repository.findById(ac, {id}, selection)"]
+        QRY_IN["execute(accessContext, {id})"]
+        QRY_REPO["1. repository.findById(ac, {id})"]
         QRY_OUT["2. retorna resultado ou null"]
 
         QRY_IN --> QRY_REPO --> QRY_OUT
@@ -3478,7 +3478,7 @@ sequenceDiagram
 
     C->>CTRL: GET /api/campi?page=2&limit=10&search=IFRO&sortBy=nomeFantasia:ASC
     CTRL->>H: execute(ac, paginateQuery)
-    H->>R: findAll(ac, paginateQuery, selection)
+    H->>R: findAll(ac, paginateQuery)
     R->>NP: NestJsPaginateAdapter.paginate(repo, dto, config)
     NP->>NP: Aplica filtros, busca, ordenação
     NP-->>R: { data: Campus[], meta: { totalItems, currentPage, ... } }
@@ -3635,14 +3635,12 @@ sequenceDiagram
     C->>A: query { campusFindOne(id: "uuid") { id, nomeFantasia } }
     A->>A: Parse e valida query contra schema
     A->>R: campusFindOne(id, info, accessContext)
-    R->>R: graphqlExtractSelection(info)\n→ ["id", "nomeFantasia"]
-    R->>H: execute(accessContext, {id}, selection)
-    H->>DB: SELECT id, nome_fantasia FROM campus WHERE id = $1
+    R->>H: execute(accessContext, {id})
+    H->>DB: SELECT campus + relations FROM campus WHERE id = $1
     DB-->>H: { id, nomeFantasia }
     H-->>R: CampusFindOneQueryResult
     R-->>A: CampusFindOneOutputGraphQlDto
     A-->>C: { data: { campusFindOne: { id: "...", nomeFantasia: "IFRO" } } }
-    Note over C: Recebe APENAS os campos pedidos
 ```
 
 ### Configuração
@@ -3698,7 +3696,7 @@ graph TD
 
 **Compartilhamento de lógica:** os resolvers GraphQL (em `presentation.graphql/`) reutilizam os **mesmos command/query handlers** da API REST. Isso significa que a lógica de negócio, validação e autorização são idênticas independentemente de a requisição vir via REST ou GraphQL.
 
-> **Nota avançada:** o projeto **não** usa DataLoader para resolver o problema N+1 do GraphQL — queries que buscam relações fazem JOINs no repositório TypeORM. A função `graphqlExtractSelection()` (em `src/infrastructure.graphql/graphql-selection.ts`) extrai os campos solicitados da query GraphQL e os passa para o repositório, que faz SELECT apenas das colunas necessárias — otimizando a query SQL.
+> **Nota avançada:** o projeto **não** usa DataLoader para resolver o problema N+1 do GraphQL — queries que buscam relações fazem JOINs no repositório TypeORM. As relations são declaradas no `paginateConfig` de cada repositório e carregadas automaticamente via `nestjs-paginate` (para listagens) ou `repo.findOne({ relations })` (para buscas por ID).
 
 <!--
 Source of Trust
@@ -3707,7 +3705,7 @@ verified_at: 2026-03-23T12:30:00Z
 source_patterns:
   - src/infrastructure.graphql/**/*.ts
   - src/modules/*/presentation.graphql/**/*.ts
-confidence_scope: Apollo Server v5 code-first, endpoint /api/graphql, GraphiQL habilitado, cache LRU (100MB, 5min TTL), graphqlExtractSelection, módulos com/sem GraphQL
+confidence_scope: Apollo Server v5 code-first, endpoint /api/graphql, GraphiQL habilitado, cache LRU (100MB, 5min TTL), módulos com/sem GraphQL
 -->
 
 ---

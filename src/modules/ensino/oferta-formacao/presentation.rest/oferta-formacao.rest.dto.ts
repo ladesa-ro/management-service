@@ -1,4 +1,6 @@
+import { CampusFindOneOutputRestDto } from "@/modules/ambientes/campus/presentation.rest/campus.rest.dto";
 import { ModalidadeFindOneOutputRestDto } from "@/modules/ensino/modalidade/presentation.rest/modalidade.rest.dto";
+import { NivelFormacaoFindOneOutputRestDto } from "@/modules/ensino/nivel-formacao/presentation.rest/nivel-formacao.rest.dto";
 import { OfertaFormacaoFindOneInputSchema } from "@/modules/ensino/oferta-formacao/domain/queries/oferta-formacao-find-one.query.schemas";
 import { OfertaFormacaoPaginationInputSchema } from "@/modules/ensino/oferta-formacao/domain/queries/oferta-formacao-list.query.schemas";
 import {
@@ -17,6 +19,47 @@ import { OfertaFormacaoCreateCommandFields } from "../domain/commands/oferta-for
 import { OfertaFormacaoCreateSchema } from "../domain/oferta-formacao.schemas";
 import { OfertaFormacaoFindOneQueryResultFields } from "../domain/queries/oferta-formacao-find-one.query.result";
 import { OfertaFormacaoListQueryFields } from "../domain/queries/oferta-formacao-list.query";
+
+// ============================================================================
+// Periodo/Etapa Output
+// ============================================================================
+
+@ApiSchema({ name: "OfertaFormacaoPeriodoEtapaOutputDto" })
+export class OfertaFormacaoPeriodoEtapaOutputRestDto {
+  @ApiProperty({ type: "string" }) id: string;
+  @ApiProperty({ type: "string" }) nome: string;
+  @ApiProperty({ type: "string" }) cor: string;
+}
+
+@ApiSchema({ name: "OfertaFormacaoPeriodoOutputDto" })
+export class OfertaFormacaoPeriodoOutputRestDto {
+  @ApiProperty({ type: "string" }) id: string;
+  @ApiProperty({ type: "integer" }) numeroPeriodo: number;
+  @ApiProperty({ type: () => [OfertaFormacaoPeriodoEtapaOutputRestDto] })
+  etapas: OfertaFormacaoPeriodoEtapaOutputRestDto[];
+}
+
+// ============================================================================
+// Periodo/Etapa Input
+// ============================================================================
+
+@ApiSchema({ name: "OfertaFormacaoPeriodoEtapaInputDto" })
+export class OfertaFormacaoPeriodoEtapaInputRestDto {
+  @ApiProperty({ type: "string", description: "Nome da etapa" }) nome: string;
+  @ApiProperty({ type: "string", description: "Cor da etapa (hex)" }) cor: string;
+}
+
+@ApiSchema({ name: "OfertaFormacaoPeriodoInputDto" })
+export class OfertaFormacaoPeriodoInputRestDto {
+  @ApiProperty({ type: "integer", description: "Numero do periodo", minimum: 1 })
+  numeroPeriodo: number;
+
+  @ApiProperty({
+    type: () => [OfertaFormacaoPeriodoEtapaInputRestDto],
+    description: "Etapas do periodo (ao menos 1)",
+  })
+  etapas: OfertaFormacaoPeriodoEtapaInputRestDto[];
+}
 
 // ============================================================================
 // FindOne Output
@@ -38,18 +81,35 @@ export class OfertaFormacaoFindOneOutputRestDto extends EntityBaseRestDto {
   })
   slug: string;
 
-  @ApiPropertyOptional({
+  @ApiProperty({
     type: Number,
     ...OfertaFormacaoFindOneQueryResultFields.duracaoPeriodoEmMeses.swaggerMetadata,
-    nullable: true,
   })
-  duracaoPeriodoEmMeses: number | null;
+  duracaoPeriodoEmMeses: number;
 
   @ApiProperty({
     type: () => ModalidadeFindOneOutputRestDto,
     ...OfertaFormacaoFindOneQueryResultFields.modalidade.swaggerMetadata,
   })
   modalidade: ModalidadeFindOneOutputRestDto;
+
+  @ApiProperty({
+    type: () => CampusFindOneOutputRestDto,
+    ...OfertaFormacaoFindOneQueryResultFields.campus.swaggerMetadata,
+  })
+  campus: CampusFindOneOutputRestDto;
+
+  @ApiProperty({
+    type: () => [NivelFormacaoFindOneOutputRestDto],
+    ...OfertaFormacaoFindOneQueryResultFields.niveisFormacoes.swaggerMetadata,
+  })
+  niveisFormacoes: NivelFormacaoFindOneOutputRestDto[];
+
+  @ApiProperty({
+    type: () => [OfertaFormacaoPeriodoOutputRestDto],
+    ...OfertaFormacaoFindOneQueryResultFields.periodos.swaggerMetadata,
+  })
+  periodos: OfertaFormacaoPeriodoOutputRestDto[];
 }
 
 // ============================================================================
@@ -67,6 +127,14 @@ export class OfertaFormacaoListInputRestDto extends PaginatedFilterByIdRestDto {
   })
   @TransformToArray()
   "filter.modalidade.id"?: string[];
+
+  @ApiPropertyOptional({
+    type: "string",
+    isArray: true,
+    ...OfertaFormacaoListQueryFields.filterCampusId.swaggerMetadata,
+  })
+  @TransformToArray()
+  "filter.campus.id"?: string[];
 }
 
 @ApiSchema({ name: "OfertaFormacaoListOutputDto" })
@@ -106,12 +174,11 @@ export class OfertaFormacaoCreateInputRestDto {
   })
   slug: string;
 
-  @ApiPropertyOptional({
+  @ApiProperty({
     type: Number,
     ...OfertaFormacaoCreateCommandFields.duracaoPeriodoEmMeses.swaggerMetadata,
-    nullable: true,
   })
-  duracaoPeriodoEmMeses?: number | null;
+  duracaoPeriodoEmMeses: number;
 
   @ApiProperty({
     type: "object",
@@ -119,6 +186,26 @@ export class OfertaFormacaoCreateInputRestDto {
     properties: { id: { type: "string", format: "uuid" } },
   })
   modalidade: { id: string };
+
+  @ApiProperty({
+    type: "object",
+    ...OfertaFormacaoCreateCommandFields.campus.swaggerMetadata,
+    properties: { id: { type: "string", format: "uuid" } },
+  })
+  campus: { id: string };
+
+  @ApiProperty({
+    type: "array",
+    ...OfertaFormacaoCreateCommandFields.niveisFormacoes.swaggerMetadata,
+    items: { type: "object", properties: { id: { type: "string", format: "uuid" } } },
+  })
+  niveisFormacoes: Array<{ id: string }>;
+
+  @ApiProperty({
+    type: () => [OfertaFormacaoPeriodoInputRestDto],
+    ...OfertaFormacaoCreateCommandFields.periodos.swaggerMetadata,
+  })
+  periodos: OfertaFormacaoPeriodoInputRestDto[];
 }
 
 @ApiSchema({ name: "OfertaFormacaoUpdateInputDto" })

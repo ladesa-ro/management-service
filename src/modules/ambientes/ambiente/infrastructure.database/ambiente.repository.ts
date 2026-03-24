@@ -23,25 +23,19 @@ import { AmbienteEntity, ambienteEntityDomainMapper } from "./typeorm";
 
 const config = {
   alias: "ambiente",
-  outputDtoName: "AmbienteFindOneQueryResult",
 } as const;
 
 const ambientePaginateConfig: ITypeOrmPaginationConfig<AmbienteEntity> = {
   ...paginateConfig,
-  select: [
-    "id",
-    "nome",
-    "descricao",
-    "codigo",
-    "capacidade",
-    "tipo",
-    "dateCreated",
-    "bloco.id",
-    "bloco.campus.id",
-  ],
   relations: {
     bloco: {
-      campus: true,
+      campus: {
+        endereco: {
+          cidade: {
+            estado: true,
+          },
+        },
+      },
     },
   },
   sortableColumns: [
@@ -73,41 +67,27 @@ export class AmbienteTypeOrmRepositoryAdapter implements IAmbienteRepository {
     private readonly paginationAdapter: NestJsPaginateAdapter,
   ) {}
 
-  findAll(
-    accessContext: IAccessContext | null,
-    dto: AmbienteListQuery | null = null,
-    selection?: string[] | boolean | null,
-  ) {
+  findAll(accessContext: IAccessContext | null, dto: AmbienteListQuery | null = null) {
     return typeormFindAll<AmbienteEntity, AmbienteListQuery, AmbienteListQueryResult>(
       this.appTypeormConnection,
       AmbienteEntity,
       { ...config, paginateConfig: ambientePaginateConfig },
       this.paginationAdapter,
       dto,
-      selection,
     );
   }
 
-  findById(
-    accessContext: IAccessContext | null,
-    dto: AmbienteFindOneQuery,
-    selection?: string[] | boolean | null,
-  ) {
+  findById(accessContext: IAccessContext | null, dto: AmbienteFindOneQuery) {
     return typeormFindById<AmbienteEntity, AmbienteFindOneQuery, AmbienteFindOneQueryResult>(
       this.appTypeormConnection,
       AmbienteEntity,
-      config,
+      { ...config, paginateConfig: ambientePaginateConfig },
       dto,
-      selection,
     );
   }
 
-  findByIdSimple(
-    accessContext: IAccessContext | null,
-    id: string,
-    selection?: string[] | boolean | null,
-  ) {
-    return this.findById(accessContext, { id } as AmbienteFindOneQuery, selection);
+  findByIdSimple(accessContext: IAccessContext | null, id: string) {
+    return this.findById(accessContext, { id } as AmbienteFindOneQuery);
   }
 
   create(data: Record<string, unknown>) {

@@ -18,6 +18,6 @@ export class OfertaFormacaoFindOneQueryHandlerImpl implements IOfertaFormacaoFin
     accessContext: IAccessContext | null,
     dto: OfertaFormacaoFindOneQuery,
   ): Promise<OfertaFormacaoFindOneQueryResult | null> {
-    return this.repository.findById(accessContext, dto, dto?.selection);
+    return this.repository.getFindOneQueryResult(accessContext, dto);
   }
 }

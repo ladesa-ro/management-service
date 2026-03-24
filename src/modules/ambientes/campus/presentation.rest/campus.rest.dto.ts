@@ -62,9 +62,6 @@ export class CampusListInputRestDto {
   @ApiPropertyOptional(CampusListQueryFields.sortBy.swaggerMetadata)
   sortBy?: string[];
 
-  @ApiPropertyOptional(CampusListQueryFields.selection.swaggerMetadata)
-  selection?: string[];
-
   @ApiPropertyOptional(CampusListQueryFields.filterId.swaggerMetadata)
   "filter.id"?: string[];
 }

@@ -18,13 +18,11 @@ export interface IEstagiarioRepository {
   findAll(
     accessContext: IAccessContext | null,
     dto: EstagiarioListQuery | null,
-    selection?: string[] | boolean | null,
   ): Promise<EstagiarioListQueryResult>;
 
   findById(
     accessContext: IAccessContext | null,
     dto: EstagiarioFindOneQuery,
-    selection?: string[] | boolean | null,
   ): Promise<EstagiarioFindOneQueryResult | null>;
 
   create(

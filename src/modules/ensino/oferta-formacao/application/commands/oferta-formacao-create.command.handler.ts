@@ -1,8 +1,12 @@
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Campus } from "@/modules/ambientes/campus/domain/campus";
+import { ICampusFindOneQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-find-one.query.handler.interface";
 import { Modalidade } from "@/modules/ensino/modalidade/domain/modalidade";
 import { IModalidadeFindOneQueryHandler } from "@/modules/ensino/modalidade/domain/queries/modalidade-find-one.query.handler.interface";
+import { NivelFormacao } from "@/modules/ensino/nivel-formacao/domain/nivel-formacao";
+import { INivelFormacaoFindOneQueryHandler } from "@/modules/ensino/nivel-formacao/domain/queries/nivel-formacao-find-one.query.handler.interface";
 import type { OfertaFormacaoCreateCommand } from "@/modules/ensino/oferta-formacao/domain/commands/oferta-formacao-create.command";
 import { IOfertaFormacaoCreateCommandHandler } from "@/modules/ensino/oferta-formacao/domain/commands/oferta-formacao-create.command.handler.interface";
 import { OfertaFormacao } from "@/modules/ensino/oferta-formacao/domain/oferta-formacao";
@@ -19,6 +23,10 @@ export class OfertaFormacaoCreateCommandHandlerImpl implements IOfertaFormacaoCr
     private readonly permissionChecker: IOfertaFormacaoPermissionChecker,
     @DeclareDependency(IModalidadeFindOneQueryHandler)
     private readonly modalidadeFindOneHandler: IModalidadeFindOneQueryHandler,
+    @DeclareDependency(ICampusFindOneQueryHandler)
+    private readonly campusFindOneHandler: ICampusFindOneQueryHandler,
+    @DeclareDependency(INivelFormacaoFindOneQueryHandler)
+    private readonly nivelFormacaoFindOneHandler: INivelFormacaoFindOneQueryHandler,
   ) {}
 
   async execute(
@@ -27,28 +35,31 @@ export class OfertaFormacaoCreateCommandHandlerImpl implements IOfertaFormacaoCr
   ): Promise<OfertaFormacaoFindOneQueryResult> {
     await this.permissionChecker.ensureCanCreate(accessContext, { dto });
 
-    let modalidadeRef: { id: string } | undefined;
     if (dto.modalidade) {
       const modalidade = await this.modalidadeFindOneHandler.execute(accessContext, {
         id: dto.modalidade.id,
       });
       ensureExists(modalidade, Modalidade.entityName, dto.modalidade.id);
-      modalidadeRef = { id: modalidade.id };
     }
-    const domain = OfertaFormacao.create({
-      nome: dto.nome,
-      slug: dto.slug,
-      duracaoPeriodoEmMeses: dto.duracaoPeriodoEmMeses,
-      modalidade: modalidadeRef,
-    });
-    const { id } = await this.repository.create({
-      ...domain,
-      ...(modalidadeRef ? { modalidade: modalidadeRef } : {}),
-    });
 
-    const result = await this.repository.findById(accessContext, { id });
+    const campus = await this.campusFindOneHandler.execute(accessContext, {
+      id: dto.campus.id,
+    });
+    ensureExists(campus, Campus.entityName, dto.campus.id);
 
-    ensureExists(result, OfertaFormacao.entityName, id);
+    for (const nf of dto.niveisFormacoes) {
+      const nivelFormacao = await this.nivelFormacaoFindOneHandler.execute(accessContext, {
+        id: nf.id,
+      });
+      ensureExists(nivelFormacao, NivelFormacao.entityName, nf.id);
+    }
+
+    const domain = OfertaFormacao.create(dto);
+
+    await this.repository.save(domain);
+
+    const result = await this.repository.getFindOneQueryResult(accessContext, { id: domain.id });
+    ensureExists(result, OfertaFormacao.entityName, domain.id);
 
     return result;
   }

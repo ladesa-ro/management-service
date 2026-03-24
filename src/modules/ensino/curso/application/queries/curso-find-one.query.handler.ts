@@ -15,6 +15,6 @@ export class CursoFindOneQueryHandlerImpl implements ICursoFindOneQueryHandler {
     accessContext: IAccessContext | null,
     dto: CursoFindOneQuery,
   ): Promise<CursoFindOneQueryResult | null> {
-    return this.repository.findById(accessContext, dto, dto?.selection);
+    return this.repository.findById(accessContext, dto);
   }
 }

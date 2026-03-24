@@ -41,10 +41,9 @@ export class CidadeGraphqlMapper {
     return listInputMapping.mapDefined<CidadeListQuery>(dto);
   }
 
-  static toFindOneInput(id: number, selection?: string[]): CidadeFindOneQuery {
+  static toFindOneInput(id: number): CidadeFindOneQuery {
     const input = new CidadeFindOneQuery();
     input.id = id;
-    input.selection = selection;
     return input;
   }
 

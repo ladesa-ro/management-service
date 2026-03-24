@@ -1,11 +1,11 @@
 import { FilterOperator } from "nestjs-paginate";
+import { IsNull } from "typeorm";
 import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
 import { paginateConfig } from "@/infrastructure.database/pagination/config/paginate-config";
 import type { ITypeOrmPaginationConfig } from "@/infrastructure.database/pagination/interfaces/pagination-config.types";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
-import { QbEfficientLoad } from "@/infrastructure.database/typeorm/helpers/qb-efficient-load";
 import {
   typeormCreate,
   typeormFindAll,
@@ -27,13 +27,11 @@ import { UsuarioEntity, usuarioEntityDomainMapper } from "./typeorm";
 
 const config = {
   alias: "usuario",
-  outputDtoName: "UsuarioFindOneQueryResult",
   hasSoftDelete: true,
 } as const;
 
 const usuarioPaginateConfig: ITypeOrmPaginationConfig<UsuarioEntity> = {
   ...paginateConfig,
-  select: ["id", "nome", "matricula", "email", "dateCreated"],
   sortableColumns: ["nome", "matricula", "email", "dateCreated"],
   searchableColumns: ["id", "nome", "matricula", "email"],
   defaultSortBy: [
@@ -57,55 +55,36 @@ export class UsuarioTypeOrmRepositoryAdapter implements IUsuarioRepository {
     private readonly paginationAdapter: NestJsPaginateAdapter,
   ) {}
 
-  findAll(
-    accessContext: IAccessContext | null,
-    dto: UsuarioListQuery | null = null,
-    selection?: string[] | boolean | null,
-  ) {
+  findAll(accessContext: IAccessContext | null, dto: UsuarioListQuery | null = null) {
     return typeormFindAll<UsuarioEntity, UsuarioListQuery, UsuarioListQueryResult>(
       this.appTypeormConnection,
       UsuarioEntity,
       { ...config, paginateConfig: usuarioPaginateConfig },
       this.paginationAdapter,
       dto,
-      selection,
     );
   }
 
-  findById(
-    accessContext: IAccessContext | null,
-    dto: UsuarioFindOneQuery,
-    selection?: string[] | boolean | null,
-  ) {
+  findById(accessContext: IAccessContext | null, dto: UsuarioFindOneQuery) {
     return typeormFindById<UsuarioEntity, UsuarioFindOneQuery, UsuarioFindOneQueryResult>(
       this.appTypeormConnection,
       UsuarioEntity,
-      config,
+      { ...config, paginateConfig: usuarioPaginateConfig },
       dto,
-      selection,
     );
   }
 
-  findByIdSimple(
-    accessContext: IAccessContext | null,
-    id: string,
-    selection?: string[] | boolean | null,
-  ) {
-    return this.findById(accessContext, { id } as UsuarioFindOneQuery, selection);
+  findByIdSimple(accessContext: IAccessContext | null, id: string) {
+    return this.findById(accessContext, { id } as UsuarioFindOneQuery);
   }
 
-  async findByMatricula(
-    matricula: string,
-    selection?: string[] | boolean | null,
-  ): Promise<UsuarioFindOneQueryResult | null> {
+  async findByMatricula(matricula: string): Promise<UsuarioFindOneQueryResult | null> {
     const repo = this.appTypeormConnection.getRepository(UsuarioEntity);
-    const qb = repo.createQueryBuilder(config.alias);
-
-    qb.andWhere(`${config.alias}.matricula = :matricula`, { matricula });
-    qb.select([]);
-    QbEfficientLoad(config.outputDtoName, qb, config.alias, selection);
-
-    return (await qb.getOne()) as UsuarioFindOneQueryResult | null;
+    const entity = await repo.findOne({
+      where: { matricula, dateDeleted: IsNull() },
+      relations: usuarioPaginateConfig.relations,
+    });
+    return (entity as unknown as UsuarioFindOneQueryResult) ?? null;
   }
 
   async isMatriculaAvailable(

@@ -15,6 +15,6 @@ export class CampusListQueryHandlerImpl implements ICampusListQueryHandler {
     accessContext: IAccessContext | null,
     dto: CampusListQuery | null,
   ): Promise<CampusListQueryResult> {
-    return this.repository.findAll(accessContext, dto, dto?.selection);
+    return this.repository.findAll(accessContext, dto);
   }
 }

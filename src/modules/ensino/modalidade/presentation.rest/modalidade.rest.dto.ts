@@ -43,9 +43,6 @@ export class ModalidadeListInputRestDto {
   @ApiPropertyOptional(ModalidadeListQueryFields.sortBy.swaggerMetadata)
   sortBy?: string[];
 
-  @ApiPropertyOptional(ModalidadeListQueryFields.selection.swaggerMetadata)
-  selection?: string[];
-
   @ApiPropertyOptional(ModalidadeListQueryFields.filterId.swaggerMetadata)
   "filter.id"?: string[];
 }

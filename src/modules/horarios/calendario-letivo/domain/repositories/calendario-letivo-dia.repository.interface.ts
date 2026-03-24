@@ -26,6 +26,5 @@ export type ICalendarioLetivoDiaRepository =
         accessContext: IAccessContext | null,
         calendarioLetivoId: string,
         data: string,
-        selection?: string[],
       ): Promise<CalendarioLetivoDiaFindOneQueryResult | null>;
     };

@@ -21,10 +21,7 @@ export type IUsuarioRepository = IRepositoryFindAll<UsuarioListQueryResult> &
   IRepositoryCreate<object> &
   IRepositoryUpdate<object> &
   IRepositorySoftDelete & {
-    findByMatricula(
-      matricula: string,
-      selection?: string[] | boolean | null,
-    ): Promise<UsuarioFindOneQueryResult | null>;
+    findByMatricula(matricula: string): Promise<UsuarioFindOneQueryResult | null>;
 
     isMatriculaAvailable(matricula: string, excludeUsuarioId?: string | null): Promise<boolean>;
 

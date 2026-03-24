@@ -1,8 +1,6 @@
-import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
-import { type GraphQLResolveInfo } from "graphql";
+import { Args, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
 import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
-import { graphqlExtractSelection } from "@/infrastructure.graphql";
 import {
   IPerfilSetVinculosCommandHandler,
   PerfilSetVinculosCommandMetadata,
@@ -39,13 +37,8 @@ export class PerfilGraphqlResolver {
   async findAll(
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args() dto: PerfilListInputGraphQlDto,
-    @Info() info: GraphQLResolveInfo,
   ): Promise<PerfilListOutputGraphQlDto> {
     const input = PerfilGraphqlMapper.toListInput(dto);
-
-    if (input) {
-      input.selection = graphqlExtractSelection(info, "paginated");
-    }
     const result = await this.listHandler.execute(accessContext, input);
     return PerfilGraphqlMapper.toListOutputDto(result);
   }
@@ -57,10 +50,8 @@ export class PerfilGraphqlResolver {
   async findById(
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("id", { type: () => ID }) id: string,
-    @Info() info: GraphQLResolveInfo,
   ): Promise<PerfilFindOneOutputGraphQlDto | null> {
-    const selection = graphqlExtractSelection(info);
-    const result = await this.findOneHandler.execute(accessContext, { id, selection });
+    const result = await this.findOneHandler.execute(accessContext, { id });
     if (!result) {
       return null;
     }
@@ -71,7 +62,6 @@ export class PerfilGraphqlResolver {
   async setVinculos(
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("input") dto: PerfilSetVinculosInputGraphQlDto,
-    @Info() info: GraphQLResolveInfo,
   ): Promise<PerfilListOutputGraphQlDto> {
     const input = PerfilGraphqlMapper.toSetVinculosInput(dto);
     const result = await this.setVinculosHandler.execute(accessContext, input);

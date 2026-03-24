@@ -1,9 +1,7 @@
-import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
-import { type GraphQLResolveInfo } from "graphql";
+import { Args, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
-import { graphqlExtractSelection } from "@/infrastructure.graphql";
 import {
   ITurmaCreateCommandHandler,
   TurmaCreateCommandMetadata,
@@ -54,13 +52,8 @@ export class TurmaGraphqlResolver {
   async findAll(
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args() dto: TurmaListInputGraphQlDto,
-    @Info() info: GraphQLResolveInfo,
   ): Promise<TurmaListOutputGraphQlDto> {
     const input = TurmaGraphqlMapper.toListInput(dto);
-
-    if (input) {
-      input.selection = graphqlExtractSelection(info, "paginated");
-    }
     const result = await this.listHandler.execute(accessContext, input);
     return TurmaGraphqlMapper.toListOutputDto(result);
   }
@@ -69,10 +62,8 @@ export class TurmaGraphqlResolver {
   async findById(
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("id", { type: () => ID }) id: string,
-    @Info() info: GraphQLResolveInfo,
   ): Promise<TurmaFindOneOutputGraphQlDto> {
-    const selection = graphqlExtractSelection(info);
-    const result = await this.findOneHandler.execute(accessContext, { id, selection });
+    const result = await this.findOneHandler.execute(accessContext, { id });
     ensureExists(result, Turma.entityName, id);
     return TurmaGraphqlMapper.toFindOneOutputDto(result);
   }
@@ -81,7 +72,6 @@ export class TurmaGraphqlResolver {
   async create(
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("input") dto: TurmaCreateInputGraphQlDto,
-    @Info() info: GraphQLResolveInfo,
   ): Promise<TurmaFindOneOutputGraphQlDto> {
     const input = TurmaGraphqlMapper.toCreateInput(dto);
     const result = await this.createHandler.execute(accessContext, input);
@@ -93,7 +83,6 @@ export class TurmaGraphqlResolver {
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Args("input") dto: TurmaUpdateInputGraphQlDto,
-    @Info() info: GraphQLResolveInfo,
   ): Promise<TurmaFindOneOutputGraphQlDto> {
     const input = TurmaGraphqlMapper.toUpdateInput({ id }, dto);
     const result = await this.updateHandler.execute(accessContext, input);

@@ -15,9 +15,6 @@ export class PaginationInputGraphQlDto {
 
   @Field(() => [String], { nullable: true })
   sortBy?: string[];
-
-  @Field(() => [String], { nullable: true })
-  selection?: string[];
 }
 
 /**

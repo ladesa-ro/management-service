@@ -1,6 +1,4 @@
 import { SharedFields } from "@/domain/abstractions";
-import { fieldsToProperties } from "@/domain/abstractions/metadata/model-from-fields";
-import { defineModel, referenceProperty } from "@/domain/abstractions/metadata/model-registry";
 import type { IdNumeric } from "@/domain/abstractions/scalars";
 import { EstadoFindOneQueryResult } from "@/modules/localidades/estado";
 import { CidadeFields } from "../cidade.fields";
@@ -15,8 +13,3 @@ export class CidadeFindOneQueryResult {
   nome!: string;
   estado!: EstadoFindOneQueryResult;
 }
-
-defineModel("CidadeFindOneQueryResult", [
-  ...fieldsToProperties(CidadeFindOneQueryResultFields),
-  referenceProperty("estado", "EstadoFindOneQueryResult"),
-]);

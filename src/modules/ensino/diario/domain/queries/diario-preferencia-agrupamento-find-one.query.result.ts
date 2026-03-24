@@ -1,10 +1,4 @@
 import { EntityQueryResult, SharedFields } from "@/domain/abstractions";
-import { fieldsToProperties } from "@/domain/abstractions/metadata/model-from-fields";
-import {
-  commonProperties,
-  defineModel,
-  referenceProperty,
-} from "@/domain/abstractions/metadata/model-registry";
 import type { ScalarDate } from "@/domain/abstractions/scalars";
 import { DiarioFindOneQueryResult } from "@/modules/ensino/diario";
 import { DiarioPreferenciaAgrupamentoFields } from "../diario-preferencia-agrupamento.fields";
@@ -21,9 +15,3 @@ export class DiarioPreferenciaAgrupamentoFindOneQueryResult extends EntityQueryR
   aulasSeguidas!: number;
   diario!: DiarioFindOneQueryResult;
 }
-
-defineModel("DiarioPreferenciaAgrupamentoFindOneQueryResult", [
-  ...fieldsToProperties(DiarioPreferenciaAgrupamentoFindOneQueryResultFields),
-  referenceProperty("diario", "DiarioFindOneQueryResult"),
-  ...commonProperties.dated,
-]);

@@ -15,6 +15,6 @@ export class UsuarioFindOneQueryHandlerImpl implements IUsuarioFindOneQueryHandl
     accessContext: IAccessContext | null,
     dto: UsuarioFindOneQuery,
   ): Promise<UsuarioFindOneQueryResult | null> {
-    return this.repository.findById(accessContext, dto, dto?.selection);
+    return this.repository.findById(accessContext, dto);
   }
 }

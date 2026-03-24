@@ -44,9 +44,6 @@ export class EstadoListInputRestDto {
   @ApiPropertyOptional(EstadoListQueryFields.sortBy.swaggerMetadata)
   sortBy?: string[];
 
-  @ApiPropertyOptional(EstadoListQueryFields.selection.swaggerMetadata)
-  selection?: string[];
-
   @ApiPropertyOptional(EstadoListQueryFields.filterId.swaggerMetadata)
   "filter.id"?: string[];
 }

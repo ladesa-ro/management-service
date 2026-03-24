@@ -21,14 +21,12 @@ export class CalendarioLetivoDiaFindOneQueryHandlerImpl
     dto: CalendarioLetivoDiaFindOneQuery,
   ): Promise<CalendarioLetivoDiaFindOneQueryResult | null> {
     if (dto.calendarioLetivoId && dto.data) {
-      const selection = Array.isArray(dto.selection) ? dto.selection : undefined;
       return this.repository.findByCalendarioAndDate(
         accessContext,
         dto.calendarioLetivoId,
         dto.data,
-        selection,
       );
     }
-    return this.repository.findById(accessContext, dto, dto?.selection);
+    return this.repository.findById(accessContext, dto);
   }
 }

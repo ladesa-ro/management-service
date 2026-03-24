@@ -8,6 +8,5 @@ export interface IRepositoryFindByIdSimple<FindOneOutputDto> {
   findByIdSimple(
     accessContext: IAccessContext | null,
     id: string | number,
-    selection?: string[] | boolean | null,
   ): Promise<FindOneOutputDto | null>;
 }

@@ -36,7 +36,6 @@ export const paginationInputSchema = z.object({
   limit: z.coerce.number().int().min(1).optional(),
   search: z.string().optional(),
   sortBy: coerceArray(z.string()),
-  selection: coerceArray(z.string()),
 });
 
 export const graphqlPaginationInputSchema = z.object({
@@ -44,7 +43,6 @@ export const graphqlPaginationInputSchema = z.object({
   limit: z.number().int().min(1).optional(),
   search: z.string().optional(),
   sortBy: z.array(z.string()).optional(),
-  selection: z.array(z.string()).optional(),
 });
 
 /**

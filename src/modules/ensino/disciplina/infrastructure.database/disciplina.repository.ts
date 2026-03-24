@@ -23,14 +23,12 @@ import { DisciplinaEntity, disciplinaEntityDomainMapper } from "./typeorm";
 
 const config = {
   alias: "disciplina",
-  outputDtoName: "DisciplinaFindOneQueryResult",
   hasSoftDelete: true,
 } as const;
 
 const disciplinaPaginateConfig: ITypeOrmPaginationConfig<DisciplinaEntity> = {
   ...paginateConfig,
   relations: { diarios: true },
-  select: ["id", "nome", "nomeAbreviado", "cargaHoraria"],
   sortableColumns: ["nome", "cargaHoraria"],
   searchableColumns: ["id", "nome", "nomeAbreviado", "cargaHoraria"],
   defaultSortBy: [["nome", "ASC"]],
@@ -47,41 +45,27 @@ export class DisciplinaTypeOrmRepositoryAdapter implements IDisciplinaRepository
     private readonly paginationAdapter: NestJsPaginateAdapter,
   ) {}
 
-  findAll(
-    accessContext: IAccessContext | null,
-    dto: DisciplinaListQuery | null = null,
-    selection?: string[] | boolean | null,
-  ) {
+  findAll(accessContext: IAccessContext | null, dto: DisciplinaListQuery | null = null) {
     return typeormFindAll<DisciplinaEntity, DisciplinaListQuery, DisciplinaListQueryResult>(
       this.appTypeormConnection,
       DisciplinaEntity,
       { ...config, paginateConfig: disciplinaPaginateConfig },
       this.paginationAdapter,
       dto,
-      selection,
     );
   }
 
-  findById(
-    accessContext: IAccessContext | null,
-    dto: DisciplinaFindOneQuery,
-    selection?: string[] | boolean | null,
-  ) {
+  findById(accessContext: IAccessContext | null, dto: DisciplinaFindOneQuery) {
     return typeormFindById<DisciplinaEntity, DisciplinaFindOneQuery, DisciplinaFindOneQueryResult>(
       this.appTypeormConnection,
       DisciplinaEntity,
-      config,
+      { ...config, paginateConfig: disciplinaPaginateConfig },
       dto,
-      selection,
     );
   }
 
-  findByIdSimple(
-    accessContext: IAccessContext | null,
-    id: string,
-    selection?: string[] | boolean | null,
-  ) {
-    return this.findById(accessContext, { id } as DisciplinaFindOneQuery, selection);
+  findByIdSimple(accessContext: IAccessContext | null, id: string) {
+    return this.findById(accessContext, { id } as DisciplinaFindOneQuery);
   }
 
   create(data: Record<string, unknown>) {

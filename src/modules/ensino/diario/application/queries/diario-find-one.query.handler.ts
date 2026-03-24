@@ -15,6 +15,6 @@ export class DiarioFindOneQueryHandlerImpl implements IDiarioFindOneQueryHandler
     accessContext: IAccessContext | null,
     dto: DiarioFindOneQuery,
   ): Promise<DiarioFindOneQueryResult | null> {
-    return this.repository.findById(accessContext, dto, dto?.selection);
+    return this.repository.findById(accessContext, dto);
   }
 }
