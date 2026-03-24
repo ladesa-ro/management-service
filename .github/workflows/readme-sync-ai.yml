@@ -70,7 +70,7 @@ jobs:
 
       - name: Criar issue de drift (se detectado)
         if: steps.drift.outputs.has_drift == 'true'
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const report = JSON.parse('${{ steps.drift.outputs.report }}');
@@ -337,7 +337,7 @@ jobs:
 
       - name: Fechar issue de drift (se existir)
         if: steps.changes.outputs.changed == 'true'
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const { data: issues } = await github.rest.issues.listForRepo({
