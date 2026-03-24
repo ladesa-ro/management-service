@@ -17,8 +17,23 @@ export function coerceArray<T extends z.ZodType>(itemSchema: T) {
   }, z.array(itemSchema).optional());
 }
 
-export const uuidFilterSchema = coerceArray(uuidSchema);
-export const stringFilterSchema = coerceArray(z.string());
+/**
+ * Coerce para array e remove strings vazias.
+ * Específico para filtros de query params, onde `filter.campo=` envia string vazia
+ * que causaria erros no banco (ex: "invalid input syntax for type uuid").
+ * Retorna undefined se nenhum valor válido restar.
+ */
+export function coerceFilterArray<T extends z.ZodType>(itemSchema: T) {
+  return z.preprocess((val) => {
+    if (val === undefined || val === null) return undefined;
+    const arr = Array.isArray(val) ? val : [val];
+    const filtered = arr.filter((item) => (typeof item === "string" ? item.trim() !== "" : true));
+    return filtered.length > 0 ? filtered : undefined;
+  }, z.array(itemSchema).optional());
+}
+
+export const uuidFilterSchema = coerceFilterArray(uuidSchema);
+export const stringFilterSchema = coerceFilterArray(z.string());
 
 // ============================================================================
 // ID input schemas

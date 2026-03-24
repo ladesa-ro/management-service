@@ -48,20 +48,40 @@ export class NestJsPaginateAdapter {
       filter: {},
     };
 
-    // Processa filtros
+    // Processa filtros, removendo valores vazios que causariam erros no banco
     if (criteria?.filters) {
       for (const [key, value] of Object.entries(criteria.filters)) {
         if (typeof value !== "string" && !Array.isArray(value)) {
           continue;
         }
 
+        const sanitized = this.sanitizeFilterValue(value);
+
+        if (sanitized === undefined) {
+          continue;
+        }
+
         paginateQuery.filter = {
           ...paginateQuery.filter,
-          [key]: value,
+          [key]: sanitized,
         };
       }
     }
 
     return paginateQuery;
+  }
+
+  /**
+   * Remove strings vazias de valores de filtro.
+   * Query params como `filter.campus.id=` enviam string vazia,
+   * que causa "invalid input syntax for type uuid" no PostgreSQL.
+   */
+  private sanitizeFilterValue(value: string | string[]): string | string[] | undefined {
+    if (typeof value === "string") {
+      return value.trim() === "" ? undefined : value;
+    }
+
+    const filtered = value.filter((item) => item.trim() !== "");
+    return filtered.length > 0 ? filtered : undefined;
   }
 }

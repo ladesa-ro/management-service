@@ -5,7 +5,7 @@
  * da query (paginacao, filtros, ordenacao).
  */
 import {
-  coerceArray,
+  coerceFilterArray,
   createPaginationInputSchema,
   stringFilterSchema,
 } from "@/shared/validation/schemas";
@@ -14,5 +14,5 @@ import { EstagioStatusSchema } from "../estagio.fields";
 export const EstagioPaginationInputSchema = createPaginationInputSchema({
   "filter.empresa.id": stringFilterSchema,
   "filter.estagiario.id": stringFilterSchema,
-  "filter.status": coerceArray(EstagioStatusSchema),
+  "filter.status": coerceFilterArray(EstagioStatusSchema),
 });

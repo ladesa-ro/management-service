@@ -50,26 +50,14 @@ export class EstagioRestMapper {
   }
 
   static toListInput(dto: EstagioListInputRestDto): EstagioListQuery {
-    const normalizeArray = <T>(value: T | T[] | undefined): T[] | undefined => {
-      if (!value) return undefined;
-      const arr = Array.isArray(value) ? value : [value];
-      return arr.length > 0 ? arr : undefined;
-    };
-
-    const normalizeStringArray = (value: string | string[] | undefined): string[] | undefined => {
-      if (!value) return undefined;
-      const arr = Array.isArray(value) ? value : [value];
-      const filtered = arr.filter((item) => item && item.trim());
-      return filtered.length > 0 ? filtered : undefined;
-    };
-
+    // Após validação Zod (coerceFilterArray), os filtros já são string[] | undefined
     return {
       page: dto.page,
       limit: dto.limit,
       search: dto.search,
-      filterEmpresaId: normalizeStringArray(dto["filter.empresa.id"]),
-      filterEstagiarioId: normalizeStringArray(dto["filter.estagiario.id"]),
-      filterStatus: normalizeArray(dto["filter.status"]) as EstagioStatus[] | undefined,
+      filterEmpresaId: dto["filter.empresa.id"] as string[] | undefined,
+      filterEstagiarioId: dto["filter.estagiario.id"] as string[] | undefined,
+      filterStatus: dto["filter.status"] as EstagioStatus[] | undefined,
     };
   }
 
