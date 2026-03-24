@@ -14,7 +14,7 @@ import { CalendarioLetivoFields } from "./calendario-letivo.fields";
 // Fragments de referência
 // ============================================================================
 
-export const CalendarioLetivoCampusRefSchema = createSchema(() => z.object({ id: uuidSchema }));
+export const CalendarioLetivoCampusRefSchema = ObjectIdUuidFactory;
 
 export const CalendarioLetivoOfertaFormacaoRefSchema = ObjectIdUuidFactory;
 
@@ -27,10 +27,10 @@ export const CalendarioLetivoSchema = z
     id: uuidSchema,
     nome: CalendarioLetivoFields.nome.domainSchema,
     ano: CalendarioLetivoFields.ano.domainSchema,
-    campus: z.object({ id: uuidSchema }),
-    ofertaFormacao: z.object({ id: uuidSchema }).nullable(),
+    campus: ObjectIdUuidFactory.domain,
+    ofertaFormacao: ObjectIdUuidFactory.domain.nullable(),
   })
-  .merge(datedSchema);
+  .extend(datedSchema.shape);
 
 export const CalendarioLetivoCreateSchema = createSchema((standard) =>
   z.object({

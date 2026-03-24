@@ -15,14 +15,14 @@ import {
   dateToISO,
   dateToISONullable,
   filterActive,
-  toRef,
+  mapDatedEntity,
   toRefRequired,
 } from "@/infrastructure.database/typeorm/mapping";
-import type {
-  OfertaFormacaoFindOneQuery,
+import {
+  type OfertaFormacaoFindOneQuery,
   OfertaFormacaoFindOneQueryResult,
-  OfertaFormacaoListQuery,
-  OfertaFormacaoListQueryResult,
+  type OfertaFormacaoListQuery,
+  type OfertaFormacaoListQueryResult,
 } from "@/modules/ensino/oferta-formacao";
 import {
   type IOfertaFormacao,
@@ -189,7 +189,7 @@ export class OfertaFormacaoTypeOrmRepositoryAdapter implements IOfertaFormacaoRe
       slug: entity.slug,
       duracaoPeriodoEmMeses: entity.duracaoPeriodoEmMeses,
 
-      modalidade: toRef(entity.modalidade),
+      modalidade: toRefRequired(entity.modalidade),
       campus: toRefRequired(entity.campus),
 
       niveisFormacoes: filterActive(entity.ofertaFormacaoNiveisFormacoes).map((nf) => ({
@@ -220,34 +220,42 @@ export class OfertaFormacaoTypeOrmRepositoryAdapter implements IOfertaFormacaoRe
    * Value objects incluem IDs de persistência (para links na UI).
    */
   private toQueryResult(entity: OfertaFormacaoEntity): OfertaFormacaoFindOneQueryResult {
-    return {
-      id: entity.id,
-      nome: entity.nome,
-      slug: entity.slug,
-      duracaoPeriodoEmMeses: entity.duracaoPeriodoEmMeses,
-      dateCreated: entity.dateCreated,
-      dateUpdated: entity.dateUpdated,
-      dateDeleted: entity.dateDeleted,
+    const result = new OfertaFormacaoFindOneQueryResult();
 
-      modalidade: entity.modalidade ?? null,
-      campus: entity.campus,
+    result.id = entity.id;
+    result.nome = entity.nome;
+    result.slug = entity.slug;
+    result.duracaoPeriodoEmMeses = entity.duracaoPeriodoEmMeses;
+    result.dateCreated = dateToISO(entity.dateCreated);
+    result.dateUpdated = dateToISO(entity.dateUpdated);
+    result.dateDeleted = dateToISONullable(entity.dateDeleted);
 
-      niveisFormacoes: filterActive(entity.ofertaFormacaoNiveisFormacoes).map(
-        (nf) => nf.nivelFormacao,
-      ),
+    result.modalidade = mapDatedEntity(entity.modalidade);
+    result.campus = {
+      ...mapDatedEntity(entity.campus),
+      endereco: {
+        ...mapDatedEntity(entity.campus.endereco),
+        cidade: entity.campus.endereco.cidade,
+      },
+    };
 
-      periodos: filterActive(entity.periodosEntities)
-        .sort((a, b) => a.numeroPeriodo - b.numeroPeriodo)
-        .map((p) => ({
-          id: p.id,
-          numeroPeriodo: p.numeroPeriodo,
-          etapas: filterActive(p.etapas).map((e) => ({
-            id: e.id,
-            nome: e.nome,
-            cor: e.cor,
-          })),
+    result.niveisFormacoes = filterActive(entity.ofertaFormacaoNiveisFormacoes).map((nf) =>
+      mapDatedEntity(nf.nivelFormacao),
+    );
+
+    result.periodos = filterActive(entity.periodosEntities)
+      .sort((a, b) => a.numeroPeriodo - b.numeroPeriodo)
+      .map((p) => ({
+        id: p.id,
+        numeroPeriodo: p.numeroPeriodo,
+        etapas: filterActive(p.etapas).map((e) => ({
+          id: e.id,
+          nome: e.nome,
+          cor: e.cor,
         })),
-    } as unknown as OfertaFormacaoFindOneQueryResult;
+      }));
+
+    return result;
   }
 
   // ==========================================

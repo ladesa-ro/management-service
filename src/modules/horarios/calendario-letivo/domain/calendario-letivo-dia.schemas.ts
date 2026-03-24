@@ -6,7 +6,7 @@
  * os contratos de dados da entidade.
  */
 import { z } from "zod";
-import { createSchema } from "@/domain/abstractions";
+import { createSchema, ObjectIdUuidFactory } from "@/domain/abstractions";
 import { datedSchema, uuidSchema } from "@/shared/validation/schemas";
 import { CalendarioLetivoDiaFields } from "./calendario-letivo-dia.fields";
 
@@ -14,9 +14,7 @@ import { CalendarioLetivoDiaFields } from "./calendario-letivo-dia.fields";
 // Fragments de referência
 // ============================================================================
 
-export const CalendarioLetivoDiaCalendarioRefSchema = createSchema(() =>
-  z.object({ id: uuidSchema }),
-);
+export const CalendarioLetivoDiaCalendarioRefSchema = ObjectIdUuidFactory;
 
 // ============================================================================
 // Schemas compostos
@@ -31,9 +29,9 @@ export const CalendarioLetivoDiaSchema = z
     diaPresencial: CalendarioLetivoDiaFields.diaPresencial.domainSchema,
     tipo: CalendarioLetivoDiaFields.tipo.domainSchema,
     extraCurricular: CalendarioLetivoDiaFields.extraCurricular.domainSchema,
-    calendario: z.object({ id: uuidSchema }),
+    calendario: ObjectIdUuidFactory.domain,
   })
-  .merge(datedSchema);
+  .extend(datedSchema.shape);
 
 export const CalendarioLetivoDiaUpdateSchema = createSchema((standard) =>
   z.object({

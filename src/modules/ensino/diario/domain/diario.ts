@@ -8,7 +8,7 @@ import type { ITurma } from "@/modules/ensino/turma/domain/turma";
 import type { ICalendarioLetivo } from "@/modules/horarios/calendario-letivo";
 import { zodValidate } from "@/shared/validation/index";
 import { getNowISO } from "@/utils/date";
-import { DiarioCreateSchema, DiarioUpdateSchema } from "./diario.schemas";
+import { DiarioCreateSchema, DiarioSchema, DiarioUpdateSchema } from "./diario.schemas";
 
 export interface IDiario extends IEntityBaseUuid {
   ativo: boolean;
@@ -58,7 +58,12 @@ export class Diario implements IEntityBaseUuid {
 
     instance.id = generateUuidV7();
     instance.ativo = parsed.ativo;
-    instance.ambientePadrao = null;
+    instance.calendarioLetivo = parsed.calendarioLetivo as unknown as ICalendarioLetivo;
+    instance.turma = parsed.turma as unknown as ITurma;
+    instance.disciplina = parsed.disciplina as unknown as IDisciplina;
+    instance.ambientePadrao = parsed.ambientePadrao
+      ? (parsed.ambientePadrao as unknown as IAmbiente)
+      : null;
     instance.imagemCapa = null;
     instance.dateCreated = getNowISO();
     instance.dateUpdated = getNowISO();
@@ -67,18 +72,21 @@ export class Diario implements IEntityBaseUuid {
     return instance;
   }
 
-  static load(dados: Record<string, any>): Diario {
-    const instance = Object.create(Diario.prototype) as Diario;
-    if (dados.id !== undefined) instance.id = dados.id;
-    if (dados.ativo !== undefined) instance.ativo = dados.ativo;
-    if (dados.calendarioLetivo !== undefined) instance.calendarioLetivo = dados.calendarioLetivo;
-    if (dados.turma !== undefined) instance.turma = dados.turma;
-    if (dados.disciplina !== undefined) instance.disciplina = dados.disciplina;
-    if (dados.ambientePadrao !== undefined) instance.ambientePadrao = dados.ambientePadrao;
-    if (dados.imagemCapa !== undefined) instance.imagemCapa = dados.imagemCapa;
-    if (dados.dateCreated !== undefined) instance.dateCreated = dados.dateCreated;
-    if (dados.dateUpdated !== undefined) instance.dateUpdated = dados.dateUpdated;
-    if (dados.dateDeleted !== undefined) instance.dateDeleted = dados.dateDeleted;
+  static load(dados: unknown): Diario {
+    const parsed = zodValidate(Diario.entityName, DiarioSchema, dados);
+
+    const instance = new Diario();
+
+    instance.id = parsed.id;
+    instance.ativo = parsed.ativo;
+    instance.calendarioLetivo = parsed.calendarioLetivo as unknown as ICalendarioLetivo;
+    instance.turma = parsed.turma as unknown as ITurma;
+    instance.disciplina = parsed.disciplina as unknown as IDisciplina;
+    instance.ambientePadrao = parsed.ambientePadrao as unknown as IAmbiente | null;
+    instance.imagemCapa = parsed.imagemCapa as unknown as IImagem | null;
+    instance.dateCreated = parsed.dateCreated;
+    instance.dateUpdated = parsed.dateUpdated;
+    instance.dateDeleted = parsed.dateDeleted;
     return instance;
   }
 

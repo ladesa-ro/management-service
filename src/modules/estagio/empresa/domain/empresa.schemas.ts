@@ -6,7 +6,7 @@
  * os contratos de dados da entidade.
  */
 import { z } from "zod";
-import { createSchema } from "@/domain/abstractions";
+import { createSchema, ObjectIdUuidFactory } from "@/domain/abstractions";
 import { datedSchema, uuidSchema } from "@/shared/validation/schemas";
 import { EmpresaFields } from "./empresa.fields";
 
@@ -14,7 +14,7 @@ import { EmpresaFields } from "./empresa.fields";
 // Fragments de referência
 // ============================================================================
 
-export const EmpresaEnderecoRefSchema = createSchema(() => z.object({ id: uuidSchema }));
+export const EmpresaEnderecoRefSchema = ObjectIdUuidFactory;
 
 // ============================================================================
 // Schemas compostos
@@ -28,9 +28,9 @@ export const EmpresaSchema = z
     cnpj: z.string(),
     telefone: z.string().min(1).max(15),
     email: z.string().email(),
-    endereco: z.object({ id: uuidSchema }),
+    endereco: ObjectIdUuidFactory.domain,
   })
-  .merge(datedSchema);
+  .extend(datedSchema.shape);
 
 export const EmpresaCreateSchema = createSchema((standard) =>
   z.object({

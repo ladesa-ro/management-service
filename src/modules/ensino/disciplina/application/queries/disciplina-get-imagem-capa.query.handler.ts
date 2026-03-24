@@ -38,7 +38,7 @@ export class DisciplinaGetImagemCapaQueryHandlerImpl
     ensureExists(entity, Disciplina.entityName, id);
 
     return getEntityImagemStreamableFile(
-      entity as Record<string, any>,
+      entity as unknown as Record<string, unknown>,
       "imagemCapa",
       "Imagem de capa do Disciplina",
       id,

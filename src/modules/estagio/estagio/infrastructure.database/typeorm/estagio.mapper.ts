@@ -11,9 +11,7 @@ export class EstagioMapper {
   static toDomain(entity: EstagioTypeormEntity): Estagio {
     return Estagio.load({
       id: entity.id,
-      empresa: {
-        id: entity.empresa?.id ?? (entity as unknown as Record<string, string>).idEmpresaFk,
-      },
+      empresa: { id: entity.empresa.id },
       estagiario: entity.estagiario ? { id: entity.estagiario.id } : null,
       cargaHoraria: entity.cargaHoraria,
       dataInicio: dateToDateString(entity.dataInicio) as string | null,
@@ -27,8 +25,8 @@ export class EstagioMapper {
           horaInicio: horario.horaInicio,
           horaFim: horario.horaFim,
         })),
-      dateCreated: dateToISO(entity.dateCreated) as string | null,
-      dateUpdated: dateToISO(entity.dateUpdated) as string | null,
+      dateCreated: dateToISO(entity.dateCreated) as string,
+      dateUpdated: dateToISO(entity.dateUpdated) as string,
       dateDeleted: dateToISO(entity.dateDeleted) as string | null,
     });
   }
@@ -36,10 +34,10 @@ export class EstagioMapper {
   static toPersistence(estagio: Estagio): EstagioTypeormEntity {
     const entity = new EstagioTypeormEntity();
     entity.id = estagio.id || generateUuidV7();
-    entity.empresa = { id: estagio.empresa.id } as unknown as typeof entity.empresa;
-    entity.estagiario = estagio.estagiario
-      ? ({ id: estagio.estagiario.id } as unknown as NonNullable<typeof entity.estagiario>)
-      : null;
+    Object.assign(entity, { empresa: { id: estagio.empresa.id } });
+    Object.assign(entity, {
+      estagiario: estagio.estagiario ? { id: estagio.estagiario.id } : null,
+    });
     entity.cargaHoraria = estagio.cargaHoraria;
     entity.dataInicio = estagio.dataInicio ? (isoToDate(estagio.dataInicio) as Date) : null;
     entity.dataFim = estagio.dataFim ? (isoToDate(estagio.dataFim) as Date) : null;
@@ -56,7 +54,7 @@ export class EstagioMapper {
   ): HorarioEstagioTypeormEntity {
     const entity = new HorarioEstagioTypeormEntity();
     entity.id = horario.id || generateUuidV7();
-    entity.estagio = { id: idEstagioFk } as unknown as typeof entity.estagio;
+    Object.assign(entity, { estagio: { id: idEstagioFk } });
     entity.diaSemana = horario.diaSemana;
     entity.horaInicio = horario.horaInicio;
     entity.horaFim = horario.horaFim;
@@ -66,12 +64,32 @@ export class EstagioMapper {
     return entity;
   }
 
+  static toPersistenceFromRecord(data: Record<string, unknown>): Partial<EstagioTypeormEntity> {
+    const entity: Partial<EstagioTypeormEntity> = {};
+    if (data.id !== undefined) entity.id = data.id as string;
+    if (data.empresa !== undefined) Object.assign(entity, { empresa: data.empresa });
+    if (data.estagiario !== undefined) Object.assign(entity, { estagiario: data.estagiario });
+    if (data.cargaHoraria !== undefined) entity.cargaHoraria = data.cargaHoraria as number;
+    if (data.dataInicio !== undefined)
+      entity.dataInicio = data.dataInicio ? (isoToDate(data.dataInicio as string) as Date) : null;
+    if (data.dataFim !== undefined)
+      entity.dataFim = data.dataFim ? (isoToDate(data.dataFim as string) as Date) : null;
+    if (data.status !== undefined) entity.status = data.status as EstagioTypeormEntity["status"];
+    if (data.dateCreated !== undefined)
+      entity.dateCreated = isoToDate(data.dateCreated as string) as Date;
+    if (data.dateUpdated !== undefined)
+      entity.dateUpdated = isoToDate(data.dateUpdated as string) as Date;
+    if (data.dateDeleted !== undefined)
+      entity.dateDeleted = data.dateDeleted
+        ? (isoToDate(data.dateDeleted as string) as Date)
+        : null;
+    return entity;
+  }
+
   static toOutputDto(entity: EstagioTypeormEntity): EstagioFindOneQueryResult {
     return {
       id: entity.id,
-      empresa: {
-        id: entity.empresa?.id ?? (entity as unknown as Record<string, string>).idEmpresaFk,
-      },
+      empresa: { id: entity.empresa.id },
       estagiario: entity.estagiario ? { id: entity.estagiario.id } : null,
       cargaHoraria: entity.cargaHoraria,
       dataInicio: dateToDateString(entity.dataInicio) as string | null,

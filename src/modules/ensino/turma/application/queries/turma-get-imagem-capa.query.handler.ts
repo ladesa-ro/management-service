@@ -36,7 +36,7 @@ export class TurmaGetImagemCapaQueryHandlerImpl implements ITurmaGetImagemCapaQu
     ensureExists(entity, Turma.entityName, id);
 
     return getEntityImagemStreamableFile(
-      entity as Record<string, any>,
+      entity as unknown as Record<string, unknown>,
       "imagemCapa",
       "Imagem de capa do Turma",
       id,

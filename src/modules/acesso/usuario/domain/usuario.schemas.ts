@@ -32,7 +32,7 @@ export const UsuarioSchema = z
     imagemCapa: z.unknown().nullable(),
     imagemPerfil: z.unknown().nullable(),
   })
-  .merge(datedSchema);
+  .extend(datedSchema.shape);
 
 export const UsuarioCreateSchema = createSchema((standard) =>
   z.object({

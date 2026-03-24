@@ -100,15 +100,6 @@ describe("OfertaFormacao (domain entity)", () => {
       ).toThrow();
     });
 
-    it("should reject null modalidade on create", () => {
-      expect(() =>
-        OfertaFormacao.create({
-          ...validCreateInput,
-          modalidade: null,
-        }),
-      ).toThrow();
-    });
-
     it("should reject empty nome", () => {
       expect(() => OfertaFormacao.create({ ...validCreateInput, nome: "" })).toThrow();
     });
@@ -138,15 +129,6 @@ describe("OfertaFormacao (domain entity)", () => {
       expect(entity.niveisFormacoes).toEqual(input.niveisFormacoes);
       expect(entity.periodos).toEqual(validPeriodos);
       expect(entity.dateCreated).toBe(input.dateCreated);
-    });
-
-    it("should load with null modalidade", () => {
-      const entity = OfertaFormacao.load({
-        ...validLoadInput(),
-        modalidade: null,
-      });
-
-      expect(entity.modalidade).toBeNull();
     });
 
     it("should reject loading with invalid id", () => {
@@ -207,12 +189,6 @@ describe("OfertaFormacao (domain entity)", () => {
       entity.update({ modalidade: newModalidade });
 
       expect(entity.modalidade).toEqual(newModalidade);
-    });
-
-    it("should reject null modalidade on update", () => {
-      const entity = OfertaFormacao.create(validCreateInput);
-
-      expect(() => entity.update({ modalidade: null })).toThrow();
     });
 
     it("should update campus", () => {

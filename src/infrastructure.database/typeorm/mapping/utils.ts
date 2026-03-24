@@ -43,3 +43,24 @@ export function dateToISONullable(date: Date | null): string | null {
 export function isoToDateNullable(iso: string | null): Date | null {
   return iso ? new Date(iso) : null;
 }
+
+/**
+ * Converte campos de data de uma entity TypeORM (Date) para formato query result (string).
+ * Útil para mapear relações carregadas sem cast manual.
+ */
+export function mapDatedEntity<
+  T extends { dateCreated: Date; dateUpdated: Date; dateDeleted: Date | null },
+>(
+  entity: T,
+): Omit<T, "dateCreated" | "dateUpdated" | "dateDeleted"> & {
+  dateCreated: string;
+  dateUpdated: string;
+  dateDeleted: string | null;
+} {
+  return {
+    ...entity,
+    dateCreated: entity.dateCreated.toISOString(),
+    dateUpdated: entity.dateUpdated.toISOString(),
+    dateDeleted: entity.dateDeleted?.toISOString() ?? null,
+  };
+}

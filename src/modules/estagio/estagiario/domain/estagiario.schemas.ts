@@ -6,7 +6,7 @@
  * os contratos de dados da entidade.
  */
 import { z } from "zod";
-import { createSchema } from "@/domain/abstractions";
+import { createSchema, ObjectIdUuidFactory } from "@/domain/abstractions";
 import { datedSchema, uuidSchema } from "@/shared/validation/schemas";
 import { EstagiarioFields } from "./estagiario.fields";
 
@@ -14,11 +14,11 @@ import { EstagiarioFields } from "./estagiario.fields";
 // Fragments de referência
 // ============================================================================
 
-export const EstagiarioPerfilRefSchema = createSchema(() => z.object({ id: uuidSchema }));
+export const EstagiarioPerfilRefSchema = ObjectIdUuidFactory;
 
-export const EstagiarioCursoRefSchema = createSchema(() => z.object({ id: uuidSchema }));
+export const EstagiarioCursoRefSchema = ObjectIdUuidFactory;
 
-export const EstagiarioTurmaRefSchema = createSchema(() => z.object({ id: uuidSchema }));
+export const EstagiarioTurmaRefSchema = ObjectIdUuidFactory;
 
 // ============================================================================
 // Schemas compostos
@@ -27,14 +27,14 @@ export const EstagiarioTurmaRefSchema = createSchema(() => z.object({ id: uuidSc
 export const EstagiarioSchema = z
   .object({
     id: uuidSchema,
-    perfil: z.object({ id: uuidSchema }),
-    curso: z.object({ id: uuidSchema }),
-    turma: z.object({ id: uuidSchema }),
+    perfil: ObjectIdUuidFactory.domain,
+    curso: ObjectIdUuidFactory.domain,
+    turma: ObjectIdUuidFactory.domain,
     telefone: z.string().min(1).max(15),
     emailInstitucional: z.string().nullable(),
     dataNascimento: z.string(),
   })
-  .merge(datedSchema);
+  .extend(datedSchema.shape);
 
 export const EstagiarioCreateSchema = createSchema((standard) =>
   z.object({

@@ -14,7 +14,7 @@ import { TurmaFields } from "./turma.fields";
 // Fragments de referência
 // ============================================================================
 
-export const TurmaCursoRefSchema = createSchema(() => z.object({ id: uuidSchema }));
+export const TurmaCursoRefSchema = ObjectIdUuidFactory;
 
 export const TurmaAmbientePadraoAulaRefSchema = createSchema((standard) =>
   ObjectIdUuidFactory.create(standard).nullable().optional(),
@@ -32,11 +32,11 @@ export const TurmaSchema = z
   .object({
     id: uuidSchema,
     periodo: TurmaFields.periodo.domainSchema,
-    curso: z.object({ id: uuidSchema }).passthrough(),
-    ambientePadraoAula: z.object({ id: uuidSchema }).nullable(),
-    imagemCapa: z.object({ id: uuidSchema }).nullable(),
+    curso: ObjectIdUuidFactory.domain.loose(),
+    ambientePadraoAula: ObjectIdUuidFactory.domain.nullable(),
+    imagemCapa: ObjectIdUuidFactory.domain.nullable(),
   })
-  .merge(datedSchema);
+  .extend(datedSchema.shape);
 
 export const TurmaCreateSchema = createSchema((standard) =>
   z.object({

@@ -27,10 +27,10 @@ export const BlocoSchema = z
     id: uuidSchema,
     nome: BlocoFields.nome.domainSchema,
     codigo: BlocoFields.codigo.domainSchema,
-    campus: z.object({ id: uuidSchema }).passthrough(),
-    imagemCapa: z.object({ id: uuidSchema }).passthrough().nullable(),
+    campus: ObjectIdUuidFactory.domain.loose(),
+    imagemCapa: ObjectIdUuidFactory.domain.loose().nullable(),
   })
-  .merge(datedSchema);
+  .extend(datedSchema.shape);
 
 export const BlocoCreateSchema = createSchema((standard) =>
   z.object({

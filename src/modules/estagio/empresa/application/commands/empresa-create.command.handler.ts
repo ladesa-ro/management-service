@@ -1,8 +1,9 @@
-import { InternalError, ResourceNotFoundError } from "@/application/errors";
+import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { EmpresaCreateCommand } from "@/modules/estagio/empresa/domain/commands/empresa-create.command";
 import { IEmpresaCreateCommandHandler } from "@/modules/estagio/empresa/domain/commands/empresa-create.command.handler.interface";
+import { Empresa } from "@/modules/estagio/empresa/domain/empresa";
 import type { EmpresaFindOneQueryResult } from "../../domain/queries";
 import { IEmpresaRepository } from "../../domain/repositories";
 
@@ -17,13 +18,16 @@ export class EmpresaCreateCommandHandlerImpl implements IEmpresaCreateCommandHan
     accessContext: IAccessContext | null,
     dto: EmpresaCreateCommand,
   ): Promise<EmpresaFindOneQueryResult> {
-    try {
-      return await this.repository.create(accessContext, dto);
-    } catch (error) {
-      if (error instanceof ResourceNotFoundError) {
-        throw error;
-      }
-      throw new InternalError("Erro ao criar empresa");
-    }
+    const empresa = Empresa.create(dto);
+
+    const { id } = await this.repository.create({
+      ...empresa,
+      endereco: { id: empresa.endereco.id },
+    });
+
+    const result = await this.repository.findById(accessContext, { id: id as string });
+    ensureExists(result, Empresa.entityName, id);
+
+    return result;
   }
 }

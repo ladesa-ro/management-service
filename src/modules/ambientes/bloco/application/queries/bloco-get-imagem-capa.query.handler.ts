@@ -36,7 +36,7 @@ export class BlocoGetImagemCapaQueryHandlerImpl implements IBlocoGetImagemCapaQu
     ensureExists(entity, Bloco.entityName, id);
 
     return getEntityImagemStreamableFile(
-      entity as Record<string, any>,
+      entity as unknown as Record<string, unknown>,
       "imagemCapa",
       "Imagem de capa do Bloco",
       id,

@@ -49,7 +49,7 @@ export const DateStringSchema = z
   .string()
   .refine((val) => !isNaN(new Date(val).getTime()), "data inválida");
 
-export const EstagioEmpresaRefSchema = createSchema(() => z.object({ id: uuidSchema }));
+export const EstagioEmpresaRefSchema = ObjectIdUuidFactory;
 
 export const EstagioEstagiarioRefSchema = ObjectIdUuidFactory;
 
@@ -60,15 +60,15 @@ export const EstagioEstagiarioRefSchema = ObjectIdUuidFactory;
 export const EstagioSchema = z
   .object({
     id: uuidSchema,
-    empresa: z.object({ id: uuidSchema }),
-    estagiario: z.object({ id: uuidSchema }).nullable(),
+    empresa: ObjectIdUuidFactory.domain,
+    estagiario: ObjectIdUuidFactory.domain.nullable(),
     cargaHoraria: z.number().int().min(1),
     dataInicio: z.string().nullable(),
     dataFim: z.string().nullable(),
     status: EstagioStatusSchema,
     horariosEstagio: z.array(HorarioEstagioSchema),
   })
-  .merge(datedSchema);
+  .extend(datedSchema.shape);
 
 export const EstagioCreateSchema = createSchema((standard) =>
   z

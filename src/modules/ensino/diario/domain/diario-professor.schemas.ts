@@ -6,7 +6,7 @@
  * os contratos de dados da entidade.
  */
 import { z } from "zod";
-import { createSchema } from "@/domain/abstractions";
+import { createSchema, ObjectIdUuidFactory } from "@/domain/abstractions";
 import { datedSchema, uuidSchema } from "@/shared/validation/schemas";
 import { DiarioProfessorFields } from "./diario-professor.fields";
 
@@ -14,9 +14,9 @@ import { DiarioProfessorFields } from "./diario-professor.fields";
 // Fragments de referência
 // ============================================================================
 
-export const DiarioProfessorDiarioRefSchema = createSchema(() => z.object({ id: uuidSchema }));
+export const DiarioProfessorDiarioRefSchema = ObjectIdUuidFactory;
 
-export const DiarioProfessorPerfilRefSchema = createSchema(() => z.object({ id: uuidSchema }));
+export const DiarioProfessorPerfilRefSchema = ObjectIdUuidFactory;
 
 // ============================================================================
 // Schemas compostos
@@ -26,10 +26,10 @@ export const DiarioProfessorSchema = z
   .object({
     id: uuidSchema,
     situacao: DiarioProfessorFields.situacao.domainSchema,
-    diario: z.object({ id: uuidSchema }).passthrough(),
-    perfil: z.object({ id: uuidSchema }).passthrough(),
+    diario: ObjectIdUuidFactory.domain.loose(),
+    perfil: ObjectIdUuidFactory.domain.loose(),
   })
-  .merge(datedSchema);
+  .extend(datedSchema.shape);
 
 export const DiarioProfessorCreateSchema = createSchema((standard) =>
   z.object({

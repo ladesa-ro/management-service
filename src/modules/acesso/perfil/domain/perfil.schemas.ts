@@ -6,7 +6,7 @@
  * os contratos de dados da entidade.
  */
 import { z } from "zod";
-import { createSchema } from "@/domain/abstractions";
+import { createSchema, ObjectIdUuidFactory } from "@/domain/abstractions";
 import { datedSchema, uuidSchema } from "@/shared/validation/schemas";
 import { PerfilFields } from "./perfil.fields";
 
@@ -14,9 +14,9 @@ import { PerfilFields } from "./perfil.fields";
 // Fragments de referência
 // ============================================================================
 
-export const PerfilCampusRefSchema = createSchema(() => z.object({ id: uuidSchema }));
+export const PerfilCampusRefSchema = ObjectIdUuidFactory;
 
-export const PerfilUsuarioRefSchema = createSchema(() => z.object({ id: uuidSchema }));
+export const PerfilUsuarioRefSchema = ObjectIdUuidFactory;
 
 // ============================================================================
 // Schemas compostos
@@ -27,10 +27,10 @@ export const PerfilSchema = z
     id: uuidSchema,
     ativo: PerfilFields.ativo.domainSchema,
     cargo: PerfilFields.cargo.domainSchema,
-    campus: z.object({ id: uuidSchema }),
-    usuario: z.object({ id: uuidSchema }),
+    campus: ObjectIdUuidFactory.domain,
+    usuario: ObjectIdUuidFactory.domain,
   })
-  .merge(datedSchema);
+  .extend(datedSchema.shape);
 
 export const PerfilCreateSchema = createSchema((standard) =>
   z.object({

@@ -8,7 +8,7 @@ import type { IStreamableFileResult } from "@/domain/abstractions/storage";
  * Reutilizável por qualquer handler que possua campos de imagem.
  */
 export async function getEntityImagemStreamableFile(
-  entity: Record<string, any>,
+  entity: Record<string, unknown>,
   fieldName: string,
   resourceLabel: string,
   entityId: string | number,
@@ -25,7 +25,7 @@ export async function getEntityImagemStreamableFile(
     ): Promise<IStreamableFileResult>;
   },
 ): Promise<IStreamableFileResult> {
-  const imagem = entity[fieldName];
+  const imagem = entity[fieldName] as { id: string } | null | undefined;
 
   if (imagem?.id) {
     const arquivoId = await getLatestArquivoIdHandler.execute(null, { imagemId: imagem.id });
@@ -53,7 +53,7 @@ export async function saveEntityImagemField(
       command: { file: Express.Multer.File },
     ): Promise<{ imagem: { id: string } }>;
   },
-  repository: { update(id: string | number, data: Record<string, any>): Promise<void> },
+  repository: { update(id: string | number, data: Record<string, unknown>): Promise<void> },
 ): Promise<boolean> {
   const { imagem } = await saveImagemCapaHandler.execute(null, { file });
 

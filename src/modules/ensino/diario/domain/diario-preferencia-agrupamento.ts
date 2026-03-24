@@ -56,15 +56,14 @@ export class DiarioPreferenciaAgrupamento implements IEntityBaseUuid {
       dados,
     );
 
-    const instance = Object.create(
-      DiarioPreferenciaAgrupamento.prototype,
-    ) as DiarioPreferenciaAgrupamento;
+    const instance = new DiarioPreferenciaAgrupamento();
 
     instance.id = generateUuidV7();
     instance.dataInicio = parsed.dataInicio;
     instance.dataFim = parsed.dataFim ?? null;
     instance.diaSemanaIso = parsed.diaSemanaIso;
     instance.aulasSeguidas = parsed.aulasSeguidas;
+    instance.diario = parsed.diario as unknown as IDiario;
     instance.dateCreated = getNowISO();
     instance.dateUpdated = getNowISO();
     instance.dateDeleted = null;
@@ -72,19 +71,24 @@ export class DiarioPreferenciaAgrupamento implements IEntityBaseUuid {
     return instance;
   }
 
-  static load(dados: Record<string, any>): DiarioPreferenciaAgrupamento {
-    const instance = Object.create(
-      DiarioPreferenciaAgrupamento.prototype,
-    ) as DiarioPreferenciaAgrupamento;
-    if (dados.id !== undefined) instance.id = dados.id;
-    if (dados.dataInicio !== undefined) instance.dataInicio = dados.dataInicio;
-    if (dados.dataFim !== undefined) instance.dataFim = dados.dataFim;
-    if (dados.diaSemanaIso !== undefined) instance.diaSemanaIso = dados.diaSemanaIso;
-    if (dados.aulasSeguidas !== undefined) instance.aulasSeguidas = dados.aulasSeguidas;
-    if (dados.diario !== undefined) instance.diario = dados.diario;
-    if (dados.dateCreated !== undefined) instance.dateCreated = dados.dateCreated;
-    if (dados.dateUpdated !== undefined) instance.dateUpdated = dados.dateUpdated;
-    if (dados.dateDeleted !== undefined) instance.dateDeleted = dados.dateDeleted;
+  static load(dados: unknown): DiarioPreferenciaAgrupamento {
+    const parsed = zodValidate(
+      DiarioPreferenciaAgrupamento.entityName,
+      DiarioPreferenciaAgrupamentoSchema,
+      dados,
+    );
+
+    const instance = new DiarioPreferenciaAgrupamento();
+
+    instance.id = parsed.id;
+    instance.dataInicio = parsed.dataInicio;
+    instance.dataFim = parsed.dataFim;
+    instance.diaSemanaIso = parsed.diaSemanaIso;
+    instance.aulasSeguidas = parsed.aulasSeguidas;
+    instance.diario = parsed.diario as unknown as IDiario;
+    instance.dateCreated = parsed.dateCreated;
+    instance.dateUpdated = parsed.dateUpdated;
+    instance.dateDeleted = parsed.dateDeleted;
     return instance;
   }
 

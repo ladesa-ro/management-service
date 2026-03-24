@@ -14,9 +14,9 @@ import { CursoFields } from "./curso.fields";
 // Fragments de referência
 // ============================================================================
 
-export const CursoCampusRefSchema = createSchema(() => z.object({ id: uuidSchema }));
+export const CursoCampusRefSchema = ObjectIdUuidFactory;
 
-export const CursoOfertaFormacaoRefSchema = createSchema(() => z.object({ id: uuidSchema }));
+export const CursoOfertaFormacaoRefSchema = ObjectIdUuidFactory;
 
 export const CursoImagemCapaRefSchema = createSchema((standard) =>
   ObjectIdUuidFactory.create(standard).nullable().optional(),
@@ -31,11 +31,11 @@ export const CursoSchema = z
     id: uuidSchema,
     nome: CursoFields.nome.domainSchema,
     nomeAbreviado: CursoFields.nomeAbreviado.domainSchema,
-    campus: z.object({ id: uuidSchema }).passthrough(),
-    ofertaFormacao: z.object({ id: uuidSchema }).passthrough(),
-    imagemCapa: z.object({ id: uuidSchema }).nullable(),
+    campus: ObjectIdUuidFactory.domain.loose(),
+    ofertaFormacao: ObjectIdUuidFactory.domain.loose(),
+    imagemCapa: ObjectIdUuidFactory.domain.nullable(),
   })
-  .merge(datedSchema);
+  .extend(datedSchema.shape);
 
 export const CursoCreateSchema = createSchema((standard) =>
   z.object({

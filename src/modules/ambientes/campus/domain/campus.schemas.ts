@@ -6,7 +6,7 @@
  * os contratos de dados da entidade.
  */
 import { z } from "zod";
-import { createSchema, safeInt } from "@/domain/abstractions";
+import { createSchema, ObjectIdIntFactory, safeInt } from "@/domain/abstractions";
 import { datedSchema, uuidSchema } from "@/shared/validation/schemas";
 import { CampusFields } from "./campus.fields";
 
@@ -49,11 +49,11 @@ export const CampusSchema = z
         bairro: z.string(),
         complemento: z.string().nullable(),
         pontoReferencia: z.string().nullable(),
-        cidade: z.object({ id: z.number().int() }).passthrough(),
+        cidade: ObjectIdIntFactory.domain.loose(),
       })
-      .passthrough(),
+      .loose(),
   })
-  .merge(datedSchema);
+  .extend(datedSchema.shape);
 
 export const CampusCreateSchema = createSchema((standard) =>
   z.object({

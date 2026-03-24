@@ -36,7 +36,7 @@ export class UsuarioGetImagemCapaQueryHandlerImpl implements IUsuarioGetImagemCa
     ensureExists(usuario, Usuario.entityName, id);
 
     return getEntityImagemStreamableFile(
-      usuario,
+      usuario as unknown as Record<string, unknown>,
       "imagemCapa",
       "Imagem de capa do Usuario",
       id,

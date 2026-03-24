@@ -7,6 +7,7 @@ import { zodValidate } from "@/shared/validation/index";
 import { getNowISO } from "@/utils/date";
 import {
   CalendarioLetivoCreateSchema,
+  CalendarioLetivoSchema,
   CalendarioLetivoUpdateSchema,
 } from "./calendario-letivo.schemas";
 
@@ -57,7 +58,10 @@ export class CalendarioLetivo implements IEntityBaseUuid {
     instance.id = generateUuidV7();
     instance.nome = parsed.nome;
     instance.ano = parsed.ano;
-    instance.ofertaFormacao = null;
+    instance.campus = parsed.campus as unknown as ICampus;
+    instance.ofertaFormacao = parsed.ofertaFormacao
+      ? (parsed.ofertaFormacao as unknown as IOfertaFormacao)
+      : null;
     instance.dateCreated = getNowISO();
     instance.dateUpdated = getNowISO();
     instance.dateDeleted = null;
@@ -65,16 +69,19 @@ export class CalendarioLetivo implements IEntityBaseUuid {
     return instance;
   }
 
-  static load(dados: Record<string, any>): CalendarioLetivo {
-    const instance = Object.create(CalendarioLetivo.prototype) as CalendarioLetivo;
-    if (dados.id !== undefined) instance.id = dados.id;
-    if (dados.nome !== undefined) instance.nome = dados.nome;
-    if (dados.ano !== undefined) instance.ano = dados.ano;
-    if (dados.campus !== undefined) instance.campus = dados.campus;
-    if (dados.ofertaFormacao !== undefined) instance.ofertaFormacao = dados.ofertaFormacao;
-    if (dados.dateCreated !== undefined) instance.dateCreated = dados.dateCreated;
-    if (dados.dateUpdated !== undefined) instance.dateUpdated = dados.dateUpdated;
-    if (dados.dateDeleted !== undefined) instance.dateDeleted = dados.dateDeleted;
+  static load(dados: unknown): CalendarioLetivo {
+    const parsed = zodValidate(CalendarioLetivo.entityName, CalendarioLetivoSchema, dados);
+
+    const instance = new CalendarioLetivo();
+
+    instance.id = parsed.id;
+    instance.nome = parsed.nome;
+    instance.ano = parsed.ano;
+    instance.campus = parsed.campus as unknown as ICampus;
+    instance.ofertaFormacao = parsed.ofertaFormacao as unknown as IOfertaFormacao | null;
+    instance.dateCreated = parsed.dateCreated;
+    instance.dateUpdated = parsed.dateUpdated;
+    instance.dateDeleted = parsed.dateDeleted;
     return instance;
   }
 

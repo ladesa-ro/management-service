@@ -28,9 +28,9 @@ export const DisciplinaSchema = z
     nome: DisciplinaFields.nome.domainSchema,
     nomeAbreviado: DisciplinaFields.nomeAbreviado.domainSchema,
     cargaHoraria: DisciplinaFields.cargaHoraria.domainSchema,
-    imagemCapa: z.object({ id: uuidSchema }).nullable(),
+    imagemCapa: ObjectIdUuidFactory.domain.nullable(),
   })
-  .merge(datedSchema);
+  .extend(datedSchema.shape);
 
 export const DisciplinaCreateSchema = createSchema((standard) =>
   z.object({

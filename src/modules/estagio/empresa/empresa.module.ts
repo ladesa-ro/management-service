@@ -1,4 +1,5 @@
 import { Module } from "@nestjs/common";
+import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
 import {
   EmpresaCreateCommandHandlerImpl,
   EmpresaDeleteCommandHandlerImpl,
@@ -26,6 +27,7 @@ import { EmpresaGraphqlResolver } from "./presentation.graphql";
   imports: [],
   controllers: [EmpresaRestController],
   providers: [
+    NestJsPaginateAdapter,
     EmpresaGraphqlResolver,
     {
       provide: IEmpresaRepository,

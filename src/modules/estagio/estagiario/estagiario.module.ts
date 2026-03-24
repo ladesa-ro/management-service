@@ -1,4 +1,5 @@
 import { Module } from "@nestjs/common";
+import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
 import {
   EstagiarioCreateCommandHandlerImpl,
   EstagiarioDeleteCommandHandlerImpl,
@@ -25,6 +26,7 @@ import { EstagiarioRestController } from "@/modules/estagio/estagiario/presentat
   imports: [],
   controllers: [EstagiarioRestController],
   providers: [
+    NestJsPaginateAdapter,
     {
       provide: IEstagiarioRepository,
       useClass: EstagiarioTypeOrmRepositoryAdapter,

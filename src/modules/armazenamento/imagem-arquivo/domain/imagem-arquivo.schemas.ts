@@ -6,7 +6,7 @@
  * os contratos de dados da entidade.
  */
 import { z } from "zod";
-import { createSchema } from "@/domain/abstractions";
+import { createSchema, ObjectIdUuidFactory } from "@/domain/abstractions";
 import { datedSchema, uuidSchema } from "@/shared/validation/schemas";
 import { ImagemArquivoFields } from "./imagem-arquivo.fields";
 
@@ -14,9 +14,9 @@ import { ImagemArquivoFields } from "./imagem-arquivo.fields";
 // Fragments de referência
 // ============================================================================
 
-export const ImagemArquivoImagemRefSchema = createSchema(() => z.object({ id: uuidSchema }));
+export const ImagemArquivoImagemRefSchema = ObjectIdUuidFactory;
 
-export const ImagemArquivoArquivoRefSchema = createSchema(() => z.object({ id: uuidSchema }));
+export const ImagemArquivoArquivoRefSchema = ObjectIdUuidFactory;
 
 // ============================================================================
 // Schemas compostos
@@ -29,10 +29,10 @@ export const ImagemArquivoSchema = z
     altura: ImagemArquivoFields.altura.domainSchema,
     formato: ImagemArquivoFields.formato.domainSchema,
     mimeType: ImagemArquivoFields.mimeType.domainSchema,
-    imagem: z.object({ id: uuidSchema }),
-    arquivo: z.object({ id: uuidSchema }),
+    imagem: ObjectIdUuidFactory.domain,
+    arquivo: ObjectIdUuidFactory.domain,
   })
-  .merge(datedSchema);
+  .extend(datedSchema.shape);
 
 export const ImagemArquivoCreateSchema = createSchema((standard) =>
   z.object({

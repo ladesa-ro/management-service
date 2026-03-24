@@ -6,7 +6,7 @@
  * os contratos de dados da entidade.
  */
 import { z } from "zod";
-import { createSchema, safeInt } from "@/domain/abstractions";
+import { createSchema, ObjectIdIntFactory, safeInt } from "@/domain/abstractions";
 import { datedSchema, uuidSchema } from "@/shared/validation/schemas";
 
 // ============================================================================
@@ -54,9 +54,9 @@ export const EnderecoSchema = z
     bairro: EnderecoBairroSchema.domain,
     complemento: z.string().nullable(),
     pontoReferencia: z.string().nullable(),
-    cidade: z.object({ id: z.number().int() }),
+    cidade: ObjectIdIntFactory.domain,
   })
-  .merge(datedSchema);
+  .extend(datedSchema.shape);
 
 export const EnderecoCreateSchema = createSchema((standard) =>
   z.object({

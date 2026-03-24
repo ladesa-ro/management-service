@@ -1,17 +1,18 @@
+import { FilterOperator } from "nestjs-paginate";
 import { IsNull } from "typeorm";
-import { ensureExists } from "@/application/errors";
-import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
+import { paginateConfig } from "@/infrastructure.database/pagination/config/paginate-config";
+import type { ITypeOrmPaginationConfig } from "@/infrastructure.database/pagination/interfaces/pagination-config.types";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
-import { Empresa } from "@/modules/estagio/empresa/domain/empresa";
-import { EmpresaTypeormEntity } from "@/modules/estagio/empresa/infrastructure.database/typeorm/empresa.typeorm.entity";
-import { Estagiario } from "@/modules/estagio/estagiario/domain/estagiario";
-import { EstagiarioTypeormEntity } from "@/modules/estagio/estagiario/infrastructure.database/typeorm/estagiario.typeorm.entity";
-import type {
-  EstagioCreateCommand,
-  EstagioUpdateCommand,
-} from "@/modules/estagio/estagio/domain/commands";
-import { Estagio, EstagioStatus } from "@/modules/estagio/estagio/domain/estagio";
+import {
+  typeormCreate,
+  typeormFindAll,
+  typeormFindById,
+  typeormSoftDeleteById,
+  typeormUpdate,
+} from "@/infrastructure.database/typeorm/helpers/typeorm-repository-helpers";
+import type { IHorarioEstagio } from "@/modules/estagio/estagio/domain/estagio";
 import type {
   EstagioFindOneQuery,
   EstagioFindOneQueryResult,
@@ -22,232 +23,92 @@ import type { IEstagioRepository } from "@/modules/estagio/estagio/domain/reposi
 import { getNow } from "@/utils/date";
 import { EstagioMapper, EstagioTypeormEntity, HorarioEstagioTypeormEntity } from "./typeorm";
 
+const config = {
+  alias: "estagio",
+  hasSoftDelete: true,
+} as const;
+
+const estagioPaginateConfig: ITypeOrmPaginationConfig<EstagioTypeormEntity> = {
+  ...paginateConfig,
+  relations: {
+    empresa: true,
+    estagiario: true,
+    horariosEstagio: true,
+  },
+  sortableColumns: ["status", "cargaHoraria", "dataInicio", "dataFim", "dateCreated"],
+  searchableColumns: ["status"],
+  defaultSortBy: [["dateCreated", "DESC"]],
+  filterableColumns: {
+    "empresa.id": [FilterOperator.EQ],
+    "estagiario.id": [FilterOperator.EQ],
+    status: [FilterOperator.EQ],
+  },
+};
+
 @DeclareImplementation()
 export class EstagioTypeOrmRepositoryAdapter implements IEstagioRepository {
   constructor(
     @DeclareDependency(IAppTypeormConnection)
     private readonly appTypeormConnection: IAppTypeormConnection,
+    private readonly paginationAdapter: NestJsPaginateAdapter,
   ) {}
 
-  private get repository() {
-    return this.appTypeormConnection.getRepository(EstagioTypeormEntity);
+  findAll(accessContext: unknown, dto: EstagioListQuery | null = null) {
+    return typeormFindAll<EstagioTypeormEntity, EstagioListQuery, EstagioListQueryResult>(
+      this.appTypeormConnection,
+      EstagioTypeormEntity,
+      { ...config, paginateConfig: estagioPaginateConfig },
+      this.paginationAdapter,
+      dto,
+      (entity) => EstagioMapper.toOutputDto(entity),
+    );
   }
 
-  private get horarioRepository() {
-    return this.appTypeormConnection.getRepository(HorarioEstagioTypeormEntity);
+  findById(accessContext: unknown, dto: EstagioFindOneQuery) {
+    return typeormFindById<EstagioTypeormEntity, EstagioFindOneQuery, EstagioFindOneQueryResult>(
+      this.appTypeormConnection,
+      EstagioTypeormEntity,
+      { ...config, paginateConfig: estagioPaginateConfig },
+      dto,
+      (entity) => EstagioMapper.toOutputDto(entity),
+    );
   }
 
-  // cross-module: uses TypeORM directly for existence check (EmpresaTypeormEntity)
-  private get empresaRepository() {
-    return this.appTypeormConnection.getRepository(EmpresaTypeormEntity);
+  findByIdSimple(accessContext: unknown, id: string) {
+    return this.findById(accessContext, { id } as EstagioFindOneQuery);
   }
 
-  // cross-module: uses TypeORM directly for existence check (EstagiarioTypeormEntity)
-  private get estagiarioRepository() {
-    return this.appTypeormConnection.getRepository(EstagiarioTypeormEntity);
+  create(data: Record<string, unknown>) {
+    const entityData = EstagioMapper.toPersistenceFromRecord(data) as Record<string, unknown>;
+    return typeormCreate(this.appTypeormConnection, EstagioTypeormEntity, entityData);
   }
 
-  async findAll(
-    accessContext: IAccessContext | null,
-    dto: EstagioListQuery | null = null,
-  ): Promise<EstagioListQueryResult> {
-    const page = dto?.page || 1;
-    const limit = dto?.limit || 10;
-    const skip = (page - 1) * limit;
-
-    const query = this.repository
-      .createQueryBuilder("estagio")
-      .leftJoinAndSelect("estagio.empresa", "empresa")
-      .leftJoinAndSelect("estagio.estagiario", "estagiario")
-      .leftJoinAndSelect(
-        "estagio.horariosEstagio",
-        "horarioEstagio",
-        "horarioEstagio.dateDeleted IS NULL",
-      )
-      .where("estagio.dateDeleted IS NULL");
-
-    if (dto?.search) {
-      query.andWhere("CAST(estagio.status AS TEXT) ILIKE :search", {
-        search: `%${dto.search}%`,
-      });
-    }
-
-    if (
-      dto?.filterEmpresaId &&
-      Array.isArray(dto.filterEmpresaId) &&
-      dto.filterEmpresaId.length > 0
-    ) {
-      const validIds = dto.filterEmpresaId.filter((id) => id && id.trim());
-      if (validIds.length > 0) {
-        query.andWhere("empresa.id IN (:...idEmpresas)", {
-          idEmpresas: validIds,
-        });
-      }
-    }
-
-    if (
-      dto?.filterEstagiarioId &&
-      Array.isArray(dto.filterEstagiarioId) &&
-      dto.filterEstagiarioId.length > 0
-    ) {
-      const validIds = dto.filterEstagiarioId.filter((id) => id && id.trim());
-      if (validIds.length > 0) {
-        query.andWhere("estagiario.id IN (:...idEstagiarios)", {
-          idEstagiarios: validIds,
-        });
-      }
-    }
-
-    if (dto?.filterStatus && Array.isArray(dto.filterStatus) && dto.filterStatus.length > 0) {
-      const validStatus = dto.filterStatus.filter((status) =>
-        Object.values(EstagioStatus).includes(status),
-      );
-      if (validStatus.length > 0) {
-        query.andWhere("estagio.status IN (:...status)", {
-          status: validStatus,
-        });
-      }
-    }
-
-    const [data, total] = await query.skip(skip).take(limit).getManyAndCount();
-
-    return {
-      data: data.map((entity) => EstagioMapper.toOutputDto(entity)),
-      total,
-      page,
-      limit,
-    };
+  update(id: string | number, data: Record<string, unknown>) {
+    const entityData = EstagioMapper.toPersistenceFromRecord(data) as Record<string, unknown>;
+    return typeormUpdate(this.appTypeormConnection, EstagioTypeormEntity, id, entityData);
   }
 
-  async findById(
-    accessContext: IAccessContext | null,
-    dto: EstagioFindOneQuery,
-  ): Promise<EstagioFindOneQueryResult | null> {
-    const entity = await this.repository.findOne({
-      where: { id: dto.id, dateDeleted: IsNull() },
-      relations: { empresa: true, estagiario: true, horariosEstagio: true },
-    });
-
-    if (!entity) {
-      return null;
-    }
-
-    return EstagioMapper.toOutputDto(entity);
+  softDeleteById(id: string) {
+    return typeormSoftDeleteById(this.appTypeormConnection, EstagioTypeormEntity, config.alias, id);
   }
 
-  async create(
-    accessContext: IAccessContext | null,
-    dto: EstagioCreateCommand,
-  ): Promise<EstagioFindOneQueryResult> {
-    const empresa = await this.empresaRepository.findOne({
-      where: { id: dto.empresa.id, dateDeleted: IsNull() },
-    });
+  async replaceHorariosEstagio(estagioId: string, horarios: IHorarioEstagio[]): Promise<void> {
+    await this.softDeleteHorariosEstagio(estagioId);
 
-    ensureExists(empresa, Empresa.entityName, dto.empresa.id);
+    if (horarios.length === 0) return;
 
-    if (dto.estagiario) {
-      const estagiario = await this.estagiarioRepository.findOne({
-        where: { id: dto.estagiario.id, dateDeleted: IsNull() },
-      });
-
-      ensureExists(estagiario, Estagiario.entityName, dto.estagiario.id);
-    }
-
-    const estagio = Estagio.create(dto);
-
-    const entity = EstagioMapper.toPersistence(estagio);
-    const saved = await this.repository.save(entity);
-
-    if (estagio.horariosEstagio.length > 0) {
-      const horarios = estagio.horariosEstagio.map((horario) =>
-        EstagioMapper.toHorarioPersistence(saved.id, horario),
-      );
-      await this.horarioRepository.save(horarios);
-    }
-
-    const outputEntity = await this.repository.findOne({
-      where: { id: saved.id, dateDeleted: IsNull() },
-      relations: { empresa: true, estagiario: true, horariosEstagio: true },
-    });
-
-    ensureExists(outputEntity, Estagio.entityName, saved.id);
-
-    return EstagioMapper.toOutputDto(outputEntity);
+    const repo = this.appTypeormConnection.getRepository(HorarioEstagioTypeormEntity);
+    const entities = horarios.map((horario) =>
+      EstagioMapper.toHorarioPersistence(estagioId, horario),
+    );
+    await repo.save(entities);
   }
 
-  async update(
-    accessContext: IAccessContext | null,
-    id: string,
-    dto: EstagioUpdateCommand,
-  ): Promise<EstagioFindOneQueryResult> {
-    const entity = await this.repository.findOne({
-      where: { id, dateDeleted: IsNull() },
-      relations: { empresa: true, estagiario: true, horariosEstagio: true },
-    });
-
-    ensureExists(entity, Estagio.entityName, id);
-
-    const estagio = EstagioMapper.toDomain(entity);
-
-    if (dto.empresa) {
-      const empresa = await this.empresaRepository.findOne({
-        where: { id: dto.empresa.id, dateDeleted: IsNull() },
-      });
-
-      ensureExists(empresa, Empresa.entityName, dto.empresa.id);
-    }
-
-    if (dto.estagiario) {
-      const estagiario = await this.estagiarioRepository.findOne({
-        where: { id: dto.estagiario.id, dateDeleted: IsNull() },
-      });
-
-      ensureExists(estagiario, Estagiario.entityName, dto.estagiario.id);
-    }
-
-    estagio.update(dto);
-
-    const updated = EstagioMapper.toPersistence(estagio);
-    await this.repository.save(updated);
-
-    if (dto.horariosEstagio !== undefined) {
-      const now = getNow();
-      await this.horarioRepository.update(
-        { estagio: { id }, dateDeleted: IsNull() },
-        { dateDeleted: now, dateUpdated: now },
-      );
-
-      if (dto.horariosEstagio.length > 0) {
-        const horarios = dto.horariosEstagio.map((horario) =>
-          EstagioMapper.toHorarioPersistence(id, horario),
-        );
-        await this.horarioRepository.save(horarios);
-      }
-    }
-
-    const outputEntity = await this.repository.findOne({
-      where: { id, dateDeleted: IsNull() },
-      relations: { empresa: true, estagiario: true, horariosEstagio: true },
-    });
-
-    ensureExists(outputEntity, Estagio.entityName, id);
-
-    return EstagioMapper.toOutputDto(outputEntity);
-  }
-
-  async delete(accessContext: IAccessContext | null, id: string): Promise<void> {
-    const entity = await this.repository.findOne({
-      where: { id, dateDeleted: IsNull() },
-    });
-
-    ensureExists(entity, Estagio.entityName, id);
-
+  async softDeleteHorariosEstagio(estagioId: string): Promise<void> {
+    const repo = this.appTypeormConnection.getRepository(HorarioEstagioTypeormEntity);
     const now = getNow();
-    entity.dateDeleted = now;
-    await this.repository.save(entity);
-
-    await this.horarioRepository.update(
-      { estagio: { id }, dateDeleted: IsNull() },
+    await repo.update(
+      { estagio: { id: estagioId }, dateDeleted: IsNull() },
       { dateDeleted: now, dateUpdated: now },
     );
   }

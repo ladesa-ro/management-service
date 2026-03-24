@@ -6,7 +6,7 @@
  * os contratos de dados da entidade.
  */
 import { z } from "zod";
-import { createSchema } from "@/domain/abstractions";
+import { createSchema, ObjectIdUuidFactory } from "@/domain/abstractions";
 import { datedSchema, uuidSchema } from "@/shared/validation/schemas";
 import { DiarioPreferenciaAgrupamentoFields } from "./diario-preferencia-agrupamento.fields";
 
@@ -14,9 +14,7 @@ import { DiarioPreferenciaAgrupamentoFields } from "./diario-preferencia-agrupam
 // Fragments de referência
 // ============================================================================
 
-export const DiarioPreferenciaAgrupamentoDiarioRefSchema = createSchema(() =>
-  z.object({ id: uuidSchema }),
-);
+export const DiarioPreferenciaAgrupamentoDiarioRefSchema = ObjectIdUuidFactory;
 
 // ============================================================================
 // Schemas compostos
@@ -29,9 +27,9 @@ export const DiarioPreferenciaAgrupamentoSchema = z
     dataFim: z.string().nullable(),
     diaSemanaIso: DiarioPreferenciaAgrupamentoFields.diaSemanaIso.domainSchema,
     aulasSeguidas: DiarioPreferenciaAgrupamentoFields.aulasSeguidas.domainSchema,
-    diario: z.object({ id: uuidSchema }).passthrough(),
+    diario: ObjectIdUuidFactory.domain.loose(),
   })
-  .merge(datedSchema);
+  .extend(datedSchema.shape);
 
 export const DiarioPreferenciaAgrupamentoCreateSchema = createSchema((standard) =>
   z.object({

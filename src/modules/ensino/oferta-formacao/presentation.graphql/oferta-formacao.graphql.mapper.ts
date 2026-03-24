@@ -98,6 +98,7 @@ export class OfertaFormacaoGraphqlMapper {
     dto.id = output.id;
     dto.nome = output.nome;
     dto.slug = output.slug;
+    dto.duracaoPeriodoEmMeses = output.duracaoPeriodoEmMeses;
     dto.modalidade = ModalidadeGraphqlMapper.toFindOneOutputDto(output.modalidade);
     dto.campus = CampusGraphqlMapper.toFindOneOutputDto(output.campus);
     dto.niveisFormacoes = (output.niveisFormacoes ?? []).map((nf) =>

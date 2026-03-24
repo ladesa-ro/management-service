@@ -6,7 +6,7 @@
  * os contratos de dados da entidade.
  */
 import { z } from "zod";
-import { createSchema } from "@/domain/abstractions";
+import { createSchema, ObjectIdUuidFactory } from "@/domain/abstractions";
 import { datedSchema, uuidSchema } from "@/shared/validation/schemas";
 import { OfertaFormacaoFields } from "./oferta-formacao.fields";
 
@@ -14,13 +14,11 @@ import { OfertaFormacaoFields } from "./oferta-formacao.fields";
 // Fragments de referência
 // ============================================================================
 
-export const OfertaFormacaoModalidadeRefSchema = createSchema(() => z.object({ id: uuidSchema }));
+export const OfertaFormacaoModalidadeRefSchema = ObjectIdUuidFactory;
 
-export const OfertaFormacaoCampusRefSchema = createSchema(() => z.object({ id: uuidSchema }));
+export const OfertaFormacaoCampusRefSchema = ObjectIdUuidFactory;
 
-export const OfertaFormacaoNivelFormacaoRefSchema = createSchema(() =>
-  z.object({ id: uuidSchema }),
-);
+export const OfertaFormacaoNivelFormacaoRefSchema = ObjectIdUuidFactory;
 
 // ============================================================================
 // Schemas de periodo/etapa (value objects do aggregate)
@@ -33,7 +31,7 @@ const ofertaFormacaoPeriodoEtapaSchema = z.object({
 
 const ofertaFormacaoPeriodoSchema = z.object({
   numeroPeriodo: z.number().int().positive(),
-  etapas: z.array(ofertaFormacaoPeriodoEtapaSchema.passthrough()).min(1),
+  etapas: z.array(ofertaFormacaoPeriodoEtapaSchema.loose()).min(1),
 });
 
 // ============================================================================
@@ -55,17 +53,17 @@ export const OfertaFormacaoSchema = z
     nome: OfertaFormacaoFields.nome.domainSchema,
     slug: OfertaFormacaoFields.slug.domainSchema,
     duracaoPeriodoEmMeses: OfertaFormacaoFields.duracaoPeriodoEmMeses.domainSchema,
-    modalidade: z.object({ id: uuidSchema }).passthrough().nullable(),
-    campus: z.object({ id: uuidSchema }).passthrough(),
+    modalidade: ObjectIdUuidFactory.domain.loose(),
+    campus: ObjectIdUuidFactory.domain.loose(),
     niveisFormacoes: z
-      .array(z.object({ id: uuidSchema }).passthrough())
+      .array(ObjectIdUuidFactory.domain.loose())
       .min(1)
       .refine(niveisFormacoesSemDuplicatas, {
         message: "niveisFormacoes não pode conter IDs duplicados",
       }),
-    periodos: z.array(ofertaFormacaoPeriodoSchema.passthrough()),
+    periodos: z.array(ofertaFormacaoPeriodoSchema.loose()),
   })
-  .merge(datedSchema);
+  .extend(datedSchema.shape);
 
 export const OfertaFormacaoCreateSchema = createSchema((standard) =>
   z.object({

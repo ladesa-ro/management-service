@@ -20,7 +20,7 @@ export const ModalidadeSchema = z
     nome: ModalidadeFields.nome.domainSchema,
     slug: ModalidadeFields.slug.domainSchema,
   })
-  .merge(datedSchema);
+  .extend(datedSchema.shape);
 
 export const ModalidadeCreateSchema = createSchema((standard) =>
   z.object({

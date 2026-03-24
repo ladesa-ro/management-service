@@ -1,40 +1,19 @@
-import type { IAccessContext } from "@/domain/abstractions";
-import type { EmpresaCreateCommand, EmpresaUpdateCommand } from "../commands";
 import type {
-  EmpresaFindOneQuery,
-  EmpresaFindOneQueryResult,
-  EmpresaListQuery,
-  EmpresaListQueryResult,
-} from "../queries";
-/**
- * Symbol para injetar a porta de repositório
- */
+  IRepositoryCreate,
+  IRepositoryFindAll,
+  IRepositoryFindById,
+  IRepositoryFindByIdSimple,
+  IRepositorySoftDelete,
+  IRepositoryUpdate,
+} from "@/domain/abstractions";
+import type { IEmpresa } from "../empresa";
+import type { EmpresaFindOneQueryResult, EmpresaListQueryResult } from "../queries";
+
 export const IEmpresaRepository = Symbol("IEmpresaRepository");
 
-/**
- * Interface da porta de repositório
- */
-export interface IEmpresaRepository {
-  findAll(
-    accessContext: IAccessContext | null,
-    dto: EmpresaListQuery | null,
-  ): Promise<EmpresaListQueryResult>;
-
-  findById(
-    accessContext: IAccessContext | null,
-    dto: EmpresaFindOneQuery,
-  ): Promise<EmpresaFindOneQueryResult | null>;
-
-  create(
-    accessContext: IAccessContext | null,
-    dto: EmpresaCreateCommand,
-  ): Promise<EmpresaFindOneQueryResult>;
-
-  update(
-    accessContext: IAccessContext | null,
-    id: string,
-    dto: EmpresaUpdateCommand,
-  ): Promise<EmpresaFindOneQueryResult>;
-
-  delete(accessContext: IAccessContext | null, id: string): Promise<void>;
-}
+export type IEmpresaRepository = IRepositoryFindAll<EmpresaListQueryResult> &
+  IRepositoryFindById<EmpresaFindOneQueryResult> &
+  IRepositoryFindByIdSimple<EmpresaFindOneQueryResult> &
+  IRepositoryCreate<IEmpresa> &
+  IRepositoryUpdate<IEmpresa> &
+  IRepositorySoftDelete;

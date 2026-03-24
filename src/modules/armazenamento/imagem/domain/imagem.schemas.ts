@@ -19,7 +19,7 @@ export const ImagemSchema = z
     id: uuidSchema,
     descricao: z.string().nullable(),
   })
-  .merge(datedSchema);
+  .extend(datedSchema.shape);
 
 export const ImagemCreateSchema = createSchema((standard) =>
   z.object({

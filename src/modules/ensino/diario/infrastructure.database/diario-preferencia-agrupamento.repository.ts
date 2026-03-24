@@ -111,11 +111,11 @@ export class DiarioPreferenciaAgrupamentoTypeOrmRepositoryAdapter
     return this.findById(accessContext, { id } as DiarioPreferenciaAgrupamentoFindOneQuery);
   }
 
-  create(data: Record<string, any>) {
+  create(data: Record<string, unknown>) {
     return typeormCreate(this.appTypeormConnection, DiarioPreferenciaAgrupamentoEntity, data);
   }
 
-  update(id: string | number, data: Record<string, any>) {
+  update(id: string | number, data: Record<string, unknown>) {
     return typeormUpdate(this.appTypeormConnection, DiarioPreferenciaAgrupamentoEntity, id, data);
   }
 

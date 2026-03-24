@@ -7,6 +7,7 @@ import { zodValidate } from "@/shared/validation/index";
 import { getNowISO } from "@/utils/date";
 import {
   DiarioProfessorCreateSchema,
+  DiarioProfessorSchema,
   DiarioProfessorUpdateSchema,
 } from "./diario-professor.schemas";
 
@@ -52,6 +53,8 @@ export class DiarioProfessor implements IEntityBaseUuid {
 
     instance.id = generateUuidV7();
     instance.situacao = parsed.situacao;
+    instance.diario = parsed.diario as unknown as IDiario;
+    instance.perfil = parsed.perfil as unknown as IPerfil;
     instance.dateCreated = getNowISO();
     instance.dateUpdated = getNowISO();
     instance.dateDeleted = null;
@@ -59,15 +62,18 @@ export class DiarioProfessor implements IEntityBaseUuid {
     return instance;
   }
 
-  static load(dados: Record<string, any>): DiarioProfessor {
-    const instance = Object.create(DiarioProfessor.prototype) as DiarioProfessor;
-    if (dados.id !== undefined) instance.id = dados.id;
-    if (dados.situacao !== undefined) instance.situacao = dados.situacao;
-    if (dados.diario !== undefined) instance.diario = dados.diario;
-    if (dados.perfil !== undefined) instance.perfil = dados.perfil;
-    if (dados.dateCreated !== undefined) instance.dateCreated = dados.dateCreated;
-    if (dados.dateUpdated !== undefined) instance.dateUpdated = dados.dateUpdated;
-    if (dados.dateDeleted !== undefined) instance.dateDeleted = dados.dateDeleted;
+  static load(dados: unknown): DiarioProfessor {
+    const parsed = zodValidate(DiarioProfessor.entityName, DiarioProfessorSchema, dados);
+
+    const instance = new DiarioProfessor();
+
+    instance.id = parsed.id;
+    instance.situacao = parsed.situacao;
+    instance.diario = parsed.diario as unknown as IDiario;
+    instance.perfil = parsed.perfil as unknown as IPerfil;
+    instance.dateCreated = parsed.dateCreated;
+    instance.dateUpdated = parsed.dateUpdated;
+    instance.dateDeleted = parsed.dateDeleted;
     return instance;
   }
 

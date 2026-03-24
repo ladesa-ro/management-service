@@ -14,11 +14,11 @@ import { DiarioFields } from "./diario.fields";
 // Fragments de referência
 // ============================================================================
 
-export const DiarioCalendarioLetivoRefSchema = createSchema(() => z.object({ id: uuidSchema }));
+export const DiarioCalendarioLetivoRefSchema = ObjectIdUuidFactory;
 
-export const DiarioTurmaRefSchema = createSchema(() => z.object({ id: uuidSchema }));
+export const DiarioTurmaRefSchema = ObjectIdUuidFactory;
 
-export const DiarioDisciplinaRefSchema = createSchema(() => z.object({ id: uuidSchema }));
+export const DiarioDisciplinaRefSchema = ObjectIdUuidFactory;
 
 export const DiarioAmbientePadraoRefSchema = ObjectIdUuidFactory;
 
@@ -32,13 +32,13 @@ export const DiarioSchema = z
   .object({
     id: uuidSchema,
     ativo: DiarioFields.ativo.domainSchema,
-    calendarioLetivo: z.object({ id: uuidSchema }).passthrough(),
-    turma: z.object({ id: uuidSchema }).passthrough(),
-    disciplina: z.object({ id: uuidSchema }).passthrough(),
-    ambientePadrao: z.object({ id: uuidSchema }).passthrough().nullable(),
-    imagemCapa: z.object({ id: uuidSchema }).passthrough().nullable(),
+    calendarioLetivo: ObjectIdUuidFactory.domain.loose(),
+    turma: ObjectIdUuidFactory.domain.loose(),
+    disciplina: ObjectIdUuidFactory.domain.loose(),
+    ambientePadrao: ObjectIdUuidFactory.domain.loose().nullable(),
+    imagemCapa: ObjectIdUuidFactory.domain.loose().nullable(),
   })
-  .merge(datedSchema);
+  .extend(datedSchema.shape);
 
 export const DiarioCreateSchema = createSchema((standard) =>
   z.object({

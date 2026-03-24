@@ -116,11 +116,11 @@ export class DiarioProfessorTypeOrmRepositoryAdapter implements IDiarioProfessor
     return this.findById(accessContext, { id } as DiarioProfessorFindOneQuery);
   }
 
-  create(data: Record<string, any>) {
+  create(data: Record<string, unknown>) {
     return typeormCreate(this.appTypeormConnection, DiarioProfessorEntity, data);
   }
 
-  update(id: string | number, data: Record<string, any>) {
+  update(id: string | number, data: Record<string, unknown>) {
     return typeormUpdate(this.appTypeormConnection, DiarioProfessorEntity, id, data);
   }
 

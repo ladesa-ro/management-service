@@ -30,10 +30,10 @@ export const AmbienteSchema = z
     codigo: AmbienteFields.codigo.domainSchema,
     capacidade: z.number().int().nullable(),
     tipo: z.string().nullable(),
-    bloco: z.object({ id: uuidSchema }).passthrough(),
-    imagemCapa: z.object({ id: uuidSchema }).passthrough().nullable(),
+    bloco: ObjectIdUuidFactory.domain.loose(),
+    imagemCapa: ObjectIdUuidFactory.domain.loose().nullable(),
   })
-  .merge(datedSchema);
+  .extend(datedSchema.shape);
 
 export const AmbienteCreateSchema = createSchema((standard) =>
   z.object({

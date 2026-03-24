@@ -61,6 +61,10 @@ export class OfertaFormacaoPeriodoInputGraphQlDto {
 export class OfertaFormacaoFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
   @Field(() => String, OfertaFormacaoFindOneQueryResultFields.nome.gqlMetadata) nome: string;
   @Field(() => String, OfertaFormacaoFindOneQueryResultFields.slug.gqlMetadata) slug: string;
+
+  @Field(() => Int, OfertaFormacaoFindOneQueryResultFields.duracaoPeriodoEmMeses.gqlMetadata)
+  duracaoPeriodoEmMeses: number;
+
   @Field(
     () => ModalidadeFindOneOutputGraphQlDto,
     OfertaFormacaoFindOneQueryResultFields.modalidade.gqlMetadata,

@@ -29,7 +29,7 @@ export class OfertaFormacao {
   slug!: string;
   duracaoPeriodoEmMeses!: number;
 
-  modalidade!: { id: string } | null;
+  modalidade!: { id: string };
   campus!: { id: string };
   niveisFormacoes!: Array<{ id: string }>;
   periodos!: IOfertaFormacaoPeriodo[];
@@ -49,7 +49,7 @@ export class OfertaFormacao {
     instance.nome = parsed.nome;
     instance.slug = parsed.slug;
     instance.duracaoPeriodoEmMeses = parsed.duracaoPeriodoEmMeses;
-    instance.modalidade = parsed.modalidade ?? null;
+    instance.modalidade = parsed.modalidade;
     instance.campus = parsed.campus;
     instance.niveisFormacoes = parsed.niveisFormacoes;
     instance.periodos = parsed.periodos;
@@ -87,7 +87,7 @@ export class OfertaFormacao {
     if (parsed.slug !== undefined) this.slug = parsed.slug;
     if (parsed.duracaoPeriodoEmMeses !== undefined)
       this.duracaoPeriodoEmMeses = parsed.duracaoPeriodoEmMeses;
-    if (parsed.modalidade !== undefined) this.modalidade = parsed.modalidade ?? null;
+    if (parsed.modalidade !== undefined) this.modalidade = parsed.modalidade;
     if (parsed.campus !== undefined) this.campus = parsed.campus;
     if (parsed.niveisFormacoes !== undefined) this.niveisFormacoes = parsed.niveisFormacoes;
     if (parsed.periodos !== undefined) this.periodos = parsed.periodos;

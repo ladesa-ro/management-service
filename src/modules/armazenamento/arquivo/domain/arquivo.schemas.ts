@@ -22,7 +22,7 @@ export const ArquivoSchema = z
     sizeBytes: ArquivoFields.sizeBytes.domainSchema,
     storageType: ArquivoFields.storageType.domainSchema,
   })
-  .merge(datedSchema);
+  .extend(datedSchema.shape);
 
 export const ArquivoCreateSchema = createSchema((standard) =>
   z.object({

@@ -8,5 +8,7 @@ export const ObjectIdIntFactory = createSchema((standard) => {
 
   if (!standard.coerce) return schema;
 
-  return z.preprocess(objectIdPreprocess, schema.nullable());
+  // Cast preserva tipo consistente para inferência. Em runtime, o preprocess + nullable
+  // garante a coerção; em domain mode, o retorno é exatamente o schema não-nullable.
+  return z.preprocess(objectIdPreprocess, schema.nullable()) as unknown as typeof schema;
 });

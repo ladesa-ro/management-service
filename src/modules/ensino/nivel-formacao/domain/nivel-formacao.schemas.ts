@@ -19,7 +19,7 @@ export const NivelFormacaoSchema = z
     id: uuidSchema,
     slug: NivelFormacaoFields.slug.domainSchema,
   })
-  .merge(datedSchema);
+  .extend(datedSchema.shape);
 
 export const NivelFormacaoCreateSchema = createSchema((standard) =>
   z.object({
