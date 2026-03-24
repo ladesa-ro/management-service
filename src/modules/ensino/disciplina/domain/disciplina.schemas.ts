@@ -6,7 +6,7 @@
  * os contratos de dados da entidade.
  */
 import { z } from "zod";
-import { createSchema, ObjectIdUuidFactory } from "@/domain/abstractions";
+import { createSchema, ObjectIdUuidFactoryNullable } from "@/domain/abstractions";
 import { datedSchema, uuidSchema } from "@/shared/validation/schemas";
 import { DisciplinaFields } from "./disciplina.fields";
 
@@ -15,7 +15,7 @@ import { DisciplinaFields } from "./disciplina.fields";
 // ============================================================================
 
 export const DisciplinaImagemCapaRefSchema = createSchema((standard) =>
-  ObjectIdUuidFactory.create(standard).nullable().optional(),
+  ObjectIdUuidFactoryNullable.create(standard).optional(),
 );
 
 // ============================================================================
@@ -28,7 +28,7 @@ export const DisciplinaSchema = z
     nome: DisciplinaFields.nome.domainSchema,
     nomeAbreviado: DisciplinaFields.nomeAbreviado.domainSchema,
     cargaHoraria: DisciplinaFields.cargaHoraria.domainSchema,
-    imagemCapa: ObjectIdUuidFactory.domain.nullable(),
+    imagemCapa: ObjectIdUuidFactoryNullable.domain,
   })
   .extend(datedSchema.shape);
 

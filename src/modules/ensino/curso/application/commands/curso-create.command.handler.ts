@@ -43,10 +43,12 @@ export class CursoCreateCommandHandlerImpl implements ICursoCreateCommandHandler
       campus: { id: campus.id },
       ofertaFormacao: { id: ofertaFormacao.id },
     });
+
     const { id } = await this.repository.create({
       ...domain,
       campus: { id: campus.id },
       ofertaFormacao: { id: ofertaFormacao.id },
+      imagemCapa: domain.imagemCapa ? { id: domain.imagemCapa.id } : null,
     });
 
     const result = await this.repository.findById(accessContext, { id });

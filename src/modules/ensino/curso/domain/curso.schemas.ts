@@ -6,7 +6,11 @@
  * os contratos de dados da entidade.
  */
 import { z } from "zod";
-import { createSchema, ObjectIdUuidFactory } from "@/domain/abstractions";
+import {
+  createSchema,
+  ObjectIdUuidFactory,
+  ObjectIdUuidFactoryNullable,
+} from "@/domain/abstractions";
 import { datedSchema, uuidSchema } from "@/shared/validation/schemas";
 import { CursoFields } from "./curso.fields";
 
@@ -19,7 +23,7 @@ export const CursoCampusRefSchema = ObjectIdUuidFactory;
 export const CursoOfertaFormacaoRefSchema = ObjectIdUuidFactory;
 
 export const CursoImagemCapaRefSchema = createSchema((standard) =>
-  ObjectIdUuidFactory.create(standard).nullable().optional(),
+  ObjectIdUuidFactoryNullable.create(standard).optional(),
 );
 
 // ============================================================================
@@ -31,9 +35,9 @@ export const CursoSchema = z
     id: uuidSchema,
     nome: CursoFields.nome.domainSchema,
     nomeAbreviado: CursoFields.nomeAbreviado.domainSchema,
-    campus: ObjectIdUuidFactory.domain.loose(),
-    ofertaFormacao: ObjectIdUuidFactory.domain.loose(),
-    imagemCapa: ObjectIdUuidFactory.domain.nullable(),
+    campus: ObjectIdUuidFactory.domain,
+    ofertaFormacao: ObjectIdUuidFactory.domain,
+    imagemCapa: ObjectIdUuidFactoryNullable.domain,
   })
   .extend(datedSchema.shape);
 

@@ -6,7 +6,11 @@
  * os contratos de dados da entidade.
  */
 import { z } from "zod";
-import { createSchema, ObjectIdUuidFactory } from "@/domain/abstractions";
+import {
+  createSchema,
+  ObjectIdUuidFactory,
+  ObjectIdUuidFactoryNullable,
+} from "@/domain/abstractions";
 import { datedSchema, uuidSchema } from "@/shared/validation/schemas";
 import { EstagioFields, EstagioStatusSchema } from "./estagio.fields";
 
@@ -61,7 +65,7 @@ export const EstagioSchema = z
   .object({
     id: uuidSchema,
     empresa: ObjectIdUuidFactory.domain,
-    estagiario: ObjectIdUuidFactory.domain.nullable(),
+    estagiario: ObjectIdUuidFactoryNullable.domain,
     cargaHoraria: z.number().int().min(1),
     dataInicio: z.string().nullable(),
     dataFim: z.string().nullable(),
@@ -126,7 +130,7 @@ export const EstagioCreateSchema = createSchema((standard) =>
 export const EstagioUpdateSchema = createSchema((standard) =>
   z.object({
     empresa: EstagioEmpresaRefSchema.create(standard).optional(),
-    estagiario: EstagioEstagiarioRefSchema.create(standard).nullable().optional(),
+    estagiario: ObjectIdUuidFactoryNullable.create(standard).optional(),
     cargaHoraria: EstagioFields.cargaHoraria.create(standard).optional(),
     dataInicio: EstagioFields.dataInicio.create(standard).nullable().optional(),
     dataFim: EstagioFields.dataFim.create(standard).optional(),

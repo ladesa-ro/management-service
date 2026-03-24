@@ -40,18 +40,16 @@ export const CampusSchema = z
     razaoSocial: CampusFields.razaoSocial.domainSchema,
     apelido: CampusFields.apelido.domainSchema,
     cnpj: CampusFields.cnpj.domainSchema,
-    endereco: z
-      .object({
-        id: uuidSchema,
-        cep: z.string(),
-        logradouro: z.string(),
-        numero: z.number().int(),
-        bairro: z.string(),
-        complemento: z.string().nullable(),
-        pontoReferencia: z.string().nullable(),
-        cidade: ObjectIdIntFactory.domain.loose(),
-      })
-      .loose(),
+    endereco: z.object({
+      id: uuidSchema,
+      cep: z.string(),
+      logradouro: z.string(),
+      numero: z.number().int(),
+      bairro: z.string(),
+      complemento: z.string().nullable(),
+      pontoReferencia: z.string().nullable(),
+      cidade: ObjectIdIntFactory.domain,
+    }),
   })
   .extend(datedSchema.shape);
 

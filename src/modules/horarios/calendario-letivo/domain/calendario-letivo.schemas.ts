@@ -6,7 +6,11 @@
  * os contratos de dados da entidade.
  */
 import { z } from "zod";
-import { createSchema, ObjectIdUuidFactory } from "@/domain/abstractions";
+import {
+  createSchema,
+  ObjectIdUuidFactory,
+  ObjectIdUuidFactoryNullable,
+} from "@/domain/abstractions";
 import { datedSchema, uuidSchema } from "@/shared/validation/schemas";
 import { CalendarioLetivoFields } from "./calendario-letivo.fields";
 
@@ -28,7 +32,7 @@ export const CalendarioLetivoSchema = z
     nome: CalendarioLetivoFields.nome.domainSchema,
     ano: CalendarioLetivoFields.ano.domainSchema,
     campus: ObjectIdUuidFactory.domain,
-    ofertaFormacao: ObjectIdUuidFactory.domain.nullable(),
+    ofertaFormacao: ObjectIdUuidFactoryNullable.domain,
   })
   .extend(datedSchema.shape);
 

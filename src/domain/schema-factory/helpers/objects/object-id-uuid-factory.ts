@@ -10,3 +10,11 @@ export const ObjectIdUuidFactory = createSchema((standard) => {
 
   return z.preprocess(objectIdPreprocess, schema) as unknown as typeof schema;
 });
+
+export const ObjectIdUuidFactoryNullable = createSchema((standard) => {
+  const schema = z.object({ id: UuidSchema.create(standard) }).nullable();
+
+  if (!standard.coerce) return schema;
+
+  return z.preprocess(objectIdPreprocess, schema) as unknown as typeof schema;
+});

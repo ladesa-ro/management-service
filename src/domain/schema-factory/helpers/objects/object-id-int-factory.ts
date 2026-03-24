@@ -10,3 +10,11 @@ export const ObjectIdIntFactory = createSchema((standard) => {
 
   return z.preprocess(objectIdPreprocess, schema) as unknown as typeof schema;
 });
+
+export const ObjectIdIntFactoryNullable = createSchema((standard) => {
+  const schema = z.object({ id: IdIntSchema.create(standard) }).nullable();
+
+  if (!standard.coerce) return schema;
+
+  return z.preprocess(objectIdPreprocess, schema) as unknown as typeof schema;
+});

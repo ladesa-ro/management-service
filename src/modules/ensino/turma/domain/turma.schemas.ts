@@ -6,7 +6,11 @@
  * os contratos de dados da entidade.
  */
 import { z } from "zod";
-import { createSchema, ObjectIdUuidFactory } from "@/domain/abstractions";
+import {
+  createSchema,
+  ObjectIdUuidFactory,
+  ObjectIdUuidFactoryNullable,
+} from "@/domain/abstractions";
 import { datedSchema, uuidSchema } from "@/shared/validation/schemas";
 import { TurmaFields } from "./turma.fields";
 
@@ -17,11 +21,11 @@ import { TurmaFields } from "./turma.fields";
 export const TurmaCursoRefSchema = ObjectIdUuidFactory;
 
 export const TurmaAmbientePadraoAulaRefSchema = createSchema((standard) =>
-  ObjectIdUuidFactory.create(standard).nullable().optional(),
+  ObjectIdUuidFactoryNullable.create(standard).optional(),
 );
 
 export const TurmaImagemCapaRefSchema = createSchema((standard) =>
-  ObjectIdUuidFactory.create(standard).nullable().optional(),
+  ObjectIdUuidFactoryNullable.create(standard).optional(),
 );
 
 // ============================================================================
@@ -33,8 +37,8 @@ export const TurmaSchema = z
     id: uuidSchema,
     periodo: TurmaFields.periodo.domainSchema,
     curso: ObjectIdUuidFactory.domain.loose(),
-    ambientePadraoAula: ObjectIdUuidFactory.domain.nullable(),
-    imagemCapa: ObjectIdUuidFactory.domain.nullable(),
+    ambientePadraoAula: ObjectIdUuidFactoryNullable.domain,
+    imagemCapa: ObjectIdUuidFactoryNullable.domain,
   })
   .extend(datedSchema.shape);
 

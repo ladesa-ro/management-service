@@ -6,7 +6,7 @@
  * os contratos de dados da entidade.
  */
 import { z } from "zod";
-import { createSchema, ObjectIdUuidFactory } from "@/domain/abstractions";
+import { createSchema, ObjectIdUuidFactoryNullable } from "@/domain/abstractions";
 import { datedSchema, uuidSchema } from "@/shared/validation/schemas";
 import { UsuarioFields } from "./usuario.fields";
 
@@ -15,7 +15,7 @@ import { UsuarioFields } from "./usuario.fields";
 // ============================================================================
 
 export const UsuarioImagemRefSchema = createSchema((standard) =>
-  ObjectIdUuidFactory.create(standard).nullable().optional(),
+  ObjectIdUuidFactoryNullable.create(standard).optional(),
 );
 
 // ============================================================================
