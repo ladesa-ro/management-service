@@ -5,6 +5,8 @@ import {
   UsuarioListQuery,
   UsuarioUpdateCommand,
 } from "@/modules/acesso/usuario";
+import type { PerfilNestedQueryResult } from "@/modules/acesso/usuario/perfil/domain/queries/perfil-nested.query.result";
+import { CampusGraphqlMapper } from "@/modules/ambientes/campus/presentation.graphql/campus.graphql.mapper";
 import {
   createFindOneInputMapper,
   createListOutputMapper,
@@ -16,6 +18,7 @@ import {
   UsuarioFindOneOutputGraphQlDto,
   UsuarioListInputGraphQlDto,
   UsuarioListOutputGraphQlDto,
+  UsuarioPerfilNestedOutputGraphQlDto,
   UsuarioUpdateInputGraphQlDto,
 } from "./usuario.graphql.dto";
 
@@ -71,6 +74,19 @@ export class UsuarioGraphqlMapper {
     dto.isSuperUser = output.isSuperUser;
     dto.imagemCapa = mapImagemOutput(output.imagemCapa);
     dto.imagemPerfil = mapImagemOutput(output.imagemPerfil);
+    dto.vinculos = (output.vinculos ?? []).map(UsuarioGraphqlMapper.toPerfilNestedOutputDto);
+    mapDatedFields(dto, output);
+    return dto;
+  }
+
+  static toPerfilNestedOutputDto(
+    output: PerfilNestedQueryResult,
+  ): UsuarioPerfilNestedOutputGraphQlDto {
+    const dto = new UsuarioPerfilNestedOutputGraphQlDto();
+    dto.id = output.id;
+    dto.ativo = output.ativo;
+    dto.cargo = output.cargo;
+    dto.campus = CampusGraphqlMapper.toFindOneOutputDto(output.campus);
     mapDatedFields(dto, output);
     return dto;
   }

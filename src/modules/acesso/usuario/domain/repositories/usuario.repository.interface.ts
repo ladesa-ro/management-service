@@ -18,16 +18,18 @@ export const IUsuarioRepository = Symbol("IUsuarioRepository");
 export type IUsuarioRepository = IRepositoryFindAll<UsuarioListQueryResult> &
   IRepositoryFindById<UsuarioFindOneQueryResult> &
   IRepositoryFindByIdSimple<UsuarioFindOneQueryResult> &
-  IRepositoryCreate<object> &
+  Omit<IRepositoryCreate<object>, "create"> &
   IRepositoryUpdate<object> &
   IRepositorySoftDelete & {
+    create(data: Record<string, unknown>): Promise<{ id: string }>;
+
     findByMatricula(matricula: string): Promise<UsuarioFindOneQueryResult | null>;
 
     isMatriculaAvailable(matricula: string, excludeUsuarioId?: string | null): Promise<boolean>;
 
     isEmailAvailable(email: string, excludeUsuarioId?: string | null): Promise<boolean>;
 
-    resolveProperty<Property extends string>(id: string, property: Property): Promise<unknown>;
+    resolveMatricula(id: string): Promise<string | null>;
 
     findUsuarioEnsino(usuarioId: string): Promise<{
       disciplinas: Array<{

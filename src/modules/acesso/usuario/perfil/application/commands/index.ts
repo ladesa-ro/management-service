@@ -1,1 +1,1 @@
-export * from "./perfil-set-vinculos.command.handler";
+export * from "./perfil-definir-perfis-ativos.command.handler";

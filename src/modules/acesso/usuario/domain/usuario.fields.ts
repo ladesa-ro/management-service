@@ -40,4 +40,7 @@ export const UsuarioFields = {
     description: "Imagem de perfil do usuario",
     nullable: true,
   }),
+  vinculos: createFieldMetadata({
+    description: "Vinculos (cargos por campus) do usuario",
+  }),
 };

@@ -6,7 +6,11 @@
  * os contratos de dados da entidade.
  */
 import { z } from "zod";
-import { createSchema, ObjectIdUuidFactoryNullable } from "@/domain/abstractions";
+import {
+  createSchema,
+  ObjectIdUuidFactory,
+  ObjectIdUuidFactoryNullable,
+} from "@/domain/abstractions";
 import { datedSchema, uuidSchema } from "@/shared/validation/schemas";
 import { UsuarioFields } from "./usuario.fields";
 
@@ -39,6 +43,9 @@ export const UsuarioCreateSchema = createSchema((standard) =>
     nome: UsuarioFields.nome.create(standard),
     matricula: UsuarioFields.matricula.create(standard),
     email: UsuarioFields.email.create(standard),
+    vinculos: z
+      .array(z.object({ campus: ObjectIdUuidFactory.create(standard), cargo: z.string().min(1) }))
+      .optional(),
   }),
 );
 
@@ -47,5 +54,8 @@ export const UsuarioUpdateSchema = createSchema((standard) =>
     nome: UsuarioFields.nome.create(standard),
     matricula: UsuarioFields.matricula.create(standard),
     email: UsuarioFields.email.create(standard),
+    vinculos: z
+      .array(z.object({ campus: ObjectIdUuidFactory.create(standard), cargo: z.string().min(1) }))
+      .optional(),
   }),
 );

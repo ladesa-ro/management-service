@@ -24,7 +24,4 @@ export const PerfilFields = {
   usuario: createFieldMetadata({
     description: "Usuario associado ao vinculo",
   }),
-  cargos: createFieldMetadata({
-    description: "Lista de cargos que o usuario tera no campus",
-  }),
 };

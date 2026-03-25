@@ -1,5 +1,5 @@
 import { has } from "lodash";
-import { ensureExists, ServiceUnavailableError, ValidationError } from "@/application/errors";
+import { ensureExists, ServiceUnavailableError } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { IIdpUserService } from "@/domain/abstractions/identity-provider";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
@@ -7,9 +7,11 @@ import type { UsuarioUpdateCommand } from "@/modules/acesso/usuario/domain/comma
 import { IUsuarioUpdateCommandHandler } from "@/modules/acesso/usuario/domain/commands/usuario-update.command.handler.interface";
 import type { UsuarioFindOneQuery } from "@/modules/acesso/usuario/domain/queries";
 import { Usuario } from "@/modules/acesso/usuario/domain/usuario";
+import { IPerfilDefinirPerfisAtivosCommandHandler } from "@/modules/acesso/usuario/perfil/domain/commands/perfil-definir-perfis-ativos.command.handler.interface";
 import { IUsuarioPermissionChecker } from "../../domain/authorization";
 import type { UsuarioFindOneQueryResult } from "../../domain/queries";
 import { IUsuarioRepository } from "../../domain/repositories";
+import { IUsuarioAvailabilityChecker } from "../../domain/services";
 
 @DeclareImplementation()
 export class UsuarioUpdateCommandHandlerImpl implements IUsuarioUpdateCommandHandler {
@@ -20,6 +22,10 @@ export class UsuarioUpdateCommandHandlerImpl implements IUsuarioUpdateCommandHan
     private readonly idpUserService: IIdpUserService,
     @DeclareDependency(IUsuarioPermissionChecker)
     private readonly permissionChecker: IUsuarioPermissionChecker,
+    @DeclareDependency(IPerfilDefinirPerfisAtivosCommandHandler)
+    private readonly definirPerfisAtivosHandler: IPerfilDefinirPerfisAtivosCommandHandler,
+    @DeclareDependency(IUsuarioAvailabilityChecker)
+    private readonly availabilityChecker: IUsuarioAvailabilityChecker,
   ) {}
 
   async execute(
@@ -31,8 +37,7 @@ export class UsuarioUpdateCommandHandlerImpl implements IUsuarioUpdateCommandHan
     ensureExists(currentUsuario, Usuario.entityName, dto.id);
 
     const currentMatricula =
-      currentUsuario.matricula ??
-      ((await this.repository.resolveProperty(currentUsuario.id, "matricula")) as string | null);
+      currentUsuario.matricula ?? (await this.repository.resolveMatricula(currentUsuario.id));
 
     if (!currentMatricula) {
       throw new ServiceUnavailableError();
@@ -52,7 +57,7 @@ export class UsuarioUpdateCommandHandlerImpl implements IUsuarioUpdateCommandHan
       email: dto.email,
     };
 
-    await this.ensureDtoAvailability(input, dto.id);
+    await this.availabilityChecker.ensureAvailable(input, dto.id);
 
     const domain = Usuario.load(currentUsuario);
     domain.update(input);
@@ -69,57 +74,17 @@ export class UsuarioUpdateCommandHandlerImpl implements IUsuarioUpdateCommandHan
       });
     }
 
+    if (dto.vinculos !== undefined) {
+      await this.definirPerfisAtivosHandler.execute(accessContext, {
+        vinculos: dto.vinculos,
+        usuario: { id: currentUsuario.id },
+      });
+    }
+
     const result = await this.repository.findById(accessContext, { id: currentUsuario.id });
 
     ensureExists(result, Usuario.entityName, currentUsuario.id);
 
     return result;
-  }
-
-  private async ensureDtoAvailability(
-    dto: Partial<Pick<UsuarioFindOneQueryResult, "email" | "matricula">>,
-    currentUsuarioId: string | null = null,
-  ) {
-    let isEmailAvailable = true;
-    let isMatriculaAvailable = true;
-
-    const email = dto.email;
-
-    if (email) {
-      isEmailAvailable = await this.repository.isEmailAvailable(email, currentUsuarioId);
-    }
-
-    const matricula = dto.matricula;
-
-    if (matricula) {
-      isMatriculaAvailable = await this.repository.isMatriculaAvailable(
-        matricula,
-        currentUsuarioId,
-      );
-    }
-
-    if (!isMatriculaAvailable || !isEmailAvailable) {
-      const details = [
-        ...(!isEmailAvailable
-          ? [
-              {
-                field: "email",
-                message: "O e-mail informado nao esta disponivel.",
-                rule: "email-is-available",
-              },
-            ]
-          : []),
-        ...(!isMatriculaAvailable
-          ? [
-              {
-                field: "matricula",
-                message: "A matricula informada nao esta disponivel.",
-                rule: "matricula-is-available",
-              },
-            ]
-          : []),
-      ];
-      throw new ValidationError(details);
-    }
   }
 }
