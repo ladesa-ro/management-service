@@ -59,6 +59,8 @@ import {
 } from "@/modules/acesso/usuario/perfil/domain/queries";
 import { IPerfilRepository } from "@/modules/acesso/usuario/perfil/domain/repositories";
 import { PerfilTypeOrmRepositoryAdapter } from "@/modules/acesso/usuario/perfil/infrastructure.database";
+import { PerfilGraphqlResolver } from "@/modules/acesso/usuario/perfil/presentation.graphql/perfil.graphql.resolver";
+import { PerfilRestController } from "@/modules/acesso/usuario/perfil/presentation.rest/perfil.rest.controller";
 import { UsuarioGraphqlResolver } from "@/modules/acesso/usuario/presentation.graphql/usuario.graphql.resolver";
 import { UsuarioRestController } from "@/modules/acesso/usuario/presentation.rest/usuario.rest.controller";
 import { UsuarioEventoRestController } from "@/modules/acesso/usuario/presentation.rest/usuario-evento.rest.controller";
@@ -75,10 +77,11 @@ import { HorarioConsultaModule } from "@/modules/horarios/horario-consulta/horar
     HorarioConsultaModule,
     CampusModule,
   ],
-  controllers: [UsuarioRestController, UsuarioEventoRestController],
+  controllers: [UsuarioRestController, UsuarioEventoRestController, PerfilRestController],
   providers: [
     NestJsPaginateAdapter,
     UsuarioGraphqlResolver,
+    PerfilGraphqlResolver,
     {
       provide: IUsuarioPermissionChecker,
       useClass: UsuarioPermissionCheckerImpl,
