@@ -40,4 +40,13 @@ export class CalendarioAgendamentoEntity {
 
   @Column({ name: "status", type: "enum", enum: CalendarioAgendamentoStatus, nullable: true })
   status!: CalendarioAgendamentoStatus | null;
+
+  @Column({ name: "date_created", type: "timestamptz", nullable: false, default: () => "NOW()" })
+  dateCreated!: Date;
+
+  @Column({ name: "date_updated", type: "timestamptz", nullable: false, default: () => "NOW()" })
+  dateUpdated!: Date;
+
+  @Column({ name: "date_deleted", type: "timestamptz", nullable: true })
+  dateDeleted!: Date | null;
 }

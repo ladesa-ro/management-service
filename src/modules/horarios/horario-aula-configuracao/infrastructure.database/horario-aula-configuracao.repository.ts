@@ -2,7 +2,10 @@ import type { FindOptionsWhere } from "typeorm";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
-import type { IHorarioAulaConfiguracao } from "../domain/horario-aula-configuracao.types";
+import {
+  HorarioAulaConfiguracao,
+  type IHorarioAulaConfiguracaoDomain,
+} from "../domain/horario-aula-configuracao";
 import type { IHorarioAulaConfiguracaoRepository } from "../domain/repositories/horario-aula-configuracao.repository.interface";
 import { HorarioAulaEntity } from "./typeorm/horario-aula.typeorm.entity";
 import { HorarioAulaConfiguracaoEntity } from "./typeorm/horario-aula-configuracao.typeorm.entity";
@@ -16,69 +19,85 @@ export class HorarioAulaConfiguracaoTypeOrmRepositoryAdapter
     private readonly appTypeormConnection: IAppTypeormConnection,
   ) {}
 
-  async findAll(where?: Record<string, unknown>): Promise<IHorarioAulaConfiguracao[]> {
+  async loadById(id: string): Promise<HorarioAulaConfiguracao | null> {
+    const repo = this.appTypeormConnection.getRepository(HorarioAulaConfiguracaoEntity);
+    const entity = await repo.findOneBy({ id });
+    if (!entity) return null;
+
+    return HorarioAulaConfiguracao.load(await this.toDomainData(entity));
+  }
+
+  async findAll(where?: Record<string, unknown>): Promise<HorarioAulaConfiguracao[]> {
     const repo = this.appTypeormConnection.getRepository(HorarioAulaConfiguracaoEntity);
     const entities = await repo.find({
       where,
       order: { dataInicio: "ASC" },
     });
 
-    return Promise.all(entities.map((e) => this.withHorarios(e)));
+    return Promise.all(
+      entities.map(async (e) => HorarioAulaConfiguracao.load(await this.toDomainData(e))),
+    );
   }
 
-  async findById(id: string): Promise<IHorarioAulaConfiguracao | null> {
-    const repo = this.appTypeormConnection.getRepository(HorarioAulaConfiguracaoEntity);
-    const entity = await repo.findOneBy({ id });
-    if (!entity) return null;
-
-    return this.withHorarios(entity);
-  }
-
-  async save(data: Partial<IHorarioAulaConfiguracao>): Promise<IHorarioAulaConfiguracao> {
+  async save(aggregate: HorarioAulaConfiguracao): Promise<void> {
     const repo = this.appTypeormConnection.getRepository(HorarioAulaConfiguracaoEntity);
 
-    const { horarios, ...entityData } = data;
+    const entity = repo.create({
+      id: aggregate.id,
+      dataInicio: new Date(aggregate.dataInicio),
+      dataFim: aggregate.dataFim ? new Date(aggregate.dataFim) : null,
+      ativo: aggregate.ativo,
+    });
+    Object.assign(entity, { campus: { id: aggregate.campus.id } });
+    await repo.save(entity);
 
-    const saved = await repo.save(entityData as HorarioAulaConfiguracaoEntity);
-
-    if (horarios !== undefined) {
-      await this.replaceHorarios(saved.id, horarios);
-    }
-
-    return this.withHorarios(saved);
+    await this.replaceHorarios(aggregate.id, aggregate.horarios);
   }
 
-  async remove(entity: IHorarioAulaConfiguracao): Promise<void> {
+  async remove(id: string): Promise<void> {
     const horarioRepo = this.appTypeormConnection.getRepository(HorarioAulaEntity);
     await horarioRepo.delete({
-      horarioAulaConfiguracao: { id: entity.id },
+      horarioAulaConfiguracao: { id },
     } as FindOptionsWhere<HorarioAulaEntity>);
 
     const repo = this.appTypeormConnection.getRepository(HorarioAulaConfiguracaoEntity);
-    await repo.remove({ id: entity.id } as HorarioAulaConfiguracaoEntity);
+    await repo.delete(id);
   }
 
   // ============================================================================
-  // Horários (value objects do aggregate)
+  // Mappers privados
   // ============================================================================
 
-  private async withHorarios(
+  private async toDomainData(
     entity: HorarioAulaConfiguracaoEntity,
-  ): Promise<IHorarioAulaConfiguracao> {
+  ): Promise<IHorarioAulaConfiguracaoDomain> {
     const horarioRepo = this.appTypeormConnection.getRepository(HorarioAulaEntity);
     const horarios = await horarioRepo.find({
       where: { horarioAulaConfiguracao: { id: entity.id } },
       order: { inicio: "ASC" },
     });
 
+    const formatDate = (d: Date | null) => {
+      if (!d) return null;
+      return d instanceof Date ? d.toISOString().split("T")[0] : String(d);
+    };
+
     return {
-      ...entity,
+      id: entity.id,
+      dataInicio: formatDate(entity.dataInicio) ?? "",
+      dataFim: formatDate(entity.dataFim),
+      ativo: entity.ativo,
+      campus: { id: entity.campus?.id },
       horarios: horarios.map((h) => ({
         inicio: h.inicio,
         fim: h.fim,
       })),
     };
   }
+
+  // ============================================================================
+  // Horários (value objects do aggregate)
+  // ============================================================================
 
   private async replaceHorarios(
     configuracaoId: string,

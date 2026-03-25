@@ -1,19 +1,8 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, type Relation } from "typeorm";
 import { UsuarioEntity } from "@/modules/acesso/usuario/infrastructure.database/typeorm/usuario.typeorm.entity";
+import { GerarHorarioDuracao, GerarHorarioStatus } from "../../domain/gerar-horario.types";
 
-export enum GerarHorarioStatus {
-  SOLICITADO = "SOLICITADO",
-  PENDENTE = "PENDENTE",
-  SUCESSO = "SUCESSO",
-  ERRO = "ERRO",
-  ACEITO = "ACEITO",
-  REJEITADO = "REJEITADO",
-}
-
-export enum GerarHorarioDuracao {
-  TEMPORARIO = "TEMPORARIO",
-  PERMANENTE = "PERMANENTE",
-}
+export { GerarHorarioDuracao, GerarHorarioStatus };
 
 @Entity("gerar_horario")
 export class GerarHorarioEntity {

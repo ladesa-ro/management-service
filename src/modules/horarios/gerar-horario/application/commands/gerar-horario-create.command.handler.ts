@@ -4,17 +4,11 @@ import {
   IMessageBrokerService as IMessageBrokerServiceToken,
 } from "@/domain/abstractions/message-broker";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
-import { getNow } from "@/utils/date";
 import type {
   IGerarHorarioCreateCommand,
   IGerarHorarioCreateCommandHandler,
 } from "../../domain/commands/gerar-horario-create.command.handler.interface";
-import {
-  GerarHorarioDuracao,
-  GerarHorarioStatus,
-  type IGerarHorario,
-} from "../../domain/gerar-horario.types";
+import { GerarHorario } from "../../domain/gerar-horario";
 import {
   IGerarHorarioRepository,
   type IGerarHorarioRepository as IGerarHorarioRepositoryType,
@@ -32,26 +26,15 @@ export class GerarHorarioCreateCommandHandlerImpl implements IGerarHorarioCreate
   async execute(
     _accessContext: IAccessContext | null,
     command: IGerarHorarioCreateCommand,
-  ): Promise<IGerarHorario> {
-    const entity: IGerarHorario = {
-      id: generateUuidV7(),
-      status: GerarHorarioStatus.SOLICITADO,
-      duracao: GerarHorarioDuracao.TEMPORARIO,
-      dataInicio: new Date(command.dataInicio),
-      dataTermino: command.dataTermino ? new Date(command.dataTermino) : null,
-      requisicaoGerador: null,
-      respostaGerador: null,
-      dateCreated: getNow(),
-      calendarioLetivoIds: command.calendarioLetivoIds ?? [],
-      ofertaFormacaoIds: command.ofertaFormacaoIds ?? [],
-    };
+  ): Promise<GerarHorario> {
+    const domain = GerarHorario.create(command);
 
-    await this.gerarHorarioRepository.save(entity);
+    await this.gerarHorarioRepository.save(domain);
 
     // Fire-and-forget: publish to timetable generator queue
     // TODO: Build proper GenerateRequest from DB data
     const request = {
-      request_id: entity.id,
+      request_id: domain.id,
       date_start: command.dataInicio,
       date_end: command.dataTermino ?? command.dataInicio,
       time_slots: [],
@@ -64,10 +47,9 @@ export class GerarHorarioCreateCommandHandlerImpl implements IGerarHorarioCreate
     await this.messageBrokerService.publishTimetableRequestFireAndForget(request);
 
     // Update status to PENDENTE after publishing
-    entity.status = GerarHorarioStatus.PENDENTE;
-    entity.requisicaoGerador = request;
-    await this.gerarHorarioRepository.save(entity);
+    domain.markAsPendente(request);
+    await this.gerarHorarioRepository.save(domain);
 
-    return entity;
+    return domain;
   }
 }

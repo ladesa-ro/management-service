@@ -1,6 +1,6 @@
 import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import type { IGerarHorario } from "../../domain/gerar-horario.types";
+import type { GerarHorario } from "../../domain/gerar-horario";
 import type {
   IGerarHorarioFindOneQuery,
   IGerarHorarioFindOneQueryHandler,
@@ -20,7 +20,7 @@ export class GerarHorarioFindOneQueryHandlerImpl implements IGerarHorarioFindOne
   async execute(
     _accessContext: IAccessContext | null,
     query: IGerarHorarioFindOneQuery,
-  ): Promise<IGerarHorario | null> {
-    return this.gerarHorarioRepository.findOneBy({ id: query.id });
+  ): Promise<GerarHorario | null> {
+    return this.gerarHorarioRepository.loadById(query.id);
   }
 }

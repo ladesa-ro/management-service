@@ -1,7 +1,8 @@
 import type { z } from "zod";
-import type { IdUuid } from "@/domain/abstractions/scalars";
+import type { IdUuid, ScalarDateTimeString } from "@/domain/abstractions/scalars";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { zodValidate } from "@/shared/validation/index";
+import { getNowISO } from "@/utils/date";
 import {
   CalendarioAgendamentoCreateSchema,
   CalendarioAgendamentoSchema,
@@ -35,6 +36,11 @@ export class CalendarioAgendamento {
   ofertaFormacaoIds!: string[];
   modalidadeIds!: string[];
   ambienteIds!: string[];
+  diarioIds!: string[];
+
+  dateCreated!: ScalarDateTimeString;
+  dateUpdated!: ScalarDateTimeString;
+  dateDeleted!: ScalarDateTimeString | null;
 
   private constructor() {}
 
@@ -65,6 +71,11 @@ export class CalendarioAgendamento {
     instance.ofertaFormacaoIds = parsed.ofertaFormacaoIds ?? [];
     instance.modalidadeIds = parsed.modalidadeIds ?? [];
     instance.ambienteIds = parsed.ambienteIds ?? [];
+    instance.diarioIds = parsed.diarioIds ?? [];
+
+    instance.dateCreated = getNowISO();
+    instance.dateUpdated = getNowISO();
+    instance.dateDeleted = null;
 
     return instance;
   }
@@ -96,6 +107,11 @@ export class CalendarioAgendamento {
     instance.ofertaFormacaoIds = parsed.ofertaFormacaoIds;
     instance.modalidadeIds = parsed.modalidadeIds;
     instance.ambienteIds = parsed.ambienteIds;
+    instance.diarioIds = parsed.diarioIds;
+
+    instance.dateCreated = parsed.dateCreated;
+    instance.dateUpdated = parsed.dateUpdated;
+    instance.dateDeleted = parsed.dateDeleted;
 
     return instance;
   }
@@ -123,6 +139,9 @@ export class CalendarioAgendamento {
     if (parsed.ofertaFormacaoIds !== undefined) this.ofertaFormacaoIds = parsed.ofertaFormacaoIds;
     if (parsed.modalidadeIds !== undefined) this.modalidadeIds = parsed.modalidadeIds;
     if (parsed.ambienteIds !== undefined) this.ambienteIds = parsed.ambienteIds;
+    if (parsed.diarioIds !== undefined) this.diarioIds = parsed.diarioIds;
+
+    this.dateUpdated = getNowISO();
 
     zodValidate(CalendarioAgendamento.entityName, CalendarioAgendamentoSchema, this);
   }

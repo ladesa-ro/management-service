@@ -2,7 +2,8 @@ import type { FindOptionsWhere } from "typeorm";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
-import type { IGerarHorario } from "../domain/gerar-horario.types";
+import { GerarHorario, type IGerarHorarioDomain } from "../domain/gerar-horario";
+import type { GerarHorarioDuracao, GerarHorarioStatus } from "../domain/gerar-horario.types";
 import type { IGerarHorarioRepository } from "../domain/repositories/gerar-horario.repository.interface";
 import { GerarHorarioEntity } from "./typeorm/gerar-horario.typeorm.entity";
 import { GerarHorarioCalendarioLetivoEntity } from "./typeorm/gerar-horario-calendario-letivo.typeorm.entity";
@@ -15,49 +16,72 @@ export class GerarHorarioTypeOrmRepositoryAdapter implements IGerarHorarioReposi
     private readonly appTypeormConnection: IAppTypeormConnection,
   ) {}
 
-  async findOneBy(where: FindOptionsWhere<GerarHorarioEntity>): Promise<IGerarHorario | null> {
+  async loadById(id: string): Promise<GerarHorario | null> {
     const repo = this.appTypeormConnection.getRepository(GerarHorarioEntity);
-    const entity = await repo.findOneBy(where);
+    const entity = await repo.findOneBy({ id });
     if (!entity) return null;
 
     const junctions = await this.findJunctions(entity.id);
 
-    return {
-      ...entity,
-      calendarioLetivoIds: junctions.calendarioLetivoIds,
-      ofertaFormacaoIds: junctions.ofertaFormacaoIds,
-    };
+    return GerarHorario.load(this.toDomainData(entity, junctions));
   }
 
-  async save(data: Partial<IGerarHorario>): Promise<IGerarHorario> {
+  async save(aggregate: GerarHorario): Promise<void> {
     const repo = this.appTypeormConnection.getRepository(GerarHorarioEntity);
 
-    const { calendarioLetivoIds, ofertaFormacaoIds, ...entityData } = data;
+    const entity = repo.create({
+      id: aggregate.id,
+      status: aggregate.status as GerarHorarioStatus,
+      duracao: aggregate.duracao as GerarHorarioDuracao,
+      dataInicio: new Date(aggregate.dataInicio),
+      dataTermino: aggregate.dataTermino ? new Date(aggregate.dataTermino) : null,
+      requisicaoGerador: aggregate.requisicaoGerador,
+      respostaGerador: aggregate.respostaGerador,
+      dateCreated: new Date(aggregate.dateCreated),
+    });
+    await repo.save(entity);
 
-    const entity = await repo.save(entityData as GerarHorarioEntity);
+    await this.replaceJunctionSet(
+      GerarHorarioCalendarioLetivoEntity,
+      aggregate.id,
+      aggregate.calendarioLetivoIds,
+      "calendarioLetivo",
+    );
+    await this.replaceJunctionSet(
+      GerarHorarioOfertaFormacaoEntity,
+      aggregate.id,
+      aggregate.ofertaFormacaoIds,
+      "ofertaFormacao",
+    );
+  }
 
-    if (calendarioLetivoIds !== undefined) {
-      await this.replaceJunctionSet(
-        GerarHorarioCalendarioLetivoEntity,
-        entity.id,
-        calendarioLetivoIds,
-        "calendarioLetivo",
-      );
-    }
+  // ============================================================================
+  // Mappers privados
+  // ============================================================================
 
-    if (ofertaFormacaoIds !== undefined) {
-      await this.replaceJunctionSet(
-        GerarHorarioOfertaFormacaoEntity,
-        entity.id,
-        ofertaFormacaoIds,
-        "ofertaFormacao",
-      );
-    }
-
-    const junctions = await this.findJunctions(entity.id);
-
+  private toDomainData(
+    entity: GerarHorarioEntity,
+    junctions: { calendarioLetivoIds: string[]; ofertaFormacaoIds: string[] },
+  ): IGerarHorarioDomain {
     return {
-      ...entity,
+      id: entity.id,
+      status: entity.status,
+      duracao: entity.duracao,
+      dataInicio:
+        entity.dataInicio instanceof Date
+          ? entity.dataInicio.toISOString().split("T")[0]
+          : String(entity.dataInicio),
+      dataTermino: entity.dataTermino
+        ? entity.dataTermino instanceof Date
+          ? entity.dataTermino.toISOString().split("T")[0]
+          : String(entity.dataTermino)
+        : null,
+      requisicaoGerador: entity.requisicaoGerador,
+      respostaGerador: entity.respostaGerador,
+      dateCreated:
+        entity.dateCreated instanceof Date
+          ? entity.dateCreated.toISOString()
+          : String(entity.dateCreated),
       calendarioLetivoIds: junctions.calendarioLetivoIds,
       ofertaFormacaoIds: junctions.ofertaFormacaoIds,
     };

@@ -3,6 +3,7 @@ import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
+import { dateToISO, dateToISONullable } from "@/infrastructure.database/typeorm/mapping";
 import {
   CalendarioAgendamento,
   type ICalendarioAgendamento,
@@ -17,6 +18,7 @@ import {
 } from "./typeorm/calendario-agendamento.typeorm.entity";
 import { CalendarioAgendamentoAmbienteEntity } from "./typeorm/calendario-agendamento-ambiente.typeorm.entity";
 import { CalendarioAgendamentoCalendarioLetivoEntity } from "./typeorm/calendario-agendamento-calendario-letivo.typeorm.entity";
+import { CalendarioAgendamentoDiarioEntity } from "./typeorm/calendario-agendamento-diario.typeorm.entity";
 import { CalendarioAgendamentoModalidadeEntity } from "./typeorm/calendario-agendamento-modalidade.typeorm.entity";
 import { CalendarioAgendamentoOfertaFormacaoEntity } from "./typeorm/calendario-agendamento-oferta-formacao.typeorm.entity";
 import { CalendarioAgendamentoProfessorEntity } from "./typeorm/calendario-agendamento-professor.typeorm.entity";
@@ -68,6 +70,9 @@ export class CalendarioAgendamentoTypeOrmRepositoryAdapter
       cor: aggregate.cor,
       repeticao: aggregate.repeticao,
       status: aggregate.status as CalendarioAgendamentoStatus | null,
+      dateCreated: new Date(aggregate.dateCreated),
+      dateUpdated: new Date(aggregate.dateUpdated),
+      dateDeleted: aggregate.dateDeleted ? new Date(aggregate.dateDeleted) : null,
     });
     await repo.save(entity);
 
@@ -173,6 +178,11 @@ export class CalendarioAgendamentoTypeOrmRepositoryAdapter
       ofertaFormacaoIds: junctions.ofertaFormacaoIds,
       modalidadeIds: junctions.modalidadeIds,
       ambienteIds: junctions.ambienteIds,
+      diarioIds: junctions.diarioIds,
+
+      dateCreated: dateToISO(entity.dateCreated),
+      dateUpdated: dateToISO(entity.dateUpdated),
+      dateDeleted: dateToISONullable(entity.dateDeleted),
     };
   }
 
@@ -200,6 +210,11 @@ export class CalendarioAgendamentoTypeOrmRepositoryAdapter
     result.ofertaFormacaoIds = junctions.ofertaFormacaoIds;
     result.modalidadeIds = junctions.modalidadeIds;
     result.ambienteIds = junctions.ambienteIds;
+    result.diarioIds = junctions.diarioIds;
+
+    result.dateCreated = dateToISO(entity.dateCreated);
+    result.dateUpdated = dateToISO(entity.dateUpdated);
+    result.dateDeleted = dateToISONullable(entity.dateDeleted);
 
     return result;
   }
@@ -213,27 +228,37 @@ export class CalendarioAgendamentoTypeOrmRepositoryAdapter
   // ============================================================================
 
   private async findJunctions(eventoId: string): Promise<IJunctionData> {
-    const [turmaJunctions, profJunctions, clJunctions, ofJunctions, modJunctions, ambJunctions] =
-      await Promise.all([
-        this.appTypeormConnection
-          .getRepository(CalendarioAgendamentoTurmaEntity)
-          .find({ where: { calendarioAgendamento: { id: eventoId } } }),
-        this.appTypeormConnection
-          .getRepository(CalendarioAgendamentoProfessorEntity)
-          .find({ where: { calendarioAgendamento: { id: eventoId } } }),
-        this.appTypeormConnection
-          .getRepository(CalendarioAgendamentoCalendarioLetivoEntity)
-          .find({ where: { calendarioAgendamento: { id: eventoId } } }),
-        this.appTypeormConnection
-          .getRepository(CalendarioAgendamentoOfertaFormacaoEntity)
-          .find({ where: { calendarioAgendamento: { id: eventoId } } }),
-        this.appTypeormConnection
-          .getRepository(CalendarioAgendamentoModalidadeEntity)
-          .find({ where: { calendarioAgendamento: { id: eventoId } } }),
-        this.appTypeormConnection
-          .getRepository(CalendarioAgendamentoAmbienteEntity)
-          .find({ where: { calendarioAgendamento: { id: eventoId } } }),
-      ]);
+    const [
+      turmaJunctions,
+      profJunctions,
+      clJunctions,
+      ofJunctions,
+      modJunctions,
+      ambJunctions,
+      diarJunctions,
+    ] = await Promise.all([
+      this.appTypeormConnection
+        .getRepository(CalendarioAgendamentoTurmaEntity)
+        .find({ where: { calendarioAgendamento: { id: eventoId } } }),
+      this.appTypeormConnection
+        .getRepository(CalendarioAgendamentoProfessorEntity)
+        .find({ where: { calendarioAgendamento: { id: eventoId } } }),
+      this.appTypeormConnection
+        .getRepository(CalendarioAgendamentoCalendarioLetivoEntity)
+        .find({ where: { calendarioAgendamento: { id: eventoId } } }),
+      this.appTypeormConnection
+        .getRepository(CalendarioAgendamentoOfertaFormacaoEntity)
+        .find({ where: { calendarioAgendamento: { id: eventoId } } }),
+      this.appTypeormConnection
+        .getRepository(CalendarioAgendamentoModalidadeEntity)
+        .find({ where: { calendarioAgendamento: { id: eventoId } } }),
+      this.appTypeormConnection
+        .getRepository(CalendarioAgendamentoAmbienteEntity)
+        .find({ where: { calendarioAgendamento: { id: eventoId } } }),
+      this.appTypeormConnection
+        .getRepository(CalendarioAgendamentoDiarioEntity)
+        .find({ where: { calendarioAgendamento: { id: eventoId } } }),
+    ]);
 
     return {
       turmaIds: turmaJunctions.map((j) => j.turma?.id).filter(Boolean),
@@ -242,6 +267,7 @@ export class CalendarioAgendamentoTypeOrmRepositoryAdapter
       ofertaFormacaoIds: ofJunctions.map((j) => j.ofertaFormacao?.id).filter(Boolean),
       modalidadeIds: modJunctions.map((j) => j.modalidade?.id).filter(Boolean),
       ambienteIds: ambJunctions.map((j) => j.ambiente?.id).filter(Boolean),
+      diarioIds: diarJunctions.map((j) => j.diario?.id).filter(Boolean),
     };
   }
 
@@ -283,6 +309,12 @@ export class CalendarioAgendamentoTypeOrmRepositoryAdapter
         aggregate.ambienteIds,
         "ambiente",
       ),
+      this.replaceJunctionSet(
+        CalendarioAgendamentoDiarioEntity,
+        aggregate.id,
+        aggregate.diarioIds,
+        "diario",
+      ),
     ]);
   }
 
@@ -317,4 +349,5 @@ interface IJunctionData {
   ofertaFormacaoIds: string[];
   modalidadeIds: string[];
   ambienteIds: string[];
+  diarioIds: string[];
 }
