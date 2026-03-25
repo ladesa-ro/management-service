@@ -32,6 +32,7 @@ const APPLICATION_ERROR_STATUS_MAP: Record<ApplicationErrorCode, number> = {
   [ApplicationErrorCode.UNAUTHORIZED]: 401,
   [ApplicationErrorCode.VALIDATION]: 422,
   [ApplicationErrorCode.CONFLICT]: 409,
+  [ApplicationErrorCode.GONE]: 410,
   [ApplicationErrorCode.INTERNAL]: 500,
   [ApplicationErrorCode.SERVICE_UNAVAILABLE]: 503,
 };

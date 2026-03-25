@@ -1,6 +1,11 @@
 import { BadRequestException, HttpException, NotFoundException } from "@nestjs/common";
 import { describe, expect, it } from "vitest";
-import { ForbiddenError, ResourceNotFoundError, ValidationError } from "@/application/errors";
+import {
+  ForbiddenError,
+  GoneError,
+  ResourceNotFoundError,
+  ValidationError,
+} from "@/application/errors";
 import { EntityValidationError } from "@/domain/errors";
 import { buildStandardizedErrorResponse } from "./error-response.mapper";
 
@@ -28,6 +33,26 @@ describe("buildStandardizedErrorResponse", () => {
       const error = new ResourceNotFoundError("Campus");
       const response = buildStandardizedErrorResponse(error);
       expect(response.details).toBeUndefined();
+    });
+  });
+
+  describe("with GoneError", () => {
+    it("returns status 410", () => {
+      const error = new GoneError("Perfil");
+      const response = buildStandardizedErrorResponse(error);
+      expect(response.statusCode).toBe(410);
+    });
+
+    it("returns code APP.GONE", () => {
+      const error = new GoneError("Perfil");
+      const response = buildStandardizedErrorResponse(error);
+      expect(response.code).toBe("APP.GONE");
+    });
+
+    it("includes the error message with identifier", () => {
+      const error = new GoneError("Perfil", "uuid-123");
+      const response = buildStandardizedErrorResponse(error);
+      expect(response.message).toBe('Perfil com identificador "uuid-123" não está mais ativo(a).');
     });
   });
 
