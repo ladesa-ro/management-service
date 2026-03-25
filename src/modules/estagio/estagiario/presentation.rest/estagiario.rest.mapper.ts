@@ -1,4 +1,4 @@
-import { PerfilRestMapper } from "@/modules/acesso/perfil/presentation.rest/perfil.rest.mapper";
+import { PerfilRestMapper } from "@/modules/acesso/usuario/perfil/presentation.rest/perfil.rest.mapper";
 import { CursoRestMapper } from "@/modules/ensino/curso/presentation.rest/curso.rest.mapper";
 import { TurmaRestMapper } from "@/modules/ensino/turma/presentation.rest/turma.rest.mapper";
 import {

@@ -49,12 +49,12 @@ presentation.graphql/        # Resolvers GraphQL (quando aplicável)
 
 | Grupo | Módulos |
 |-------|---------|
-| `acesso/` | `autenticacao`, `perfil`, `usuario` |
+| `acesso/` | `autenticacao`, `usuario` (inclui `perfil` como sub-entidade) |
 | `ambientes/` | `ambiente`, `bloco`, `campus` |
 | `armazenamento/` | `arquivo`, `imagem`, `imagem-arquivo` |
 | `ensino/` | `curso`, `diario`, `disciplina`, `modalidade`, `nivel-formacao`, `oferta-formacao`, `turma`, etc. |
 | `estagio/` | `empresa`, `estagiario`, `estagio`, `responsavel-empresa` |
-| `horarios/` | `calendario-letivo`, `calendario-agendamento`, `gerar-horario`, `horario-aula`, etc. |
+| `horarios/` | `calendario-letivo`, `calendario-agendamento`, `gerar-horario`, `horario-aula-configuracao` (inclui `horario-aula`), `horario-consulta`, `horario-edicao`, `turma-horario-aula`, `relatorio` |
 | `localidades/` | `cidade`, `endereco`, `estado` |
 
 ## Diretórios compartilhados

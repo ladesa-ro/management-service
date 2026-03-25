@@ -2648,12 +2648,12 @@ modules/<grupo>/<nome-do-modulo>/
 
 | Área | Descrição | Módulos |
 |------|-----------|---------|
-| **Acesso** | Gestão de usuários, autenticação, perfis e notificações | `usuario`, `autenticacao`, `notificacao`, `perfil` |
+| **Acesso** | Gestão de usuários, autenticação, perfis e notificações | `usuario` (inclui `perfil`), `autenticacao`, `notificacao` |
 | **Ambientes** | Estrutura física da instituição: campus, blocos e salas | `campus`, `bloco`, `ambiente` |
 | **Armazenamento** | Upload e gerenciamento de arquivos e imagens | `arquivo`, `imagem`, `imagem-arquivo` |
 | **Ensino** | Estrutura acadêmica: cursos, disciplinas, turmas, diários e ofertas de formação | `curso`, `disciplina`, `modalidade`, `nivel-formacao`, `oferta-formacao`, `oferta-formacao-periodo`, `oferta-formacao-periodo-etapa`, `turma`, `diario` |
 | **Estágio** | Gestão de estágios, empresas parceiras e estagiários | `empresa`, `estagiario`, `estagio`, `responsavel-empresa` |
-| **Horários** | Calendários letivos, agendamentos e geração automática de horários | `calendario-letivo`, `calendario-agendamento`, `calendario-agendamento-ambiente`, `calendario-agendamento-calendario-letivo`, `calendario-agendamento-diario`, `calendario-agendamento-modalidade`, `calendario-agendamento-oferta-formacao`, `calendario-agendamento-professor`, `calendario-agendamento-turma`, `gerar-horario`, `gerar-horario-calendario-letivo`, `gerar-horario-oferta-formacao`, `horario-aula`, `horario-aula-configuracao`, `horario-consulta`, `horario-edicao`, `relatorio`, `turma-horario-aula` |
+| **Horários** | Calendários letivos, agendamentos e geração automática de horários | `calendario-letivo`, `calendario-agendamento` (junções internas), `gerar-horario` (junções internas), `horario-aula-configuracao` (inclui `horario-aula`), `horario-consulta`, `horario-edicao`, `relatorio`, `turma-horario-aula` |
 | **Localidades** | Estados, cidades e endereços (dados IBGE) | `estado`, `cidade`, `endereco` |
 
 ### Diagrama de entidades e relacionamentos

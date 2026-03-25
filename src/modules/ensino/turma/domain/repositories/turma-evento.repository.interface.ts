@@ -1,9 +1,9 @@
-import type { ICalendarioAgendamento } from "@/modules/horarios/calendario-agendamento/domain/calendario-agendamento.types";
+import type { CalendarioAgendamentoEntity } from "@/modules/horarios/calendario-agendamento/infrastructure.database/typeorm/calendario-agendamento.typeorm.entity";
 
 export const ITurmaEventoRepository = Symbol("ITurmaEventoRepository");
 
 export interface ITurmaEventoRepository {
-  findEventosByTurmaId(turmaId: string): Promise<ICalendarioAgendamento[]>;
+  findEventosByTurmaId(turmaId: string): Promise<CalendarioAgendamentoEntity[]>;
 
   createEvento(
     turmaId: string,
@@ -17,7 +17,7 @@ export interface ITurmaEventoRepository {
       cor: string | null;
       repeticao: string | null;
     },
-  ): Promise<ICalendarioAgendamento>;
+  ): Promise<CalendarioAgendamentoEntity>;
 
   updateEvento(
     eventoId: string,
@@ -31,7 +31,7 @@ export interface ITurmaEventoRepository {
       cor?: string | null;
       repeticao?: string | null;
     },
-  ): Promise<ICalendarioAgendamento>;
+  ): Promise<CalendarioAgendamentoEntity>;
 
   deleteEventoForTurma(eventoId: string, turmaId: string): Promise<void>;
 }

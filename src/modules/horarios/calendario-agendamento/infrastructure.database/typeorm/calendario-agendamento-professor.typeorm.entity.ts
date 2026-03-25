@@ -1,0 +1,17 @@
+import { Entity, JoinColumn, ManyToOne, PrimaryColumn, type Relation } from "typeorm";
+import { PerfilEntity } from "@/modules/acesso/usuario/perfil/infrastructure.database/typeorm/perfil.typeorm.entity";
+import { CalendarioAgendamentoEntity } from "./calendario-agendamento.typeorm.entity";
+
+@Entity("calendario_agendamento_professor")
+export class CalendarioAgendamentoProfessorEntity {
+  @PrimaryColumn("uuid")
+  id!: string;
+
+  @ManyToOne(() => PerfilEntity, {})
+  @JoinColumn({ name: "id_perfil_fk" })
+  perfil!: Relation<PerfilEntity>;
+
+  @ManyToOne(() => CalendarioAgendamentoEntity, {})
+  @JoinColumn({ name: "id_calendario_agendamento_fk" })
+  calendarioAgendamento!: Relation<CalendarioAgendamentoEntity>;
+}

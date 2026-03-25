@@ -1,7 +1,7 @@
 import type { IEntityBaseUuid } from "@/domain/abstractions/entities";
 import type { IdUuid, ScalarDateTimeString } from "@/domain/abstractions/scalars";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
-import type { IPerfil } from "@/modules/acesso/perfil";
+import type { IPerfil } from "@/modules/acesso/usuario/perfil";
 import type { IDiario } from "@/modules/ensino/diario/domain/diario";
 import { zodValidate } from "@/shared/validation/index";
 import { getNowISO } from "@/utils/date";

@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
-import { PerfilModule } from "@/modules/acesso/perfil/perfil.module";
+import { UsuarioModule } from "@/modules/acesso/usuario/usuario.module";
 import { AmbienteModule } from "@/modules/ambientes/ambiente/ambiente.module";
 import { DiarioPermissionCheckerImpl } from "@/modules/ensino/diario/application/authorization";
 import {
@@ -56,7 +56,7 @@ import { CalendarioLetivoModule } from "@/modules/horarios/calendario-letivo/cal
  * Modulo NestJS para Diario
  */
 @Module({
-  imports: [CalendarioLetivoModule, TurmaModule, AmbienteModule, DisciplinaModule, PerfilModule],
+  imports: [CalendarioLetivoModule, TurmaModule, AmbienteModule, DisciplinaModule, UsuarioModule],
   controllers: [
     DiarioRestController,
     DiarioProfessorRestController,

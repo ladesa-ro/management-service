@@ -16,6 +16,9 @@ export class GerarHorarioCreateInputRestDto {
   @ApiPropertyOptional(GerarHorarioFields.ofertaFormacaoIds.swaggerMetadata)
   ofertaFormacaoIds?: string[];
 
+  @ApiPropertyOptional(GerarHorarioFields.calendarioLetivoIds.swaggerMetadata)
+  calendarioLetivoIds?: string[];
+
   @ApiPropertyOptional(GerarHorarioFields.duracao.swaggerMetadata)
   duracao?: string;
 }
@@ -55,4 +58,10 @@ export class GerarHorarioFindOneOutputRestDto {
 
   @ApiProperty(GerarHorarioFields.dateCreated.swaggerMetadata)
   dateCreated: string;
+
+  @ApiPropertyOptional(GerarHorarioFields.ofertaFormacaoIds.swaggerMetadata)
+  ofertaFormacaoIds: string[];
+
+  @ApiPropertyOptional(GerarHorarioFields.calendarioLetivoIds.swaggerMetadata)
+  calendarioLetivoIds: string[];
 }

@@ -21,4 +21,7 @@ export interface IGerarHorario {
   requisicaoGerador: Record<string, unknown> | null;
   respostaGerador: Record<string, unknown> | null;
   dateCreated: Date;
+
+  calendarioLetivoIds: string[];
+  ofertaFormacaoIds: string[];
 }

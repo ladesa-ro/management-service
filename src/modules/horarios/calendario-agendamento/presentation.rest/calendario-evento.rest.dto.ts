@@ -72,6 +72,13 @@ export class CalendarioEventoCreateInputRestDto {
     description: "IDs das modalidades vinculadas",
   })
   modalidadeIds?: string[];
+
+  @ApiPropertyOptional({
+    type: "string",
+    isArray: true,
+    description: "IDs dos ambientes vinculados",
+  })
+  ambienteIds?: string[];
 }
 
 // ============================================================================
@@ -126,6 +133,13 @@ export class CalendarioEventoUpdateInputRestDto {
     description: "IDs das modalidades vinculadas",
   })
   modalidadeIds?: string[];
+
+  @ApiPropertyOptional({
+    type: "string",
+    isArray: true,
+    description: "IDs dos ambientes vinculados",
+  })
+  ambienteIds?: string[];
 }
 
 // ============================================================================
@@ -159,6 +173,7 @@ export class CalendarioEventoFindOneOutputRestDto {
   @ApiPropertyOptional({ type: "string", isArray: true }) calendarioLetivoIds?: string[];
   @ApiPropertyOptional({ type: "string", isArray: true }) ofertaFormacaoIds?: string[];
   @ApiPropertyOptional({ type: "string", isArray: true }) modalidadeIds?: string[];
+  @ApiPropertyOptional({ type: "string", isArray: true }) ambienteIds?: string[];
 }
 
 @ApiSchema({ name: "CalendarioEventoListOutputDto" })

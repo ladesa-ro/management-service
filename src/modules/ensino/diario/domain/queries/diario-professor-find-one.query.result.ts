@@ -1,5 +1,5 @@
 import { EntityQueryResult, SharedFields } from "@/domain/abstractions";
-import { PerfilFindOneQueryResult } from "@/modules/acesso/perfil";
+import { PerfilFindOneQueryResult } from "@/modules/acesso/usuario/perfil";
 import { DiarioFindOneQueryResult } from "@/modules/ensino/diario";
 import { DiarioProfessorFields } from "../diario-professor.fields";
 

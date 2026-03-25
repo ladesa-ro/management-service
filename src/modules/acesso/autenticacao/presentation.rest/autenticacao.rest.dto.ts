@@ -4,7 +4,7 @@ import { AuthLoginCommandFields } from "@/modules/acesso/autenticacao/domain/com
 import { AuthRecoverPasswordCommandFields } from "@/modules/acesso/autenticacao/domain/commands/auth-recover-password.command";
 import { AuthRefreshCommandFields } from "@/modules/acesso/autenticacao/domain/commands/auth-refresh.command";
 import { AuthWhoAmIQueryResultFields } from "@/modules/acesso/autenticacao/domain/queries/auth-who-am-i.query.result";
-import { PerfilFindOneOutputRestDto } from "@/modules/acesso/perfil/presentation.rest";
+import { PerfilFindOneOutputRestDto } from "@/modules/acesso/usuario/perfil/presentation.rest";
 import { UsuarioFindOneOutputRestDto } from "@/modules/acesso/usuario/presentation.rest";
 import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@/shared/presentation/rest";
 

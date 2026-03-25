@@ -1,4 +1,4 @@
-import { PerfilFindOneOutputRestDto } from "@/modules/acesso/perfil/presentation.rest";
+import { PerfilFindOneOutputRestDto } from "@/modules/acesso/usuario/perfil/presentation.rest";
 import {
   ApiProperty,
   ApiPropertyOptional,

@@ -22,6 +22,8 @@ export class GerarHorarioRestMapper {
       entity.dateCreated instanceof Date
         ? entity.dateCreated.toISOString()
         : String(entity.dateCreated);
+    dto.ofertaFormacaoIds = entity.ofertaFormacaoIds ?? [];
+    dto.calendarioLetivoIds = entity.calendarioLetivoIds ?? [];
     return dto;
   }
 }

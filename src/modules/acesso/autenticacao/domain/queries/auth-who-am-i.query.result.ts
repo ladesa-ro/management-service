@@ -1,5 +1,5 @@
-import { PerfilFindOneQueryResult } from "@/modules/acesso/perfil";
 import { UsuarioFindOneQueryResult } from "@/modules/acesso/usuario";
+import { PerfilFindOneQueryResult } from "@/modules/acesso/usuario/perfil";
 import { AutenticacaoFields } from "../autenticacao.fields";
 
 export const AuthWhoAmIQueryResultFields = {

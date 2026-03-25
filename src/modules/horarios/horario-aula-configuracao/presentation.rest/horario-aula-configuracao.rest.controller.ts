@@ -79,14 +79,14 @@ export class HorarioAulaConfiguracaoRestController {
     @AccessContextHttp() _accessContext: IAccessContext,
     @Body() dto: HorarioAulaConfiguracaoCreateInputRestDto,
   ): Promise<HorarioAulaConfiguracaoFindOneOutputRestDto> {
-    const entity = {
+    const saved = await this.repository.save({
       id: generateUuidV7(),
       dataInicio: new Date(dto.dataInicio),
       dataFim: dto.dataFim ? new Date(dto.dataFim) : null,
       ativo: dto.ativo,
       campus: { id: dto.campusId },
-    };
-    const saved = await this.repository.save(entity);
+      horarios: dto.horarios ?? [],
+    });
     return this.toOutputDto(saved);
   }
 
@@ -103,14 +103,15 @@ export class HorarioAulaConfiguracaoRestController {
     const entity = await this.repository.findById(params.id);
     ensureExists(entity, "HorarioAulaConfiguracao", params.id);
 
-    if (dto.dataInicio !== undefined) entity.dataInicio = new Date(dto.dataInicio);
-    if (dto.dataFim !== undefined) entity.dataFim = dto.dataFim ? new Date(dto.dataFim) : null;
-    if (dto.ativo !== undefined) entity.ativo = dto.ativo;
-    if (dto.campusId !== undefined)
-      entity.campus = { id: dto.campusId } as unknown as typeof entity.campus;
+    const updateData: Record<string, unknown> = { id: entity.id };
+    if (dto.dataInicio !== undefined) updateData.dataInicio = new Date(dto.dataInicio);
+    if (dto.dataFim !== undefined) updateData.dataFim = dto.dataFim ? new Date(dto.dataFim) : null;
+    if (dto.ativo !== undefined) updateData.ativo = dto.ativo;
+    if (dto.campusId !== undefined) updateData.campus = { id: dto.campusId };
+    if (dto.horarios !== undefined) updateData.horarios = dto.horarios;
 
-    await this.repository.save(entity);
-    return this.toOutputDto(entity);
+    const saved = await this.repository.save(updateData as Partial<IHorarioAulaConfiguracao>);
+    return this.toOutputDto(saved);
   }
 
   @Delete("/:id")
@@ -141,6 +142,7 @@ export class HorarioAulaConfiguracaoRestController {
       dataFim: formatDate(entity.dataFim),
       ativo: entity.ativo,
       campusId: entity.campus?.id,
+      horarios: entity.horarios ?? [],
     };
   }
 }

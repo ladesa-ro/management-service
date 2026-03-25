@@ -38,6 +38,10 @@ export const GerarHorarioFields = {
     description: "IDs das ofertas de formacao",
     schema: createSchema(() => z.array(z.string().uuid())),
   }),
+  calendarioLetivoIds: createFieldMetadata({
+    description: "IDs dos calendarios letivos",
+    schema: createSchema(() => z.array(z.string().uuid())),
+  }),
   duracao: createFieldMetadata({
     description: "Duracao: TEMPORARIO ou PERMANENTE",
     schema: createSchema(() => z.enum(GerarHorarioDuracaoValues)),

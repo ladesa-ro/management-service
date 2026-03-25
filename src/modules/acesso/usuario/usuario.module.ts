@@ -45,15 +45,36 @@ import {
   UsuarioEventoTypeOrmRepositoryAdapter,
   UsuarioTypeOrmRepositoryAdapter,
 } from "@/modules/acesso/usuario/infrastructure.database";
+import { PerfilSetVinculosCommandHandlerImpl } from "@/modules/acesso/usuario/perfil/application/commands";
+import {
+  PerfilFindAllActiveQueryHandlerImpl,
+  PerfilFindOneQueryHandlerImpl,
+  PerfilListQueryHandlerImpl,
+} from "@/modules/acesso/usuario/perfil/application/queries";
+import { IPerfilSetVinculosCommandHandler } from "@/modules/acesso/usuario/perfil/domain/commands";
+import {
+  IPerfilFindAllActiveQueryHandler,
+  IPerfilFindOneQueryHandler,
+  IPerfilListQueryHandler,
+} from "@/modules/acesso/usuario/perfil/domain/queries";
+import { IPerfilRepository } from "@/modules/acesso/usuario/perfil/domain/repositories";
+import { PerfilTypeOrmRepositoryAdapter } from "@/modules/acesso/usuario/perfil/infrastructure.database";
 import { UsuarioGraphqlResolver } from "@/modules/acesso/usuario/presentation.graphql/usuario.graphql.resolver";
 import { UsuarioRestController } from "@/modules/acesso/usuario/presentation.rest/usuario.rest.controller";
 import { UsuarioEventoRestController } from "@/modules/acesso/usuario/presentation.rest/usuario-evento.rest.controller";
+import { CampusModule } from "@/modules/ambientes/campus/campus.module";
 import { ArquivoModule } from "@/modules/armazenamento/arquivo/arquivo.module";
 import { ImagemModule } from "@/modules/armazenamento/imagem/imagem.module";
 import { HorarioConsultaModule } from "@/modules/horarios/horario-consulta/horario-consulta.module";
 
 @Module({
-  imports: [IdentityProviderModule, ImagemModule, ArquivoModule, HorarioConsultaModule],
+  imports: [
+    IdentityProviderModule,
+    ImagemModule,
+    ArquivoModule,
+    HorarioConsultaModule,
+    CampusModule,
+  ],
   controllers: [UsuarioRestController, UsuarioEventoRestController],
   providers: [
     NestJsPaginateAdapter,
@@ -75,7 +96,7 @@ import { HorarioConsultaModule } from "@/modules/horarios/horario-consulta/horar
       useClass: UsuarioEventoTypeOrmRepositoryAdapter,
     },
 
-    // Commands
+    // Usuario Commands
     { provide: IUsuarioCreateCommandHandler, useClass: UsuarioCreateCommandHandlerImpl },
     { provide: IUsuarioUpdateCommandHandler, useClass: UsuarioUpdateCommandHandlerImpl },
     { provide: IUsuarioDeleteCommandHandler, useClass: UsuarioDeleteCommandHandlerImpl },
@@ -87,7 +108,7 @@ import { HorarioConsultaModule } from "@/modules/horarios/horario-consulta/horar
       provide: IUsuarioUpdateImagemPerfilCommandHandler,
       useClass: UsuarioUpdateImagemPerfilCommandHandlerImpl,
     },
-    // Queries
+    // Usuario Queries
     { provide: IUsuarioListQueryHandler, useClass: UsuarioListQueryHandlerImpl },
     { provide: IUsuarioFindOneQueryHandler, useClass: UsuarioFindOneQueryHandlerImpl },
     {
@@ -104,12 +125,22 @@ import { HorarioConsultaModule } from "@/modules/horarios/horario-consulta/horar
       useClass: UsuarioGetImagemPerfilQueryHandlerImpl,
     },
     { provide: IUsuarioEnsinoQueryHandler, useClass: UsuarioEnsinoQueryHandlerImpl },
+
+    // Perfil (sub-entidade de Usuario)
+    { provide: IPerfilRepository, useClass: PerfilTypeOrmRepositoryAdapter },
+    { provide: IPerfilSetVinculosCommandHandler, useClass: PerfilSetVinculosCommandHandlerImpl },
+    { provide: IPerfilListQueryHandler, useClass: PerfilListQueryHandlerImpl },
+    { provide: IPerfilFindOneQueryHandler, useClass: PerfilFindOneQueryHandlerImpl },
+    { provide: IPerfilFindAllActiveQueryHandler, useClass: PerfilFindAllActiveQueryHandlerImpl },
   ],
   exports: [
     IUsuarioFindOneQueryHandler,
     IUsuarioFindByIdSimpleQueryHandler,
     IUsuarioFindByMatriculaQueryHandler,
     IUsuarioEnsinoQueryHandler,
+    IPerfilFindAllActiveQueryHandler,
+    IPerfilFindOneQueryHandler,
+    IPerfilListQueryHandler,
   ],
 })
 export class UsuarioModule {}

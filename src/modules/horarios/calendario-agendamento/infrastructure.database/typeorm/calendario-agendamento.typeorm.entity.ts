@@ -1,17 +1,10 @@
 import { Column, Entity, PrimaryColumn } from "typeorm";
+import {
+  CalendarioAgendamentoStatus,
+  CalendarioAgendamentoTipo,
+} from "../../domain/calendario-agendamento.types";
 
-export enum CalendarioAgendamentoTipo {
-  INDISPONIBILIDADE = "INDISPONIBILIDADE",
-  AULA = "AULA",
-  EVENTO = "EVENTO",
-  RESERVA = "RESERVA",
-}
-
-export enum CalendarioAgendamentoStatus {
-  RASCUNHO = "RASCUNHO",
-  ATIVO = "ATIVO",
-  INATIVO = "INATIVO",
-}
+export { CalendarioAgendamentoStatus, CalendarioAgendamentoTipo };
 
 @Entity("calendario_agendamento")
 export class CalendarioAgendamentoEntity {

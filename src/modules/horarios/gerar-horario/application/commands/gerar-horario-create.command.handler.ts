@@ -42,6 +42,8 @@ export class GerarHorarioCreateCommandHandlerImpl implements IGerarHorarioCreate
       requisicaoGerador: null,
       respostaGerador: null,
       dateCreated: getNow(),
+      calendarioLetivoIds: command.calendarioLetivoIds ?? [],
+      ofertaFormacaoIds: command.ofertaFormacaoIds ?? [],
     };
 
     await this.gerarHorarioRepository.save(entity);

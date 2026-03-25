@@ -1,11 +1,7 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
+import { CalendarioAgendamento } from "@/modules/horarios/calendario-agendamento/domain/calendario-agendamento";
+import { CalendarioAgendamentoTipo } from "@/modules/horarios/calendario-agendamento/domain/calendario-agendamento.types";
 import { ICalendarioAgendamentoRepository } from "@/modules/horarios/calendario-agendamento/domain/repositories/calendario-agendamento.repository.interface";
-import {
-  CalendarioAgendamentoEntity,
-  CalendarioAgendamentoStatus,
-  CalendarioAgendamentoTipo,
-} from "@/modules/horarios/calendario-agendamento/infrastructure.database/typeorm/calendario-agendamento.typeorm.entity";
 import type { IHorarioEdicaoApplicator } from "../domain/repositories";
 import {
   type HorarioEdicaoMudancaEntity,
@@ -25,51 +21,46 @@ export class HorarioEdicaoApplicatorTypeOrmAdapter implements IHorarioEdicaoAppl
 
       switch (mudanca.tipoOperacao) {
         case HorarioEdicaoMudancaTipoOperacao.CRIAR: {
-          const agendamento = new CalendarioAgendamentoEntity();
-          agendamento.id = generateUuidV7();
-          agendamento.tipo =
-            (dados.tipo as CalendarioAgendamentoTipo) ?? CalendarioAgendamentoTipo.AULA;
-          agendamento.nome = (dados.nome as string) ?? null;
-          agendamento.dataInicio = new Date(dados.dataInicio as string);
-          agendamento.dataFim = dados.dataFim ? new Date(dados.dataFim as string) : null;
-          agendamento.diaInteiro = (dados.diaInteiro as boolean) ?? false;
-          agendamento.horarioInicio = (dados.horarioInicio as string) ?? "00:00:00";
-          agendamento.horarioFim = (dados.horarioFim as string) ?? "23:59:59";
-          agendamento.repeticao = (dados.repeticao as string) ?? null;
-          agendamento.cor = (dados.cor as string) ?? null;
-          agendamento.status = CalendarioAgendamentoStatus.ATIVO;
-          await this.calendarioAgendamentoRepository.save(agendamento);
+          const domain = CalendarioAgendamento.create({
+            tipo: (dados.tipo as CalendarioAgendamentoTipo) ?? CalendarioAgendamentoTipo.AULA,
+            nome: (dados.nome as string) ?? null,
+            dataInicio: dados.dataInicio as string,
+            dataFim: (dados.dataFim as string) ?? null,
+            diaInteiro: (dados.diaInteiro as boolean) ?? false,
+            horarioInicio: (dados.horarioInicio as string) ?? "00:00:00",
+            horarioFim: (dados.horarioFim as string) ?? "23:59:59",
+            repeticao: (dados.repeticao as string) ?? null,
+            cor: (dados.cor as string) ?? null,
+          });
+          await this.calendarioAgendamentoRepository.save(domain);
           break;
         }
 
         case HorarioEdicaoMudancaTipoOperacao.MOVER: {
           if (!mudanca.calendarioAgendamento?.id) break;
-          const existing = await this.calendarioAgendamentoRepository.findById(
-            mudanca.calendarioAgendamento?.id,
+          const existing = await this.calendarioAgendamentoRepository.loadById(
+            null,
+            mudanca.calendarioAgendamento.id,
           );
           if (!existing) break;
 
-          if (dados.dataInicio !== undefined)
-            existing.dataInicio = new Date(dados.dataInicio as string);
-          if (dados.dataFim !== undefined)
-            existing.dataFim = dados.dataFim ? new Date(dados.dataFim as string) : null;
-          if (dados.horarioInicio !== undefined)
-            existing.horarioInicio = dados.horarioInicio as string;
-          if (dados.horarioFim !== undefined) existing.horarioFim = dados.horarioFim as string;
-          if (dados.nome !== undefined) existing.nome = dados.nome as string;
-          if (dados.diaInteiro !== undefined) existing.diaInteiro = dados.diaInteiro as boolean;
+          existing.update({
+            dataInicio: dados.dataInicio as string | undefined,
+            dataFim: dados.dataFim as string | null | undefined,
+            horarioInicio: dados.horarioInicio as string | undefined,
+            horarioFim: dados.horarioFim as string | undefined,
+            nome: dados.nome as string | undefined,
+            diaInteiro: dados.diaInteiro as boolean | undefined,
+          });
           await this.calendarioAgendamentoRepository.save(existing);
           break;
         }
 
         case HorarioEdicaoMudancaTipoOperacao.REMOVER: {
           if (!mudanca.calendarioAgendamento?.id) break;
-          const toRemove = await this.calendarioAgendamentoRepository.findById(
-            mudanca.calendarioAgendamento?.id,
+          await this.calendarioAgendamentoRepository.inactivateById(
+            mudanca.calendarioAgendamento.id,
           );
-          if (!toRemove) break;
-          toRemove.status = CalendarioAgendamentoStatus.INATIVO;
-          await this.calendarioAgendamentoRepository.save(toRemove);
           break;
         }
       }

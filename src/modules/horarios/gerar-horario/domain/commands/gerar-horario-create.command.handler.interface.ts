@@ -5,6 +5,8 @@ import type { IGerarHorario } from "../gerar-horario.types";
 export interface IGerarHorarioCreateCommand {
   dataInicio: string;
   dataTermino?: string;
+  ofertaFormacaoIds?: string[];
+  calendarioLetivoIds?: string[];
 }
 
 export const GerarHorarioCreateCommandMetadata = createOperationMetadata({

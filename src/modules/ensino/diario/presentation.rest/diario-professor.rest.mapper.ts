@@ -1,4 +1,4 @@
-import { PerfilRestMapper } from "@/modules/acesso/perfil/presentation.rest";
+import { PerfilRestMapper } from "@/modules/acesso/usuario/perfil/presentation.rest";
 import { createListOutputMapper } from "@/shared/mapping";
 import { getNow } from "@/utils/date";
 import { DiarioProfessorBulkReplaceCommand, DiarioProfessorListQuery } from "../domain";

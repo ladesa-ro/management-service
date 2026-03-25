@@ -1,15 +1,15 @@
 import type { FindOptionsWhere } from "typeorm";
 import { ensureExists } from "@/application/errors";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
+import { CalendarioAgendamento } from "@/modules/horarios/calendario-agendamento/domain/calendario-agendamento";
+import { CalendarioAgendamentoTipo } from "@/modules/horarios/calendario-agendamento/domain/calendario-agendamento.types";
 import { ICalendarioAgendamentoRepository } from "@/modules/horarios/calendario-agendamento/domain/repositories/calendario-agendamento.repository.interface";
 import {
   CalendarioAgendamentoEntity,
   CalendarioAgendamentoStatus,
-  CalendarioAgendamentoTipo,
 } from "@/modules/horarios/calendario-agendamento/infrastructure.database/typeorm/calendario-agendamento.typeorm.entity";
-import { CalendarioAgendamentoTurmaEntity } from "@/modules/horarios/calendario-agendamento-turma/infrastructure.database/typeorm/calendario-agendamento-turma.typeorm.entity";
+import { CalendarioAgendamentoTurmaEntity } from "@/modules/horarios/calendario-agendamento/infrastructure.database/typeorm/calendario-agendamento-turma.typeorm.entity";
 import type { ITurmaEventoRepository } from "../domain/repositories";
 
 @DeclareImplementation()
@@ -48,31 +48,33 @@ export class TurmaEventoTypeOrmRepositoryAdapter implements ITurmaEventoReposito
       repeticao: string | null;
     },
   ): Promise<CalendarioAgendamentoEntity> {
-    const evento = new CalendarioAgendamentoEntity();
-    evento.id = generateUuidV7();
-    evento.tipo = CalendarioAgendamentoTipo.EVENTO;
-    evento.nome = data.nome;
-    evento.dataInicio = data.dataInicio;
-    evento.dataFim = data.dataFim;
-    evento.diaInteiro = data.diaInteiro;
-    evento.horarioInicio = data.horarioInicio;
-    evento.horarioFim = data.horarioFim;
-    evento.cor = data.cor;
-    evento.repeticao = data.repeticao;
-    evento.status = CalendarioAgendamentoStatus.ATIVO;
-    await this.calendarioAgendamentoRepository.save(evento);
+    const domain = CalendarioAgendamento.create({
+      tipo: CalendarioAgendamentoTipo.EVENTO,
+      nome: data.nome,
+      dataInicio:
+        data.dataInicio instanceof Date
+          ? data.dataInicio.toISOString().split("T")[0]
+          : String(data.dataInicio),
+      dataFim: data.dataFim
+        ? data.dataFim instanceof Date
+          ? data.dataFim.toISOString().split("T")[0]
+          : String(data.dataFim)
+        : null,
+      diaInteiro: data.diaInteiro,
+      horarioInicio: data.horarioInicio,
+      horarioFim: data.horarioFim,
+      cor: data.cor,
+      repeticao: data.repeticao,
+      turmaIds: [turmaId],
+    });
 
-    // cross-module: uses TypeORM directly for junction entity (CalendarioAgendamentoTurmaEntity)
-    const junctionRepo = this.appTypeormConnection.getRepository(CalendarioAgendamentoTurmaEntity);
-    const junction = new CalendarioAgendamentoTurmaEntity();
-    junction.id = generateUuidV7();
-    junction.turma = { id: turmaId } as CalendarioAgendamentoTurmaEntity["turma"];
-    junction.calendarioAgendamento = {
-      id: evento.id,
-    } as CalendarioAgendamentoTurmaEntity["calendarioAgendamento"];
-    await junctionRepo.save(junction);
+    await this.calendarioAgendamentoRepository.save(domain);
 
-    return evento;
+    // Retorna entity para compatibilidade com callers existentes
+    const repo = this.appTypeormConnection.getRepository(CalendarioAgendamentoEntity);
+    const entity = await repo.findOneBy({ id: domain.id });
+    ensureExists(entity, CalendarioAgendamento.entityName, domain.id);
+    return entity;
   }
 
   async updateEvento(
@@ -88,19 +90,16 @@ export class TurmaEventoTypeOrmRepositoryAdapter implements ITurmaEventoReposito
       repeticao?: string | null;
     },
   ): Promise<CalendarioAgendamentoEntity> {
-    const entity = await this.calendarioAgendamentoRepository.findById(eventoId);
-    ensureExists(entity, "TurmaEvento", eventoId);
+    const domain = await this.calendarioAgendamentoRepository.loadById(null, eventoId);
+    ensureExists(domain, "TurmaEvento", eventoId);
 
-    if (data.nome !== undefined) entity.nome = data.nome;
-    if (data.dataInicio !== undefined) entity.dataInicio = new Date(data.dataInicio);
-    if (data.dataFim !== undefined) entity.dataFim = data.dataFim ? new Date(data.dataFim) : null;
-    if (data.diaInteiro !== undefined) entity.diaInteiro = data.diaInteiro;
-    if (data.horarioInicio !== undefined) entity.horarioInicio = data.horarioInicio;
-    if (data.horarioFim !== undefined) entity.horarioFim = data.horarioFim;
-    if (data.cor !== undefined) entity.cor = data.cor ?? null;
-    if (data.repeticao !== undefined) entity.repeticao = data.repeticao ?? null;
+    domain.update(data);
 
-    await this.calendarioAgendamentoRepository.save(entity);
+    await this.calendarioAgendamentoRepository.save(domain);
+
+    const repo = this.appTypeormConnection.getRepository(CalendarioAgendamentoEntity);
+    const entity = await repo.findOneBy({ id: eventoId });
+    ensureExists(entity, CalendarioAgendamento.entityName, eventoId);
     return entity;
   }
 
