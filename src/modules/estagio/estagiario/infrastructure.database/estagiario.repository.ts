@@ -1,15 +1,20 @@
+import { IsNull } from "typeorm";
 import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
 import { buildTypeOrmPaginateConfig } from "@/infrastructure.database/pagination/adapters/pagination-spec.adapter";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import {
-  typeormCreate,
   typeormFindAll,
   typeormFindById,
   typeormSoftDeleteById,
-  typeormUpdate,
 } from "@/infrastructure.database/typeorm/helpers/typeorm-repository-helpers";
+import {
+  dateToISO,
+  dateToISONullable,
+  toRefRequired,
+} from "@/infrastructure.database/typeorm/mapping";
+import { Estagiario } from "@/modules/estagio/estagiario/domain/estagiario";
 import type {
   EstagiarioFindOneQuery,
   EstagiarioFindOneQueryResult,
@@ -54,6 +59,13 @@ const estagiarioPaginateConfig = buildTypeOrmPaginateConfig<EstagiarioTypeormEnt
   estagiarioRelations,
 );
 
+/** Relations para o write side (loadById). */
+const writeRelations = {
+  perfil: true,
+  curso: true,
+  turma: true,
+} as const;
+
 @DeclareImplementation()
 export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository {
   constructor(
@@ -62,17 +74,59 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
     private readonly paginationAdapter: NestJsPaginateAdapter,
   ) {}
 
-  findAll(accessContext: IAccessContext | null, dto: EstagiarioListQuery | null = null) {
-    return typeormFindAll<EstagiarioTypeormEntity, EstagiarioListQuery, EstagiarioListQueryResult>(
+  // ==========================================
+  // Write side
+  // ==========================================
+
+  async loadById(_accessContext: IAccessContext | null, id: string): Promise<Estagiario | null> {
+    const repo = this.appTypeormConnection.getRepository(EstagiarioTypeormEntity);
+
+    const entity = await repo.findOne({
+      where: { id, dateDeleted: IsNull() },
+      relations: writeRelations,
+    });
+
+    if (!entity) return null;
+
+    return Estagiario.load({
+      id: entity.id,
+      perfil: toRefRequired(entity.perfil),
+      curso: toRefRequired(entity.curso),
+      turma: toRefRequired(entity.turma),
+      telefone: entity.telefone,
+      emailInstitucional: entity.emailInstitucional,
+      dataNascimento:
+        entity.dataNascimento instanceof Date
+          ? entity.dataNascimento.toISOString().slice(0, 10)
+          : entity.dataNascimento,
+      dateCreated: dateToISO(entity.dateCreated),
+      dateUpdated: dateToISO(entity.dateUpdated),
+      dateDeleted: dateToISONullable(entity.dateDeleted),
+    });
+  }
+
+  async save(aggregate: Estagiario): Promise<void> {
+    const entityData = estagiarioEntityDomainMapper.toPersistenceData({
+      ...aggregate,
+    }) as Record<string, unknown>;
+    const repo = this.appTypeormConnection.getRepository(EstagiarioTypeormEntity);
+    await repo.save(repo.create({ id: aggregate.id, ...entityData } as EstagiarioTypeormEntity));
+  }
+
+  softDeleteById(id: string) {
+    return typeormSoftDeleteById(
       this.appTypeormConnection,
       EstagiarioTypeormEntity,
-      { ...config, paginateConfig: estagiarioPaginateConfig },
-      this.paginationAdapter,
-      dto,
+      config.alias,
+      id,
     );
   }
 
-  findById(accessContext: IAccessContext | null, dto: EstagiarioFindOneQuery) {
+  // ==========================================
+  // Read side
+  // ==========================================
+
+  getFindOneQueryResult(accessContext: IAccessContext | null, dto: EstagiarioFindOneQuery) {
     return typeormFindById<
       EstagiarioTypeormEntity,
       EstagiarioFindOneQuery,
@@ -85,32 +139,16 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
     );
   }
 
-  findByIdSimple(accessContext: IAccessContext | null, id: string) {
-    return this.findById(accessContext, { id } as EstagiarioFindOneQuery);
-  }
-
-  create(data: Record<string, unknown>) {
-    const entityData = estagiarioEntityDomainMapper.toPersistenceData(data) as Record<
-      string,
-      unknown
-    >;
-    return typeormCreate(this.appTypeormConnection, EstagiarioTypeormEntity, entityData);
-  }
-
-  update(id: string | number, data: Record<string, unknown>) {
-    const entityData = estagiarioEntityDomainMapper.toPersistenceData(data) as Record<
-      string,
-      unknown
-    >;
-    return typeormUpdate(this.appTypeormConnection, EstagiarioTypeormEntity, id, entityData);
-  }
-
-  softDeleteById(id: string) {
-    return typeormSoftDeleteById(
+  getFindAllQueryResult(
+    accessContext: IAccessContext | null,
+    dto: EstagiarioListQuery | null = null,
+  ) {
+    return typeormFindAll<EstagiarioTypeormEntity, EstagiarioListQuery, EstagiarioListQueryResult>(
       this.appTypeormConnection,
       EstagiarioTypeormEntity,
-      config.alias,
-      id,
+      { ...config, paginateConfig: estagiarioPaginateConfig },
+      this.paginationAdapter,
+      dto,
     );
   }
 }

@@ -32,7 +32,7 @@ export class CursoUpdateCommandHandlerImpl implements ICursoUpdateCommandHandler
     accessContext: IAccessContext | null,
     dto: CursoFindOneQuery & CursoUpdateCommand,
   ): Promise<CursoFindOneQueryResult> {
-    const current = await this.repository.findById(accessContext, { id: dto.id });
+    const current = await this.repository.getFindOneQueryResult(accessContext, { id: dto.id });
 
     ensureExists(current, Curso.entityName, dto.id);
 
@@ -55,7 +55,7 @@ export class CursoUpdateCommandHandlerImpl implements ICursoUpdateCommandHandler
     }
     await this.repository.update(current.id, updateData);
 
-    const result = await this.repository.findById(accessContext, { id: dto.id });
+    const result = await this.repository.getFindOneQueryResult(accessContext, { id: dto.id });
 
     ensureExists(result, Curso.entityName, dto.id);
 

@@ -15,6 +15,6 @@ export class CampusFindOneQueryHandlerImpl implements ICampusFindOneQueryHandler
     accessContext: IAccessContext | null,
     dto: CampusFindOneQuery,
   ): Promise<CampusFindOneQueryResult | null> {
-    return this.repository.findById(accessContext, dto);
+    return this.repository.getFindOneQueryResult(accessContext, dto);
   }
 }

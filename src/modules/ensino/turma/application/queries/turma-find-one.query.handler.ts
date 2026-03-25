@@ -15,6 +15,6 @@ export class TurmaFindOneQueryHandlerImpl implements ITurmaFindOneQueryHandler {
     accessContext: IAccessContext | null,
     dto: TurmaFindOneQuery,
   ): Promise<TurmaFindOneQueryResult | null> {
-    return this.repository.findById(accessContext, dto);
+    return this.repository.getFindOneQueryResult(accessContext, dto);
   }
 }

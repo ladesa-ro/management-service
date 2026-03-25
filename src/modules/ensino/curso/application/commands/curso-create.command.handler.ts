@@ -51,7 +51,7 @@ export class CursoCreateCommandHandlerImpl implements ICursoCreateCommandHandler
       imagemCapa: domain.imagemCapa ? { id: domain.imagemCapa.id } : null,
     });
 
-    const result = await this.repository.findById(accessContext, { id });
+    const result = await this.repository.getFindOneQueryResult(accessContext, { id });
 
     ensureExists(result, Curso.entityName, id);
 

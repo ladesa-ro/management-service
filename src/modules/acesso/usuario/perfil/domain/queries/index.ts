@@ -7,4 +7,4 @@ export * from "./perfil-find-one.query.schemas";
 export * from "./perfil-list.query";
 export * from "./perfil-list.query.handler.interface";
 export * from "./perfil-list.query.result";
-export * from "./perfil-list.query.schemas";
+export * from "./perfil-nested.query.result";

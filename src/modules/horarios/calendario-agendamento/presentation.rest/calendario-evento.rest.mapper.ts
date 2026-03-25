@@ -30,6 +30,7 @@ export class CalendarioEventoRestMapper {
     input.ofertaFormacaoIds = dto.ofertaFormacaoIds;
     input.modalidadeIds = dto.modalidadeIds;
     input.ambienteIds = dto.ambienteIds;
+    input.diarioIds = dto.diarioIds;
     return input;
   }
 
@@ -55,6 +56,7 @@ export class CalendarioEventoRestMapper {
     if (dto.ofertaFormacaoIds !== undefined) input.ofertaFormacaoIds = dto.ofertaFormacaoIds;
     if (dto.modalidadeIds !== undefined) input.modalidadeIds = dto.modalidadeIds;
     if (dto.ambienteIds !== undefined) input.ambienteIds = dto.ambienteIds;
+    if (dto.diarioIds !== undefined) input.diarioIds = dto.diarioIds;
 
     return input;
   }
@@ -79,6 +81,7 @@ export class CalendarioEventoRestMapper {
       ofertaFormacaoIds: output.ofertaFormacaoIds,
       modalidadeIds: output.modalidadeIds,
       ambienteIds: output.ambienteIds,
+      diarioIds: output.diarioIds,
     };
   }
 }

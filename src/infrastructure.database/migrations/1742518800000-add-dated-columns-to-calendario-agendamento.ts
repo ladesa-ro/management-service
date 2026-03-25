@@ -21,9 +21,7 @@ export class AddDatedColumnsToCalendarioAgendamento1742518800000 implements Migr
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query(
-      `DROP TRIGGER IF EXISTS change_date_updated ON calendario_agendamento`,
-    );
+    await queryRunner.query(`DROP TRIGGER IF EXISTS change_date_updated ON calendario_agendamento`);
     await queryRunner.dropColumns("calendario_agendamento", [
       "date_created",
       "date_updated",

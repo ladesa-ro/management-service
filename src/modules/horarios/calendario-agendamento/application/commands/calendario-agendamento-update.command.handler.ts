@@ -1,4 +1,4 @@
-import { ensureExists } from "@/application/errors";
+import { ensureActiveEntity, ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { CalendarioAgendamento } from "../../domain/calendario-agendamento";
@@ -23,6 +23,7 @@ export class CalendarioAgendamentoUpdateCommandHandlerImpl
   ): Promise<CalendarioAgendamentoFindOneQueryResult> {
     const domain = await this.repository.loadById(accessContext, dto.id);
     ensureExists(domain, CalendarioAgendamento.entityName, dto.id);
+    ensureActiveEntity(domain, CalendarioAgendamento.entityName, dto.id);
 
     domain.update(dto);
 

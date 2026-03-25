@@ -1,5 +1,4 @@
-import { ensureExists } from "@/application/errors";
-import { saveEntityImagemField } from "@/application/helpers";
+import { ensureActiveEntity, ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
@@ -31,22 +30,21 @@ export class DisciplinaUpdateImagemCapaCommandHandlerImpl
     accessContext: IAccessContext | null,
     { dto, file }: DisciplinaUpdateImagemCapaCommand,
   ): Promise<boolean> {
-    const current = await this.repository.findById(accessContext, dto);
-
-    ensureExists(current, Disciplina.entityName, dto.id);
+    const domain = await this.repository.loadById(accessContext, dto.id);
+    ensureExists(domain, Disciplina.entityName, dto.id);
+    ensureActiveEntity(domain, Disciplina.entityName, dto.id);
 
     await this.permissionChecker.ensureCanUpdate(
       accessContext,
-      { dto: { id: current.id } },
-      current.id,
+      { dto: { id: domain.id } },
+      domain.id,
     );
 
-    return saveEntityImagemField(
-      current.id,
-      file,
-      "imagemCapa",
-      this.saveImagemCapaHandler,
-      this.repository,
-    );
+    const { imagem } = await this.saveImagemCapaHandler.execute(null, { file });
+
+    domain.update({ imagemCapa: { id: imagem.id } });
+    await this.repository.save(domain);
+
+    return true;
   }
 }

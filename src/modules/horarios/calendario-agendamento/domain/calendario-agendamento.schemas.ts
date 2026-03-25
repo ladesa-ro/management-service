@@ -3,36 +3,39 @@
  */
 import { z } from "zod";
 import { createSchema } from "@/domain/abstractions";
-import { uuidSchema } from "@/shared/validation/schemas";
+import { datedSchema, uuidSchema } from "@/shared/validation/schemas";
 import {
   CalendarioAgendamentoStatus,
   CalendarioAgendamentoTipo,
 } from "./calendario-agendamento.types";
 
 // ============================================================================
-// Schema completo do aggregate (sem dated — tabela não tem dateCreated/etc.)
+// Schema completo do aggregate
 // ============================================================================
 
-export const CalendarioAgendamentoSchema = z.object({
-  id: uuidSchema,
-  tipo: z.nativeEnum(CalendarioAgendamentoTipo),
-  dataInicio: z.string().min(1),
-  dataFim: z.string().nullable(),
-  diaInteiro: z.boolean(),
-  horarioInicio: z.string(),
-  horarioFim: z.string(),
-  repeticao: z.string().nullable(),
-  nome: z.string().nullable(),
-  cor: z.string().nullable(),
-  status: z.nativeEnum(CalendarioAgendamentoStatus).nullable(),
+export const CalendarioAgendamentoSchema = z
+  .object({
+    id: uuidSchema,
+    tipo: z.nativeEnum(CalendarioAgendamentoTipo),
+    dataInicio: z.string().min(1),
+    dataFim: z.string().nullable(),
+    diaInteiro: z.boolean(),
+    horarioInicio: z.string(),
+    horarioFim: z.string(),
+    repeticao: z.string().nullable(),
+    nome: z.string().nullable(),
+    cor: z.string().nullable(),
+    status: z.nativeEnum(CalendarioAgendamentoStatus).nullable(),
 
-  turmaIds: z.array(uuidSchema),
-  perfilIds: z.array(uuidSchema),
-  calendarioLetivoIds: z.array(uuidSchema),
-  ofertaFormacaoIds: z.array(uuidSchema),
-  modalidadeIds: z.array(uuidSchema),
-  ambienteIds: z.array(uuidSchema),
-});
+    turmaIds: z.array(uuidSchema),
+    perfilIds: z.array(uuidSchema),
+    calendarioLetivoIds: z.array(uuidSchema),
+    ofertaFormacaoIds: z.array(uuidSchema),
+    modalidadeIds: z.array(uuidSchema),
+    ambienteIds: z.array(uuidSchema),
+    diarioIds: z.array(uuidSchema),
+  })
+  .extend(datedSchema.shape);
 
 // ============================================================================
 // Create
@@ -60,6 +63,7 @@ export const CalendarioAgendamentoCreateSchema = createSchema((_standard) =>
     ofertaFormacaoIds: z.array(uuidSchema).optional().default([]),
     modalidadeIds: z.array(uuidSchema).optional().default([]),
     ambienteIds: z.array(uuidSchema).optional().default([]),
+    diarioIds: z.array(uuidSchema).optional().default([]),
   }),
 );
 
@@ -84,5 +88,6 @@ export const CalendarioAgendamentoUpdateSchema = createSchema((_standard) =>
     ofertaFormacaoIds: z.array(uuidSchema).optional(),
     modalidadeIds: z.array(uuidSchema).optional(),
     ambienteIds: z.array(uuidSchema).optional(),
+    diarioIds: z.array(uuidSchema).optional(),
   }),
 );

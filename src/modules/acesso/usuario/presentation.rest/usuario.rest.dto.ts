@@ -1,4 +1,7 @@
-import { UsuarioCreateCommandFields } from "@/modules/acesso/usuario/domain/commands/usuario-create.command";
+import {
+  UsuarioCreateCommandFields,
+  type VinculoInput,
+} from "@/modules/acesso/usuario/domain/commands/usuario-create.command";
 import { UsuarioUpdateCommandFields } from "@/modules/acesso/usuario/domain/commands/usuario-update.command";
 import { UsuarioFindOneQueryFields } from "@/modules/acesso/usuario/domain/queries/usuario-find-one.query";
 import { UsuarioFindOneQueryResultFields } from "@/modules/acesso/usuario/domain/queries/usuario-find-one.query.result";
@@ -9,13 +12,34 @@ import {
   UsuarioCreateSchema,
   UsuarioUpdateSchema,
 } from "@/modules/acesso/usuario/domain/usuario.schemas";
+import { PerfilFindOneQueryResultFields } from "@/modules/acesso/usuario/perfil/domain/queries/perfil-find-one.query.result";
 import { ImagemFindOneOutputRestDto } from "@/modules/ambientes/bloco/presentation.rest";
+import { CampusFindOneOutputRestDto } from "@/modules/ambientes/campus/presentation.rest";
 import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@/shared/presentation/rest";
 import {
   EntityBaseRestDto,
   PaginatedFilterByIdRestDto,
   PaginationMetaRestDto,
 } from "@/shared/presentation/rest/dtos";
+
+// ============================================================================
+// Perfil Nested Output (usado quando perfil é aninhado em usuario)
+// ============================================================================
+
+@ApiSchema({ name: "UsuarioPerfilNestedOutputDto" })
+export class UsuarioPerfilNestedOutputRestDto extends EntityBaseRestDto {
+  @ApiProperty(PerfilFindOneQueryResultFields.ativo.swaggerMetadata)
+  ativo: boolean;
+
+  @ApiProperty(PerfilFindOneQueryResultFields.cargo.swaggerMetadata)
+  cargo: string;
+
+  @ApiProperty({
+    type: () => CampusFindOneOutputRestDto,
+    ...PerfilFindOneQueryResultFields.campus.swaggerMetadata,
+  })
+  campus: CampusFindOneOutputRestDto;
+}
 
 // ============================================================================
 // FindOne Output
@@ -46,6 +70,12 @@ export class UsuarioFindOneOutputRestDto extends EntityBaseRestDto {
     ...UsuarioFindOneQueryResultFields.imagemPerfil.swaggerMetadata,
   })
   imagemPerfil: ImagemFindOneOutputRestDto | null;
+
+  @ApiProperty({
+    type: () => [UsuarioPerfilNestedOutputRestDto],
+    ...UsuarioFindOneQueryResultFields.vinculos.swaggerMetadata,
+  })
+  vinculos: UsuarioPerfilNestedOutputRestDto[];
 }
 
 // ============================================================================
@@ -134,6 +164,20 @@ export class UsuarioListOutputRestDto {
 // Create/Update Input
 // ============================================================================
 
+@ApiSchema({ name: "VinculoInputDto" })
+export class VinculoInputRestDto {
+  @ApiProperty({
+    type: "object",
+    properties: { id: { type: "string", format: "uuid" } },
+    required: ["id"],
+    description: "Campus associado ao vinculo",
+  })
+  campus: { id: string };
+
+  @ApiProperty({ type: "string", description: "Cargo do usuario no vinculo" })
+  cargo: string;
+}
+
 @ApiSchema({ name: "UsuarioCreateInputDto" })
 export class UsuarioCreateInputRestDto {
   static schema = UsuarioCreateSchema.presentation;
@@ -146,6 +190,12 @@ export class UsuarioCreateInputRestDto {
 
   @ApiPropertyOptional(UsuarioCreateCommandFields.email.swaggerMetadata)
   email?: string | null;
+
+  @ApiPropertyOptional({
+    type: () => [VinculoInputRestDto],
+    ...UsuarioCreateCommandFields.vinculos.swaggerMetadata,
+  })
+  vinculos?: VinculoInput[];
 }
 
 @ApiSchema({ name: "UsuarioUpdateInputDto" })
@@ -160,6 +210,12 @@ export class UsuarioUpdateInputRestDto {
 
   @ApiPropertyOptional(UsuarioUpdateCommandFields.email.swaggerMetadata)
   email?: string | null;
+
+  @ApiPropertyOptional({
+    type: () => [VinculoInputRestDto],
+    ...UsuarioUpdateCommandFields.vinculos.swaggerMetadata,
+  })
+  vinculos?: VinculoInput[];
 }
 
 // ============================================================================

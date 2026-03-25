@@ -29,7 +29,15 @@ const config = {
 } as const;
 
 const usuarioRelations = {
-  vinculos: true,
+  vinculos: {
+    campus: {
+      endereco: {
+        cidade: {
+          estado: true,
+        },
+      },
+    },
+  },
 };
 
 const usuarioPaginateConfig = buildTypeOrmPaginateConfig<UsuarioEntity>(
@@ -45,7 +53,7 @@ export class UsuarioTypeOrmRepositoryAdapter implements IUsuarioRepository {
     private readonly paginationAdapter: NestJsPaginateAdapter,
   ) {}
 
-  findAll(accessContext: IAccessContext | null, dto: UsuarioListQuery | null = null) {
+  getFindAllQueryResult(accessContext: IAccessContext | null, dto: UsuarioListQuery | null = null) {
     return typeormFindAll<UsuarioEntity, UsuarioListQuery, UsuarioListQueryResult>(
       this.appTypeormConnection,
       UsuarioEntity,
@@ -55,7 +63,7 @@ export class UsuarioTypeOrmRepositoryAdapter implements IUsuarioRepository {
     );
   }
 
-  findById(accessContext: IAccessContext | null, dto: UsuarioFindOneQuery) {
+  getFindOneQueryResult(accessContext: IAccessContext | null, dto: UsuarioFindOneQuery) {
     return typeormFindById<UsuarioEntity, UsuarioFindOneQuery, UsuarioFindOneQueryResult>(
       this.appTypeormConnection,
       UsuarioEntity,
@@ -65,7 +73,7 @@ export class UsuarioTypeOrmRepositoryAdapter implements IUsuarioRepository {
   }
 
   findByIdSimple(accessContext: IAccessContext | null, id: string) {
-    return this.findById(accessContext, { id } as UsuarioFindOneQuery);
+    return this.getFindOneQueryResult(accessContext, { id } as UsuarioFindOneQuery);
   }
 
   async findByMatricula(matricula: string): Promise<UsuarioFindOneQueryResult | null> {
@@ -110,14 +118,14 @@ export class UsuarioTypeOrmRepositoryAdapter implements IUsuarioRepository {
     return !exists;
   }
 
-  async resolveProperty<Property extends string>(id: string, property: Property): Promise<unknown> {
+  async resolveMatricula(id: string): Promise<string | null> {
     const repo = this.appTypeormConnection.getRepository(UsuarioEntity);
     const qb = repo.createQueryBuilder(config.alias);
-    qb.select(`${config.alias}.${property}`);
+    qb.select(`${config.alias}.matricula`);
     qb.where(`${config.alias}.id = :usuarioId`, { usuarioId: id });
 
     const usuario = await qb.getOneOrFail();
-    return usuario[property as keyof UsuarioEntity];
+    return usuario.matricula ?? null;
   }
 
   // cross-module: uses TypeORM directly for join query (DisciplinaEntity, CursoEntity, TurmaEntity)
@@ -240,9 +248,10 @@ export class UsuarioTypeOrmRepositoryAdapter implements IUsuarioRepository {
     return { disciplinas: result };
   }
 
-  create(data: Record<string, unknown>) {
+  async create(data: Record<string, unknown>): Promise<{ id: string }> {
     const entityData = usuarioEntityDomainMapper.toPersistenceData(data);
-    return typeormCreate(this.appTypeormConnection, UsuarioEntity, entityData);
+    const result = await typeormCreate(this.appTypeormConnection, UsuarioEntity, entityData);
+    return { id: result.id as string };
   }
 
   update(id: string | number, data: Record<string, unknown>) {

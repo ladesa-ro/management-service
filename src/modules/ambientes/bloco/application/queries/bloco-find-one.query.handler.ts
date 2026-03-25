@@ -15,6 +15,6 @@ export class BlocoFindOneQueryHandlerImpl implements IBlocoFindOneQueryHandler {
     accessContext: IAccessContext | null,
     dto: BlocoFindOneQuery,
   ): Promise<BlocoFindOneQueryResult | null> {
-    return this.repository.findById(accessContext, dto);
+    return this.repository.getFindOneQueryResult(accessContext, dto);
   }
 }

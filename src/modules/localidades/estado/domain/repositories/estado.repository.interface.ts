@@ -1,7 +1,23 @@
-import type { IRepositoryFindAll, IRepositoryFindById } from "@/domain/abstractions";
-import { EstadoFindOneQueryResult, EstadoListQueryResult } from "@/modules/localidades/estado";
+import type {
+  IRepositoryGetFindAllQueryResult,
+  IRepositoryGetFindOneQueryResult,
+} from "@/domain/abstractions";
+import type {
+  EstadoFindOneQuery,
+  EstadoFindOneQueryResult,
+  EstadoListQuery,
+  EstadoListQueryResult,
+} from "@/modules/localidades/estado";
 
 export const IEstadoRepository = Symbol("IEstadoRepository");
 
-export type IEstadoRepository = IRepositoryFindAll<EstadoListQueryResult> &
-  IRepositoryFindById<EstadoFindOneQueryResult>;
+/**
+ * Port de saída para operações de consulta de Estado (read-only).
+ */
+export interface IEstadoRepository {
+  getFindOneQueryResult: IRepositoryGetFindOneQueryResult<
+    EstadoFindOneQuery,
+    EstadoFindOneQueryResult
+  >;
+  getFindAllQueryResult: IRepositoryGetFindAllQueryResult<EstadoListQuery, EstadoListQueryResult>;
+}

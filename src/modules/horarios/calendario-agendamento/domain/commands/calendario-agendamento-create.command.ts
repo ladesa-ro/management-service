@@ -16,6 +16,7 @@ export const CalendarioAgendamentoCreateCommandFields = {
   ofertaFormacaoIds: CalendarioAgendamentoFields.ofertaFormacaoIds,
   modalidadeIds: CalendarioAgendamentoFields.modalidadeIds,
   ambienteIds: CalendarioAgendamentoFields.ambienteIds,
+  diarioIds: CalendarioAgendamentoFields.diarioIds,
 };
 
 export class CalendarioAgendamentoCreateCommand {
@@ -35,4 +36,5 @@ export class CalendarioAgendamentoCreateCommand {
   ofertaFormacaoIds?: string[];
   modalidadeIds?: string[];
   ambienteIds?: string[];
+  diarioIds?: string[];
 }

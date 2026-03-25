@@ -19,7 +19,7 @@ export class CursoDeleteCommandHandlerImpl implements ICursoDeleteCommandHandler
   async execute(accessContext: IAccessContext | null, dto: CursoFindOneQuery): Promise<boolean> {
     await this.permissionChecker.ensureCanDelete(accessContext, { dto }, dto.id);
 
-    const entity = await this.repository.findById(accessContext, dto);
+    const entity = await this.repository.getFindOneQueryResult(accessContext, dto);
 
     ensureExists(entity, Curso.entityName, dto.id);
 

@@ -15,6 +15,6 @@ export class EstadoListQueryHandlerImpl implements IEstadoListQueryHandler {
     accessContext: IAccessContext | null,
     dto: EstadoListQuery | null,
   ): Promise<EstadoListQueryResult> {
-    return this.repository.findAll(accessContext, dto);
+    return this.repository.getFindAllQueryResult(accessContext, dto);
   }
 }

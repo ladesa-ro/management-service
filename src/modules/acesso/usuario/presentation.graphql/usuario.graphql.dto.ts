@@ -12,8 +12,22 @@ import {
   UsuarioCreateSchema,
   UsuarioUpdateSchema,
 } from "@/modules/acesso/usuario/domain/usuario.schemas";
+import { PerfilFindOneQueryResultFields } from "@/modules/acesso/usuario/perfil/domain/queries/perfil-find-one.query.result";
+import { CampusFindOneOutputGraphQlDto } from "@/modules/ambientes/campus/presentation.graphql/campus.graphql.dto";
 import { ImagemFindOneOutputGraphQlDto } from "@/modules/armazenamento/imagem-arquivo/presentation.graphql/imagem-arquivo.graphql.dto";
 import { ArgsType, Field, InputType, ObjectType } from "@/shared/presentation/graphql";
+
+// ============================================================================
+// Perfil Nested Output (usado quando perfil é aninhado em usuario)
+// ============================================================================
+
+@ObjectType("UsuarioPerfilNestedOutputDto")
+export class UsuarioPerfilNestedOutputGraphQlDto extends EntityBaseGraphQlDto {
+  @Field(() => Boolean, PerfilFindOneQueryResultFields.ativo.gqlMetadata) ativo: boolean;
+  @Field(() => String, PerfilFindOneQueryResultFields.cargo.gqlMetadata) cargo: string;
+  @Field(() => CampusFindOneOutputGraphQlDto, PerfilFindOneQueryResultFields.campus.gqlMetadata)
+  campus: CampusFindOneOutputGraphQlDto;
+}
 
 // ============================================================================
 // FindOne Output
@@ -39,6 +53,11 @@ export class UsuarioFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
     ...UsuarioFindOneQueryResultFields.imagemPerfil.gqlMetadata,
   })
   imagemPerfil: ImagemFindOneOutputGraphQlDto | null;
+  @Field(
+    () => [UsuarioPerfilNestedOutputGraphQlDto],
+    UsuarioFindOneQueryResultFields.vinculos.gqlMetadata,
+  )
+  vinculos: UsuarioPerfilNestedOutputGraphQlDto[];
 }
 
 // ============================================================================

@@ -39,7 +39,10 @@ export class ImagemArquivoQueryTypeOrmRepositoryAdapter implements IImagemArquiv
     private readonly paginationAdapter: NestJsPaginateAdapter,
   ) {}
 
-  findAll(accessContext: IAccessContext | null, dto: ImagemArquivoListQuery | null = null) {
+  getFindAllQueryResult(
+    accessContext: IAccessContext | null,
+    dto: ImagemArquivoListQuery | null = null,
+  ) {
     return typeormFindAll<
       ImagemArquivoEntity,
       ImagemArquivoListQuery,
@@ -53,7 +56,7 @@ export class ImagemArquivoQueryTypeOrmRepositoryAdapter implements IImagemArquiv
     );
   }
 
-  findById(accessContext: IAccessContext | null, dto: ImagemArquivoFindOneQuery) {
+  getFindOneQueryResult(accessContext: IAccessContext | null, dto: ImagemArquivoFindOneQuery) {
     return typeormFindById<
       ImagemArquivoEntity,
       ImagemArquivoFindOneQuery,

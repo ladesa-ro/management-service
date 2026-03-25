@@ -24,11 +24,10 @@ export class NivelFormacaoCreateCommandHandlerImpl implements INivelFormacaoCrea
     await this.permissionChecker.ensureCanCreate(accessContext, { dto });
 
     const domain = NivelFormacao.create({ slug: dto.slug });
-    const { id } = await this.repository.create({ ...domain });
+    await this.repository.save(domain);
 
-    const result = await this.repository.findById(accessContext, { id });
-
-    ensureExists(result, NivelFormacao.entityName, id);
+    const result = await this.repository.getFindOneQueryResult(accessContext, { id: domain.id });
+    ensureExists(result, NivelFormacao.entityName, domain.id);
 
     return result;
   }

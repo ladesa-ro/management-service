@@ -1,16 +1,21 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { ResourceNotFoundError } from "@/application/errors/application.error";
-import {
-  createMockCrudRepository,
-  createMockPermissionChecker,
-  createTestAccessContext,
-  createTestId,
-} from "@/test/helpers";
+import { createMockPermissionChecker, createTestAccessContext, createTestId } from "@/test/helpers";
 import { CampusDeleteCommandHandlerImpl } from "./campus-delete.command.handler";
+
+function createMockCampusRepository() {
+  return {
+    loadById: vi.fn().mockResolvedValue(null),
+    save: vi.fn().mockResolvedValue(undefined),
+    softDeleteById: vi.fn().mockResolvedValue(undefined),
+    getFindOneQueryResult: vi.fn().mockResolvedValue(null),
+    getFindAllQueryResult: vi.fn().mockResolvedValue({ meta: { itemCount: 0 }, data: [] }),
+  };
+}
 
 describe("CampusDeleteCommandHandler", () => {
   function createHandler(overrides: { repository?: object; permissionChecker?: object } = {}) {
-    const repository = overrides.repository ?? createMockCrudRepository();
+    const repository = overrides.repository ?? createMockCampusRepository();
     const permissionChecker = overrides.permissionChecker ?? createMockPermissionChecker();
 
     const handler = new CampusDeleteCommandHandlerImpl(repository as any, permissionChecker as any);
@@ -20,10 +25,10 @@ describe("CampusDeleteCommandHandler", () => {
 
   it("should delete an existing entity and return true", async () => {
     const id = createTestId();
-    const entity = { id, nomeFantasia: "Campus Central" };
+    const aggregate = { id, nomeFantasia: "Campus Central" };
 
-    const repository = createMockCrudRepository();
-    repository.findById.mockResolvedValue(entity);
+    const repository = createMockCampusRepository();
+    repository.loadById.mockResolvedValue(aggregate);
 
     const { handler } = createHandler({ repository });
     const accessContext = createTestAccessContext();
@@ -36,8 +41,8 @@ describe("CampusDeleteCommandHandler", () => {
 
   it("should call permissionChecker.ensureCanDelete", async () => {
     const id = createTestId();
-    const repository = createMockCrudRepository();
-    repository.findById.mockResolvedValue({ id });
+    const repository = createMockCampusRepository();
+    repository.loadById.mockResolvedValue({ id });
 
     const permissionChecker = createMockPermissionChecker();
     const { handler } = createHandler({ repository, permissionChecker });
@@ -53,8 +58,8 @@ describe("CampusDeleteCommandHandler", () => {
   });
 
   it("should throw ResourceNotFoundError when entity does not exist", async () => {
-    const repository = createMockCrudRepository();
-    repository.findById.mockResolvedValue(null);
+    const repository = createMockCampusRepository();
+    repository.loadById.mockResolvedValue(null);
 
     const { handler } = createHandler({ repository });
     const accessContext = createTestAccessContext();

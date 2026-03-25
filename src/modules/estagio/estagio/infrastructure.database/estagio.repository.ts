@@ -5,13 +5,11 @@ import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adap
 import { buildTypeOrmPaginateConfig } from "@/infrastructure.database/pagination/adapters/pagination-spec.adapter";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import {
-  typeormCreate,
   typeormFindAll,
-  typeormFindById,
   typeormSoftDeleteById,
-  typeormUpdate,
 } from "@/infrastructure.database/typeorm/helpers/typeorm-repository-helpers";
 import type { IHorarioEstagio } from "@/modules/estagio/estagio/domain/estagio";
+import { Estagio } from "@/modules/estagio/estagio/domain/estagio";
 import type {
   EstagioFindOneQuery,
   EstagioFindOneQueryResult,
@@ -38,6 +36,13 @@ const estagioPaginateConfig = buildTypeOrmPaginateConfig<EstagioTypeormEntity>(
   estagioRelations,
 );
 
+/** Relations para o write side (loadById). */
+const writeRelations = {
+  empresa: true,
+  estagiario: true,
+  horariosEstagio: true,
+} as const;
+
 @DeclareImplementation()
 export class EstagioTypeOrmRepositoryAdapter implements IEstagioRepository {
   constructor(
@@ -46,39 +51,31 @@ export class EstagioTypeOrmRepositoryAdapter implements IEstagioRepository {
     private readonly paginationAdapter: NestJsPaginateAdapter,
   ) {}
 
-  findAll(accessContext: IAccessContext | null, dto: EstagioListQuery | null = null) {
-    return typeormFindAll<EstagioTypeormEntity, EstagioListQuery, EstagioListQueryResult>(
-      this.appTypeormConnection,
-      EstagioTypeormEntity,
-      { ...config, paginateConfig: estagioPaginateConfig },
-      this.paginationAdapter,
-      dto,
-      (entity) => EstagioMapper.toOutputDto(entity),
-    );
+  // ==========================================
+  // Write side
+  // ==========================================
+
+  async loadById(_accessContext: IAccessContext | null, id: string): Promise<Estagio | null> {
+    const repo = this.appTypeormConnection.getRepository(EstagioTypeormEntity);
+
+    const entity = await repo.findOne({
+      where: { id, dateDeleted: IsNull() },
+      relations: writeRelations,
+    });
+
+    if (!entity) return null;
+
+    return EstagioMapper.toDomain(entity);
   }
 
-  findById(accessContext: IAccessContext | null, dto: EstagioFindOneQuery) {
-    return typeormFindById<EstagioTypeormEntity, EstagioFindOneQuery, EstagioFindOneQueryResult>(
-      this.appTypeormConnection,
-      EstagioTypeormEntity,
-      { ...config, paginateConfig: estagioPaginateConfig },
-      dto,
-      (entity) => EstagioMapper.toOutputDto(entity),
-    );
-  }
+  async save(aggregate: Estagio): Promise<void> {
+    const entity = EstagioMapper.toPersistence(aggregate);
+    const repo = this.appTypeormConnection.getRepository(EstagioTypeormEntity);
+    await repo.save(entity);
 
-  findByIdSimple(accessContext: IAccessContext | null, id: string) {
-    return this.findById(accessContext, { id } as EstagioFindOneQuery);
-  }
-
-  create(data: Record<string, unknown>) {
-    const entityData = EstagioMapper.toPersistenceFromRecord(data) as Record<string, unknown>;
-    return typeormCreate(this.appTypeormConnection, EstagioTypeormEntity, entityData);
-  }
-
-  update(id: string | number, data: Record<string, unknown>) {
-    const entityData = EstagioMapper.toPersistenceFromRecord(data) as Record<string, unknown>;
-    return typeormUpdate(this.appTypeormConnection, EstagioTypeormEntity, id, entityData);
+    if (aggregate.horariosEstagio !== undefined) {
+      await this.replaceHorariosEstagio(aggregate.id, aggregate.horariosEstagio);
+    }
   }
 
   softDeleteById(id: string) {
@@ -103,6 +100,38 @@ export class EstagioTypeOrmRepositoryAdapter implements IEstagioRepository {
     await repo.update(
       { estagio: { id: estagioId }, dateDeleted: IsNull() },
       { dateDeleted: now, dateUpdated: now },
+    );
+  }
+
+  // ==========================================
+  // Read side
+  // ==========================================
+
+  getFindOneQueryResult(
+    _accessContext: IAccessContext | null,
+    dto: EstagioFindOneQuery,
+  ): Promise<EstagioFindOneQueryResult | null> {
+    const repo = this.appTypeormConnection.getRepository(EstagioTypeormEntity);
+
+    return repo
+      .findOne({
+        where: { id: dto.id, dateDeleted: IsNull() },
+        relations: estagioRelations,
+      })
+      .then((entity) => (entity ? EstagioMapper.toOutputDto(entity) : null));
+  }
+
+  getFindAllQueryResult(
+    _accessContext: IAccessContext | null,
+    dto: EstagioListQuery | null = null,
+  ): Promise<EstagioListQueryResult> {
+    return typeormFindAll<EstagioTypeormEntity, EstagioListQuery, EstagioListQueryResult>(
+      this.appTypeormConnection,
+      EstagioTypeormEntity,
+      { ...config, paginateConfig: estagioPaginateConfig },
+      this.paginationAdapter,
+      dto,
+      (entity) => EstagioMapper.toOutputDto(entity),
     );
   }
 }

@@ -18,6 +18,7 @@ import {
   UsuarioGetImagemPerfilQueryHandlerImpl,
   UsuarioListQueryHandlerImpl,
 } from "@/modules/acesso/usuario/application/queries";
+import { UsuarioAvailabilityCheckerImpl } from "@/modules/acesso/usuario/application/services";
 import { IUsuarioPermissionChecker } from "@/modules/acesso/usuario/domain/authorization";
 import {
   IUsuarioCreateCommandHandler,
@@ -40,18 +41,19 @@ import {
   IUsuarioEventoRepository,
   IUsuarioRepository,
 } from "@/modules/acesso/usuario/domain/repositories";
+import { IUsuarioAvailabilityChecker } from "@/modules/acesso/usuario/domain/services";
 import {
   UsuarioDisponibilidadeTypeOrmRepositoryAdapter,
   UsuarioEventoTypeOrmRepositoryAdapter,
   UsuarioTypeOrmRepositoryAdapter,
 } from "@/modules/acesso/usuario/infrastructure.database";
-import { PerfilSetVinculosCommandHandlerImpl } from "@/modules/acesso/usuario/perfil/application/commands";
+import { PerfilDefinirPerfisAtivosCommandHandlerImpl } from "@/modules/acesso/usuario/perfil/application/commands";
 import {
   PerfilFindAllActiveQueryHandlerImpl,
   PerfilFindOneQueryHandlerImpl,
   PerfilListQueryHandlerImpl,
 } from "@/modules/acesso/usuario/perfil/application/queries";
-import { IPerfilSetVinculosCommandHandler } from "@/modules/acesso/usuario/perfil/domain/commands";
+import { IPerfilDefinirPerfisAtivosCommandHandler } from "@/modules/acesso/usuario/perfil/domain/commands";
 import {
   IPerfilFindAllActiveQueryHandler,
   IPerfilFindOneQueryHandler,
@@ -99,6 +101,9 @@ import { HorarioConsultaModule } from "@/modules/horarios/horario-consulta/horar
       useClass: UsuarioEventoTypeOrmRepositoryAdapter,
     },
 
+    // Usuario Services
+    { provide: IUsuarioAvailabilityChecker, useClass: UsuarioAvailabilityCheckerImpl },
+
     // Usuario Commands
     { provide: IUsuarioCreateCommandHandler, useClass: UsuarioCreateCommandHandlerImpl },
     { provide: IUsuarioUpdateCommandHandler, useClass: UsuarioUpdateCommandHandlerImpl },
@@ -131,7 +136,10 @@ import { HorarioConsultaModule } from "@/modules/horarios/horario-consulta/horar
 
     // Perfil (sub-entidade de Usuario)
     { provide: IPerfilRepository, useClass: PerfilTypeOrmRepositoryAdapter },
-    { provide: IPerfilSetVinculosCommandHandler, useClass: PerfilSetVinculosCommandHandlerImpl },
+    {
+      provide: IPerfilDefinirPerfisAtivosCommandHandler,
+      useClass: PerfilDefinirPerfisAtivosCommandHandlerImpl,
+    },
     { provide: IPerfilListQueryHandler, useClass: PerfilListQueryHandlerImpl },
     { provide: IPerfilFindOneQueryHandler, useClass: PerfilFindOneQueryHandlerImpl },
     { provide: IPerfilFindAllActiveQueryHandler, useClass: PerfilFindAllActiveQueryHandlerImpl },

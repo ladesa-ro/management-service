@@ -31,7 +31,7 @@ export class CursoUpdateImagemCapaCommandHandlerImpl
     accessContext: IAccessContext | null,
     { dto, file }: CursoUpdateImagemCapaCommand,
   ): Promise<boolean> {
-    const current = await this.repository.findById(accessContext, dto);
+    const current = await this.repository.getFindOneQueryResult(accessContext, dto);
 
     ensureExists(current, Curso.entityName, dto.id);
 

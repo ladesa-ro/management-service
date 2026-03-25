@@ -15,6 +15,6 @@ export class ImagemArquivoListQueryHandlerImpl implements IImagemArquivoListQuer
     accessContext: IAccessContext | null,
     dto: ImagemArquivoListQuery | null,
   ): Promise<ImagemArquivoListQueryResult> {
-    return this.repository.findAll(accessContext, dto);
+    return this.repository.getFindAllQueryResult(accessContext, dto);
   }
 }

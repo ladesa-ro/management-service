@@ -15,6 +15,6 @@ export class EmpresaFindOneQueryHandlerImpl implements IEmpresaFindOneQueryHandl
     accessContext: IAccessContext | null,
     dto: EmpresaFindOneQuery,
   ): Promise<EmpresaFindOneQueryResult | null> {
-    return this.repository.findById(accessContext, dto);
+    return this.repository.getFindOneQueryResult(accessContext, dto);
   }
 }

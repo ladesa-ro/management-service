@@ -107,4 +107,8 @@ export class Usuario {
   temImagemPerfil(): boolean {
     return this.imagemPerfil !== null;
   }
+
+  isActive(): boolean {
+    return this.dateDeleted === null;
+  }
 }

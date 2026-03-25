@@ -10,8 +10,8 @@ import {
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
-import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { AccessContextHttp } from "@/server/nest/access-context";
+import { HorarioAulaConfiguracao } from "../domain/horario-aula-configuracao";
 import {
   HorarioAulaConfiguracaoCreateCommandMetadata,
   HorarioAulaConfiguracaoDeleteCommandMetadata,
@@ -19,7 +19,6 @@ import {
   HorarioAulaConfiguracaoFindByIdQueryMetadata,
   HorarioAulaConfiguracaoUpdateCommandMetadata,
 } from "../domain/horario-aula-configuracao.operations";
-import type { IHorarioAulaConfiguracao } from "../domain/horario-aula-configuracao.types";
 import { IHorarioAulaConfiguracaoRepository } from "../domain/repositories";
 import {
   HorarioAulaConfiguracaoCreateInputRestDto,
@@ -66,8 +65,8 @@ export class HorarioAulaConfiguracaoRestController {
     @AccessContextHttp() _accessContext: IAccessContext,
     @Param() params: HorarioAulaConfiguracaoFindOneParamsRestDto,
   ): Promise<HorarioAulaConfiguracaoFindOneOutputRestDto> {
-    const entity = await this.repository.findById(params.id);
-    ensureExists(entity, "HorarioAulaConfiguracao", params.id);
+    const entity = await this.repository.loadById(params.id);
+    ensureExists(entity, HorarioAulaConfiguracao.entityName, params.id);
     return this.toOutputDto(entity);
   }
 
@@ -79,15 +78,17 @@ export class HorarioAulaConfiguracaoRestController {
     @AccessContextHttp() _accessContext: IAccessContext,
     @Body() dto: HorarioAulaConfiguracaoCreateInputRestDto,
   ): Promise<HorarioAulaConfiguracaoFindOneOutputRestDto> {
-    const saved = await this.repository.save({
-      id: generateUuidV7(),
-      dataInicio: new Date(dto.dataInicio),
-      dataFim: dto.dataFim ? new Date(dto.dataFim) : null,
+    const domain = HorarioAulaConfiguracao.create({
+      dataInicio: dto.dataInicio,
+      dataFim: dto.dataFim ?? null,
       ativo: dto.ativo,
       campus: { id: dto.campusId },
       horarios: dto.horarios ?? [],
     });
-    return this.toOutputDto(saved);
+
+    await this.repository.save(domain);
+
+    return this.toOutputDto(domain);
   }
 
   @Patch("/:id")
@@ -100,18 +101,20 @@ export class HorarioAulaConfiguracaoRestController {
     @Param() params: HorarioAulaConfiguracaoFindOneParamsRestDto,
     @Body() dto: HorarioAulaConfiguracaoUpdateInputRestDto,
   ): Promise<HorarioAulaConfiguracaoFindOneOutputRestDto> {
-    const entity = await this.repository.findById(params.id);
-    ensureExists(entity, "HorarioAulaConfiguracao", params.id);
+    const domain = await this.repository.loadById(params.id);
+    ensureExists(domain, HorarioAulaConfiguracao.entityName, params.id);
 
-    const updateData: Record<string, unknown> = { id: entity.id };
-    if (dto.dataInicio !== undefined) updateData.dataInicio = new Date(dto.dataInicio);
-    if (dto.dataFim !== undefined) updateData.dataFim = dto.dataFim ? new Date(dto.dataFim) : null;
-    if (dto.ativo !== undefined) updateData.ativo = dto.ativo;
-    if (dto.campusId !== undefined) updateData.campus = { id: dto.campusId };
-    if (dto.horarios !== undefined) updateData.horarios = dto.horarios;
+    domain.update({
+      dataInicio: dto.dataInicio,
+      dataFim: dto.dataFim,
+      ativo: dto.ativo,
+      campus: dto.campusId !== undefined ? { id: dto.campusId } : undefined,
+      horarios: dto.horarios,
+    });
 
-    const saved = await this.repository.save(updateData as Partial<IHorarioAulaConfiguracao>);
-    return this.toOutputDto(saved);
+    await this.repository.save(domain);
+
+    return this.toOutputDto(domain);
   }
 
   @Delete("/:id")
@@ -123,23 +126,19 @@ export class HorarioAulaConfiguracaoRestController {
     @AccessContextHttp() _accessContext: IAccessContext,
     @Param() params: HorarioAulaConfiguracaoFindOneParamsRestDto,
   ): Promise<boolean> {
-    const entity = await this.repository.findById(params.id);
-    ensureExists(entity, "HorarioAulaConfiguracao", params.id);
-    await this.repository.remove(entity);
+    const domain = await this.repository.loadById(params.id);
+    ensureExists(domain, HorarioAulaConfiguracao.entityName, params.id);
+    await this.repository.remove(domain.id);
     return true;
   }
 
   private toOutputDto(
-    entity: IHorarioAulaConfiguracao,
+    entity: HorarioAulaConfiguracao,
   ): HorarioAulaConfiguracaoFindOneOutputRestDto {
-    const formatDate = (d: Date | null) => {
-      if (!d) return null;
-      return d instanceof Date ? d.toISOString().split("T")[0] : String(d);
-    };
     return {
       id: entity.id,
-      dataInicio: formatDate(entity.dataInicio) ?? "",
-      dataFim: formatDate(entity.dataFim),
+      dataInicio: entity.dataInicio,
+      dataFim: entity.dataFim,
       ativo: entity.ativo,
       campusId: entity.campus?.id,
       horarios: entity.horarios ?? [],

@@ -15,6 +15,6 @@ export class ModalidadeFindOneQueryHandlerImpl implements IModalidadeFindOneQuer
     accessContext: IAccessContext | null,
     dto: ModalidadeFindOneQuery,
   ): Promise<ModalidadeFindOneQueryResult | null> {
-    return this.repository.findById(accessContext, dto);
+    return this.repository.getFindOneQueryResult(accessContext, dto);
   }
 }

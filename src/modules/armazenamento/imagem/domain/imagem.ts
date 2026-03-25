@@ -81,4 +81,8 @@ export class Imagem implements IEntityBaseUuid {
   temDescricao(): boolean {
     return this.descricao !== null && this.descricao.trim().length > 0;
   }
+
+  isActive(): boolean {
+    return this.dateDeleted === null;
+  }
 }

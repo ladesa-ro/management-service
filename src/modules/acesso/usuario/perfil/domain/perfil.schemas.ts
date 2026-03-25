@@ -48,11 +48,3 @@ export const PerfilUpdateSchema = createSchema((standard) =>
     usuario: PerfilUsuarioRefSchema.create(standard).optional(),
   }),
 );
-
-export const PerfilSetVinculosInputSchema = createSchema((standard) =>
-  z.object({
-    cargos: z.array(z.string().min(1)),
-    campus: PerfilCampusRefSchema.create(standard),
-    usuario: PerfilUsuarioRefSchema.create(standard),
-  }),
-);

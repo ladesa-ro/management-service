@@ -39,7 +39,7 @@ export class CidadeTypeOrmRepositoryAdapter implements ICidadeRepository {
     private readonly paginationAdapter: NestJsPaginateAdapter,
   ) {}
 
-  findAll(accessContext: IAccessContext | null, dto: CidadeListQuery | null = null) {
+  getFindAllQueryResult(accessContext: IAccessContext | null, dto: CidadeListQuery | null = null) {
     return typeormFindAll<CidadeEntity, CidadeListQuery, CidadeListQueryResult>(
       this.appTypeormConnection,
       CidadeEntity,
@@ -49,7 +49,7 @@ export class CidadeTypeOrmRepositoryAdapter implements ICidadeRepository {
     );
   }
 
-  findById(accessContext: IAccessContext | null, dto: CidadeFindOneQuery) {
+  getFindOneQueryResult(accessContext: IAccessContext | null, dto: CidadeFindOneQuery) {
     return typeormFindById<CidadeEntity, CidadeFindOneQuery, CidadeFindOneQueryResult>(
       this.appTypeormConnection,
       CidadeEntity,
@@ -59,6 +59,6 @@ export class CidadeTypeOrmRepositoryAdapter implements ICidadeRepository {
   }
 
   findByIdSimple(accessContext: IAccessContext | null, id: string) {
-    return this.findById(accessContext, { id: Number(id) } as CidadeFindOneQuery);
+    return this.getFindOneQueryResult(accessContext, { id: Number(id) } as CidadeFindOneQuery);
   }
 }

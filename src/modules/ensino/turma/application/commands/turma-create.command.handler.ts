@@ -46,15 +46,12 @@ export class TurmaCreateCommandHandlerImpl implements ITurmaCreateCommandHandler
       curso: { id: curso.id },
       ambientePadraoAula: ambientePadraoAulaRef,
     });
-    const { id } = await this.repository.create({
-      ...domain,
-      curso: { id: curso.id },
-      ambientePadraoAula: ambientePadraoAulaRef,
-    });
 
-    const result = await this.repository.findById(accessContext, { id });
+    await this.repository.save(domain);
 
-    ensureExists(result, Turma.entityName, id);
+    const result = await this.repository.getFindOneQueryResult(accessContext, { id: domain.id });
+
+    ensureExists(result, Turma.entityName, domain.id);
 
     return result;
   }

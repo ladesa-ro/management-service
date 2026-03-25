@@ -15,6 +15,6 @@ export class EstagioListQueryHandlerImpl implements IEstagioListQueryHandler {
     accessContext: IAccessContext | null,
     dto: EstagioListQuery | null,
   ): Promise<EstagioListQueryResult> {
-    return this.repository.findAll(accessContext, dto);
+    return this.repository.getFindAllQueryResult(accessContext, dto);
   }
 }

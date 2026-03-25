@@ -15,6 +15,6 @@ export class UsuarioListQueryHandlerImpl implements IUsuarioListQueryHandler {
     accessContext: IAccessContext | null,
     dto: UsuarioListQuery | null,
   ): Promise<UsuarioListQueryResult> {
-    return this.repository.findAll(accessContext, dto);
+    return this.repository.getFindAllQueryResult(accessContext, dto);
   }
 }

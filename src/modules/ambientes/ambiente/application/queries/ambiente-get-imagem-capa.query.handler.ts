@@ -31,7 +31,7 @@ export class AmbienteGetImagemCapaQueryHandlerImpl implements IAmbienteGetImagem
     accessContext: IAccessContext | null,
     { id }: AmbienteFindOneQuery,
   ): Promise<IStreamableFileResult> {
-    const entity = await this.repository.findById(accessContext, { id });
+    const entity = await this.repository.getFindOneQueryResult(accessContext, { id });
 
     ensureExists(entity, Ambiente.entityName, id);
 

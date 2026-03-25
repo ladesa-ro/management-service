@@ -75,6 +75,10 @@ export class Perfil {
   }
 
   isAtivo(): boolean {
+    return this.isActive();
+  }
+
+  isActive(): boolean {
     return this.ativo && this.dateDeleted === null;
   }
 

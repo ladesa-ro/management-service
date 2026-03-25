@@ -31,7 +31,7 @@ export class BlocoGetImagemCapaQueryHandlerImpl implements IBlocoGetImagemCapaQu
     accessContext: IAccessContext | null,
     { id }: BlocoFindOneQuery,
   ): Promise<IStreamableFileResult> {
-    const entity = await this.repository.findById(accessContext, { id });
+    const entity = await this.repository.getFindOneQueryResult(accessContext, { id });
 
     ensureExists(entity, Bloco.entityName, id);
 

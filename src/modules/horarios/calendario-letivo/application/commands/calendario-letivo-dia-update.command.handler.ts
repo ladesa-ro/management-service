@@ -1,8 +1,8 @@
-import { ensureExists } from "@/application/errors";
-import type { IAccessContext, PersistInput } from "@/domain/abstractions";
+import { ensureActiveEntity, ensureExists } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { ICalendarioLetivoPermissionChecker } from "../../domain/authorization";
-import { CalendarioLetivoDia, type ICalendarioLetivoDia } from "../../domain/calendario-letivo-dia";
+import { CalendarioLetivoDia } from "../../domain/calendario-letivo-dia";
 import type { CalendarioLetivoDiaUpdateCommand } from "../../domain/commands/calendario-letivo-dia-update.command";
 import { ICalendarioLetivoDiaUpdateCommandHandler } from "../../domain/commands/calendario-letivo-dia-update.command.handler.interface";
 import type {
@@ -26,23 +26,26 @@ export class CalendarioLetivoDiaUpdateCommandHandlerImpl
     accessContext: IAccessContext | null,
     dto: CalendarioLetivoDiaFindOneQuery & CalendarioLetivoDiaUpdateCommand,
   ): Promise<CalendarioLetivoDiaFindOneQueryResult> {
-    let current: CalendarioLetivoDiaFindOneQueryResult | null;
+    let domain: CalendarioLetivoDia | null = null;
 
     if (dto.calendarioLetivoId && dto.data) {
-      current = await this.repository.findByCalendarioAndDate(
+      // Busca via query result e depois carrega pelo id encontrado
+      const found = await this.repository.findByCalendarioAndDate(
         accessContext,
         dto.calendarioLetivoId,
         dto.data,
       );
+      ensureExists(found, CalendarioLetivoDia.entityName, dto.data);
+      domain = await this.repository.loadById(accessContext, found.id);
     } else {
-      current = await this.repository.findById(accessContext, { id: dto.id });
+      domain = await this.repository.loadById(accessContext, dto.id);
     }
 
-    ensureExists(current, CalendarioLetivoDia.entityName, dto.id ?? dto.data);
+    ensureExists(domain, CalendarioLetivoDia.entityName, dto.id ?? dto.data);
+    ensureActiveEntity(domain, CalendarioLetivoDia.entityName, domain.id);
 
-    await this.permissionChecker.ensureCanUpdate(accessContext, { dto }, current.id);
+    await this.permissionChecker.ensureCanUpdate(accessContext, { dto }, domain.id);
 
-    const domain = CalendarioLetivoDia.load(current);
     domain.update({
       diaLetivo: dto.diaLetivo,
       feriado: dto.feriado,
@@ -51,11 +54,10 @@ export class CalendarioLetivoDiaUpdateCommandHandlerImpl
       extraCurricular: dto.extraCurricular,
     });
 
-    const updateData: Partial<PersistInput<ICalendarioLetivoDia>> = { ...domain };
-    await this.repository.update(current.id, updateData);
+    await this.repository.save(domain);
 
-    const result = await this.repository.findById(accessContext, { id: current.id });
-    ensureExists(result, CalendarioLetivoDia.entityName, current.id);
+    const result = await this.repository.getFindOneQueryResult(accessContext, { id: domain.id });
+    ensureExists(result, CalendarioLetivoDia.entityName, domain.id);
 
     return result;
   }

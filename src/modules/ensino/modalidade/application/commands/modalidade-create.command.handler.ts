@@ -24,11 +24,12 @@ export class ModalidadeCreateCommandHandlerImpl implements IModalidadeCreateComm
     await this.permissionChecker.ensureCanCreate(accessContext, { dto });
 
     const domain = Modalidade.create({ nome: dto.nome, slug: dto.slug });
-    const { id } = await this.repository.create({ ...domain });
 
-    const result = await this.repository.findById(accessContext, { id });
+    await this.repository.save(domain);
 
-    ensureExists(result, Modalidade.entityName, id);
+    const result = await this.repository.getFindOneQueryResult(accessContext, { id: domain.id });
+
+    ensureExists(result, Modalidade.entityName, domain.id);
 
     return result;
   }

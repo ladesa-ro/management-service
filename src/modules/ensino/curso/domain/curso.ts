@@ -75,4 +75,8 @@ export class Curso {
   temImagemCapa(): boolean {
     return this.imagemCapa !== null;
   }
+
+  isActive(): boolean {
+    return this.dateDeleted === null;
+  }
 }

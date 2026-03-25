@@ -107,4 +107,8 @@ export class DiarioPreferenciaAgrupamento implements IEntityBaseUuid {
     this.dateUpdated = getNowISO();
     zodValidate(DiarioPreferenciaAgrupamento.entityName, DiarioPreferenciaAgrupamentoSchema, this);
   }
+
+  isActive(): boolean {
+    return this.dateDeleted === null;
+  }
 }

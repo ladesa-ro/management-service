@@ -15,6 +15,6 @@ export class CidadeListQueryHandlerImpl implements ICidadeListQueryHandler {
     accessContext: IAccessContext | null,
     dto: CidadeListQuery | null,
   ): Promise<CidadeListQueryResult> {
-    return this.repository.findAll(accessContext, dto);
+    return this.repository.getFindAllQueryResult(accessContext, dto);
   }
 }

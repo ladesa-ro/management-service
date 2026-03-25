@@ -63,4 +63,8 @@ export class Modalidade {
 
     zodValidate(Modalidade.entityName, ModalidadeSchema, this);
   }
+
+  isActive(): boolean {
+    return this.dateDeleted === null;
+  }
 }

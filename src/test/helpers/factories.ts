@@ -1,4 +1,5 @@
 import { v7 as uuidv7 } from "uuid";
+import { vi } from "vitest";
 import type { IAccessContext } from "@/domain/abstractions";
 import type { IRequestActor } from "@/domain/abstractions/request-actor";
 
@@ -63,5 +64,22 @@ export function createTestDatedFields(offset = 0) {
     dateCreated: createTestDate(offset),
     dateUpdated: createTestDate(offset + 1),
     dateDeleted: null,
+  };
+}
+
+/**
+ * Creates a minimal domain entity stub for CQRS tests.
+ * Has `id`, dated fields, `isActive()` and `update()` stubs.
+ */
+export function createTestDomainEntity(
+  overrides: Record<string, unknown> = {},
+): Record<string, unknown> & { id: string; update: (...args: unknown[]) => void } {
+  const id = (overrides.id as string) ?? createTestId();
+  return {
+    id,
+    ...createTestDatedFields(),
+    isActive: () => true,
+    update: vi.fn(),
+    ...overrides,
   };
 }

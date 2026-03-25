@@ -33,7 +33,7 @@ export class DisciplinaGetImagemCapaQueryHandlerImpl
     accessContext: IAccessContext | null,
     { id }: DisciplinaFindOneQuery,
   ): Promise<IStreamableFileResult> {
-    const entity = await this.repository.findById(accessContext, { id });
+    const entity = await this.repository.getFindOneQueryResult(accessContext, { id });
 
     ensureExists(entity, Disciplina.entityName, id);
 

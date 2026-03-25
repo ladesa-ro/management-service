@@ -6,7 +6,9 @@ import {
   UsuarioListQuery,
   UsuarioUpdateCommand,
 } from "@/modules/acesso/usuario";
+import type { PerfilNestedQueryResult } from "@/modules/acesso/usuario/perfil/domain/queries/perfil-nested.query.result";
 import { BlocoRestMapper } from "@/modules/ambientes/bloco/presentation.rest";
+import { CampusRestMapper } from "@/modules/ambientes/campus/presentation.rest";
 import {
   createFindOneInputMapper,
   createListInputMapper,
@@ -22,6 +24,7 @@ import {
   UsuarioFindOneInputRestDto,
   UsuarioFindOneOutputRestDto,
   UsuarioListOutputRestDto,
+  UsuarioPerfilNestedOutputRestDto,
   UsuarioUpdateInputRestDto,
 } from "./usuario.rest.dto";
 
@@ -42,6 +45,7 @@ export class UsuarioRestMapper {
     input.nome = dto.nome;
     input.matricula = dto.matricula;
     input.email = dto.email;
+    input.vinculos = dto.vinculos;
     return input;
   }
 
@@ -59,6 +63,9 @@ export class UsuarioRestMapper {
     }
     if (dto.email !== undefined) {
       input.email = dto.email;
+    }
+    if (dto.vinculos !== undefined) {
+      input.vinculos = dto.vinculos;
     }
     return input;
   }
@@ -80,6 +87,19 @@ export class UsuarioRestMapper {
     dto.imagemPerfil = output.imagemPerfil
       ? BlocoRestMapper.toImagemOutputDto(output.imagemPerfil)
       : null;
+    dto.vinculos = (output.vinculos ?? []).map(UsuarioRestMapper.toPerfilNestedOutputDto);
+    mapDatedFields(dto, output);
+    return dto;
+  }
+
+  static toPerfilNestedOutputDto(
+    output: PerfilNestedQueryResult,
+  ): UsuarioPerfilNestedOutputRestDto {
+    const dto = new UsuarioPerfilNestedOutputRestDto();
+    dto.id = output.id;
+    dto.ativo = output.ativo;
+    dto.cargo = output.cargo;
+    dto.campus = CampusRestMapper.toFindOneOutputDto(output.campus);
     mapDatedFields(dto, output);
     return dto;
   }

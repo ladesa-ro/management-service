@@ -1,15 +1,11 @@
-import { ensureExists, ValidationError } from "@/application/errors";
+import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type {
   IGerarHorarioAceitarCommand,
   IGerarHorarioAceitarCommandHandler,
 } from "../../domain/commands/gerar-horario-aceitar.command.handler.interface";
-import {
-  GerarHorarioDuracao,
-  GerarHorarioStatus,
-  type IGerarHorario,
-} from "../../domain/gerar-horario.types";
+import { GerarHorario } from "../../domain/gerar-horario";
 import {
   IGerarHorarioRepository,
   type IGerarHorarioRepository as IGerarHorarioRepositoryType,
@@ -25,21 +21,14 @@ export class GerarHorarioAceitarCommandHandlerImpl implements IGerarHorarioAceit
   async execute(
     _accessContext: IAccessContext | null,
     command: IGerarHorarioAceitarCommand,
-  ): Promise<IGerarHorario> {
-    const entity = await this.gerarHorarioRepository.findOneBy({ id: command.id });
-    ensureExists(entity, "GerarHorario", command.id);
+  ): Promise<GerarHorario> {
+    const domain = await this.gerarHorarioRepository.loadById(command.id);
+    ensureExists(domain, GerarHorario.entityName, command.id);
 
-    if (entity.status !== GerarHorarioStatus.SUCESSO) {
-      throw ValidationError.fromField(
-        "status",
-        `Solicitacao ${command.id} nao pode ser aceita no status ${entity.status}. Status esperado: SUCESSO.`,
-      );
-    }
+    domain.aceitar();
 
-    entity.status = GerarHorarioStatus.ACEITO;
-    entity.duracao = GerarHorarioDuracao.PERMANENTE;
-    await this.gerarHorarioRepository.save(entity);
+    await this.gerarHorarioRepository.save(domain);
 
-    return entity;
+    return domain;
   }
 }

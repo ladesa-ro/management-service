@@ -51,7 +51,7 @@ export class CursoTypeOrmRepositoryAdapter implements ICursoRepository {
     private readonly paginationAdapter: NestJsPaginateAdapter,
   ) {}
 
-  findAll(accessContext: IAccessContext | null, dto: CursoListQuery | null = null) {
+  getFindAllQueryResult(accessContext: IAccessContext | null, dto: CursoListQuery | null = null) {
     return typeormFindAll<CursoEntity, CursoListQuery, CursoListQueryResult>(
       this.appTypeormConnection,
       CursoEntity,
@@ -61,7 +61,7 @@ export class CursoTypeOrmRepositoryAdapter implements ICursoRepository {
     );
   }
 
-  findById(accessContext: IAccessContext | null, dto: CursoFindOneQuery) {
+  getFindOneQueryResult(accessContext: IAccessContext | null, dto: CursoFindOneQuery) {
     return typeormFindById<CursoEntity, CursoFindOneQuery, CursoFindOneQueryResult>(
       this.appTypeormConnection,
       CursoEntity,
@@ -70,13 +70,10 @@ export class CursoTypeOrmRepositoryAdapter implements ICursoRepository {
     );
   }
 
-  findByIdSimple(accessContext: IAccessContext | null, id: string) {
-    return this.findById(accessContext, { id } as CursoFindOneQuery);
-  }
-
-  create(data: Record<string, unknown>) {
+  async create(data: Record<string, unknown>): Promise<{ id: string }> {
     const entityData = cursoEntityDomainMapper.toPersistenceData(data);
-    return typeormCreate(this.appTypeormConnection, CursoEntity, entityData);
+    const result = await typeormCreate(this.appTypeormConnection, CursoEntity, entityData);
+    return { id: result.id as string };
   }
 
   update(id: string | number, data: Record<string, unknown>) {

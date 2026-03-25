@@ -49,4 +49,7 @@ export const CalendarioAgendamentoFields = {
   ambienteIds: createFieldMetadata({
     description: "IDs dos ambientes vinculados",
   }),
+  diarioIds: createFieldMetadata({
+    description: "IDs dos diarios vinculados",
+  }),
 };

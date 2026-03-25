@@ -31,18 +31,18 @@ export class TurmaUpdateImagemCapaCommandHandlerImpl
     accessContext: IAccessContext | null,
     { dto, file }: TurmaUpdateImagemCapaCommand,
   ): Promise<boolean> {
-    const current = await this.repository.findById(accessContext, dto);
+    const aggregate = await this.repository.loadById(accessContext, dto.id);
 
-    ensureExists(current, Turma.entityName, dto.id);
+    ensureExists(aggregate, Turma.entityName, dto.id);
 
     await this.permissionChecker.ensureCanUpdate(
       accessContext,
-      { dto: { id: current.id } },
-      current.id,
+      { dto: { id: aggregate.id } },
+      aggregate.id,
     );
 
     return saveEntityImagemField(
-      current.id,
+      aggregate.id,
       file,
       "imagemCapa",
       this.saveImagemCapaHandler,

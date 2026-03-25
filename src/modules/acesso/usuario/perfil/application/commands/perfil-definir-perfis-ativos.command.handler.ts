@@ -4,8 +4,8 @@ import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-in
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { IUsuarioFindByIdSimpleQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-find-by-id-simple.query.handler.interface";
 import { Usuario } from "@/modules/acesso/usuario/domain/usuario";
-import type { PerfilSetVinculosCommand } from "@/modules/acesso/usuario/perfil/domain/commands/perfil-set-vinculos.command";
-import { IPerfilSetVinculosCommandHandler } from "@/modules/acesso/usuario/perfil/domain/commands/perfil-set-vinculos.command.handler.interface";
+import type { PerfilDefinirPerfisAtivosCommand } from "@/modules/acesso/usuario/perfil/domain/commands/perfil-definir-perfis-ativos.command";
+import { IPerfilDefinirPerfisAtivosCommandHandler } from "@/modules/acesso/usuario/perfil/domain/commands/perfil-definir-perfis-ativos.command.handler.interface";
 import { IPerfilListQueryHandler } from "@/modules/acesso/usuario/perfil/domain/queries/perfil-list.query.handler.interface";
 import { Campus } from "@/modules/ambientes/campus/domain/campus";
 import { ICampusFindOneQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-find-one.query.handler.interface";
@@ -13,7 +13,9 @@ import type { PerfilListQuery, PerfilListQueryResult } from "../../domain/querie
 import { IPerfilRepository } from "../../domain/repositories";
 
 @DeclareImplementation()
-export class PerfilSetVinculosCommandHandlerImpl implements IPerfilSetVinculosCommandHandler {
+export class PerfilDefinirPerfisAtivosCommandHandlerImpl
+  implements IPerfilDefinirPerfisAtivosCommandHandler
+{
   constructor(
     @DeclareDependency(IPerfilRepository)
     private readonly perfilRepository: IPerfilRepository,
@@ -27,36 +29,61 @@ export class PerfilSetVinculosCommandHandlerImpl implements IPerfilSetVinculosCo
 
   async execute(
     accessContext: IAccessContext | null,
-    dto: PerfilSetVinculosCommand,
+    dto: PerfilDefinirPerfisAtivosCommand,
   ): Promise<PerfilListQueryResult> {
-    // Valida campus e usuário
-    const campus = await this.campusFindOneHandler.execute(accessContext, { id: dto.campus.id });
-    ensureExists(campus, Campus.entityName, dto.campus.id);
+    // Valida usuario
     const usuarioResult = await this.usuarioFindByIdSimpleHandler.execute(accessContext, {
       id: dto.usuario.id,
     });
     ensureExists(usuarioResult, Usuario.entityName, dto.usuario.id);
-    const usuario = usuarioResult;
 
+    // Agrupa vinculos por campus
+    const vinculosPorCampus = new Map<string, string[]>();
+
+    for (const vinculo of dto.vinculos) {
+      const campusId = vinculo.campus.id;
+      const cargos = vinculosPorCampus.get(campusId) ?? [];
+      cargos.push(vinculo.cargo);
+      vinculosPorCampus.set(campusId, cargos);
+    }
+
+    // Processa cada campus
+    for (const [campusId, cargos] of vinculosPorCampus) {
+      const campus = await this.campusFindOneHandler.execute(accessContext, { id: campusId });
+      ensureExists(campus, Campus.entityName, campusId);
+
+      await this.processVinculosForCampus(usuarioResult.id, campusId, cargos);
+    }
+
+    // Retorna lista filtrada com os perfis ativos do usuario
+    const filterCriteria: PerfilListQuery = {
+      "filter.ativo": ["true"],
+      "filter.usuario.id": [`${usuarioResult.id}`],
+    };
+
+    return this.perfilListHandler.execute(accessContext, filterCriteria);
+  }
+
+  private async processVinculosForCampus(
+    usuarioId: string,
+    campusId: string,
+    cargos: string[],
+  ): Promise<void> {
     const vinculosParaManter = new Set<string>();
 
-    // Busca vínculos existentes via repository
-    const vinculosExistentesUsuarioCampus = await this.perfilRepository.findByUsuarioAndCampus(
-      usuario.id,
-      campus.id,
+    const vinculosExistentes = await this.perfilRepository.findByUsuarioAndCampus(
+      usuarioId,
+      campusId,
     );
 
-    // Processa cada cargo do DTO
-    for (const cargo of dto.cargos) {
-      const vinculoExistente = vinculosExistentesUsuarioCampus.find(
-        (vinculo) => vinculo.cargo === cargo,
-      );
+    for (const cargo of cargos) {
+      const vinculoExistente = vinculosExistentes.find((v) => v.cargo === cargo);
 
       if (vinculoExistente) {
         vinculosParaManter.add(vinculoExistente.id);
       }
 
-      // Se o vínculo já existe, está ativo e não foi deletado, pula
+      // Se o vinculo ja existe, esta ativo e nao foi deletado, pula
       if (
         vinculoExistente &&
         vinculoExistente.ativo === true &&
@@ -65,14 +92,13 @@ export class PerfilSetVinculosCommandHandlerImpl implements IPerfilSetVinculosCo
         continue;
       }
 
-      // Cria ou reativa vínculo usando o port de repositório
       const data = {
         id: vinculoExistente?.id ?? generateUuidV7(),
         ativo: true,
         cargo,
         dateDeleted: null,
-        usuario: { id: usuario.id },
-        campus: { id: campus.id },
+        usuario: { id: usuarioId },
+        campus: { id: campusId },
       };
 
       if (vinculoExistente) {
@@ -82,24 +108,13 @@ export class PerfilSetVinculosCommandHandlerImpl implements IPerfilSetVinculosCo
       }
     }
 
-    // Desativa vínculos que não devem ser mantidos
-    const vinculosParaDesativar = vinculosExistentesUsuarioCampus
-      .filter((vinculo) => vinculo.ativo)
-      .filter((vinculo) => !vinculosParaManter.has(vinculo.id));
+    // Desativa vinculos que nao devem ser mantidos
+    const vinculosParaDesativar = vinculosExistentes
+      .filter((v) => v.ativo)
+      .filter((v) => !vinculosParaManter.has(v.id));
 
     if (vinculosParaDesativar.length > 0) {
-      await this.perfilRepository.deactivateByIds(
-        vinculosParaDesativar.map((vinculo) => vinculo.id),
-      );
+      await this.perfilRepository.deactivateByIds(vinculosParaDesativar.map((v) => v.id));
     }
-
-    // Retorna lista filtrada com os perfis do usuário no campus
-    const filterCriteria: PerfilListQuery = {
-      "filter.ativo": ["true"],
-      "filter.usuario.id": [`${usuario.id}`],
-      "filter.campus.id": [`${campus.id}`],
-    };
-
-    return this.perfilListHandler.execute(accessContext, filterCriteria);
   }
 }

@@ -9,6 +9,7 @@ export enum ApplicationErrorCode {
   UNAUTHORIZED = "APP.UNAUTHORIZED",
   VALIDATION = "APP.VALIDATION",
   CONFLICT = "APP.CONFLICT",
+  GONE = "APP.GONE",
   INTERNAL = "APP.INTERNAL",
   SERVICE_UNAVAILABLE = "APP.SERVICE_UNAVAILABLE",
 }
@@ -107,6 +108,21 @@ export class ValidationError extends ApplicationError {
     }
 
     return `Erro de validação em ${details.length} campo(s).`;
+  }
+}
+
+/**
+ * Recurso existe mas não está mais ativo.
+ */
+export class GoneError extends ApplicationError {
+  readonly code = ApplicationErrorCode.GONE;
+
+  constructor(
+    readonly resource: string,
+    readonly identifier?: string | number,
+  ) {
+    const idPart = identifier !== undefined ? ` com identificador "${identifier}"` : "";
+    super(`${resource}${idPart} não está mais ativo(a).`);
   }
 }
 

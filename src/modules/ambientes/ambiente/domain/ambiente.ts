@@ -76,4 +76,8 @@ export class Ambiente {
 
     zodValidate(Ambiente.entityName, AmbienteSchema, this);
   }
+
+  isActive(): boolean {
+    return this.dateDeleted === null;
+  }
 }

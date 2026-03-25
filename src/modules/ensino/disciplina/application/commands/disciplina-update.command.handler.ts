@@ -1,4 +1,4 @@
-import { ensureExists } from "@/application/errors";
+import { ensureActiveEntity, ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { DisciplinaUpdateCommand } from "@/modules/ensino/disciplina/domain/commands/disciplina-update.command";
@@ -22,22 +22,20 @@ export class DisciplinaUpdateCommandHandlerImpl implements IDisciplinaUpdateComm
     accessContext: IAccessContext | null,
     dto: DisciplinaFindOneQuery & DisciplinaUpdateCommand,
   ): Promise<DisciplinaFindOneQueryResult> {
-    const current = await this.repository.findById(accessContext, { id: dto.id });
-
-    ensureExists(current, Disciplina.entityName, dto.id);
+    const domain = await this.repository.loadById(accessContext, dto.id);
+    ensureExists(domain, Disciplina.entityName, dto.id);
+    ensureActiveEntity(domain, Disciplina.entityName, dto.id);
 
     await this.permissionChecker.ensureCanUpdate(accessContext, { dto }, dto.id);
 
-    const domain = Disciplina.load(current);
     domain.update({
       nome: dto.nome,
       nomeAbreviado: dto.nomeAbreviado,
       cargaHoraria: dto.cargaHoraria,
     });
-    await this.repository.update(current.id, domain);
+    await this.repository.save(domain);
 
-    const result = await this.repository.findById(accessContext, { id: dto.id });
-
+    const result = await this.repository.getFindOneQueryResult(accessContext, { id: dto.id });
     ensureExists(result, Disciplina.entityName, dto.id);
 
     return result;

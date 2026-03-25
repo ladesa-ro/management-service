@@ -19,7 +19,7 @@ export class UsuarioDeleteCommandHandlerImpl implements IUsuarioDeleteCommandHan
   async execute(accessContext: IAccessContext | null, dto: UsuarioFindOneQuery): Promise<boolean> {
     await this.permissionChecker.ensureCanDelete(accessContext, { dto }, dto.id);
 
-    const usuario = await this.repository.findById(accessContext, dto);
+    const usuario = await this.repository.getFindOneQueryResult(accessContext, dto);
 
     ensureExists(usuario, Usuario.entityName, dto.id);
 

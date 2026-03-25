@@ -1,16 +1,19 @@
 import { describe, expect, it } from "vitest";
 import { ResourceNotFoundError } from "@/application/errors/application.error";
 import {
-  createMockCrudRepository,
+  createMockCqrsRepository,
   createMockPermissionChecker,
   createTestAccessContext,
+  createTestDatedFields,
+  createTestDomainEntity,
   createTestId,
 } from "@/test/helpers";
+
 import { ModalidadeDeleteCommandHandlerImpl } from "./modalidade-delete.command.handler";
 
 describe("ModalidadeDeleteCommandHandler", () => {
   function createHandler(overrides: { repository?: object; permissionChecker?: object } = {}) {
-    const repository = overrides.repository ?? createMockCrudRepository();
+    const repository = overrides.repository ?? createMockCqrsRepository();
     const permissionChecker = overrides.permissionChecker ?? createMockPermissionChecker();
 
     const handler = new ModalidadeDeleteCommandHandlerImpl(
@@ -23,10 +26,10 @@ describe("ModalidadeDeleteCommandHandler", () => {
 
   it("should delete an existing entity and return true", async () => {
     const id = createTestId();
-    const entity = { id, nome: "EaD", slug: "ead" };
+    const entity = createTestDomainEntity({ id, nome: "EaD", slug: "ead" });
 
-    const repository = createMockCrudRepository();
-    repository.findById.mockResolvedValue(entity);
+    const repository = createMockCqrsRepository();
+    repository.loadById.mockResolvedValue(entity);
 
     const { handler } = createHandler({ repository });
     const accessContext = createTestAccessContext();
@@ -39,8 +42,13 @@ describe("ModalidadeDeleteCommandHandler", () => {
 
   it("should call permissionChecker.ensureCanDelete", async () => {
     const id = createTestId();
-    const repository = createMockCrudRepository();
-    repository.findById.mockResolvedValue({ id });
+    const repository = createMockCqrsRepository();
+    repository.loadById.mockResolvedValue({
+      id,
+      ...createTestDatedFields(),
+      isActive: () => true,
+      update: () => {},
+    });
 
     const permissionChecker = createMockPermissionChecker();
     const { handler } = createHandler({ repository, permissionChecker });
@@ -56,8 +64,8 @@ describe("ModalidadeDeleteCommandHandler", () => {
   });
 
   it("should throw ResourceNotFoundError when entity does not exist", async () => {
-    const repository = createMockCrudRepository();
-    repository.findById.mockResolvedValue(null);
+    const repository = createMockCqrsRepository();
+    repository.loadById.mockResolvedValue(null);
 
     const { handler } = createHandler({ repository });
     const accessContext = createTestAccessContext();

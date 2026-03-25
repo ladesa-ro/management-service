@@ -1,4 +1,4 @@
-import { ensureExists } from "@/application/errors";
+import { ensureActiveEntity, ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { EstagioUpdateCommand } from "@/modules/estagio/estagio/domain/commands/estagio-update.command";
@@ -21,16 +21,15 @@ export class EstagioUpdateCommandHandlerImpl implements IEstagioUpdateCommandHan
   ): Promise<EstagioFindOneQueryResult> {
     const { id, ...dto } = command;
 
-    const current = await this.repository.findById(accessContext, { id });
-    ensureExists(current, Estagio.entityName, id);
+    const domain = await this.repository.loadById(accessContext, id);
+    ensureExists(domain, Estagio.entityName, id);
+    ensureActiveEntity(domain, Estagio.entityName, id);
 
-    await this.repository.update(id, dto);
+    domain.update(dto);
 
-    if (dto.horariosEstagio !== undefined) {
-      await this.repository.replaceHorariosEstagio(id, dto.horariosEstagio ?? []);
-    }
+    await this.repository.save(domain);
 
-    const result = await this.repository.findById(accessContext, { id });
+    const result = await this.repository.getFindOneQueryResult(accessContext, { id });
     ensureExists(result, Estagio.entityName, id);
 
     return result;

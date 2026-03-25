@@ -22,18 +22,16 @@ export class BlocoUpdateCommandHandlerImpl implements IBlocoUpdateCommandHandler
     accessContext: IAccessContext | null,
     dto: BlocoFindOneQuery & BlocoUpdateCommand,
   ): Promise<BlocoFindOneQueryResult> {
-    const current = await this.repository.findById(accessContext, { id: dto.id });
-
-    ensureExists(current, Bloco.entityName, dto.id);
+    const domain = await this.repository.loadById(accessContext, dto.id);
+    ensureExists(domain, Bloco.entityName, dto.id);
 
     await this.permissionChecker.ensureCanUpdate(accessContext, { dto }, dto.id);
 
-    const domain = Bloco.load(current);
     domain.update({ nome: dto.nome, codigo: dto.codigo });
-    await this.repository.update(current.id, domain);
 
-    const result = await this.repository.findById(accessContext, { id: dto.id });
+    await this.repository.save(domain);
 
+    const result = await this.repository.getFindOneQueryResult(accessContext, { id: dto.id });
     ensureExists(result, Bloco.entityName, dto.id);
 
     return result;

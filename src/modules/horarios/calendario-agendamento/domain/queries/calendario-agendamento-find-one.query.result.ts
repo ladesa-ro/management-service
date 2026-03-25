@@ -1,4 +1,4 @@
-import { SharedFields } from "@/domain/abstractions";
+import { EntityQueryResult, SharedFields } from "@/domain/abstractions";
 import { CalendarioAgendamentoFields } from "../calendario-agendamento.fields";
 import type {
   CalendarioAgendamentoStatus,
@@ -10,8 +10,7 @@ export const CalendarioAgendamentoFindOneQueryResultFields = {
   ...CalendarioAgendamentoFields,
 };
 
-export class CalendarioAgendamentoFindOneQueryResult {
-  id!: string;
+export class CalendarioAgendamentoFindOneQueryResult extends EntityQueryResult {
   tipo!: CalendarioAgendamentoTipo;
   nome!: string | null;
   dataInicio!: string;
@@ -29,4 +28,5 @@ export class CalendarioAgendamentoFindOneQueryResult {
   ofertaFormacaoIds!: string[];
   modalidadeIds!: string[];
   ambienteIds!: string[];
+  diarioIds!: string[];
 }

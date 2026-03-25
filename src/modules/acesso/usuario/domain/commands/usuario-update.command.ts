@@ -1,5 +1,6 @@
 import { ImagemInputRef } from "@/modules/armazenamento/imagem";
 import { UsuarioFields } from "../usuario.fields";
+import type { VinculoInput } from "./usuario-create.command";
 
 export const UsuarioUpdateCommandFields = {
   nome: UsuarioFields.nome,
@@ -7,6 +8,7 @@ export const UsuarioUpdateCommandFields = {
   email: UsuarioFields.email,
   imagemCapa: UsuarioFields.imagemCapa,
   imagemPerfil: UsuarioFields.imagemPerfil,
+  vinculos: UsuarioFields.vinculos,
 };
 
 export class UsuarioUpdateCommand {
@@ -15,4 +17,5 @@ export class UsuarioUpdateCommand {
   email?: string | null;
   imagemCapa?: ImagemInputRef | null;
   imagemPerfil?: ImagemInputRef | null;
+  vinculos?: VinculoInput[];
 }

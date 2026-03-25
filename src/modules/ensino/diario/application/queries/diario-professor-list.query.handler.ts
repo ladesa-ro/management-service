@@ -18,6 +18,6 @@ export class DiarioProfessorListQueryHandlerImpl implements IDiarioProfessorList
     accessContext: IAccessContext | null,
     dto: DiarioProfessorListQuery | null,
   ): Promise<DiarioProfessorListQueryResult> {
-    return this.repository.findAll(accessContext, dto);
+    return this.repository.getFindAllQueryResult(accessContext, dto);
   }
 }

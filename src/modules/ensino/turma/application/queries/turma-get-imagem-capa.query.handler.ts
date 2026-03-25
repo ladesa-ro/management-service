@@ -31,7 +31,7 @@ export class TurmaGetImagemCapaQueryHandlerImpl implements ITurmaGetImagemCapaQu
     accessContext: IAccessContext | null,
     { id }: TurmaFindOneQuery,
   ): Promise<IStreamableFileResult> {
-    const entity = await this.repository.findById(accessContext, { id });
+    const entity = await this.repository.getFindOneQueryResult(accessContext, { id });
 
     ensureExists(entity, Turma.entityName, id);
 

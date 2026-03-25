@@ -1,4 +1,10 @@
-import type { IAccessContext } from "@/domain/abstractions";
+import type {
+  IRepositoryGetFindAllQueryResult,
+  IRepositoryGetFindOneQueryResult,
+  IRepositoryLoadById,
+  IRepositorySave,
+  IRepositorySoftDeleteById,
+} from "@/domain/abstractions";
 import type { OfertaFormacao } from "@/modules/ensino/oferta-formacao/domain/oferta-formacao";
 import type {
   OfertaFormacaoFindOneQuery,
@@ -22,27 +28,27 @@ export interface IOfertaFormacaoRepository {
   // ==========================================
 
   /** Carrega o aggregate reconstituído na forma do domínio. */
-  loadById(accessContext: IAccessContext | null, id: string): Promise<OfertaFormacao | null>;
+  loadById: IRepositoryLoadById<OfertaFormacao>;
 
   /** Persiste o aggregate (create ou update). */
-  save(aggregate: OfertaFormacao): Promise<void>;
+  save: IRepositorySave<OfertaFormacao>;
 
   /** Soft-delete por ID. */
-  softDeleteById(id: string): Promise<void>;
+  softDeleteById: IRepositorySoftDeleteById;
 
   // ==========================================
   // Read side — usado por query handlers
   // ==========================================
 
   /** Retorna um registro hidratado com todas as relações para exibição. */
-  getFindOneQueryResult(
-    accessContext: IAccessContext | null,
-    dto: OfertaFormacaoFindOneQuery,
-  ): Promise<OfertaFormacaoFindOneQueryResult | null>;
+  getFindOneQueryResult: IRepositoryGetFindOneQueryResult<
+    OfertaFormacaoFindOneQuery,
+    OfertaFormacaoFindOneQueryResult
+  >;
 
   /** Retorna lista paginada com dados hidratados para exibição. */
-  getFindAllQueryResult(
-    accessContext: IAccessContext | null,
-    dto: OfertaFormacaoListQuery | null,
-  ): Promise<OfertaFormacaoListQueryResult>;
+  getFindAllQueryResult: IRepositoryGetFindAllQueryResult<
+    OfertaFormacaoListQuery,
+    OfertaFormacaoListQueryResult
+  >;
 }

@@ -97,4 +97,8 @@ export class CalendarioLetivo implements IEntityBaseUuid {
 
     this.dateUpdated = getNowISO();
   }
+
+  isActive(): boolean {
+    return this.dateDeleted === null;
+  }
 }

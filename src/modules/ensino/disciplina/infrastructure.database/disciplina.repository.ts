@@ -1,15 +1,15 @@
+import { IsNull } from "typeorm";
 import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
 import { buildTypeOrmPaginateConfig } from "@/infrastructure.database/pagination/adapters/pagination-spec.adapter";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import {
-  typeormCreate,
   typeormFindAll,
   typeormFindById,
   typeormSoftDeleteById,
-  typeormUpdate,
 } from "@/infrastructure.database/typeorm/helpers/typeorm-repository-helpers";
+import { Disciplina } from "@/modules/ensino/disciplina/domain/disciplina";
 import {
   type DisciplinaFindOneQuery,
   type DisciplinaFindOneQueryResult,
@@ -40,17 +40,39 @@ export class DisciplinaTypeOrmRepositoryAdapter implements IDisciplinaRepository
     private readonly paginationAdapter: NestJsPaginateAdapter,
   ) {}
 
-  findAll(accessContext: IAccessContext | null, dto: DisciplinaListQuery | null = null) {
-    return typeormFindAll<DisciplinaEntity, DisciplinaListQuery, DisciplinaListQueryResult>(
-      this.appTypeormConnection,
-      DisciplinaEntity,
-      { ...config, paginateConfig: disciplinaPaginateConfig },
-      this.paginationAdapter,
-      dto,
+  // ==========================================
+  // Write side
+  // ==========================================
+
+  async loadById(_accessContext: IAccessContext | null, id: string): Promise<Disciplina | null> {
+    const repo = this.appTypeormConnection.getRepository(DisciplinaEntity);
+
+    const entity = await repo.findOne({
+      where: { id, dateDeleted: IsNull() },
+    });
+
+    if (!entity) return null;
+
+    return Disciplina.load(
+      disciplinaEntityDomainMapper.toOutputData(entity as unknown as Record<string, unknown>),
     );
   }
 
-  findById(accessContext: IAccessContext | null, dto: DisciplinaFindOneQuery) {
+  async save(aggregate: Disciplina): Promise<void> {
+    const entityData = disciplinaEntityDomainMapper.toPersistenceData({ ...aggregate });
+    const repo = this.appTypeormConnection.getRepository(DisciplinaEntity);
+    await repo.save(repo.create({ id: aggregate.id, ...entityData } as DisciplinaEntity));
+  }
+
+  softDeleteById(id: string) {
+    return typeormSoftDeleteById(this.appTypeormConnection, DisciplinaEntity, config.alias, id);
+  }
+
+  // ==========================================
+  // Read side
+  // ==========================================
+
+  getFindOneQueryResult(accessContext: IAccessContext | null, dto: DisciplinaFindOneQuery) {
     return typeormFindById<DisciplinaEntity, DisciplinaFindOneQuery, DisciplinaFindOneQueryResult>(
       this.appTypeormConnection,
       DisciplinaEntity,
@@ -59,21 +81,16 @@ export class DisciplinaTypeOrmRepositoryAdapter implements IDisciplinaRepository
     );
   }
 
-  findByIdSimple(accessContext: IAccessContext | null, id: string) {
-    return this.findById(accessContext, { id } as DisciplinaFindOneQuery);
-  }
-
-  create(data: Record<string, unknown>) {
-    const entityData = disciplinaEntityDomainMapper.toPersistenceData(data);
-    return typeormCreate(this.appTypeormConnection, DisciplinaEntity, entityData);
-  }
-
-  update(id: string | number, data: Record<string, unknown>) {
-    const entityData = disciplinaEntityDomainMapper.toPersistenceData(data);
-    return typeormUpdate(this.appTypeormConnection, DisciplinaEntity, id, entityData);
-  }
-
-  softDeleteById(id: string) {
-    return typeormSoftDeleteById(this.appTypeormConnection, DisciplinaEntity, config.alias, id);
+  getFindAllQueryResult(
+    accessContext: IAccessContext | null,
+    dto: DisciplinaListQuery | null = null,
+  ) {
+    return typeormFindAll<DisciplinaEntity, DisciplinaListQuery, DisciplinaListQueryResult>(
+      this.appTypeormConnection,
+      DisciplinaEntity,
+      { ...config, paginateConfig: disciplinaPaginateConfig },
+      this.paginationAdapter,
+      dto,
+    );
   }
 }

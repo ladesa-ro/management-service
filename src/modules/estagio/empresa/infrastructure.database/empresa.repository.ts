@@ -1,15 +1,20 @@
+import { IsNull } from "typeorm";
 import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
 import { buildTypeOrmPaginateConfig } from "@/infrastructure.database/pagination/adapters/pagination-spec.adapter";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import {
-  typeormCreate,
   typeormFindAll,
   typeormFindById,
   typeormSoftDeleteById,
-  typeormUpdate,
 } from "@/infrastructure.database/typeorm/helpers/typeorm-repository-helpers";
+import {
+  dateToISO,
+  dateToISONullable,
+  toRefRequired,
+} from "@/infrastructure.database/typeorm/mapping";
+import { Empresa } from "@/modules/estagio/empresa/domain/empresa";
 import type {
   EmpresaFindOneQuery,
   EmpresaFindOneQueryResult,
@@ -37,6 +42,11 @@ const empresaPaginateConfig = buildTypeOrmPaginateConfig<EmpresaTypeormEntity>(
   empresaRelations,
 );
 
+/** Relations para o write side (loadById). */
+const writeRelations = {
+  endereco: true,
+} as const;
+
 @DeclareImplementation()
 export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
   constructor(
@@ -45,17 +55,51 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
     private readonly paginationAdapter: NestJsPaginateAdapter,
   ) {}
 
-  findAll(accessContext: IAccessContext | null, dto: EmpresaListQuery | null = null) {
-    return typeormFindAll<EmpresaTypeormEntity, EmpresaListQuery, EmpresaListQueryResult>(
-      this.appTypeormConnection,
-      EmpresaTypeormEntity,
-      { ...config, paginateConfig: empresaPaginateConfig },
-      this.paginationAdapter,
-      dto,
-    );
+  // ==========================================
+  // Write side
+  // ==========================================
+
+  async loadById(_accessContext: IAccessContext | null, id: string): Promise<Empresa | null> {
+    const repo = this.appTypeormConnection.getRepository(EmpresaTypeormEntity);
+
+    const entity = await repo.findOne({
+      where: { id, dateDeleted: IsNull() },
+      relations: writeRelations,
+    });
+
+    if (!entity) return null;
+
+    return Empresa.load({
+      id: entity.id,
+      razaoSocial: entity.razaoSocial,
+      nomeFantasia: entity.nomeFantasia,
+      cnpj: entity.cnpj,
+      telefone: entity.telefone,
+      email: entity.email,
+      endereco: toRefRequired(entity.endereco),
+      dateCreated: dateToISO(entity.dateCreated),
+      dateUpdated: dateToISO(entity.dateUpdated),
+      dateDeleted: dateToISONullable(entity.dateDeleted),
+    });
   }
 
-  findById(accessContext: IAccessContext | null, dto: EmpresaFindOneQuery) {
+  async save(aggregate: Empresa): Promise<void> {
+    const entityData = empresaEntityDomainMapper.toPersistenceData({
+      ...aggregate,
+    }) as Record<string, unknown>;
+    const repo = this.appTypeormConnection.getRepository(EmpresaTypeormEntity);
+    await repo.save(repo.create({ id: aggregate.id, ...entityData } as EmpresaTypeormEntity));
+  }
+
+  softDeleteById(id: string) {
+    return typeormSoftDeleteById(this.appTypeormConnection, EmpresaTypeormEntity, config.alias, id);
+  }
+
+  // ==========================================
+  // Read side
+  // ==========================================
+
+  getFindOneQueryResult(accessContext: IAccessContext | null, dto: EmpresaFindOneQuery) {
     return typeormFindById<EmpresaTypeormEntity, EmpresaFindOneQuery, EmpresaFindOneQueryResult>(
       this.appTypeormConnection,
       EmpresaTypeormEntity,
@@ -64,21 +108,13 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
     );
   }
 
-  findByIdSimple(accessContext: IAccessContext | null, id: string) {
-    return this.findById(accessContext, { id } as EmpresaFindOneQuery);
-  }
-
-  create(data: Record<string, unknown>) {
-    const entityData = empresaEntityDomainMapper.toPersistenceData(data) as Record<string, unknown>;
-    return typeormCreate(this.appTypeormConnection, EmpresaTypeormEntity, entityData);
-  }
-
-  update(id: string | number, data: Record<string, unknown>) {
-    const entityData = empresaEntityDomainMapper.toPersistenceData(data) as Record<string, unknown>;
-    return typeormUpdate(this.appTypeormConnection, EmpresaTypeormEntity, id, entityData);
-  }
-
-  softDeleteById(id: string) {
-    return typeormSoftDeleteById(this.appTypeormConnection, EmpresaTypeormEntity, config.alias, id);
+  getFindAllQueryResult(accessContext: IAccessContext | null, dto: EmpresaListQuery | null = null) {
+    return typeormFindAll<EmpresaTypeormEntity, EmpresaListQuery, EmpresaListQueryResult>(
+      this.appTypeormConnection,
+      EmpresaTypeormEntity,
+      { ...config, paginateConfig: empresaPaginateConfig },
+      this.paginationAdapter,
+      dto,
+    );
   }
 }
