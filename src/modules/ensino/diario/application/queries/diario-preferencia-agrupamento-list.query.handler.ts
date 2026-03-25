@@ -20,6 +20,6 @@ export class DiarioPreferenciaAgrupamentoListQueryHandlerImpl
     accessContext: IAccessContext | null,
     dto: DiarioPreferenciaAgrupamentoListQuery | null,
   ): Promise<DiarioPreferenciaAgrupamentoListQueryResult> {
-    return this.repository.findAll(accessContext, dto);
+    return this.repository.getFindAllQueryResult(accessContext, dto);
   }
 }

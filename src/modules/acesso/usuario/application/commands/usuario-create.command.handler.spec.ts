@@ -79,7 +79,7 @@ describe("UsuarioCreateCommandHandler", () => {
 
     const repository = createMockUsuarioRepository();
     repository.create.mockResolvedValue({ id });
-    repository.findById.mockResolvedValue(expectedResult);
+    repository.getFindOneQueryResult.mockResolvedValue(expectedResult);
 
     const { handler } = createHandler({ repository });
     const accessContext = createTestAccessContext();
@@ -88,13 +88,13 @@ describe("UsuarioCreateCommandHandler", () => {
 
     expect(result).toEqual(expectedResult);
     expect(repository.create).toHaveBeenCalledOnce();
-    expect(repository.findById).toHaveBeenCalledWith(accessContext, { id });
+    expect(repository.getFindOneQueryResult).toHaveBeenCalledWith(accessContext, { id });
   });
 
   it("should call permissionChecker.ensureCanCreate before creating", async () => {
     const repository = createMockUsuarioRepository();
     repository.create.mockResolvedValue({ id: createTestId() });
-    repository.findById.mockResolvedValue({ id: createTestId() });
+    repository.getFindOneQueryResult.mockResolvedValue({ id: createTestId() });
 
     const permissionChecker = createMockPermissionChecker();
     const { handler } = createHandler({ repository, permissionChecker });
@@ -115,10 +115,10 @@ describe("UsuarioCreateCommandHandler", () => {
     await expect(handler.execute(accessContext, dto)).rejects.toThrow("Forbidden");
   });
 
-  it("should throw ResourceNotFoundError when findById returns null after create", async () => {
+  it("should throw ResourceNotFoundError when getFindOneQueryResult returns null after create", async () => {
     const repository = createMockUsuarioRepository();
     repository.create.mockResolvedValue({ id: createTestId() });
-    repository.findById.mockResolvedValue(null);
+    repository.getFindOneQueryResult.mockResolvedValue(null);
 
     const { handler } = createHandler({ repository });
     const accessContext = createTestAccessContext();
@@ -129,7 +129,7 @@ describe("UsuarioCreateCommandHandler", () => {
   it("should provision user in IDP after creating", async () => {
     const repository = createMockUsuarioRepository();
     repository.create.mockResolvedValue({ id: createTestId() });
-    repository.findById.mockResolvedValue({ id: createTestId() });
+    repository.getFindOneQueryResult.mockResolvedValue({ id: createTestId() });
 
     const idpUserService = createMockIdpUserService();
     const { handler } = createHandler({ repository, idpUserService });
@@ -147,7 +147,7 @@ describe("UsuarioCreateCommandHandler", () => {
     it("should not call definirPerfisAtivosHandler when vinculos is undefined", async () => {
       const repository = createMockUsuarioRepository();
       repository.create.mockResolvedValue({ id: createTestId() });
-      repository.findById.mockResolvedValue({ id: createTestId() });
+      repository.getFindOneQueryResult.mockResolvedValue({ id: createTestId() });
 
       const definirPerfisAtivosHandler = createMockDefinirPerfisAtivosHandler();
       const { handler } = createHandler({ repository, definirPerfisAtivosHandler });
@@ -161,7 +161,7 @@ describe("UsuarioCreateCommandHandler", () => {
     it("should not call definirPerfisAtivosHandler when vinculos is empty", async () => {
       const repository = createMockUsuarioRepository();
       repository.create.mockResolvedValue({ id: createTestId() });
-      repository.findById.mockResolvedValue({ id: createTestId() });
+      repository.getFindOneQueryResult.mockResolvedValue({ id: createTestId() });
 
       const definirPerfisAtivosHandler = createMockDefinirPerfisAtivosHandler();
       const { handler } = createHandler({ repository, definirPerfisAtivosHandler });
@@ -178,7 +178,7 @@ describe("UsuarioCreateCommandHandler", () => {
 
       const repository = createMockUsuarioRepository();
       repository.create.mockResolvedValue({ id: usuarioId });
-      repository.findById.mockResolvedValue({ id: usuarioId });
+      repository.getFindOneQueryResult.mockResolvedValue({ id: usuarioId });
 
       const definirPerfisAtivosHandler = createMockDefinirPerfisAtivosHandler();
       const { handler } = createHandler({ repository, definirPerfisAtivosHandler });

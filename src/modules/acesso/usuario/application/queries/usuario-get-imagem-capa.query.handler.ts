@@ -31,7 +31,7 @@ export class UsuarioGetImagemCapaQueryHandlerImpl implements IUsuarioGetImagemCa
     accessContext: IAccessContext | null,
     { id }: UsuarioFindOneQuery,
   ): Promise<IStreamableFileResult> {
-    const usuario = await this.repository.findById(accessContext, { id });
+    const usuario = await this.repository.getFindOneQueryResult(accessContext, { id });
 
     ensureExists(usuario, Usuario.entityName, id);
 

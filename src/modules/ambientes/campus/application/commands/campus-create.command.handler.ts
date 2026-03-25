@@ -1,7 +1,7 @@
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import { Campus } from "@/modules/ambientes/campus/domain/campus";
+import { Campus, type ICampus } from "@/modules/ambientes/campus/domain/campus";
 import type { CampusCreateCommand } from "@/modules/ambientes/campus/domain/commands/campus-create.command";
 import { ICampusCreateCommandHandler } from "@/modules/ambientes/campus/domain/commands/campus-create.command.handler.interface";
 import { IEnderecoCreateOrUpdateCommandHandler } from "@/modules/localidades/endereco/domain/commands/endereco-create-or-update.command.handler.interface";
@@ -30,6 +30,7 @@ export class CampusCreateCommandHandlerImpl implements ICampusCreateCommandHandl
       id: null,
       dto: dto.endereco,
     });
+
     const domain = Campus.create({
       nomeFantasia: dto.nomeFantasia,
       razaoSocial: dto.razaoSocial,
@@ -37,14 +38,15 @@ export class CampusCreateCommandHandlerImpl implements ICampusCreateCommandHandl
       cnpj: dto.cnpj,
       endereco: dto.endereco,
     });
-    const { id } = await this.repository.create({
-      ...domain,
-      endereco: { id: endereco.id as string },
-    });
 
-    const result = await this.repository.findById(accessContext, { id });
+    // Associar o endereco persistido ao domínio (Campus.create não atribui endereco)
+    domain.endereco = { id: endereco.id as string } as ICampus["endereco"];
 
-    ensureExists(result, Campus.entityName, id);
+    await this.repository.save(domain);
+
+    const result = await this.repository.getFindOneQueryResult(accessContext, { id: domain.id });
+
+    ensureExists(result, Campus.entityName, domain.id);
 
     return result;
   }

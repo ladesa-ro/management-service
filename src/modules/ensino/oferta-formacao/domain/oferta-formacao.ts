@@ -96,4 +96,8 @@ export class OfertaFormacao {
 
     zodValidate(OfertaFormacao.entityName, OfertaFormacaoSchema, this);
   }
+
+  isActive(): boolean {
+    return this.dateDeleted === null;
+  }
 }

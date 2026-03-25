@@ -15,6 +15,6 @@ export class CursoListQueryHandlerImpl implements ICursoListQueryHandler {
     accessContext: IAccessContext | null,
     dto: CursoListQuery | null,
   ): Promise<CursoListQueryResult> {
-    return this.repository.findAll(accessContext, dto);
+    return this.repository.getFindAllQueryResult(accessContext, dto);
   }
 }

@@ -41,7 +41,7 @@ export class EstadoTypeOrmRepositoryAdapter implements IEstadoRepository {
     private readonly paginationAdapter: NestJsPaginateAdapter,
   ) {}
 
-  findAll(accessContext: IAccessContext | null, dto: EstadoListQuery | null = null) {
+  getFindAllQueryResult(accessContext: IAccessContext | null, dto: EstadoListQuery | null = null) {
     return typeormFindAll<EstadoEntity, EstadoListQuery, EstadoListQueryResult>(
       this.appTypeormConnection,
       EstadoEntity,
@@ -51,7 +51,7 @@ export class EstadoTypeOrmRepositoryAdapter implements IEstadoRepository {
     );
   }
 
-  findById(accessContext: IAccessContext | null, dto: EstadoFindOneQuery) {
+  getFindOneQueryResult(accessContext: IAccessContext | null, dto: EstadoFindOneQuery) {
     return typeormFindById<EstadoEntity, EstadoFindOneQuery, EstadoFindOneQueryResult>(
       this.appTypeormConnection,
       EstadoEntity,
@@ -61,7 +61,7 @@ export class EstadoTypeOrmRepositoryAdapter implements IEstadoRepository {
   }
 
   findByIdSimple(accessContext: IAccessContext | null, id: string) {
-    return this.findById(accessContext, { id: Number(id) } as EstadoFindOneQuery);
+    return this.getFindOneQueryResult(accessContext, { id: Number(id) } as EstadoFindOneQuery);
   }
 
   create(data: Record<string, unknown>) {

@@ -1,4 +1,4 @@
-import { ensureExists } from "@/application/errors";
+import { ensureActiveEntity, ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { IDisciplinaDeleteCommandHandler } from "@/modules/ensino/disciplina/domain/commands/disciplina-delete.command.handler.interface";
@@ -22,11 +22,11 @@ export class DisciplinaDeleteCommandHandlerImpl implements IDisciplinaDeleteComm
   ): Promise<boolean> {
     await this.permissionChecker.ensureCanDelete(accessContext, { dto }, dto.id);
 
-    const entity = await this.repository.findById(accessContext, dto);
+    const domain = await this.repository.loadById(accessContext, dto.id);
+    ensureExists(domain, Disciplina.entityName, dto.id);
+    ensureActiveEntity(domain, Disciplina.entityName, dto.id);
 
-    ensureExists(entity, Disciplina.entityName, dto.id);
-
-    await this.repository.softDeleteById(entity.id);
+    await this.repository.softDeleteById(domain.id);
 
     return true;
   }

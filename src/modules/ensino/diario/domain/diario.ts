@@ -111,4 +111,8 @@ export class Diario implements IEntityBaseUuid {
     this.ativo = false;
     this.dateUpdated = getNowISO();
   }
+
+  isActive(): boolean {
+    return this.ativo && this.dateDeleted === null;
+  }
 }

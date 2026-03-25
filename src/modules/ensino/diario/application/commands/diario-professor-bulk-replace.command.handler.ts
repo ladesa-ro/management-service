@@ -32,6 +32,6 @@ export class DiarioProfessorBulkReplaceCommandHandlerImpl
     );
 
     const listQuery: DiarioProfessorListQuery = { "filter.diario.id": [dto.diarioId] };
-    return this.repository.findAll(accessContext, listQuery);
+    return this.repository.getFindAllQueryResult(accessContext, listQuery);
   }
 }

@@ -15,6 +15,6 @@ export class DiarioListQueryHandlerImpl implements IDiarioListQueryHandler {
     accessContext: IAccessContext | null,
     dto: DiarioListQuery | null,
   ): Promise<DiarioListQueryResult> {
-    return this.repository.findAll(accessContext, dto);
+    return this.repository.getFindAllQueryResult(accessContext, dto);
   }
 }

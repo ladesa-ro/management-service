@@ -20,14 +20,12 @@ export class EstagioCreateCommandHandlerImpl implements IEstagioCreateCommandHan
   ): Promise<EstagioFindOneQueryResult> {
     const estagio = Estagio.create(dto);
 
-    const { id } = await this.repository.create({ ...estagio });
+    await this.repository.save(estagio);
 
-    if (estagio.horariosEstagio.length > 0) {
-      await this.repository.replaceHorariosEstagio(id as string, estagio.horariosEstagio);
-    }
-
-    const result = await this.repository.findById(accessContext, { id: id as string });
-    ensureExists(result, Estagio.entityName, id);
+    const result = await this.repository.getFindOneQueryResult(accessContext, {
+      id: estagio.id,
+    });
+    ensureExists(result, Estagio.entityName, estagio.id);
 
     return result;
   }

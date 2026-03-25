@@ -74,4 +74,8 @@ export class Campus {
     const cnpjLimpo = this.cnpj.replace(/\D/g, "");
     return /^\d{14}$/.test(cnpjLimpo);
   }
+
+  isActive(): boolean {
+    return this.dateDeleted === null;
+  }
 }

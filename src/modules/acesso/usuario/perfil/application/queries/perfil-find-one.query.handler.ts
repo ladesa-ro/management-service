@@ -15,6 +15,6 @@ export class PerfilFindOneQueryHandlerImpl implements IPerfilFindOneQueryHandler
     accessContext: IAccessContext | null,
     dto: PerfilFindOneQuery,
   ): Promise<PerfilFindOneQueryResult | null> {
-    return this.repository.findById(accessContext, dto);
+    return this.repository.getFindOneQueryResult(accessContext, dto);
   }
 }

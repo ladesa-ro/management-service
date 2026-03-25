@@ -1,23 +1,23 @@
+import { IsNull } from "typeorm";
 import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
 import { buildTypeOrmPaginateConfig } from "@/infrastructure.database/pagination/adapters/pagination-spec.adapter";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import {
-  typeormCreate,
   typeormFindAll,
   typeormFindById,
   typeormSoftDeleteById,
-  typeormUpdate,
 } from "@/infrastructure.database/typeorm/helpers/typeorm-repository-helpers";
+import { CalendarioLetivo } from "../domain/calendario-letivo";
 import type {
   CalendarioLetivoFindOneQuery,
   CalendarioLetivoFindOneQueryResult,
   CalendarioLetivoListQuery,
   CalendarioLetivoListQueryResult,
-  ICalendarioLetivoRepository,
-} from "@/modules/horarios/calendario-letivo";
-import { calendarioLetivoPaginationSpec } from "@/modules/horarios/calendario-letivo/domain/queries";
+} from "../domain/queries";
+import { calendarioLetivoPaginationSpec } from "../domain/queries";
+import type { ICalendarioLetivoRepository } from "../domain/repositories";
 import { CalendarioLetivoEntity, calendarioLetivoEntityDomainMapper } from "./typeorm";
 
 const config = {
@@ -42,6 +42,17 @@ const calendarioLetivoPaginateConfig = buildTypeOrmPaginateConfig<CalendarioLeti
   calendarioLetivoRelations,
 );
 
+/**
+ * Relations para o write side (loadById).
+ * Carrega o minimo necessario para reconstituir o aggregate:
+ * - campus: join para extrair o ID (TypeORM nao expoe FK sem join)
+ * - ofertaFormacao: join para extrair o ID (nullable)
+ */
+const writeRelations = {
+  campus: true,
+  ofertaFormacao: true,
+} as const;
+
 @DeclareImplementation()
 export class CalendarioLetivoTypeOrmRepositoryAdapter implements ICalendarioLetivoRepository {
   constructor(
@@ -50,21 +61,50 @@ export class CalendarioLetivoTypeOrmRepositoryAdapter implements ICalendarioLeti
     private readonly paginationAdapter: NestJsPaginateAdapter,
   ) {}
 
-  findAll(accessContext: IAccessContext | null, dto: CalendarioLetivoListQuery | null = null) {
-    return typeormFindAll<
-      CalendarioLetivoEntity,
-      CalendarioLetivoListQuery,
-      CalendarioLetivoListQueryResult
-    >(
-      this.appTypeormConnection,
-      CalendarioLetivoEntity,
-      { ...config, paginateConfig: calendarioLetivoPaginateConfig },
-      this.paginationAdapter,
-      dto,
+  // ==========================================
+  // Write side
+  // ==========================================
+
+  async loadById(
+    _accessContext: IAccessContext | null,
+    id: string,
+  ): Promise<CalendarioLetivo | null> {
+    const repo = this.appTypeormConnection.getRepository(CalendarioLetivoEntity);
+
+    const entity = await repo.findOne({
+      where: { id, dateDeleted: IsNull() },
+      relations: writeRelations,
+    });
+
+    if (!entity) return null;
+
+    return CalendarioLetivo.load(
+      calendarioLetivoEntityDomainMapper.toOutputData(entity as unknown as Record<string, unknown>),
     );
   }
 
-  findById(accessContext: IAccessContext | null, dto: CalendarioLetivoFindOneQuery) {
+  async save(aggregate: CalendarioLetivo): Promise<void> {
+    const entityData = calendarioLetivoEntityDomainMapper.toPersistenceData({
+      ...aggregate,
+    });
+    const repo = this.appTypeormConnection.getRepository(CalendarioLetivoEntity);
+    await repo.save(repo.create({ id: aggregate.id, ...entityData } as CalendarioLetivoEntity));
+  }
+
+  softDeleteById(id: string) {
+    return typeormSoftDeleteById(
+      this.appTypeormConnection,
+      CalendarioLetivoEntity,
+      config.alias,
+      id,
+    );
+  }
+
+  // ==========================================
+  // Read side
+  // ==========================================
+
+  getFindOneQueryResult(accessContext: IAccessContext | null, dto: CalendarioLetivoFindOneQuery) {
     return typeormFindById<
       CalendarioLetivoEntity,
       CalendarioLetivoFindOneQuery,
@@ -77,26 +117,20 @@ export class CalendarioLetivoTypeOrmRepositoryAdapter implements ICalendarioLeti
     );
   }
 
-  findByIdSimple(accessContext: IAccessContext | null, id: string) {
-    return this.findById(accessContext, { id } as CalendarioLetivoFindOneQuery);
-  }
-
-  create(data: Record<string, unknown>) {
-    const entityData = calendarioLetivoEntityDomainMapper.toPersistenceData(data);
-    return typeormCreate(this.appTypeormConnection, CalendarioLetivoEntity, entityData);
-  }
-
-  update(id: string | number, data: Record<string, unknown>) {
-    const entityData = calendarioLetivoEntityDomainMapper.toPersistenceData(data);
-    return typeormUpdate(this.appTypeormConnection, CalendarioLetivoEntity, id, entityData);
-  }
-
-  softDeleteById(id: string) {
-    return typeormSoftDeleteById(
+  getFindAllQueryResult(
+    accessContext: IAccessContext | null,
+    dto: CalendarioLetivoListQuery | null = null,
+  ) {
+    return typeormFindAll<
+      CalendarioLetivoEntity,
+      CalendarioLetivoListQuery,
+      CalendarioLetivoListQueryResult
+    >(
       this.appTypeormConnection,
       CalendarioLetivoEntity,
-      config.alias,
-      id,
+      { ...config, paginateConfig: calendarioLetivoPaginateConfig },
+      this.paginationAdapter,
+      dto,
     );
   }
 }

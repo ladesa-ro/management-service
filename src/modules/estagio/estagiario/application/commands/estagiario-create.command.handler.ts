@@ -20,10 +20,12 @@ export class EstagiarioCreateCommandHandlerImpl implements IEstagiarioCreateComm
   ): Promise<EstagiarioFindOneQueryResult> {
     const estagiario = Estagiario.create(dto);
 
-    const { id } = await this.repository.create({ ...estagiario });
+    await this.repository.save(estagiario);
 
-    const result = await this.repository.findById(accessContext, { id: id as string });
-    ensureExists(result, Estagiario.entityName, id);
+    const result = await this.repository.getFindOneQueryResult(accessContext, {
+      id: estagiario.id,
+    });
+    ensureExists(result, Estagiario.entityName, estagiario.id);
 
     return result;
   }

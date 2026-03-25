@@ -15,6 +15,6 @@ export class PerfilListQueryHandlerImpl implements IPerfilListQueryHandler {
     accessContext: IAccessContext | null,
     dto: PerfilListQuery | null,
   ): Promise<PerfilListQueryResult> {
-    return this.repository.findAll(accessContext, dto);
+    return this.repository.getFindAllQueryResult(accessContext, dto);
   }
 }

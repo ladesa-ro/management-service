@@ -88,7 +88,9 @@ describe("UsuarioUpdateCommandHandler", () => {
 
   it("should update usuario and return result", async () => {
     const repository = createMockUsuarioRepository();
-    repository.findById.mockResolvedValueOnce(currentUsuario).mockResolvedValueOnce(currentUsuario);
+    repository.getFindOneQueryResult
+      .mockResolvedValueOnce(currentUsuario)
+      .mockResolvedValueOnce(currentUsuario);
 
     const { handler } = createHandler({ repository });
     const accessContext = createTestAccessContext();
@@ -104,7 +106,7 @@ describe("UsuarioUpdateCommandHandler", () => {
 
   it("should throw ResourceNotFoundError when usuario does not exist", async () => {
     const repository = createMockUsuarioRepository();
-    repository.findById.mockResolvedValue(null);
+    repository.getFindOneQueryResult.mockResolvedValue(null);
 
     const { handler } = createHandler({ repository });
     const accessContext = createTestAccessContext();
@@ -116,7 +118,7 @@ describe("UsuarioUpdateCommandHandler", () => {
 
   it("should throw ServiceUnavailableError when matricula not found in IDP", async () => {
     const repository = createMockUsuarioRepository();
-    repository.findById.mockResolvedValue(currentUsuario);
+    repository.getFindOneQueryResult.mockResolvedValue(currentUsuario);
 
     const idpUserService = createMockIdpUserService();
     idpUserService.existsByMatricula.mockResolvedValue(false);
@@ -132,7 +134,7 @@ describe("UsuarioUpdateCommandHandler", () => {
   describe("vinculos", () => {
     it("should not call definirPerfisAtivosHandler when vinculos is undefined", async () => {
       const repository = createMockUsuarioRepository();
-      repository.findById
+      repository.getFindOneQueryResult
         .mockResolvedValueOnce(currentUsuario)
         .mockResolvedValueOnce(currentUsuario);
 
@@ -147,7 +149,7 @@ describe("UsuarioUpdateCommandHandler", () => {
 
     it("should call definirPerfisAtivosHandler with flat vinculos (even empty)", async () => {
       const repository = createMockUsuarioRepository();
-      repository.findById
+      repository.getFindOneQueryResult
         .mockResolvedValueOnce(currentUsuario)
         .mockResolvedValueOnce(currentUsuario);
 
@@ -168,7 +170,7 @@ describe("UsuarioUpdateCommandHandler", () => {
       const campusId = createTestId();
 
       const repository = createMockUsuarioRepository();
-      repository.findById
+      repository.getFindOneQueryResult
         .mockResolvedValueOnce(currentUsuario)
         .mockResolvedValueOnce(currentUsuario);
 

@@ -23,7 +23,7 @@ describe("CursoDeleteCommandHandler", () => {
     const entity = { id, nome: "Engenharia de Software" };
 
     const repository = createMockCrudRepository();
-    repository.findById.mockResolvedValue(entity);
+    repository.getFindOneQueryResult.mockResolvedValue(entity);
 
     const { handler } = createHandler({ repository });
     const accessContext = createTestAccessContext();
@@ -37,7 +37,7 @@ describe("CursoDeleteCommandHandler", () => {
   it("should call permissionChecker.ensureCanDelete", async () => {
     const id = createTestId();
     const repository = createMockCrudRepository();
-    repository.findById.mockResolvedValue({ id });
+    repository.getFindOneQueryResult.mockResolvedValue({ id });
 
     const permissionChecker = createMockPermissionChecker();
     const { handler } = createHandler({ repository, permissionChecker });
@@ -54,7 +54,7 @@ describe("CursoDeleteCommandHandler", () => {
 
   it("should throw ResourceNotFoundError when entity does not exist", async () => {
     const repository = createMockCrudRepository();
-    repository.findById.mockResolvedValue(null);
+    repository.getFindOneQueryResult.mockResolvedValue(null);
 
     const { handler } = createHandler({ repository });
     const accessContext = createTestAccessContext();

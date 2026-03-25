@@ -97,4 +97,8 @@ export class Estagio {
 
     zodValidate(Estagio.entityName, EstagioSchema, this);
   }
+
+  isActive(): boolean {
+    return this.ativo && this.dateDeleted === null;
+  }
 }

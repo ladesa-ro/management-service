@@ -28,11 +28,10 @@ export class DisciplinaCreateCommandHandlerImpl implements IDisciplinaCreateComm
       nomeAbreviado: dto.nomeAbreviado,
       cargaHoraria: dto.cargaHoraria,
     });
-    const { id } = await this.repository.create({ ...domain });
+    await this.repository.save(domain);
 
-    const result = await this.repository.findById(accessContext, { id });
-
-    ensureExists(result, Disciplina.entityName, id);
+    const result = await this.repository.getFindOneQueryResult(accessContext, { id: domain.id });
+    ensureExists(result, Disciplina.entityName, domain.id);
 
     return result;
   }

@@ -1,6 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { ResourceNotFoundError } from "@/application/errors";
-import { createMockCrudRepository, createTestAccessContext, createTestId } from "@/test/helpers";
+import {
+  createMockCqrsRepository,
+  createTestAccessContext,
+  createTestDomainEntity,
+  createTestId,
+} from "@/test/helpers";
 import { EmpresaCreateCommandHandlerImpl } from "./empresa-create.command.handler";
 import { EmpresaDeleteCommandHandlerImpl } from "./empresa-delete.command.handler";
 import { EmpresaUpdateCommandHandlerImpl } from "./empresa-update.command.handler";
@@ -18,21 +23,20 @@ function createValidCreateDto() {
 
 describe("EmpresaCreateCommandHandler", () => {
   it("should create empresa and return query result", async () => {
-    const repository = createMockCrudRepository();
+    const repository = createMockCqrsRepository();
     const savedResult = { id: createTestId(), nomeFantasia: "Empresa Teste" };
-    repository.findById.mockResolvedValue(savedResult);
+    repository.getFindOneQueryResult.mockResolvedValue(savedResult);
 
     const handler = new EmpresaCreateCommandHandlerImpl(repository as any);
     const result = await handler.execute(createTestAccessContext(), createValidCreateDto() as any);
 
     expect(result).toEqual(savedResult);
-    expect(repository.create).toHaveBeenCalled();
-    expect(repository.findById).toHaveBeenCalled();
+    expect(repository.save).toHaveBeenCalled();
   });
 
   it("should throw if created entity not found after create", async () => {
-    const repository = createMockCrudRepository();
-    repository.findById.mockResolvedValue(null);
+    const repository = createMockCqrsRepository();
+    repository.getFindOneQueryResult.mockResolvedValue(null);
 
     const handler = new EmpresaCreateCommandHandlerImpl(repository as any);
 
@@ -45,10 +49,11 @@ describe("EmpresaCreateCommandHandler", () => {
 describe("EmpresaUpdateCommandHandler", () => {
   it("should verify existence, update, and return result", async () => {
     const id = createTestId();
-    const repository = createMockCrudRepository();
-    const existing = { id, nomeFantasia: "Old" };
+    const repository = createMockCqrsRepository();
+    const domain = createTestDomainEntity({ id, nomeFantasia: "Old" });
     const updated = { id, nomeFantasia: "New" };
-    repository.findById.mockResolvedValueOnce(existing).mockResolvedValueOnce(updated);
+    repository.loadById.mockResolvedValue(domain);
+    repository.getFindOneQueryResult.mockResolvedValue(updated);
 
     const handler = new EmpresaUpdateCommandHandlerImpl(repository as any);
     const result = await handler.execute(createTestAccessContext(), {
@@ -57,12 +62,12 @@ describe("EmpresaUpdateCommandHandler", () => {
     } as any);
 
     expect(result).toEqual(updated);
-    expect(repository.update).toHaveBeenCalledWith(id, { nomeFantasia: "New" });
+    expect(repository.save).toHaveBeenCalled();
   });
 
   it("should throw if entity not found", async () => {
-    const repository = createMockCrudRepository();
-    repository.findById.mockResolvedValue(null);
+    const repository = createMockCqrsRepository();
+    repository.loadById.mockResolvedValue(null);
 
     const handler = new EmpresaUpdateCommandHandlerImpl(repository as any);
 
@@ -75,8 +80,9 @@ describe("EmpresaUpdateCommandHandler", () => {
 describe("EmpresaDeleteCommandHandler", () => {
   it("should verify existence and soft delete", async () => {
     const id = createTestId();
-    const repository = createMockCrudRepository();
-    repository.findById.mockResolvedValue({ id });
+    const repository = createMockCqrsRepository();
+    const domain = createTestDomainEntity({ id });
+    repository.loadById.mockResolvedValue(domain);
 
     const handler = new EmpresaDeleteCommandHandlerImpl(repository as any);
     await handler.execute(createTestAccessContext(), { id } as any);
@@ -85,8 +91,8 @@ describe("EmpresaDeleteCommandHandler", () => {
   });
 
   it("should throw if entity not found", async () => {
-    const repository = createMockCrudRepository();
-    repository.findById.mockResolvedValue(null);
+    const repository = createMockCqrsRepository();
+    repository.loadById.mockResolvedValue(null);
 
     const handler = new EmpresaDeleteCommandHandlerImpl(repository as any);
 

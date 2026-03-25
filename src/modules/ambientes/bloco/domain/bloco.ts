@@ -64,4 +64,8 @@ export class Bloco {
 
     zodValidate(Bloco.entityName, BlocoSchema, this);
   }
+
+  isActive(): boolean {
+    return this.dateDeleted === null;
+  }
 }

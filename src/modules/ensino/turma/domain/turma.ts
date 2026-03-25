@@ -76,4 +76,8 @@ export class Turma {
   temImagemCapa(): boolean {
     return this.imagemCapa !== null;
   }
+
+  isActive(): boolean {
+    return this.dateDeleted === null;
+  }
 }

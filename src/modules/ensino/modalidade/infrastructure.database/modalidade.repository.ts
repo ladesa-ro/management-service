@@ -1,3 +1,4 @@
+import { IsNull } from "typeorm";
 import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
@@ -5,19 +6,18 @@ import { paginateConfig } from "@/infrastructure.database/pagination/config/pagi
 import type { ITypeOrmPaginationConfig } from "@/infrastructure.database/pagination/interfaces/pagination-config.types";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import {
-  typeormCreate,
   typeormFindAll,
   typeormFindById,
   typeormSoftDeleteById,
-  typeormUpdate,
 } from "@/infrastructure.database/typeorm/helpers/typeorm-repository-helpers";
 import type {
-  IModalidadeRepository,
   ModalidadeFindOneQuery,
   ModalidadeFindOneQueryResult,
   ModalidadeListQuery,
   ModalidadeListQueryResult,
 } from "@/modules/ensino/modalidade";
+import { Modalidade } from "@/modules/ensino/modalidade/domain/modalidade";
+import type { IModalidadeRepository } from "@/modules/ensino/modalidade/domain/repositories";
 import { ModalidadeEntity, modalidadeEntityDomainMapper } from "./typeorm";
 
 const config = {
@@ -44,17 +44,39 @@ export class ModalidadeTypeOrmRepositoryAdapter implements IModalidadeRepository
     private readonly paginationAdapter: NestJsPaginateAdapter,
   ) {}
 
-  findAll(accessContext: IAccessContext | null, dto: ModalidadeListQuery | null = null) {
-    return typeormFindAll<ModalidadeEntity, ModalidadeListQuery, ModalidadeListQueryResult>(
-      this.appTypeormConnection,
-      ModalidadeEntity,
-      { ...config, paginateConfig: modalidadePaginateConfig },
-      this.paginationAdapter,
-      dto,
+  // ==========================================
+  // Write side
+  // ==========================================
+
+  async loadById(_accessContext: IAccessContext | null, id: string): Promise<Modalidade | null> {
+    const repo = this.appTypeormConnection.getRepository(ModalidadeEntity);
+
+    const entity = await repo.findOne({
+      where: { id, dateDeleted: IsNull() },
+    });
+
+    if (!entity) return null;
+
+    return Modalidade.load(
+      modalidadeEntityDomainMapper.toOutputData(entity as unknown as Record<string, unknown>),
     );
   }
 
-  findById(accessContext: IAccessContext | null, dto: ModalidadeFindOneQuery) {
+  async save(aggregate: Modalidade): Promise<void> {
+    const entityData = modalidadeEntityDomainMapper.toPersistenceData({ ...aggregate });
+    const repo = this.appTypeormConnection.getRepository(ModalidadeEntity);
+    await repo.save(repo.create({ id: aggregate.id, ...entityData } as ModalidadeEntity));
+  }
+
+  softDeleteById(id: string) {
+    return typeormSoftDeleteById(this.appTypeormConnection, ModalidadeEntity, config.alias, id);
+  }
+
+  // ==========================================
+  // Read side
+  // ==========================================
+
+  getFindOneQueryResult(accessContext: IAccessContext | null, dto: ModalidadeFindOneQuery) {
     return typeormFindById<ModalidadeEntity, ModalidadeFindOneQuery, ModalidadeFindOneQueryResult>(
       this.appTypeormConnection,
       ModalidadeEntity,
@@ -63,21 +85,16 @@ export class ModalidadeTypeOrmRepositoryAdapter implements IModalidadeRepository
     );
   }
 
-  findByIdSimple(accessContext: IAccessContext | null, id: string) {
-    return this.findById(accessContext, { id } as ModalidadeFindOneQuery);
-  }
-
-  create(data: Record<string, unknown>) {
-    const entityData = modalidadeEntityDomainMapper.toPersistenceData(data);
-    return typeormCreate(this.appTypeormConnection, ModalidadeEntity, entityData);
-  }
-
-  update(id: string | number, data: Record<string, unknown>) {
-    const entityData = modalidadeEntityDomainMapper.toPersistenceData(data);
-    return typeormUpdate(this.appTypeormConnection, ModalidadeEntity, id, entityData);
-  }
-
-  softDeleteById(id: string) {
-    return typeormSoftDeleteById(this.appTypeormConnection, ModalidadeEntity, config.alias, id);
+  getFindAllQueryResult(
+    accessContext: IAccessContext | null,
+    dto: ModalidadeListQuery | null = null,
+  ) {
+    return typeormFindAll<ModalidadeEntity, ModalidadeListQuery, ModalidadeListQueryResult>(
+      this.appTypeormConnection,
+      ModalidadeEntity,
+      { ...config, paginateConfig: modalidadePaginateConfig },
+      this.paginationAdapter,
+      dto,
+    );
   }
 }

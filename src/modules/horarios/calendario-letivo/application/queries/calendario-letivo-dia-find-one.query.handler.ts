@@ -27,6 +27,6 @@ export class CalendarioLetivoDiaFindOneQueryHandlerImpl
         dto.data,
       );
     }
-    return this.repository.findById(accessContext, dto);
+    return this.repository.getFindOneQueryResult(accessContext, dto);
   }
 }

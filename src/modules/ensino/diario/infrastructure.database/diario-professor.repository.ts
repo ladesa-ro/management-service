@@ -78,7 +78,10 @@ export class DiarioProfessorTypeOrmRepositoryAdapter implements IDiarioProfessor
     private readonly paginationAdapter: NestJsPaginateAdapter,
   ) {}
 
-  findAll(accessContext: IAccessContext | null, dto: DiarioProfessorListQuery | null = null) {
+  getFindAllQueryResult(
+    accessContext: IAccessContext | null,
+    dto: DiarioProfessorListQuery | null = null,
+  ) {
     return typeormFindAll<
       DiarioProfessorEntity,
       DiarioProfessorListQuery,
@@ -92,7 +95,7 @@ export class DiarioProfessorTypeOrmRepositoryAdapter implements IDiarioProfessor
     );
   }
 
-  findById(accessContext: IAccessContext | null, dto: DiarioProfessorFindOneQuery) {
+  getFindOneQueryResult(accessContext: IAccessContext | null, dto: DiarioProfessorFindOneQuery) {
     return typeormFindById<
       DiarioProfessorEntity,
       DiarioProfessorFindOneQuery,
@@ -106,7 +109,7 @@ export class DiarioProfessorTypeOrmRepositoryAdapter implements IDiarioProfessor
   }
 
   findByIdSimple(accessContext: IAccessContext | null, id: string) {
-    return this.findById(accessContext, { id } as DiarioProfessorFindOneQuery);
+    return this.getFindOneQueryResult(accessContext, { id } as DiarioProfessorFindOneQuery);
   }
 
   create(data: Record<string, unknown>) {

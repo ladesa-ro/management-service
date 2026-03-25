@@ -1,4 +1,4 @@
-import { ensureExists } from "@/application/errors";
+import { ensureActiveEntity, ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { IOfertaFormacaoDeleteCommandHandler } from "@/modules/ensino/oferta-formacao/domain/commands/oferta-formacao-delete.command.handler.interface";
@@ -25,6 +25,7 @@ export class OfertaFormacaoDeleteCommandHandlerImpl implements IOfertaFormacaoDe
     const aggregate = await this.repository.loadById(accessContext, dto.id);
 
     ensureExists(aggregate, OfertaFormacao.entityName, dto.id);
+    ensureActiveEntity(aggregate, OfertaFormacao.entityName, dto.id);
 
     await this.repository.softDeleteById(aggregate.id);
 

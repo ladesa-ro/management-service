@@ -31,7 +31,9 @@ export class UsuarioUpdateImagemCapaCommandHandlerImpl
     accessContext: IAccessContext | null,
     { dto, file }: UsuarioUpdateImagemCapaCommand,
   ): Promise<boolean> {
-    const currentUsuario = await this.repository.findById(accessContext, { id: dto.id });
+    const currentUsuario = await this.repository.getFindOneQueryResult(accessContext, {
+      id: dto.id,
+    });
 
     ensureExists(currentUsuario, Usuario.entityName, dto.id);
 

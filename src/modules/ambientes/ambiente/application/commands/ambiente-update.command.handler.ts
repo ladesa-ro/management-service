@@ -22,13 +22,11 @@ export class AmbienteUpdateCommandHandlerImpl implements IAmbienteUpdateCommandH
     accessContext: IAccessContext | null,
     dto: AmbienteFindOneQuery & AmbienteUpdateCommand,
   ): Promise<AmbienteFindOneQueryResult> {
-    const current = await this.repository.findById(accessContext, { id: dto.id });
-
-    ensureExists(current, Ambiente.entityName, dto.id);
+    const domain = await this.repository.loadById(accessContext, dto.id);
+    ensureExists(domain, Ambiente.entityName, dto.id);
 
     await this.permissionChecker.ensureCanUpdate(accessContext, { dto }, dto.id);
 
-    const domain = Ambiente.load(current);
     domain.update({
       nome: dto.nome,
       descricao: dto.descricao,
@@ -37,10 +35,9 @@ export class AmbienteUpdateCommandHandlerImpl implements IAmbienteUpdateCommandH
       tipo: dto.tipo,
     });
 
-    await this.repository.update(current.id, domain);
+    await this.repository.save(domain);
 
-    const result = await this.repository.findById(accessContext, { id: dto.id });
-
+    const result = await this.repository.getFindOneQueryResult(accessContext, { id: dto.id });
     ensureExists(result, Ambiente.entityName, dto.id);
 
     return result;

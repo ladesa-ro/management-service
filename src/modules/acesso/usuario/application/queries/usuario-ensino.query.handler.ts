@@ -17,7 +17,7 @@ export class UsuarioEnsinoQueryHandlerImpl implements IUsuarioEnsinoQueryHandler
     accessContext: IAccessContext | null,
     dto: UsuarioFindOneQuery,
   ): Promise<UsuarioEnsinoQueryResult> {
-    const usuario = await this.repository.findById(accessContext, dto);
+    const usuario = await this.repository.getFindOneQueryResult(accessContext, dto);
 
     ensureExists(usuario, Usuario.entityName, dto.id);
 

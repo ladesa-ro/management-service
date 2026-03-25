@@ -79,4 +79,8 @@ export class Disciplina {
   temCargaHorariaValida(): boolean {
     return this.cargaHoraria > 0;
   }
+
+  isActive(): boolean {
+    return this.dateDeleted === null;
+  }
 }

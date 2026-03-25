@@ -15,6 +15,6 @@ export class NivelFormacaoListQueryHandlerImpl implements INivelFormacaoListQuer
     accessContext: IAccessContext | null,
     dto: NivelFormacaoListQuery | null,
   ): Promise<NivelFormacaoListQueryResult> {
-    return this.repository.findAll(accessContext, dto);
+    return this.repository.getFindAllQueryResult(accessContext, dto);
   }
 }

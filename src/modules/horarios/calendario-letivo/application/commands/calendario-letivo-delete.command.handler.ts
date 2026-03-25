@@ -1,4 +1,4 @@
-import { ensureExists } from "@/application/errors";
+import { ensureActiveEntity, ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { CalendarioLetivo } from "@/modules/horarios/calendario-letivo/domain/calendario-letivo";
@@ -24,11 +24,11 @@ export class CalendarioLetivoDeleteCommandHandlerImpl
   ): Promise<boolean> {
     await this.permissionChecker.ensureCanDelete(accessContext, { dto }, dto.id);
 
-    const entity = await this.repository.findById(accessContext, dto);
+    const aggregate = await this.repository.loadById(accessContext, dto.id);
+    ensureExists(aggregate, CalendarioLetivo.entityName, dto.id);
+    ensureActiveEntity(aggregate, CalendarioLetivo.entityName, dto.id);
 
-    ensureExists(entity, CalendarioLetivo.entityName, dto.id);
-
-    await this.repository.softDeleteById(entity.id);
+    await this.repository.softDeleteById(aggregate.id);
 
     return true;
   }

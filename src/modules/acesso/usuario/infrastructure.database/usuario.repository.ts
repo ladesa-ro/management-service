@@ -53,7 +53,7 @@ export class UsuarioTypeOrmRepositoryAdapter implements IUsuarioRepository {
     private readonly paginationAdapter: NestJsPaginateAdapter,
   ) {}
 
-  findAll(accessContext: IAccessContext | null, dto: UsuarioListQuery | null = null) {
+  getFindAllQueryResult(accessContext: IAccessContext | null, dto: UsuarioListQuery | null = null) {
     return typeormFindAll<UsuarioEntity, UsuarioListQuery, UsuarioListQueryResult>(
       this.appTypeormConnection,
       UsuarioEntity,
@@ -63,7 +63,7 @@ export class UsuarioTypeOrmRepositoryAdapter implements IUsuarioRepository {
     );
   }
 
-  findById(accessContext: IAccessContext | null, dto: UsuarioFindOneQuery) {
+  getFindOneQueryResult(accessContext: IAccessContext | null, dto: UsuarioFindOneQuery) {
     return typeormFindById<UsuarioEntity, UsuarioFindOneQuery, UsuarioFindOneQueryResult>(
       this.appTypeormConnection,
       UsuarioEntity,
@@ -73,7 +73,7 @@ export class UsuarioTypeOrmRepositoryAdapter implements IUsuarioRepository {
   }
 
   findByIdSimple(accessContext: IAccessContext | null, id: string) {
-    return this.findById(accessContext, { id } as UsuarioFindOneQuery);
+    return this.getFindOneQueryResult(accessContext, { id } as UsuarioFindOneQuery);
   }
 
   async findByMatricula(matricula: string): Promise<UsuarioFindOneQueryResult | null> {

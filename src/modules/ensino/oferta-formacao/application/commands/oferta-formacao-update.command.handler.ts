@@ -1,5 +1,5 @@
 import { has } from "lodash";
-import { ensureExists } from "@/application/errors";
+import { ensureActiveEntity, ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { Campus } from "@/modules/ambientes/campus/domain/campus";
@@ -37,6 +37,7 @@ export class OfertaFormacaoUpdateCommandHandlerImpl implements IOfertaFormacaoUp
   ): Promise<OfertaFormacaoFindOneQueryResult> {
     const domain = await this.repository.loadById(accessContext, dto.id);
     ensureExists(domain, OfertaFormacao.entityName, dto.id);
+    ensureActiveEntity(domain, OfertaFormacao.entityName, dto.id);
 
     await this.permissionChecker.ensureCanUpdate(accessContext, { dto }, dto.id);
 

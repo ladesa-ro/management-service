@@ -29,16 +29,19 @@ export class BlocoCreateCommandHandlerImpl implements IBlocoCreateCommandHandler
 
     const campus = await this.campusFindOneHandler.execute(accessContext, { id: dto.campus.id });
     ensureExists(campus, Campus.entityName, dto.campus.id);
+
     const domain = Bloco.create({
       nome: dto.nome,
       codigo: dto.codigo,
       campus: { id: campus.id },
     });
-    const { id } = await this.repository.create({ ...domain, campus: { id: campus.id } });
 
-    const result = await this.repository.findById(accessContext, { id });
+    domain.campus = { id: campus.id };
 
-    ensureExists(result, Bloco.entityName, id);
+    await this.repository.save(domain);
+
+    const result = await this.repository.getFindOneQueryResult(accessContext, { id: domain.id });
+    ensureExists(result, Bloco.entityName, domain.id);
 
     return result;
   }

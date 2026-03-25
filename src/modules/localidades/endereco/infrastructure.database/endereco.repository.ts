@@ -50,7 +50,10 @@ export class EnderecoTypeOrmRepositoryAdapter implements IEnderecoRepository {
     private readonly paginationAdapter: NestJsPaginateAdapter,
   ) {}
 
-  findAll(accessContext: IAccessContext | null, dto: EnderecoListQuery | null = null) {
+  getFindAllQueryResult(
+    accessContext: IAccessContext | null,
+    dto: EnderecoListQuery | null = null,
+  ) {
     return typeormFindAll<EnderecoEntity, EnderecoListQuery, EnderecoListQueryResult>(
       this.appTypeormConnection,
       EnderecoEntity,
@@ -60,7 +63,7 @@ export class EnderecoTypeOrmRepositoryAdapter implements IEnderecoRepository {
     );
   }
 
-  findById(accessContext: IAccessContext | null, dto: EnderecoFindOneQuery) {
+  getFindOneQueryResult(accessContext: IAccessContext | null, dto: EnderecoFindOneQuery) {
     return typeormFindById<EnderecoEntity, EnderecoFindOneQuery, EnderecoFindOneQueryResult>(
       this.appTypeormConnection,
       EnderecoEntity,
@@ -70,7 +73,7 @@ export class EnderecoTypeOrmRepositoryAdapter implements IEnderecoRepository {
   }
 
   findByIdSimple(accessContext: IAccessContext | null, id: string) {
-    return this.findById(accessContext, { id } as EnderecoFindOneQuery);
+    return this.getFindOneQueryResult(accessContext, { id } as EnderecoFindOneQuery);
   }
 
   async findOneById(id: string): Promise<EnderecoFindOneQueryResult | null> {

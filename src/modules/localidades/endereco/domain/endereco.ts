@@ -89,4 +89,8 @@ export class Endereco {
     ].filter(Boolean);
     return partes.join(", ");
   }
+
+  isActive(): boolean {
+    return this.dateDeleted === null;
+  }
 }

@@ -105,4 +105,8 @@ export class ImagemArquivo implements IEntityBaseUuid {
     this.dateUpdated = getNowISO();
     zodValidate(ImagemArquivo.entityName, ImagemArquivoSchema, this);
   }
+
+  isActive(): boolean {
+    return this.dateDeleted === null;
+  }
 }

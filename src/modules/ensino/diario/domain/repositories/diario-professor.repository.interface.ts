@@ -1,29 +1,58 @@
 import type {
-  IRepositoryCreate,
-  IRepositoryFindAll,
-  IRepositoryFindById,
-  IRepositoryFindByIdSimple,
-  IRepositorySoftDelete,
-  IRepositoryUpdate,
+  IRepositoryGetFindAllQueryResult,
+  IRepositoryGetFindOneQueryResult,
+  IRepositorySoftDeleteById,
+  PersistInput,
 } from "@/domain/abstractions";
 import type { IDiarioProfessor } from "@/modules/ensino/diario";
-import type { DiarioProfessorFindOneQueryResult, DiarioProfessorListQueryResult } from "../queries";
+import type {
+  DiarioProfessorFindOneQuery,
+  DiarioProfessorFindOneQueryResult,
+  DiarioProfessorListQuery,
+  DiarioProfessorListQueryResult,
+} from "../queries";
 
 export const IDiarioProfessorRepository = Symbol("IDiarioProfessorRepository");
 
-export type IDiarioProfessorRepository = IRepositoryFindAll<DiarioProfessorListQueryResult> &
-  IRepositoryFindById<DiarioProfessorFindOneQueryResult> &
-  IRepositoryFindByIdSimple<DiarioProfessorFindOneQueryResult> &
-  IRepositoryCreate<IDiarioProfessor> &
-  IRepositoryUpdate<IDiarioProfessor> &
-  IRepositorySoftDelete & {
-    softDeleteByDiarioId(diarioId: string): Promise<void>;
+export interface IDiarioProfessorRepository {
+  // ==========================================
+  // Write side — usado por command handlers
+  // ==========================================
 
-    bulkCreate(
-      entries: Array<{
-        situacao: boolean;
-        diarioId: string;
-        perfilId: string;
-      }>,
-    ): Promise<void>;
-  };
+  /** Cria o registro e retorna o ID gerado. */
+  create(data: Partial<PersistInput<IDiarioProfessor>>): Promise<{ id: string | number }>;
+
+  /** Atualiza campos do registro por ID. */
+  update(id: string | number, data: Partial<PersistInput<IDiarioProfessor>>): Promise<void>;
+
+  /** Soft-delete por ID. */
+  softDeleteById: IRepositorySoftDeleteById;
+
+  /** Soft-delete de todos os professores de um diário. */
+  softDeleteByDiarioId(diarioId: string): Promise<void>;
+
+  /** Cria múltiplos registros em lote. */
+  bulkCreate(
+    entries: Array<{
+      situacao: boolean;
+      diarioId: string;
+      perfilId: string;
+    }>,
+  ): Promise<void>;
+
+  // ==========================================
+  // Read side — usado por query handlers
+  // ==========================================
+
+  /** Retorna um registro hidratado com todas as relações para exibição. */
+  getFindOneQueryResult: IRepositoryGetFindOneQueryResult<
+    DiarioProfessorFindOneQuery,
+    DiarioProfessorFindOneQueryResult
+  >;
+
+  /** Retorna lista paginada com dados hidratados para exibição. */
+  getFindAllQueryResult: IRepositoryGetFindAllQueryResult<
+    DiarioProfessorListQuery,
+    DiarioProfessorListQueryResult
+  >;
+}

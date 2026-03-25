@@ -18,6 +18,6 @@ export class ImagemArquivoFindOneQueryHandlerImpl implements IImagemArquivoFindO
     accessContext: IAccessContext | null,
     dto: ImagemArquivoFindOneQuery,
   ): Promise<ImagemArquivoFindOneQueryResult | null> {
-    return this.repository.findById(accessContext, dto);
+    return this.repository.getFindOneQueryResult(accessContext, dto);
   }
 }

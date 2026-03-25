@@ -15,6 +15,6 @@ export class CidadeFindOneQueryHandlerImpl implements ICidadeFindOneQueryHandler
     accessContext: IAccessContext | null,
     dto: CidadeFindOneQuery,
   ): Promise<CidadeFindOneQueryResult | null> {
-    return this.repository.findById(accessContext, dto);
+    return this.repository.getFindOneQueryResult(accessContext, dto);
   }
 }

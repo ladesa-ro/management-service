@@ -20,13 +20,10 @@ export class EmpresaCreateCommandHandlerImpl implements IEmpresaCreateCommandHan
   ): Promise<EmpresaFindOneQueryResult> {
     const empresa = Empresa.create(dto);
 
-    const { id } = await this.repository.create({
-      ...empresa,
-      endereco: { id: empresa.endereco.id },
-    });
+    await this.repository.save(empresa);
 
-    const result = await this.repository.findById(accessContext, { id: id as string });
-    ensureExists(result, Empresa.entityName, id);
+    const result = await this.repository.getFindOneQueryResult(accessContext, { id: empresa.id });
+    ensureExists(result, Empresa.entityName, empresa.id);
 
     return result;
   }

@@ -18,6 +18,6 @@ export class DiarioProfessorFindOneQueryHandlerImpl implements IDiarioProfessorF
     accessContext: IAccessContext | null,
     dto: DiarioProfessorFindOneQuery,
   ): Promise<DiarioProfessorFindOneQueryResult | null> {
-    return this.repository.findById(accessContext, dto);
+    return this.repository.getFindOneQueryResult(accessContext, dto);
   }
 }

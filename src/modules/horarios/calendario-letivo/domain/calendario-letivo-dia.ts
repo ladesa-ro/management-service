@@ -83,4 +83,8 @@ export class CalendarioLetivoDia implements IEntityBaseUuid {
     this.dateUpdated = getNowISO();
     zodValidate(CalendarioLetivoDia.entityName, CalendarioLetivoDiaSchema, this);
   }
+
+  isActive(): boolean {
+    return this.dateDeleted === null;
+  }
 }

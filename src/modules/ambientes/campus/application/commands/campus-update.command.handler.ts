@@ -1,6 +1,6 @@
 import { get } from "lodash";
 import { ensureExists } from "@/application/errors";
-import type { IAccessContext, PersistInput } from "@/domain/abstractions";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { Campus, type ICampus } from "@/modules/ambientes/campus/domain/campus";
 import type { CampusUpdateCommand } from "@/modules/ambientes/campus/domain/commands/campus-update.command";
@@ -27,32 +27,30 @@ export class CampusUpdateCommandHandlerImpl implements ICampusUpdateCommandHandl
     accessContext: IAccessContext | null,
     dto: CampusFindOneQuery & CampusUpdateCommand,
   ): Promise<CampusFindOneQueryResult> {
-    const current = await this.repository.findById(accessContext, { id: dto.id });
-
-    ensureExists(current, Campus.entityName, dto.id);
+    const domain = await this.repository.loadById(accessContext, dto.id);
+    ensureExists(domain, Campus.entityName, dto.id);
 
     await this.permissionChecker.ensureCanUpdate(accessContext, { dto }, dto.id);
 
-    const domain = Campus.load(current);
     domain.update({
       nomeFantasia: dto.nomeFantasia,
       razaoSocial: dto.razaoSocial,
       apelido: dto.apelido,
       cnpj: dto.cnpj,
     });
-    const updateData: Partial<PersistInput<ICampus>> = { ...domain };
+
     const dtoEndereco = get(dto, "endereco");
     if (dtoEndereco) {
       const endereco = await this.enderecoCreateOrUpdateHandler.execute(null, {
-        id: current.endereco.id,
+        id: domain.endereco.id,
         dto: dtoEndereco as EnderecoInputCommand,
       });
-      updateData.endereco = { id: endereco.id as string };
+      domain.endereco = { id: endereco.id as string } as ICampus["endereco"];
     }
-    await this.repository.update(current.id, updateData);
 
-    const result = await this.repository.findById(accessContext, { id: dto.id });
+    await this.repository.save(domain);
 
+    const result = await this.repository.getFindOneQueryResult(accessContext, { id: dto.id });
     ensureExists(result, Campus.entityName, dto.id);
 
     return result;

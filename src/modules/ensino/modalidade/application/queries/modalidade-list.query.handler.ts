@@ -15,6 +15,6 @@ export class ModalidadeListQueryHandlerImpl implements IModalidadeListQueryHandl
     accessContext: IAccessContext | null,
     dto: ModalidadeListQuery | null,
   ): Promise<ModalidadeListQueryResult> {
-    return this.repository.findAll(accessContext, dto);
+    return this.repository.getFindAllQueryResult(accessContext, dto);
   }
 }

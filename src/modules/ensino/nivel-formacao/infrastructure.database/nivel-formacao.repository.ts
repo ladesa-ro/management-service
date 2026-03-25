@@ -1,3 +1,4 @@
+import { IsNull } from "typeorm";
 import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
@@ -5,19 +6,18 @@ import { paginateConfig } from "@/infrastructure.database/pagination/config/pagi
 import type { ITypeOrmPaginationConfig } from "@/infrastructure.database/pagination/interfaces/pagination-config.types";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import {
-  typeormCreate,
   typeormFindAll,
   typeormFindById,
   typeormSoftDeleteById,
-  typeormUpdate,
 } from "@/infrastructure.database/typeorm/helpers/typeorm-repository-helpers";
 import type {
-  INivelFormacaoRepository,
   NivelFormacaoFindOneQuery,
   NivelFormacaoFindOneQueryResult,
   NivelFormacaoListQuery,
   NivelFormacaoListQueryResult,
 } from "@/modules/ensino/nivel-formacao";
+import { NivelFormacao } from "@/modules/ensino/nivel-formacao/domain/nivel-formacao";
+import type { INivelFormacaoRepository } from "@/modules/ensino/nivel-formacao/domain/repositories";
 import { NivelFormacaoEntity, nivelFormacaoEntityDomainMapper } from "./typeorm";
 
 const config = {
@@ -44,21 +44,39 @@ export class NivelFormacaoTypeOrmRepositoryAdapter implements INivelFormacaoRepo
     private readonly paginationAdapter: NestJsPaginateAdapter,
   ) {}
 
-  findAll(accessContext: IAccessContext | null, dto: NivelFormacaoListQuery | null = null) {
-    return typeormFindAll<
-      NivelFormacaoEntity,
-      NivelFormacaoListQuery,
-      NivelFormacaoListQueryResult
-    >(
-      this.appTypeormConnection,
-      NivelFormacaoEntity,
-      { ...config, paginateConfig: nivelFormacaoPaginateConfig },
-      this.paginationAdapter,
-      dto,
+  // ==========================================
+  // Write side
+  // ==========================================
+
+  async loadById(_accessContext: IAccessContext | null, id: string): Promise<NivelFormacao | null> {
+    const repo = this.appTypeormConnection.getRepository(NivelFormacaoEntity);
+
+    const entity = await repo.findOne({
+      where: { id, dateDeleted: IsNull() },
+    });
+
+    if (!entity) return null;
+
+    return NivelFormacao.load(
+      nivelFormacaoEntityDomainMapper.toOutputData(entity as unknown as Record<string, unknown>),
     );
   }
 
-  findById(accessContext: IAccessContext | null, dto: NivelFormacaoFindOneQuery) {
+  async save(aggregate: NivelFormacao): Promise<void> {
+    const entityData = nivelFormacaoEntityDomainMapper.toPersistenceData({ ...aggregate });
+    const repo = this.appTypeormConnection.getRepository(NivelFormacaoEntity);
+    await repo.save(repo.create({ id: aggregate.id, ...entityData } as NivelFormacaoEntity));
+  }
+
+  softDeleteById(id: string) {
+    return typeormSoftDeleteById(this.appTypeormConnection, NivelFormacaoEntity, config.alias, id);
+  }
+
+  // ==========================================
+  // Read side
+  // ==========================================
+
+  getFindOneQueryResult(accessContext: IAccessContext | null, dto: NivelFormacaoFindOneQuery) {
     return typeormFindById<
       NivelFormacaoEntity,
       NivelFormacaoFindOneQuery,
@@ -71,21 +89,20 @@ export class NivelFormacaoTypeOrmRepositoryAdapter implements INivelFormacaoRepo
     );
   }
 
-  findByIdSimple(accessContext: IAccessContext | null, id: string) {
-    return this.findById(accessContext, { id } as NivelFormacaoFindOneQuery);
-  }
-
-  create(data: Record<string, unknown>) {
-    const entityData = nivelFormacaoEntityDomainMapper.toPersistenceData(data);
-    return typeormCreate(this.appTypeormConnection, NivelFormacaoEntity, entityData);
-  }
-
-  update(id: string | number, data: Record<string, unknown>) {
-    const entityData = nivelFormacaoEntityDomainMapper.toPersistenceData(data);
-    return typeormUpdate(this.appTypeormConnection, NivelFormacaoEntity, id, entityData);
-  }
-
-  softDeleteById(id: string) {
-    return typeormSoftDeleteById(this.appTypeormConnection, NivelFormacaoEntity, config.alias, id);
+  getFindAllQueryResult(
+    accessContext: IAccessContext | null,
+    dto: NivelFormacaoListQuery | null = null,
+  ) {
+    return typeormFindAll<
+      NivelFormacaoEntity,
+      NivelFormacaoListQuery,
+      NivelFormacaoListQueryResult
+    >(
+      this.appTypeormConnection,
+      NivelFormacaoEntity,
+      { ...config, paginateConfig: nivelFormacaoPaginateConfig },
+      this.paginationAdapter,
+      dto,
+    );
   }
 }

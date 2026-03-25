@@ -149,34 +149,44 @@ export class CampusFindOneQueryHandler implements ICampusFindOneQueryHandler {
     accessContext: IAccessContext | null,
     dto: { id: string },
   ) {
-    return this.campusRepository.findById(accessContext, dto);
+    return this.campusRepository.getFindOneQueryResult(accessContext, dto);
   }
 }
 ```
 
-## Contrato de repositório
+## Contrato de repositório (new-style CQRS)
 
 ```typescript
-// src/modules/ambientes/campus/domain/repositories/campus.repository.ts
+// src/modules/ambientes/campus/domain/repositories/campus.repository.interface.ts
 import type {
-  IRepositoryCreate, IRepositoryFindAll, IRepositoryFindById,
-  IRepositoryFindByIdSimple, IRepositoryUpdate, IRepositorySoftDelete,
+  IRepositoryGetFindAllQueryResult,
+  IRepositoryGetFindOneQueryResult,
+  IRepositoryLoadById,
+  IRepositorySave,
+  IRepositorySoftDeleteById,
 } from "@/domain/abstractions";
 
 export const ICampusRepository = Symbol("ICampusRepository");
 
-export type ICampusRepository =
-  IRepositoryFindAll<CampusListQueryResult> &
-  IRepositoryFindById<CampusFindOneQueryResult> &
-  IRepositoryFindByIdSimple<CampusFindOneQueryResult> &
-  IRepositoryCreate<ICampus> &
-  IRepositoryUpdate<ICampus> &
-  IRepositorySoftDelete;
+export interface ICampusRepository {
+  // Write side — command handlers
+  loadById: IRepositoryLoadById<Campus>;
+  save: IRepositorySave<Campus>;
+  softDeleteById: IRepositorySoftDeleteById;
+
+  // Read side — query handlers
+  getFindOneQueryResult: IRepositoryGetFindOneQueryResult<CampusFindOneQuery, CampusFindOneQueryResult>;
+  getFindAllQueryResult: IRepositoryGetFindAllQueryResult<CampusListQuery, CampusListQueryResult>;
+}
 ```
 
 **Regras:**
-- Repositório é um Symbol + type alias composto de interfaces granulares.
-- `IRepositoryFindAll`, `IRepositoryFindById`, etc. vêm de `@/domain/abstractions`.
+- Repositório é um Symbol + `interface` (não type alias `&`).
+- Write side usa `loadById`/`save`/`softDeleteById` (aggregate pattern).
+- Read side usa `getFindOneQueryResult`/`getFindAllQueryResult` (query result hidratado).
+- Type aliases (`IRepositoryLoadById`, etc.) vêm de `@/domain/abstractions` — `TId` default é `string`.
+- Repos com IDs sempre string (UUID) usam o default. Repos com IDs numéricos: `IRepositorySoftDeleteById<number>`.
+- Repos que não têm aggregate pattern (ex: `usuario`, `perfil`) declaram `create`/`update` explicitamente.
 
 ## TypeORM adapter (infraestrutura)
 
@@ -355,6 +365,7 @@ ForbiddenError          // 403 — sem permissão
 UnauthorizedError       // 401 — não autenticado
 ValidationError         // 400 — dados inválidos (com detalhes por campo)
 ConflictError           // 409 — conflito (ex.: duplicidade)
+GoneError               // 410 — recurso existe mas não está mais ativo
 InternalError           // 500 — erro interno
 ServiceUnavailableError // 503 — serviço indisponível
 ```

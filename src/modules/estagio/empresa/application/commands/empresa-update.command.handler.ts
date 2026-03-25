@@ -1,4 +1,4 @@
-import { ensureExists } from "@/application/errors";
+import { ensureActiveEntity, ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { EmpresaUpdateCommand } from "@/modules/estagio/empresa/domain/commands/empresa-update.command";
@@ -20,12 +20,15 @@ export class EmpresaUpdateCommandHandlerImpl implements IEmpresaUpdateCommandHan
   ): Promise<EmpresaFindOneQueryResult> {
     const { id, ...dto } = command;
 
-    const current = await this.repository.findById(accessContext, { id });
-    ensureExists(current, Empresa.entityName, id);
+    const domain = await this.repository.loadById(accessContext, id);
+    ensureExists(domain, Empresa.entityName, id);
+    ensureActiveEntity(domain, Empresa.entityName, id);
 
-    await this.repository.update(id, dto);
+    domain.update(dto);
 
-    const result = await this.repository.findById(accessContext, { id });
+    await this.repository.save(domain);
+
+    const result = await this.repository.getFindOneQueryResult(accessContext, { id });
     ensureExists(result, Empresa.entityName, id);
 
     return result;

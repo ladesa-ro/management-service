@@ -1,12 +1,17 @@
 import { describe, expect, it, vi } from "vitest";
 import { ResourceNotFoundError } from "@/application/errors/application.error";
-import {
-  createMockCrudRepository,
-  createMockPermissionChecker,
-  createTestAccessContext,
-  createTestId,
-} from "@/test/helpers";
+import { createMockPermissionChecker, createTestAccessContext, createTestId } from "@/test/helpers";
 import { CampusCreateCommandHandlerImpl } from "./campus-create.command.handler";
+
+function createMockCampusRepository() {
+  return {
+    loadById: vi.fn().mockResolvedValue(null),
+    save: vi.fn().mockResolvedValue(undefined),
+    softDeleteById: vi.fn().mockResolvedValue(undefined),
+    getFindOneQueryResult: vi.fn().mockResolvedValue(null),
+    getFindAllQueryResult: vi.fn().mockResolvedValue({ meta: { itemCount: 0 }, data: [] }),
+  };
+}
 
 function createMockEnderecoHandler() {
   return {
@@ -18,7 +23,7 @@ describe("CampusCreateCommandHandler", () => {
   function createHandler(
     overrides: { repository?: object; permissionChecker?: object; enderecoHandler?: object } = {},
   ) {
-    const repository = overrides.repository ?? createMockCrudRepository();
+    const repository = overrides.repository ?? createMockCampusRepository();
     const permissionChecker = overrides.permissionChecker ?? createMockPermissionChecker();
     const enderecoHandler = overrides.enderecoHandler ?? createMockEnderecoHandler();
 
@@ -48,12 +53,10 @@ describe("CampusCreateCommandHandler", () => {
   };
 
   it("should create campus and return result from repository", async () => {
-    const id = createTestId();
-    const expectedResult = { id, nomeFantasia: "Campus Central" };
+    const expectedResult = { id: createTestId(), nomeFantasia: "Campus Central" };
 
-    const repository = createMockCrudRepository();
-    repository.create.mockResolvedValue({ id });
-    repository.findById.mockResolvedValue(expectedResult);
+    const repository = createMockCampusRepository();
+    repository.getFindOneQueryResult.mockResolvedValue(expectedResult);
 
     const { handler } = createHandler({ repository });
     const accessContext = createTestAccessContext();
@@ -61,14 +64,12 @@ describe("CampusCreateCommandHandler", () => {
     const result = await handler.execute(accessContext, dto);
 
     expect(result).toEqual(expectedResult);
-    expect(repository.create).toHaveBeenCalledOnce();
-    expect(repository.findById).toHaveBeenCalledWith(accessContext, { id });
+    expect(repository.save).toHaveBeenCalledOnce();
   });
 
   it("should call permissionChecker.ensureCanCreate before creating", async () => {
-    const repository = createMockCrudRepository();
-    repository.create.mockResolvedValue({ id: createTestId() });
-    repository.findById.mockResolvedValue({ id: createTestId() });
+    const repository = createMockCampusRepository();
+    repository.getFindOneQueryResult.mockResolvedValue({ id: createTestId() });
 
     const permissionChecker = createMockPermissionChecker();
     const { handler } = createHandler({ repository, permissionChecker });
@@ -89,10 +90,9 @@ describe("CampusCreateCommandHandler", () => {
     await expect(handler.execute(accessContext, dto)).rejects.toThrow("Forbidden");
   });
 
-  it("should throw ResourceNotFoundError when findById returns null after create", async () => {
-    const repository = createMockCrudRepository();
-    repository.create.mockResolvedValue({ id: createTestId() });
-    repository.findById.mockResolvedValue(null);
+  it("should throw ResourceNotFoundError when getFindOneQueryResult returns null after save", async () => {
+    const repository = createMockCampusRepository();
+    repository.getFindOneQueryResult.mockResolvedValue(null);
 
     const { handler } = createHandler({ repository });
     const accessContext = createTestAccessContext();

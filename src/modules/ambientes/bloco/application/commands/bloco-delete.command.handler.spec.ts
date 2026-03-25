@@ -1,16 +1,17 @@
 import { describe, expect, it } from "vitest";
 import { ResourceNotFoundError } from "@/application/errors/application.error";
 import {
-  createMockCrudRepository,
+  createMockCqrsRepository,
   createMockPermissionChecker,
   createTestAccessContext,
+  createTestDomainEntity,
   createTestId,
 } from "@/test/helpers";
 import { BlocoDeleteCommandHandlerImpl } from "./bloco-delete.command.handler";
 
 describe("BlocoDeleteCommandHandler", () => {
   function createHandler(overrides: { repository?: object; permissionChecker?: object } = {}) {
-    const repository = overrides.repository ?? createMockCrudRepository();
+    const repository = overrides.repository ?? createMockCqrsRepository();
     const permissionChecker = overrides.permissionChecker ?? createMockPermissionChecker();
 
     const handler = new BlocoDeleteCommandHandlerImpl(repository as any, permissionChecker as any);
@@ -20,10 +21,10 @@ describe("BlocoDeleteCommandHandler", () => {
 
   it("should delete an existing entity and return true", async () => {
     const id = createTestId();
-    const entity = { id, nome: "Bloco A", codigo: "BLA" };
+    const aggregate = createTestDomainEntity({ id, nome: "Bloco A", codigo: "BLA" });
 
-    const repository = createMockCrudRepository();
-    repository.findById.mockResolvedValue(entity);
+    const repository = createMockCqrsRepository();
+    repository.loadById.mockResolvedValue(aggregate);
 
     const { handler } = createHandler({ repository });
     const accessContext = createTestAccessContext();
@@ -36,8 +37,8 @@ describe("BlocoDeleteCommandHandler", () => {
 
   it("should call permissionChecker.ensureCanDelete", async () => {
     const id = createTestId();
-    const repository = createMockCrudRepository();
-    repository.findById.mockResolvedValue({ id });
+    const repository = createMockCqrsRepository();
+    repository.loadById.mockResolvedValue(createTestDomainEntity({ id }));
 
     const permissionChecker = createMockPermissionChecker();
     const { handler } = createHandler({ repository, permissionChecker });
@@ -53,8 +54,8 @@ describe("BlocoDeleteCommandHandler", () => {
   });
 
   it("should throw ResourceNotFoundError when entity does not exist", async () => {
-    const repository = createMockCrudRepository();
-    repository.findById.mockResolvedValue(null);
+    const repository = createMockCqrsRepository();
+    repository.loadById.mockResolvedValue(null);
 
     const { handler } = createHandler({ repository });
     const accessContext = createTestAccessContext();

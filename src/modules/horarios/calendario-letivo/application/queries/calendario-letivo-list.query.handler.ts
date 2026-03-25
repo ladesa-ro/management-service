@@ -18,6 +18,6 @@ export class CalendarioLetivoListQueryHandlerImpl implements ICalendarioLetivoLi
     accessContext: IAccessContext | null,
     dto: CalendarioLetivoListQuery | null,
   ): Promise<CalendarioLetivoListQueryResult> {
-    return this.repository.findAll(accessContext, dto);
+    return this.repository.getFindAllQueryResult(accessContext, dto);
   }
 }

@@ -88,4 +88,8 @@ export class DiarioProfessor implements IEntityBaseUuid {
 
     this.dateUpdated = getNowISO();
   }
+
+  isActive(): boolean {
+    return this.dateDeleted === null;
+  }
 }

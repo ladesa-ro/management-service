@@ -58,7 +58,7 @@ export class UsuarioCreateCommandHandlerImpl implements IUsuarioCreateCommandHan
         });
       }
 
-      const result = await this.repository.findById(accessContext, { id });
+      const result = await this.repository.getFindOneQueryResult(accessContext, { id });
 
       ensureExists(result, Usuario.entityName, id);
 

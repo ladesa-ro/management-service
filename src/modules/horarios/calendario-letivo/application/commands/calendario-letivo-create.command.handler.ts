@@ -35,6 +35,7 @@ export class CalendarioLetivoCreateCommandHandlerImpl
 
     const campus = await this.campusFindOneHandler.execute(accessContext, { id: dto.campus.id });
     ensureExists(campus, Campus.entityName, dto.campus.id);
+
     let ofertaFormacaoRef: { id: string } | undefined;
     if (dto.ofertaFormacao) {
       const ofertaFormacao = await this.ofertaFormacaoFindOneHandler.execute(accessContext, {
@@ -43,21 +44,18 @@ export class CalendarioLetivoCreateCommandHandlerImpl
       ensureExists(ofertaFormacao, OfertaFormacao.entityName, dto.ofertaFormacao.id);
       ofertaFormacaoRef = { id: ofertaFormacao.id };
     }
+
     const domain = CalendarioLetivo.create({
       nome: dto.nome,
       ano: dto.ano,
       campus: { id: campus.id },
       ofertaFormacao: ofertaFormacaoRef,
     });
-    const { id } = await this.repository.create({
-      ...domain,
-      campus: { id: campus.id },
-      ...(ofertaFormacaoRef ? { ofertaFormacao: ofertaFormacaoRef } : {}),
-    });
 
-    const result = await this.repository.findById(accessContext, { id });
+    await this.repository.save(domain);
 
-    ensureExists(result, CalendarioLetivo.entityName, id);
+    const result = await this.repository.getFindOneQueryResult(accessContext, { id: domain.id });
+    ensureExists(result, CalendarioLetivo.entityName, domain.id);
 
     return result;
   }

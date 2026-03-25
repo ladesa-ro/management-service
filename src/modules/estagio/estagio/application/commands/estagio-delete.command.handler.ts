@@ -1,4 +1,4 @@
-import { ensureExists } from "@/application/errors";
+import { ensureActiveEntity, ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { IEstagioDeleteCommandHandler } from "@/modules/estagio/estagio/domain/commands/estagio-delete.command.handler.interface";
@@ -14,8 +14,9 @@ export class EstagioDeleteCommandHandlerImpl implements IEstagioDeleteCommandHan
   ) {}
 
   async execute(accessContext: IAccessContext | null, { id }: EstagioFindOneQuery): Promise<void> {
-    const current = await this.repository.findById(accessContext, { id });
-    ensureExists(current, Estagio.entityName, id);
+    const domain = await this.repository.loadById(accessContext, id);
+    ensureExists(domain, Estagio.entityName, id);
+    ensureActiveEntity(domain, Estagio.entityName, id);
 
     await this.repository.softDeleteHorariosEstagio(id);
     await this.repository.softDeleteById(id);

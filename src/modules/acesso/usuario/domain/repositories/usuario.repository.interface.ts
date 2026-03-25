@@ -1,12 +1,15 @@
 import type {
-  IRepositoryCreate,
-  IRepositoryFindAll,
-  IRepositoryFindById,
-  IRepositoryFindByIdSimple,
-  IRepositorySoftDelete,
-  IRepositoryUpdate,
+  IAccessContext,
+  IRepositoryGetFindAllQueryResult,
+  IRepositoryGetFindOneQueryResult,
+  IRepositorySoftDeleteById,
 } from "@/domain/abstractions";
-import type { UsuarioFindOneQueryResult, UsuarioListQueryResult } from "../queries";
+import type {
+  UsuarioFindOneQuery,
+  UsuarioFindOneQueryResult,
+  UsuarioListQuery,
+  UsuarioListQueryResult,
+} from "../queries";
 import type {
   UsuarioEnsinoCursoRef,
   UsuarioEnsinoDisciplinaRef,
@@ -15,31 +18,71 @@ import type {
 
 export const IUsuarioRepository = Symbol("IUsuarioRepository");
 
-export type IUsuarioRepository = IRepositoryFindAll<UsuarioListQueryResult> &
-  IRepositoryFindById<UsuarioFindOneQueryResult> &
-  IRepositoryFindByIdSimple<UsuarioFindOneQueryResult> &
-  Omit<IRepositoryCreate<object>, "create"> &
-  IRepositoryUpdate<object> &
-  IRepositorySoftDelete & {
-    create(data: Record<string, unknown>): Promise<{ id: string }>;
+/**
+ * Port de saída para operações de persistência de Usuario.
+ *
+ * Separado em write side (command handlers) e read side (query handlers).
+ * O read side retorna dados hidratados para exibição (query results).
+ */
+export interface IUsuarioRepository {
+  // ==========================================
+  // Write side — usado por command handlers
+  // ==========================================
 
-    findByMatricula(matricula: string): Promise<UsuarioFindOneQueryResult | null>;
+  /** Cria o registro e retorna o ID gerado. */
+  create(data: Record<string, unknown>): Promise<{ id: string }>;
 
-    isMatriculaAvailable(matricula: string, excludeUsuarioId?: string | null): Promise<boolean>;
+  /** Atualiza campos do registro por ID. */
+  update(id: string | number, data: Record<string, unknown>): Promise<void>;
 
-    isEmailAvailable(email: string, excludeUsuarioId?: string | null): Promise<boolean>;
+  /** Soft-delete por ID. */
+  softDeleteById: IRepositorySoftDeleteById;
 
-    resolveMatricula(id: string): Promise<string | null>;
+  // ==========================================
+  // Read side — usado por query handlers
+  // ==========================================
 
-    findUsuarioEnsino(usuarioId: string): Promise<{
-      disciplinas: Array<{
-        disciplina: UsuarioEnsinoDisciplinaRef;
-        cursos: Array<{
-          curso: UsuarioEnsinoCursoRef;
-          turmas: Array<{
-            turma: UsuarioEnsinoTurmaRef;
-          }>;
+  /** Retorna um registro hidratado com todas as relações para exibição. */
+  getFindOneQueryResult: IRepositoryGetFindOneQueryResult<
+    UsuarioFindOneQuery,
+    UsuarioFindOneQueryResult
+  >;
+
+  /** Retorna lista paginada com dados hidratados para exibição. */
+  getFindAllQueryResult: IRepositoryGetFindAllQueryResult<UsuarioListQuery, UsuarioListQueryResult>;
+
+  // ==========================================
+  // Operações de domínio específicas
+  // ==========================================
+
+  /** Busca simplificada por ID (sem relações expandidas). */
+  findByIdSimple(
+    accessContext: IAccessContext | null,
+    id: string,
+  ): Promise<UsuarioFindOneQueryResult | null>;
+
+  /** Busca por matrícula. */
+  findByMatricula(matricula: string): Promise<UsuarioFindOneQueryResult | null>;
+
+  /** Verifica disponibilidade de matrícula. */
+  isMatriculaAvailable(matricula: string, excludeUsuarioId?: string | null): Promise<boolean>;
+
+  /** Verifica disponibilidade de email. */
+  isEmailAvailable(email: string, excludeUsuarioId?: string | null): Promise<boolean>;
+
+  /** Resolve a matrícula de um usuário pelo ID. */
+  resolveMatricula(id: string): Promise<string | null>;
+
+  /** Retorna a estrutura de ensino do usuário (disciplinas → cursos → turmas). */
+  findUsuarioEnsino(usuarioId: string): Promise<{
+    disciplinas: Array<{
+      disciplina: UsuarioEnsinoDisciplinaRef;
+      cursos: Array<{
+        curso: UsuarioEnsinoCursoRef;
+        turmas: Array<{
+          turma: UsuarioEnsinoTurmaRef;
         }>;
       }>;
     }>;
-  };
+  }>;
+}

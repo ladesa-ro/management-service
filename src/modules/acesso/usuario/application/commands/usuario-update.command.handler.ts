@@ -32,7 +32,7 @@ export class UsuarioUpdateCommandHandlerImpl implements IUsuarioUpdateCommandHan
     accessContext: IAccessContext | null,
     dto: UsuarioFindOneQuery & UsuarioUpdateCommand,
   ): Promise<UsuarioFindOneQueryResult> {
-    const currentUsuario = await this.repository.findById(accessContext, dto);
+    const currentUsuario = await this.repository.getFindOneQueryResult(accessContext, dto);
 
     ensureExists(currentUsuario, Usuario.entityName, dto.id);
 
@@ -62,7 +62,7 @@ export class UsuarioUpdateCommandHandlerImpl implements IUsuarioUpdateCommandHan
     const domain = Usuario.load(currentUsuario);
     domain.update(input);
 
-    await this.repository.update(currentUsuario.id, domain);
+    await this.repository.update(currentUsuario.id, { ...domain });
 
     const changedEmail = has(dto, "email");
     const changedMatricula = has(dto, "matricula");
@@ -81,7 +81,9 @@ export class UsuarioUpdateCommandHandlerImpl implements IUsuarioUpdateCommandHan
       });
     }
 
-    const result = await this.repository.findById(accessContext, { id: currentUsuario.id });
+    const result = await this.repository.getFindOneQueryResult(accessContext, {
+      id: currentUsuario.id,
+    });
 
     ensureExists(result, Usuario.entityName, currentUsuario.id);
 

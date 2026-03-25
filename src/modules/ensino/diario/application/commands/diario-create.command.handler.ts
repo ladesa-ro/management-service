@@ -68,17 +68,12 @@ export class DiarioCreateCommandHandlerImpl implements IDiarioCreateCommandHandl
       disciplina: { id: disciplina.id },
       ambientePadrao: ambientePadraoRef,
     });
-    const { id } = await this.repository.create({
-      ...domain,
-      calendarioLetivo: { id: calendarioLetivo.id },
-      turma: { id: turma.id },
-      disciplina: { id: disciplina.id },
-      ambientePadrao: ambientePadraoRef,
-    });
 
-    const result = await this.repository.findById(accessContext, { id });
+    await this.repository.save(domain);
 
-    ensureExists(result, Diario.entityName, id);
+    const result = await this.repository.getFindOneQueryResult(accessContext, { id: domain.id });
+
+    ensureExists(result, Diario.entityName, domain.id);
 
     return result;
   }

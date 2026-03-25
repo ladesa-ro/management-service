@@ -1,4 +1,4 @@
-import { ensureExists } from "@/application/errors";
+import { ensureActiveEntity, ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { NivelFormacaoUpdateCommand } from "@/modules/ensino/nivel-formacao/domain/commands/nivel-formacao-update.command";
@@ -22,18 +22,16 @@ export class NivelFormacaoUpdateCommandHandlerImpl implements INivelFormacaoUpda
     accessContext: IAccessContext | null,
     dto: NivelFormacaoFindOneQuery & NivelFormacaoUpdateCommand,
   ): Promise<NivelFormacaoFindOneQueryResult> {
-    const current = await this.repository.findById(accessContext, { id: dto.id });
-
-    ensureExists(current, NivelFormacao.entityName, dto.id);
+    const domain = await this.repository.loadById(accessContext, dto.id);
+    ensureExists(domain, NivelFormacao.entityName, dto.id);
+    ensureActiveEntity(domain, NivelFormacao.entityName, dto.id);
 
     await this.permissionChecker.ensureCanUpdate(accessContext, { dto }, dto.id);
 
-    const domain = NivelFormacao.load(current);
     domain.update({ slug: dto.slug });
-    await this.repository.update(current.id, domain);
+    await this.repository.save(domain);
 
-    const result = await this.repository.findById(accessContext, { id: dto.id });
-
+    const result = await this.repository.getFindOneQueryResult(accessContext, { id: dto.id });
     ensureExists(result, NivelFormacao.entityName, dto.id);
 
     return result;

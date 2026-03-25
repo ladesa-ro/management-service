@@ -1,5 +1,13 @@
-import type { IRepositoryFindAll, IRepositoryFindById } from "@/domain/abstractions";
-import { CidadeFindOneQueryResult, CidadeListQueryResult } from "@/modules/localidades/cidade";
+import type {
+  IRepositoryGetFindAllQueryResult,
+  IRepositoryGetFindOneQueryResult,
+} from "@/domain/abstractions";
+import type {
+  CidadeFindOneQuery,
+  CidadeFindOneQueryResult,
+  CidadeListQuery,
+  CidadeListQueryResult,
+} from "@/modules/localidades/cidade";
 
 /**
  * Token de injeção para o repositório de Cidade
@@ -7,8 +15,12 @@ import { CidadeFindOneQueryResult, CidadeListQueryResult } from "@/modules/local
 export const ICidadeRepository = Symbol("ICidadeRepository");
 
 /**
- * Port de saída para operações de persistência de Cidade (read-only)
- * Define o contrato que os adapters de persistência devem implementar
+ * Port de saída para operações de consulta de Cidade (read-only).
  */
-export type ICidadeRepository = IRepositoryFindAll<CidadeListQueryResult> &
-  IRepositoryFindById<CidadeFindOneQueryResult>;
+export interface ICidadeRepository {
+  getFindOneQueryResult: IRepositoryGetFindOneQueryResult<
+    CidadeFindOneQuery,
+    CidadeFindOneQueryResult
+  >;
+  getFindAllQueryResult: IRepositoryGetFindAllQueryResult<CidadeListQuery, CidadeListQueryResult>;
+}

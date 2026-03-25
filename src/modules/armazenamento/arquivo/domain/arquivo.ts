@@ -85,4 +85,8 @@ export class Arquivo implements IEntityBaseUuid {
     this.dateUpdated = getNowISO();
     zodValidate(Arquivo.entityName, ArquivoSchema, this);
   }
+
+  isActive(): boolean {
+    return this.dateDeleted === null;
+  }
 }

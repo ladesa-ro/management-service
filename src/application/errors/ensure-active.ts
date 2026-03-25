@@ -9,3 +9,13 @@ export function ensureActive(
     throw new GoneError(resourceName, id);
   }
 }
+
+export function ensureActiveEntity(
+  entity: { isActive(): boolean },
+  resourceName: string,
+  id?: string | number,
+): void {
+  if (!entity.isActive()) {
+    throw new GoneError(resourceName, id);
+  }
+}

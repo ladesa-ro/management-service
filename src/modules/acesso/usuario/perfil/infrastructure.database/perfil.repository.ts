@@ -47,7 +47,7 @@ export class PerfilTypeOrmRepositoryAdapter implements IPerfilRepository {
     private readonly paginationAdapter: NestJsPaginateAdapter,
   ) {}
 
-  findAll(accessContext: IAccessContext | null, dto: PerfilListQuery | null = null) {
+  getFindAllQueryResult(accessContext: IAccessContext | null, dto: PerfilListQuery | null = null) {
     return typeormFindAll<PerfilEntity, PerfilListQuery, PerfilListQueryResult>(
       this.appTypeormConnection,
       PerfilEntity,
@@ -57,7 +57,7 @@ export class PerfilTypeOrmRepositoryAdapter implements IPerfilRepository {
     );
   }
 
-  findById(accessContext: IAccessContext | null, dto: PerfilFindOneQuery) {
+  getFindOneQueryResult(accessContext: IAccessContext | null, dto: PerfilFindOneQuery) {
     return typeormFindById<PerfilEntity, PerfilFindOneQuery, PerfilFindOneQueryResult>(
       this.appTypeormConnection,
       PerfilEntity,
@@ -67,7 +67,7 @@ export class PerfilTypeOrmRepositoryAdapter implements IPerfilRepository {
   }
 
   findByIdSimple(accessContext: IAccessContext | null, id: string) {
-    return this.findById(accessContext, { id } as PerfilFindOneQuery);
+    return this.getFindOneQueryResult(accessContext, { id } as PerfilFindOneQuery);
   }
 
   async findAllActiveByUsuarioId(

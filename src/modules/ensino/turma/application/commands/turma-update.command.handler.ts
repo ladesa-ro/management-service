@@ -1,6 +1,6 @@
 import { has } from "lodash";
 import { ensureExists } from "@/application/errors";
-import type { IAccessContext, PersistInput } from "@/domain/abstractions";
+import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente";
 import { IAmbienteFindOneQueryHandler } from "@/modules/ambientes/ambiente/domain/queries/ambiente-find-one.query.handler.interface";
@@ -9,7 +9,6 @@ import { ICursoFindOneQueryHandler } from "@/modules/ensino/curso/domain/queries
 import type { TurmaUpdateCommand } from "@/modules/ensino/turma/domain/commands/turma-update.command";
 import { ITurmaUpdateCommandHandler } from "@/modules/ensino/turma/domain/commands/turma-update.command.handler.interface";
 import type { TurmaFindOneQuery } from "@/modules/ensino/turma/domain/queries";
-import type { ITurma } from "@/modules/ensino/turma/domain/turma";
 import { Turma } from "@/modules/ensino/turma/domain/turma";
 import { ITurmaPermissionChecker } from "../../domain/authorization";
 import type { TurmaFindOneQueryResult } from "../../domain/queries";
@@ -32,34 +31,35 @@ export class TurmaUpdateCommandHandlerImpl implements ITurmaUpdateCommandHandler
     accessContext: IAccessContext | null,
     dto: TurmaFindOneQuery & TurmaUpdateCommand,
   ): Promise<TurmaFindOneQueryResult> {
-    const current = await this.repository.findById(accessContext, { id: dto.id });
+    const domain = await this.repository.loadById(accessContext, dto.id);
 
-    ensureExists(current, Turma.entityName, dto.id);
+    ensureExists(domain, Turma.entityName, dto.id);
 
     await this.permissionChecker.ensureCanUpdate(accessContext, { dto }, dto.id);
 
-    const domain = Turma.load(current);
-    domain.update({ periodo: dto.periodo });
-    const updateData: Partial<PersistInput<ITurma>> = { ...domain };
+    // Validar existência das referências antes de atualizar o domain
     if (has(dto, "ambientePadraoAula") && dto.ambientePadraoAula !== undefined) {
       if (dto.ambientePadraoAula !== null) {
         const ambientePadraoAula = await this.ambienteFindOneHandler.execute(accessContext, {
           id: dto.ambientePadraoAula.id,
         });
         ensureExists(ambientePadraoAula, Ambiente.entityName, dto.ambientePadraoAula.id);
-        updateData.ambientePadraoAula = { id: ambientePadraoAula.id };
-      } else {
-        updateData.ambientePadraoAula = null;
       }
     }
     if (has(dto, "curso") && dto.curso !== undefined) {
       const curso = await this.cursoFindOneHandler.execute(accessContext, { id: dto.curso.id });
       ensureExists(curso, Curso.entityName, dto.curso.id);
-      updateData.curso = { id: curso.id };
     }
-    await this.repository.update(current.id, updateData);
 
-    const result = await this.repository.findById(accessContext, { id: dto.id });
+    domain.update({
+      periodo: dto.periodo,
+      curso: dto.curso,
+      ambientePadraoAula: dto.ambientePadraoAula,
+    });
+
+    await this.repository.save(domain);
+
+    const result = await this.repository.getFindOneQueryResult(accessContext, { id: dto.id });
 
     ensureExists(result, Turma.entityName, dto.id);
 

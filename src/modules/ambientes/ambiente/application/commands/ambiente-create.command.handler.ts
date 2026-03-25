@@ -39,11 +39,12 @@ export class AmbienteCreateCommandHandlerImpl implements IAmbienteCreateCommandH
       bloco: { id: bloco.id },
     });
 
-    const { id } = await this.repository.create({ ...domain, bloco: { id: bloco.id } });
+    domain.bloco = { id: bloco.id };
 
-    const result = await this.repository.findById(accessContext, { id });
+    await this.repository.save(domain);
 
-    ensureExists(result, Ambiente.entityName, id);
+    const result = await this.repository.getFindOneQueryResult(accessContext, { id: domain.id });
+    ensureExists(result, Ambiente.entityName, domain.id);
 
     return result;
   }

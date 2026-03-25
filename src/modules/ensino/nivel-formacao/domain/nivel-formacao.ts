@@ -59,4 +59,8 @@ export class NivelFormacao {
 
     zodValidate(NivelFormacao.entityName, NivelFormacaoSchema, this);
   }
+
+  isActive(): boolean {
+    return this.dateDeleted === null;
+  }
 }

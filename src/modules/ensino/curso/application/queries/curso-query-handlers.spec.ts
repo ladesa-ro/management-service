@@ -4,12 +4,12 @@ import { CursoFindOneQueryHandlerImpl } from "./curso-find-one.query.handler";
 import { CursoListQueryHandlerImpl } from "./curso-list.query.handler";
 
 describe("CursoFindOneQueryHandler", () => {
-  it("should delegate to repository.findById", async () => {
+  it("should delegate to repository.getFindOneQueryResult", async () => {
     const id = createTestId();
     const entity = { id, nome: "Engenharia de Software" };
 
     const repository = createMockCrudRepository();
-    repository.findById.mockResolvedValue(entity);
+    repository.getFindOneQueryResult.mockResolvedValue(entity);
 
     const handler = new CursoFindOneQueryHandlerImpl(repository as any);
     const accessContext = createTestAccessContext();
@@ -17,12 +17,12 @@ describe("CursoFindOneQueryHandler", () => {
     const result = await handler.execute(accessContext, { id });
 
     expect(result).toEqual(entity);
-    expect(repository.findById).toHaveBeenCalledWith(accessContext, { id });
+    expect(repository.getFindOneQueryResult).toHaveBeenCalledWith(accessContext, { id });
   });
 
   it("should return null when entity does not exist", async () => {
     const repository = createMockCrudRepository();
-    repository.findById.mockResolvedValue(null);
+    repository.getFindOneQueryResult.mockResolvedValue(null);
 
     const handler = new CursoFindOneQueryHandlerImpl(repository as any);
 
@@ -33,11 +33,11 @@ describe("CursoFindOneQueryHandler", () => {
 });
 
 describe("CursoListQueryHandler", () => {
-  it("should delegate to repository.findAll", async () => {
+  it("should delegate to repository.getFindAllQueryResult", async () => {
     const expected = { meta: { itemCount: 1 }, data: [{ id: createTestId() }] };
 
     const repository = createMockCrudRepository();
-    repository.findAll.mockResolvedValue(expected);
+    repository.getFindAllQueryResult.mockResolvedValue(expected);
 
     const handler = new CursoListQueryHandlerImpl(repository as any);
     const accessContext = createTestAccessContext();
@@ -45,6 +45,6 @@ describe("CursoListQueryHandler", () => {
     const result = await handler.execute(accessContext, null);
 
     expect(result).toEqual(expected);
-    expect(repository.findAll).toHaveBeenCalledWith(accessContext, null);
+    expect(repository.getFindAllQueryResult).toHaveBeenCalledWith(accessContext, null);
   });
 });

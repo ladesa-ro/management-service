@@ -15,6 +15,6 @@ export class AmbienteListQueryHandlerImpl implements IAmbienteListQueryHandler {
     accessContext: IAccessContext | null,
     dto: AmbienteListQuery | null,
   ): Promise<AmbienteListQueryResult> {
-    return this.repository.findAll(accessContext, dto);
+    return this.repository.getFindAllQueryResult(accessContext, dto);
   }
 }

@@ -145,4 +145,8 @@ export class CalendarioAgendamento {
 
     zodValidate(CalendarioAgendamento.entityName, CalendarioAgendamentoSchema, this);
   }
+
+  isActive(): boolean {
+    return this.dateDeleted === null;
+  }
 }

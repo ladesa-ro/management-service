@@ -1,15 +1,15 @@
 import { describe, expect, it } from "vitest";
-import { createMockCrudRepository, createTestAccessContext, createTestId } from "@/test/helpers";
+import { createMockCqrsRepository, createTestAccessContext, createTestId } from "@/test/helpers";
 import { ModalidadeFindOneQueryHandlerImpl } from "./modalidade-find-one.query.handler";
 import { ModalidadeListQueryHandlerImpl } from "./modalidade-list.query.handler";
 
 describe("ModalidadeFindOneQueryHandler", () => {
-  it("should delegate to repository.findById", async () => {
+  it("should delegate to repository.getFindOneQueryResult", async () => {
     const id = createTestId();
     const entity = { id, nome: "Presencial", slug: "presencial" };
 
-    const repository = createMockCrudRepository();
-    repository.findById.mockResolvedValue(entity);
+    const repository = createMockCqrsRepository();
+    repository.getFindOneQueryResult.mockResolvedValue(entity);
 
     const handler = new ModalidadeFindOneQueryHandlerImpl(repository as any);
     const accessContext = createTestAccessContext();
@@ -17,12 +17,12 @@ describe("ModalidadeFindOneQueryHandler", () => {
     const result = await handler.execute(accessContext, { id });
 
     expect(result).toEqual(entity);
-    expect(repository.findById).toHaveBeenCalledWith(accessContext, { id });
+    expect(repository.getFindOneQueryResult).toHaveBeenCalledWith(accessContext, { id });
   });
 
   it("should return null when entity does not exist", async () => {
-    const repository = createMockCrudRepository();
-    repository.findById.mockResolvedValue(null);
+    const repository = createMockCqrsRepository();
+    repository.getFindOneQueryResult.mockResolvedValue(null);
 
     const handler = new ModalidadeFindOneQueryHandlerImpl(repository as any);
 
@@ -33,11 +33,11 @@ describe("ModalidadeFindOneQueryHandler", () => {
 });
 
 describe("ModalidadeListQueryHandler", () => {
-  it("should delegate to repository.findAll", async () => {
+  it("should delegate to repository.getFindAllQueryResult", async () => {
     const expected = { meta: { itemCount: 1 }, data: [{ id: createTestId() }] };
 
-    const repository = createMockCrudRepository();
-    repository.findAll.mockResolvedValue(expected);
+    const repository = createMockCqrsRepository();
+    repository.getFindAllQueryResult.mockResolvedValue(expected);
 
     const handler = new ModalidadeListQueryHandlerImpl(repository as any);
     const accessContext = createTestAccessContext();
@@ -45,6 +45,6 @@ describe("ModalidadeListQueryHandler", () => {
     const result = await handler.execute(accessContext, null);
 
     expect(result).toEqual(expected);
-    expect(repository.findAll).toHaveBeenCalledWith(accessContext, null);
+    expect(repository.getFindAllQueryResult).toHaveBeenCalledWith(accessContext, null);
   });
 });
