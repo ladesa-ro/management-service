@@ -1,6 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, type Relation } from "typeorm";
 import { UsuarioEntity } from "@/modules/acesso/usuario/infrastructure.database/typeorm/usuario.typeorm.entity";
 import { CampusEntity } from "@/modules/ambientes/campus/infrastructure.database/typeorm/campus.typeorm.entity";
+import { CargoEntity } from "./cargo.typeorm.entity";
 
 @Entity("perfil")
 export class PerfilEntity {
@@ -10,8 +11,9 @@ export class PerfilEntity {
   @Column({ name: "ativo", type: "boolean" })
   ativo!: boolean;
 
-  @Column({ name: "cargo", type: "text" })
-  cargo!: string;
+  @ManyToOne(() => CargoEntity, (cargo) => cargo.perfis, { nullable: true })
+  @JoinColumn({ name: "id_cargo_fk" })
+  cargo!: Relation<CargoEntity>;
 
   @ManyToOne(
     () => CampusEntity,

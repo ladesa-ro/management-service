@@ -5,11 +5,15 @@ import { mapDatedFields } from "@/shared/mapping";
 import { PerfilFindOneOutputGraphQlDto } from "./perfil.graphql.dto";
 
 export class PerfilGraphqlMapper {
+  private static getCargoNome(output: PerfilFindOneQueryResult): string {
+    return output.cargo?.nome ?? "";
+  }
+
   static toFindOneOutputDto(output: PerfilFindOneQueryResult): PerfilFindOneOutputGraphQlDto {
     const dto = new PerfilFindOneOutputGraphQlDto();
     dto.id = output.id;
     dto.ativo = output.ativo;
-    dto.cargo = output.cargo;
+    dto.cargo = PerfilGraphqlMapper.getCargoNome(output);
     dto.campus = CampusGraphqlMapper.toFindOneOutputDto(output.campus);
     dto.usuario = UsuarioGraphqlMapper.toFindOneOutputDto(output.usuario);
     mapDatedFields(dto, output);

@@ -3,7 +3,7 @@ import { type IFilterAcceptableValues, PaginationQuery } from "@/domain/abstract
 export class PerfilListQuery extends PaginationQuery {
   "filter.id"?: IFilterAcceptableValues;
   "filter.ativo"?: IFilterAcceptableValues;
-  "filter.cargo"?: IFilterAcceptableValues;
+  "filter.cargo.nome"?: IFilterAcceptableValues;
   "filter.campus.id"?: IFilterAcceptableValues;
   "filter.usuario.id"?: IFilterAcceptableValues;
 }

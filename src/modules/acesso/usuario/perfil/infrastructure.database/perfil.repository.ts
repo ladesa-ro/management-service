@@ -32,6 +32,7 @@ const config = {
 const perfilRelations = {
   campus: true,
   usuario: true,
+  cargo: true,
 };
 
 const perfilPaginateConfig = buildTypeOrmPaginateConfig<PerfilEntity>(
@@ -92,6 +93,7 @@ export class PerfilTypeOrmRepositoryAdapter implements IPerfilRepository {
 
     qb.leftJoinAndSelect(`${config.alias}.campus`, "campus");
     qb.leftJoinAndSelect(`${config.alias}.usuario`, "usuario");
+    qb.leftJoinAndSelect(`${config.alias}.cargo`, "cargo");
     qb.andWhere(`${config.alias}.dateDeleted IS NULL`);
 
     return this.paginationAdapter.paginate(
@@ -117,9 +119,10 @@ export class PerfilTypeOrmRepositoryAdapter implements IPerfilRepository {
       .createQueryBuilder(config.alias)
       .innerJoin(`${config.alias}.campus`, "campus")
       .innerJoin(`${config.alias}.usuario`, "usuario")
+      .leftJoinAndSelect(`${config.alias}.cargo`, "cargo")
       .andWhere("campus.id = :campusId", { campusId })
       .andWhere("usuario.id = :usuarioId", { usuarioId })
-      .select([config.alias, "campus", "usuario"])
+      .select([config.alias, "campus", "usuario", "cargo"])
       .getMany();
 
     return vinculos as unknown as PerfilFindOneQueryResult[];

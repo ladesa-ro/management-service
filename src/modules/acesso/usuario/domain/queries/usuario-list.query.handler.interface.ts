@@ -26,6 +26,6 @@ export const usuarioPaginationSpec: IPaginationSpec = {
     ["matricula", "ASC"],
   ],
   filterableColumns: {
-    "vinculos.cargo": [PaginationFilter.EQ],
+    "vinculos.cargo.nome": [PaginationFilter.EQ],
   },
 };

@@ -23,6 +23,10 @@ import {
 } from "./usuario.graphql.dto";
 
 export class UsuarioGraphqlMapper {
+  private static getCargoNome(output: PerfilNestedQueryResult): string {
+    return output.cargo?.nome ?? "";
+  }
+
   static toListInput(dto: UsuarioListInputGraphQlDto | null): UsuarioListQuery | null {
     if (!dto) {
       return null;
@@ -85,7 +89,7 @@ export class UsuarioGraphqlMapper {
     const dto = new UsuarioPerfilNestedOutputGraphQlDto();
     dto.id = output.id;
     dto.ativo = output.ativo;
-    dto.cargo = output.cargo;
+    dto.cargo = UsuarioGraphqlMapper.getCargoNome(output);
     dto.campus = CampusGraphqlMapper.toFindOneOutputDto(output.campus);
     mapDatedFields(dto, output);
     return dto;
