@@ -3001,24 +3001,30 @@ graph LR
     style PMAP fill:#3498db,stroke:#2980b9,color:#fff
 ```
 
-Todos os mappers são construídos com `createMapper<I, O>` de `src/shared/mapping/create-mapper.ts` — funções puras, síncronas, tipadas de ponta a ponta, com mapeamento explícito campo a campo. Sem decorators, sem reflexão, sem strings mágicas.
+Todos os mappers são construídos com `createMapper<I, O>` de `src/shared/mapping/create-mapper.ts` — funções puras, síncronas, tipadas de ponta a ponta. Para mapeamento imperativo de campos individuais (filtros, paginação, input mapping), o projeto usa a DSL `into`:
+
+```typescript
+// into — DSL imperativa centrada no destino
+into(query)
+  .field("filter.id").from(dto, "filterId")   // rename camelCase → dot notation
+  .field("page").default(1).from(dto)          // default se undefined/null
+  .field("userId").required().from(auth);      // erro se ausente
+```
 
 #### Utilitários de mapeamento (`src/shared/mapping/create-mapper.ts`)
 
 | Helper | Propósito |
 |--------|-----------|
+| `into(target)` | DSL imperativa para mapeamento de campos — `.from()`, `.field()`, `.transform()`, `.default()`, `.when()`, `.required()`, `.optional()` |
 | `createMapper<I, O>(fn)` | Mapper unitário com `.map(input)` e `.mapArray(inputs)` |
 | `createListMapper(DtoClass, itemMapper)` | Lista paginada — instancia DTO, repassa meta, mapeia data |
-| `createPaginatedInputMapper(QueryClass, mapFilters)` | Input paginado — mapeia page/limit/search/sortBy automaticamente, filtra via callback |
+| `createPaginatedInputMapper(QueryClass, mapFilters)` | Input paginado — mapeia page/limit/search/sortBy via `into`, filtra via callback |
 
 #### Mapper de infraestrutura (TypeORM Entity → Query Result)
 
 Cada módulo define um mapper em `infrastructure.database/typeorm/{nome}.typeorm.mapper.ts`:
 
 ```typescript
-// src/modules/localidades/estado/infrastructure.database/typeorm/estado.typeorm.mapper.ts
-import { createMapper } from "@/shared/mapping";
-
 export const entityToOutput = createMapper<EstadoEntity, EstadoFindOneQueryResult>((e) => ({
   id: e.id,
   nome: e.nome,
@@ -3026,55 +3032,24 @@ export const entityToOutput = createMapper<EstadoEntity, EstadoFindOneQueryResul
 }));
 ```
 
-O barrel re-exporta via namespace:
-```typescript
-// typeorm/index.ts
-export * as EstadoTypeormMapper from "./estado.typeorm.mapper";
-```
-
-O repositório usa o mapper como callback:
-```typescript
-import { EstadoEntity, EstadoTypeormMapper } from "./typeorm";
-
-getFindOneQueryResult(accessContext, dto) {
-  return typeormFindById<EstadoEntity, EstadoFindOneQuery, EstadoFindOneQueryResult>(
-    this.appTypeormConnection, EstadoEntity,
-    { ...config, paginateConfig: estadoPaginateConfig },
-    dto,
-    EstadoTypeormMapper.entityToOutput.map,
-  );
-}
-```
+O barrel re-exporta via namespace (`export * as EstadoTypeormMapper`) e o repositório usa como callback (`EstadoTypeormMapper.entityToOutput.map`).
 
 #### Mapper de apresentação (DTO ↔ Command/Query)
 
-Cada mapper de apresentação organiza exports em duas regiões:
+Cada mapper de apresentação organiza exports em duas regiões ("Externa → Interna" e "Interna → Externa"):
 
 ```typescript
-// src/modules/localidades/estado/presentation.rest/estado.rest.mapper.ts
-import { createListMapper, createMapper, createPaginatedInputMapper } from "@/shared/mapping";
+import { createListMapper, createMapper, createPaginatedInputMapper, into } from "@/shared/mapping";
 
-// ============================================================================
-// Externa → Interna (Input: Presentation → Core)
-// ============================================================================
-
-export const toFindOneInput = createMapper<EstadoFindOneInputRestDto, EstadoFindOneQuery>((dto) => {
-  const input = new EstadoFindOneQuery();
-  input.id = dto.id;
-  return input;
-});
-
+// Externa → Interna
 export const toListInput = createPaginatedInputMapper<EstadoListInputRestDto, EstadoListQuery>(
   EstadoListQuery,
   (dto, query) => {
-    if (dto["filter.id"] !== undefined) query["filter.id"] = dto["filter.id"];
+    into(query).field("filter.id").from(dto, "filter.id");
   },
 );
 
-// ============================================================================
-// Interna → Externa (Output: Core → Presentation)
-// ============================================================================
-
+// Interna → Externa
 export const toFindOneOutput = createMapper<EstadoFindOneQueryResult, EstadoFindOneOutputRestDto>(
   (output) => ({ id: output.id, nome: output.nome, sigla: output.sigla }),
 );
@@ -3087,11 +3062,10 @@ Controllers e resolvers importam via namespace:
 import * as EstadoRestMapper from "./estado.rest.mapper";
 
 const input = EstadoRestMapper.toListInput.map(dto);
-return EstadoRestMapper.toListOutput(result);
 return EstadoRestMapper.toFindOneOutput.map(result);
 ```
 
-> **Para ir mais fundo:** transforms reutilizáveis (conversões de data, normalização de relações) ficam em `src/shared/mapping/transforms.ts`. A documentação completa do padrão de mapeamento está em [`.claude/docs/mapeamento.md`](.claude/docs/mapeamento.md).
+> **Para ir mais fundo:** a documentação completa do padrão de mapeamento (incluindo `into`, pipelines, transforms e convenções) está em [`.claude/docs/mapeamento.md`](.claude/docs/mapeamento.md).
 
 ### Command e Query Handlers
 

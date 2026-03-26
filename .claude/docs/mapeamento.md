@@ -15,6 +15,91 @@ Este documento descreve o padrão de mapeamento adotado no projeto para transfor
 
 ---
 
+## API `into` — mapeamento imperativo de campos
+
+A API `into` é a forma padrão de mapear campos individuais entre objetos. É uma DSL imperativa centrada no destino.
+
+### Forma canônica (source global)
+
+```typescript
+into(query)
+  .from(dto)
+  .field("filter.id", "filterId")
+  .field("page")
+  .field("limit");
+```
+
+- `into(target)` — define o objeto destino
+- `.from(source)` — define a source corrente (global)
+- `.field(targetKey, sourceKey?)` — copia o campo. `sourceKey` default = `targetKey`
+- Campos `undefined` na source são ignorados (target preserva o valor anterior)
+
+### Forma per-field (múltiplas sources)
+
+```typescript
+into(query)
+  .field("filter.id").from(dto, "filterId")
+  .field("tenantId").from(context)
+  .field("userId").from(auth);
+```
+
+Cada `.field().from()` é independente — sem estado compartilhado.
+
+### Pipeline por campo
+
+Cada `field` abre um pipeline independente com operações opcionais:
+
+```typescript
+into(query)
+  .field("page").default(1).from(dto)
+  .field("status").when(v => v !== "DELETED").from(dto)
+  .field("userId").required().from(auth);
+```
+
+### Operações do pipeline
+
+| Operação | Descrição | Exemplo |
+|----------|-----------|---------|
+| `.from(source, key?)` | Define source e executa o mapping | `.from(dto, "filterId")` |
+| `.transform(fn)` | Transforma o valor antes do set | `.transform(v => Number(v))` |
+| `.default(value)` | Fallback quando valor é `undefined` ou `null` | `.default(1)` |
+| `.when(predicate)` | Condicional — só escreve se `predicate(value)` retorna `true` | `.when(v => v !== "DELETED")` |
+| `.required()` | Lança erro se valor é `undefined` ou `null` | `.required()` |
+| `.optional()` | Ignora silenciosamente se valor é `undefined` ou `null` | `.optional()` |
+
+### Ordem de execução
+
+Fixa e determinística:
+
+```
+resolve source → transform → default → when → required/optional → set target
+```
+
+### Uso no `createPaginatedInputMapper`
+
+O helper `createPaginatedInputMapper` usa `into` internamente para mapear page/limit/search/sortBy. O callback de filtros deve usar `into` também:
+
+```typescript
+export const toListInput = createPaginatedInputMapper<EstadoListInputRestDto, EstadoListQuery>(
+  EstadoListQuery,
+  (dto, query) => {
+    into(query)
+      .field("filter.id").from(dto, "filter.id");
+  },
+);
+
+// GraphQL — renomeia camelCase → dot notation
+const listInputMapper = createPaginatedInputMapper<EstadoListInputGraphQlDto, EstadoListQuery>(
+  EstadoListQuery,
+  (dto, query) => {
+    into(query)
+      .field("filter.id").from(dto, "filterId");
+  },
+);
+```
+
+---
+
 ## Utilitários (`src/shared/mapping/create-mapper.ts`)
 
 ### `createMapper<I, O>`
@@ -41,25 +126,20 @@ export const toListOutput = createListMapper(EstadoListOutputRestDto, toFindOneO
 
 ### `createPaginatedInputMapper`
 
-Cria um mapper de input paginado (DTO → Query). Mapeia automaticamente os campos comuns de paginação (`page`, `limit`, `search`, `sortBy`) e delega o mapeamento de filtros específicos via callback.
+Cria um mapper de input paginado (DTO → Query). Mapeia automaticamente page/limit/search/sortBy via `into` e delega filtros ao callback.
 
 ```typescript
-// REST — filtros usam dot notation
 export const toListInput = createPaginatedInputMapper<EstadoListInputRestDto, EstadoListQuery>(
   EstadoListQuery,
   (dto, query) => {
-    if (dto["filter.id"] !== undefined) query["filter.id"] = dto["filter.id"];
-  },
-);
-
-// GraphQL — filtros usam camelCase, mapeados para dot notation
-const listInputMapper = createPaginatedInputMapper<EstadoListInputGraphQlDto, EstadoListQuery>(
-  EstadoListQuery,
-  (dto, query) => {
-    if (dto.filterId !== undefined) query["filter.id"] = dto.filterId;
+    into(query).field("filter.id").from(dto, "filter.id");
   },
 );
 ```
+
+### `mapField` (deprecated)
+
+> **@deprecated** — Use `into(target).field(key).from(source, key)` em vez de `mapField`.
 
 ---
 
@@ -69,8 +149,6 @@ const listInputMapper = createPaginatedInputMapper<EstadoListInputGraphQlDto, Es
 
 **Arquivo:** `{nome}.typeorm.mapper.ts`
 
-Mapeia entre TypeORM Entity e tipos do domínio (Query Results).
-
 ```
 infrastructure.database/
 └── typeorm/
@@ -79,121 +157,35 @@ infrastructure.database/
     └── index.ts                   ← barrel com export * as EstadoTypeormMapper
 ```
 
-**Barrel pattern:**
+**Barrel:**
 ```typescript
 export * from "./estado.typeorm.entity";
 export * as EstadoTypeormMapper from "./estado.typeorm.mapper";
 ```
 
-**Mapper:**
-```typescript
-// ============================================================================
-// Persistência → Domínio (TypeORM Entity → Query Result)
-// ============================================================================
-
-export const entityToOutput = createMapper<EstadoEntity, EstadoFindOneQueryResult>((e) => ({
-  id: e.id,
-  nome: e.nome,
-  sigla: e.sigla,
-}));
-```
-
-**Uso no repository:**
-```typescript
-import { EstadoEntity, EstadoTypeormMapper } from "./typeorm";
-
-getFindOneQueryResult(accessContext, dto) {
-  return typeormFindById<EstadoEntity, EstadoFindOneQuery, EstadoFindOneQueryResult>(
-    this.appTypeormConnection,
-    EstadoEntity,
-    { ...config, paginateConfig: estadoPaginateConfig },
-    dto,
-    EstadoTypeormMapper.entityToOutput.map,  // callback de mapeamento
-  );
-}
-```
-
 **Exports típicos:**
 - `entityToOutput` — Entity → Query Result (leitura)
-- `entityToDomain` — Entity → Domain Interface (aggregate pattern, se aplicável)
-- `domainToPersistence` — Domain → Entity parcial (escrita, se aplicável)
-
-Apenas exporte o que é efetivamente usado pelo repository. Módulos read-only (ex: estado) só precisam de `entityToOutput`.
+- `entityToDomain` — Entity → Domain Interface (aggregate pattern)
+- `domainToPersistence` — Domain → Entity parcial (escrita)
 
 ### Apresentação REST (`presentation.rest/`)
 
 **Arquivo:** `{nome}.rest.mapper.ts`
 
-**Regiões:**
-```typescript
-// ============================================================================
-// Externa → Interna (Input: Presentation → Core)
-// ============================================================================
+Regiões: "Externa → Interna" e "Interna → Externa".
 
-export const toFindOneInput = createMapper<...>(...);
-export const toListInput = createPaginatedInputMapper<...>(...);
-
-// ============================================================================
-// Interna → Externa (Output: Core → Presentation)
-// ============================================================================
-
-export const toFindOneOutput = createMapper<...>(...);
-export const toListOutput = createListMapper(...);
-```
-
-**Uso no controller:**
-```typescript
-import * as EstadoRestMapper from "./estado.rest.mapper";
-
-async findAll(accessContext, dto) {
-  const input = EstadoRestMapper.toListInput.map(dto);
-  const result = await this.listHandler.execute(accessContext, input);
-  return EstadoRestMapper.toListOutput(result);
-}
-
-async findById(accessContext, params) {
-  const input = EstadoRestMapper.toFindOneInput.map(params);
-  const result = await this.findOneHandler.execute(accessContext, input);
-  ensureExists(result, Estado.entityName, input.id);
-  return EstadoRestMapper.toFindOneOutput.map(result);
-}
-```
+**Controller:** `import * as EstadoRestMapper from "./estado.rest.mapper"`
 
 ### Apresentação GraphQL (`presentation.graphql/`)
 
-**Arquivo:** `{nome}.graphql.mapper.ts`
-
-Mesmo padrão do REST, com duas diferenças:
-
-1. **Filtros usam camelCase** no DTO (`filterId`) e precisam ser mapeados para dot notation (`filter.id`) na Query.
-2. **`toListInput` precisa de null check** porque GraphQL permite args opcionais:
-
-```typescript
-const listInputMapper = createPaginatedInputMapper<EstadoListInputGraphQlDto, EstadoListQuery>(...);
-
-export function toListInput(dto: EstadoListInputGraphQlDto | null): EstadoListQuery | null {
-  if (!dto) return null;
-  return listInputMapper.map(dto);
-}
-```
-
-**Uso no resolver:**
-```typescript
-import * as EstadoGraphqlMapper from "./estado.graphql.mapper";
-
-async findById(accessContext, id: number) {
-  const input = EstadoGraphqlMapper.toFindOneInput.map(id);
-  const result = await this.findOneHandler.execute(accessContext, input);
-  ensureExists(result, Estado.entityName, input.id);
-  return EstadoGraphqlMapper.toFindOneOutput.map(result);
-}
-```
+Mesmo padrão do REST. Diferenças:
+- Output dates: `new Date(output.dateCreated)` (GraphQL scalar)
+- `toListInput`: null check wrapper
+- Schemas GraphQL definidos no arquivo de DTO (não no domain)
 
 ---
 
-## Cross-module: referenciando mappers de outro módulo
-
-Quando o DTO de saída de um módulo inclui dados de outro módulo (ex: `cidade.estado`), importe o mapper do outro módulo via namespace:
+## Cross-module
 
 ```typescript
 import * as EstadoRestMapper from "@/modules/localidades/estado/presentation.rest/estado.rest.mapper";
@@ -214,59 +206,22 @@ export const toFindOneOutput = createMapper<CidadeFindOneQueryResult, CidadeFind
 | Export | Uso |
 |--------|-----|
 | `toFindOneInput` | DTO → FindOneQuery |
-| `toListInput` | DTO → ListQuery (via `createPaginatedInputMapper`) |
+| `toListInput` | DTO → ListQuery |
 | `toFindOneOutput` | QueryResult → FindOneOutputDto |
-| `toListOutput` | PaginatedQueryResult → ListOutputDto (via `createListMapper`) |
+| `toListOutput` | PaginatedQueryResult → ListOutputDto |
 | `toCreateInput` | CreateDto → CreateCommand |
 | `toUpdateInput` | UpdateDto → UpdateCommand |
 | `entityToOutput` | Entity → QueryResult (infraestrutura) |
-| `entityToDomain` | Entity → Domain Interface (infraestrutura, aggregate pattern) |
-| `domainToPersistence` | Domain → Entity parcial (infraestrutura, escrita) |
+| `entityToDomain` | Entity → Domain Interface (infraestrutura) |
+| `domainToPersistence` | Domain → Entity parcial (infraestrutura) |
 
 ---
 
-## Schemas de validação GraphQL
+## Update input (Query & Command)
 
-Schemas de validação específicos do GraphQL (ex: `createGraphqlListInputSchema()`) pertencem à **camada de apresentação**, não ao domínio. Defina a constante no próprio arquivo de DTO:
-
-```typescript
-// presentation.graphql/estado.graphql.dto.ts
-const EstadoGraphqlListInputSchema = createGraphqlListInputSchema();
-
-export class EstadoListInputGraphQlDto {
-  static schema = EstadoGraphqlListInputSchema;
-  // ...
-}
-```
-
----
-
-## Transforms tipadas (`src/shared/mapping/transforms.ts`)
-
-Como datas são `string` em entity/domain/REST, **conversões de data não são necessárias na maioria dos mappers** — os campos passam direto (passthrough). Transforms são necessárias apenas em dois cenários:
-
-1. **GraphQL output** — `@Field(() => Date)` exige objetos `Date`, então o mapper GraphQL converte: `new Date(output.dateCreated)`
-2. **Relações** — `pickId` extrai `{ id }` de uma relação carregada
-
-| Função | Assinatura | Quando usar |
-|--------|------------|-------------|
-| `pickId` | `({ id: TId }) → { id: TId }` / nullable | Extrair referência de relação carregada |
-| `dateToISOString` | `(Date) → string` / nullable | Converter Date para string (módulos legados com entity Date) |
-| `isoStringToDate` | `(string) → Date` / nullable | Converter string para Date (saída GraphQL) |
-| `dateToDateOnlyString` | `(Date) → "YYYY-MM-DD"` / nullable | Campos date-only |
-| `dateOnlyStringToDate` | `("YYYY-MM-DD") → Date` / nullable | Campos date-only (entrada) |
-
-As funções legadas (`dateToISO`, `isoToDate`, `normalizeRelationRef`, etc.) estão marcadas `@deprecated` e tipadas como `(unknown) → unknown`.
-
-### Update input (Query & Command)
-
-Para mappers de update que retornam `FindOneQuery & UpdateCommand`, **não instancie a classe e faça cast**. Retorne um plain object que satisfaz a interseção:
+Retorne um plain object — nunca instancie classe com cast:
 
 ```typescript
-// Errado — usa `as`
-const input = new ModalidadeFindOneQuery() as ModalidadeFindOneQuery & ModalidadeUpdateCommand;
-
-// Correto — plain object
 export const toUpdateInput = createMapper<
   { params: ModalidadeFindOneInputRestDto; dto: ModalidadeUpdateInputRestDto },
   ModalidadeFindOneQuery & ModalidadeUpdateCommand
@@ -279,17 +234,29 @@ export const toUpdateInput = createMapper<
 
 ---
 
-## Migração de módulos legados
+## Transforms tipadas (`src/shared/mapping/transforms.ts`)
 
-Módulos não migrados ainda usam o padrão antigo (classes com static methods, `createEntityDomainMapper`, `createMapping`). Os arquivos legados em `src/shared/mapping/` estão marcados como `@deprecated`:
+Datas são `string` em entity/domain/REST — conversões de data são necessárias apenas no GraphQL output.
 
-- `base.mapper.ts` — helpers antigos (`createListOutputMapper`, `createListInputMapper`, etc.)
-- `field-mapper.ts` — mapeamento baseado em strings (`createMapping`, `mapFilterCase`)
-- `imagem-output.mapper.ts` — helper de imagem (será migrado)
-- `entity-domain-mapper.ts` — mapper bidirectional de infraestrutura
+| Função | Quando usar |
+|--------|-------------|
+| `pickId` | Extrair `{ id }` de relação carregada |
+| `dateToISOString` | Converter Date → string (módulos legados) |
+| `isoStringToDate` | Converter string → Date (saída GraphQL) |
+| `dateToDateOnlyString` | Campos date-only |
+| `dateOnlyStringToDate` | Campos date-only (entrada) |
 
-**Ativo (novo padrão):**
-- `create-mapper.ts` — `createMapper`, `createListMapper`, `createPaginatedInputMapper`
-- `transforms.ts` — funções tipadas (`dateToISOString`, `isoStringToDate`, `pickId`, etc.) + legadas deprecated
+---
 
-Ao migrar um módulo, siga o padrão dos módulos `estado` e `modalidade` como referência.
+## Schemas de validação GraphQL
+
+Pertencem à camada de apresentação, não ao domínio:
+
+```typescript
+// presentation.graphql/estado.graphql.dto.ts
+const EstadoGraphqlListInputSchema = createGraphqlListInputSchema();
+
+export class EstadoListInputGraphQlDto {
+  static schema = EstadoGraphqlListInputSchema;
+}
+```

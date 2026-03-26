@@ -48,7 +48,7 @@ Consulte os arquivos abaixo conforme o contexto da tarefa. **Leia o arquivo rele
 | [`.claude/docs/padroes-codigo.md`](.claude/docs/padroes-codigo.md) | Ao escrever código novo — contém exemplos reais de entidades, handlers, repositórios, controllers, DTOs, schemas, mappers |
 | [`.claude/docs/convencoes.md`](.claude/docs/convencoes.md) | Ao nomear arquivos, variáveis, imports, tipagem, formatação — regras de estilo e linguagem (PT-BR/EN) |
 | [`.claude/docs/decisoes-arquiteturais.md`](.claude/docs/decisoes-arquiteturais.md) | Antes de propor mudanças arquiteturais — lista de decisões intencionais que **não devem ser questionadas** |
-| [`.claude/docs/mapeamento.md`](.claude/docs/mapeamento.md) | Ao criar/modificar mappers — padrão `createMapper`, helpers de lista, convenções de nomenclatura, namespace imports |
+| [`.claude/docs/mapeamento.md`](.claude/docs/mapeamento.md) | Ao criar/modificar mappers — API `into`, `createMapper`, helpers de lista, convenções de nomenclatura, namespace imports |
 | [`CHECKLIST.md`](CHECKLIST.md) | Ao migrar módulos para o novo padrão de mappers — progresso, ordem de migração, instruções de limpeza |
 | [`.claude/docs/principios.md`](.claude/docs/principios.md) | Ao revisar ou propor código — SOLID, DDD, Clean Code, anti-patterns, qualidade técnica |
 | [`.claude/docs/ambiente.md`](.claude/docs/ambiente.md) | Ao configurar ambiente, portas, autenticação, serviços externos |

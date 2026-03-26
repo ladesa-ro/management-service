@@ -252,12 +252,12 @@ function mapPaginationFields(dto: PaginationLike, query: PaginationLike): void {
  * @example
  * // REST (filter fields usam dot notation)
  * export const toListInput = createPaginatedInputMapper(EstadoListQuery, (dto, query) => {
- *   mapField(query, "filter.id", dto, "filter.id");
+ *   into(query).field("filter.id").from(dto, "filter.id");
  * });
  *
  * // GraphQL (filter fields usam camelCase → dot notation)
  * const listInputMapper = createPaginatedInputMapper(EstadoListQuery, (dto, query) => {
- *   mapField(query, "filter.id", dto, "filterId");
+ *   into(query).field("filter.id").from(dto, "filterId");
  * });
  */
 export function createPaginatedInputMapper<
