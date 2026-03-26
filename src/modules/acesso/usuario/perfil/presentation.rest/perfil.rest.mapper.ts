@@ -5,6 +5,10 @@ import { createFindOneInputMapper, mapDatedFields } from "@/shared/mapping";
 import { PerfilFindOneOutputRestDto } from "./perfil.rest.dto";
 
 export class PerfilRestMapper {
+  private static getCargoNome(output: PerfilFindOneQueryResult): string {
+    return output.cargo?.nome ?? "";
+  }
+
   // ============================================================================
   // Input: Server DTO -> Core DTO
   // ============================================================================
@@ -19,7 +23,7 @@ export class PerfilRestMapper {
     const dto = new PerfilFindOneOutputRestDto();
     dto.id = output.id;
     dto.ativo = output.ativo;
-    dto.cargo = output.cargo;
+    dto.cargo = PerfilRestMapper.getCargoNome(output);
     dto.campus = CampusRestMapper.toFindOneOutputDto(output.campus);
     dto.usuario = UsuarioRestMapper.toFindOneOutputDto(output.usuario);
     mapDatedFields(dto, output);
