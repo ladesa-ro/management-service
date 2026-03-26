@@ -432,37 +432,8 @@ services/
 - Shell scripts em `src/commands/` chamam `bun run` nos entrypoints .ts.
 - Scripts de scaffolding (`typeorm-generate`, `typeorm-create`, `typeorm-entity`) continuam usando o CLI do TypeORM diretamente.
 
-## Mapeamento domain ↔ entity (infraestrutura)
+## Mapeamento entre camadas
 
-Cada módulo define um mapper em `infrastructure.database/typeorm/{nome}.mapper.ts` usando `createEntityDomainMapper`:
+O padrão de mapeamento completo está documentado em [`.claude/docs/mapeamento.md`](mapeamento.md).
 
-```typescript
-// src/modules/ambientes/campus/infrastructure.database/typeorm/campus.mapper.ts
-export const campusEntityDomainMapper = createEntityDomainMapper<ICampus, Record<string, unknown>>({
-  fields: [
-    "id", "nomeFantasia", "razaoSocial", "apelido", "cnpj",
-    { field: "endereco", type: "relation" },
-    { field: "dateCreated", type: "date" },
-    { field: "dateUpdated", type: "date" },
-    { field: "dateDeleted", type: "date" },
-  ],
-});
-```
-
-**Tipos de campo disponíveis:**
-
-| Tipo | Forward (entity → domain) | Reverse (domain → entity) | Quando usar |
-|------|--------------------------|--------------------------|-------------|
-| `string` | passthrough | passthrough | Campos diretos sem conversão |
-| `"date"` | `Date` → ISO string | ISO string → `Date` | `dateCreated`, `dateUpdated`, `dateDeleted` |
-| `"date-only"` | `Date` → `"YYYY-MM-DD"` | `"YYYY-MM-DD"` → `Date` | `dataNascimento` e similares |
-| `"relation"` | `{ id, ... }` → `{ id }` | passthrough | Domain armazena `{ id }` (ex: `endereco`) |
-| `"relation-loaded"` | passthrough | `{ id, ... }` → `{ id }` | Domain armazena objeto completo (ex: `cidade.estado`) |
-| custom `{ forward, reverse }` | função custom | função custom | Casos especiais |
-
-**Regras:**
-- O mapper é **interno à infraestrutura** — nunca vaza para a camada de aplicação.
-- Repositórios usam `toPersistenceData()` nos métodos `create`/`update`.
-- Repositórios que usam `typeormFindAll`/`typeormFindById` continuam usando esses helpers para leitura.
-- Config `output` opcional para `toOutputData` com campos computados (ex: `ativo = !dateDeleted`).
-- Transforms comuns ficam em `src/shared/mapping/transforms.ts`.
+**Resumo:** mappers usam `createMapper<I, O>` de `src/shared/mapping/create-mapper.ts`. Mapeamento explícito campo a campo, tipado, puro e síncrono. Um arquivo mapper por camada, exports individuais, consumers usam `import * as XxxMapper`. Módulo `estado` é a referência do padrão migrado.

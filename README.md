@@ -2998,7 +2998,7 @@ O type `PersistInput<T>` converte relações em referências `{ id }` para desac
 
 ### Mappers (mapeamento entre camadas)
 
-**Mappers** são funções que **traduzem dados de um formato para outro** quando eles cruzam fronteiras entre camadas. Como a arquitetura hexagonal isola o domínio da infraestrutura, cada camada pode representar os mesmos dados de formas diferentes — por exemplo, o domínio armazena datas como strings ISO (`"2025-06-15T10:30:00.000Z"`) enquanto o TypeORM usa objetos `Date` do JavaScript. O mapper é quem faz essa conversão.
+**Mappers** são funções puras que **traduzem dados de um formato para outro** quando eles cruzam fronteiras entre camadas. Como a arquitetura hexagonal isola o domínio da infraestrutura, cada camada pode representar os mesmos dados de formas diferentes — por exemplo, o domínio armazena datas como strings ISO (`"2025-06-15T10:30:00.000Z"`) enquanto o TypeORM usa objetos `Date` do JavaScript. O mapper é quem faz essa conversão.
 
 > **Analogia:** imagine que um hospital brasileiro recebe um paciente estrangeiro. O prontuário interno é em português, mas o paciente trouxe exames em inglês. O **mapper** é o tradutor que converte os exames para português (entrada) e traduz o diagnóstico de volta para inglês (saída) — sem alterar o conteúdo médico, apenas o formato.
 
@@ -3007,18 +3007,18 @@ O projeto possui mappers em **duas camadas**:
 ```mermaid
 graph LR
     subgraph "Apresentação (REST/GraphQL)"
-        DTO_IN["DTO de Entrada\n(CampusCreateInputRestDto)"]
-        DTO_OUT["DTO de Saída\n(CampusFindOneOutputRestDto)"]
-        PMAP["RestMapper / GraphqlMapper\n• toCreateInput(dto) → Command\n• toFindOneOutputDto(result) → DTO\n• toListInput(dto) → Query"]
+        DTO_IN["DTO de Entrada"]
+        DTO_OUT["DTO de Saída"]
+        PMAP["RestMapper / GraphqlMapper\n• toFindOneInput.map(dto)\n• toFindOneOutput.map(result)\n• toListInput.map(dto)\n• toListOutput(result)"]
     end
 
     subgraph "Infraestrutura (TypeORM)"
-        ENTITY["TypeORM Entity\n(CampusEntity)\ndatas: Date\nrelações: Relation&lt;T&gt;"]
-        IMAP["EntityDomainMapper\n• toDomainData(entity)\n• toPersistenceData(domain)\n• toOutputData(entity)"]
+        ENTITY["TypeORM Entity\ndatas: Date\nrelações: Relation&lt;T&gt;"]
+        IMAP["TypeormMapper\n• entityToOutput.map(entity)"]
     end
 
     subgraph "Domínio"
-        DOMAIN["Entidade de Domínio\n(Campus)\ndatas: ISO string\nrelações: { id }"]
+        DOMAIN["Entidade de Domínio\ndatas: ISO string\nrelações: { id }"]
         CMD["Command / Query Result"]
     end
 
@@ -3033,89 +3033,97 @@ graph LR
     style PMAP fill:#3498db,stroke:#2980b9,color:#fff
 ```
 
-#### Mapper de infraestrutura (domain ↔ TypeORM entity)
+Todos os mappers são construídos com `createMapper<I, O>` de `src/shared/mapping/create-mapper.ts` — funções puras, síncronas, tipadas de ponta a ponta, com mapeamento explícito campo a campo. Sem decorators, sem reflexão, sem strings mágicas.
 
-Cada módulo define um mapper declarativo em `infrastructure.database/typeorm/{nome}.mapper.ts` usando o helper `createEntityDomainMapper`. Ele converte automaticamente entre os tipos do domínio (strings ISO, referências `{ id }`) e os tipos do TypeORM (objetos `Date`, relações carregadas):
+#### Utilitários de mapeamento (`src/shared/mapping/create-mapper.ts`)
+
+| Helper | Propósito |
+|--------|-----------|
+| `createMapper<I, O>(fn)` | Mapper unitário com `.map(input)` e `.mapArray(inputs)` |
+| `createListMapper(DtoClass, itemMapper)` | Lista paginada — instancia DTO, repassa meta, mapeia data |
+| `createPaginatedInputMapper(QueryClass, mapFilters)` | Input paginado — mapeia page/limit/search/sortBy automaticamente, filtra via callback |
+
+#### Mapper de infraestrutura (TypeORM Entity → Query Result)
+
+Cada módulo define um mapper em `infrastructure.database/typeorm/{nome}.typeorm.mapper.ts`:
 
 ```typescript
-// src/modules/ambientes/campus/infrastructure.database/typeorm/campus.mapper.ts
-import { createEntityDomainMapper } from "@/infrastructure.database/typeorm/helpers/entity-domain-mapper";
-import type { ICampus } from "@/modules/ambientes/campus/domain/campus";
+// src/modules/localidades/estado/infrastructure.database/typeorm/estado.typeorm.mapper.ts
+import { createMapper } from "@/shared/mapping";
 
-export const campusEntityDomainMapper = createEntityDomainMapper<ICampus, Record<string, unknown>>({
-  fields: [
-    "id",                                    // campo direto — sem conversão
-    "nomeFantasia",                          // campo direto
-    "razaoSocial",                           // campo direto
-    "apelido",                               // campo direto
-    "cnpj",                                  // campo direto
-    { field: "endereco", type: "relation" }, // { id, logradouro, ... } → { id }
-    { field: "dateCreated", type: "date" },  // Date ↔ ISO string
-    { field: "dateUpdated", type: "date" },  // Date ↔ ISO string
-    { field: "dateDeleted", type: "date" },  // Date | null ↔ ISO string | null
-  ],
-});
+export const entityToOutput = createMapper<EstadoEntity, EstadoFindOneQueryResult>((e) => ({
+  id: e.id,
+  nome: e.nome,
+  sigla: e.sigla,
+}));
 ```
 
-**Tipos de campo disponíveis:**
-
-| Tipo | Entity → Domain | Domain → Entity | Quando usar |
-|------|----------------|----------------|-------------|
-| `string` (nome do campo) | passthrough | passthrough | Campos com mesmo tipo em ambas as camadas |
-| `"date"` | `Date` → `"2025-06-15T10:30:00.000Z"` | ISO string → `Date` | `dateCreated`, `dateUpdated`, `dateDeleted` |
-| `"date-only"` | `Date` → `"2025-06-15"` | `"YYYY-MM-DD"` → `Date` | `dataNascimento` e similares |
-| `"relation"` | `{ id, nome, ... }` → `{ id }` | passthrough | Quando o domínio armazena apenas a referência (`{ id }`) |
-| `"relation-loaded"` | passthrough | `{ id, nome, ... }` → `{ id }` | Quando o domínio armazena o objeto completo (ex: `cidade.estado`) |
-| `{ forward, reverse }` | função custom | função custom | Casos especiais |
-
-O mapper é **interno à infraestrutura** — handlers e controllers nunca o acessam diretamente. O repositório usa `toPersistenceData()` para converter dados do domínio antes de salvar:
-
+O barrel re-exporta via namespace:
 ```typescript
-// Dentro do repositório (infraestrutura)
-create(data: Record<string, unknown>) {
-  const entityData = campusEntityDomainMapper.toPersistenceData(data);
-  return typeormCreate(this.appTypeormConnection, CampusEntity, entityData);
+// typeorm/index.ts
+export * as EstadoTypeormMapper from "./estado.typeorm.mapper";
+```
+
+O repositório usa o mapper como callback:
+```typescript
+import { EstadoEntity, EstadoTypeormMapper } from "./typeorm";
+
+getFindOneQueryResult(accessContext, dto) {
+  return typeormFindById<EstadoEntity, EstadoFindOneQuery, EstadoFindOneQueryResult>(
+    this.appTypeormConnection, EstadoEntity,
+    { ...config, paginateConfig: estadoPaginateConfig },
+    dto,
+    EstadoTypeormMapper.entityToOutput.map,
+  );
 }
-```
-
-Para módulos com campos computados no output (ex: `ativo = !dateDeleted`), o mapper aceita uma config `output` adicional:
-
-```typescript
-// src/modules/estagio/empresa/infrastructure.database/typeorm/empresa.mapper.ts
-export const empresaEntityDomainMapper = createEntityDomainMapper<...>({
-  fields: [ /* ... campos bidirecionais ... */ ],
-  output: [
-    "id", "razaoSocial", "nomeFantasia", /* ... */
-    ["dateCreated", "dateCreated", dateToISO],
-    ["dateDeleted", "ativo", (v) => !v],     // campo computado
-  ],
-});
 ```
 
 #### Mapper de apresentação (DTO ↔ Command/Query)
 
-Os mappers de apresentação ficam em `presentation.rest/{nome}.rest.mapper.ts` e `presentation.graphql/{nome}.graphql.mapper.ts`. Eles usam os helpers de `@/shared/mapping`:
-
-- `createMapping(fields)` — mapeia campos entre objetos (suporta dot notation, transforms)
-- `createListInputMapper(QueryClass, filterKeys)` — mapeia paginação, busca, filtros (REST)
-- `createListOutputMapper(DtoClass, itemMapper)` — mapeia listas paginadas
-- `mapFilterCase("filter.estado.id")` — converte `filterEstadoId` (GraphQL camelCase) → `"filter.estado.id"` (dot notation)
+Cada mapper de apresentação organiza exports em duas regiões:
 
 ```typescript
-// REST — filtros usam dot notation diretamente
-static toListInput = createListInputMapper(CidadeListQuery, [
-  "filter.id", "filter.estado.id", "filter.estado.nome",
-]);
+// src/modules/localidades/estado/presentation.rest/estado.rest.mapper.ts
+import { createListMapper, createMapper, createPaginatedInputMapper } from "@/shared/mapping";
 
-// GraphQL — converte camelCase para dot notation
-const listInputMapping = createMapping([
-  "page", "limit", "search", "sortBy",
-  mapFilterCase("filter.id"),            // filterId → filter.id
-  mapFilterCase("filter.estado.id"),     // filterEstadoId → filter.estado.id
-]);
+// ============================================================================
+// Externa → Interna (Input: Presentation → Core)
+// ============================================================================
+
+export const toFindOneInput = createMapper<EstadoFindOneInputRestDto, EstadoFindOneQuery>((dto) => {
+  const input = new EstadoFindOneQuery();
+  input.id = dto.id;
+  return input;
+});
+
+export const toListInput = createPaginatedInputMapper<EstadoListInputRestDto, EstadoListQuery>(
+  EstadoListQuery,
+  (dto, query) => {
+    if (dto["filter.id"] !== undefined) query["filter.id"] = dto["filter.id"];
+  },
+);
+
+// ============================================================================
+// Interna → Externa (Output: Core → Presentation)
+// ============================================================================
+
+export const toFindOneOutput = createMapper<EstadoFindOneQueryResult, EstadoFindOneOutputRestDto>(
+  (output) => ({ id: output.id, nome: output.nome, sigla: output.sigla }),
+);
+
+export const toListOutput = createListMapper(EstadoListOutputRestDto, toFindOneOutput);
 ```
 
-> **Para ir mais fundo:** os transforms reutilizáveis ficam em `src/shared/mapping/transforms.ts` (`dateToISO`, `isoToDate`, `normalizeRelationRef`, etc.). O helper `createBidirectionalMapping` em `src/shared/mapping/field-mapper.ts` permite definir um mapeamento uma vez e obter ambas as direções automaticamente — é a base do `createEntityDomainMapper`.
+Controllers e resolvers importam via namespace:
+```typescript
+import * as EstadoRestMapper from "./estado.rest.mapper";
+
+const input = EstadoRestMapper.toListInput.map(dto);
+return EstadoRestMapper.toListOutput(result);
+return EstadoRestMapper.toFindOneOutput.map(result);
+```
+
+> **Para ir mais fundo:** transforms reutilizáveis (conversões de data, normalização de relações) ficam em `src/shared/mapping/transforms.ts`. A documentação completa do padrão de mapeamento está em [`.claude/docs/mapeamento.md`](.claude/docs/mapeamento.md).
 
 ### Command e Query Handlers
 
