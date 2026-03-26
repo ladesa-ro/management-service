@@ -34,8 +34,6 @@ export class CidadeFindOneOutputRestDto {
 export class CidadeListInputRestDto {
   static schema = CidadePaginationInputSchema;
 
-  [key: string]: string | number | string[] | null | undefined;
-
   @ApiPropertyOptional(CidadeListQueryFields.page.swaggerMetadata)
   page?: number;
 

@@ -48,8 +48,6 @@ export class CampusFindOneOutputRestDto extends EntityBaseRestDto {
 export class CampusListInputRestDto {
   static schema = CampusPaginationInputSchema;
 
-  [key: string]: string | number | string[] | null | undefined;
-
   @ApiPropertyOptional(CampusListQueryFields.page.swaggerMetadata)
   page?: number;
 

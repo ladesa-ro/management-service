@@ -90,8 +90,6 @@ export class BlocoFindOneOutputRestDto extends EntityBaseRestDto {
 export class BlocoListInputRestDto {
   static schema = BlocoPaginationInputSchema;
 
-  [key: string]: string | number | string[] | null | undefined;
-
   @ApiPropertyOptional(BlocoListQueryFields.page.swaggerMetadata)
   page?: number;
 

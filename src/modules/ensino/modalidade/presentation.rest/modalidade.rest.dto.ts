@@ -29,8 +29,6 @@ export class ModalidadeFindOneOutputRestDto extends EntityBaseRestDto {
 export class ModalidadeListInputRestDto {
   static schema = ModalidadePaginationInputSchema;
 
-  [key: string]: string | number | string[] | null | undefined;
-
   @ApiPropertyOptional(ModalidadeListQueryFields.page.swaggerMetadata)
   page?: number;
 
