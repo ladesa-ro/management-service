@@ -204,7 +204,7 @@ export async function typeormCreate<Entity extends IEntityWithId>(
   conn: IAppTypeormConnection,
   entity: EntityTarget<Entity>,
   data: Record<string, unknown>,
-): Promise<{ id: string | number }> {
+): Promise<{ id: Entity["id"] }> {
   const repo = getRepository(conn, entity);
   const created = repo.create(data as DeepPartial<Entity>);
   const saved = await repo.save(created);
@@ -222,17 +222,17 @@ export async function typeormUpdate<Entity extends IEntityWithId>(
   await repo.save(created);
 }
 
-export async function typeormSoftDeleteById<Entity extends ObjectLiteral>(
+export async function typeormSoftDeleteById(
   conn: IAppTypeormConnection,
-  entity: EntityTarget<Entity>,
+  entity: EntityTarget<ObjectLiteral>,
   alias: string,
-  id: string,
+  id: string | number,
 ): Promise<void> {
   const repo = getRepository(conn, entity);
   await repo
     .createQueryBuilder(alias)
     .update()
-    .set({ dateDeleted: () => "NOW()" } as unknown as Partial<Entity>)
+    .set({ dateDeleted: () => "NOW()" } as unknown as Partial<ObjectLiteral>)
     .where("id = :id", { id })
     .andWhere("dateDeleted IS NULL")
     .execute();

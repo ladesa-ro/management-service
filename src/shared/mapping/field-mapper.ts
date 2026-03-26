@@ -1,3 +1,8 @@
+/**
+ * @deprecated Use `createMapper` de `@/shared/mapping/create-mapper` em vez deste arquivo.
+ * Este módulo será removido após a migração completa de todos os mappers.
+ */
+
 import type { IValidationErrorDetail } from "@/domain/validation";
 
 // ============================================================================

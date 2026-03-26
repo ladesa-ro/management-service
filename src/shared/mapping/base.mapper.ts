@@ -1,6 +1,6 @@
 /**
- * Utilitários compartilhados para mappers REST e GraphQL.
- * Seguindo DRY: funções comuns extraídas para reutilização.
+ * @deprecated Use `createMapper` e `createListMapper` de `@/shared/mapping/create-mapper` em vez deste arquivo.
+ * Este módulo será removido após a migração completa de todos os mappers.
  */
 
 /**

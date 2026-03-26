@@ -30,8 +30,6 @@ export class EstadoFindOneOutputRestDto {
 export class EstadoListInputRestDto {
   static schema = EstadoPaginationInputSchema;
 
-  [key: string]: string | number | string[] | null | undefined;
-
   @ApiPropertyOptional(EstadoListQueryFields.page.swaggerMetadata)
   page?: number;
 
@@ -68,6 +66,6 @@ export class EstadoListOutputRestDto {
 export class EstadoFindOneInputRestDto {
   static schema = EstadoFindOneInputSchema;
 
-  @ApiProperty({ type: "integer", ...EstadoFindOneQueryFields.id.swaggerMetadata })
+  @ApiProperty(EstadoFindOneQueryFields.id.swaggerMetadata)
   id: number;
 }

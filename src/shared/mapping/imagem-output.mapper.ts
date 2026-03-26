@@ -1,7 +1,8 @@
 /**
- * Shared mapper for imagem output in presentation layer.
- * Eliminates duplicated `mapImagemOutput` across all GraphQL mappers.
+ * @deprecated Use `createMapper` de `@/shared/mapping/create-mapper` em vez deste arquivo.
+ * Este módulo será removido após a migração completa de todos os mappers.
  *
+ * Shared mapper for imagem output in presentation layer.
  * Uses structural interfaces to accommodate varying query result shapes.
  * Generic return type T lets callers specify the expected output DTO.
  */

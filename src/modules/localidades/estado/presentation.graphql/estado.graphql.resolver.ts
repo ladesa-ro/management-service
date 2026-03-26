@@ -17,7 +17,7 @@ import {
   EstadoListInputGraphQlDto,
   EstadoListOutputGraphQlDto,
 } from "./estado.graphql.dto";
-import { EstadoGraphqlMapper } from "./estado.graphql.mapper";
+import * as EstadoGraphqlMapper from "./estado.graphql.mapper";
 
 @Resolver(() => EstadoFindOneOutputGraphQlDto)
 export class EstadoGraphqlResolver {
@@ -34,8 +34,10 @@ export class EstadoGraphqlResolver {
     @Args() dto: EstadoListInputGraphQlDto,
   ): Promise<EstadoListOutputGraphQlDto> {
     const input = EstadoGraphqlMapper.toListInput(dto);
+
     const result = await this.listHandler.execute(accessContext, input);
-    return EstadoGraphqlMapper.toListOutputDto(result);
+
+    return EstadoGraphqlMapper.toListOutput(result);
   }
 
   @Query(() => EstadoFindOneOutputGraphQlDto, EstadoFindOneQueryMetadata.gqlMetadata)
@@ -43,8 +45,11 @@ export class EstadoGraphqlResolver {
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("id", { type: () => Int }) id: number,
   ): Promise<EstadoFindOneOutputGraphQlDto> {
-    const result = await this.findOneHandler.execute(accessContext, { id });
-    ensureExists(result, Estado.entityName, id);
-    return EstadoGraphqlMapper.toFindOneOutputDto(result);
+    const input = EstadoGraphqlMapper.toFindOneInput.map(id);
+
+    const result = await this.findOneHandler.execute(accessContext, input);
+    ensureExists(result, Estado.entityName, input.id);
+
+    return EstadoGraphqlMapper.toFindOneOutput.map(result);
   }
 }

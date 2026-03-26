@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createMapper } from "./create-mapper";
+import { createListMapper, createMapper, createPaginatedInputMapper } from "./create-mapper";
 
 describe("createMapper", () => {
   it("maps a single input to the expected output", () => {
@@ -50,5 +50,113 @@ describe("createMapper", () => {
     mapper.map(input);
 
     expect(input.value).toBe(1);
+  });
+});
+
+describe("createListMapper", () => {
+  class TestListDto {
+    meta: unknown;
+    data: { name: string }[] = [];
+  }
+
+  const itemMapper = createMapper<{ id: number; label: string }, { name: string }>((input) => ({
+    name: input.label,
+  }));
+
+  it("maps data items using the item mapper", () => {
+    const listMapper = createListMapper(TestListDto, itemMapper);
+
+    const result = listMapper({
+      meta: { total: 2 },
+      data: [
+        { id: 1, label: "A" },
+        { id: 2, label: "B" },
+      ],
+    });
+
+    expect(result.data).toEqual([{ name: "A" }, { name: "B" }]);
+  });
+
+  it("passes meta through unchanged", () => {
+    const listMapper = createListMapper(TestListDto, itemMapper);
+    const meta = { currentPage: 1, totalItems: 5 };
+
+    const result = listMapper({ meta, data: [] });
+
+    expect(result.meta).toBe(meta);
+  });
+
+  it("returns an instance of the DTO class", () => {
+    const listMapper = createListMapper(TestListDto, itemMapper);
+
+    const result = listMapper({ meta: null, data: [] });
+
+    expect(result).toBeInstanceOf(TestListDto);
+  });
+
+  it("handles empty data array", () => {
+    const listMapper = createListMapper(TestListDto, itemMapper);
+
+    const result = listMapper({ meta: {}, data: [] });
+
+    expect(result.data).toEqual([]);
+  });
+});
+
+describe("createPaginatedInputMapper", () => {
+  class TestQuery {
+    page?: number | null;
+    limit?: number | null;
+    search?: string | null;
+    sortBy?: string[] | null;
+    "filter.nome"?: string;
+  }
+
+  it("maps pagination fields automatically", () => {
+    const mapper = createPaginatedInputMapper<
+      { page?: number; limit?: number; search?: string; sortBy?: string[] },
+      TestQuery
+    >(TestQuery, () => {});
+
+    const result = mapper.map({ page: 2, limit: 10, search: "abc", sortBy: ["nome:ASC"] });
+
+    expect(result.page).toBe(2);
+    expect(result.limit).toBe(10);
+    expect(result.search).toBe("abc");
+    expect(result.sortBy).toEqual(["nome:ASC"]);
+  });
+
+  it("skips undefined pagination fields", () => {
+    const mapper = createPaginatedInputMapper<{ page?: number }, TestQuery>(TestQuery, () => {});
+
+    const result = mapper.map({});
+
+    expect(result.page).toBeUndefined();
+    expect(result.limit).toBeUndefined();
+  });
+
+  it("maps custom filters via callback", () => {
+    interface DtoWithFilter {
+      page?: number;
+      filtroNome?: string;
+    }
+
+    const mapper = createPaginatedInputMapper<DtoWithFilter, TestQuery>(TestQuery, (dto, query) => {
+      if (dto.filtroNome !== undefined) query["filter.nome"] = dto.filtroNome;
+    });
+
+    const result = mapper.map({ filtroNome: "teste" });
+
+    expect(result["filter.nome"]).toBe("teste");
+  });
+
+  it("returns a Mapper with mapArray support", () => {
+    const mapper = createPaginatedInputMapper<{ page?: number }, TestQuery>(TestQuery, () => {});
+
+    const results = mapper.mapArray([{ page: 1 }, { page: 2 }]);
+
+    expect(results).toHaveLength(2);
+    expect(results[0].page).toBe(1);
+    expect(results[1].page).toBe(2);
   });
 });

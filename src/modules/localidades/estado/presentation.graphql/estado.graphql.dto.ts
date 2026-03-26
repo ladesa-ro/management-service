@@ -1,8 +1,10 @@
 import { PaginationMetaGraphQlDto } from "@/infrastructure.graphql/dtos";
 import { EstadoFindOneQueryResultFields } from "@/modules/localidades/estado/domain/queries/estado-find-one.query.result";
 import { EstadoListQueryFields } from "@/modules/localidades/estado/domain/queries/estado-list.query";
-import { EstadoGraphqlListInputSchema } from "@/modules/localidades/estado/domain/queries/estado-list.query.schemas";
 import { ArgsType, Field, Int, ObjectType } from "@/shared/presentation/graphql";
+import { createGraphqlListInputSchema } from "@/shared/validation/schemas";
+
+const EstadoGraphqlListInputSchema = createGraphqlListInputSchema();
 
 // ============================================================================
 // FindOne Output
@@ -10,9 +12,12 @@ import { ArgsType, Field, Int, ObjectType } from "@/shared/presentation/graphql"
 
 @ObjectType("EstadoFindOneOutputDto")
 export class EstadoFindOneOutputGraphQlDto {
-  @Field(() => Int, EstadoFindOneQueryResultFields.id.gqlMetadata) id: number;
-  @Field(() => String, EstadoFindOneQueryResultFields.nome.gqlMetadata) nome: string;
-  @Field(() => String, EstadoFindOneQueryResultFields.sigla.gqlMetadata) sigla: string;
+  @Field(() => Int, EstadoFindOneQueryResultFields.id.gqlMetadata)
+  id: number;
+  @Field(() => String, EstadoFindOneQueryResultFields.nome.gqlMetadata)
+  nome: string;
+  @Field(() => String, EstadoFindOneQueryResultFields.sigla.gqlMetadata)
+  sigla: string;
 }
 
 // ============================================================================
