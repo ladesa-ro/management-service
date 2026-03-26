@@ -1,3 +1,4 @@
+import { ServiceUnavailableError } from "@/application/errors";
 import type { IIdpUserService } from "@/domain/abstractions/identity-provider";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { IAuthOptions } from "../options/auth-options.interface";
@@ -9,8 +10,16 @@ export class KeycloakUserService implements IIdpUserService {
   constructor(
     private readonly keycloakService: KeycloakService,
     @DeclareDependency(IAuthOptionsToken)
-    private readonly authOptions: IAuthOptions,
+    private readonly authOptions: IAuthOptions | null,
   ) {}
+
+  #ensureAuthOptions(): IAuthOptions {
+    if (!this.authOptions) {
+      throw new ServiceUnavailableError(undefined, "keycloak");
+    }
+
+    return this.authOptions;
+  }
 
   async resolveUsernameByMatricula(matricula: string): Promise<string | undefined> {
     const user = await this.keycloakService.findUserByMatricula(matricula);
@@ -110,10 +119,12 @@ export class KeycloakUserService implements IIdpUserService {
     }
 
     try {
+      const authOptions = this.#ensureAuthOptions();
+
       await kcAdminClient.users.executeActionsEmail({
         id: user.id,
-        redirectUri: "https://dev.ladesa.com.br",
-        clientId: this.authOptions.keycloakClientId,
+        redirectUri: authOptions.keycloakPasswordResetRedirectUri,
+        clientId: authOptions.keycloakClientId,
         actions: ["UPDATE_PASSWORD"],
       });
       return true;

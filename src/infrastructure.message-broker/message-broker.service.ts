@@ -1,11 +1,10 @@
 import { Logger } from "@nestjs/common";
 import type { SubscriberSessionAsPromised } from "rascal";
+import { ServiceUnavailableError } from "@/application/errors";
 import { IMessageBrokerService } from "@/domain/abstractions/message-broker";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import {
-  IMessageBrokerOptions,
-  IMessageBrokerOptions as IMessageBrokerOptionsToken,
-} from "@/infrastructure.config/options/message-broker/message-broker-options.interface";
+import type { IMessageBrokerOptions } from "@/infrastructure.config/options/message-broker/message-broker-options.interface";
+import { IMessageBrokerOptions as IMessageBrokerOptionsToken } from "@/infrastructure.config/options/message-broker/message-broker-options.interface";
 import { MessageBrokerContainerService } from "./message-broker-container.service";
 
 @DeclareImplementation()
@@ -15,12 +14,13 @@ export class MessageBrokerService implements IMessageBrokerService {
   constructor(
     private messageBrokerContainerService: MessageBrokerContainerService,
     @DeclareDependency(IMessageBrokerOptionsToken)
-    private readonly messageBrokerOptions: IMessageBrokerOptions,
+    private readonly messageBrokerOptions: IMessageBrokerOptions | null,
   ) {}
 
   async publishTimetableRequestFireAndForget<TRequest>(request: TRequest): Promise<void> {
     const broker = await this.messageBrokerContainerService.getBroker();
-    const queueRequest = this.messageBrokerOptions.queueTimetableRequest;
+    const options = this.#ensureOptions();
+    const queueRequest = options.queueTimetableRequest;
     this.logger.log(`Publicando mensagem fire-and-forget na queue ${queueRequest}`);
     await broker.publish(queueRequest, JSON.stringify(request));
   }
@@ -30,8 +30,9 @@ export class MessageBrokerService implements IMessageBrokerService {
     timeoutMs = 60000,
   ): Promise<TResponse> {
     const broker = await this.messageBrokerContainerService.getBroker();
-    const queueRequest = this.messageBrokerOptions.queueTimetableRequest;
-    const queueResponse = this.messageBrokerOptions.queueTimetableResponse;
+    const options = this.#ensureOptions();
+    const queueRequest = options.queueTimetableRequest;
+    const queueResponse = options.queueTimetableResponse;
 
     return new Promise<TResponse>((resolve, reject) => {
       let subscription: SubscriberSessionAsPromised | undefined;
@@ -78,5 +79,13 @@ export class MessageBrokerService implements IMessageBrokerService {
           reject(err);
         });
     });
+  }
+
+  #ensureOptions(): IMessageBrokerOptions {
+    if (!this.messageBrokerOptions) {
+      throw new ServiceUnavailableError(undefined, "message-broker");
+    }
+
+    return this.messageBrokerOptions;
   }
 }

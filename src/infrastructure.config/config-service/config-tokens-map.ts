@@ -24,6 +24,10 @@ export const ConfigTokensMap = new Map<symbol, string>([
   [ConfigTokens.AuthOptions.Keycloak.Realm, EnvKeys.KC_REALM],
   [ConfigTokens.AuthOptions.Keycloak.ClientId, EnvKeys.KC_CLIENT_ID],
   [ConfigTokens.AuthOptions.Keycloak.ClientSecret, EnvKeys.KC_CLIENT_SECRET],
+  [
+    ConfigTokens.AuthOptions.Keycloak.PasswordResetRedirectUri,
+    EnvKeys.KC_PASSWORD_RESET_REDIRECT_URI,
+  ],
   [ConfigTokens.MessageBrokerOptions.Url, EnvKeys.MESSAGE_BROKER_URL],
   [
     ConfigTokens.MessageBrokerOptions.QueueTimetableRequest,

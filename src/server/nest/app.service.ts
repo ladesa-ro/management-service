@@ -3,6 +3,8 @@ import {
   IRuntimeOptions,
   IRuntimeOptions as IRuntimeOptionsToken,
 } from "@/infrastructure.config/options/runtime/runtime-options.interface";
+import type { IConnectionHealthEntry } from "@/shared/resilience/connection-health-registry";
+import { IConnectionHealthRegistry } from "@/shared/resilience/connection-health-registry.interface";
 
 export interface ServiceInfo {
   status: string;
@@ -13,11 +15,21 @@ export interface ServiceInfo {
   gitCommitHash: string | null;
 }
 
+export interface HealthCheckResponse {
+  status: "healthy" | "degraded" | "unavailable";
+  dependencies: Record<
+    string,
+    Pick<IConnectionHealthEntry, "status" | "lastCheckedAt" | "lastError">
+  >;
+}
+
 @DeclareImplementation()
 export class AppService {
   constructor(
     @DeclareDependency(IRuntimeOptionsToken)
     private readonly runtimeOptions: IRuntimeOptions,
+    @DeclareDependency(IConnectionHealthRegistry)
+    private readonly healthRegistry: IConnectionHealthRegistry,
   ) {}
 
   getServiceInfo(): ServiceInfo {
@@ -31,7 +43,27 @@ export class AppService {
     };
   }
 
-  healthCheck(): { status: string } {
-    return { status: "ok" };
+  healthCheck(): HealthCheckResponse {
+    const entries = this.healthRegistry.getAllEntries();
+
+    const overallStatus: HealthCheckResponse["status"] = entries.every(
+      (e) => e.status === "healthy",
+    )
+      ? "healthy"
+      : entries.some((e) => e.status === "unavailable")
+        ? "unavailable"
+        : "degraded";
+
+    const dependencies: HealthCheckResponse["dependencies"] = {};
+
+    for (const entry of entries) {
+      dependencies[entry.name] = {
+        status: entry.status,
+        lastCheckedAt: entry.lastCheckedAt,
+        ...(entry.lastError ? { lastError: entry.lastError } : {}),
+      };
+    }
+
+    return { status: overallStatus, dependencies };
   }
 }

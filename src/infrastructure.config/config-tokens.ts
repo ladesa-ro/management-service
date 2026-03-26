@@ -26,6 +26,7 @@ export const ConfigTokens = {
       Realm: Symbol("AuthOptions.Keycloak.Realm"),
       ClientId: Symbol("AuthOptions.Keycloak.ClientId"),
       ClientSecret: Symbol("AuthOptions.Keycloak.ClientSecret"),
+      PasswordResetRedirectUri: Symbol("AuthOptions.Keycloak.PasswordResetRedirectUri"),
     },
   },
   MessageBrokerOptions: {

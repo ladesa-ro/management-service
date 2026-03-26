@@ -1,55 +1,86 @@
+import { type OnModuleInit } from "@nestjs/common";
 import * as client from "openid-client";
+import { ServiceUnavailableError } from "@/application/errors";
 import { ILoggerPort, ILoggerPort as ILoggerPortToken } from "@/domain/abstractions/logging";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { IConnectionHealthRegistry } from "@/shared/resilience/connection-health-registry.interface";
+import { retryWithBackoff } from "@/shared/resilience/retry-with-backoff";
 import type { IAuthOptions } from "../options/auth-options.interface";
 import { IAuthOptions as IAuthOptionsToken } from "../options/auth-options.interface";
 
+const DEPENDENCY_NAME = "identity-provider";
+
 @DeclareImplementation()
-export class OpenidConnectService {
-  config: client.Configuration | null = null;
+export class OpenidConnectService implements OnModuleInit {
+  #config: client.Configuration | null = null;
   #initialized = false;
 
   constructor(
     @DeclareDependency(IAuthOptionsToken)
-    readonly authOptions: IAuthOptions,
+    readonly authOptions: IAuthOptions | null,
     @DeclareDependency(ILoggerPortToken)
     private readonly logger: ILoggerPort,
+    @DeclareDependency(IConnectionHealthRegistry)
+    private readonly healthRegistry: IConnectionHealthRegistry,
   ) {}
 
-  async setup(): Promise<boolean> {
-    if (!this.#initialized) {
-      try {
-        const config = await client.discovery(
-          new URL(this.authOptions.oidcIssuer),
-          this.authOptions.oidcClientId,
-          this.authOptions.oidcClientSecret,
-        );
+  onModuleInit(): void {
+    this.healthRegistry.register(DEPENDENCY_NAME);
 
-        this.config = config;
-        this.#initialized = true;
-      } catch (error) {
-        this.logger.error(
-          String(error),
-          error instanceof Error ? error.stack : undefined,
-          "OpenidConnect",
-        );
-      }
+    if (!this.authOptions) {
+      this.healthRegistry.markUnavailable(DEPENDENCY_NAME, "Identity provider not configured");
+      return;
     }
 
-    return this.#initialized;
+    this.#startConnectionLoop(this.authOptions);
   }
 
   async getClientConfig(): Promise<client.Configuration> {
-    while (!this.#initialized) {
-      await this.setup();
+    if (this.#initialized && this.#config) {
+      return this.#config;
     }
 
-    const config = this.config;
+    throw new ServiceUnavailableError(undefined, DEPENDENCY_NAME);
+  }
 
-    if (config) {
-      return config;
-    }
+  #startConnectionLoop(authOptions: IAuthOptions): void {
+    retryWithBackoff(
+      async () => {
+        const config = await client.discovery(
+          new URL(authOptions.oidcIssuer),
+          authOptions.oidcClientId,
+          authOptions.oidcClientSecret,
+        );
 
-    throw new Error("[OpenidConnectService::error] config is null");
+        this.#config = config;
+        this.#initialized = true;
+      },
+      {
+        maxRetries: Number.POSITIVE_INFINITY,
+        baseDelayMs: 2000,
+        maxDelayMs: 30_000,
+        jitterFactor: 0.3,
+        onRetry: (attempt, error, delayMs) => {
+          const message = error instanceof Error ? error.message : String(error);
+          this.healthRegistry.markUnavailable(DEPENDENCY_NAME, message);
+          this.logger.warn(
+            `OIDC discovery attempt #${attempt} failed. Retrying in ${delayMs}ms: ${message}`,
+            "OpenidConnect",
+          );
+        },
+      },
+    )
+      .then(() => {
+        this.healthRegistry.markHealthy(DEPENDENCY_NAME);
+        this.logger.log("OIDC discovery completed successfully.", "OpenidConnect");
+      })
+      .catch((err: unknown) => {
+        const message = err instanceof Error ? err.message : String(err);
+        this.logger.error(
+          `OIDC connection loop terminated unexpectedly: ${message}`,
+          undefined,
+          "OpenidConnect",
+        );
+      });
   }
 }

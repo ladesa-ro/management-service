@@ -13,9 +13,11 @@ import {
 } from "@/server/nest/filters";
 import { TransactionInterceptor } from "@/server/nest/interceptors/transaction.interceptor";
 import { ModulesModule } from "@/server/nest/modules/modules.module";
+import { ResilienceModule } from "@/shared/resilience";
 
 @Module({
   imports: [
+    ResilienceModule,
     LoggingModule,
     ModulesModule,
     InfrastructureModule,
