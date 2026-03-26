@@ -39,8 +39,8 @@ export class TurmaEventoTypeOrmRepositoryAdapter implements ITurmaEventoReposito
     turmaId: string,
     data: {
       nome: string | null;
-      dataInicio: Date;
-      dataFim: Date | null;
+      dataInicio: string;
+      dataFim: string | null;
       diaInteiro: boolean;
       horarioInicio: string;
       horarioFim: string;
@@ -51,15 +51,8 @@ export class TurmaEventoTypeOrmRepositoryAdapter implements ITurmaEventoReposito
     const domain = CalendarioAgendamento.create({
       tipo: CalendarioAgendamentoTipo.EVENTO,
       nome: data.nome,
-      dataInicio:
-        data.dataInicio instanceof Date
-          ? data.dataInicio.toISOString().split("T")[0]
-          : String(data.dataInicio),
-      dataFim: data.dataFim
-        ? data.dataFim instanceof Date
-          ? data.dataFim.toISOString().split("T")[0]
-          : String(data.dataFim)
-        : null,
+      dataInicio: data.dataInicio,
+      dataFim: data.dataFim,
       diaInteiro: data.diaInteiro,
       horarioInicio: data.horarioInicio,
       horarioFim: data.horarioFim,

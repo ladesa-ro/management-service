@@ -18,8 +18,8 @@ import type {
 } from "@/modules/estagio/estagio/domain/queries";
 import { estagioPaginationSpec } from "@/modules/estagio/estagio/domain/queries";
 import type { IEstagioRepository } from "@/modules/estagio/estagio/domain/repositories";
-import { getNow } from "@/utils/date";
-import { EstagioMapper, EstagioTypeormEntity, HorarioEstagioTypeormEntity } from "./typeorm";
+import { getNowISO } from "@/utils/date";
+import { EstagioTypeormEntity, EstagioTypeormMapper, HorarioEstagioTypeormEntity } from "./typeorm";
 
 const config = {
   alias: "estagio",
@@ -65,11 +65,11 @@ export class EstagioTypeOrmRepositoryAdapter implements IEstagioRepository {
 
     if (!entity) return null;
 
-    return EstagioMapper.toDomain(entity);
+    return EstagioTypeormMapper.entityToDomain.map(entity);
   }
 
   async save(aggregate: Estagio): Promise<void> {
-    const entity = EstagioMapper.toPersistence(aggregate);
+    const entity = EstagioTypeormMapper.domainToPersistence.map(aggregate);
     const repo = this.appTypeormConnection.getRepository(EstagioTypeormEntity);
     await repo.save(entity);
 
@@ -89,14 +89,14 @@ export class EstagioTypeOrmRepositoryAdapter implements IEstagioRepository {
 
     const repo = this.appTypeormConnection.getRepository(HorarioEstagioTypeormEntity);
     const entities = horarios.map((horario) =>
-      EstagioMapper.toHorarioPersistence(estagioId, horario),
+      EstagioTypeormMapper.horarioToPersistence(estagioId, horario),
     );
     await repo.save(entities);
   }
 
   async softDeleteHorariosEstagio(estagioId: string): Promise<void> {
     const repo = this.appTypeormConnection.getRepository(HorarioEstagioTypeormEntity);
-    const now = getNow();
+    const now = getNowISO();
     await repo.update(
       { estagio: { id: estagioId }, dateDeleted: IsNull() },
       { dateDeleted: now, dateUpdated: now },
@@ -118,7 +118,7 @@ export class EstagioTypeOrmRepositoryAdapter implements IEstagioRepository {
         where: { id: dto.id, dateDeleted: IsNull() },
         relations: estagioRelations,
       })
-      .then((entity) => (entity ? EstagioMapper.toOutputDto(entity) : null));
+      .then((entity) => (entity ? EstagioTypeormMapper.entityToOutput.map(entity) : null));
   }
 
   getFindAllQueryResult(
@@ -131,7 +131,7 @@ export class EstagioTypeOrmRepositoryAdapter implements IEstagioRepository {
       { ...config, paginateConfig: estagioPaginateConfig },
       this.paginationAdapter,
       dto,
-      (entity) => EstagioMapper.toOutputDto(entity),
+      EstagioTypeormMapper.entityToOutput.map,
     );
   }
 }

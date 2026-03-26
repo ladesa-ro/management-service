@@ -9,11 +9,6 @@ import {
   typeormFindById,
   typeormSoftDeleteById,
 } from "@/infrastructure.database/typeorm/helpers/typeorm-repository-helpers";
-import {
-  dateToISO,
-  dateToISONullable,
-  toRefRequired,
-} from "@/infrastructure.database/typeorm/mapping";
 import { Empresa } from "@/modules/estagio/empresa/domain/empresa";
 import type {
   EmpresaFindOneQuery,
@@ -23,7 +18,7 @@ import type {
 } from "@/modules/estagio/empresa/domain/queries";
 import { empresaPaginationSpec } from "@/modules/estagio/empresa/domain/queries";
 import type { IEmpresaRepository } from "@/modules/estagio/empresa/domain/repositories";
-import { EmpresaTypeormEntity, empresaEntityDomainMapper } from "./typeorm";
+import { EmpresaTypeormEntity, EmpresaTypeormMapper } from "./typeorm";
 
 const config = {
   alias: "empresa",
@@ -69,24 +64,11 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
 
     if (!entity) return null;
 
-    return Empresa.load({
-      id: entity.id,
-      razaoSocial: entity.razaoSocial,
-      nomeFantasia: entity.nomeFantasia,
-      cnpj: entity.cnpj,
-      telefone: entity.telefone,
-      email: entity.email,
-      endereco: toRefRequired(entity.endereco),
-      dateCreated: dateToISO(entity.dateCreated),
-      dateUpdated: dateToISO(entity.dateUpdated),
-      dateDeleted: dateToISONullable(entity.dateDeleted),
-    });
+    return Empresa.load(EmpresaTypeormMapper.entityToDomain.map(entity));
   }
 
   async save(aggregate: Empresa): Promise<void> {
-    const entityData = empresaEntityDomainMapper.toPersistenceData({
-      ...aggregate,
-    }) as Record<string, unknown>;
+    const entityData = EmpresaTypeormMapper.domainToPersistence.map({ ...aggregate });
     const repo = this.appTypeormConnection.getRepository(EmpresaTypeormEntity);
     await repo.save(repo.create({ id: aggregate.id, ...entityData } as EmpresaTypeormEntity));
   }
@@ -105,6 +87,7 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
       EmpresaTypeormEntity,
       { ...config, paginateConfig: empresaPaginateConfig },
       dto,
+      EmpresaTypeormMapper.entityToOutput.map,
     );
   }
 
@@ -115,6 +98,7 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
       { ...config, paginateConfig: empresaPaginateConfig },
       this.paginationAdapter,
       dto,
+      EmpresaTypeormMapper.entityToOutput.map,
     );
   }
 }

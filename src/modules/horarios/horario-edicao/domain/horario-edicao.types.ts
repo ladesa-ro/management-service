@@ -8,8 +8,8 @@ export interface IHorarioEdicaoSessao {
   id: string;
   status: HorarioEdicaoSessaoStatus;
   usuario: { id: string };
-  dateCreated: Date;
-  dateUpdated: Date;
+  dateCreated: string;
+  dateUpdated: string;
 }
 
 export enum HorarioEdicaoMudancaTipoOperacao {
@@ -24,5 +24,5 @@ export interface IHorarioEdicaoMudanca {
   calendarioAgendamento: { id: string } | null;
   tipoOperacao: HorarioEdicaoMudancaTipoOperacao;
   dados: Record<string, unknown>;
-  dateCreated: Date;
+  dateCreated: string;
 }

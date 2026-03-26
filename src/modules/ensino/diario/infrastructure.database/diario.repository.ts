@@ -8,11 +8,6 @@ import {
   typeormFindAll,
   typeormSoftDeleteById,
 } from "@/infrastructure.database/typeorm/helpers/typeorm-repository-helpers";
-import {
-  dateToISO,
-  dateToISONullable,
-  toRefRequired,
-} from "@/infrastructure.database/typeorm/mapping";
 import { Diario } from "@/modules/ensino/diario/domain/diario";
 import {
   type DiarioFindOneQuery,
@@ -22,7 +17,7 @@ import {
   diarioPaginationSpec,
 } from "@/modules/ensino/diario/domain/queries";
 import type { IDiarioRepository } from "@/modules/ensino/diario/domain/repositories";
-import { DiarioEntity, diarioEntityDomainMapper } from "./typeorm";
+import { DiarioEntity, DiarioTypeormMapper } from "./typeorm";
 
 const config = {
   alias: "diario",
@@ -57,7 +52,7 @@ const diarioRelations = {
 
 /**
  * Relations para o write side (loadById).
- * Carrega o mínimo necessário para reconstituir o aggregate:
+ * Carrega o minimo necessario para reconstituir o aggregate:
  * - calendarioLetivo, turma, disciplina: join para extrair o ID
  * - ambientePadrao, imagemCapa: join para extrair o ID (nullable)
  */
@@ -96,13 +91,13 @@ export class DiarioTypeOrmRepositoryAdapter implements IDiarioRepository {
 
     if (!entity) return null;
 
-    return Diario.load(this.toDomainData(entity));
+    return Diario.load(DiarioTypeormMapper.entityToDomain.map(entity));
   }
 
   async save(aggregate: Diario): Promise<void> {
-    const entityData = diarioEntityDomainMapper.toPersistenceData({ ...aggregate });
+    const entityData = DiarioTypeormMapper.domainToPersistence.map({ ...aggregate });
     const repo = this.appTypeormConnection.getRepository(DiarioEntity);
-    await repo.save(repo.create({ id: aggregate.id, ...entityData } as DiarioEntity));
+    await repo.save(repo.create(entityData));
   }
 
   softDeleteById(id: string) {
@@ -126,7 +121,7 @@ export class DiarioTypeOrmRepositoryAdapter implements IDiarioRepository {
 
     if (!entity) return null;
 
-    return entity as unknown as DiarioFindOneQueryResult;
+    return DiarioTypeormMapper.entityToOutput.map(entity);
   }
 
   getFindAllQueryResult(
@@ -139,31 +134,7 @@ export class DiarioTypeOrmRepositoryAdapter implements IDiarioRepository {
       { ...config, paginateConfig: diarioPaginateConfig },
       this.paginationAdapter,
       dto,
+      DiarioTypeormMapper.entityToOutput.map,
     );
-  }
-
-  // ==========================================
-  // Mappers privados — fronteira de tradução do adapter
-  // ==========================================
-
-  /**
-   * Entity TypeORM → dados para Domain.load() (write side).
-   *
-   * Projeta relações como { id } — o domínio não carrega dados de outros aggregates.
-   * Datas Date → ISO string (o domínio usa ScalarDateTimeString).
-   */
-  private toDomainData(entity: DiarioEntity): Record<string, unknown> {
-    return {
-      id: entity.id,
-      ativo: entity.ativo,
-      calendarioLetivo: toRefRequired(entity.calendarioLetivo),
-      turma: toRefRequired(entity.turma),
-      disciplina: toRefRequired(entity.disciplina),
-      ambientePadrao: entity.ambientePadrao ? { id: entity.ambientePadrao.id } : null,
-      imagemCapa: entity.imagemCapa ? { id: entity.imagemCapa.id } : null,
-      dateCreated: dateToISO(entity.dateCreated),
-      dateUpdated: dateToISO(entity.dateUpdated),
-      dateDeleted: dateToISONullable(entity.dateDeleted),
-    };
   }
 }

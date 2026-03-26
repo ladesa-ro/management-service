@@ -1,98 +1,90 @@
 import {
   AmbienteCreateCommand,
   AmbienteFindOneQuery,
-  AmbienteFindOneQueryResult,
+  type AmbienteFindOneQueryResult,
   AmbienteListQuery,
   AmbienteUpdateCommand,
 } from "@/modules/ambientes/ambiente";
-import { BlocoRestMapper } from "@/modules/ambientes/bloco/presentation.rest";
+import * as BlocoRestMapper from "@/modules/ambientes/bloco/presentation.rest/bloco.rest.mapper";
 import {
-  createFindOneInputMapper,
-  createListInputMapper,
-  createListOutputMapper,
-  mapDatedFields,
+  createListMapper,
+  createMapper,
+  createPaginatedInputMapper,
+  mapField,
 } from "@/shared/mapping";
 import {
-  AmbienteCreateInputRestDto,
-  AmbienteFindOneInputRestDto,
+  type AmbienteCreateInputRestDto,
+  type AmbienteFindOneInputRestDto,
   AmbienteFindOneOutputRestDto,
+  type AmbienteListInputRestDto,
   AmbienteListOutputRestDto,
-  AmbienteUpdateInputRestDto,
+  type AmbienteUpdateInputRestDto,
 } from "./ambiente.rest.dto";
 
-export class AmbienteRestMapper {
-  // ============================================================================
-  // Input: Server DTO -> Core DTO
-  // ============================================================================
+// ============================================================================
+// Externa -> Interna (Input: Presentation -> Core)
+// ============================================================================
 
-  static toFindOneInput = createFindOneInputMapper(AmbienteFindOneQuery);
-
-  static toListInput = createListInputMapper(AmbienteListQuery, [
-    "filter.id",
-    "filter.bloco.id",
-    "filter.bloco.campus.id",
-  ]);
-
-  static toCreateInput(dto: AmbienteCreateInputRestDto): AmbienteCreateCommand {
-    const input = new AmbienteCreateCommand();
-    input.nome = dto.nome;
-    input.codigo = dto.codigo;
-    input.descricao = dto.descricao;
-    input.capacidade = dto.capacidade;
-    input.tipo = dto.tipo;
-    input.bloco = { id: dto.bloco.id };
+export const toFindOneInput = createMapper<AmbienteFindOneInputRestDto, AmbienteFindOneQuery>(
+  (dto) => {
+    const input = new AmbienteFindOneQuery();
+    input.id = dto.id;
     return input;
-  }
+  },
+);
 
-  static toUpdateInput(
-    params: AmbienteFindOneInputRestDto,
-    dto: AmbienteUpdateInputRestDto,
-  ): AmbienteFindOneQuery & AmbienteUpdateCommand {
-    const input = new AmbienteFindOneQuery() as AmbienteFindOneQuery & AmbienteUpdateCommand;
-    input.id = params.id;
-    if (dto.nome !== undefined) {
-      input.nome = dto.nome;
-    }
-    if (dto.codigo !== undefined) {
-      input.codigo = dto.codigo;
-    }
-    if (dto.descricao !== undefined) {
-      input.descricao = dto.descricao;
-    }
-    if (dto.capacidade !== undefined) {
-      input.capacidade = dto.capacidade;
-    }
-    if (dto.tipo !== undefined) {
-      input.tipo = dto.tipo;
-    }
-    if (dto.bloco !== undefined) {
-      input.bloco = { id: dto.bloco.id };
-    }
-    return input;
-  }
+export const toListInput = createPaginatedInputMapper<AmbienteListInputRestDto, AmbienteListQuery>(
+  AmbienteListQuery,
+  (dto, query) => {
+    mapField(query, "filter.id", dto, "filter.id");
+    mapField(query, "filter.bloco.id", dto, "filter.bloco.id");
+    mapField(query, "filter.bloco.campus.id", dto, "filter.bloco.campus.id");
+  },
+);
 
-  // ============================================================================
-  // Output: Core DTO -> Server DTO
-  // ============================================================================
+export const toCreateInput = createMapper<AmbienteCreateInputRestDto, AmbienteCreateCommand>(
+  (dto) => ({
+    nome: dto.nome,
+    codigo: dto.codigo,
+    descricao: dto.descricao,
+    capacidade: dto.capacidade,
+    tipo: dto.tipo,
+    bloco: { id: dto.bloco.id },
+  }),
+);
 
-  static toFindOneOutputDto(output: AmbienteFindOneQueryResult): AmbienteFindOneOutputRestDto {
-    const dto = new AmbienteFindOneOutputRestDto();
-    dto.id = output.id;
-    dto.nome = output.nome;
-    dto.descricao = output.descricao;
-    dto.codigo = output.codigo;
-    dto.capacidade = output.capacidade;
-    dto.tipo = output.tipo;
-    dto.bloco = BlocoRestMapper.toFindOneOutputDto(output.bloco);
-    dto.imagemCapa = output.imagemCapa
-      ? BlocoRestMapper.toImagemOutputDto(output.imagemCapa)
-      : null;
-    mapDatedFields(dto, output);
-    return dto;
-  }
+export const toUpdateInput = createMapper<
+  { params: AmbienteFindOneInputRestDto; dto: AmbienteUpdateInputRestDto },
+  AmbienteFindOneQuery & AmbienteUpdateCommand
+>(({ params, dto }) => ({
+  id: params.id,
+  nome: dto.nome,
+  codigo: dto.codigo,
+  descricao: dto.descricao,
+  capacidade: dto.capacidade,
+  tipo: dto.tipo,
+  bloco: dto.bloco ? { id: dto.bloco.id } : undefined,
+}));
 
-  static toListOutputDto = createListOutputMapper(
-    AmbienteListOutputRestDto,
-    AmbienteRestMapper.toFindOneOutputDto,
-  );
-}
+// ============================================================================
+// Interna -> Externa (Output: Core -> Presentation)
+// ============================================================================
+
+export const toFindOneOutput = createMapper<
+  AmbienteFindOneQueryResult,
+  AmbienteFindOneOutputRestDto
+>((output) => ({
+  id: output.id,
+  nome: output.nome,
+  descricao: output.descricao,
+  codigo: output.codigo,
+  capacidade: output.capacidade,
+  tipo: output.tipo,
+  bloco: BlocoRestMapper.toFindOneOutput.map(output.bloco),
+  imagemCapa: output.imagemCapa ? BlocoRestMapper.toImagemOutput(output.imagemCapa) : null,
+  dateCreated: output.dateCreated,
+  dateUpdated: output.dateUpdated,
+  dateDeleted: output.dateDeleted,
+}));
+
+export const toListOutput = createListMapper(AmbienteListOutputRestDto, toFindOneOutput);

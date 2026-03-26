@@ -9,7 +9,8 @@ import type {
   EstagioListQuery,
   EstagioListQueryResult,
 } from "@/modules/estagio/estagio/domain/queries";
-import {
+import { createMapper, mapField } from "@/shared/mapping";
+import type {
   EstagioCreateInputRestDto,
   EstagioFindOneInputRestDto,
   EstagioFindOneOutputRestDto,
@@ -18,71 +19,79 @@ import {
   EstagioUpdateInputRestDto,
 } from "./estagio.rest.dto";
 
-export class EstagioRestMapper {
-  static toCreateInput(dto: EstagioCreateInputRestDto): EstagioCreateCommand {
-    return {
-      empresa: dto.empresa,
-      estagiario: dto.estagiario,
-      cargaHoraria: dto.cargaHoraria,
-      dataInicio: dto.dataInicio,
-      dataFim: dto.dataFim,
-      status: dto.status as EstagioStatus | undefined,
-      horariosEstagio: dto.horariosEstagio,
-    };
-  }
+// ============================================================================
+// Externa → Interna (Input: Presentation → Core)
+// ============================================================================
 
-  static toUpdateInput(dto: EstagioUpdateInputRestDto): EstagioUpdateCommand {
-    return {
-      empresa: dto.empresa,
-      estagiario: dto.estagiario,
-      cargaHoraria: dto.cargaHoraria,
-      dataInicio: dto.dataInicio,
-      dataFim: dto.dataFim,
-      status: dto.status as EstagioStatus | undefined,
-      horariosEstagio: dto.horariosEstagio,
-    };
-  }
+export const toFindOneInput = createMapper<EstagioFindOneInputRestDto, EstagioFindOneQuery>(
+  (dto) => ({
+    id: dto.id,
+  }),
+);
 
-  static toFindOneInput(dto: EstagioFindOneInputRestDto): EstagioFindOneQuery {
-    return {
-      id: dto.id,
-    };
-  }
+export const toListInput = createMapper<EstagioListInputRestDto, EstagioListQuery>((dto) => {
+  const query: EstagioListQuery = {
+    page: dto.page,
+    limit: dto.limit,
+    search: dto.search,
+  };
 
-  static toListInput(dto: EstagioListInputRestDto): EstagioListQuery {
-    // Após validação Zod (coerceFilterArray), os filtros já são string[] | undefined
-    return {
-      page: dto.page,
-      limit: dto.limit,
-      search: dto.search,
-      filterEmpresaId: dto["filter.empresa.id"] as string[] | undefined,
-      filterEstagiarioId: dto["filter.estagiario.id"] as string[] | undefined,
-      filterStatus: dto["filter.status"] as EstagioStatus[] | undefined,
-    };
-  }
+  mapField(query, "filterEmpresaId", dto, "filter.empresa.id");
+  mapField(query, "filterEstagiarioId", dto, "filter.estagiario.id");
+  mapField(query, "filterStatus", dto, "filter.status");
 
-  static toFindOneOutputDto(data: EstagioFindOneQueryResult): EstagioFindOneOutputRestDto {
-    return {
-      id: data.id,
-      empresa: data.empresa,
-      estagiario: data.estagiario,
-      cargaHoraria: data.cargaHoraria,
-      dataInicio: data.dataInicio,
-      dataFim: data.dataFim,
-      status: data.status,
-      horariosEstagio: data.horariosEstagio,
-      ativo: data.ativo,
-      dateCreated: data.dateCreated,
-      dateUpdated: data.dateUpdated,
-    };
-  }
+  return query;
+});
 
-  static toListOutputDto(data: EstagioListQueryResult): EstagioListOutputRestDto {
-    return {
-      data: data.data.map((item) => this.toFindOneOutputDto(item)),
-      total: data.total,
-      page: data.page,
-      limit: data.limit,
-    };
-  }
-}
+export const toCreateInput = createMapper<EstagioCreateInputRestDto, EstagioCreateCommand>(
+  (dto) => ({
+    empresa: dto.empresa,
+    estagiario: dto.estagiario,
+    cargaHoraria: dto.cargaHoraria,
+    dataInicio: dto.dataInicio,
+    dataFim: dto.dataFim,
+    status: dto.status as EstagioStatus | undefined,
+    horariosEstagio: dto.horariosEstagio,
+  }),
+);
+
+export const toUpdateInput = createMapper<EstagioUpdateInputRestDto, EstagioUpdateCommand>(
+  (dto) => ({
+    empresa: dto.empresa,
+    estagiario: dto.estagiario,
+    cargaHoraria: dto.cargaHoraria,
+    dataInicio: dto.dataInicio,
+    dataFim: dto.dataFim,
+    status: dto.status as EstagioStatus | undefined,
+    horariosEstagio: dto.horariosEstagio,
+  }),
+);
+
+// ============================================================================
+// Interna → Externa (Output: Core → Presentation)
+// ============================================================================
+
+export const toFindOneOutput = createMapper<EstagioFindOneQueryResult, EstagioFindOneOutputRestDto>(
+  (data) => ({
+    id: data.id,
+    empresa: data.empresa,
+    estagiario: data.estagiario,
+    cargaHoraria: data.cargaHoraria,
+    dataInicio: data.dataInicio,
+    dataFim: data.dataFim,
+    status: data.status,
+    horariosEstagio: data.horariosEstagio,
+    ativo: data.ativo,
+    dateCreated: data.dateCreated,
+    dateUpdated: data.dateUpdated,
+  }),
+);
+
+export const toListOutput = createMapper<EstagioListQueryResult, EstagioListOutputRestDto>(
+  (data) => ({
+    data: toFindOneOutput.mapArray(data.data),
+    total: data.total,
+    page: data.page,
+    limit: data.limit,
+  }),
+);

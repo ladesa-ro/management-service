@@ -40,7 +40,7 @@ import {
   OfertaFormacaoListOutputRestDto,
   OfertaFormacaoUpdateInputRestDto,
 } from "./oferta-formacao.rest.dto";
-import { OfertaFormacaoRestMapper } from "./oferta-formacao.rest.mapper";
+import * as OfertaFormacaoRestMapper from "./oferta-formacao.rest.mapper";
 
 @ApiTags("ofertas-formacoes")
 @Controller("/ofertas-formacoes")
@@ -66,9 +66,9 @@ export class OfertaFormacaoRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Query() dto: OfertaFormacaoListInputRestDto,
   ): Promise<OfertaFormacaoListOutputRestDto> {
-    const input = OfertaFormacaoRestMapper.toListInput(dto);
+    const input = OfertaFormacaoRestMapper.toListInput.map(dto);
     const result = await this.listHandler.execute(accessContext, input);
-    return OfertaFormacaoRestMapper.toListOutputDto(result);
+    return OfertaFormacaoRestMapper.toListOutput(result);
   }
 
   @Get("/:id")
@@ -80,10 +80,10 @@ export class OfertaFormacaoRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: OfertaFormacaoFindOneInputRestDto,
   ): Promise<OfertaFormacaoFindOneOutputRestDto> {
-    const input = OfertaFormacaoRestMapper.toFindOneInput(params);
+    const input = OfertaFormacaoRestMapper.toFindOneInput.map(params);
     const result = await this.findOneHandler.execute(accessContext, input);
     ensureExists(result, OfertaFormacao.entityName, input.id);
-    return OfertaFormacaoRestMapper.toFindOneOutputDto(result);
+    return OfertaFormacaoRestMapper.toFindOneOutput.map(result);
   }
 
   @Post("/")
@@ -94,9 +94,9 @@ export class OfertaFormacaoRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Body() dto: OfertaFormacaoCreateInputRestDto,
   ): Promise<OfertaFormacaoFindOneOutputRestDto> {
-    const input = OfertaFormacaoRestMapper.toCreateInput(dto);
+    const input = OfertaFormacaoRestMapper.toCreateInput.map(dto);
     const result = await this.createHandler.execute(accessContext, input);
-    return OfertaFormacaoRestMapper.toFindOneOutputDto(result);
+    return OfertaFormacaoRestMapper.toFindOneOutput.map(result);
   }
 
   @Patch("/:id")
@@ -109,9 +109,9 @@ export class OfertaFormacaoRestController {
     @Param() params: OfertaFormacaoFindOneInputRestDto,
     @Body() dto: OfertaFormacaoUpdateInputRestDto,
   ): Promise<OfertaFormacaoFindOneOutputRestDto> {
-    const input = OfertaFormacaoRestMapper.toUpdateInput(params, dto);
+    const input = OfertaFormacaoRestMapper.toUpdateInput.map({ params, dto });
     const result = await this.updateHandler.execute(accessContext, input);
-    return OfertaFormacaoRestMapper.toFindOneOutputDto(result);
+    return OfertaFormacaoRestMapper.toFindOneOutput.map(result);
   }
 
   @Delete("/:id")
@@ -123,7 +123,7 @@ export class OfertaFormacaoRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: OfertaFormacaoFindOneInputRestDto,
   ): Promise<boolean> {
-    const input = OfertaFormacaoRestMapper.toFindOneInput(params);
+    const input = OfertaFormacaoRestMapper.toFindOneInput.map(params);
     return this.deleteHandler.execute(accessContext, input);
   }
 }

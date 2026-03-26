@@ -1,102 +1,109 @@
 import {
   UsuarioCreateCommand,
   UsuarioFindOneQuery,
-  UsuarioFindOneQueryResult,
+  type UsuarioFindOneQueryResult,
   UsuarioListQuery,
   UsuarioUpdateCommand,
 } from "@/modules/acesso/usuario";
 import type { PerfilNestedQueryResult } from "@/modules/acesso/usuario/perfil/domain/queries/perfil-nested.query.result";
-import { CampusGraphqlMapper } from "@/modules/ambientes/campus/presentation.graphql/campus.graphql.mapper";
+import * as CampusGraphqlMapper from "@/modules/ambientes/campus/presentation.graphql/campus.graphql.mapper";
 import {
-  createFindOneInputMapper,
-  createListOutputMapper,
-  mapDatedFields,
+  createListMapper,
+  createMapper,
+  createPaginatedInputMapper,
+  mapField,
   mapImagemOutput,
 } from "@/shared/mapping";
 import {
-  UsuarioCreateInputGraphQlDto,
+  type UsuarioCreateInputGraphQlDto,
   UsuarioFindOneOutputGraphQlDto,
-  UsuarioListInputGraphQlDto,
+  type UsuarioListInputGraphQlDto,
   UsuarioListOutputGraphQlDto,
   UsuarioPerfilNestedOutputGraphQlDto,
-  UsuarioUpdateInputGraphQlDto,
+  type UsuarioUpdateInputGraphQlDto,
 } from "./usuario.graphql.dto";
 
-export class UsuarioGraphqlMapper {
-  private static getCargoNome(output: PerfilNestedQueryResult): string {
-    return output.cargo?.nome ?? "";
-  }
+// ============================================================================
+// Externa -> Interna (Input: Presentation -> Core)
+// ============================================================================
 
-  static toListInput(dto: UsuarioListInputGraphQlDto | null): UsuarioListQuery | null {
-    if (!dto) {
-      return null;
-    }
+export const toFindOneInput = createMapper<string, UsuarioFindOneQuery>((id) => {
+  const input = new UsuarioFindOneQuery();
+  input.id = id;
+  return input;
+});
 
-    const input = new UsuarioListQuery();
-    input.page = dto.page;
-    input.limit = dto.limit;
-    input.search = dto.search;
-    input.sortBy = dto.sortBy;
-    input["filter.id"] = dto.filterId;
-    return input;
-  }
+const listInputMapper = createPaginatedInputMapper<UsuarioListInputGraphQlDto, UsuarioListQuery>(
+  UsuarioListQuery,
+  (dto, query) => {
+    mapField(query, "filter.id", dto, "filterId");
+  },
+);
 
-  static toFindOneInput = createFindOneInputMapper(UsuarioFindOneQuery);
+export function toListInput(dto: UsuarioListInputGraphQlDto | null): UsuarioListQuery | null {
+  if (!dto) return null;
+  return listInputMapper.map(dto);
+}
 
-  static toCreateInput(dto: UsuarioCreateInputGraphQlDto): UsuarioCreateCommand {
+export const toCreateInput = createMapper<UsuarioCreateInputGraphQlDto, UsuarioCreateCommand>(
+  (dto) => {
     const input = new UsuarioCreateCommand();
     input.nome = dto.nome;
     input.matricula = dto.matricula;
     input.email = dto.email;
     return input;
-  }
+  },
+);
 
-  static toUpdateInput(
-    params: { id: string },
-    dto: UsuarioUpdateInputGraphQlDto,
-  ): UsuarioFindOneQuery & UsuarioUpdateCommand {
-    const input = new UsuarioFindOneQuery() as UsuarioFindOneQuery & UsuarioUpdateCommand;
-    input.id = params.id;
-    if (dto.nome !== undefined) {
-      input.nome = dto.nome;
-    }
-    if (dto.matricula !== undefined) {
-      input.matricula = dto.matricula;
-    }
-    if (dto.email !== undefined) {
-      input.email = dto.email;
-    }
-    return input;
-  }
+export const toUpdateInput = createMapper<
+  { id: string; dto: UsuarioUpdateInputGraphQlDto },
+  UsuarioFindOneQuery & UsuarioUpdateCommand
+>(({ id, dto }) => ({
+  id,
+  nome: dto.nome,
+  matricula: dto.matricula,
+  email: dto.email,
+}));
 
-  static toFindOneOutputDto(output: UsuarioFindOneQueryResult): UsuarioFindOneOutputGraphQlDto {
-    const dto = new UsuarioFindOneOutputGraphQlDto();
-    dto.id = output.id;
-    dto.nome = output.nome;
-    dto.matricula = output.matricula;
-    dto.email = output.email;
-    dto.isSuperUser = output.isSuperUser;
-    dto.imagemCapa = mapImagemOutput(output.imagemCapa);
-    dto.imagemPerfil = mapImagemOutput(output.imagemPerfil);
-    dto.vinculos = (output.vinculos ?? []).map(UsuarioGraphqlMapper.toPerfilNestedOutputDto);
-    mapDatedFields(dto, output);
-    return dto;
-  }
+// ============================================================================
+// Interna -> Externa (Output: Core -> Presentation)
+// ============================================================================
 
-  static toPerfilNestedOutputDto(
-    output: PerfilNestedQueryResult,
-  ): UsuarioPerfilNestedOutputGraphQlDto {
-    const dto = new UsuarioPerfilNestedOutputGraphQlDto();
-    dto.id = output.id;
-    dto.ativo = output.ativo;
-    dto.cargo = UsuarioGraphqlMapper.getCargoNome(output);
-    dto.campus = CampusGraphqlMapper.toFindOneOutputDto(output.campus);
-    mapDatedFields(dto, output);
-    return dto;
-  }
-
-  static toListOutputDto = createListOutputMapper(
-    UsuarioListOutputGraphQlDto,
-    UsuarioGraphqlMapper.toFindOneOutputDto,
-  );
+function getCargoNome(output: PerfilNestedQueryResult): string {
+  return output.cargo?.nome ?? "";
 }
+
+export function toPerfilNestedOutputDto(
+  output: PerfilNestedQueryResult,
+): UsuarioPerfilNestedOutputGraphQlDto {
+  const dto = new UsuarioPerfilNestedOutputGraphQlDto();
+  dto.id = output.id;
+  dto.ativo = output.ativo;
+  dto.cargo = getCargoNome(output);
+  dto.campus = CampusGraphqlMapper.toFindOneOutput.map(output.campus);
+  dto.dateCreated = new Date(output.dateCreated);
+  dto.dateUpdated = new Date(output.dateUpdated);
+  dto.dateDeleted = output.dateDeleted ? new Date(output.dateDeleted) : null;
+  return dto;
+}
+
+export const toFindOneOutput = createMapper<
+  UsuarioFindOneQueryResult,
+  UsuarioFindOneOutputGraphQlDto
+>((output) => {
+  const dto = new UsuarioFindOneOutputGraphQlDto();
+  dto.id = output.id;
+  dto.nome = output.nome;
+  dto.matricula = output.matricula;
+  dto.email = output.email;
+  dto.isSuperUser = output.isSuperUser;
+  dto.imagemCapa = mapImagemOutput(output.imagemCapa);
+  dto.imagemPerfil = mapImagemOutput(output.imagemPerfil);
+  dto.vinculos = (output.vinculos ?? []).map(toPerfilNestedOutputDto);
+  dto.dateCreated = new Date(output.dateCreated);
+  dto.dateUpdated = new Date(output.dateUpdated);
+  dto.dateDeleted = output.dateDeleted ? new Date(output.dateDeleted) : null;
+  return dto;
+});
+
+export const toListOutput = createListMapper(UsuarioListOutputGraphQlDto, toFindOneOutput);

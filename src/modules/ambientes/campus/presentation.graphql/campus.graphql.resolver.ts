@@ -31,7 +31,7 @@ import {
   CampusListOutputGraphQlDto,
   CampusUpdateInputGraphQlDto,
 } from "./campus.graphql.dto";
-import { CampusGraphqlMapper } from "./campus.graphql.mapper";
+import * as CampusGraphqlMapper from "./campus.graphql.mapper";
 
 @Resolver(() => CampusFindOneOutputGraphQlDto)
 export class CampusGraphqlResolver {
@@ -55,7 +55,7 @@ export class CampusGraphqlResolver {
   ): Promise<CampusListOutputGraphQlDto> {
     const input = CampusGraphqlMapper.toListInput(dto);
     const result = await this.listHandler.execute(accessContext, input);
-    return CampusGraphqlMapper.toListOutputDto(result);
+    return CampusGraphqlMapper.toListOutput(result);
   }
 
   @Query(() => CampusFindOneOutputGraphQlDto, CampusFindOneQueryMetadata.gqlMetadata)
@@ -63,9 +63,10 @@ export class CampusGraphqlResolver {
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<CampusFindOneOutputGraphQlDto> {
-    const result = await this.findOneHandler.execute(accessContext, { id });
-    ensureExists(result, Campus.entityName, id);
-    return CampusGraphqlMapper.toFindOneOutputDto(result);
+    const input = CampusGraphqlMapper.toFindOneInput.map(id);
+    const result = await this.findOneHandler.execute(accessContext, input);
+    ensureExists(result, Campus.entityName, input.id);
+    return CampusGraphqlMapper.toFindOneOutput.map(result);
   }
 
   @Mutation(() => CampusFindOneOutputGraphQlDto, CampusCreateCommandMetadata.gqlMetadata)
@@ -73,9 +74,9 @@ export class CampusGraphqlResolver {
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("input") dto: CampusCreateInputGraphQlDto,
   ): Promise<CampusFindOneOutputGraphQlDto> {
-    const input = CampusGraphqlMapper.toCreateInput(dto);
+    const input = CampusGraphqlMapper.toCreateInput.map(dto);
     const result = await this.createHandler.execute(accessContext, input);
-    return CampusGraphqlMapper.toFindOneOutputDto(result);
+    return CampusGraphqlMapper.toFindOneOutput.map(result);
   }
 
   @Mutation(() => CampusFindOneOutputGraphQlDto, CampusUpdateCommandMetadata.gqlMetadata)
@@ -84,9 +85,9 @@ export class CampusGraphqlResolver {
     @Args("id", { type: () => ID }) id: string,
     @Args("input") dto: CampusUpdateInputGraphQlDto,
   ): Promise<CampusFindOneOutputGraphQlDto> {
-    const input = CampusGraphqlMapper.toUpdateInput({ id }, dto);
+    const input = CampusGraphqlMapper.toUpdateInput.map({ params: { id }, dto });
     const result = await this.updateHandler.execute(accessContext, input);
-    return CampusGraphqlMapper.toFindOneOutputDto(result);
+    return CampusGraphqlMapper.toFindOneOutput.map(result);
   }
 
   @Mutation(() => Boolean, CampusDeleteCommandMetadata.gqlMetadata)

@@ -11,6 +11,7 @@ import {
   typeormSoftDeleteById,
   typeormUpdate,
 } from "@/infrastructure.database/typeorm/helpers/typeorm-repository-helpers";
+import type { IEndereco } from "@/modules/localidades/endereco/domain/endereco";
 import type {
   EnderecoFindOneQuery,
   EnderecoFindOneQueryResult,
@@ -18,7 +19,7 @@ import type {
   EnderecoListQueryResult,
 } from "@/modules/localidades/endereco/domain/queries";
 import type { IEnderecoRepository } from "@/modules/localidades/endereco/domain/repositories";
-import { EnderecoEntity, enderecoEntityDomainMapper } from "./typeorm";
+import { EnderecoEntity, EnderecoTypeormMapper } from "./typeorm";
 
 const config = {
   alias: "endereco",
@@ -60,6 +61,7 @@ export class EnderecoTypeOrmRepositoryAdapter implements IEnderecoRepository {
       { ...config, paginateConfig: enderecoPaginateConfig },
       this.paginationAdapter,
       dto,
+      EnderecoTypeormMapper.entityToOutput.map,
     );
   }
 
@@ -69,6 +71,7 @@ export class EnderecoTypeOrmRepositoryAdapter implements IEnderecoRepository {
       EnderecoEntity,
       { ...config, paginateConfig: enderecoPaginateConfig },
       dto,
+      EnderecoTypeormMapper.entityToOutput.map,
     );
   }
 
@@ -84,7 +87,7 @@ export class EnderecoTypeOrmRepositoryAdapter implements IEnderecoRepository {
     });
 
     if (!endereco) return null;
-    return enderecoEntityDomainMapper.toOutputData(endereco as unknown as Record<string, unknown>);
+    return EnderecoTypeormMapper.entityToOutput.map(endereco);
   }
 
   async exists(id: string): Promise<boolean> {
@@ -92,13 +95,13 @@ export class EnderecoTypeOrmRepositoryAdapter implements IEnderecoRepository {
     return repo.exists({ where: { id } });
   }
 
-  create(data: Record<string, unknown>) {
-    const entityData = enderecoEntityDomainMapper.toPersistenceData(data);
+  create(data: Partial<IEndereco>) {
+    const entityData = EnderecoTypeormMapper.domainToPersistence.map(data as IEndereco);
     return typeormCreate(this.appTypeormConnection, EnderecoEntity, entityData);
   }
 
-  update(id: string | number, data: Record<string, unknown>) {
-    const entityData = enderecoEntityDomainMapper.toPersistenceData(data);
+  update(id: string | number, data: Partial<IEndereco>) {
+    const entityData = EnderecoTypeormMapper.domainToPersistence.map(data as IEndereco);
     return typeormUpdate(this.appTypeormConnection, EnderecoEntity, id, entityData);
   }
 

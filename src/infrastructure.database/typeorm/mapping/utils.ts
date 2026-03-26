@@ -7,7 +7,7 @@
  */
 
 /** Filtra itens ativos (dateDeleted === null) de uma coleção. */
-export function filterActive<T extends { dateDeleted: Date | null }>(
+export function filterActive<T extends { dateDeleted: Date | string | null }>(
   items: T[] | undefined | null,
 ): T[] {
   return (items ?? []).filter((item) => item.dateDeleted === null);
@@ -24,24 +24,24 @@ export function toRefRequired(relation: { id: string } | null | undefined): { id
   return { id: relation.id };
 }
 
-/** Converte Date do TypeORM para ISO string do domínio. */
-export function dateToISO(date: Date): string {
-  return date.toISOString();
+/** Converte Date ou string do TypeORM para ISO string do domínio. */
+export function dateToISO(date: Date | string): string {
+  return date instanceof Date ? date.toISOString() : date;
 }
 
-/** Converte ISO string do domínio para Date do TypeORM. */
-export function isoToDate(iso: string): Date {
-  return new Date(iso);
+/** Converte ISO string do domínio para string (identity — entidades agora usam string). */
+export function isoToDate(iso: string): string {
+  return iso;
 }
 
-/** Converte Date | null para string | null. */
-export function dateToISONullable(date: Date | null): string | null {
-  return date ? date.toISOString() : null;
+/** Converte Date | string | null para string | null. */
+export function dateToISONullable(date: Date | string | null): string | null {
+  return date instanceof Date ? date.toISOString() : date;
 }
 
-/** Converte string | null para Date | null. */
-export function isoToDateNullable(iso: string | null): Date | null {
-  return iso ? new Date(iso) : null;
+/** Converte string | null para string | null (identity — entidades agora usam string). */
+export function isoToDateNullable(iso: string | null): string | null {
+  return iso;
 }
 
 /**

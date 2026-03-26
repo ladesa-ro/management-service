@@ -7,10 +7,10 @@ export class HorarioAulaConfiguracaoEntity {
   id!: string;
 
   @Column({ name: "data_inicio", type: "date", nullable: false })
-  dataInicio!: Date;
+  dataInicio!: string;
 
   @Column({ name: "data_fim", type: "date", nullable: true })
-  dataFim!: Date | null;
+  dataFim!: string | null;
 
   @Column({ name: "ativo", type: "boolean", nullable: false })
   ativo!: boolean;

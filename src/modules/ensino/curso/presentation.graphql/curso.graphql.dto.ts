@@ -1,3 +1,4 @@
+import { z } from "zod";
 import {
   EntityBaseGraphQlDto,
   PaginatedFilterByIdGraphQlDto,
@@ -5,9 +6,9 @@ import {
 } from "@/infrastructure.graphql/dtos";
 import { CampusFindOneOutputGraphQlDto } from "@/modules/ambientes/campus/presentation.graphql/campus.graphql.dto";
 import { ImagemFindOneOutputGraphQlDto } from "@/modules/armazenamento/imagem-arquivo/presentation.graphql/imagem-arquivo.graphql.dto";
-import { CursoGraphqlListInputSchema } from "@/modules/ensino/curso/domain/queries/curso-list.query.schemas";
 import { OfertaFormacaoFindOneOutputGraphQlDto } from "@/modules/ensino/oferta-formacao/presentation.graphql/oferta-formacao.graphql.dto";
 import { ArgsType, Field, InputType, ObjectType } from "@/shared/presentation/graphql";
+import { createGraphqlListInputSchema } from "@/shared/validation/schemas";
 import { CursoCreateCommandFields } from "../domain/commands/curso-create.command";
 import { CursoUpdateCommandFields } from "../domain/commands/curso-update.command";
 import { CursoCreateSchema, CursoUpdateSchema } from "../domain/curso.schemas";
@@ -108,6 +109,11 @@ export class CursoUpdateInputGraphQlDto {
 // ============================================================================
 // List Input
 // ============================================================================
+
+const CursoGraphqlListInputSchema = createGraphqlListInputSchema({
+  filterCampusId: z.array(z.string()).optional(),
+  filterOfertaFormacaoId: z.array(z.string()).optional(),
+});
 
 @ArgsType()
 export class CursoListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {

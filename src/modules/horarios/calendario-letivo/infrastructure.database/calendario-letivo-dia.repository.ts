@@ -1,6 +1,5 @@
 import { IsNull } from "typeorm";
 import type { IAccessContext } from "@/domain/abstractions";
-import type { ScalarDate } from "@/domain/abstractions/scalars";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
 import { buildTypeOrmPaginateConfig } from "@/infrastructure.database/pagination/adapters/pagination-spec.adapter";
@@ -18,9 +17,8 @@ import type {
   CalendarioLetivoDiaListQueryResult,
 } from "../domain/queries";
 import { calendarioLetivoDiaPaginationSpec } from "../domain/queries";
-import type { CalendarioLetivoFindOneQueryResult } from "../domain/queries/calendario-letivo-find-one.query.result";
 import type { ICalendarioLetivoDiaRepository } from "../domain/repositories/calendario-letivo-dia.repository.interface";
-import { CalendarioLetivoDiaEntity, calendarioLetivoDiaEntityDomainMapper } from "./typeorm";
+import { CalendarioLetivoDiaEntity, CalendarioLetivoDiaTypeormMapper } from "./typeorm";
 
 const config = {
   alias: "calendario_letivo_dia",
@@ -69,17 +67,11 @@ export class CalendarioLetivoDiaTypeOrmRepositoryAdapter implements ICalendarioL
 
     if (!entity) return null;
 
-    return CalendarioLetivoDia.load(
-      calendarioLetivoDiaEntityDomainMapper.toOutputData(
-        entity as unknown as Record<string, unknown>,
-      ),
-    );
+    return CalendarioLetivoDia.load(CalendarioLetivoDiaTypeormMapper.entityToDomain.map(entity));
   }
 
   async save(aggregate: CalendarioLetivoDia): Promise<void> {
-    const entityData = calendarioLetivoDiaEntityDomainMapper.toPersistenceData({
-      ...aggregate,
-    });
+    const entityData = CalendarioLetivoDiaTypeormMapper.domainToPersistence.map({ ...aggregate });
     const repo = this.appTypeormConnection.getRepository(CalendarioLetivoDiaEntity);
     await repo.save(repo.create({ id: aggregate.id, ...entityData } as CalendarioLetivoDiaEntity));
   }
@@ -145,18 +137,6 @@ export class CalendarioLetivoDiaTypeOrmRepositoryAdapter implements ICalendarioL
     const entity = await qb.getOne();
     if (!entity) return null;
 
-    return {
-      id: entity.id,
-      data: entity.data as unknown as ScalarDate,
-      diaLetivo: entity.diaLetivo,
-      feriado: entity.feriado,
-      diaPresencial: entity.diaPresencial,
-      tipo: entity.tipo,
-      extraCurricular: entity.extraCurricular,
-      calendario: entity.calendario as unknown as CalendarioLetivoFindOneQueryResult,
-      dateCreated: entity.dateCreated as unknown as string,
-      dateUpdated: entity.dateUpdated as unknown as string,
-      dateDeleted: entity.dateDeleted as unknown as string | null,
-    } as CalendarioLetivoDiaFindOneQueryResult;
+    return CalendarioLetivoDiaTypeormMapper.entityToOutput.map(entity);
   }
 }

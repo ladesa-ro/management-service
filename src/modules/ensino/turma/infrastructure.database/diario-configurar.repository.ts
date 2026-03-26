@@ -2,7 +2,7 @@ import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-in
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import { DiarioEntity } from "@/modules/ensino/diario/infrastructure.database/typeorm/diario.typeorm.entity";
 import { DiarioProfessorEntity } from "@/modules/ensino/diario/infrastructure.database/typeorm/diario-professor.typeorm.entity";
-import { getNow } from "@/utils/date";
+import { getNowISO } from "@/utils/date";
 import type { IDiarioConfigurarRepository } from "../domain/repositories";
 
 // cross-module: uses TypeORM directly for DiarioEntity and DiarioProfessorEntity (diario module has no repository to inject)
@@ -21,7 +21,7 @@ export class DiarioConfigurarTypeOrmRepositoryAdapter implements IDiarioConfigur
     calendarioLetivoId: string;
   }): Promise<void> {
     const repo = this.appTypeormConnection.getRepository(DiarioEntity);
-    const now = getNow();
+    const now = getNowISO();
 
     const diario = new DiarioEntity();
     diario.id = data.id;
@@ -45,7 +45,7 @@ export class DiarioConfigurarTypeOrmRepositoryAdapter implements IDiarioConfigur
     perfilId: string;
   }): Promise<void> {
     const repo = this.appTypeormConnection.getRepository(DiarioProfessorEntity);
-    const now = getNow();
+    const now = getNowISO();
 
     const dp = new DiarioProfessorEntity();
     dp.id = data.id;

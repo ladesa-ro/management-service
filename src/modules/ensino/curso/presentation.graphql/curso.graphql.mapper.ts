@@ -1,92 +1,90 @@
-import { CampusGraphqlMapper } from "@/modules/ambientes/campus/presentation.graphql/campus.graphql.mapper";
+import * as CampusGraphqlMapper from "@/modules/ambientes/campus/presentation.graphql/campus.graphql.mapper";
 import {
   CursoCreateCommand,
   CursoFindOneQuery,
-  CursoFindOneQueryResult,
+  type CursoFindOneQueryResult,
   CursoListQuery,
   CursoUpdateCommand,
 } from "@/modules/ensino/curso";
-import { OfertaFormacaoGraphqlMapper } from "@/modules/ensino/oferta-formacao/presentation.graphql/oferta-formacao.graphql.mapper";
-import { createListOutputMapper, mapDatedFields, mapImagemOutput } from "@/shared/mapping";
+import * as OfertaFormacaoGraphqlMapper from "@/modules/ensino/oferta-formacao/presentation.graphql/oferta-formacao.graphql.mapper";
 import {
-  CursoCreateInputGraphQlDto,
+  createListMapper,
+  createMapper,
+  createPaginatedInputMapper,
+  mapField,
+  mapImagemOutput,
+} from "@/shared/mapping";
+import {
+  type CursoCreateInputGraphQlDto,
   CursoFindOneOutputGraphQlDto,
-  CursoListInputGraphQlDto,
+  type CursoListInputGraphQlDto,
   CursoListOutputGraphQlDto,
-  CursoUpdateInputGraphQlDto,
+  type CursoUpdateInputGraphQlDto,
 } from "./curso.graphql.dto";
 
-export class CursoGraphqlMapper {
-  static toListInput(dto: CursoListInputGraphQlDto | null): CursoListQuery | null {
-    if (!dto) {
-      return null;
-    }
+// ============================================================================
+// Externa → Interna (Input: Presentation → Core)
+// ============================================================================
 
-    const input = new CursoListQuery();
-    input.page = dto.page;
-    input.limit = dto.limit;
-    input.search = dto.search;
-    input.sortBy = dto.sortBy;
-    input["filter.id"] = dto.filterId;
-    input["filter.campus.id"] = dto.filterCampusId;
-    input["filter.ofertaFormacao.id"] = dto.filterOfertaFormacaoId;
-    return input;
-  }
+export const toFindOneInput = createMapper<string, CursoFindOneQuery>((id) => {
+  const input = new CursoFindOneQuery();
+  input.id = id;
+  return input;
+});
 
-  static toFindOneInput(id: string): CursoFindOneQuery {
-    const input = new CursoFindOneQuery();
-    input.id = id;
-    return input;
-  }
+const listInputMapper = createPaginatedInputMapper<CursoListInputGraphQlDto, CursoListQuery>(
+  CursoListQuery,
+  (dto, query) => {
+    mapField(query, "filter.id", dto, "filterId");
+    mapField(query, "filter.campus.id", dto, "filterCampusId");
+    mapField(query, "filter.ofertaFormacao.id", dto, "filterOfertaFormacaoId");
+  },
+);
 
-  static toCreateInput(dto: CursoCreateInputGraphQlDto): CursoCreateCommand {
-    const input = new CursoCreateCommand();
-    input.nome = dto.nome;
-    input.nomeAbreviado = dto.nomeAbreviado;
-    input.campus = { id: dto.campus.id };
-    input.ofertaFormacao = { id: dto.ofertaFormacao.id };
-    input.imagemCapa = dto.imagemCapa ? { id: dto.imagemCapa.id } : null;
-    return input;
-  }
-
-  static toUpdateInput(
-    params: { id: string },
-    dto: CursoUpdateInputGraphQlDto,
-  ): CursoFindOneQuery & CursoUpdateCommand {
-    const input = new CursoFindOneQuery() as CursoFindOneQuery & CursoUpdateCommand;
-    input.id = params.id;
-    if (dto.nome !== undefined) {
-      input.nome = dto.nome;
-    }
-    if (dto.nomeAbreviado !== undefined) {
-      input.nomeAbreviado = dto.nomeAbreviado;
-    }
-    if (dto.campus !== undefined) {
-      input.campus = { id: dto.campus.id };
-    }
-    if (dto.ofertaFormacao !== undefined) {
-      input.ofertaFormacao = { id: dto.ofertaFormacao.id };
-    }
-    if (dto.imagemCapa !== undefined) {
-      input.imagemCapa = dto.imagemCapa ? { id: dto.imagemCapa.id } : null;
-    }
-    return input;
-  }
-
-  static toFindOneOutputDto(output: CursoFindOneQueryResult): CursoFindOneOutputGraphQlDto {
-    const dto = new CursoFindOneOutputGraphQlDto();
-    dto.id = output.id;
-    dto.nome = output.nome;
-    dto.nomeAbreviado = output.nomeAbreviado;
-    dto.campus = CampusGraphqlMapper.toFindOneOutputDto(output.campus);
-    dto.ofertaFormacao = OfertaFormacaoGraphqlMapper.toFindOneOutputDto(output.ofertaFormacao);
-    dto.imagemCapa = mapImagemOutput(output.imagemCapa);
-    mapDatedFields(dto, output);
-    return dto;
-  }
-
-  static toListOutputDto = createListOutputMapper(
-    CursoListOutputGraphQlDto,
-    CursoGraphqlMapper.toFindOneOutputDto,
-  );
+export function toListInput(dto: CursoListInputGraphQlDto | null): CursoListQuery | null {
+  if (!dto) return null;
+  return listInputMapper.map(dto);
 }
+
+export const toCreateInput = createMapper<CursoCreateInputGraphQlDto, CursoCreateCommand>((dto) => {
+  const input = new CursoCreateCommand();
+  input.nome = dto.nome;
+  input.nomeAbreviado = dto.nomeAbreviado;
+  input.campus = { id: dto.campus.id };
+  input.ofertaFormacao = { id: dto.ofertaFormacao.id };
+  input.imagemCapa = dto.imagemCapa ? { id: dto.imagemCapa.id } : null;
+  return input;
+});
+
+export const toUpdateInput = createMapper<
+  { id: string; dto: CursoUpdateInputGraphQlDto },
+  CursoFindOneQuery & CursoUpdateCommand
+>(({ id, dto }) => ({
+  id,
+  nome: dto.nome,
+  nomeAbreviado: dto.nomeAbreviado,
+  campus: dto.campus ? { id: dto.campus.id } : undefined,
+  ofertaFormacao: dto.ofertaFormacao ? { id: dto.ofertaFormacao.id } : undefined,
+  imagemCapa:
+    dto.imagemCapa !== undefined ? (dto.imagemCapa ? { id: dto.imagemCapa.id } : null) : undefined,
+}));
+
+// ============================================================================
+// Interna → Externa (Output: Core → Presentation)
+// ============================================================================
+
+export const toFindOneOutput = createMapper<CursoFindOneQueryResult, CursoFindOneOutputGraphQlDto>(
+  (output) => ({
+    id: output.id,
+    nome: output.nome,
+    nomeAbreviado: output.nomeAbreviado,
+    campus: CampusGraphqlMapper.toFindOneOutput.map(output.campus),
+    ofertaFormacao: OfertaFormacaoGraphqlMapper.toFindOneOutput.map(output.ofertaFormacao),
+    imagemCapa: mapImagemOutput(output.imagemCapa),
+    dateCreated: new Date(output.dateCreated),
+    dateUpdated: new Date(output.dateUpdated),
+    dateDeleted: output.dateDeleted ? new Date(output.dateDeleted) : null,
+  }),
+);
+
+export const toListOutput = createListMapper(CursoListOutputGraphQlDto, toFindOneOutput);

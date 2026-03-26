@@ -69,16 +69,8 @@ export class UsuarioDisponibilidadeTypeOrmRepositoryAdapter
       const ca = j.calendarioAgendamento;
       return {
         id: ca.id,
-        dataInicio:
-          ca.dataInicio instanceof Date
-            ? ca.dataInicio.toISOString().split("T")[0]
-            : String(ca.dataInicio),
-        dataFim:
-          ca.dataFim instanceof Date
-            ? ca.dataFim.toISOString().split("T")[0]
-            : ca.dataFim
-              ? String(ca.dataFim)
-              : null,
+        dataInicio: String(ca.dataInicio),
+        dataFim: ca.dataFim ? String(ca.dataFim) : null,
         diaInteiro: ca.diaInteiro,
         horarioInicio: ca.horarioInicio,
         horarioFim: ca.horarioFim,
@@ -121,8 +113,8 @@ export class UsuarioDisponibilidadeTypeOrmRepositoryAdapter
       agendamento.id = generateUuidV7();
       agendamento.tipo = CalendarioAgendamentoTipo.INDISPONIBILIDADE;
       agendamento.nome = null;
-      agendamento.dataInicio = new Date(item.dataInicio);
-      agendamento.dataFim = item.dataFim ? new Date(item.dataFim) : null;
+      agendamento.dataInicio = item.dataInicio;
+      agendamento.dataFim = item.dataFim ?? null;
       agendamento.diaInteiro = item.diaInteiro;
       agendamento.horarioInicio = item.horarioInicio ?? "00:00:00";
       agendamento.horarioFim = item.horarioFim ?? "23:59:59";

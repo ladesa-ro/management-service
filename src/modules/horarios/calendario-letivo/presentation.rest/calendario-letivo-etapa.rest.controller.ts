@@ -10,7 +10,7 @@ import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { AccessContextHttp } from "@/server/nest/access-context";
-import { getNow } from "@/utils/date";
+import { getNowISO } from "@/utils/date";
 import {
   CalendarioLetivoDesativarCommandMetadata,
   CalendarioLetivoEtapaBulkReplaceCommandMetadata,
@@ -50,14 +50,8 @@ export class CalendarioLetivoEtapaRestController {
         id: e.id,
         ofertaFormacaoPeriodoEtapaId: e.ofertaFormacaoPeriodoEtapa?.id,
         nomeEtapa: e.ofertaFormacaoPeriodoEtapa?.nome ?? "",
-        dataInicio:
-          e.dataInicio instanceof Date
-            ? e.dataInicio.toISOString().split("T")[0]
-            : String(e.dataInicio),
-        dataTermino:
-          e.dataTermino instanceof Date
-            ? e.dataTermino.toISOString().split("T")[0]
-            : String(e.dataTermino),
+        dataInicio: String(e.dataInicio),
+        dataTermino: String(e.dataTermino),
       })),
     };
   }
@@ -77,14 +71,14 @@ export class CalendarioLetivoEtapaRestController {
     await this.etapaRepository.softDeleteByCalendarioLetivoId(calendarioLetivoId);
 
     // Insert new
-    const now = getNow();
+    const now = getNowISO();
     for (const item of dto.etapas) {
       await this.etapaRepository.save({
         id: generateUuidV7(),
         calendarioLetivo: { id: calendarioLetivoId },
         ofertaFormacaoPeriodoEtapa: { id: item.ofertaFormacaoPeriodoEtapaId },
-        dataInicio: new Date(item.dataInicio),
-        dataTermino: new Date(item.dataTermino),
+        dataInicio: item.dataInicio,
+        dataTermino: item.dataTermino,
         dateCreated: now,
         dateUpdated: now,
         dateDeleted: null,

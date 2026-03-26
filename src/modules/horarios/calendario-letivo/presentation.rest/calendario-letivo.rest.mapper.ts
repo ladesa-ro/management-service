@@ -1,90 +1,91 @@
-import { CampusRestMapper } from "@/modules/ambientes/campus/presentation.rest";
-import { OfertaFormacaoRestMapper } from "@/modules/ensino/oferta-formacao/presentation.rest";
+import * as CampusRestMapper from "@/modules/ambientes/campus/presentation.rest/campus.rest.mapper";
+import * as OfertaFormacaoRestMapper from "@/modules/ensino/oferta-formacao/presentation.rest/oferta-formacao.rest.mapper";
 import {
   CalendarioLetivoCreateCommand,
   CalendarioLetivoFindOneQuery,
-  CalendarioLetivoFindOneQueryResult,
+  type CalendarioLetivoFindOneQueryResult,
   CalendarioLetivoListQuery,
   CalendarioLetivoUpdateCommand,
 } from "@/modules/horarios/calendario-letivo";
 import {
-  createFindOneInputMapper,
-  createListInputMapper,
-  createListOutputMapper,
-  mapDatedFields,
+  createListMapper,
+  createMapper,
+  createPaginatedInputMapper,
+  mapField,
 } from "@/shared/mapping";
 import {
-  CalendarioLetivoCreateInputRestDto,
-  CalendarioLetivoFindOneInputRestDto,
+  type CalendarioLetivoCreateInputRestDto,
+  type CalendarioLetivoFindOneInputRestDto,
   CalendarioLetivoFindOneOutputRestDto,
+  type CalendarioLetivoListInputRestDto,
   CalendarioLetivoListOutputRestDto,
-  CalendarioLetivoUpdateInputRestDto,
+  type CalendarioLetivoUpdateInputRestDto,
 } from "./calendario-letivo.rest.dto";
 
-export class CalendarioLetivoRestMapper {
-  // ============================================================================
-  // Input: Server DTO -> Core DTO
-  // ============================================================================
+// ============================================================================
+// Externa -> Interna (Input: Presentation -> Core)
+// ============================================================================
 
-  static toFindOneInput = createFindOneInputMapper(CalendarioLetivoFindOneQuery);
+export const toFindOneInput = createMapper<
+  CalendarioLetivoFindOneInputRestDto,
+  CalendarioLetivoFindOneQuery
+>((dto) => {
+  const input = new CalendarioLetivoFindOneQuery();
+  input.id = dto.id;
+  return input;
+});
 
-  static toListInput = createListInputMapper(CalendarioLetivoListQuery, [
-    "filter.id",
-    "filter.ano",
-    "filter.campus.id",
-    "filter.ofertaFormacao.id",
-  ]);
+export const toListInput = createPaginatedInputMapper<
+  CalendarioLetivoListInputRestDto,
+  CalendarioLetivoListQuery
+>(CalendarioLetivoListQuery, (dto, query) => {
+  mapField(query, "filter.id", dto, "filter.id");
+  mapField(query, "filter.ano", dto, "filter.ano");
+  mapField(query, "filter.campus.id", dto, "filter.campus.id");
+  mapField(query, "filter.ofertaFormacao.id", dto, "filter.ofertaFormacao.id");
+});
 
-  static toCreateInput(dto: CalendarioLetivoCreateInputRestDto): CalendarioLetivoCreateCommand {
-    const input = new CalendarioLetivoCreateCommand();
-    input.nome = dto.nome;
-    input.ano = dto.ano;
-    input.campus = { id: dto.campus.id };
-    input.ofertaFormacao = { id: dto.ofertaFormacao.id };
-    return input;
-  }
+export const toCreateInput = createMapper<
+  CalendarioLetivoCreateInputRestDto,
+  CalendarioLetivoCreateCommand
+>((dto) => {
+  const input = new CalendarioLetivoCreateCommand();
+  input.nome = dto.nome;
+  input.ano = dto.ano;
+  input.campus = { id: dto.campus.id };
+  input.ofertaFormacao = { id: dto.ofertaFormacao.id };
+  return input;
+});
 
-  static toUpdateInput(
-    params: CalendarioLetivoFindOneInputRestDto,
-    dto: CalendarioLetivoUpdateInputRestDto,
-  ): CalendarioLetivoFindOneQuery & CalendarioLetivoUpdateCommand {
-    const input = new CalendarioLetivoFindOneQuery() as CalendarioLetivoFindOneQuery &
-      CalendarioLetivoUpdateCommand;
-    input.id = params.id;
-    if (dto.nome !== undefined) {
-      input.nome = dto.nome;
-    }
-    if (dto.ano !== undefined) {
-      input.ano = dto.ano;
-    }
-    if (dto.campus !== undefined) {
-      input.campus = { id: dto.campus.id };
-    }
-    if (dto.ofertaFormacao !== undefined) {
-      input.ofertaFormacao = { id: dto.ofertaFormacao.id };
-    }
-    return input;
-  }
+export const toUpdateInput = createMapper<
+  { params: CalendarioLetivoFindOneInputRestDto; dto: CalendarioLetivoUpdateInputRestDto },
+  CalendarioLetivoFindOneQuery & CalendarioLetivoUpdateCommand
+>(({ params, dto }) => ({
+  id: params.id,
+  nome: dto.nome,
+  ano: dto.ano,
+  campus: dto.campus ? { id: dto.campus.id } : undefined,
+  ofertaFormacao: dto.ofertaFormacao ? { id: dto.ofertaFormacao.id } : undefined,
+}));
 
-  // ============================================================================
-  // Output: Core DTO -> Server DTO
-  // ============================================================================
+// ============================================================================
+// Interna -> Externa (Output: Core -> Presentation)
+// ============================================================================
 
-  static toFindOneOutputDto(
-    output: CalendarioLetivoFindOneQueryResult,
-  ): CalendarioLetivoFindOneOutputRestDto {
-    const dto = new CalendarioLetivoFindOneOutputRestDto();
-    dto.id = output.id;
-    dto.nome = output.nome;
-    dto.ano = output.ano;
-    dto.campus = CampusRestMapper.toFindOneOutputDto(output.campus);
-    dto.ofertaFormacao = OfertaFormacaoRestMapper.toFindOneOutputDto(output.ofertaFormacao);
-    mapDatedFields(dto, output);
-    return dto;
-  }
+export const toFindOneOutput = createMapper<
+  CalendarioLetivoFindOneQueryResult,
+  CalendarioLetivoFindOneOutputRestDto
+>((output) => {
+  const dto = new CalendarioLetivoFindOneOutputRestDto();
+  dto.id = output.id;
+  dto.nome = output.nome;
+  dto.ano = output.ano;
+  dto.campus = CampusRestMapper.toFindOneOutput.map(output.campus);
+  dto.ofertaFormacao = OfertaFormacaoRestMapper.toFindOneOutput.map(output.ofertaFormacao);
+  dto.dateCreated = output.dateCreated;
+  dto.dateUpdated = output.dateUpdated;
+  dto.dateDeleted = output.dateDeleted;
+  return dto;
+});
 
-  static toListOutputDto = createListOutputMapper(
-    CalendarioLetivoListOutputRestDto,
-    CalendarioLetivoRestMapper.toFindOneOutputDto,
-  );
-}
+export const toListOutput = createListMapper(CalendarioLetivoListOutputRestDto, toFindOneOutput);

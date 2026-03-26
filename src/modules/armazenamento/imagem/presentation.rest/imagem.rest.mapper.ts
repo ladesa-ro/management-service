@@ -1,40 +1,51 @@
 import {
   ImagemFindOneQuery,
-  ImagemFindOneQueryResult,
+  type ImagemFindOneQueryResult,
   ImagemListQuery,
 } from "@/modules/armazenamento/imagem";
 import {
-  createFindOneInputMapper,
-  createListInputMapper,
-  createListOutputMapper,
-  mapDatedFields,
+  createListMapper,
+  createMapper,
+  createPaginatedInputMapper,
+  mapField,
 } from "@/shared/mapping";
-import { ImagemFindOneOutputRestDto, ImagemListOutputRestDto } from "./imagem.rest.dto";
+import {
+  type ImagemFindOneInputRestDto,
+  ImagemFindOneOutputRestDto,
+  type ImagemListInputRestDto,
+  ImagemListOutputRestDto,
+} from "./imagem.rest.dto";
 
-export class ImagemRestMapper {
-  // ============================================================================
-  // Input: Server DTO -> Core DTO
-  // ============================================================================
+// ============================================================================
+// Externa → Interna (Input: Presentation → Core)
+// ============================================================================
 
-  static toFindOneInput = createFindOneInputMapper(ImagemFindOneQuery);
+export const toFindOneInput = createMapper<ImagemFindOneInputRestDto, ImagemFindOneQuery>((dto) => {
+  const input = new ImagemFindOneQuery();
+  input.id = dto.id;
+  return input;
+});
 
-  static toListInput = createListInputMapper(ImagemListQuery, ["filter.id"]);
+export const toListInput = createPaginatedInputMapper<ImagemListInputRestDto, ImagemListQuery>(
+  ImagemListQuery,
+  (dto, query) => {
+    mapField(query, "filter.id", dto, "filter.id");
+  },
+);
 
-  // ============================================================================
-  // Output: Core DTO -> Server DTO
-  // ============================================================================
+// ============================================================================
+// Interna → Externa (Output: Core → Presentation)
+// ============================================================================
 
-  static toFindOneOutputDto(output: ImagemFindOneQueryResult): ImagemFindOneOutputRestDto {
-    const dto = new ImagemFindOneOutputRestDto();
-    dto.id = output.id;
-    dto.descricao = output.descricao;
-    mapDatedFields(dto, output);
-    // Note: versoes mapping would need to be done by the consumer
-    return dto;
-  }
+export const toFindOneOutput = createMapper<ImagemFindOneQueryResult, ImagemFindOneOutputRestDto>(
+  (output) => ({
+    id: output.id,
+    descricao: output.descricao,
+    versoes: [],
+    dateCreated: output.dateCreated,
+    dateUpdated: output.dateUpdated,
+    dateDeleted: output.dateDeleted,
+  }),
+);
 
-  static toListOutputDto = createListOutputMapper(
-    ImagemListOutputRestDto,
-    ImagemRestMapper.toFindOneOutputDto,
-  );
-}
+export const toListOutput = createListMapper(ImagemListOutputRestDto, toFindOneOutput);

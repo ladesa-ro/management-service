@@ -1,32 +1,44 @@
-import { CidadeRestMapper } from "@/modules/localidades/cidade/presentation.rest/cidade.rest.mapper";
-import { EnderecoCreateCommand, EnderecoFindOneQueryResult } from "@/modules/localidades/endereco";
-import { mapDatedFields } from "@/shared/mapping";
-import { EnderecoFindOneOutputRestDto, EnderecoInputRestDto } from "./endereco.rest.dto";
+import * as CidadeRestMapper from "@/modules/localidades/cidade/presentation.rest/cidade.rest.mapper";
+import {
+  EnderecoCreateCommand,
+  type EnderecoFindOneQueryResult,
+} from "@/modules/localidades/endereco";
+import { createMapper } from "@/shared/mapping";
+import { EnderecoFindOneOutputRestDto, type EnderecoInputRestDto } from "./endereco.rest.dto";
 
-export class EnderecoRestMapper {
-  static toCreateInput(dto: EnderecoInputRestDto): EnderecoCreateCommand {
-    const input = new EnderecoCreateCommand();
-    input.cep = dto.cep;
-    input.logradouro = dto.logradouro;
-    input.numero = dto.numero;
-    input.bairro = dto.bairro;
-    input.complemento = dto.complemento ?? null;
-    input.pontoReferencia = dto.pontoReferencia ?? null;
-    input.cidade = { id: dto.cidade.id };
-    return input;
-  }
+// ============================================================================
+// Externa → Interna (Input: Presentation → Core)
+// ============================================================================
 
-  static toFindOneOutputDto(output: EnderecoFindOneQueryResult): EnderecoFindOneOutputRestDto {
-    const dto = new EnderecoFindOneOutputRestDto();
-    dto.id = output.id;
-    dto.cep = output.cep;
-    dto.logradouro = output.logradouro;
-    dto.numero = output.numero;
-    dto.bairro = output.bairro;
-    dto.complemento = output.complemento;
-    dto.pontoReferencia = output.pontoReferencia;
-    dto.cidade = CidadeRestMapper.toFindOneOutputDto(output.cidade);
-    mapDatedFields(dto, output);
-    return dto;
-  }
-}
+export const toCreateInput = createMapper<EnderecoInputRestDto, EnderecoCreateCommand>((dto) => {
+  const input = new EnderecoCreateCommand();
+  input.cep = dto.cep;
+  input.logradouro = dto.logradouro;
+  input.numero = dto.numero;
+  input.bairro = dto.bairro;
+  input.complemento = dto.complemento ?? null;
+  input.pontoReferencia = dto.pontoReferencia ?? null;
+  input.cidade = { id: dto.cidade.id };
+  return input;
+});
+
+// ============================================================================
+// Interna → Externa (Output: Core → Presentation)
+// ============================================================================
+
+export const toFindOneOutput = createMapper<
+  EnderecoFindOneQueryResult,
+  EnderecoFindOneOutputRestDto
+>((output) => ({
+  id: output.id,
+  cep: output.cep,
+  logradouro: output.logradouro,
+  numero: output.numero,
+  bairro: output.bairro,
+  complemento: output.complemento,
+  pontoReferencia: output.pontoReferencia,
+  cidade: CidadeRestMapper.toFindOneOutput.map(output.cidade),
+  dateCreated: output.dateCreated,
+  dateUpdated: output.dateUpdated,
+  dateDeleted: output.dateDeleted,
+}));

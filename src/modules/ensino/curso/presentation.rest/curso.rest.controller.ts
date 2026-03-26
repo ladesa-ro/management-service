@@ -64,7 +64,7 @@ import {
   CursoListOutputRestDto,
   CursoUpdateInputRestDto,
 } from "./curso.rest.dto";
-import { CursoRestMapper } from "./curso.rest.mapper";
+import * as CursoRestMapper from "./curso.rest.mapper";
 
 @ApiTags("cursos")
 @Controller("/cursos")
@@ -94,9 +94,9 @@ export class CursoRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Query() dto: CursoListInputRestDto,
   ): Promise<CursoListOutputRestDto> {
-    const input = CursoRestMapper.toListInput(dto);
+    const input = CursoRestMapper.toListInput.map(dto);
     const result = await this.listHandler.execute(accessContext, input);
-    return CursoRestMapper.toListOutputDto(result);
+    return CursoRestMapper.toListOutput(result);
   }
 
   @Get("/:id")
@@ -108,10 +108,10 @@ export class CursoRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: CursoFindOneInputRestDto,
   ): Promise<CursoFindOneOutputRestDto> {
-    const input = CursoRestMapper.toFindOneInput(params);
+    const input = CursoRestMapper.toFindOneInput.map(params);
     const result = await this.findOneHandler.execute(accessContext, input);
     ensureExists(result, Curso.entityName, input.id);
-    return CursoRestMapper.toFindOneOutputDto(result);
+    return CursoRestMapper.toFindOneOutput.map(result);
   }
 
   @Post("/")
@@ -122,9 +122,9 @@ export class CursoRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Body() dto: CursoCreateInputRestDto,
   ): Promise<CursoFindOneOutputRestDto> {
-    const input = CursoRestMapper.toCreateInput(dto);
+    const input = CursoRestMapper.toCreateInput.map(dto);
     const result = await this.createHandler.execute(accessContext, input);
-    return CursoRestMapper.toFindOneOutputDto(result);
+    return CursoRestMapper.toFindOneOutput.map(result);
   }
 
   @Patch("/:id")
@@ -137,9 +137,9 @@ export class CursoRestController {
     @Param() params: CursoFindOneInputRestDto,
     @Body() dto: CursoUpdateInputRestDto,
   ): Promise<CursoFindOneOutputRestDto> {
-    const input = CursoRestMapper.toUpdateInput(params, dto);
+    const input = CursoRestMapper.toUpdateInput.map({ params, dto });
     const result = await this.updateHandler.execute(accessContext, input);
-    return CursoRestMapper.toFindOneOutputDto(result);
+    return CursoRestMapper.toFindOneOutput.map(result);
   }
 
   @Get("/:id/imagem/capa")
@@ -164,9 +164,7 @@ export class CursoRestController {
   @ApiBody({
     schema: {
       type: "object",
-      properties: {
-        file: { type: "string", format: "binary" },
-      },
+      properties: { file: { type: "string", format: "binary" } },
       required: ["file"],
     },
   })
@@ -191,7 +189,7 @@ export class CursoRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: CursoFindOneInputRestDto,
   ): Promise<boolean> {
-    const input = CursoRestMapper.toFindOneInput(params);
+    const input = CursoRestMapper.toFindOneInput.map(params);
     return this.deleteHandler.execute(accessContext, input);
   }
 }

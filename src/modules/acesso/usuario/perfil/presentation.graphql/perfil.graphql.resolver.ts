@@ -7,7 +7,7 @@ import {
 } from "@/modules/acesso/usuario/perfil/domain/queries/perfil-find-one.query.handler.interface";
 import { AccessContextGraphQL } from "@/server/nest/access-context";
 import { PerfilFindOneOutputGraphQlDto } from "./perfil.graphql.dto";
-import { PerfilGraphqlMapper } from "./perfil.graphql.mapper";
+import * as PerfilGraphqlMapper from "./perfil.graphql.mapper";
 
 @Resolver(() => PerfilFindOneOutputGraphQlDto)
 export class PerfilGraphqlResolver {
@@ -28,6 +28,6 @@ export class PerfilGraphqlResolver {
     if (!result) {
       return null;
     }
-    return PerfilGraphqlMapper.toFindOneOutputDto(result);
+    return PerfilGraphqlMapper.toFindOneOutput.map(result);
   }
 }

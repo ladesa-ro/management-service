@@ -1,11 +1,12 @@
+import { z } from "zod";
 import {
   EntityBaseGraphQlDto,
   PaginatedFilterByIdGraphQlDto,
   PaginationMetaGraphQlDto,
 } from "@/infrastructure.graphql/dtos";
 import { ImagemFindOneOutputGraphQlDto } from "@/modules/armazenamento/imagem-arquivo/presentation.graphql/imagem-arquivo.graphql.dto";
-import { DisciplinaGraphqlListInputSchema } from "@/modules/ensino/disciplina/domain/queries/disciplina-list.query.schemas";
 import { ArgsType, Field, InputType, Int, ObjectType } from "@/shared/presentation/graphql";
+import { createGraphqlListInputSchema } from "@/shared/validation/schemas";
 import { DisciplinaCreateCommandFields } from "../domain/commands/disciplina-create.command";
 import { DisciplinaUpdateCommandFields } from "../domain/commands/disciplina-update.command";
 import { DisciplinaCreateSchema, DisciplinaUpdateSchema } from "../domain/disciplina.schemas";
@@ -81,6 +82,10 @@ export class DisciplinaUpdateInputGraphQlDto {
 // ============================================================================
 // List Input
 // ============================================================================
+
+const DisciplinaGraphqlListInputSchema = createGraphqlListInputSchema({
+  filterDiariosId: z.array(z.string()).optional(),
+});
 
 @ArgsType()
 export class DisciplinaListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {

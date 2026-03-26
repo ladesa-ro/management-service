@@ -74,8 +74,8 @@ export class UsuarioEventoTypeOrmRepositoryAdapter implements IUsuarioEventoRepo
     evento.id = generateUuidV7();
     evento.tipo = tipo;
     evento.nome = input.nome;
-    evento.dataInicio = new Date(input.dataInicio);
-    evento.dataFim = input.dataFim ? new Date(input.dataFim) : null;
+    evento.dataInicio = input.dataInicio;
+    evento.dataFim = input.dataFim ?? null;
     evento.diaInteiro = input.diaInteiro;
     evento.horarioInicio = input.horarioInicio ?? "00:00:00";
     evento.horarioFim = input.horarioFim ?? "23:59:59";
@@ -109,9 +109,8 @@ export class UsuarioEventoTypeOrmRepositoryAdapter implements IUsuarioEventoRepo
     }
 
     if (input.nome !== undefined) entity.nome = input.nome;
-    if (input.dataInicio !== undefined) entity.dataInicio = new Date(input.dataInicio);
-    if (input.dataFim !== undefined)
-      entity.dataFim = input.dataFim ? new Date(input.dataFim) : null;
+    if (input.dataInicio !== undefined) entity.dataInicio = input.dataInicio;
+    if (input.dataFim !== undefined) entity.dataFim = input.dataFim ?? null;
     if (input.diaInteiro !== undefined) entity.diaInteiro = input.diaInteiro;
     if (input.horarioInicio !== undefined) entity.horarioInicio = input.horarioInicio;
     if (input.horarioFim !== undefined) entity.horarioFim = input.horarioFim;
@@ -145,16 +144,8 @@ export class UsuarioEventoTypeOrmRepositoryAdapter implements IUsuarioEventoRepo
       id: entity.id,
       nome: entity.nome,
       tipo: entity.tipo,
-      dataInicio:
-        entity.dataInicio instanceof Date
-          ? entity.dataInicio.toISOString().split("T")[0]
-          : String(entity.dataInicio),
-      dataFim:
-        entity.dataFim instanceof Date
-          ? entity.dataFim.toISOString().split("T")[0]
-          : entity.dataFim
-            ? String(entity.dataFim)
-            : null,
+      dataInicio: String(entity.dataInicio),
+      dataFim: entity.dataFim ? String(entity.dataFim) : null,
       diaInteiro: entity.diaInteiro,
       horarioInicio: entity.horarioInicio,
       horarioFim: entity.horarioFim,

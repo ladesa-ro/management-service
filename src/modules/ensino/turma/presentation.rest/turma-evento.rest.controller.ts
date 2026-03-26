@@ -55,8 +55,8 @@ export class TurmaEventoRestController {
   ): Promise<TurmaEventoFindOneOutputRestDto> {
     const evento = await this.turmaEventoRepository.createEvento(parentParams.turmaId, {
       nome: dto.nome,
-      dataInicio: new Date(dto.dataInicio),
-      dataFim: dto.dataFim ? new Date(dto.dataFim) : null,
+      dataInicio: dto.dataInicio,
+      dataFim: dto.dataFim ?? null,
       diaInteiro: dto.diaInteiro,
       horarioInicio: dto.horarioInicio ?? "00:00:00",
       horarioFim: dto.horarioFim ?? "23:59:59",
@@ -108,16 +108,8 @@ export class TurmaEventoRestController {
     return {
       id: entity.id,
       nome: entity.nome,
-      dataInicio:
-        entity.dataInicio instanceof Date
-          ? entity.dataInicio.toISOString().split("T")[0]
-          : String(entity.dataInicio),
-      dataFim:
-        entity.dataFim instanceof Date
-          ? entity.dataFim.toISOString().split("T")[0]
-          : entity.dataFim
-            ? String(entity.dataFim)
-            : null,
+      dataInicio: String(entity.dataInicio),
+      dataFim: entity.dataFim ? String(entity.dataFim) : null,
       diaInteiro: entity.diaInteiro,
       horarioInicio: entity.horarioInicio,
       horarioFim: entity.horarioFim,

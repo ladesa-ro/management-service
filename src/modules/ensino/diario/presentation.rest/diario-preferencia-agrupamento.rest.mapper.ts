@@ -1,64 +1,71 @@
-import { createListOutputMapper, mapDatedFields } from "@/shared/mapping";
+import { createListMapper, createMapper } from "@/shared/mapping";
 import {
   DiarioPreferenciaAgrupamentoBulkReplaceCommand,
   DiarioPreferenciaAgrupamentoListQuery,
 } from "../domain";
 import type { DiarioPreferenciaAgrupamentoFindOneQueryResult } from "../domain/queries";
-import { DiarioRestMapper } from "./diario.rest.mapper";
+import * as DiarioRestMapper from "./diario.rest.mapper";
 import {
-  DiarioPreferenciaAgrupamentoBulkReplaceInputRestDto,
+  type DiarioPreferenciaAgrupamentoBulkReplaceInputRestDto,
   DiarioPreferenciaAgrupamentoFindOneOutputRestDto,
-  DiarioPreferenciaAgrupamentoListInputRestDto,
+  type DiarioPreferenciaAgrupamentoListInputRestDto,
   DiarioPreferenciaAgrupamentoListOutputRestDto,
-  DiarioPreferenciaAgrupamentoParentParamsRestDto,
+  type DiarioPreferenciaAgrupamentoParentParamsRestDto,
 } from "./diario-preferencia-agrupamento.rest.dto";
 
-export class DiarioPreferenciaAgrupamentoRestMapper {
-  static toListInput(
-    parentParams: DiarioPreferenciaAgrupamentoParentParamsRestDto,
-    dto: DiarioPreferenciaAgrupamentoListInputRestDto,
-  ): DiarioPreferenciaAgrupamentoListQuery {
-    const input = new DiarioPreferenciaAgrupamentoListQuery();
-    input.page = dto.page;
-    input.limit = dto.limit;
-    input.search = dto.search;
-    input.sortBy = dto.sortBy;
-    input["filter.id"] = dto["filter.id"];
-    input["filter.diario.id"] = [parentParams.diarioId];
-    return input;
-  }
+// ============================================================================
+// Externa -> Interna (Input: Presentation -> Core)
+// ============================================================================
 
-  static toBulkReplaceInput(
-    parentParams: DiarioPreferenciaAgrupamentoParentParamsRestDto,
-    dto: DiarioPreferenciaAgrupamentoBulkReplaceInputRestDto,
-  ): DiarioPreferenciaAgrupamentoBulkReplaceCommand {
-    const input = new DiarioPreferenciaAgrupamentoBulkReplaceCommand();
-    input.diarioId = parentParams.diarioId;
-    input.preferenciasAgrupamento = dto.preferenciasAgrupamento.map((p) => ({
-      dataInicio: p.dataInicio,
-      dataFim: p.dataFim ?? null,
-      diaSemanaIso: p.diaSemanaIso,
-      aulasSeguidas: p.aulasSeguidas,
-    }));
-    return input;
-  }
-
-  static toFindOneOutputDto(
-    output: DiarioPreferenciaAgrupamentoFindOneQueryResult,
-  ): DiarioPreferenciaAgrupamentoFindOneOutputRestDto {
-    const dto = new DiarioPreferenciaAgrupamentoFindOneOutputRestDto();
-    dto.id = output.id;
-    dto.dataInicio = output.dataInicio;
-    dto.dataFim = output.dataFim;
-    dto.diaSemanaIso = output.diaSemanaIso;
-    dto.aulasSeguidas = output.aulasSeguidas;
-    dto.diario = DiarioRestMapper.toFindOneOutputDto(output.diario);
-    mapDatedFields(dto, output);
-    return dto;
-  }
-
-  static toListOutputDto = createListOutputMapper(
-    DiarioPreferenciaAgrupamentoListOutputRestDto,
-    DiarioPreferenciaAgrupamentoRestMapper.toFindOneOutputDto,
-  );
+export function toListInput(
+  parentParams: DiarioPreferenciaAgrupamentoParentParamsRestDto,
+  dto: DiarioPreferenciaAgrupamentoListInputRestDto,
+): DiarioPreferenciaAgrupamentoListQuery {
+  const input = new DiarioPreferenciaAgrupamentoListQuery();
+  input.page = dto.page;
+  input.limit = dto.limit;
+  input.search = dto.search;
+  input.sortBy = dto.sortBy;
+  input["filter.id"] = dto["filter.id"];
+  input["filter.diario.id"] = [parentParams.diarioId];
+  return input;
 }
+
+export function toBulkReplaceInput(
+  parentParams: DiarioPreferenciaAgrupamentoParentParamsRestDto,
+  dto: DiarioPreferenciaAgrupamentoBulkReplaceInputRestDto,
+): DiarioPreferenciaAgrupamentoBulkReplaceCommand {
+  const input = new DiarioPreferenciaAgrupamentoBulkReplaceCommand();
+  input.diarioId = parentParams.diarioId;
+  input.preferenciasAgrupamento = dto.preferenciasAgrupamento.map((p) => ({
+    dataInicio: p.dataInicio,
+    dataFim: p.dataFim ?? null,
+    diaSemanaIso: p.diaSemanaIso,
+    aulasSeguidas: p.aulasSeguidas,
+  }));
+  return input;
+}
+
+// ============================================================================
+// Interna -> Externa (Output: Core -> Presentation)
+// ============================================================================
+
+export const toFindOneOutput = createMapper<
+  DiarioPreferenciaAgrupamentoFindOneQueryResult,
+  DiarioPreferenciaAgrupamentoFindOneOutputRestDto
+>((output) => ({
+  id: output.id,
+  dataInicio: output.dataInicio,
+  dataFim: output.dataFim,
+  diaSemanaIso: output.diaSemanaIso,
+  aulasSeguidas: output.aulasSeguidas,
+  diario: DiarioRestMapper.toFindOneOutput.map(output.diario),
+  dateCreated: output.dateCreated,
+  dateUpdated: output.dateUpdated,
+  dateDeleted: output.dateDeleted,
+}));
+
+export const toListOutput = createListMapper(
+  DiarioPreferenciaAgrupamentoListOutputRestDto,
+  toFindOneOutput,
+);

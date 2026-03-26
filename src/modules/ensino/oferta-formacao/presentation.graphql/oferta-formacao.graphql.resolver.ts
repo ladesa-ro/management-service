@@ -31,7 +31,7 @@ import {
   OfertaFormacaoListOutputGraphQlDto,
   OfertaFormacaoUpdateInputGraphQlDto,
 } from "./oferta-formacao.graphql.dto";
-import { OfertaFormacaoGraphqlMapper } from "./oferta-formacao.graphql.mapper";
+import * as OfertaFormacaoGraphqlMapper from "./oferta-formacao.graphql.mapper";
 
 @Resolver(() => OfertaFormacaoFindOneOutputGraphQlDto)
 export class OfertaFormacaoGraphqlResolver {
@@ -55,7 +55,7 @@ export class OfertaFormacaoGraphqlResolver {
   ): Promise<OfertaFormacaoListOutputGraphQlDto> {
     const input = OfertaFormacaoGraphqlMapper.toListInput(dto);
     const result = await this.listHandler.execute(accessContext, input);
-    return OfertaFormacaoGraphqlMapper.toListOutputDto(result);
+    return OfertaFormacaoGraphqlMapper.toListOutput(result);
   }
 
   @Query(
@@ -66,9 +66,10 @@ export class OfertaFormacaoGraphqlResolver {
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<OfertaFormacaoFindOneOutputGraphQlDto> {
-    const result = await this.findOneHandler.execute(accessContext, { id });
-    ensureExists(result, OfertaFormacao.entityName, id);
-    return OfertaFormacaoGraphqlMapper.toFindOneOutputDto(result);
+    const input = OfertaFormacaoGraphqlMapper.toFindOneInput.map(id);
+    const result = await this.findOneHandler.execute(accessContext, input);
+    ensureExists(result, OfertaFormacao.entityName, input.id);
+    return OfertaFormacaoGraphqlMapper.toFindOneOutput.map(result);
   }
 
   @Mutation(
@@ -79,9 +80,9 @@ export class OfertaFormacaoGraphqlResolver {
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("input") dto: OfertaFormacaoCreateInputGraphQlDto,
   ): Promise<OfertaFormacaoFindOneOutputGraphQlDto> {
-    const input = OfertaFormacaoGraphqlMapper.toCreateInput(dto);
+    const input = OfertaFormacaoGraphqlMapper.toCreateInput.map(dto);
     const result = await this.createHandler.execute(accessContext, input);
-    return OfertaFormacaoGraphqlMapper.toFindOneOutputDto(result);
+    return OfertaFormacaoGraphqlMapper.toFindOneOutput.map(result);
   }
 
   @Mutation(
@@ -93,9 +94,9 @@ export class OfertaFormacaoGraphqlResolver {
     @Args("id", { type: () => ID }) id: string,
     @Args("input") dto: OfertaFormacaoUpdateInputGraphQlDto,
   ): Promise<OfertaFormacaoFindOneOutputGraphQlDto> {
-    const input = OfertaFormacaoGraphqlMapper.toUpdateInput({ id }, dto);
+    const input = OfertaFormacaoGraphqlMapper.toUpdateInput.map({ id, dto });
     const result = await this.updateHandler.execute(accessContext, input);
-    return OfertaFormacaoGraphqlMapper.toFindOneOutputDto(result);
+    return OfertaFormacaoGraphqlMapper.toFindOneOutput.map(result);
   }
 
   @Mutation(() => Boolean, OfertaFormacaoDeleteCommandMetadata.gqlMetadata)

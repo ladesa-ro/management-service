@@ -32,7 +32,7 @@ import {
   GerarHorarioFindOneOutputRestDto,
   GerarHorarioFindOneParamsRestDto,
 } from "./gerar-horario.rest.dto";
-import { GerarHorarioRestMapper } from "./gerar-horario.rest.mapper";
+import * as GerarHorarioRestMapper from "./gerar-horario.rest.mapper";
 
 @ApiTags("gerar-horario")
 @Controller("/gerar-horario")
@@ -58,7 +58,7 @@ export class GerarHorarioRestController {
     @Body() dto: GerarHorarioCreateInputRestDto,
   ): Promise<GerarHorarioFindOneOutputRestDto> {
     const result = await this.createHandler.execute(accessContext, dto);
-    return GerarHorarioRestMapper.toFindOneOutputDto(result);
+    return GerarHorarioRestMapper.toFindOneOutput.map(result);
   }
 
   @Get("/:id")
@@ -72,7 +72,7 @@ export class GerarHorarioRestController {
   ): Promise<GerarHorarioFindOneOutputRestDto> {
     const result = await this.findOneHandler.execute(accessContext, { id: params.id });
     ensureExists(result, "GerarHorario", params.id);
-    return GerarHorarioRestMapper.toFindOneOutputDto(result!);
+    return GerarHorarioRestMapper.toFindOneOutput.map(result!);
   }
 
   @Post("/:id/aceitar")
@@ -85,7 +85,7 @@ export class GerarHorarioRestController {
     @Param() params: GerarHorarioFindOneParamsRestDto,
   ): Promise<GerarHorarioFindOneOutputRestDto> {
     const result = await this.aceitarHandler.execute(accessContext, { id: params.id });
-    return GerarHorarioRestMapper.toFindOneOutputDto(result);
+    return GerarHorarioRestMapper.toFindOneOutput.map(result);
   }
 
   @Post("/:id/rejeitar")
@@ -98,6 +98,6 @@ export class GerarHorarioRestController {
     @Param() params: GerarHorarioFindOneParamsRestDto,
   ): Promise<GerarHorarioFindOneOutputRestDto> {
     const result = await this.rejeitarHandler.execute(accessContext, { id: params.id });
-    return GerarHorarioRestMapper.toFindOneOutputDto(result);
+    return GerarHorarioRestMapper.toFindOneOutput.map(result);
   }
 }

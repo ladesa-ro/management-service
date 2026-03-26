@@ -1,86 +1,81 @@
 import {
   CampusCreateCommand,
   CampusFindOneQuery,
-  CampusFindOneQueryResult,
+  type CampusFindOneQueryResult,
   CampusListQuery,
   CampusUpdateCommand,
 } from "@/modules/ambientes/campus";
-import { EnderecoRestMapper } from "@/modules/localidades/endereco/presentation.rest";
+import * as EnderecoRestMapper from "@/modules/localidades/endereco/presentation.rest/endereco.rest.mapper";
 import {
-  createFindOneInputMapper,
-  createListInputMapper,
-  createListOutputMapper,
-  mapDatedFields,
+  createListMapper,
+  createMapper,
+  createPaginatedInputMapper,
+  mapField,
 } from "@/shared/mapping";
 import {
-  CampusCreateInputRestDto,
-  CampusFindOneInputRestDto,
+  type CampusCreateInputRestDto,
+  type CampusFindOneInputRestDto,
   CampusFindOneOutputRestDto,
+  type CampusListInputRestDto,
   CampusListOutputRestDto,
-  CampusUpdateInputRestDto,
+  type CampusUpdateInputRestDto,
 } from "./campus.rest.dto";
 
-export class CampusRestMapper {
-  // ============================================================================
-  // Input: Server DTO -> Core DTO
-  // ============================================================================
+// ============================================================================
+// Externa → Interna (Input: Presentation → Core)
+// ============================================================================
 
-  static toFindOneInput = createFindOneInputMapper(CampusFindOneQuery);
+export const toFindOneInput = createMapper<CampusFindOneInputRestDto, CampusFindOneQuery>((dto) => {
+  const input = new CampusFindOneQuery();
+  input.id = dto.id;
+  return input;
+});
 
-  static toListInput = createListInputMapper(CampusListQuery, ["filter.id"]);
+export const toListInput = createPaginatedInputMapper<CampusListInputRestDto, CampusListQuery>(
+  CampusListQuery,
+  (dto, query) => {
+    mapField(query, "filter.id", dto, "filter.id");
+  },
+);
 
-  static toCreateInput(dto: CampusCreateInputRestDto): CampusCreateCommand {
-    const input = new CampusCreateCommand();
-    input.nomeFantasia = dto.nomeFantasia;
-    input.razaoSocial = dto.razaoSocial;
-    input.apelido = dto.apelido;
-    input.cnpj = dto.cnpj;
-    input.endereco = EnderecoRestMapper.toCreateInput(dto.endereco);
-    return input;
-  }
+export const toCreateInput = createMapper<CampusCreateInputRestDto, CampusCreateCommand>((dto) => {
+  const input = new CampusCreateCommand();
+  input.nomeFantasia = dto.nomeFantasia;
+  input.razaoSocial = dto.razaoSocial;
+  input.apelido = dto.apelido;
+  input.cnpj = dto.cnpj;
+  input.endereco = EnderecoRestMapper.toCreateInput.map(dto.endereco);
+  return input;
+});
 
-  static toUpdateInput(
-    params: CampusFindOneInputRestDto,
-    dto: CampusUpdateInputRestDto,
-  ): CampusFindOneQuery & CampusUpdateCommand {
-    const input = new CampusFindOneQuery() as CampusFindOneQuery & CampusUpdateCommand;
-    input.id = params.id;
-    if (dto.nomeFantasia !== undefined) {
-      input.nomeFantasia = dto.nomeFantasia;
-    }
-    if (dto.razaoSocial !== undefined) {
-      input.razaoSocial = dto.razaoSocial;
-    }
-    if (dto.apelido !== undefined) {
-      input.apelido = dto.apelido;
-    }
-    if (dto.cnpj !== undefined) {
-      input.cnpj = dto.cnpj;
-    }
-    if (dto.endereco !== undefined) {
-      input.endereco = EnderecoRestMapper.toCreateInput(dto.endereco);
-    }
-    return input;
-  }
+export const toUpdateInput = createMapper<
+  { params: CampusFindOneInputRestDto; dto: CampusUpdateInputRestDto },
+  CampusFindOneQuery & CampusUpdateCommand
+>(({ params, dto }) => ({
+  id: params.id,
+  nomeFantasia: dto.nomeFantasia,
+  razaoSocial: dto.razaoSocial,
+  apelido: dto.apelido,
+  cnpj: dto.cnpj,
+  endereco: dto.endereco ? EnderecoRestMapper.toCreateInput.map(dto.endereco) : undefined,
+}));
 
-  // ============================================================================
-  // Output: Core DTO -> Server DTO
-  // ============================================================================
+// ============================================================================
+// Interna → Externa (Output: Core → Presentation)
+// ============================================================================
 
-  static toFindOneOutputDto(output: CampusFindOneQueryResult): CampusFindOneOutputRestDto {
-    const dto = new CampusFindOneOutputRestDto();
-    dto.id = output.id;
-    dto.nomeFantasia = output.nomeFantasia;
-    dto.razaoSocial = output.razaoSocial;
-    dto.apelido = output.apelido;
-    dto.cnpj = output.cnpj;
-    dto.endereco = EnderecoRestMapper.toFindOneOutputDto(output.endereco);
-    mapDatedFields(dto, output);
-    return dto;
-  }
+export const toFindOneOutput = createMapper<CampusFindOneQueryResult, CampusFindOneOutputRestDto>(
+  (output) => ({
+    id: output.id,
+    nomeFantasia: output.nomeFantasia,
+    razaoSocial: output.razaoSocial,
+    apelido: output.apelido,
+    cnpj: output.cnpj,
+    endereco: EnderecoRestMapper.toFindOneOutput.map(output.endereco),
+    dateCreated: output.dateCreated,
+    dateUpdated: output.dateUpdated,
+    dateDeleted: output.dateDeleted,
+  }),
+);
 
-  static toListOutputDto = createListOutputMapper(
-    CampusListOutputRestDto,
-    CampusRestMapper.toFindOneOutputDto,
-  );
-}
+export const toListOutput = createListMapper(CampusListOutputRestDto, toFindOneOutput);

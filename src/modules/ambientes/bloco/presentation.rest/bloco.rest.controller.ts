@@ -64,7 +64,7 @@ import {
   BlocoListOutputRestDto,
   BlocoUpdateInputRestDto,
 } from "./bloco.rest.dto";
-import { BlocoRestMapper } from "./bloco.rest.mapper";
+import * as BlocoRestMapper from "./bloco.rest.mapper";
 
 @ApiTags("blocos")
 @Controller("/blocos")
@@ -94,9 +94,9 @@ export class BlocoRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Query() dto: BlocoListInputRestDto,
   ): Promise<BlocoListOutputRestDto> {
-    const input = BlocoRestMapper.toListInput(dto);
+    const input = BlocoRestMapper.toListInput.map(dto);
     const result = await this.listHandler.execute(accessContext, input);
-    return BlocoRestMapper.toListOutputDto(result);
+    return BlocoRestMapper.toListOutput(result);
   }
 
   @Get("/:id")
@@ -108,10 +108,10 @@ export class BlocoRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: BlocoFindOneInputRestDto,
   ): Promise<BlocoFindOneOutputRestDto> {
-    const input = BlocoRestMapper.toFindOneInput(params);
+    const input = BlocoRestMapper.toFindOneInput.map(params);
     const result = await this.findOneHandler.execute(accessContext, input);
     ensureExists(result, Bloco.entityName, input.id);
-    return BlocoRestMapper.toFindOneOutputDto(result);
+    return BlocoRestMapper.toFindOneOutput.map(result);
   }
 
   @Post("/")
@@ -122,9 +122,9 @@ export class BlocoRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Body() dto: BlocoCreateInputRestDto,
   ): Promise<BlocoFindOneOutputRestDto> {
-    const input = BlocoRestMapper.toCreateInput(dto);
+    const input = BlocoRestMapper.toCreateInput.map(dto);
     const result = await this.createHandler.execute(accessContext, input);
-    return BlocoRestMapper.toFindOneOutputDto(result);
+    return BlocoRestMapper.toFindOneOutput.map(result);
   }
 
   @Patch("/:id")
@@ -137,9 +137,9 @@ export class BlocoRestController {
     @Param() params: BlocoFindOneInputRestDto,
     @Body() dto: BlocoUpdateInputRestDto,
   ): Promise<BlocoFindOneOutputRestDto> {
-    const input = BlocoRestMapper.toUpdateInput(params, dto);
+    const input = BlocoRestMapper.toUpdateInput.map({ params, dto });
     const result = await this.updateHandler.execute(accessContext, input);
-    return BlocoRestMapper.toFindOneOutputDto(result);
+    return BlocoRestMapper.toFindOneOutput.map(result);
   }
 
   @Get("/:id/imagem/capa")
@@ -191,7 +191,7 @@ export class BlocoRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: BlocoFindOneInputRestDto,
   ): Promise<boolean> {
-    const input = BlocoRestMapper.toFindOneInput(params);
+    const input = BlocoRestMapper.toFindOneInput.map(params);
     return this.deleteHandler.execute(accessContext, input);
   }
 }

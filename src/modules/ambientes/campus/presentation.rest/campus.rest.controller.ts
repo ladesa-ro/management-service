@@ -40,7 +40,7 @@ import {
   CampusListOutputRestDto,
   CampusUpdateInputRestDto,
 } from "./campus.rest.dto";
-import { CampusRestMapper } from "./campus.rest.mapper";
+import * as CampusRestMapper from "./campus.rest.mapper";
 
 @ApiTags("campi")
 @Controller("/campi")
@@ -66,9 +66,9 @@ export class CampusRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Query() dto: CampusListInputRestDto,
   ): Promise<CampusListOutputRestDto> {
-    const input = CampusRestMapper.toListInput(dto);
+    const input = CampusRestMapper.toListInput.map(dto);
     const result = await this.listHandler.execute(accessContext, input);
-    return CampusRestMapper.toListOutputDto(result);
+    return CampusRestMapper.toListOutput(result);
   }
 
   @Get("/:id")
@@ -80,10 +80,10 @@ export class CampusRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: CampusFindOneInputRestDto,
   ): Promise<CampusFindOneOutputRestDto> {
-    const input = CampusRestMapper.toFindOneInput(params);
+    const input = CampusRestMapper.toFindOneInput.map(params);
     const result = await this.findOneHandler.execute(accessContext, input);
     ensureExists(result, Campus.entityName, input.id);
-    return CampusRestMapper.toFindOneOutputDto(result);
+    return CampusRestMapper.toFindOneOutput.map(result);
   }
 
   @Post("/")
@@ -94,9 +94,9 @@ export class CampusRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Body() dto: CampusCreateInputRestDto,
   ): Promise<CampusFindOneOutputRestDto> {
-    const input = CampusRestMapper.toCreateInput(dto);
+    const input = CampusRestMapper.toCreateInput.map(dto);
     const result = await this.createHandler.execute(accessContext, input);
-    return CampusRestMapper.toFindOneOutputDto(result);
+    return CampusRestMapper.toFindOneOutput.map(result);
   }
 
   @Patch("/:id")
@@ -109,9 +109,9 @@ export class CampusRestController {
     @Param() params: CampusFindOneInputRestDto,
     @Body() dto: CampusUpdateInputRestDto,
   ): Promise<CampusFindOneOutputRestDto> {
-    const input = CampusRestMapper.toUpdateInput(params, dto);
+    const input = CampusRestMapper.toUpdateInput.map({ params, dto });
     const result = await this.updateHandler.execute(accessContext, input);
-    return CampusRestMapper.toFindOneOutputDto(result);
+    return CampusRestMapper.toFindOneOutput.map(result);
   }
 
   @Delete("/:id")
@@ -123,7 +123,7 @@ export class CampusRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: CampusFindOneInputRestDto,
   ): Promise<boolean> {
-    const input = CampusRestMapper.toFindOneInput(params);
+    const input = CampusRestMapper.toFindOneInput.map(params);
     return this.deleteHandler.execute(accessContext, input);
   }
 }

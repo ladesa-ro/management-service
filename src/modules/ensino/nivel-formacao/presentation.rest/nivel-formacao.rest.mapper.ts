@@ -5,7 +5,12 @@ import {
   NivelFormacaoListQuery,
   NivelFormacaoUpdateCommand,
 } from "@/modules/ensino/nivel-formacao";
-import { createListMapper, createMapper, createPaginatedInputMapper } from "@/shared/mapping";
+import {
+  createListMapper,
+  createMapper,
+  createPaginatedInputMapper,
+  mapField,
+} from "@/shared/mapping";
 import {
   type NivelFormacaoCreateInputRestDto,
   type NivelFormacaoFindOneInputRestDto,
@@ -32,7 +37,7 @@ export const toListInput = createPaginatedInputMapper<
   NivelFormacaoListInputRestDto,
   NivelFormacaoListQuery
 >(NivelFormacaoListQuery, (dto, query) => {
-  if (dto["filter.id"] !== undefined) query["filter.id"] = dto["filter.id"];
+  mapField(query, "filter.id", dto, "filter.id");
 });
 
 export const toCreateInput = createMapper<

@@ -15,7 +15,7 @@ import {
 } from "@/modules/acesso/usuario/perfil/domain/queries/perfil-find-one.query.handler.interface";
 import { AccessContextHttp } from "@/server/nest/access-context";
 import { PerfilFindOneInputRestDto, PerfilFindOneOutputRestDto } from "./perfil.rest.dto";
-import { PerfilRestMapper } from "./perfil.rest.mapper";
+import * as PerfilRestMapper from "./perfil.rest.mapper";
 
 @ApiTags("usuarios")
 @Controller("/usuarios/:usuarioId/perfis")
@@ -34,9 +34,9 @@ export class PerfilRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: PerfilFindOneInputRestDto,
   ): Promise<PerfilFindOneOutputRestDto | null> {
-    const input = PerfilRestMapper.toFindOneInput(params);
+    const input = PerfilRestMapper.toFindOneInput.map(params);
     const result = await this.findOneHandler.execute(accessContext, input);
-    return result ? PerfilRestMapper.toFindOneOutputDto(result) : null;
+    return result ? PerfilRestMapper.toFindOneOutput.map(result) : null;
   }
 
   @Get("/:id/ensino")
@@ -48,8 +48,8 @@ export class PerfilRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: PerfilFindOneInputRestDto,
   ): Promise<PerfilFindOneOutputRestDto | null> {
-    const input = PerfilRestMapper.toFindOneInput(params);
+    const input = PerfilRestMapper.toFindOneInput.map(params);
     const result = await this.findOneHandler.execute(accessContext, input);
-    return result ? PerfilRestMapper.toFindOneOutputDto(result) : null;
+    return result ? PerfilRestMapper.toFindOneOutput.map(result) : null;
   }
 }

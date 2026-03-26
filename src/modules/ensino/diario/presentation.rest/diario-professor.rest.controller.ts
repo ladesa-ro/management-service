@@ -17,7 +17,7 @@ import {
   DiarioProfessorListOutputRestDto,
   DiarioProfessorParentParamsRestDto,
 } from "./diario-professor.rest.dto";
-import { DiarioProfessorRestMapper } from "./diario-professor.rest.mapper";
+import * as DiarioProfessorRestMapper from "./diario-professor.rest.mapper";
 
 @ApiTags("diarios")
 @Controller("/diarios/:diarioId/professores")
@@ -40,7 +40,7 @@ export class DiarioProfessorRestController {
   ): Promise<DiarioProfessorListOutputRestDto> {
     const input = DiarioProfessorRestMapper.toListInput(parentParams, dto);
     const result = await this.listHandler.execute(accessContext, input);
-    return DiarioProfessorRestMapper.toListOutputDto(result);
+    return DiarioProfessorRestMapper.toListOutput(result);
   }
 
   @Put("/")
@@ -54,6 +54,6 @@ export class DiarioProfessorRestController {
   ): Promise<DiarioProfessorListOutputRestDto> {
     const input = DiarioProfessorRestMapper.toBulkReplaceInput(parentParams, dto);
     const result = await this.bulkReplaceHandler.execute(accessContext, input);
-    return DiarioProfessorRestMapper.toListOutputDto(result);
+    return DiarioProfessorRestMapper.toListOutput(result);
   }
 }

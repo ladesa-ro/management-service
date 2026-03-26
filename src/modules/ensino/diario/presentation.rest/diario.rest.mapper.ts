@@ -1,103 +1,99 @@
-import { AmbienteRestMapper } from "@/modules/ambientes/ambiente/presentation.rest";
-import { BlocoRestMapper } from "@/modules/ambientes/bloco/presentation.rest";
+import * as AmbienteRestMapper from "@/modules/ambientes/ambiente/presentation.rest/ambiente.rest.mapper";
+import * as BlocoRestMapper from "@/modules/ambientes/bloco/presentation.rest/bloco.rest.mapper";
 import {
   DiarioCreateCommand,
   DiarioFindOneQuery,
-  DiarioFindOneQueryResult,
+  type DiarioFindOneQueryResult,
   DiarioListQuery,
   DiarioUpdateCommand,
 } from "@/modules/ensino/diario";
-import { DisciplinaRestMapper } from "@/modules/ensino/disciplina/presentation.rest";
-import { TurmaRestMapper } from "@/modules/ensino/turma/presentation.rest";
-import { CalendarioLetivoRestMapper } from "@/modules/horarios/calendario-letivo/presentation.rest";
+import * as DisciplinaRestMapper from "@/modules/ensino/disciplina/presentation.rest/disciplina.rest.mapper";
+import * as TurmaRestMapper from "@/modules/ensino/turma/presentation.rest/turma.rest.mapper";
+import * as CalendarioLetivoRestMapper from "@/modules/horarios/calendario-letivo/presentation.rest/calendario-letivo.rest.mapper";
 import {
-  createFindOneInputMapper,
-  createListInputMapper,
-  createListOutputMapper,
-  mapDatedFields,
+  createListMapper,
+  createMapper,
+  createPaginatedInputMapper,
+  mapField,
 } from "@/shared/mapping";
 import {
-  DiarioCreateInputRestDto,
-  DiarioFindOneInputRestDto,
+  type DiarioCreateInputRestDto,
+  type DiarioFindOneInputRestDto,
   DiarioFindOneOutputRestDto,
+  type DiarioListInputRestDto,
   DiarioListOutputRestDto,
-  DiarioUpdateInputRestDto,
+  type DiarioUpdateInputRestDto,
 } from "./diario.rest.dto";
 
-export class DiarioRestMapper {
-  // ============================================================================
-  // Input: Server DTO -> Core DTO
-  // ============================================================================
+// ============================================================================
+// Externa -> Interna (Input: Presentation -> Core)
+// ============================================================================
 
-  static toFindOneInput = createFindOneInputMapper(DiarioFindOneQuery);
+export const toFindOneInput = createMapper<DiarioFindOneInputRestDto, DiarioFindOneQuery>((dto) => {
+  const input = new DiarioFindOneQuery();
+  input.id = dto.id;
+  return input;
+});
 
-  static toListInput = createListInputMapper(DiarioListQuery, [
-    "filter.id",
-    "filter.turma.id",
-    "filter.disciplina.id",
-    "filter.ambientePadrao.id",
-    "filter.calendarioLetivo.id",
-  ]);
+export const toListInput = createPaginatedInputMapper<DiarioListInputRestDto, DiarioListQuery>(
+  DiarioListQuery,
+  (dto, query) => {
+    mapField(query, "filter.id", dto, "filter.id");
+    mapField(query, "filter.turma.id", dto, "filter.turma.id");
+    mapField(query, "filter.disciplina.id", dto, "filter.disciplina.id");
+    mapField(query, "filter.calendarioLetivo.id", dto, "filter.calendarioLetivo.id");
+  },
+);
 
-  static toCreateInput(dto: DiarioCreateInputRestDto): DiarioCreateCommand {
-    const input = new DiarioCreateCommand();
-    input.ativo = dto.ativo;
-    input.calendarioLetivo = { id: dto.calendarioLetivo.id };
-    input.turma = { id: dto.turma.id };
-    input.disciplina = { id: dto.disciplina.id };
-    if (dto.ambientePadrao !== undefined) {
-      input.ambientePadrao = dto.ambientePadrao ? { id: dto.ambientePadrao.id } : null;
-    }
-    return input;
-  }
+export const toCreateInput = createMapper<DiarioCreateInputRestDto, DiarioCreateCommand>((dto) => ({
+  ativo: dto.ativo,
+  calendarioLetivo: { id: dto.calendarioLetivo.id },
+  turma: { id: dto.turma.id },
+  disciplina: { id: dto.disciplina.id },
+  ambientePadrao:
+    dto.ambientePadrao !== undefined
+      ? dto.ambientePadrao
+        ? { id: dto.ambientePadrao.id }
+        : null
+      : undefined,
+}));
 
-  static toUpdateInput(
-    params: DiarioFindOneInputRestDto,
-    dto: DiarioUpdateInputRestDto,
-  ): DiarioFindOneQuery & DiarioUpdateCommand {
-    const input = new DiarioFindOneQuery() as DiarioFindOneQuery & DiarioUpdateCommand;
-    input.id = params.id;
-    if (dto.ativo !== undefined) {
-      input.ativo = dto.ativo;
-    }
-    if (dto.calendarioLetivo !== undefined) {
-      input.calendarioLetivo = { id: dto.calendarioLetivo.id };
-    }
-    if (dto.turma !== undefined) {
-      input.turma = { id: dto.turma.id };
-    }
-    if (dto.disciplina !== undefined) {
-      input.disciplina = { id: dto.disciplina.id };
-    }
-    if (dto.ambientePadrao !== undefined) {
-      input.ambientePadrao = dto.ambientePadrao ? { id: dto.ambientePadrao.id } : null;
-    }
-    return input;
-  }
+export const toUpdateInput = createMapper<
+  { params: DiarioFindOneInputRestDto; dto: DiarioUpdateInputRestDto },
+  DiarioFindOneQuery & DiarioUpdateCommand
+>(({ params, dto }) => ({
+  id: params.id,
+  ativo: dto.ativo,
+  calendarioLetivo: dto.calendarioLetivo ? { id: dto.calendarioLetivo.id } : undefined,
+  turma: dto.turma ? { id: dto.turma.id } : undefined,
+  disciplina: dto.disciplina ? { id: dto.disciplina.id } : undefined,
+  ambientePadrao:
+    dto.ambientePadrao !== undefined
+      ? dto.ambientePadrao
+        ? { id: dto.ambientePadrao.id }
+        : null
+      : undefined,
+}));
 
-  // ============================================================================
-  // Output: Core DTO -> Server DTO
-  // ============================================================================
+// ============================================================================
+// Interna -> Externa (Output: Core -> Presentation)
+// ============================================================================
 
-  static toFindOneOutputDto(output: DiarioFindOneQueryResult): DiarioFindOneOutputRestDto {
-    const dto = new DiarioFindOneOutputRestDto();
-    dto.id = output.id;
-    dto.ativo = output.ativo;
-    dto.calendarioLetivo = CalendarioLetivoRestMapper.toFindOneOutputDto(output.calendarioLetivo);
-    dto.turma = TurmaRestMapper.toFindOneOutputDto(output.turma);
-    dto.disciplina = DisciplinaRestMapper.toFindOneOutputDto(output.disciplina);
-    dto.ambientePadrao = output.ambientePadrao
-      ? AmbienteRestMapper.toFindOneOutputDto(output.ambientePadrao)
-      : null;
-    dto.imagemCapa = output.imagemCapa
-      ? BlocoRestMapper.toImagemOutputDto(output.imagemCapa)
-      : null;
-    mapDatedFields(dto, output);
-    return dto;
-  }
+export const toFindOneOutput = createMapper<DiarioFindOneQueryResult, DiarioFindOneOutputRestDto>(
+  (output) => ({
+    id: output.id,
+    ativo: output.ativo,
+    calendarioLetivo: CalendarioLetivoRestMapper.toFindOneOutput.map(output.calendarioLetivo),
+    turma: TurmaRestMapper.toFindOneOutput.map(output.turma),
+    disciplina: DisciplinaRestMapper.toFindOneOutput.map(output.disciplina),
+    ambientePadrao: output.ambientePadrao
+      ? AmbienteRestMapper.toFindOneOutput.map(output.ambientePadrao)
+      : null,
+    imagemCapa: output.imagemCapa ? BlocoRestMapper.toImagemOutput(output.imagemCapa) : null,
+    dateCreated: output.dateCreated,
+    dateUpdated: output.dateUpdated,
+    dateDeleted: output.dateDeleted,
+  }),
+);
 
-  static toListOutputDto = createListOutputMapper(
-    DiarioListOutputRestDto,
-    DiarioRestMapper.toFindOneOutputDto,
-  );
-}
+export const toListOutput = createListMapper(DiarioListOutputRestDto, toFindOneOutput);

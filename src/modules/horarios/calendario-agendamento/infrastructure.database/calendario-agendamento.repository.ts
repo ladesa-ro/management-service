@@ -62,17 +62,17 @@ export class CalendarioAgendamentoTypeOrmRepositoryAdapter
       id: aggregate.id,
       tipo: aggregate.tipo as CalendarioAgendamentoTipo,
       nome: aggregate.nome,
-      dataInicio: new Date(aggregate.dataInicio),
-      dataFim: aggregate.dataFim ? new Date(aggregate.dataFim) : null,
+      dataInicio: aggregate.dataInicio,
+      dataFim: aggregate.dataFim,
       diaInteiro: aggregate.diaInteiro,
       horarioInicio: aggregate.horarioInicio,
       horarioFim: aggregate.horarioFim,
       cor: aggregate.cor,
       repeticao: aggregate.repeticao,
       status: aggregate.status as CalendarioAgendamentoStatus | null,
-      dateCreated: new Date(aggregate.dateCreated),
-      dateUpdated: new Date(aggregate.dateUpdated),
-      dateDeleted: aggregate.dateDeleted ? new Date(aggregate.dateDeleted) : null,
+      dateCreated: aggregate.dateCreated,
+      dateUpdated: aggregate.dateUpdated,
+      dateDeleted: aggregate.dateDeleted,
     });
     await repo.save(entity);
 
@@ -219,8 +219,8 @@ export class CalendarioAgendamentoTypeOrmRepositoryAdapter
     return result;
   }
 
-  private dateToString(d: Date): string {
-    return d instanceof Date ? d.toISOString().split("T")[0] : String(d);
+  private dateToString(d: string): string {
+    return String(d);
   }
 
   // ============================================================================

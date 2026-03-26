@@ -15,10 +15,10 @@ export class CalendarioAgendamentoEntity {
   tipo!: CalendarioAgendamentoTipo;
 
   @Column({ name: "data_inicio", type: "date", nullable: false })
-  dataInicio!: Date;
+  dataInicio!: string;
 
   @Column({ name: "data_fim", type: "date", nullable: true })
-  dataFim!: Date | null;
+  dataFim!: string | null;
 
   @Column({ name: "dia_inteiro", type: "boolean", nullable: false })
   diaInteiro!: boolean;
@@ -42,11 +42,11 @@ export class CalendarioAgendamentoEntity {
   status!: CalendarioAgendamentoStatus | null;
 
   @Column({ name: "date_created", type: "timestamptz", nullable: false, default: () => "NOW()" })
-  dateCreated!: Date;
+  dateCreated!: string;
 
   @Column({ name: "date_updated", type: "timestamptz", nullable: false, default: () => "NOW()" })
-  dateUpdated!: Date;
+  dateUpdated!: string;
 
   @Column({ name: "date_deleted", type: "timestamptz", nullable: true })
-  dateDeleted!: Date | null;
+  dateDeleted!: string | null;
 }

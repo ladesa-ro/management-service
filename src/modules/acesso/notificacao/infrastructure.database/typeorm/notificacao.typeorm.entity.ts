@@ -20,5 +20,5 @@ export class NotificacaoEntity {
   usuario!: Relation<UsuarioEntity>;
 
   @Column({ name: "date_created", type: "timestamptz", nullable: false })
-  dateCreated!: Date;
+  dateCreated!: string;
 }

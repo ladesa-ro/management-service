@@ -1,63 +1,69 @@
-import { PerfilRestMapper } from "@/modules/acesso/usuario/perfil/presentation.rest";
-import { createListOutputMapper } from "@/shared/mapping";
+import * as PerfilRestMapper from "@/modules/acesso/usuario/perfil/presentation.rest/perfil.rest.mapper";
+import { createListMapper, createMapper } from "@/shared/mapping";
 import { getNow } from "@/utils/date";
 import { DiarioProfessorBulkReplaceCommand, DiarioProfessorListQuery } from "../domain";
 import type { DiarioProfessorFindOneQueryResult } from "../domain/queries";
-import { DiarioRestMapper } from "./diario.rest.mapper";
+import * as DiarioRestMapper from "./diario.rest.mapper";
 import {
-  DiarioProfessorBulkReplaceInputRestDto,
+  type DiarioProfessorBulkReplaceInputRestDto,
   DiarioProfessorFindOneOutputRestDto,
-  DiarioProfessorListInputRestDto,
+  type DiarioProfessorListInputRestDto,
   DiarioProfessorListOutputRestDto,
-  DiarioProfessorParentParamsRestDto,
+  type DiarioProfessorParentParamsRestDto,
 } from "./diario-professor.rest.dto";
 
-export class DiarioProfessorRestMapper {
-  static toListInput(
-    parentParams: DiarioProfessorParentParamsRestDto,
-    dto: DiarioProfessorListInputRestDto,
-  ): DiarioProfessorListQuery {
-    const input = new DiarioProfessorListQuery();
-    input.page = dto.page;
-    input.limit = dto.limit;
-    input.search = dto.search;
-    input.sortBy = dto.sortBy;
-    input["filter.id"] = dto["filter.id"];
-    input["filter.diario.id"] = [parentParams.diarioId];
-    input["filter.perfil.id"] = dto["filter.perfil.id"];
-    input["filter.perfil.usuario.id"] = dto["filter.perfil.usuario.id"];
-    return input;
-  }
+// ============================================================================
+// Externa -> Interna (Input: Presentation -> Core)
+// ============================================================================
 
-  static toBulkReplaceInput(
-    parentParams: DiarioProfessorParentParamsRestDto,
-    dto: DiarioProfessorBulkReplaceInputRestDto,
-  ): DiarioProfessorBulkReplaceCommand {
-    const input = new DiarioProfessorBulkReplaceCommand();
-    input.diarioId = parentParams.diarioId;
-    input.professores = dto.professores.map((p) => ({
-      perfilId: p.perfilId,
-      situacao: p.situacao,
-    }));
-    return input;
-  }
-
-  static toFindOneOutputDto(
-    output: DiarioProfessorFindOneQueryResult,
-  ): DiarioProfessorFindOneOutputRestDto {
-    const dto = new DiarioProfessorFindOneOutputRestDto();
-    dto.id = output.id;
-    dto.situacao = output.situacao;
-    dto.perfil = PerfilRestMapper.toFindOneOutputDto(output.perfil);
-    dto.diario = DiarioRestMapper.toFindOneOutputDto(output.diario);
-    dto.dateCreated = output.dateCreated ? new Date(output.dateCreated) : getNow();
-    dto.dateUpdated = output.dateUpdated ? new Date(output.dateUpdated) : getNow();
-    dto.dateDeleted = output.dateDeleted ? new Date(output.dateDeleted) : null;
-    return dto;
-  }
-
-  static toListOutputDto = createListOutputMapper(
-    DiarioProfessorListOutputRestDto,
-    DiarioProfessorRestMapper.toFindOneOutputDto,
-  );
+export function toListInput(
+  parentParams: DiarioProfessorParentParamsRestDto,
+  dto: DiarioProfessorListInputRestDto,
+): DiarioProfessorListQuery {
+  const input = new DiarioProfessorListQuery();
+  input.page = dto.page;
+  input.limit = dto.limit;
+  input.search = dto.search;
+  input.sortBy = dto.sortBy;
+  input["filter.id"] = dto["filter.id"];
+  input["filter.diario.id"] = [parentParams.diarioId];
+  input["filter.perfil.id"] = dto["filter.perfil.id"];
+  input["filter.perfil.usuario.id"] = dto["filter.perfil.usuario.id"];
+  return input;
 }
+
+export function toBulkReplaceInput(
+  parentParams: DiarioProfessorParentParamsRestDto,
+  dto: DiarioProfessorBulkReplaceInputRestDto,
+): DiarioProfessorBulkReplaceCommand {
+  const input = new DiarioProfessorBulkReplaceCommand();
+  input.diarioId = parentParams.diarioId;
+  input.professores = dto.professores.map((p) => ({
+    perfilId: p.perfilId,
+    situacao: p.situacao,
+  }));
+  return input;
+}
+
+// ============================================================================
+// Interna -> Externa (Output: Core -> Presentation)
+// ============================================================================
+
+export const toFindOneOutput = createMapper<
+  DiarioProfessorFindOneQueryResult,
+  DiarioProfessorFindOneOutputRestDto
+>((output) => ({
+  id: output.id,
+  situacao: output.situacao,
+  perfil: PerfilRestMapper.toFindOneOutput.map(output.perfil),
+  diario: DiarioRestMapper.toFindOneOutput.map(output.diario),
+  dateCreated: output.dateCreated
+    ? new Date(output.dateCreated).toISOString()
+    : getNow().toISOString(),
+  dateUpdated: output.dateUpdated
+    ? new Date(output.dateUpdated).toISOString()
+    : getNow().toISOString(),
+  dateDeleted: output.dateDeleted ? new Date(output.dateDeleted).toISOString() : null,
+}));
+
+export const toListOutput = createListMapper(DiarioProfessorListOutputRestDto, toFindOneOutput);

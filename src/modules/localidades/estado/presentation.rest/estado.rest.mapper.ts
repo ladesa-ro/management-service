@@ -3,7 +3,12 @@ import {
   type EstadoFindOneQueryResult,
   EstadoListQuery,
 } from "@/modules/localidades/estado";
-import { createListMapper, createMapper, createPaginatedInputMapper } from "@/shared/mapping";
+import {
+  createListMapper,
+  createMapper,
+  createPaginatedInputMapper,
+  mapField,
+} from "@/shared/mapping";
 import {
   type EstadoFindOneInputRestDto,
   EstadoFindOneOutputRestDto,
@@ -24,7 +29,7 @@ export const toFindOneInput = createMapper<EstadoFindOneInputRestDto, EstadoFind
 export const toListInput = createPaginatedInputMapper<EstadoListInputRestDto, EstadoListQuery>(
   EstadoListQuery,
   (dto, query) => {
-    if (dto["filter.id"] !== undefined) query["filter.id"] = dto["filter.id"];
+    mapField(query, "filter.id", dto, "filter.id");
   },
 );
 

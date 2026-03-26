@@ -68,7 +68,7 @@ import {
   AmbienteListOutputRestDto,
   AmbienteUpdateInputRestDto,
 } from "./ambiente.rest.dto";
-import { AmbienteRestMapper } from "./ambiente.rest.mapper";
+import * as AmbienteRestMapper from "./ambiente.rest.mapper";
 
 @ApiTags("ambientes")
 @Controller("/ambientes")
@@ -107,9 +107,9 @@ export class AmbienteRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Query() dto: AmbienteListInputRestDto,
   ): Promise<AmbienteListOutputRestDto> {
-    const input = AmbienteRestMapper.toListInput(dto);
+    const input = AmbienteRestMapper.toListInput.map(dto);
     const result = await this.listHandler.execute(accessContext, input);
-    return AmbienteRestMapper.toListOutputDto(result);
+    return AmbienteRestMapper.toListOutput(result);
   }
 
   @Get("/:id/disponibilidade")
@@ -134,10 +134,10 @@ export class AmbienteRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: AmbienteFindOneInputRestDto,
   ): Promise<AmbienteFindOneOutputRestDto> {
-    const input = AmbienteRestMapper.toFindOneInput(params);
+    const input = AmbienteRestMapper.toFindOneInput.map(params);
     const result = await this.findOneHandler.execute(accessContext, input);
     ensureExists(result, Ambiente.entityName, input.id);
-    return AmbienteRestMapper.toFindOneOutputDto(result);
+    return AmbienteRestMapper.toFindOneOutput.map(result);
   }
 
   @Post("/")
@@ -148,9 +148,9 @@ export class AmbienteRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Body() dto: AmbienteCreateInputRestDto,
   ): Promise<AmbienteFindOneOutputRestDto> {
-    const input = AmbienteRestMapper.toCreateInput(dto);
+    const input = AmbienteRestMapper.toCreateInput.map(dto);
     const result = await this.createHandler.execute(accessContext, input);
-    return AmbienteRestMapper.toFindOneOutputDto(result);
+    return AmbienteRestMapper.toFindOneOutput.map(result);
   }
 
   @Patch("/:id")
@@ -163,9 +163,9 @@ export class AmbienteRestController {
     @Param() params: AmbienteFindOneInputRestDto,
     @Body() dto: AmbienteUpdateInputRestDto,
   ): Promise<AmbienteFindOneOutputRestDto> {
-    const input = AmbienteRestMapper.toUpdateInput(params, dto);
+    const input = AmbienteRestMapper.toUpdateInput.map({ params, dto });
     const result = await this.updateHandler.execute(accessContext, input);
-    return AmbienteRestMapper.toFindOneOutputDto(result);
+    return AmbienteRestMapper.toFindOneOutput.map(result);
   }
 
   @Get("/:id/imagem/capa")
@@ -217,7 +217,7 @@ export class AmbienteRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: AmbienteFindOneInputRestDto,
   ): Promise<boolean> {
-    const input = AmbienteRestMapper.toFindOneInput(params);
+    const input = AmbienteRestMapper.toFindOneInput.map(params);
     return this.deleteHandler.execute(accessContext, input);
   }
 }

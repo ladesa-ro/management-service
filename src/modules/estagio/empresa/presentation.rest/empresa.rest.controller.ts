@@ -40,7 +40,7 @@ import {
   EmpresaListOutputRestDto,
   EmpresaUpdateInputRestDto,
 } from "./empresa.rest.dto";
-import { EmpresaRestMapper } from "./empresa.rest.mapper";
+import * as EmpresaRestMapper from "./empresa.rest.mapper";
 
 @ApiTags("empresas")
 @Controller("/empresas")
@@ -66,9 +66,9 @@ export class EmpresaRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Query() dto: EmpresaListInputRestDto,
   ): Promise<EmpresaListOutputRestDto> {
-    const input = EmpresaRestMapper.toListInput(dto);
+    const input = EmpresaRestMapper.toListInput.map(dto);
     const result = await this.listHandler.execute(accessContext, input);
-    return EmpresaRestMapper.toListOutputDto(result);
+    return EmpresaRestMapper.toListOutput(result);
   }
 
   @Get("/:id")
@@ -80,10 +80,10 @@ export class EmpresaRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: EmpresaFindOneInputRestDto,
   ): Promise<EmpresaFindOneOutputRestDto> {
-    const input = EmpresaRestMapper.toFindOneInput(params);
+    const input = EmpresaRestMapper.toFindOneInput.map(params);
     const result = await this.findOneHandler.execute(accessContext, input);
     ensureExists(result, Empresa.entityName, input.id);
-    return EmpresaRestMapper.toFindOneOutputDto(result);
+    return EmpresaRestMapper.toFindOneOutput.map(result);
   }
 
   @Post("/")
@@ -94,9 +94,9 @@ export class EmpresaRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Body() dto: EmpresaCreateInputRestDto,
   ): Promise<EmpresaFindOneOutputRestDto> {
-    const input = EmpresaRestMapper.toCreateInput(dto);
+    const input = EmpresaRestMapper.toCreateInput.map(dto);
     const result = await this.createHandler.execute(accessContext, input);
-    return EmpresaRestMapper.toFindOneOutputDto(result);
+    return EmpresaRestMapper.toFindOneOutput.map(result);
   }
 
   @Patch("/:id")
@@ -109,9 +109,9 @@ export class EmpresaRestController {
     @Param() params: EmpresaFindOneInputRestDto,
     @Body() dto: EmpresaUpdateInputRestDto,
   ): Promise<EmpresaFindOneOutputRestDto> {
-    const input = EmpresaRestMapper.toUpdateInput(params, dto);
+    const input = EmpresaRestMapper.toUpdateInput.map({ params, dto });
     const result = await this.updateHandler.execute(accessContext, input);
-    return EmpresaRestMapper.toFindOneOutputDto(result);
+    return EmpresaRestMapper.toFindOneOutput.map(result);
   }
 
   @Delete("/:id")
@@ -123,7 +123,7 @@ export class EmpresaRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: EmpresaFindOneInputRestDto,
   ): Promise<boolean> {
-    const input = EmpresaRestMapper.toFindOneInput(params);
+    const input = EmpresaRestMapper.toFindOneInput.map(params);
     await this.deleteHandler.execute(accessContext, input);
     return true;
   }

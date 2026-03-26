@@ -31,7 +31,7 @@ import {
   UsuarioListOutputGraphQlDto,
   UsuarioUpdateInputGraphQlDto,
 } from "./usuario.graphql.dto";
-import { UsuarioGraphqlMapper } from "./usuario.graphql.mapper";
+import * as UsuarioGraphqlMapper from "./usuario.graphql.mapper";
 
 @Resolver(() => UsuarioFindOneOutputGraphQlDto)
 export class UsuarioGraphqlResolver {
@@ -55,7 +55,7 @@ export class UsuarioGraphqlResolver {
   ): Promise<UsuarioListOutputGraphQlDto> {
     const input = UsuarioGraphqlMapper.toListInput(dto);
     const result = await this.listHandler.execute(accessContext, input);
-    return UsuarioGraphqlMapper.toListOutputDto(result);
+    return UsuarioGraphqlMapper.toListOutput(result);
   }
 
   @Query(() => UsuarioFindOneOutputGraphQlDto, UsuarioFindOneQueryMetadata.gqlMetadata)
@@ -65,7 +65,7 @@ export class UsuarioGraphqlResolver {
   ): Promise<UsuarioFindOneOutputGraphQlDto> {
     const result = await this.findOneHandler.execute(accessContext, { id });
     ensureExists(result, Usuario.entityName, id);
-    return UsuarioGraphqlMapper.toFindOneOutputDto(result);
+    return UsuarioGraphqlMapper.toFindOneOutput.map(result);
   }
 
   @Mutation(() => UsuarioFindOneOutputGraphQlDto, UsuarioCreateCommandMetadata.gqlMetadata)
@@ -73,9 +73,9 @@ export class UsuarioGraphqlResolver {
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("input") dto: UsuarioCreateInputGraphQlDto,
   ): Promise<UsuarioFindOneOutputGraphQlDto> {
-    const input = UsuarioGraphqlMapper.toCreateInput(dto);
+    const input = UsuarioGraphqlMapper.toCreateInput.map(dto);
     const result = await this.createHandler.execute(accessContext, input);
-    return UsuarioGraphqlMapper.toFindOneOutputDto(result);
+    return UsuarioGraphqlMapper.toFindOneOutput.map(result);
   }
 
   @Mutation(() => UsuarioFindOneOutputGraphQlDto, UsuarioUpdateCommandMetadata.gqlMetadata)
@@ -84,9 +84,9 @@ export class UsuarioGraphqlResolver {
     @Args("id", { type: () => ID }) id: string,
     @Args("input") dto: UsuarioUpdateInputGraphQlDto,
   ): Promise<UsuarioFindOneOutputGraphQlDto> {
-    const input = UsuarioGraphqlMapper.toUpdateInput({ id }, dto);
+    const input = UsuarioGraphqlMapper.toUpdateInput.map({ id, dto });
     const result = await this.updateHandler.execute(accessContext, input);
-    return UsuarioGraphqlMapper.toFindOneOutputDto(result);
+    return UsuarioGraphqlMapper.toFindOneOutput.map(result);
   }
 
   @Mutation(() => Boolean, UsuarioDeleteCommandMetadata.gqlMetadata)

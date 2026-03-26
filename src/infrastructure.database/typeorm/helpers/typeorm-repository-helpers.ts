@@ -203,10 +203,10 @@ export async function typeormFindById<
 export async function typeormCreate<Entity extends IEntityWithId>(
   conn: IAppTypeormConnection,
   entity: EntityTarget<Entity>,
-  data: Record<string, unknown>,
+  data: DeepPartial<Entity>,
 ): Promise<{ id: Entity["id"] }> {
   const repo = getRepository(conn, entity);
-  const created = repo.create(data as DeepPartial<Entity>);
+  const created = repo.create(data);
   const saved = await repo.save(created);
   return { id: saved.id };
 }
@@ -215,7 +215,7 @@ export async function typeormUpdate<Entity extends IEntityWithId>(
   conn: IAppTypeormConnection,
   entity: EntityTarget<Entity>,
   id: string | number,
-  data: Record<string, unknown>,
+  data: DeepPartial<Entity>,
 ): Promise<void> {
   const repo = getRepository(conn, entity);
   const created = repo.create({ id, ...data } as DeepPartial<Entity>);

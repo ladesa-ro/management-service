@@ -5,7 +5,12 @@ import {
   ModalidadeListQuery,
   ModalidadeUpdateCommand,
 } from "@/modules/ensino/modalidade";
-import { createListMapper, createMapper, createPaginatedInputMapper } from "@/shared/mapping";
+import {
+  createListMapper,
+  createMapper,
+  createPaginatedInputMapper,
+  mapField,
+} from "@/shared/mapping";
 import {
   type ModalidadeCreateInputGraphQlDto,
   ModalidadeFindOneOutputGraphQlDto,
@@ -28,7 +33,7 @@ const listInputMapper = createPaginatedInputMapper<
   ModalidadeListInputGraphQlDto,
   ModalidadeListQuery
 >(ModalidadeListQuery, (dto, query) => {
-  if (dto.filterId !== undefined) query["filter.id"] = dto.filterId;
+  mapField(query, "filter.id", dto, "filterId");
 });
 
 export function toListInput(dto: ModalidadeListInputGraphQlDto | null): ModalidadeListQuery | null {

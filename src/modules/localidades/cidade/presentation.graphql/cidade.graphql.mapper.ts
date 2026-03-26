@@ -1,58 +1,57 @@
 import {
   CidadeFindOneQuery,
-  CidadeFindOneQueryResult,
+  type CidadeFindOneQueryResult,
   CidadeListQuery,
 } from "@/modules/localidades/cidade";
-import { EstadoGraphqlMapper } from "@/modules/localidades/estado/presentation.graphql/estado.graphql.mapper";
-import { createListOutputMapper, createMapping, mapFilterCase } from "@/shared/mapping";
+import * as EstadoGraphqlMapper from "@/modules/localidades/estado/presentation.graphql/estado.graphql.mapper";
+import {
+  createListMapper,
+  createMapper,
+  createPaginatedInputMapper,
+  mapField,
+} from "@/shared/mapping";
 import {
   CidadeFindOneOutputGraphQlDto,
-  CidadeListInputGraphQlDto,
+  type CidadeListInputGraphQlDto,
   CidadeListOutputGraphQlDto,
 } from "./cidade.graphql.dto";
 
-const outputMapping = createMapping([
-  "id",
-  "nome",
-  [
-    "estado",
-    "estado",
-    (estado: unknown) =>
-      EstadoGraphqlMapper.toFindOneOutputDto(
-        estado as import("@/modules/localidades/estado").EstadoFindOneQueryResult,
-      ),
-  ],
-]);
+// ============================================================================
+// Externa → Interna (Input: Presentation → Core)
+// ============================================================================
 
-const listInputMapping = createMapping([
-  "page",
-  "limit",
-  "search",
-  "sortBy",
-  mapFilterCase("filter.id"),
-  mapFilterCase("filter.estado.id"),
-  mapFilterCase("filter.estado.nome"),
-  mapFilterCase("filter.estado.sigla"),
-]);
+export const toFindOneInput = createMapper<number, CidadeFindOneQuery>((id) => {
+  const input = new CidadeFindOneQuery();
+  input.id = id;
+  return input;
+});
 
-export class CidadeGraphqlMapper {
-  static toListInput(dto: CidadeListInputGraphQlDto | null): CidadeListQuery | null {
-    if (!dto) return null;
-    return listInputMapping.mapDefined<CidadeListQuery>(dto);
-  }
+const listInputMapper = createPaginatedInputMapper<CidadeListInputGraphQlDto, CidadeListQuery>(
+  CidadeListQuery,
+  (dto, query) => {
+    mapField(query, "filter.id", dto, "filterId");
+    mapField(query, "filter.estado.id", dto, "filterEstadoId");
+    mapField(query, "filter.estado.nome", dto, "filterEstadoNome");
+    mapField(query, "filter.estado.sigla", dto, "filterEstadoSigla");
+  },
+);
 
-  static toFindOneInput(id: number): CidadeFindOneQuery {
-    const input = new CidadeFindOneQuery();
-    input.id = id;
-    return input;
-  }
-
-  static toFindOneOutputDto(output: CidadeFindOneQueryResult): CidadeFindOneOutputGraphQlDto {
-    return outputMapping.map<CidadeFindOneOutputGraphQlDto>(output);
-  }
-
-  static toListOutputDto = createListOutputMapper(
-    CidadeListOutputGraphQlDto,
-    CidadeGraphqlMapper.toFindOneOutputDto,
-  );
+export function toListInput(dto: CidadeListInputGraphQlDto | null): CidadeListQuery | null {
+  if (!dto) return null;
+  return listInputMapper.map(dto);
 }
+
+// ============================================================================
+// Interna → Externa (Output: Core → Presentation)
+// ============================================================================
+
+export const toFindOneOutput = createMapper<
+  CidadeFindOneQueryResult,
+  CidadeFindOneOutputGraphQlDto
+>((output) => ({
+  id: output.id,
+  nome: output.nome,
+  estado: EstadoGraphqlMapper.toFindOneOutput.map(output.estado),
+}));
+
+export const toListOutput = createListMapper(CidadeListOutputGraphQlDto, toFindOneOutput);

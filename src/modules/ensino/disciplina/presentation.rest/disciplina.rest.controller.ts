@@ -64,7 +64,7 @@ import {
   DisciplinaListOutputRestDto,
   DisciplinaUpdateInputRestDto,
 } from "./disciplina.rest.dto";
-import { DisciplinaRestMapper } from "./disciplina.rest.mapper";
+import * as DisciplinaRestMapper from "./disciplina.rest.mapper";
 
 @ApiTags("disciplinas")
 @Controller("/disciplinas")
@@ -94,9 +94,9 @@ export class DisciplinaRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Query() dto: DisciplinaListInputRestDto,
   ): Promise<DisciplinaListOutputRestDto> {
-    const input = DisciplinaRestMapper.toListInput(dto);
+    const input = DisciplinaRestMapper.toListInput.map(dto);
     const result = await this.listHandler.execute(accessContext, input);
-    return DisciplinaRestMapper.toListOutputDto(result);
+    return DisciplinaRestMapper.toListOutput(result);
   }
 
   @Get("/:id")
@@ -108,10 +108,10 @@ export class DisciplinaRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: DisciplinaFindOneInputRestDto,
   ): Promise<DisciplinaFindOneOutputRestDto> {
-    const input = DisciplinaRestMapper.toFindOneInput(params);
+    const input = DisciplinaRestMapper.toFindOneInput.map(params);
     const result = await this.findOneHandler.execute(accessContext, input);
     ensureExists(result, Disciplina.entityName, input.id);
-    return DisciplinaRestMapper.toFindOneOutputDto(result);
+    return DisciplinaRestMapper.toFindOneOutput.map(result);
   }
 
   @Post("/")
@@ -122,9 +122,9 @@ export class DisciplinaRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Body() dto: DisciplinaCreateInputRestDto,
   ): Promise<DisciplinaFindOneOutputRestDto> {
-    const input = DisciplinaRestMapper.toCreateInput(dto);
+    const input = DisciplinaRestMapper.toCreateInput.map(dto);
     const result = await this.createHandler.execute(accessContext, input);
-    return DisciplinaRestMapper.toFindOneOutputDto(result);
+    return DisciplinaRestMapper.toFindOneOutput.map(result);
   }
 
   @Patch("/:id")
@@ -137,9 +137,9 @@ export class DisciplinaRestController {
     @Param() params: DisciplinaFindOneInputRestDto,
     @Body() dto: DisciplinaUpdateInputRestDto,
   ): Promise<DisciplinaFindOneOutputRestDto> {
-    const input = DisciplinaRestMapper.toUpdateInput(params, dto);
+    const input = DisciplinaRestMapper.toUpdateInput.map({ params, dto });
     const result = await this.updateHandler.execute(accessContext, input);
-    return DisciplinaRestMapper.toFindOneOutputDto(result);
+    return DisciplinaRestMapper.toFindOneOutput.map(result);
   }
 
   @Get("/:id/imagem/capa")
@@ -191,7 +191,7 @@ export class DisciplinaRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: DisciplinaFindOneInputRestDto,
   ): Promise<boolean> {
-    const input = DisciplinaRestMapper.toFindOneInput(params);
+    const input = DisciplinaRestMapper.toFindOneInput.map(params);
     return this.deleteHandler.execute(accessContext, input);
   }
 }

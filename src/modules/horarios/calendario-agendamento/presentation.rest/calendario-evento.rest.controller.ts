@@ -39,7 +39,7 @@ import {
   CalendarioEventoListOutputRestDto,
   CalendarioEventoUpdateInputRestDto,
 } from "./calendario-evento.rest.dto";
-import { CalendarioEventoRestMapper } from "./calendario-evento.rest.mapper";
+import * as CalendarioEventoRestMapper from "./calendario-evento.rest.mapper";
 
 @ApiTags("calendario")
 @Controller("/calendario/eventos")
@@ -74,7 +74,7 @@ export class CalendarioEventoRestController {
     });
 
     return {
-      data: results.map(CalendarioEventoRestMapper.toFindOneOutputDto),
+      data: CalendarioEventoRestMapper.toFindOneOutput.mapArray(results),
     };
   }
 
@@ -89,7 +89,7 @@ export class CalendarioEventoRestController {
   ): Promise<CalendarioEventoFindOneOutputRestDto> {
     const result = await this.findOneHandler.execute(accessContext, { id: params.id });
     ensureExists(result, CalendarioAgendamento.entityName, params.id);
-    return CalendarioEventoRestMapper.toFindOneOutputDto(result);
+    return CalendarioEventoRestMapper.toFindOneOutput.map(result);
   }
 
   @Post("/")
@@ -100,9 +100,9 @@ export class CalendarioEventoRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Body() dto: CalendarioEventoCreateInputRestDto,
   ): Promise<CalendarioEventoFindOneOutputRestDto> {
-    const input = CalendarioEventoRestMapper.toCreateInput(dto);
+    const input = CalendarioEventoRestMapper.toCreateInput.map(dto);
     const result = await this.createHandler.execute(accessContext, input);
-    return CalendarioEventoRestMapper.toFindOneOutputDto(result);
+    return CalendarioEventoRestMapper.toFindOneOutput.map(result);
   }
 
   @Patch("/:id")
@@ -115,9 +115,9 @@ export class CalendarioEventoRestController {
     @Param() params: CalendarioEventoFindOneParamsRestDto,
     @Body() dto: CalendarioEventoUpdateInputRestDto,
   ): Promise<CalendarioEventoFindOneOutputRestDto> {
-    const input = CalendarioEventoRestMapper.toUpdateInput(params, dto);
+    const input = CalendarioEventoRestMapper.toUpdateInput.map({ params, dto });
     const result = await this.updateHandler.execute(accessContext, input);
-    return CalendarioEventoRestMapper.toFindOneOutputDto(result);
+    return CalendarioEventoRestMapper.toFindOneOutput.map(result);
   }
 
   @Delete("/:id")

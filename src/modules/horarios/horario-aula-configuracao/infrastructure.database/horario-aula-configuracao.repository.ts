@@ -44,8 +44,8 @@ export class HorarioAulaConfiguracaoTypeOrmRepositoryAdapter
 
     const entity = repo.create({
       id: aggregate.id,
-      dataInicio: new Date(aggregate.dataInicio),
-      dataFim: aggregate.dataFim ? new Date(aggregate.dataFim) : null,
+      dataInicio: aggregate.dataInicio,
+      dataFim: aggregate.dataFim,
       ativo: aggregate.ativo,
     });
     Object.assign(entity, { campus: { id: aggregate.campus.id } });
@@ -77,9 +77,9 @@ export class HorarioAulaConfiguracaoTypeOrmRepositoryAdapter
       order: { inicio: "ASC" },
     });
 
-    const formatDate = (d: Date | null) => {
+    const formatDate = (d: string | null) => {
       if (!d) return null;
-      return d instanceof Date ? d.toISOString().split("T")[0] : String(d);
+      return String(d);
     };
 
     return {

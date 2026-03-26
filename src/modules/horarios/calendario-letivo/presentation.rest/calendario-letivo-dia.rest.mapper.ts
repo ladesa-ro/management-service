@@ -1,82 +1,87 @@
-import { createListOutputMapper } from "@/shared/mapping";
-import { getNow } from "@/utils/date";
+import { createListMapper, createMapper, mapField } from "@/shared/mapping";
 import {
   CalendarioLetivoDiaFindOneQuery,
   CalendarioLetivoDiaListQuery,
   CalendarioLetivoDiaUpdateCommand,
 } from "../domain";
 import type { CalendarioLetivoDiaFindOneQueryResult } from "../domain/queries";
-import { CalendarioLetivoRestMapper } from "./calendario-letivo.rest.mapper";
+import * as CalendarioLetivoRestMapper from "./calendario-letivo.rest.mapper";
 import {
-  CalendarioLetivoDiaFindByDataParamsRestDto,
+  type CalendarioLetivoDiaFindByDataParamsRestDto,
   CalendarioLetivoDiaFindOneOutputRestDto,
-  CalendarioLetivoDiaListInputRestDto,
+  type CalendarioLetivoDiaListInputRestDto,
   CalendarioLetivoDiaListOutputRestDto,
-  CalendarioLetivoDiaParentParamsRestDto,
-  CalendarioLetivoDiaUpdateInputRestDto,
+  type CalendarioLetivoDiaParentParamsRestDto,
+  type CalendarioLetivoDiaUpdateInputRestDto,
   type TipoCalendarioLetivoDia,
 } from "./calendario-letivo-dia.rest.dto";
 
-export class CalendarioLetivoDiaRestMapper {
-  static toListInput(
-    parentParams: CalendarioLetivoDiaParentParamsRestDto,
-    dto: CalendarioLetivoDiaListInputRestDto,
-  ): CalendarioLetivoDiaListQuery {
-    const input = new CalendarioLetivoDiaListQuery();
-    input.page = dto.page;
-    input.limit = dto.limit;
-    input.search = dto.search;
-    input.sortBy = dto.sortBy;
-    input["filter.id"] = dto["filter.id"];
-    input["filter.calendario.id"] = [parentParams.calendarioLetivoId];
-    return input;
-  }
+// ============================================================================
+// Externa -> Interna (Input: Presentation -> Core)
+// ============================================================================
 
-  static toFindByDataInput(
-    params: CalendarioLetivoDiaFindByDataParamsRestDto,
-  ): CalendarioLetivoDiaFindOneQuery {
-    const input = new CalendarioLetivoDiaFindOneQuery();
-    input.calendarioLetivoId = params.calendarioLetivoId;
-    input.data = params.data;
-    return input;
-  }
-
-  static toUpdateInput(
-    params: CalendarioLetivoDiaFindByDataParamsRestDto,
-    dto: CalendarioLetivoDiaUpdateInputRestDto,
-  ): CalendarioLetivoDiaFindOneQuery & CalendarioLetivoDiaUpdateCommand {
-    const input = new CalendarioLetivoDiaFindOneQuery() as CalendarioLetivoDiaFindOneQuery &
-      CalendarioLetivoDiaUpdateCommand;
-    input.calendarioLetivoId = params.calendarioLetivoId;
-    input.data = params.data;
-    if (dto.diaLetivo !== undefined) input.diaLetivo = dto.diaLetivo;
-    if (dto.feriado !== undefined) input.feriado = dto.feriado ?? "";
-    if (dto.diaPresencial !== undefined) input.diaPresencial = dto.diaPresencial;
-    if (dto.tipo !== undefined) input.tipo = dto.tipo;
-    if (dto.extraCurricular !== undefined) input.extraCurricular = dto.extraCurricular;
-    return input;
-  }
-
-  static toFindOneOutputDto(
-    output: CalendarioLetivoDiaFindOneQueryResult,
-  ): CalendarioLetivoDiaFindOneOutputRestDto {
-    const dto = new CalendarioLetivoDiaFindOneOutputRestDto();
-    dto.id = output.id;
-    dto.data = output.data;
-    dto.diaLetivo = output.diaLetivo;
-    dto.feriado = output.feriado;
-    dto.diaPresencial = output.diaPresencial;
-    dto.tipo = output.tipo as TipoCalendarioLetivoDia;
-    dto.extraCurricular = output.extraCurricular;
-    dto.calendario = CalendarioLetivoRestMapper.toFindOneOutputDto(output.calendario);
-    dto.dateCreated = output.dateCreated ? new Date(output.dateCreated) : getNow();
-    dto.dateUpdated = output.dateUpdated ? new Date(output.dateUpdated) : getNow();
-    dto.dateDeleted = output.dateDeleted ? new Date(output.dateDeleted) : null;
-    return dto;
-  }
-
-  static toListOutputDto = createListOutputMapper(
-    CalendarioLetivoDiaListOutputRestDto,
-    CalendarioLetivoDiaRestMapper.toFindOneOutputDto,
-  );
+export function toListInput(
+  parentParams: CalendarioLetivoDiaParentParamsRestDto,
+  dto: CalendarioLetivoDiaListInputRestDto,
+): CalendarioLetivoDiaListQuery {
+  const input = new CalendarioLetivoDiaListQuery();
+  input.page = dto.page;
+  input.limit = dto.limit;
+  input.search = dto.search;
+  input.sortBy = dto.sortBy;
+  mapField(input, "filter.id", dto, "filter.id");
+  input["filter.calendario.id"] = [parentParams.calendarioLetivoId];
+  return input;
 }
+
+export const toFindByDataInput = createMapper<
+  CalendarioLetivoDiaFindByDataParamsRestDto,
+  CalendarioLetivoDiaFindOneQuery
+>((params) => {
+  const input = new CalendarioLetivoDiaFindOneQuery();
+  input.calendarioLetivoId = params.calendarioLetivoId;
+  input.data = params.data;
+  return input;
+});
+
+export const toUpdateInput = createMapper<
+  {
+    params: CalendarioLetivoDiaFindByDataParamsRestDto;
+    dto: CalendarioLetivoDiaUpdateInputRestDto;
+  },
+  CalendarioLetivoDiaFindOneQuery & CalendarioLetivoDiaUpdateCommand
+>(({ params, dto }) => ({
+  id: "",
+  calendarioLetivoId: params.calendarioLetivoId,
+  data: params.data,
+  diaLetivo: dto.diaLetivo,
+  feriado: dto.feriado !== undefined ? (dto.feriado ?? "") : undefined,
+  diaPresencial: dto.diaPresencial,
+  tipo: dto.tipo,
+  extraCurricular: dto.extraCurricular,
+}));
+
+// ============================================================================
+// Interna -> Externa (Output: Core -> Presentation)
+// ============================================================================
+
+export const toFindOneOutput = createMapper<
+  CalendarioLetivoDiaFindOneQueryResult,
+  CalendarioLetivoDiaFindOneOutputRestDto
+>((output) => {
+  const dto = new CalendarioLetivoDiaFindOneOutputRestDto();
+  dto.id = output.id;
+  dto.data = output.data;
+  dto.diaLetivo = output.diaLetivo;
+  dto.feriado = output.feriado;
+  dto.diaPresencial = output.diaPresencial;
+  dto.tipo = output.tipo as TipoCalendarioLetivoDia;
+  dto.extraCurricular = output.extraCurricular;
+  dto.calendario = CalendarioLetivoRestMapper.toFindOneOutput.map(output.calendario);
+  dto.dateCreated = output.dateCreated;
+  dto.dateUpdated = output.dateUpdated;
+  dto.dateDeleted = output.dateDeleted;
+  return dto;
+});
+
+export const toListOutput = createListMapper(CalendarioLetivoDiaListOutputRestDto, toFindOneOutput);

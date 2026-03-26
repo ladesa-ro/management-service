@@ -8,12 +8,7 @@ import {
   typeormFindAll,
   typeormSoftDeleteById,
 } from "@/infrastructure.database/typeorm/helpers/typeorm-repository-helpers";
-import {
-  dateToISO,
-  dateToISONullable,
-  mapDatedEntity,
-} from "@/infrastructure.database/typeorm/mapping";
-import { Bloco, type IBloco } from "@/modules/ambientes/bloco/domain/bloco";
+import { Bloco } from "@/modules/ambientes/bloco/domain/bloco";
 import type {
   BlocoFindOneQuery,
   BlocoFindOneQueryResult,
@@ -21,9 +16,8 @@ import type {
   BlocoListQueryResult,
 } from "@/modules/ambientes/bloco/domain/queries";
 import { blocoPaginationSpec } from "@/modules/ambientes/bloco/domain/queries";
-import { BlocoFindOneQueryResult as BlocoFindOneQueryResultClass } from "@/modules/ambientes/bloco/domain/queries/bloco-find-one.query.result";
 import type { IBlocoRepository } from "@/modules/ambientes/bloco/domain/repositories";
-import { BlocoEntity, blocoEntityDomainMapper } from "./typeorm";
+import { BlocoEntity, BlocoTypeormMapper } from "./typeorm";
 
 const config = {
   alias: "bloco",
@@ -47,7 +41,7 @@ const blocoPaginateConfig = buildTypeOrmPaginateConfig<BlocoEntity>(
 
 /**
  * Relations para o write side (loadById).
- * Carrega o necessário para reconstituir o aggregate:
+ * Carrega o necessario para reconstituir o aggregate:
  * - campus: BlocoSchema exige o objeto de campus (ref)
  */
 const writeRelations = {
@@ -77,11 +71,11 @@ export class BlocoTypeOrmRepositoryAdapter implements IBlocoRepository {
 
     if (!entity) return null;
 
-    return Bloco.load(this.toDomainData(entity));
+    return Bloco.load(BlocoTypeormMapper.entityToDomain.map(entity));
   }
 
   async save(aggregate: Bloco): Promise<void> {
-    const entityData = blocoEntityDomainMapper.toPersistenceData({ ...aggregate });
+    const entityData = BlocoTypeormMapper.domainToPersistence.map({ ...aggregate });
     const repo = this.appTypeormConnection.getRepository(BlocoEntity);
     await repo.save(repo.create({ id: aggregate.id, ...entityData } as BlocoEntity));
   }
@@ -107,7 +101,7 @@ export class BlocoTypeOrmRepositoryAdapter implements IBlocoRepository {
 
     if (!entity) return null;
 
-    return this.toQueryResult(entity);
+    return BlocoTypeormMapper.entityToOutput.map(entity);
   }
 
   getFindAllQueryResult(
@@ -120,61 +114,7 @@ export class BlocoTypeOrmRepositoryAdapter implements IBlocoRepository {
       { ...config, paginateConfig: blocoPaginateConfig },
       this.paginationAdapter,
       dto,
-      (entity) => this.toQueryResult(entity),
+      BlocoTypeormMapper.entityToOutput.map,
     );
-  }
-
-  // ==========================================
-  // Mappers privados — fronteira de tradução do adapter
-  // ==========================================
-
-  /**
-   * Entity TypeORM → dados para Domain.load() (write side).
-   *
-   * Datas Date → ISO string (o domínio usa ScalarDateTimeString).
-   */
-  private toDomainData(entity: BlocoEntity): IBloco {
-    return {
-      id: entity.id,
-      nome: entity.nome,
-      codigo: entity.codigo,
-      campus: { id: entity.campus.id },
-      imagemCapa: entity.imagemCapa ? { id: entity.imagemCapa.id } : null,
-      dateCreated: dateToISO(entity.dateCreated),
-      dateUpdated: dateToISO(entity.dateUpdated),
-      dateDeleted: dateToISONullable(entity.dateDeleted),
-    };
-  }
-
-  /**
-   * Entity TypeORM → Query Result (read side).
-   *
-   * Projeta relações como objetos completos — a UI precisa dos dados para exibição.
-   */
-  private toQueryResult(entity: BlocoEntity): BlocoFindOneQueryResult {
-    const result = new BlocoFindOneQueryResultClass();
-
-    result.id = entity.id;
-    result.nome = entity.nome;
-    result.codigo = entity.codigo;
-    result.dateCreated = dateToISO(entity.dateCreated);
-    result.dateUpdated = dateToISO(entity.dateUpdated);
-    result.dateDeleted = dateToISONullable(entity.dateDeleted);
-
-    result.campus = {
-      ...mapDatedEntity(entity.campus),
-      endereco: entity.campus.endereco
-        ? {
-            ...mapDatedEntity(entity.campus.endereco),
-            cidade: entity.campus.endereco.cidade,
-          }
-        : (undefined as any),
-    };
-
-    result.imagemCapa = (entity.imagemCapa
-      ? { ...mapDatedEntity(entity.imagemCapa) }
-      : null) as unknown as (typeof result)["imagemCapa"];
-
-    return result;
   }
 }

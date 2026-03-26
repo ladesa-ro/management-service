@@ -1,42 +1,49 @@
 import {
   CampusCreateCommand,
   CampusFindOneQuery,
-  CampusFindOneQueryResult,
+  type CampusFindOneQueryResult,
   CampusListQuery,
   CampusUpdateCommand,
 } from "@/modules/ambientes/campus";
-import { EnderecoGraphqlMapper } from "@/modules/localidades/endereco/presentation.graphql/endereco.graphql.mapper";
-import { createListOutputMapper, mapDatedFields } from "@/shared/mapping";
+import * as EnderecoGraphqlMapper from "@/modules/localidades/endereco/presentation.graphql/endereco.graphql.mapper";
 import {
-  CampusCreateInputGraphQlDto,
+  createListMapper,
+  createMapper,
+  createPaginatedInputMapper,
+  mapField,
+} from "@/shared/mapping";
+import {
+  type CampusCreateInputGraphQlDto,
   CampusFindOneOutputGraphQlDto,
-  CampusListInputGraphQlDto,
+  type CampusListInputGraphQlDto,
   CampusListOutputGraphQlDto,
-  CampusUpdateInputGraphQlDto,
+  type CampusUpdateInputGraphQlDto,
 } from "./campus.graphql.dto";
 
-export class CampusGraphqlMapper {
-  static toListInput(dto: CampusListInputGraphQlDto | null): CampusListQuery | null {
-    if (!dto) {
-      return null;
-    }
+// ============================================================================
+// Externa → Interna (Input: Presentation → Core)
+// ============================================================================
 
-    const input = new CampusListQuery();
-    input.page = dto.page;
-    input.limit = dto.limit;
-    input.search = dto.search;
-    input.sortBy = dto.sortBy;
-    input["filter.id"] = dto.filterId;
-    return input;
-  }
+const listInputMapper = createPaginatedInputMapper<CampusListInputGraphQlDto, CampusListQuery>(
+  CampusListQuery,
+  (dto, query) => {
+    mapField(query, "filter.id", dto, "filterId");
+  },
+);
 
-  static toFindOneInput(id: string): CampusFindOneQuery {
-    const input = new CampusFindOneQuery();
-    input.id = id;
-    return input;
-  }
+export const toFindOneInput = createMapper<string, CampusFindOneQuery>((id) => {
+  const input = new CampusFindOneQuery();
+  input.id = id;
+  return input;
+});
 
-  static toCreateInput(dto: CampusCreateInputGraphQlDto): CampusCreateCommand {
+export function toListInput(dto: CampusListInputGraphQlDto | null): CampusListQuery | null {
+  if (!dto) return null;
+  return listInputMapper.map(dto);
+}
+
+export const toCreateInput = createMapper<CampusCreateInputGraphQlDto, CampusCreateCommand>(
+  (dto) => {
     const input = new CampusCreateCommand();
     input.nomeFantasia = dto.nomeFantasia;
     input.razaoSocial = dto.razaoSocial;
@@ -52,28 +59,20 @@ export class CampusGraphqlMapper {
       cidade: { id: dto.endereco.cidade.id },
     };
     return input;
-  }
+  },
+);
 
-  static toUpdateInput(
-    params: { id: string },
-    dto: CampusUpdateInputGraphQlDto,
-  ): CampusFindOneQuery & CampusUpdateCommand {
-    const input = new CampusFindOneQuery() as CampusFindOneQuery & CampusUpdateCommand;
-    input.id = params.id;
-    if (dto.nomeFantasia !== undefined) {
-      input.nomeFantasia = dto.nomeFantasia;
-    }
-    if (dto.razaoSocial !== undefined) {
-      input.razaoSocial = dto.razaoSocial;
-    }
-    if (dto.apelido !== undefined) {
-      input.apelido = dto.apelido;
-    }
-    if (dto.cnpj !== undefined) {
-      input.cnpj = dto.cnpj;
-    }
-    if (dto.endereco !== undefined) {
-      input.endereco = {
+export const toUpdateInput = createMapper<
+  { params: { id: string }; dto: CampusUpdateInputGraphQlDto },
+  CampusFindOneQuery & CampusUpdateCommand
+>(({ params, dto }) => ({
+  id: params.id,
+  nomeFantasia: dto.nomeFantasia,
+  razaoSocial: dto.razaoSocial,
+  apelido: dto.apelido,
+  cnpj: dto.cnpj,
+  endereco: dto.endereco
+    ? {
         cep: dto.endereco.cep,
         logradouro: dto.endereco.logradouro,
         numero: dto.endereco.numero,
@@ -81,25 +80,27 @@ export class CampusGraphqlMapper {
         complemento: dto.endereco.complemento ?? null,
         pontoReferencia: dto.endereco.pontoReferencia ?? null,
         cidade: { id: dto.endereco.cidade.id },
-      };
-    }
-    return input;
-  }
+      }
+    : undefined,
+}));
 
-  static toFindOneOutputDto(output: CampusFindOneQueryResult): CampusFindOneOutputGraphQlDto {
-    const dto = new CampusFindOneOutputGraphQlDto();
-    dto.id = output.id;
-    dto.nomeFantasia = output.nomeFantasia;
-    dto.razaoSocial = output.razaoSocial;
-    dto.apelido = output.apelido;
-    dto.cnpj = output.cnpj;
-    dto.endereco = EnderecoGraphqlMapper.toFindOneOutputDto(output.endereco);
-    mapDatedFields(dto, output);
-    return dto;
-  }
+// ============================================================================
+// Interna → Externa (Output: Core → Presentation)
+// ============================================================================
 
-  static toListOutputDto = createListOutputMapper(
-    CampusListOutputGraphQlDto,
-    CampusGraphqlMapper.toFindOneOutputDto,
-  );
-}
+export const toFindOneOutput = createMapper<
+  CampusFindOneQueryResult,
+  CampusFindOneOutputGraphQlDto
+>((output) => ({
+  id: output.id,
+  nomeFantasia: output.nomeFantasia,
+  razaoSocial: output.razaoSocial,
+  apelido: output.apelido,
+  cnpj: output.cnpj,
+  endereco: EnderecoGraphqlMapper.toFindOneOutput.map(output.endereco),
+  dateCreated: new Date(output.dateCreated),
+  dateUpdated: new Date(output.dateUpdated),
+  dateDeleted: output.dateDeleted ? new Date(output.dateDeleted) : null,
+}));
+
+export const toListOutput = createListMapper(CampusListOutputGraphQlDto, toFindOneOutput);

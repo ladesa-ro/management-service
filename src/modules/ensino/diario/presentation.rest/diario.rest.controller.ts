@@ -40,7 +40,7 @@ import {
   DiarioListOutputRestDto,
   DiarioUpdateInputRestDto,
 } from "./diario.rest.dto";
-import { DiarioRestMapper } from "./diario.rest.mapper";
+import * as DiarioRestMapper from "./diario.rest.mapper";
 
 @ApiTags("diarios")
 @Controller("/diarios")
@@ -66,9 +66,9 @@ export class DiarioRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Query() dto: DiarioListInputRestDto,
   ): Promise<DiarioListOutputRestDto> {
-    const input = DiarioRestMapper.toListInput(dto);
+    const input = DiarioRestMapper.toListInput.map(dto);
     const result = await this.listHandler.execute(accessContext, input);
-    return DiarioRestMapper.toListOutputDto(result);
+    return DiarioRestMapper.toListOutput(result);
   }
 
   @Get("/:id")
@@ -80,10 +80,10 @@ export class DiarioRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: DiarioFindOneInputRestDto,
   ): Promise<DiarioFindOneOutputRestDto> {
-    const input = DiarioRestMapper.toFindOneInput(params);
+    const input = DiarioRestMapper.toFindOneInput.map(params);
     const result = await this.findOneHandler.execute(accessContext, input);
     ensureExists(result, Diario.entityName, input.id);
-    return DiarioRestMapper.toFindOneOutputDto(result);
+    return DiarioRestMapper.toFindOneOutput.map(result);
   }
 
   @Post("/")
@@ -94,9 +94,9 @@ export class DiarioRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Body() dto: DiarioCreateInputRestDto,
   ): Promise<DiarioFindOneOutputRestDto> {
-    const input = DiarioRestMapper.toCreateInput(dto);
+    const input = DiarioRestMapper.toCreateInput.map(dto);
     const result = await this.createHandler.execute(accessContext, input);
-    return DiarioRestMapper.toFindOneOutputDto(result);
+    return DiarioRestMapper.toFindOneOutput.map(result);
   }
 
   @Patch("/:id")
@@ -109,9 +109,9 @@ export class DiarioRestController {
     @Param() params: DiarioFindOneInputRestDto,
     @Body() dto: DiarioUpdateInputRestDto,
   ): Promise<DiarioFindOneOutputRestDto> {
-    const input = DiarioRestMapper.toUpdateInput(params, dto);
+    const input = DiarioRestMapper.toUpdateInput.map({ params, dto });
     const result = await this.updateHandler.execute(accessContext, input);
-    return DiarioRestMapper.toFindOneOutputDto(result);
+    return DiarioRestMapper.toFindOneOutput.map(result);
   }
 
   @Delete("/:id")
@@ -123,7 +123,7 @@ export class DiarioRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: DiarioFindOneInputRestDto,
   ): Promise<boolean> {
-    const input = DiarioRestMapper.toFindOneInput(params);
+    const input = DiarioRestMapper.toFindOneInput.map(params);
     return this.deleteHandler.execute(accessContext, input);
   }
 }

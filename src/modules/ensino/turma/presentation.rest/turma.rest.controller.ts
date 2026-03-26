@@ -73,7 +73,7 @@ import {
   TurmaListOutputRestDto,
   TurmaUpdateInputRestDto,
 } from "./turma.rest.dto";
-import { TurmaRestMapper } from "./turma.rest.mapper";
+import * as TurmaRestMapper from "./turma.rest.mapper";
 
 @ApiTags("turmas")
 @Controller("/turmas")
@@ -105,9 +105,9 @@ export class TurmaRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Query() dto: TurmaListInputRestDto,
   ): Promise<TurmaListOutputRestDto> {
-    const input = TurmaRestMapper.toListInput(dto);
+    const input = TurmaRestMapper.toListInput.map(dto);
     const result = await this.listHandler.execute(accessContext, input);
-    return TurmaRestMapper.toListOutputDto(result);
+    return TurmaRestMapper.toListOutput(result);
   }
 
   @Get("/:id")
@@ -119,10 +119,10 @@ export class TurmaRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: TurmaFindOneInputRestDto,
   ): Promise<TurmaFindOneOutputRestDto> {
-    const input = TurmaRestMapper.toFindOneInput(params);
+    const input = TurmaRestMapper.toFindOneInput.map(params);
     const result = await this.findOneHandler.execute(accessContext, input);
     ensureExists(result, Turma.entityName, input.id);
-    return TurmaRestMapper.toFindOneOutputDto(result);
+    return TurmaRestMapper.toFindOneOutput.map(result);
   }
 
   @Post("/")
@@ -133,9 +133,9 @@ export class TurmaRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Body() dto: TurmaCreateInputRestDto,
   ): Promise<TurmaFindOneOutputRestDto> {
-    const input = TurmaRestMapper.toCreateInput(dto);
+    const input = TurmaRestMapper.toCreateInput.map(dto);
     const result = await this.createHandler.execute(accessContext, input);
-    return TurmaRestMapper.toFindOneOutputDto(result);
+    return TurmaRestMapper.toFindOneOutput.map(result);
   }
 
   @Patch("/:id")
@@ -148,9 +148,9 @@ export class TurmaRestController {
     @Param() params: TurmaFindOneInputRestDto,
     @Body() dto: TurmaUpdateInputRestDto,
   ): Promise<TurmaFindOneOutputRestDto> {
-    const input = TurmaRestMapper.toUpdateInput(params, dto);
+    const input = TurmaRestMapper.toUpdateInput.map({ params, dto });
     const result = await this.updateHandler.execute(accessContext, input);
-    return TurmaRestMapper.toFindOneOutputDto(result);
+    return TurmaRestMapper.toFindOneOutput.map(result);
   }
 
   @Get("/:id/horario")
@@ -218,7 +218,7 @@ export class TurmaRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: TurmaFindOneInputRestDto,
   ): Promise<boolean> {
-    const input = TurmaRestMapper.toFindOneInput(params);
+    const input = TurmaRestMapper.toFindOneInput.map(params);
     return this.deleteHandler.execute(accessContext, input);
   }
 }

@@ -31,7 +31,7 @@ import {
   DiarioListOutputGraphQlDto,
   DiarioUpdateInputGraphQlDto,
 } from "./diario.graphql.dto";
-import { DiarioGraphqlMapper } from "./diario.graphql.mapper";
+import * as DiarioGraphqlMapper from "./diario.graphql.mapper";
 
 @Resolver(() => DiarioFindOneOutputGraphQlDto)
 export class DiarioGraphqlResolver {
@@ -55,7 +55,7 @@ export class DiarioGraphqlResolver {
   ): Promise<DiarioListOutputGraphQlDto> {
     const input = DiarioGraphqlMapper.toListInput(dto);
     const result = await this.listHandler.execute(accessContext, input);
-    return DiarioGraphqlMapper.toListOutputDto(result);
+    return DiarioGraphqlMapper.toListOutput(result);
   }
 
   @Query(() => DiarioFindOneOutputGraphQlDto, DiarioFindOneQueryMetadata.gqlMetadata)
@@ -63,9 +63,10 @@ export class DiarioGraphqlResolver {
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<DiarioFindOneOutputGraphQlDto> {
-    const result = await this.findOneHandler.execute(accessContext, { id });
-    ensureExists(result, Diario.entityName, id);
-    return DiarioGraphqlMapper.toFindOneOutputDto(result);
+    const input = DiarioGraphqlMapper.toFindOneInput.map(id);
+    const result = await this.findOneHandler.execute(accessContext, input);
+    ensureExists(result, Diario.entityName, input.id);
+    return DiarioGraphqlMapper.toFindOneOutput.map(result);
   }
 
   @Mutation(() => DiarioFindOneOutputGraphQlDto, DiarioCreateCommandMetadata.gqlMetadata)
@@ -73,9 +74,9 @@ export class DiarioGraphqlResolver {
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("data") dto: DiarioCreateInputGraphQlDto,
   ): Promise<DiarioFindOneOutputGraphQlDto> {
-    const input = DiarioGraphqlMapper.toCreateInput(dto);
+    const input = DiarioGraphqlMapper.toCreateInput.map(dto);
     const result = await this.createHandler.execute(accessContext, input);
-    return DiarioGraphqlMapper.toFindOneOutputDto(result);
+    return DiarioGraphqlMapper.toFindOneOutput.map(result);
   }
 
   @Mutation(() => DiarioFindOneOutputGraphQlDto, DiarioUpdateCommandMetadata.gqlMetadata)
@@ -84,9 +85,9 @@ export class DiarioGraphqlResolver {
     @Args("id", { type: () => ID }) id: string,
     @Args("data") dto: DiarioUpdateInputGraphQlDto,
   ): Promise<DiarioFindOneOutputGraphQlDto> {
-    const input = DiarioGraphqlMapper.toUpdateInput(id, dto);
+    const input = DiarioGraphqlMapper.toUpdateInput.map({ id, dto });
     const result = await this.updateHandler.execute(accessContext, input);
-    return DiarioGraphqlMapper.toFindOneOutputDto(result);
+    return DiarioGraphqlMapper.toFindOneOutput.map(result);
   }
 
   @Mutation(() => Boolean, DiarioDeleteCommandMetadata.gqlMetadata)

@@ -17,7 +17,7 @@ import {
   CidadeListInputGraphQlDto,
   CidadeListOutputGraphQlDto,
 } from "./cidade.graphql.dto";
-import { CidadeGraphqlMapper } from "./cidade.graphql.mapper";
+import * as CidadeGraphqlMapper from "./cidade.graphql.mapper";
 
 @Resolver(() => CidadeFindOneOutputGraphQlDto)
 export class CidadeGraphqlResolver {
@@ -35,7 +35,7 @@ export class CidadeGraphqlResolver {
   ): Promise<CidadeListOutputGraphQlDto> {
     const input = CidadeGraphqlMapper.toListInput(dto);
     const result = await this.listHandler.execute(accessContext, input);
-    return CidadeGraphqlMapper.toListOutputDto(result);
+    return CidadeGraphqlMapper.toListOutput(result);
   }
 
   @Query(() => CidadeFindOneOutputGraphQlDto, CidadeFindOneQueryMetadata.gqlMetadata)
@@ -43,8 +43,9 @@ export class CidadeGraphqlResolver {
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("id", { type: () => Int }) id: number,
   ): Promise<CidadeFindOneOutputGraphQlDto> {
-    const result = await this.findOneHandler.execute(accessContext, { id });
-    ensureExists(result, Cidade.entityName, id);
-    return CidadeGraphqlMapper.toFindOneOutputDto(result);
+    const input = CidadeGraphqlMapper.toFindOneInput.map(id);
+    const result = await this.findOneHandler.execute(accessContext, input);
+    ensureExists(result, Cidade.entityName, input.id);
+    return CidadeGraphqlMapper.toFindOneOutput.map(result);
   }
 }

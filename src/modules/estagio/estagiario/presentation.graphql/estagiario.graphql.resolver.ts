@@ -31,7 +31,7 @@ import {
   EstagiarioListOutputGraphQlDto,
   EstagiarioUpdateInputGraphQlDto,
 } from "./estagiario.graphql.dto";
-import { EstagiarioGraphqlMapper } from "./estagiario.graphql.mapper";
+import * as EstagiarioGraphqlMapper from "./estagiario.graphql.mapper";
 
 @Resolver(() => EstagiarioFindOneOutputGraphQlDto)
 export class EstagiarioGraphqlResolver {
@@ -55,7 +55,7 @@ export class EstagiarioGraphqlResolver {
   ): Promise<EstagiarioListOutputGraphQlDto> {
     const input = EstagiarioGraphqlMapper.toListInput(dto);
     const result = await this.listHandler.execute(accessContext, input);
-    return EstagiarioGraphqlMapper.toListOutputDto(result);
+    return EstagiarioGraphqlMapper.toListOutput(result);
   }
 
   @Query(() => EstagiarioFindOneOutputGraphQlDto, EstagiarioFindOneQueryMetadata.gqlMetadata)
@@ -63,9 +63,10 @@ export class EstagiarioGraphqlResolver {
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<EstagiarioFindOneOutputGraphQlDto> {
-    const result = await this.findOneHandler.execute(accessContext, { id });
-    ensureExists(result, Estagiario.entityName, id);
-    return EstagiarioGraphqlMapper.toFindOneOutputDto(result);
+    const input = EstagiarioGraphqlMapper.toFindOneInput.map(id);
+    const result = await this.findOneHandler.execute(accessContext, input);
+    ensureExists(result, Estagiario.entityName, input.id);
+    return EstagiarioGraphqlMapper.toFindOneOutput.map(result);
   }
 
   @Mutation(() => EstagiarioFindOneOutputGraphQlDto, EstagiarioCreateCommandMetadata.gqlMetadata)
@@ -73,9 +74,9 @@ export class EstagiarioGraphqlResolver {
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("input") dto: EstagiarioCreateInputGraphQlDto,
   ): Promise<EstagiarioFindOneOutputGraphQlDto> {
-    const input = EstagiarioGraphqlMapper.toCreateInput(dto);
+    const input = EstagiarioGraphqlMapper.toCreateInput.map(dto);
     const result = await this.createHandler.execute(accessContext, input);
-    return EstagiarioGraphqlMapper.toFindOneOutputDto(result);
+    return EstagiarioGraphqlMapper.toFindOneOutput.map(result);
   }
 
   @Mutation(() => EstagiarioFindOneOutputGraphQlDto, EstagiarioUpdateCommandMetadata.gqlMetadata)
@@ -84,9 +85,9 @@ export class EstagiarioGraphqlResolver {
     @Args("id", { type: () => ID }) id: string,
     @Args("input") dto: EstagiarioUpdateInputGraphQlDto,
   ): Promise<EstagiarioFindOneOutputGraphQlDto> {
-    const input = EstagiarioGraphqlMapper.toUpdateInput({ id }, dto);
+    const input = EstagiarioGraphqlMapper.toUpdateInput.map({ id, dto });
     const result = await this.updateHandler.execute(accessContext, input);
-    return EstagiarioGraphqlMapper.toFindOneOutputDto(result);
+    return EstagiarioGraphqlMapper.toFindOneOutput.map(result);
   }
 
   @Mutation(() => Boolean, EstagiarioDeleteCommandMetadata.gqlMetadata)

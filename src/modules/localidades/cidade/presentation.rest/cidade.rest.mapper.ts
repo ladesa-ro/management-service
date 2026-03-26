@@ -1,57 +1,52 @@
 import {
   CidadeFindOneQuery,
-  CidadeFindOneQueryResult,
+  type CidadeFindOneQueryResult,
   CidadeListQuery,
 } from "@/modules/localidades/cidade";
-import { EstadoRestMapper } from "@/modules/localidades/estado/presentation.rest/estado.rest.mapper";
-import { createListInputMapper, createListOutputMapper, createMapping } from "@/shared/mapping";
+import * as EstadoRestMapper from "@/modules/localidades/estado/presentation.rest/estado.rest.mapper";
 import {
-  CidadeFindOneInputRestDto,
+  createListMapper,
+  createMapper,
+  createPaginatedInputMapper,
+  mapField,
+} from "@/shared/mapping";
+import {
+  type CidadeFindOneInputRestDto,
   CidadeFindOneOutputRestDto,
+  type CidadeListInputRestDto,
   CidadeListOutputRestDto,
 } from "./cidade.rest.dto";
 
-const outputMapping = createMapping([
-  "id",
-  "nome",
-  [
-    "estado",
-    "estado",
-    (estado: unknown) =>
-      EstadoRestMapper.toFindOneOutputDto(
-        estado as import("@/modules/localidades/estado").EstadoFindOneQueryResult,
-      ),
-  ],
-]);
+// ============================================================================
+// Externa → Interna (Input: Presentation → Core)
+// ============================================================================
 
-export class CidadeRestMapper {
-  // ============================================================================
-  // Input: Server DTO -> Core DTO
-  // ============================================================================
+export const toFindOneInput = createMapper<CidadeFindOneInputRestDto, CidadeFindOneQuery>((dto) => {
+  const input = new CidadeFindOneQuery();
+  input.id = dto.id;
+  return input;
+});
 
-  static toFindOneInput(dto: CidadeFindOneInputRestDto): CidadeFindOneQuery {
-    const input = new CidadeFindOneQuery();
-    input.id = dto.id;
-    return input;
-  }
+export const toListInput = createPaginatedInputMapper<CidadeListInputRestDto, CidadeListQuery>(
+  CidadeListQuery,
+  (dto, query) => {
+    mapField(query, "filter.id", dto, "filter.id");
+    mapField(query, "filter.estado.id", dto, "filter.estado.id");
+    mapField(query, "filter.estado.nome", dto, "filter.estado.nome");
+    mapField(query, "filter.estado.sigla", dto, "filter.estado.sigla");
+  },
+);
 
-  static toListInput = createListInputMapper(CidadeListQuery, [
-    "filter.id",
-    "filter.estado.id",
-    "filter.estado.nome",
-    "filter.estado.sigla",
-  ]);
+// ============================================================================
+// Interna → Externa (Output: Core → Presentation)
+// ============================================================================
 
-  // ============================================================================
-  // Output: Core DTO -> Server DTO
-  // ============================================================================
+export const toFindOneOutput = createMapper<CidadeFindOneQueryResult, CidadeFindOneOutputRestDto>(
+  (output) => ({
+    id: output.id,
+    nome: output.nome,
+    estado: EstadoRestMapper.toFindOneOutput.map(output.estado),
+  }),
+);
 
-  static toFindOneOutputDto(output: CidadeFindOneQueryResult): CidadeFindOneOutputRestDto {
-    return outputMapping.map<CidadeFindOneOutputRestDto>(output);
-  }
-
-  static toListOutputDto = createListOutputMapper(
-    CidadeListOutputRestDto,
-    CidadeRestMapper.toFindOneOutputDto,
-  );
-}
+export const toListOutput = createListMapper(CidadeListOutputRestDto, toFindOneOutput);

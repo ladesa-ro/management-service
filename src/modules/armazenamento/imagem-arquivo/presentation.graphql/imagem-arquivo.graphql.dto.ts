@@ -3,8 +3,8 @@ import {
   PaginatedFilterByIdGraphQlDto,
   PaginationMetaGraphQlDto,
 } from "@/infrastructure.graphql/dtos";
-import { ImagemArquivoGraphqlListInputSchema } from "@/modules/armazenamento/imagem-arquivo/domain/queries/imagem-arquivo-list.query.schemas";
 import { ArgsType, Field, ID, Int, ObjectType } from "@/shared/presentation/graphql";
+import { createGraphqlListInputSchema } from "@/shared/validation/schemas";
 import { ImagemArquivoFindOneQueryResultFields } from "../domain/queries/imagem-arquivo-find-one.query.result";
 import { ImagemArquivoListQueryFields } from "../domain/queries/imagem-arquivo-list.query";
 
@@ -102,7 +102,7 @@ export class ImagemArquivoFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
 
 @ArgsType()
 export class ImagemArquivoListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {
-  static schema = ImagemArquivoGraphqlListInputSchema;
+  static schema = createGraphqlListInputSchema();
 }
 
 // ============================================================================

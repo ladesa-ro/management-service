@@ -1,10 +1,10 @@
 export interface ICalendarioLetivoEtapa {
   id: string;
-  dataInicio: Date;
-  dataTermino: Date;
+  dataInicio: string;
+  dataTermino: string;
   ofertaFormacaoPeriodoEtapa: { id: string; nome?: string };
   calendarioLetivo: { id: string };
-  dateCreated: Date;
-  dateUpdated: Date;
-  dateDeleted: Date | null;
+  dateCreated: string;
+  dateUpdated: string;
+  dateDeleted: string | null;
 }

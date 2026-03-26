@@ -40,7 +40,7 @@ import {
   CalendarioLetivoListOutputRestDto,
   CalendarioLetivoUpdateInputRestDto,
 } from "./calendario-letivo.rest.dto";
-import { CalendarioLetivoRestMapper } from "./calendario-letivo.rest.mapper";
+import * as CalendarioLetivoRestMapper from "./calendario-letivo.rest.mapper";
 
 @ApiTags("calendarios-letivos")
 @Controller("/calendarios-letivos")
@@ -66,9 +66,9 @@ export class CalendarioLetivoRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Query() dto: CalendarioLetivoListInputRestDto,
   ): Promise<CalendarioLetivoListOutputRestDto> {
-    const input = CalendarioLetivoRestMapper.toListInput(dto);
+    const input = CalendarioLetivoRestMapper.toListInput.map(dto);
     const result = await this.listHandler.execute(accessContext, input);
-    return CalendarioLetivoRestMapper.toListOutputDto(result);
+    return CalendarioLetivoRestMapper.toListOutput(result);
   }
 
   @Get("/:id")
@@ -80,10 +80,10 @@ export class CalendarioLetivoRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: CalendarioLetivoFindOneInputRestDto,
   ): Promise<CalendarioLetivoFindOneOutputRestDto> {
-    const input = CalendarioLetivoRestMapper.toFindOneInput(params);
+    const input = CalendarioLetivoRestMapper.toFindOneInput.map(params);
     const result = await this.findOneHandler.execute(accessContext, input);
     ensureExists(result, CalendarioLetivo.entityName, input.id);
-    return CalendarioLetivoRestMapper.toFindOneOutputDto(result);
+    return CalendarioLetivoRestMapper.toFindOneOutput.map(result);
   }
 
   @Post("/")
@@ -94,9 +94,9 @@ export class CalendarioLetivoRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Body() dto: CalendarioLetivoCreateInputRestDto,
   ): Promise<CalendarioLetivoFindOneOutputRestDto> {
-    const input = CalendarioLetivoRestMapper.toCreateInput(dto);
+    const input = CalendarioLetivoRestMapper.toCreateInput.map(dto);
     const result = await this.createHandler.execute(accessContext, input);
-    return CalendarioLetivoRestMapper.toFindOneOutputDto(result);
+    return CalendarioLetivoRestMapper.toFindOneOutput.map(result);
   }
 
   @Patch("/:id")
@@ -109,9 +109,9 @@ export class CalendarioLetivoRestController {
     @Param() params: CalendarioLetivoFindOneInputRestDto,
     @Body() dto: CalendarioLetivoUpdateInputRestDto,
   ): Promise<CalendarioLetivoFindOneOutputRestDto> {
-    const input = CalendarioLetivoRestMapper.toUpdateInput(params, dto);
+    const input = CalendarioLetivoRestMapper.toUpdateInput.map({ params, dto });
     const result = await this.updateHandler.execute(accessContext, input);
-    return CalendarioLetivoRestMapper.toFindOneOutputDto(result);
+    return CalendarioLetivoRestMapper.toFindOneOutput.map(result);
   }
 
   @Delete("/:id")
@@ -123,7 +123,7 @@ export class CalendarioLetivoRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: CalendarioLetivoFindOneInputRestDto,
   ): Promise<boolean> {
-    const input = CalendarioLetivoRestMapper.toFindOneInput(params);
+    const input = CalendarioLetivoRestMapper.toFindOneInput.map(params);
     return this.deleteHandler.execute(accessContext, input);
   }
 }

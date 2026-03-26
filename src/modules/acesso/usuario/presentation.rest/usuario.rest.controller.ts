@@ -88,7 +88,7 @@ import {
   UsuarioListOutputRestDto,
   UsuarioUpdateInputRestDto,
 } from "./usuario.rest.dto";
-import { UsuarioRestMapper } from "./usuario.rest.mapper";
+import * as UsuarioRestMapper from "./usuario.rest.mapper";
 
 @ApiTags("usuarios")
 @Controller("/usuarios")
@@ -128,9 +128,9 @@ export class UsuarioRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Query() dto: UsuarioListInputRestDto,
   ): Promise<UsuarioListOutputRestDto> {
-    const input = UsuarioRestMapper.toListInput(dto);
+    const input = UsuarioRestMapper.toListInput.map(dto);
     const result = await this.listHandler.execute(accessContext, input);
-    return UsuarioRestMapper.toListOutputDto(result);
+    return UsuarioRestMapper.toListOutput(result);
   }
 
   @Get("/:id")
@@ -142,10 +142,10 @@ export class UsuarioRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: UsuarioFindOneInputRestDto,
   ): Promise<UsuarioFindOneOutputRestDto> {
-    const input = UsuarioRestMapper.toFindOneInput(params);
+    const input = UsuarioRestMapper.toFindOneInput.map(params);
     const result = await this.findOneHandler.execute(accessContext, input);
     ensureExists(result, Usuario.entityName, input.id);
-    return UsuarioRestMapper.toFindOneOutputDto(result);
+    return UsuarioRestMapper.toFindOneOutput.map(result);
   }
 
   @Get("/:id/ensino")
@@ -157,7 +157,7 @@ export class UsuarioRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: UsuarioFindOneInputRestDto,
   ): Promise<UsuarioEnsinoOutputRestDto> {
-    const input = UsuarioRestMapper.toFindOneInput(params);
+    const input = UsuarioRestMapper.toFindOneInput.map(params);
     const result = await this.ensinoHandler.execute(accessContext, input);
     return UsuarioRestMapper.toEnsinoOutputDto(result);
   }
@@ -170,9 +170,9 @@ export class UsuarioRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Body() dto: UsuarioCreateInputRestDto,
   ): Promise<UsuarioFindOneOutputRestDto> {
-    const input = UsuarioRestMapper.toCreateInput(dto);
+    const input = UsuarioRestMapper.toCreateInput.map(dto);
     const result = await this.createHandler.execute(accessContext, input);
-    return UsuarioRestMapper.toFindOneOutputDto(result);
+    return UsuarioRestMapper.toFindOneOutput.map(result);
   }
 
   @Patch("/:id")
@@ -185,9 +185,9 @@ export class UsuarioRestController {
     @Param() params: UsuarioFindOneInputRestDto,
     @Body() dto: UsuarioUpdateInputRestDto,
   ): Promise<UsuarioFindOneOutputRestDto> {
-    const input = UsuarioRestMapper.toUpdateInput(params, dto);
+    const input = UsuarioRestMapper.toUpdateInput.map({ params, dto });
     const result = await this.updateHandler.execute(accessContext, input);
-    return UsuarioRestMapper.toFindOneOutputDto(result);
+    return UsuarioRestMapper.toFindOneOutput.map(result);
   }
 
   @Get("/:id/horario")
@@ -355,7 +355,7 @@ export class UsuarioRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: UsuarioFindOneInputRestDto,
   ): Promise<boolean> {
-    const input = UsuarioRestMapper.toFindOneInput(params);
+    const input = UsuarioRestMapper.toFindOneInput.map(params);
     return this.deleteHandler.execute(accessContext, input);
   }
 }

@@ -33,11 +33,11 @@ export class GerarHorarioTypeOrmRepositoryAdapter implements IGerarHorarioReposi
       id: aggregate.id,
       status: aggregate.status as GerarHorarioStatus,
       duracao: aggregate.duracao as GerarHorarioDuracao,
-      dataInicio: new Date(aggregate.dataInicio),
-      dataTermino: aggregate.dataTermino ? new Date(aggregate.dataTermino) : null,
+      dataInicio: aggregate.dataInicio,
+      dataTermino: aggregate.dataTermino,
       requisicaoGerador: aggregate.requisicaoGerador,
       respostaGerador: aggregate.respostaGerador,
-      dateCreated: new Date(aggregate.dateCreated),
+      dateCreated: aggregate.dateCreated,
     });
     await repo.save(entity);
 
@@ -67,21 +67,11 @@ export class GerarHorarioTypeOrmRepositoryAdapter implements IGerarHorarioReposi
       id: entity.id,
       status: entity.status,
       duracao: entity.duracao,
-      dataInicio:
-        entity.dataInicio instanceof Date
-          ? entity.dataInicio.toISOString().split("T")[0]
-          : String(entity.dataInicio),
-      dataTermino: entity.dataTermino
-        ? entity.dataTermino instanceof Date
-          ? entity.dataTermino.toISOString().split("T")[0]
-          : String(entity.dataTermino)
-        : null,
+      dataInicio: String(entity.dataInicio),
+      dataTermino: entity.dataTermino ? String(entity.dataTermino) : null,
       requisicaoGerador: entity.requisicaoGerador,
       respostaGerador: entity.respostaGerador,
-      dateCreated:
-        entity.dateCreated instanceof Date
-          ? entity.dateCreated.toISOString()
-          : String(entity.dateCreated),
+      dateCreated: String(entity.dateCreated),
       calendarioLetivoIds: junctions.calendarioLetivoIds,
       ofertaFormacaoIds: junctions.ofertaFormacaoIds,
     };

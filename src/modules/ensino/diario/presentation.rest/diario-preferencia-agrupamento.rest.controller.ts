@@ -17,7 +17,7 @@ import {
   DiarioPreferenciaAgrupamentoListOutputRestDto,
   DiarioPreferenciaAgrupamentoParentParamsRestDto,
 } from "./diario-preferencia-agrupamento.rest.dto";
-import { DiarioPreferenciaAgrupamentoRestMapper } from "./diario-preferencia-agrupamento.rest.mapper";
+import * as DiarioPreferenciaAgrupamentoRestMapper from "./diario-preferencia-agrupamento.rest.mapper";
 
 @ApiTags("diarios")
 @Controller("/diarios/:diarioId/preferencias-agrupamento")
@@ -40,7 +40,7 @@ export class DiarioPreferenciaAgrupamentoRestController {
   ): Promise<DiarioPreferenciaAgrupamentoListOutputRestDto> {
     const input = DiarioPreferenciaAgrupamentoRestMapper.toListInput(parentParams, dto);
     const result = await this.listHandler.execute(accessContext, input);
-    return DiarioPreferenciaAgrupamentoRestMapper.toListOutputDto(result);
+    return DiarioPreferenciaAgrupamentoRestMapper.toListOutput(result);
   }
 
   @Put("/")
@@ -54,6 +54,6 @@ export class DiarioPreferenciaAgrupamentoRestController {
   ): Promise<DiarioPreferenciaAgrupamentoListOutputRestDto> {
     const input = DiarioPreferenciaAgrupamentoRestMapper.toBulkReplaceInput(parentParams, dto);
     const result = await this.bulkReplaceHandler.execute(accessContext, input);
-    return DiarioPreferenciaAgrupamentoRestMapper.toListOutputDto(result);
+    return DiarioPreferenciaAgrupamentoRestMapper.toListOutput(result);
   }
 }

@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { createListMapper, createMapper, createPaginatedInputMapper } from "./create-mapper";
+import {
+  createListMapper,
+  createMapper,
+  createPaginatedInputMapper,
+  mapField,
+} from "./create-mapper";
 
 describe("createMapper", () => {
   it("maps a single input to the expected output", () => {
@@ -158,5 +163,43 @@ describe("createPaginatedInputMapper", () => {
     expect(results).toHaveLength(2);
     expect(results[0].page).toBe(1);
     expect(results[1].page).toBe(2);
+  });
+});
+
+describe("mapField", () => {
+  it("copies a defined field from source to target", () => {
+    const target: { nome?: string } = {};
+    const source = { nome: "Teste" };
+
+    mapField(target, "nome", source, "nome");
+
+    expect(target.nome).toBe("Teste");
+  });
+
+  it("skips undefined fields", () => {
+    const target: { nome?: string } = { nome: "Original" };
+    const source: { nome?: string } = {};
+
+    mapField(target, "nome", source, "nome");
+
+    expect(target.nome).toBe("Original");
+  });
+
+  it("copies null values (not undefined)", () => {
+    const target: { valor?: string | null } = { valor: "algo" };
+    const source: { valor?: string | null } = { valor: null };
+
+    mapField(target, "valor", source, "valor");
+
+    expect(target.valor).toBeNull();
+  });
+
+  it("renames fields between source and target", () => {
+    const target: { "filter.id"?: string[] } = {};
+    const source = { filterId: ["1", "2"] };
+
+    mapField(target, "filter.id", source, "filterId");
+
+    expect(target["filter.id"]).toEqual(["1", "2"]);
   });
 });

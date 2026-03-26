@@ -40,7 +40,7 @@ import {
   EstagiarioListOutputRestDto,
   EstagiarioUpdateInputRestDto,
 } from "./estagiario.rest.dto";
-import { EstagiarioRestMapper } from "./estagiario.rest.mapper";
+import * as EstagiarioRestMapper from "./estagiario.rest.mapper";
 
 @ApiTags("estagiarios")
 @Controller("/estagiarios")
@@ -66,9 +66,9 @@ export class EstagiarioRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Query() dto: EstagiarioListInputRestDto,
   ): Promise<EstagiarioListOutputRestDto> {
-    const input = EstagiarioRestMapper.toListInput(dto);
+    const input = EstagiarioRestMapper.toListInput.map(dto);
     const result = await this.listHandler.execute(accessContext, input);
-    return EstagiarioRestMapper.toListOutputDto(result);
+    return EstagiarioRestMapper.toListOutput(result);
   }
 
   @Get("/:id")
@@ -80,10 +80,10 @@ export class EstagiarioRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: EstagiarioFindOneInputRestDto,
   ): Promise<EstagiarioFindOneOutputRestDto> {
-    const input = EstagiarioRestMapper.toFindOneInput(params);
+    const input = EstagiarioRestMapper.toFindOneInput.map(params);
     const result = await this.findOneHandler.execute(accessContext, input);
     ensureExists(result, Estagiario.entityName, input.id);
-    return EstagiarioRestMapper.toFindOneOutputDto(result);
+    return EstagiarioRestMapper.toFindOneOutput.map(result);
   }
 
   @Post("/")
@@ -94,9 +94,9 @@ export class EstagiarioRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Body() dto: EstagiarioCreateInputRestDto,
   ): Promise<EstagiarioFindOneOutputRestDto> {
-    const input = EstagiarioRestMapper.toCreateInput(dto);
+    const input = EstagiarioRestMapper.toCreateInput.map(dto);
     const result = await this.createHandler.execute(accessContext, input);
-    return EstagiarioRestMapper.toFindOneOutputDto(result);
+    return EstagiarioRestMapper.toFindOneOutput.map(result);
   }
 
   @Patch("/:id")
@@ -109,9 +109,9 @@ export class EstagiarioRestController {
     @Param() params: EstagiarioFindOneInputRestDto,
     @Body() dto: EstagiarioUpdateInputRestDto,
   ): Promise<EstagiarioFindOneOutputRestDto> {
-    const input = EstagiarioRestMapper.toUpdateInput(params, dto);
+    const input = EstagiarioRestMapper.toUpdateInput.map({ params, dto });
     const result = await this.updateHandler.execute(accessContext, input);
-    return EstagiarioRestMapper.toFindOneOutputDto(result);
+    return EstagiarioRestMapper.toFindOneOutput.map(result);
   }
 
   @Delete("/:id")
@@ -123,7 +123,7 @@ export class EstagiarioRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: EstagiarioFindOneInputRestDto,
   ): Promise<boolean> {
-    const input = EstagiarioRestMapper.toFindOneInput(params);
+    const input = EstagiarioRestMapper.toFindOneInput.map(params);
     await this.deleteHandler.execute(accessContext, input);
     return true;
   }

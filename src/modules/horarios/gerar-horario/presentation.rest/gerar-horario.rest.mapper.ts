@@ -1,18 +1,21 @@
+import { createMapper } from "@/shared/mapping";
 import type { GerarHorario } from "../domain/gerar-horario";
-import { GerarHorarioFindOneOutputRestDto } from "./gerar-horario.rest.dto";
+import type { GerarHorarioFindOneOutputRestDto } from "./gerar-horario.rest.dto";
 
-export class GerarHorarioRestMapper {
-  static toFindOneOutputDto(domain: GerarHorario): GerarHorarioFindOneOutputRestDto {
-    const dto = new GerarHorarioFindOneOutputRestDto();
-    dto.id = domain.id;
-    dto.status = domain.status;
-    dto.duracao = domain.duracao;
-    dto.dataInicio = domain.dataInicio;
-    dto.dataTermino = domain.dataTermino;
-    dto.respostaGerador = domain.respostaGerador;
-    dto.dateCreated = domain.dateCreated;
-    dto.ofertaFormacaoIds = domain.ofertaFormacaoIds;
-    dto.calendarioLetivoIds = domain.calendarioLetivoIds;
-    return dto;
-  }
-}
+// ============================================================================
+// Interna → Externa (Output: Core → Presentation)
+// ============================================================================
+
+export const toFindOneOutput = createMapper<GerarHorario, GerarHorarioFindOneOutputRestDto>(
+  (output) => ({
+    id: output.id,
+    status: output.status,
+    duracao: output.duracao,
+    dataInicio: output.dataInicio,
+    dataTermino: output.dataTermino,
+    respostaGerador: output.respostaGerador,
+    dateCreated: output.dateCreated,
+    ofertaFormacaoIds: output.ofertaFormacaoIds,
+    calendarioLetivoIds: output.calendarioLetivoIds,
+  }),
+);

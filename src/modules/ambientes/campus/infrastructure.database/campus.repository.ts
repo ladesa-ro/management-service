@@ -8,12 +8,7 @@ import {
   typeormFindAll,
   typeormSoftDeleteById,
 } from "@/infrastructure.database/typeorm/helpers/typeorm-repository-helpers";
-import {
-  dateToISO,
-  dateToISONullable,
-  mapDatedEntity,
-} from "@/infrastructure.database/typeorm/mapping";
-import { Campus, type ICampus } from "@/modules/ambientes/campus/domain/campus";
+import { Campus } from "@/modules/ambientes/campus/domain/campus";
 import type {
   CampusFindOneQuery,
   CampusFindOneQueryResult,
@@ -21,9 +16,8 @@ import type {
   CampusListQueryResult,
 } from "@/modules/ambientes/campus/domain/queries";
 import { campusPaginationSpec } from "@/modules/ambientes/campus/domain/queries";
-import { CampusFindOneQueryResult as CampusFindOneQueryResultClass } from "@/modules/ambientes/campus/domain/queries/campus-find-one.query.result";
 import type { ICampusRepository } from "@/modules/ambientes/campus/domain/repositories";
-import { CampusEntity, campusEntityDomainMapper } from "./typeorm";
+import { CampusEntity, CampusTypeormMapper } from "./typeorm";
 
 const config = {
   alias: "campus",
@@ -76,11 +70,11 @@ export class CampusTypeOrmRepositoryAdapter implements ICampusRepository {
 
     if (!entity) return null;
 
-    return Campus.load(this.toDomainData(entity));
+    return Campus.load(CampusTypeormMapper.entityToDomain.map(entity));
   }
 
   async save(aggregate: Campus): Promise<void> {
-    const entityData = campusEntityDomainMapper.toPersistenceData({ ...aggregate });
+    const entityData = CampusTypeormMapper.domainToPersistence.map({ ...aggregate });
     const repo = this.appTypeormConnection.getRepository(CampusEntity);
     await repo.save(repo.create({ id: aggregate.id, ...entityData } as CampusEntity));
   }
@@ -106,7 +100,7 @@ export class CampusTypeOrmRepositoryAdapter implements ICampusRepository {
 
     if (!entity) return null;
 
-    return this.toQueryResult(entity);
+    return CampusTypeormMapper.entityToOutput.map(entity);
   }
 
   getFindAllQueryResult(
@@ -119,67 +113,7 @@ export class CampusTypeOrmRepositoryAdapter implements ICampusRepository {
       { ...config, paginateConfig: campusPaginateConfig },
       this.paginationAdapter,
       dto,
-      (entity) => this.toQueryResult(entity),
+      CampusTypeormMapper.entityToOutput.map,
     );
-  }
-
-  // ==========================================
-  // Mappers privados — fronteira de tradução do adapter
-  // ==========================================
-
-  /**
-   * Entity TypeORM → dados para Domain.load() (write side).
-   *
-   * CampusSchema exige o endereco completo (com cidade ref), então mapeamos tudo.
-   * Datas Date → ISO string (o domínio usa ScalarDateTimeString).
-   */
-  private toDomainData(entity: CampusEntity): ICampus {
-    return {
-      id: entity.id,
-      nomeFantasia: entity.nomeFantasia,
-      razaoSocial: entity.razaoSocial,
-      apelido: entity.apelido,
-      cnpj: entity.cnpj,
-
-      endereco: {
-        id: entity.endereco.id,
-        cep: entity.endereco.cep,
-        logradouro: entity.endereco.logradouro,
-        numero: entity.endereco.numero,
-        bairro: entity.endereco.bairro,
-        complemento: entity.endereco.complemento,
-        pontoReferencia: entity.endereco.pontoReferencia,
-        cidade: { id: entity.endereco.cidade.id },
-      },
-
-      dateCreated: dateToISO(entity.dateCreated),
-      dateUpdated: dateToISO(entity.dateUpdated),
-      dateDeleted: dateToISONullable(entity.dateDeleted),
-    };
-  }
-
-  /**
-   * Entity TypeORM → Query Result (read side).
-   *
-   * Projeta relações como objetos completos — a UI precisa dos dados para exibição.
-   */
-  private toQueryResult(entity: CampusEntity): CampusFindOneQueryResult {
-    const result = new CampusFindOneQueryResultClass();
-
-    result.id = entity.id;
-    result.nomeFantasia = entity.nomeFantasia;
-    result.razaoSocial = entity.razaoSocial;
-    result.apelido = entity.apelido;
-    result.cnpj = entity.cnpj;
-    result.dateCreated = dateToISO(entity.dateCreated);
-    result.dateUpdated = dateToISO(entity.dateUpdated);
-    result.dateDeleted = dateToISONullable(entity.dateDeleted);
-
-    result.endereco = {
-      ...mapDatedEntity(entity.endereco),
-      cidade: entity.endereco.cidade,
-    };
-
-    return result;
   }
 }

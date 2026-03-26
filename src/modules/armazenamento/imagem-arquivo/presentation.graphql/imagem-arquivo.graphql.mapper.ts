@@ -1,63 +1,73 @@
 import {
   ImagemArquivoFindOneQuery,
-  ImagemArquivoFindOneQueryResult,
+  type ImagemArquivoFindOneQueryResult,
   ImagemArquivoListQuery,
 } from "@/modules/armazenamento/imagem-arquivo";
-import { createFindOneInputMapper, createListOutputMapper, mapDatedFields } from "@/shared/mapping";
 import {
-  ArquivoFindOneOutputGraphQlDto,
+  createListMapper,
+  createMapper,
+  createPaginatedInputMapper,
+  mapField,
+} from "@/shared/mapping";
+import {
   ImagemArquivoFindOneOutputGraphQlDto,
-  ImagemArquivoListInputGraphQlDto,
+  type ImagemArquivoListInputGraphQlDto,
   ImagemArquivoListOutputGraphQlDto,
-  ImagemFindOneFromImagemArquivoOutputGraphQlDto,
 } from "./imagem-arquivo.graphql.dto";
 
-export class ImagemArquivoGraphqlMapper {
-  static toListInput(dto: ImagemArquivoListInputGraphQlDto | null): ImagemArquivoListQuery | null {
-    if (!dto) {
-      return null;
-    }
+// ============================================================================
+// Externa → Interna (Input: Presentation → Core)
+// ============================================================================
 
-    const input = new ImagemArquivoListQuery();
-    input.page = dto.page;
-    input.limit = dto.limit;
-    input.search = dto.search;
-    input.sortBy = dto.sortBy;
-    input["filter.id"] = dto.filterId;
-    return input;
-  }
+export const toFindOneInput = createMapper<string, ImagemArquivoFindOneQuery>((id) => {
+  const input = new ImagemArquivoFindOneQuery();
+  input.id = id;
+  return input;
+});
 
-  static toFindOneInput = createFindOneInputMapper(ImagemArquivoFindOneQuery);
+const listInputMapper = createPaginatedInputMapper<
+  ImagemArquivoListInputGraphQlDto,
+  ImagemArquivoListQuery
+>(ImagemArquivoListQuery, (dto, query) => {
+  mapField(query, "filter.id", dto, "filterId");
+});
 
-  static toFindOneOutputDto(
-    output: ImagemArquivoFindOneQueryResult,
-  ): ImagemArquivoFindOneOutputGraphQlDto {
-    const dto = new ImagemArquivoFindOneOutputGraphQlDto();
-    dto.id = output.id;
-    dto.largura = output.largura;
-    dto.altura = output.altura;
-    dto.formato = output.formato;
-    dto.mimeType = output.mimeType;
-
-    const imagem = new ImagemFindOneFromImagemArquivoOutputGraphQlDto();
-    imagem.id = output.imagem.id;
-    dto.imagem = imagem;
-
-    const arquivo = new ArquivoFindOneOutputGraphQlDto();
-    arquivo.id = output.arquivo.id;
-    arquivo.name = output.arquivo.name;
-    arquivo.mimeType = output.arquivo.mimeType;
-    arquivo.sizeBytes = output.arquivo.sizeBytes;
-    arquivo.storageType = output.arquivo.storageType;
-    mapDatedFields(arquivo, output.arquivo);
-    dto.arquivo = arquivo;
-
-    mapDatedFields(dto, output);
-    return dto;
-  }
-
-  static toListOutputDto = createListOutputMapper(
-    ImagemArquivoListOutputGraphQlDto,
-    ImagemArquivoGraphqlMapper.toFindOneOutputDto,
-  );
+export function toListInput(
+  dto: ImagemArquivoListInputGraphQlDto | null,
+): ImagemArquivoListQuery | null {
+  if (!dto) return null;
+  return listInputMapper.map(dto);
 }
+
+// ============================================================================
+// Interna → Externa (Output: Core → Presentation)
+// ============================================================================
+
+export const toFindOneOutput = createMapper<
+  ImagemArquivoFindOneQueryResult,
+  ImagemArquivoFindOneOutputGraphQlDto
+>((output) => ({
+  id: output.id,
+  largura: output.largura,
+  altura: output.altura,
+  formato: output.formato,
+  mimeType: output.mimeType,
+  imagem: {
+    id: output.imagem.id,
+  },
+  arquivo: {
+    id: output.arquivo.id,
+    name: output.arquivo.name,
+    mimeType: output.arquivo.mimeType,
+    sizeBytes: output.arquivo.sizeBytes,
+    storageType: output.arquivo.storageType,
+    dateCreated: new Date(output.arquivo.dateCreated),
+    dateUpdated: new Date(output.arquivo.dateUpdated),
+    dateDeleted: output.arquivo.dateDeleted ? new Date(output.arquivo.dateDeleted) : null,
+  },
+  dateCreated: new Date(output.dateCreated),
+  dateUpdated: new Date(output.dateUpdated),
+  dateDeleted: output.dateDeleted ? new Date(output.dateDeleted) : null,
+}));
+
+export const toListOutput = createListMapper(ImagemArquivoListOutputGraphQlDto, toFindOneOutput);

@@ -8,12 +8,7 @@ import {
   typeormFindAll,
   typeormSoftDeleteById,
 } from "@/infrastructure.database/typeorm/helpers/typeorm-repository-helpers";
-import {
-  dateToISO,
-  dateToISONullable,
-  mapDatedEntity,
-} from "@/infrastructure.database/typeorm/mapping";
-import { Ambiente, type IAmbiente } from "@/modules/ambientes/ambiente/domain/ambiente";
+import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente";
 import type {
   AmbienteFindOneQuery,
   AmbienteFindOneQueryResult,
@@ -21,9 +16,8 @@ import type {
   AmbienteListQueryResult,
 } from "@/modules/ambientes/ambiente/domain/queries";
 import { ambientePaginationSpec } from "@/modules/ambientes/ambiente/domain/queries";
-import { AmbienteFindOneQueryResult as AmbienteFindOneQueryResultClass } from "@/modules/ambientes/ambiente/domain/queries/ambiente-find-one.query.result";
 import type { IAmbienteRepository } from "@/modules/ambientes/ambiente/domain/repositories";
-import { AmbienteEntity, ambienteEntityDomainMapper } from "./typeorm";
+import { AmbienteEntity, AmbienteTypeormMapper } from "./typeorm";
 
 const config = {
   alias: "ambiente",
@@ -79,13 +73,13 @@ export class AmbienteTypeOrmRepositoryAdapter implements IAmbienteRepository {
 
     if (!entity) return null;
 
-    return Ambiente.load(this.toDomainData(entity));
+    return Ambiente.load(AmbienteTypeormMapper.entityToDomain.map(entity));
   }
 
   async save(aggregate: Ambiente): Promise<void> {
-    const entityData = ambienteEntityDomainMapper.toPersistenceData({ ...aggregate });
+    const entityData = AmbienteTypeormMapper.domainToPersistence.map({ ...aggregate });
     const repo = this.appTypeormConnection.getRepository(AmbienteEntity);
-    await repo.save(repo.create({ id: aggregate.id, ...entityData } as AmbienteEntity));
+    await repo.save(repo.create(entityData));
   }
 
   softDeleteById(id: string) {
@@ -109,7 +103,7 @@ export class AmbienteTypeOrmRepositoryAdapter implements IAmbienteRepository {
 
     if (!entity) return null;
 
-    return this.toQueryResult(entity);
+    return AmbienteTypeormMapper.entityToOutput.map(entity);
   }
 
   getFindAllQueryResult(
@@ -122,73 +116,7 @@ export class AmbienteTypeOrmRepositoryAdapter implements IAmbienteRepository {
       { ...config, paginateConfig: ambientePaginateConfig },
       this.paginationAdapter,
       dto,
-      (entity) => this.toQueryResult(entity),
+      AmbienteTypeormMapper.entityToOutput.map,
     );
-  }
-
-  // ==========================================
-  // Mappers privados — fronteira de tradução do adapter
-  // ==========================================
-
-  /**
-   * Entity TypeORM → dados para Domain.load() (write side).
-   *
-   * Datas Date → ISO string (o domínio usa ScalarDateTimeString).
-   */
-  private toDomainData(entity: AmbienteEntity): IAmbiente {
-    return {
-      id: entity.id,
-      nome: entity.nome,
-      descricao: entity.descricao,
-      codigo: entity.codigo,
-      capacidade: entity.capacidade,
-      tipo: entity.tipo,
-      bloco: { id: entity.bloco.id },
-      imagemCapa: entity.imagemCapa ? { id: entity.imagemCapa.id } : null,
-      dateCreated: dateToISO(entity.dateCreated),
-      dateUpdated: dateToISO(entity.dateUpdated),
-      dateDeleted: dateToISONullable(entity.dateDeleted),
-    };
-  }
-
-  /**
-   * Entity TypeORM → Query Result (read side).
-   *
-   * Projeta relações como objetos completos — a UI precisa dos dados para exibição.
-   */
-  private toQueryResult(entity: AmbienteEntity): AmbienteFindOneQueryResult {
-    const result = new AmbienteFindOneQueryResultClass();
-
-    result.id = entity.id;
-    result.nome = entity.nome;
-    result.descricao = entity.descricao;
-    result.codigo = entity.codigo;
-    result.capacidade = entity.capacidade;
-    result.tipo = entity.tipo;
-    result.dateCreated = dateToISO(entity.dateCreated);
-    result.dateUpdated = dateToISO(entity.dateUpdated);
-    result.dateDeleted = dateToISONullable(entity.dateDeleted);
-
-    const blocoResult = {
-      ...mapDatedEntity(entity.bloco),
-      campus: entity.bloco.campus
-        ? {
-            ...mapDatedEntity(entity.bloco.campus),
-            endereco: entity.bloco.campus.endereco
-              ? {
-                  ...mapDatedEntity(entity.bloco.campus.endereco),
-                  cidade: entity.bloco.campus.endereco.cidade,
-                }
-              : (undefined as any),
-          }
-        : (undefined as any),
-    };
-    result.bloco = blocoResult as unknown as (typeof result)["bloco"];
-
-    result.imagemCapa = (entity.imagemCapa
-      ? { ...mapDatedEntity(entity.imagemCapa) }
-      : null) as unknown as (typeof result)["imagemCapa"];
-
-    return result;
   }
 }
