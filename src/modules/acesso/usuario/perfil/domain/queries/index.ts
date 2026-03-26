@@ -1,3 +1,4 @@
+export * from "./cargo-nested.query.result";
 export * from "./perfil-ensino-by-id.query.metadata";
 export * from "./perfil-find-all-active.query.handler.interface";
 export * from "./perfil-find-one.query";
