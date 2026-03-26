@@ -81,7 +81,9 @@ export class EstagiarioGraphqlMapper {
     return input;
   }
 
-  static toFindOneOutputDto(output: EstagiarioFindOneQueryResult): EstagiarioFindOneOutputGraphQlDto {
+  static toFindOneOutputDto(
+    output: EstagiarioFindOneQueryResult,
+  ): EstagiarioFindOneOutputGraphQlDto {
     const dto = new EstagiarioFindOneOutputGraphQlDto();
     dto.id = output.id;
     dto.perfil = PerfilGraphqlMapper.toFindOneOutputDto(output.perfil);

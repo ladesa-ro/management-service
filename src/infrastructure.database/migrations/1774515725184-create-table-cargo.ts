@@ -1,9 +1,9 @@
 import { MigrationInterface, QueryRunner, Table } from "typeorm";
+
 const CARGO = "cargo";
 
 export class CreateTableCargo1774515725184 implements MigrationInterface {
-
-      public async up(queryRunner: QueryRunner): Promise<void> {
+  public async up(queryRunner: QueryRunner): Promise<void> {
     if (await queryRunner.hasTable(CARGO)) return;
 
     await queryRunner.createTable(

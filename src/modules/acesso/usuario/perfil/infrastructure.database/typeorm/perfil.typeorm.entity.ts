@@ -11,7 +11,11 @@ export class PerfilEntity {
   @Column({ name: "ativo", type: "boolean" })
   ativo!: boolean;
 
-  @ManyToOne(() => CargoEntity, (cargo) => cargo.perfis, { nullable: true })
+  @ManyToOne(
+    () => CargoEntity,
+    (cargo) => cargo.perfis,
+    { nullable: true },
+  )
   @JoinColumn({ name: "id_cargo_fk" })
   cargo!: Relation<CargoEntity>;
 

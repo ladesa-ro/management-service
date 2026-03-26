@@ -150,12 +150,7 @@ export class PerfilDefinirPerfisAtivosCommandHandlerImpl
 
     const novoCargo: CargoResult = { id: generateUuidV7(), nome };
 
-    await repo
-      .createQueryBuilder()
-      .insert()
-      .into("cargo")
-      .values(novoCargo)
-      .execute();
+    await repo.createQueryBuilder().insert().into("cargo").values(novoCargo).execute();
 
     return novoCargo;
   }
