@@ -31,7 +31,7 @@ import {
   NivelFormacaoListOutputGraphQlDto,
   NivelFormacaoUpdateInputGraphQlDto,
 } from "./nivel-formacao.graphql.dto";
-import { NivelFormacaoGraphqlMapper } from "./nivel-formacao.graphql.mapper";
+import * as NivelFormacaoGraphqlMapper from "./nivel-formacao.graphql.mapper";
 
 @Resolver(() => NivelFormacaoFindOneOutputGraphQlDto)
 export class NivelFormacaoGraphqlResolver {
@@ -55,7 +55,7 @@ export class NivelFormacaoGraphqlResolver {
   ): Promise<NivelFormacaoListOutputGraphQlDto> {
     const input = NivelFormacaoGraphqlMapper.toListInput(dto);
     const result = await this.listHandler.execute(accessContext, input);
-    return NivelFormacaoGraphqlMapper.toListOutputDto(result);
+    return NivelFormacaoGraphqlMapper.toListOutput(result);
   }
 
   @Query(() => NivelFormacaoFindOneOutputGraphQlDto, NivelFormacaoFindOneQueryMetadata.gqlMetadata)
@@ -63,9 +63,10 @@ export class NivelFormacaoGraphqlResolver {
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<NivelFormacaoFindOneOutputGraphQlDto> {
-    const result = await this.findOneHandler.execute(accessContext, { id });
-    ensureExists(result, NivelFormacao.entityName, id);
-    return NivelFormacaoGraphqlMapper.toFindOneOutputDto(result);
+    const input = NivelFormacaoGraphqlMapper.toFindOneInput.map(id);
+    const result = await this.findOneHandler.execute(accessContext, input);
+    ensureExists(result, NivelFormacao.entityName, input.id);
+    return NivelFormacaoGraphqlMapper.toFindOneOutput.map(result);
   }
 
   @Mutation(
@@ -76,9 +77,9 @@ export class NivelFormacaoGraphqlResolver {
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("input") dto: NivelFormacaoCreateInputGraphQlDto,
   ): Promise<NivelFormacaoFindOneOutputGraphQlDto> {
-    const input = NivelFormacaoGraphqlMapper.toCreateInput(dto);
+    const input = NivelFormacaoGraphqlMapper.toCreateInput.map(dto);
     const result = await this.createHandler.execute(accessContext, input);
-    return NivelFormacaoGraphqlMapper.toFindOneOutputDto(result);
+    return NivelFormacaoGraphqlMapper.toFindOneOutput.map(result);
   }
 
   @Mutation(
@@ -90,9 +91,9 @@ export class NivelFormacaoGraphqlResolver {
     @Args("id", { type: () => ID }) id: string,
     @Args("input") dto: NivelFormacaoUpdateInputGraphQlDto,
   ): Promise<NivelFormacaoFindOneOutputGraphQlDto> {
-    const input = NivelFormacaoGraphqlMapper.toUpdateInput({ id }, dto);
+    const input = NivelFormacaoGraphqlMapper.toUpdateInput.map({ id, dto });
     const result = await this.updateHandler.execute(accessContext, input);
-    return NivelFormacaoGraphqlMapper.toFindOneOutputDto(result);
+    return NivelFormacaoGraphqlMapper.toFindOneOutput.map(result);
   }
 
   @Mutation(() => Boolean, NivelFormacaoDeleteCommandMetadata.gqlMetadata)

@@ -40,7 +40,7 @@ import {
   NivelFormacaoListOutputRestDto,
   NivelFormacaoUpdateInputRestDto,
 } from "./nivel-formacao.rest.dto";
-import { NivelFormacaoRestMapper } from "./nivel-formacao.rest.mapper";
+import * as NivelFormacaoRestMapper from "./nivel-formacao.rest.mapper";
 
 @ApiTags("niveis-formacoes")
 @Controller("/niveis-formacoes")
@@ -66,9 +66,9 @@ export class NivelFormacaoRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Query() dto: NivelFormacaoListInputRestDto,
   ): Promise<NivelFormacaoListOutputRestDto> {
-    const input = NivelFormacaoRestMapper.toListInput(dto);
+    const input = NivelFormacaoRestMapper.toListInput.map(dto);
     const result = await this.listHandler.execute(accessContext, input);
-    return NivelFormacaoRestMapper.toListOutputDto(result);
+    return NivelFormacaoRestMapper.toListOutput(result);
   }
 
   @Get("/:id")
@@ -80,10 +80,10 @@ export class NivelFormacaoRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: NivelFormacaoFindOneInputRestDto,
   ): Promise<NivelFormacaoFindOneOutputRestDto> {
-    const input = NivelFormacaoRestMapper.toFindOneInput(params);
+    const input = NivelFormacaoRestMapper.toFindOneInput.map(params);
     const result = await this.findOneHandler.execute(accessContext, input);
     ensureExists(result, NivelFormacao.entityName, input.id);
-    return NivelFormacaoRestMapper.toFindOneOutputDto(result);
+    return NivelFormacaoRestMapper.toFindOneOutput.map(result);
   }
 
   @Post("/")
@@ -94,9 +94,9 @@ export class NivelFormacaoRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Body() dto: NivelFormacaoCreateInputRestDto,
   ): Promise<NivelFormacaoFindOneOutputRestDto> {
-    const input = NivelFormacaoRestMapper.toCreateInput(dto);
+    const input = NivelFormacaoRestMapper.toCreateInput.map(dto);
     const result = await this.createHandler.execute(accessContext, input);
-    return NivelFormacaoRestMapper.toFindOneOutputDto(result);
+    return NivelFormacaoRestMapper.toFindOneOutput.map(result);
   }
 
   @Patch("/:id")
@@ -109,13 +109,9 @@ export class NivelFormacaoRestController {
     @Param() params: NivelFormacaoFindOneInputRestDto,
     @Body() dto: NivelFormacaoUpdateInputRestDto,
   ): Promise<NivelFormacaoFindOneOutputRestDto> {
-    const findOneInput = NivelFormacaoRestMapper.toFindOneInput(params);
-    const updateInput = NivelFormacaoRestMapper.toUpdateInput(dto);
-    const result = await this.updateHandler.execute(accessContext, {
-      ...findOneInput,
-      ...updateInput,
-    });
-    return NivelFormacaoRestMapper.toFindOneOutputDto(result);
+    const input = NivelFormacaoRestMapper.toUpdateInput.map({ params, dto });
+    const result = await this.updateHandler.execute(accessContext, input);
+    return NivelFormacaoRestMapper.toFindOneOutput.map(result);
   }
 
   @Delete("/:id")
@@ -127,7 +123,7 @@ export class NivelFormacaoRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: NivelFormacaoFindOneInputRestDto,
   ): Promise<boolean> {
-    const input = NivelFormacaoRestMapper.toFindOneInput(params);
+    const input = NivelFormacaoRestMapper.toFindOneInput.map(params);
     return this.deleteHandler.execute(accessContext, input);
   }
 }

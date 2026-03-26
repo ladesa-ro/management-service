@@ -1,71 +1,73 @@
 import {
   NivelFormacaoCreateCommand,
   NivelFormacaoFindOneQuery,
-  NivelFormacaoFindOneQueryResult,
+  type NivelFormacaoFindOneQueryResult,
   NivelFormacaoListQuery,
   NivelFormacaoUpdateCommand,
 } from "@/modules/ensino/nivel-formacao";
-import { createListOutputMapper, mapDatedFields } from "@/shared/mapping";
+import { createListMapper, createMapper, createPaginatedInputMapper } from "@/shared/mapping";
 import {
-  NivelFormacaoCreateInputGraphQlDto,
+  type NivelFormacaoCreateInputGraphQlDto,
   NivelFormacaoFindOneOutputGraphQlDto,
-  NivelFormacaoListInputGraphQlDto,
+  type NivelFormacaoListInputGraphQlDto,
   NivelFormacaoListOutputGraphQlDto,
-  NivelFormacaoUpdateInputGraphQlDto,
+  type NivelFormacaoUpdateInputGraphQlDto,
 } from "./nivel-formacao.graphql.dto";
 
-export class NivelFormacaoGraphqlMapper {
-  static toListInput(dto: NivelFormacaoListInputGraphQlDto | null): NivelFormacaoListQuery | null {
-    if (!dto) {
-      return null;
-    }
+// ============================================================================
+// Externa → Interna (Input: Presentation → Core)
+// ============================================================================
 
-    const input = new NivelFormacaoListQuery();
-    input.page = dto.page;
-    input.limit = dto.limit;
-    input.search = dto.search;
-    input.sortBy = dto.sortBy;
-    input["filter.id"] = dto.filterId;
-    return input;
-  }
+export const toFindOneInput = createMapper<string, NivelFormacaoFindOneQuery>((id) => {
+  const input = new NivelFormacaoFindOneQuery();
+  input.id = id;
+  return input;
+});
 
-  static toFindOneInput(id: string): NivelFormacaoFindOneQuery {
-    const input = new NivelFormacaoFindOneQuery();
-    input.id = id;
-    return input;
-  }
+const listInputMapper = createPaginatedInputMapper<
+  NivelFormacaoListInputGraphQlDto,
+  NivelFormacaoListQuery
+>(NivelFormacaoListQuery, (dto, query) => {
+  if (dto.filterId !== undefined) query["filter.id"] = dto.filterId;
+});
 
-  static toCreateInput(dto: NivelFormacaoCreateInputGraphQlDto): NivelFormacaoCreateCommand {
-    const input = new NivelFormacaoCreateCommand();
-    input.slug = dto.slug;
-    return input;
-  }
-
-  static toUpdateInput(
-    params: { id: string },
-    dto: NivelFormacaoUpdateInputGraphQlDto,
-  ): NivelFormacaoFindOneQuery & NivelFormacaoUpdateCommand {
-    const input = new NivelFormacaoFindOneQuery() as NivelFormacaoFindOneQuery &
-      NivelFormacaoUpdateCommand;
-    input.id = params.id;
-    if (dto.slug !== undefined) {
-      input.slug = dto.slug;
-    }
-    return input;
-  }
-
-  static toFindOneOutputDto(
-    output: NivelFormacaoFindOneQueryResult,
-  ): NivelFormacaoFindOneOutputGraphQlDto {
-    const dto = new NivelFormacaoFindOneOutputGraphQlDto();
-    dto.id = output.id;
-    dto.slug = output.slug;
-    mapDatedFields(dto, output);
-    return dto;
-  }
-
-  static toListOutputDto = createListOutputMapper(
-    NivelFormacaoListOutputGraphQlDto,
-    NivelFormacaoGraphqlMapper.toFindOneOutputDto,
-  );
+export function toListInput(
+  dto: NivelFormacaoListInputGraphQlDto | null,
+): NivelFormacaoListQuery | null {
+  if (!dto) return null;
+  return listInputMapper.map(dto);
 }
+
+export const toCreateInput = createMapper<
+  NivelFormacaoCreateInputGraphQlDto,
+  NivelFormacaoCreateCommand
+>((dto) => {
+  const input = new NivelFormacaoCreateCommand();
+  input.slug = dto.slug;
+  return input;
+});
+
+export const toUpdateInput = createMapper<
+  { id: string; dto: NivelFormacaoUpdateInputGraphQlDto },
+  NivelFormacaoFindOneQuery & NivelFormacaoUpdateCommand
+>(({ id, dto }) => ({
+  id,
+  slug: dto.slug,
+}));
+
+// ============================================================================
+// Interna → Externa (Output: Core → Presentation)
+// ============================================================================
+
+export const toFindOneOutput = createMapper<
+  NivelFormacaoFindOneQueryResult,
+  NivelFormacaoFindOneOutputGraphQlDto
+>((output) => ({
+  id: output.id,
+  slug: output.slug,
+  dateCreated: new Date(output.dateCreated),
+  dateUpdated: new Date(output.dateUpdated),
+  dateDeleted: output.dateDeleted ? new Date(output.dateDeleted) : null,
+}));
+
+export const toListOutput = createListMapper(NivelFormacaoListOutputGraphQlDto, toFindOneOutput);

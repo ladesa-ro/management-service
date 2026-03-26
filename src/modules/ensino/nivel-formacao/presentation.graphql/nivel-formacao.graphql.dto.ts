@@ -3,8 +3,8 @@ import {
   PaginatedFilterByIdGraphQlDto,
   PaginationMetaGraphQlDto,
 } from "@/infrastructure.graphql/dtos";
-import { NivelFormacaoGraphqlListInputSchema } from "@/modules/ensino/nivel-formacao/domain/queries/nivel-formacao-list.query.schemas";
 import { ArgsType, Field, InputType, ObjectType } from "@/shared/presentation/graphql";
+import { createGraphqlListInputSchema } from "@/shared/validation/schemas";
 import { NivelFormacaoCreateCommandFields } from "../domain/commands/nivel-formacao-create.command";
 import { NivelFormacaoUpdateCommandFields } from "../domain/commands/nivel-formacao-update.command";
 import {
@@ -49,6 +49,8 @@ export class NivelFormacaoUpdateInputGraphQlDto {
 // ============================================================================
 // List Input
 // ============================================================================
+
+const NivelFormacaoGraphqlListInputSchema = createGraphqlListInputSchema();
 
 @ArgsType()
 export class NivelFormacaoListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {

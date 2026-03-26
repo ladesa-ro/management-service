@@ -28,7 +28,7 @@ Módulo piloto: `localidades/estado`
 | Módulo | Typeorm | REST | GraphQL | Status |
 |--------|---------|------|---------|--------|
 | modalidade | `modalidade.typeorm.mapper.ts` | `modalidade.rest.mapper.ts` | `modalidade.graphql.mapper.ts` | :white_check_mark: Migrado |
-| nivel-formacao | `nivel-formacao.mapper.ts` | `nivel-formacao.rest.mapper.ts` | `nivel-formacao.graphql.mapper.ts` | :black_square_button: Pendente |
+| nivel-formacao | `nivel-formacao.typeorm.mapper.ts` | `nivel-formacao.rest.mapper.ts` | `nivel-formacao.graphql.mapper.ts` | :white_check_mark: Migrado |
 | disciplina | `disciplina.mapper.ts` | `disciplina.rest.mapper.ts` | `disciplina.graphql.mapper.ts` | :black_square_button: Pendente |
 | curso | `curso.mapper.ts` | `curso.rest.mapper.ts` | `curso.graphql.mapper.ts` | :black_square_button: Pendente |
 | oferta-formacao | `oferta-formacao.mapper.ts` | `oferta-formacao.rest.mapper.ts` | `oferta-formacao.graphql.mapper.ts` | :black_square_button: Pendente |

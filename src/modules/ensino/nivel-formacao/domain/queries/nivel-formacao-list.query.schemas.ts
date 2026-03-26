@@ -4,11 +4,6 @@
  * Define os schemas zod para validacao dos parametros de entrada
  * da query (paginacao, filtros, ordenacao).
  */
-import {
-  createGraphqlListInputSchema,
-  createPaginationInputSchema,
-} from "@/shared/validation/schemas";
+import { createPaginationInputSchema } from "@/shared/validation/schemas";
 
 export const NivelFormacaoPaginationInputSchema = createPaginationInputSchema();
-
-export const NivelFormacaoGraphqlListInputSchema = createGraphqlListInputSchema();
