@@ -3,6 +3,7 @@ export {
   createMapper,
   createPaginatedInputMapper,
   type ImagemLike,
+  into,
   type Mapper,
   mapField,
   mapImagemOutput,

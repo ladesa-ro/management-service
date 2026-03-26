@@ -14,15 +14,11 @@ export function createMapper<I, O>(mapFn: (input: I) => O): Mapper<I, O> {
 }
 
 // ============================================================================
-// Field helper
+// Field helper (deprecated — use `into`)
 // ============================================================================
 
 /**
- * Copia um campo de source para target se o valor não for undefined.
- *
- * @example
- * mapField(query, "filter.id", dto, "filter.id");
- * mapField(query, "filter.id", dto, "filterId"); // renomeia
+ * @deprecated Use `into(target).from(source).field(...)` em vez de `mapField`.
  */
 export function mapField<
   TTarget,
@@ -34,6 +30,175 @@ export function mapField<
   if (value !== undefined) {
     target[targetKey] = value as never;
   }
+}
+
+// ============================================================================
+// into — DSL imperativa centrada no destino
+// ============================================================================
+
+function isNil(value: unknown): value is undefined | null {
+  return value === undefined || value === null;
+}
+
+/**
+ * Builder fluente retornado por `into()`.
+ *
+ * Cada método retorna `this` para permitir encadeamento total:
+ * `.from().field().field()` e `.field().from().field().from()`.
+ */
+interface IntoChain<TTarget> {
+  /** Define a source global para os próximos .field(), ou executa per-field com sourceKey opcional */
+  from(source: object, sourceKey?: string): IntoChain<TTarget>;
+
+  /** Mapeia um campo. Se há source global, executa imediatamente. Senão, abre pipeline. */
+  field<TK extends keyof TTarget>(targetKey: TK, sourceKey?: string): IntoChain<TTarget>;
+
+  /** Define transform para o campo corrente (antes de .from() per-field) */
+  transform(fn: (value: unknown) => unknown): IntoChain<TTarget>;
+
+  /** Define valor default se nil */
+  default(value: unknown): IntoChain<TTarget>;
+
+  /** Condicional de escrita */
+  when(predicate: (value: unknown) => boolean): IntoChain<TTarget>;
+
+  /** Falha se valor nil */
+  required(): IntoChain<TTarget>;
+
+  /** Ignora se valor nil */
+  optional(): IntoChain<TTarget>;
+}
+
+/**
+ * DSL imperativa centrada no destino para construir objetos de forma incremental.
+ *
+ * @example
+ * // Forma canônica — source global
+ * into(query)
+ *   .from(dto)
+ *   .field("filter.id", "filterId")
+ *   .field("page")
+ *   .field("limit");
+ *
+ * @example
+ * // Forma per-field — múltiplas sources
+ * into(query)
+ *   .field("filter.id").from(dto, "filterId")
+ *   .field("tenantId").from(context, "tenantId");
+ *
+ * @example
+ * // Pipeline por campo
+ * into(query)
+ *   .field("page").default(1).from(dto)
+ *   .field("userId").required().from(auth);
+ */
+export function into<TTarget>(target: TTarget): IntoChain<TTarget> {
+  let globalSource: object | undefined;
+
+  // Pipeline state per current field
+  let currentTargetKey: keyof TTarget | undefined;
+  let transformFn: ((v: unknown) => unknown) | undefined;
+  let defaultValue: unknown;
+  let hasDefault = false;
+  let whenPredicate: ((v: unknown) => boolean) | undefined;
+  let isRequired = false;
+  let isOptional = false;
+
+  function resetPipeline(): void {
+    currentTargetKey = undefined;
+    transformFn = undefined;
+    defaultValue = undefined;
+    hasDefault = false;
+    whenPredicate = undefined;
+    isRequired = false;
+    isOptional = false;
+  }
+
+  function executePipeline(targetKey: keyof TTarget, rawValue: unknown): void {
+    let v = rawValue;
+
+    if (transformFn) v = transformFn(v);
+    if (hasDefault && isNil(v)) v = defaultValue;
+    if (whenPredicate && !whenPredicate(v)) {
+      resetPipeline();
+      return;
+    }
+    if (isRequired && isNil(v)) {
+      resetPipeline();
+      throw new Error(`into: field "${String(targetKey)}" is required`);
+    }
+    if (isOptional && isNil(v)) {
+      resetPipeline();
+      return;
+    }
+
+    if (v !== undefined) {
+      target[targetKey] = v as never;
+    }
+
+    resetPipeline();
+  }
+
+  function resolveFromSource(source: object, targetKey: keyof TTarget, sourceKey?: string): void {
+    const key = sourceKey ?? targetKey;
+    const value = (source as Record<string | number | symbol, unknown>)[key as string];
+    executePipeline(targetKey, value);
+  }
+
+  const chain: IntoChain<TTarget> = {
+    from(source: object, sourceKey?: string) {
+      if (currentTargetKey !== undefined) {
+        // .field("x").from(source, "y") — per-field form
+        resolveFromSource(source, currentTargetKey, sourceKey);
+      } else {
+        // .from(source) — set global
+        globalSource = source;
+      }
+      return chain;
+    },
+
+    field(targetKey, sourceKey?) {
+      // Se tinha field pendente sem .from(), descarta pipeline
+      resetPipeline();
+      currentTargetKey = targetKey;
+
+      if (globalSource !== undefined) {
+        // Executa imediatamente com global source
+        resolveFromSource(globalSource, targetKey, sourceKey);
+        return chain;
+      }
+
+      return chain;
+    },
+
+    transform(fn) {
+      transformFn = fn;
+      return chain;
+    },
+
+    default(value) {
+      defaultValue = value;
+      hasDefault = true;
+      return chain;
+    },
+
+    when(predicate) {
+      whenPredicate = predicate;
+      return chain;
+    },
+
+    required() {
+      isRequired = true;
+      return chain;
+    },
+
+    optional() {
+      isOptional = true;
+      return chain;
+    },
+  };
+
+  return chain;
 }
 
 // ============================================================================
@@ -75,10 +240,7 @@ interface PaginationLike {
  * Mapeia os campos de paginação comuns (page, limit, search, sortBy) do DTO para a query.
  */
 function mapPaginationFields(dto: PaginationLike, query: PaginationLike): void {
-  mapField(query, "page", dto, "page");
-  mapField(query, "limit", dto, "limit");
-  mapField(query, "search", dto, "search");
-  mapField(query, "sortBy", dto, "sortBy");
+  into(query).from(dto).field("page").field("limit").field("search").field("sortBy");
 }
 
 /**
