@@ -11,12 +11,9 @@ export class PerfilEntity {
   @Column({ name: "ativo", type: "boolean" })
   ativo!: boolean;
 
-//   @Column({ name: "cargo", type: "text" })
-//   cargo!: string;
-
-@ManyToOne(() => CargoEntity, (cargo) => cargo.perfis)
-@JoinColumn({ name: "id_cargo_fk" })
-cargo!: Relation<CargoEntity>;
+  @ManyToOne(() => CargoEntity, (cargo) => cargo.perfis, { nullable: true })
+  @JoinColumn({ name: "id_cargo_fk" })
+  cargo!: Relation<CargoEntity>;
 
   @ManyToOne(
     () => CampusEntity,
