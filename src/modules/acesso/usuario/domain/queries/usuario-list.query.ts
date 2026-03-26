@@ -8,12 +8,12 @@ import {
 export const UsuarioListQueryFields = {
   ...SharedListFields,
   filterVinculosCargo: createFieldMetadata({
-    description: "Filtro por cargo do vinculo (ex: professor)",
+    description: "Filtro por nome do cargo do vinculo (ex: professor)",
     nullable: true,
   }),
 };
 
 export class UsuarioListQuery extends PaginationQuery {
   "filter.id"?: IFilterAcceptableValues;
-  "filter.vinculos.cargo"?: IFilterAcceptableValues;
+  "filter.vinculos.cargo.nome"?: IFilterAcceptableValues;
 }
