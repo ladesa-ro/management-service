@@ -20,9 +20,9 @@ export class EnderecoGraphqlResolver {
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<EnderecoFindOneOutputGraphQlDto> {
-    const input = EnderecoGraphqlMapper.toFindOneInput.map(id);
-    const result = await this.findOneHandler.execute(accessContext, input);
-    ensureExists(result, Endereco.entityName, input.id);
-    return EnderecoGraphqlMapper.toFindOneOutput.map(result);
+    const query = EnderecoGraphqlMapper.findOneInputDtoToFindOneQuery.map(id);
+    const queryResult = await this.findOneHandler.execute(accessContext, query);
+    ensureExists(queryResult, Endereco.entityName, query.id);
+    return EnderecoGraphqlMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 }

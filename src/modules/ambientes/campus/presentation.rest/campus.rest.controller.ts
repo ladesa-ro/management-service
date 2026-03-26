@@ -66,9 +66,9 @@ export class CampusRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Query() dto: CampusListInputRestDto,
   ): Promise<CampusListOutputRestDto> {
-    const input = CampusRestMapper.toListInput.map(dto);
-    const result = await this.listHandler.execute(accessContext, input);
-    return CampusRestMapper.toListOutput(result);
+    const query = CampusRestMapper.listInputDtoToListQuery.map(dto);
+    const queryResult = await this.listHandler.execute(accessContext, query);
+    return CampusRestMapper.listQueryResultToListOutputDto(queryResult);
   }
 
   @Get("/:id")
@@ -80,10 +80,10 @@ export class CampusRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: CampusFindOneInputRestDto,
   ): Promise<CampusFindOneOutputRestDto> {
-    const input = CampusRestMapper.toFindOneInput.map(params);
-    const result = await this.findOneHandler.execute(accessContext, input);
-    ensureExists(result, Campus.entityName, input.id);
-    return CampusRestMapper.toFindOneOutput.map(result);
+    const query = CampusRestMapper.findOneInputDtoToFindOneQuery.map(params);
+    const queryResult = await this.findOneHandler.execute(accessContext, query);
+    ensureExists(queryResult, Campus.entityName, query.id);
+    return CampusRestMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Post("/")
@@ -94,9 +94,9 @@ export class CampusRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Body() dto: CampusCreateInputRestDto,
   ): Promise<CampusFindOneOutputRestDto> {
-    const input = CampusRestMapper.toCreateInput.map(dto);
-    const result = await this.createHandler.execute(accessContext, input);
-    return CampusRestMapper.toFindOneOutput.map(result);
+    const command = CampusRestMapper.createInputDtoToCreateCommand.map(dto);
+    const queryResult = await this.createHandler.execute(accessContext, command);
+    return CampusRestMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Patch("/:id")
@@ -109,9 +109,9 @@ export class CampusRestController {
     @Param() params: CampusFindOneInputRestDto,
     @Body() dto: CampusUpdateInputRestDto,
   ): Promise<CampusFindOneOutputRestDto> {
-    const input = CampusRestMapper.toUpdateInput.map({ params, dto });
-    const result = await this.updateHandler.execute(accessContext, input);
-    return CampusRestMapper.toFindOneOutput.map(result);
+    const command = CampusRestMapper.updateInputDtoToUpdateCommand.map({ params, dto });
+    const queryResult = await this.updateHandler.execute(accessContext, command);
+    return CampusRestMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Delete("/:id")
@@ -123,7 +123,7 @@ export class CampusRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: CampusFindOneInputRestDto,
   ): Promise<boolean> {
-    const input = CampusRestMapper.toFindOneInput.map(params);
-    return this.deleteHandler.execute(accessContext, input);
+    const query = CampusRestMapper.findOneInputDtoToFindOneQuery.map(params);
+    return this.deleteHandler.execute(accessContext, query);
   }
 }

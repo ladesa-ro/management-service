@@ -42,37 +42,38 @@ export const entityToDomain = createMapper<OfertaFormacaoEntity, IOfertaFormacao
   dateDeleted: e.dateDeleted,
 }));
 
-export const entityToOutput = createMapper<OfertaFormacaoEntity, OfertaFormacaoFindOneQueryResult>(
-  (e) => ({
-    id: e.id,
-    nome: e.nome,
-    slug: e.slug,
-    duracaoPeriodoEmMeses: e.duracaoPeriodoEmMeses,
-    dateCreated: e.dateCreated,
-    dateUpdated: e.dateUpdated,
-    dateDeleted: e.dateDeleted,
+export const entityToFindOneQueryResult = createMapper<
+  OfertaFormacaoEntity,
+  OfertaFormacaoFindOneQueryResult
+>((e) => ({
+  id: e.id,
+  nome: e.nome,
+  slug: e.slug,
+  duracaoPeriodoEmMeses: e.duracaoPeriodoEmMeses,
+  dateCreated: e.dateCreated,
+  dateUpdated: e.dateUpdated,
+  dateDeleted: e.dateDeleted,
 
-    modalidade: mapDatedEntity(e.modalidade),
+  modalidade: mapDatedEntity(e.modalidade),
 
-    campus: CampusTypeormMapper.entityToOutput.map(e.campus),
+  campus: CampusTypeormMapper.entityToFindOneQueryResult.map(e.campus),
 
-    niveisFormacoes: filterActive(e.ofertaFormacaoNiveisFormacoes).map((nf) =>
-      mapDatedEntity(nf.nivelFormacao),
-    ),
+  niveisFormacoes: filterActive(e.ofertaFormacaoNiveisFormacoes).map((nf) =>
+    mapDatedEntity(nf.nivelFormacao),
+  ),
 
-    periodos: filterActive(e.periodosEntities)
-      .sort((a, b) => a.numeroPeriodo - b.numeroPeriodo)
-      .map((p) => ({
-        id: p.id,
-        numeroPeriodo: p.numeroPeriodo,
-        etapas: filterActive(p.etapas).map((et) => ({
-          id: et.id,
-          nome: et.nome,
-          cor: et.cor,
-        })),
+  periodos: filterActive(e.periodosEntities)
+    .sort((a, b) => a.numeroPeriodo - b.numeroPeriodo)
+    .map((p) => ({
+      id: p.id,
+      numeroPeriodo: p.numeroPeriodo,
+      etapas: filterActive(p.etapas).map((et) => ({
+        id: et.id,
+        nome: et.nome,
+        cor: et.cor,
       })),
-  }),
-);
+    })),
+}));
 
 // ============================================================================
 // Dominio -> Persistencia (Domain -> TypeORM Entity)

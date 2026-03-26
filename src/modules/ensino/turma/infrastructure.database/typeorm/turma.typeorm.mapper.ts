@@ -21,19 +21,21 @@ export const entityToDomain = createMapper<TurmaEntity, ITurma>((e) => ({
   dateDeleted: e.dateDeleted,
 }));
 
-export const entityToOutput = createMapper<TurmaEntity, TurmaFindOneQueryResult>((e) => ({
-  id: e.id,
-  periodo: e.periodo,
-  nome: e.nome ?? null,
-  curso: CursoTypeormMapper.entityToOutput.map(e.curso),
-  ambientePadraoAula: e.ambientePadraoAula
-    ? AmbienteTypeormMapper.entityToOutput.map(e.ambientePadraoAula)
-    : null,
-  imagemCapa: e.imagemCapa ?? null,
-  dateCreated: e.dateCreated,
-  dateUpdated: e.dateUpdated,
-  dateDeleted: e.dateDeleted,
-}));
+export const entityToFindOneQueryResult = createMapper<TurmaEntity, TurmaFindOneQueryResult>(
+  (e) => ({
+    id: e.id,
+    periodo: e.periodo,
+    nome: e.nome ?? null,
+    curso: CursoTypeormMapper.entityToFindOneQueryResult.map(e.curso),
+    ambientePadraoAula: e.ambientePadraoAula
+      ? AmbienteTypeormMapper.entityToFindOneQueryResult.map(e.ambientePadraoAula)
+      : null,
+    imagemCapa: e.imagemCapa ?? null,
+    dateCreated: e.dateCreated,
+    dateUpdated: e.dateUpdated,
+    dateDeleted: e.dateDeleted,
+  }),
+);
 
 // ============================================================================
 // Dominio -> Persistencia (Domain -> TypeORM Entity)

@@ -26,7 +26,7 @@ import {
 // Externa -> Interna (Input: Presentation -> Core)
 // ============================================================================
 
-export const toFindOneInput = createMapper<string, TurmaFindOneQuery>((id) => {
+export const findOneInputDtoToFindOneQuery = createMapper<string, TurmaFindOneQuery>((id) => {
   const input = new TurmaFindOneQuery();
   input.id = id;
   return input;
@@ -55,21 +55,24 @@ const listInputMapper = createPaginatedInputMapper<TurmaListInputGraphQlDto, Tur
   },
 );
 
-export function toListInput(dto: TurmaListInputGraphQlDto | null): TurmaListQuery | null {
+export function listInputDtoToListQuery(
+  dto: TurmaListInputGraphQlDto | null,
+): TurmaListQuery | null {
   if (!dto) return null;
   return listInputMapper.map(dto);
 }
 
-export const toCreateInput = createMapper<TurmaCreateInputGraphQlDto, TurmaCreateCommand>(
-  (dto) => ({
-    periodo: dto.periodo,
-    curso: { id: dto.curso.id },
-    ambientePadraoAula: dto.ambientePadraoAula ? { id: dto.ambientePadraoAula.id } : null,
-    imagemCapa: dto.imagemCapa ? { id: dto.imagemCapa.id } : null,
-  }),
-);
+export const createInputDtoToCreateCommand = createMapper<
+  TurmaCreateInputGraphQlDto,
+  TurmaCreateCommand
+>((dto) => ({
+  periodo: dto.periodo,
+  curso: { id: dto.curso.id },
+  ambientePadraoAula: dto.ambientePadraoAula ? { id: dto.ambientePadraoAula.id } : null,
+  imagemCapa: dto.imagemCapa ? { id: dto.imagemCapa.id } : null,
+}));
 
-export const toUpdateInput = createMapper<
+export const updateInputDtoToUpdateCommand = createMapper<
   { id: string; dto: TurmaUpdateInputGraphQlDto },
   TurmaFindOneQuery & TurmaUpdateCommand
 >(({ id, dto }) => ({
@@ -90,19 +93,23 @@ export const toUpdateInput = createMapper<
 // Interna -> Externa (Output: Core -> Presentation)
 // ============================================================================
 
-export const toFindOneOutput = createMapper<TurmaFindOneQueryResult, TurmaFindOneOutputGraphQlDto>(
-  (output) => ({
-    id: output.id,
-    periodo: output.periodo,
-    curso: CursoGraphqlMapper.toFindOneOutput.map(output.curso),
-    ambientePadraoAula: output.ambientePadraoAula
-      ? AmbienteGraphqlMapper.toFindOneOutput.map(output.ambientePadraoAula)
-      : null,
-    imagemCapa: mapImagemOutput(output.imagemCapa),
-    dateCreated: new Date(output.dateCreated),
-    dateUpdated: new Date(output.dateUpdated),
-    dateDeleted: output.dateDeleted ? new Date(output.dateDeleted) : null,
-  }),
-);
+export const findOneQueryResultToOutputDto = createMapper<
+  TurmaFindOneQueryResult,
+  TurmaFindOneOutputGraphQlDto
+>((output) => ({
+  id: output.id,
+  periodo: output.periodo,
+  curso: CursoGraphqlMapper.findOneQueryResultToOutputDto.map(output.curso),
+  ambientePadraoAula: output.ambientePadraoAula
+    ? AmbienteGraphqlMapper.findOneQueryResultToOutputDto.map(output.ambientePadraoAula)
+    : null,
+  imagemCapa: mapImagemOutput(output.imagemCapa),
+  dateCreated: new Date(output.dateCreated),
+  dateUpdated: new Date(output.dateUpdated),
+  dateDeleted: output.dateDeleted ? new Date(output.dateDeleted) : null,
+}));
 
-export const toListOutput = createListMapper(TurmaListOutputGraphQlDto, toFindOneOutput);
+export const listQueryResultToListOutputDto = createListMapper(
+  TurmaListOutputGraphQlDto,
+  findOneQueryResultToOutputDto,
+);

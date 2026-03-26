@@ -79,7 +79,7 @@ export class NivelFormacaoTypeOrmRepositoryAdapter implements INivelFormacaoRepo
       NivelFormacaoEntity,
       { ...config, paginateConfig: nivelFormacaoPaginateConfig },
       dto,
-      NivelFormacaoTypeormMapper.entityToOutput.map,
+      NivelFormacaoTypeormMapper.entityToFindOneQueryResult.map,
     );
   }
 
@@ -97,7 +97,7 @@ export class NivelFormacaoTypeOrmRepositoryAdapter implements INivelFormacaoRepo
       { ...config, paginateConfig: nivelFormacaoPaginateConfig },
       this.paginationAdapter,
       dto,
-      NivelFormacaoTypeormMapper.entityToOutput.map,
+      NivelFormacaoTypeormMapper.entityToFindOneQueryResult.map,
     );
   }
 }

@@ -27,7 +27,7 @@ import {
 // Externa -> Interna (Input: Presentation -> Core)
 // ============================================================================
 
-export const toFindOneInput = createMapper<string, UsuarioFindOneQuery>((id) => {
+export const findOneInputDtoToFindOneQuery = createMapper<string, UsuarioFindOneQuery>((id) => {
   const input = new UsuarioFindOneQuery();
   input.id = id;
   return input;
@@ -40,22 +40,25 @@ const listInputMapper = createPaginatedInputMapper<UsuarioListInputGraphQlDto, U
   },
 );
 
-export function toListInput(dto: UsuarioListInputGraphQlDto | null): UsuarioListQuery | null {
+export function listInputDtoToListQuery(
+  dto: UsuarioListInputGraphQlDto | null,
+): UsuarioListQuery | null {
   if (!dto) return null;
   return listInputMapper.map(dto);
 }
 
-export const toCreateInput = createMapper<UsuarioCreateInputGraphQlDto, UsuarioCreateCommand>(
-  (dto) => {
-    const input = new UsuarioCreateCommand();
-    input.nome = dto.nome;
-    input.matricula = dto.matricula;
-    input.email = dto.email;
-    return input;
-  },
-);
+export const createInputDtoToCreateCommand = createMapper<
+  UsuarioCreateInputGraphQlDto,
+  UsuarioCreateCommand
+>((dto) => {
+  const input = new UsuarioCreateCommand();
+  input.nome = dto.nome;
+  input.matricula = dto.matricula;
+  input.email = dto.email;
+  return input;
+});
 
-export const toUpdateInput = createMapper<
+export const updateInputDtoToUpdateCommand = createMapper<
   { id: string; dto: UsuarioUpdateInputGraphQlDto },
   UsuarioFindOneQuery & UsuarioUpdateCommand
 >(({ id, dto }) => ({
@@ -80,14 +83,14 @@ export function toPerfilNestedOutputDto(
   dto.id = output.id;
   dto.ativo = output.ativo;
   dto.cargo = getCargoNome(output);
-  dto.campus = CampusGraphqlMapper.toFindOneOutput.map(output.campus);
+  dto.campus = CampusGraphqlMapper.findOneQueryResultToOutputDto.map(output.campus);
   dto.dateCreated = new Date(output.dateCreated);
   dto.dateUpdated = new Date(output.dateUpdated);
   dto.dateDeleted = output.dateDeleted ? new Date(output.dateDeleted) : null;
   return dto;
 }
 
-export const toFindOneOutput = createMapper<
+export const findOneQueryResultToOutputDto = createMapper<
   UsuarioFindOneQueryResult,
   UsuarioFindOneOutputGraphQlDto
 >((output) => {
@@ -106,4 +109,7 @@ export const toFindOneOutput = createMapper<
   return dto;
 });
 
-export const toListOutput = createListMapper(UsuarioListOutputGraphQlDto, toFindOneOutput);
+export const listQueryResultToListOutputDto = createListMapper(
+  UsuarioListOutputGraphQlDto,
+  findOneQueryResultToOutputDto,
+);

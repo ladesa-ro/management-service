@@ -103,7 +103,7 @@ export class AmbienteTypeOrmRepositoryAdapter implements IAmbienteRepository {
 
     if (!entity) return null;
 
-    return AmbienteTypeormMapper.entityToOutput.map(entity);
+    return AmbienteTypeormMapper.entityToFindOneQueryResult.map(entity);
   }
 
   getFindAllQueryResult(
@@ -116,7 +116,7 @@ export class AmbienteTypeOrmRepositoryAdapter implements IAmbienteRepository {
       { ...config, paginateConfig: ambientePaginateConfig },
       this.paginationAdapter,
       dto,
-      AmbienteTypeormMapper.entityToOutput.map,
+      AmbienteTypeormMapper.entityToFindOneQueryResult.map,
     );
   }
 }

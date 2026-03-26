@@ -57,9 +57,9 @@ export class EstagioRestController {
     @Query() dto: EstagioListInputRestDto,
   ): Promise<EstagioListOutputRestDto> {
     const listHandler = this.container.get<IEstagioListQueryHandler>(IEstagioListQueryHandler);
-    const input = EstagioRestMapper.toListInput.map(dto);
-    const result = await listHandler.execute(accessContext, input);
-    return EstagioRestMapper.toListOutput.map(result);
+    const query = EstagioRestMapper.listInputDtoToListQuery.map(dto);
+    const queryResult = await listHandler.execute(accessContext, query);
+    return EstagioRestMapper.listQueryResultToListOutputDto.map(queryResult);
   }
 
   @Get("/:id")
@@ -74,10 +74,10 @@ export class EstagioRestController {
     const findOneHandler = this.container.get<IEstagioFindOneQueryHandler>(
       IEstagioFindOneQueryHandler,
     );
-    const input = EstagioRestMapper.toFindOneInput.map(params);
-    const result = await findOneHandler.execute(accessContext, input);
-    ensureExists(result, Estagio.entityName, input.id);
-    return EstagioRestMapper.toFindOneOutput.map(result);
+    const query = EstagioRestMapper.findOneInputDtoToFindOneQuery.map(params);
+    const queryResult = await findOneHandler.execute(accessContext, query);
+    ensureExists(queryResult, Estagio.entityName, query.id);
+    return EstagioRestMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Post("/")
@@ -92,9 +92,9 @@ export class EstagioRestController {
     const createHandler = this.container.get<IEstagioCreateCommandHandler>(
       IEstagioCreateCommandHandler,
     );
-    const input = EstagioRestMapper.toCreateInput.map(dto);
-    const result = await createHandler.execute(accessContext, input);
-    return EstagioRestMapper.toFindOneOutput.map(result);
+    const command = EstagioRestMapper.createInputDtoToCreateCommand.map(dto);
+    const queryResult = await createHandler.execute(accessContext, command);
+    return EstagioRestMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Patch("/:id")
@@ -111,9 +111,9 @@ export class EstagioRestController {
     const updateHandler = this.container.get<IEstagioUpdateCommandHandler>(
       IEstagioUpdateCommandHandler,
     );
-    const input = EstagioRestMapper.toUpdateInput.map(dto);
-    const result = await updateHandler.execute(accessContext, { id: params.id, ...input });
-    return EstagioRestMapper.toFindOneOutput.map(result);
+    const command = EstagioRestMapper.updateInputDtoToUpdateCommand.map(dto);
+    const queryResult = await updateHandler.execute(accessContext, { id: params.id, ...command });
+    return EstagioRestMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Delete("/:id")

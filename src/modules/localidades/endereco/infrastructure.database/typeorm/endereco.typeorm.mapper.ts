@@ -22,19 +22,21 @@ export const entityToDomain = createMapper<EnderecoEntity, IEndereco>((e) => ({
   dateDeleted: e.dateDeleted,
 }));
 
-export const entityToOutput = createMapper<EnderecoEntity, EnderecoFindOneQueryResult>((e) => ({
-  id: e.id,
-  cep: e.cep,
-  logradouro: e.logradouro,
-  numero: e.numero,
-  bairro: e.bairro,
-  complemento: e.complemento,
-  pontoReferencia: e.pontoReferencia,
-  cidade: e.cidade,
-  dateCreated: e.dateCreated,
-  dateUpdated: e.dateUpdated,
-  dateDeleted: e.dateDeleted,
-}));
+export const entityToFindOneQueryResult = createMapper<EnderecoEntity, EnderecoFindOneQueryResult>(
+  (e) => ({
+    id: e.id,
+    cep: e.cep,
+    logradouro: e.logradouro,
+    numero: e.numero,
+    bairro: e.bairro,
+    complemento: e.complemento,
+    pontoReferencia: e.pontoReferencia,
+    cidade: e.cidade,
+    dateCreated: e.dateCreated,
+    dateUpdated: e.dateUpdated,
+    dateDeleted: e.dateDeleted,
+  }),
+);
 
 // ============================================================================
 // Domínio → Persistência (Domain → TypeORM Entity)

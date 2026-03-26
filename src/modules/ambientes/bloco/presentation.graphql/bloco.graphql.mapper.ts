@@ -25,7 +25,7 @@ import {
 // Externa -> Interna (Input: Presentation -> Core)
 // ============================================================================
 
-export const toFindOneInput = createMapper<string, BlocoFindOneQuery>((id) => {
+export const findOneInputDtoToFindOneQuery = createMapper<string, BlocoFindOneQuery>((id) => {
   const input = new BlocoFindOneQuery();
   input.id = id;
   return input;
@@ -39,12 +39,17 @@ const listInputMapper = createPaginatedInputMapper<BlocoListInputGraphQlDto, Blo
   },
 );
 
-export function toListInput(dto: BlocoListInputGraphQlDto | null): BlocoListQuery | null {
+export function listInputDtoToListQuery(
+  dto: BlocoListInputGraphQlDto | null,
+): BlocoListQuery | null {
   if (!dto) return null;
   return listInputMapper.map(dto);
 }
 
-export const toCreateInput = createMapper<BlocoCreateInputGraphQlDto, BlocoCreateCommand>((dto) => {
+export const createInputDtoToCreateCommand = createMapper<
+  BlocoCreateInputGraphQlDto,
+  BlocoCreateCommand
+>((dto) => {
   const input = new BlocoCreateCommand();
   input.nome = dto.nome;
   input.codigo = dto.codigo;
@@ -52,7 +57,7 @@ export const toCreateInput = createMapper<BlocoCreateInputGraphQlDto, BlocoCreat
   return input;
 });
 
-export const toUpdateInput = createMapper<
+export const updateInputDtoToUpdateCommand = createMapper<
   { id: string; dto: BlocoUpdateInputGraphQlDto },
   BlocoFindOneQuery & BlocoUpdateCommand
 >(({ id, dto }) => ({
@@ -66,17 +71,21 @@ export const toUpdateInput = createMapper<
 // Interna -> Externa (Output: Core -> Presentation)
 // ============================================================================
 
-export const toFindOneOutput = createMapper<BlocoFindOneQueryResult, BlocoFindOneOutputGraphQlDto>(
-  (output) => ({
-    id: output.id,
-    nome: output.nome,
-    codigo: output.codigo,
-    campus: CampusGraphqlMapper.toFindOneOutput.map(output.campus),
-    imagemCapa: mapImagemOutput(output.imagemCapa),
-    dateCreated: new Date(output.dateCreated),
-    dateUpdated: new Date(output.dateUpdated),
-    dateDeleted: output.dateDeleted ? new Date(output.dateDeleted) : null,
-  }),
-);
+export const findOneQueryResultToOutputDto = createMapper<
+  BlocoFindOneQueryResult,
+  BlocoFindOneOutputGraphQlDto
+>((output) => ({
+  id: output.id,
+  nome: output.nome,
+  codigo: output.codigo,
+  campus: CampusGraphqlMapper.findOneQueryResultToOutputDto.map(output.campus),
+  imagemCapa: mapImagemOutput(output.imagemCapa),
+  dateCreated: new Date(output.dateCreated),
+  dateUpdated: new Date(output.dateUpdated),
+  dateDeleted: output.dateDeleted ? new Date(output.dateDeleted) : null,
+}));
 
-export const toListOutput = createListMapper(BlocoListOutputGraphQlDto, toFindOneOutput);
+export const listQueryResultToListOutputDto = createListMapper(
+  BlocoListOutputGraphQlDto,
+  findOneQueryResultToOutputDto,
+);

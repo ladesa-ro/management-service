@@ -137,6 +137,6 @@ export class CalendarioLetivoDiaTypeOrmRepositoryAdapter implements ICalendarioL
     const entity = await qb.getOne();
     if (!entity) return null;
 
-    return CalendarioLetivoDiaTypeormMapper.entityToOutput.map(entity);
+    return CalendarioLetivoDiaTypeormMapper.entityToFindOneQueryResult.map(entity);
   }
 }

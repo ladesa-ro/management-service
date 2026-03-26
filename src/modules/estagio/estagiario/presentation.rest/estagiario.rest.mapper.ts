@@ -29,15 +29,16 @@ import {
 // Externa -> Interna (Input: Presentation -> Core)
 // ============================================================================
 
-export const toFindOneInput = createMapper<EstagiarioFindOneInputRestDto, EstagiarioFindOneQuery>(
-  (dto) => {
-    const input = new EstagiarioFindOneQuery();
-    input.id = dto.id;
-    return input;
-  },
-);
+export const findOneInputDtoToFindOneQuery = createMapper<
+  EstagiarioFindOneInputRestDto,
+  EstagiarioFindOneQuery
+>((dto) => {
+  const input = new EstagiarioFindOneQuery();
+  input.id = dto.id;
+  return input;
+});
 
-export const toListInput = createPaginatedInputMapper<
+export const listInputDtoToListQuery = createPaginatedInputMapper<
   EstagiarioListInputRestDto,
   EstagiarioListQuery
 >(EstagiarioListQuery, (dto, query) => {
@@ -47,18 +48,19 @@ export const toListInput = createPaginatedInputMapper<
   mapField(query, "filter.turma.id", dto, "filter.turma.id");
 });
 
-export const toCreateInput = createMapper<EstagiarioCreateInputRestDto, EstagiarioCreateCommand>(
-  (dto) => ({
-    perfil: { id: dto.perfil.id },
-    curso: { id: dto.curso.id },
-    turma: { id: dto.turma.id },
-    telefone: dto.telefone,
-    emailInstitucional: dto.emailInstitucional,
-    dataNascimento: dto.dataNascimento,
-  }),
-);
+export const createInputDtoToCreateCommand = createMapper<
+  EstagiarioCreateInputRestDto,
+  EstagiarioCreateCommand
+>((dto) => ({
+  perfil: { id: dto.perfil.id },
+  curso: { id: dto.curso.id },
+  turma: { id: dto.turma.id },
+  telefone: dto.telefone,
+  emailInstitucional: dto.emailInstitucional,
+  dataNascimento: dto.dataNascimento,
+}));
 
-export const toUpdateInput = createMapper<
+export const updateInputDtoToUpdateCommand = createMapper<
   { params: EstagiarioFindOneInputRestDto; dto: EstagiarioUpdateInputRestDto },
   EstagiarioFindOneQuery & EstagiarioUpdateCommand
 >(({ params, dto }) => ({
@@ -75,14 +77,14 @@ export const toUpdateInput = createMapper<
 // Interna -> Externa (Output: Core -> Presentation)
 // ============================================================================
 
-export const toFindOneOutput = createMapper<
+export const findOneQueryResultToOutputDto = createMapper<
   EstagiarioFindOneQueryResult,
   EstagiarioFindOneOutputRestDto
 >((output) => ({
   id: output.id,
-  perfil: PerfilRestMapper.toFindOneOutput.map(output.perfil),
-  curso: CursoRestMapper.toFindOneOutput.map(output.curso),
-  turma: TurmaRestMapper.toFindOneOutput.map(output.turma),
+  perfil: PerfilRestMapper.findOneQueryResultToOutputDto.map(output.perfil),
+  curso: CursoRestMapper.findOneQueryResultToOutputDto.map(output.curso),
+  turma: TurmaRestMapper.findOneQueryResultToOutputDto.map(output.turma),
   telefone: output.telefone,
   emailInstitucional: output.emailInstitucional,
   dataNascimento: output.dataNascimento,
@@ -92,4 +94,7 @@ export const toFindOneOutput = createMapper<
   dateDeleted: output.dateDeleted,
 }));
 
-export const toListOutput = createListMapper(EstagiarioListOutputRestDto, toFindOneOutput);
+export const listQueryResultToListOutputDto = createListMapper(
+  EstagiarioListOutputRestDto,
+  findOneQueryResultToOutputDto,
+);

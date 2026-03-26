@@ -29,17 +29,19 @@ export const entityToDomain = createMapper<CampusEntity, ICampus>((e) => ({
   dateDeleted: e.dateDeleted,
 }));
 
-export const entityToOutput = createMapper<CampusEntity, CampusFindOneQueryResult>((e) => ({
-  id: e.id,
-  nomeFantasia: e.nomeFantasia,
-  razaoSocial: e.razaoSocial,
-  apelido: e.apelido,
-  cnpj: e.cnpj,
-  endereco: e.endereco,
-  dateCreated: e.dateCreated,
-  dateUpdated: e.dateUpdated,
-  dateDeleted: e.dateDeleted,
-}));
+export const entityToFindOneQueryResult = createMapper<CampusEntity, CampusFindOneQueryResult>(
+  (e) => ({
+    id: e.id,
+    nomeFantasia: e.nomeFantasia,
+    razaoSocial: e.razaoSocial,
+    apelido: e.apelido,
+    cnpj: e.cnpj,
+    endereco: e.endereco,
+    dateCreated: e.dateCreated,
+    dateUpdated: e.dateUpdated,
+    dateDeleted: e.dateDeleted,
+  }),
+);
 
 // ============================================================================
 // Domínio → Persistência (Domain → TypeORM Entity)

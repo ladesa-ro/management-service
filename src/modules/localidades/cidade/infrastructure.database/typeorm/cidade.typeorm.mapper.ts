@@ -6,8 +6,10 @@ import type { CidadeEntity } from "./cidade.typeorm.entity";
 // Persistência → Domínio (TypeORM Entity → Query Result)
 // ============================================================================
 
-export const entityToOutput = createMapper<CidadeEntity, CidadeFindOneQueryResult>((e) => ({
-  id: e.id,
-  nome: e.nome,
-  estado: e.estado,
-}));
+export const entityToFindOneQueryResult = createMapper<CidadeEntity, CidadeFindOneQueryResult>(
+  (e) => ({
+    id: e.id,
+    nome: e.nome,
+    estado: e.estado,
+  }),
+);

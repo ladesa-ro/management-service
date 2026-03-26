@@ -20,7 +20,10 @@ export const entityToDomain = createMapper<DisciplinaEntity, IDisciplina>((e) =>
   dateDeleted: e.dateDeleted,
 }));
 
-export const entityToOutput = createMapper<DisciplinaEntity, DisciplinaFindOneQueryResult>((e) => ({
+export const entityToFindOneQueryResult = createMapper<
+  DisciplinaEntity,
+  DisciplinaFindOneQueryResult
+>((e) => ({
   id: e.id,
   nome: e.nome,
   nomeAbreviado: e.nomeAbreviado,

@@ -71,7 +71,7 @@ export class DisciplinaTypeOrmRepositoryAdapter implements IDisciplinaRepository
       DisciplinaEntity,
       { ...config, paginateConfig: disciplinaPaginateConfig },
       dto,
-      DisciplinaTypeormMapper.entityToOutput.map,
+      DisciplinaTypeormMapper.entityToFindOneQueryResult.map,
     );
   }
 
@@ -85,7 +85,7 @@ export class DisciplinaTypeOrmRepositoryAdapter implements IDisciplinaRepository
       { ...config, paginateConfig: disciplinaPaginateConfig },
       this.paginationAdapter,
       dto,
-      DisciplinaTypeormMapper.entityToOutput.map,
+      DisciplinaTypeormMapper.entityToFindOneQueryResult.map,
     );
   }
 }

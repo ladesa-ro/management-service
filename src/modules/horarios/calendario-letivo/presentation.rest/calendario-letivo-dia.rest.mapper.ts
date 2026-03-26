@@ -20,7 +20,7 @@ import {
 // Externa -> Interna (Input: Presentation -> Core)
 // ============================================================================
 
-export function toListInput(
+export function listInputDtoToListQuery(
   parentParams: CalendarioLetivoDiaParentParamsRestDto,
   dto: CalendarioLetivoDiaListInputRestDto,
 ): CalendarioLetivoDiaListQuery {
@@ -44,7 +44,7 @@ export const toFindByDataInput = createMapper<
   return input;
 });
 
-export const toUpdateInput = createMapper<
+export const updateInputDtoToUpdateCommand = createMapper<
   {
     params: CalendarioLetivoDiaFindByDataParamsRestDto;
     dto: CalendarioLetivoDiaUpdateInputRestDto;
@@ -65,7 +65,7 @@ export const toUpdateInput = createMapper<
 // Interna -> Externa (Output: Core -> Presentation)
 // ============================================================================
 
-export const toFindOneOutput = createMapper<
+export const findOneQueryResultToOutputDto = createMapper<
   CalendarioLetivoDiaFindOneQueryResult,
   CalendarioLetivoDiaFindOneOutputRestDto
 >((output) => {
@@ -77,11 +77,14 @@ export const toFindOneOutput = createMapper<
   dto.diaPresencial = output.diaPresencial;
   dto.tipo = output.tipo as TipoCalendarioLetivoDia;
   dto.extraCurricular = output.extraCurricular;
-  dto.calendario = CalendarioLetivoRestMapper.toFindOneOutput.map(output.calendario);
+  dto.calendario = CalendarioLetivoRestMapper.findOneQueryResultToOutputDto.map(output.calendario);
   dto.dateCreated = output.dateCreated;
   dto.dateUpdated = output.dateUpdated;
   dto.dateDeleted = output.dateDeleted;
   return dto;
 });
 
-export const toListOutput = createListMapper(CalendarioLetivoDiaListOutputRestDto, toFindOneOutput);
+export const listQueryResultToListOutputDto = createListMapper(
+  CalendarioLetivoDiaListOutputRestDto,
+  findOneQueryResultToOutputDto,
+);

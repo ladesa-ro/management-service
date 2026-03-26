@@ -24,7 +24,7 @@ import {
 // Externa → Interna (Input: Presentation → Core)
 // ============================================================================
 
-export const toFindOneInput = createMapper<
+export const findOneInputDtoToFindOneQuery = createMapper<
   NivelFormacaoFindOneInputRestDto,
   NivelFormacaoFindOneQuery
 >((dto) => {
@@ -33,14 +33,14 @@ export const toFindOneInput = createMapper<
   return input;
 });
 
-export const toListInput = createPaginatedInputMapper<
+export const listInputDtoToListQuery = createPaginatedInputMapper<
   NivelFormacaoListInputRestDto,
   NivelFormacaoListQuery
 >(NivelFormacaoListQuery, (dto, query) => {
   mapField(query, "filter.id", dto, "filter.id");
 });
 
-export const toCreateInput = createMapper<
+export const createInputDtoToCreateCommand = createMapper<
   NivelFormacaoCreateInputRestDto,
   NivelFormacaoCreateCommand
 >((dto) => {
@@ -49,7 +49,7 @@ export const toCreateInput = createMapper<
   return input;
 });
 
-export const toUpdateInput = createMapper<
+export const updateInputDtoToUpdateCommand = createMapper<
   { params: NivelFormacaoFindOneInputRestDto; dto: NivelFormacaoUpdateInputRestDto },
   NivelFormacaoFindOneQuery & NivelFormacaoUpdateCommand
 >(({ params, dto }) => ({
@@ -61,7 +61,7 @@ export const toUpdateInput = createMapper<
 // Interna → Externa (Output: Core → Presentation)
 // ============================================================================
 
-export const toFindOneOutput = createMapper<
+export const findOneQueryResultToOutputDto = createMapper<
   NivelFormacaoFindOneQueryResult,
   NivelFormacaoFindOneOutputRestDto
 >((output) => ({
@@ -72,4 +72,7 @@ export const toFindOneOutput = createMapper<
   dateDeleted: output.dateDeleted,
 }));
 
-export const toListOutput = createListMapper(NivelFormacaoListOutputRestDto, toFindOneOutput);
+export const listQueryResultToListOutputDto = createListMapper(
+  NivelFormacaoListOutputRestDto,
+  findOneQueryResultToOutputDto,
+);

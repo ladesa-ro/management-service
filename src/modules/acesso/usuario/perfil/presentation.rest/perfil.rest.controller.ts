@@ -34,9 +34,9 @@ export class PerfilRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: PerfilFindOneInputRestDto,
   ): Promise<PerfilFindOneOutputRestDto | null> {
-    const input = PerfilRestMapper.toFindOneInput.map(params);
-    const result = await this.findOneHandler.execute(accessContext, input);
-    return result ? PerfilRestMapper.toFindOneOutput.map(result) : null;
+    const query = PerfilRestMapper.findOneInputDtoToFindOneQuery.map(params);
+    const queryResult = await this.findOneHandler.execute(accessContext, query);
+    return queryResult ? PerfilRestMapper.findOneQueryResultToOutputDto.map(queryResult) : null;
   }
 
   @Get("/:id/ensino")
@@ -48,8 +48,8 @@ export class PerfilRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: PerfilFindOneInputRestDto,
   ): Promise<PerfilFindOneOutputRestDto | null> {
-    const input = PerfilRestMapper.toFindOneInput.map(params);
-    const result = await this.findOneHandler.execute(accessContext, input);
-    return result ? PerfilRestMapper.toFindOneOutput.map(result) : null;
+    const query = PerfilRestMapper.findOneInputDtoToFindOneQuery.map(params);
+    const queryResult = await this.findOneHandler.execute(accessContext, query);
+    return queryResult ? PerfilRestMapper.findOneQueryResultToOutputDto.map(queryResult) : null;
   }
 }

@@ -31,38 +31,41 @@ const listInputMapper = createPaginatedInputMapper<CampusListInputGraphQlDto, Ca
   },
 );
 
-export const toFindOneInput = createMapper<string, CampusFindOneQuery>((id) => {
+export const findOneInputDtoToFindOneQuery = createMapper<string, CampusFindOneQuery>((id) => {
   const input = new CampusFindOneQuery();
   input.id = id;
   return input;
 });
 
-export function toListInput(dto: CampusListInputGraphQlDto | null): CampusListQuery | null {
+export function listInputDtoToListQuery(
+  dto: CampusListInputGraphQlDto | null,
+): CampusListQuery | null {
   if (!dto) return null;
   return listInputMapper.map(dto);
 }
 
-export const toCreateInput = createMapper<CampusCreateInputGraphQlDto, CampusCreateCommand>(
-  (dto) => {
-    const input = new CampusCreateCommand();
-    input.nomeFantasia = dto.nomeFantasia;
-    input.razaoSocial = dto.razaoSocial;
-    input.apelido = dto.apelido;
-    input.cnpj = dto.cnpj;
-    input.endereco = {
-      cep: dto.endereco.cep,
-      logradouro: dto.endereco.logradouro,
-      numero: dto.endereco.numero,
-      bairro: dto.endereco.bairro,
-      complemento: dto.endereco.complemento ?? null,
-      pontoReferencia: dto.endereco.pontoReferencia ?? null,
-      cidade: { id: dto.endereco.cidade.id },
-    };
-    return input;
-  },
-);
+export const createInputDtoToCreateCommand = createMapper<
+  CampusCreateInputGraphQlDto,
+  CampusCreateCommand
+>((dto) => {
+  const input = new CampusCreateCommand();
+  input.nomeFantasia = dto.nomeFantasia;
+  input.razaoSocial = dto.razaoSocial;
+  input.apelido = dto.apelido;
+  input.cnpj = dto.cnpj;
+  input.endereco = {
+    cep: dto.endereco.cep,
+    logradouro: dto.endereco.logradouro,
+    numero: dto.endereco.numero,
+    bairro: dto.endereco.bairro,
+    complemento: dto.endereco.complemento ?? null,
+    pontoReferencia: dto.endereco.pontoReferencia ?? null,
+    cidade: { id: dto.endereco.cidade.id },
+  };
+  return input;
+});
 
-export const toUpdateInput = createMapper<
+export const updateInputDtoToUpdateCommand = createMapper<
   { params: { id: string }; dto: CampusUpdateInputGraphQlDto },
   CampusFindOneQuery & CampusUpdateCommand
 >(({ params, dto }) => ({
@@ -88,7 +91,7 @@ export const toUpdateInput = createMapper<
 // Interna → Externa (Output: Core → Presentation)
 // ============================================================================
 
-export const toFindOneOutput = createMapper<
+export const findOneQueryResultToOutputDto = createMapper<
   CampusFindOneQueryResult,
   CampusFindOneOutputGraphQlDto
 >((output) => ({
@@ -97,10 +100,13 @@ export const toFindOneOutput = createMapper<
   razaoSocial: output.razaoSocial,
   apelido: output.apelido,
   cnpj: output.cnpj,
-  endereco: EnderecoGraphqlMapper.toFindOneOutput.map(output.endereco),
+  endereco: EnderecoGraphqlMapper.findOneQueryResultToOutputDto.map(output.endereco),
   dateCreated: new Date(output.dateCreated),
   dateUpdated: new Date(output.dateUpdated),
   dateDeleted: output.dateDeleted ? new Date(output.dateDeleted) : null,
 }));
 
-export const toListOutput = createListMapper(CampusListOutputGraphQlDto, toFindOneOutput);
+export const listQueryResultToListOutputDto = createListMapper(
+  CampusListOutputGraphQlDto,
+  findOneQueryResultToOutputDto,
+);

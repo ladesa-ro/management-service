@@ -29,23 +29,29 @@ import {
 // Externa -> Interna (Input: Presentation -> Core)
 // ============================================================================
 
-export const toFindOneInput = createMapper<DiarioFindOneInputRestDto, DiarioFindOneQuery>((dto) => {
+export const findOneInputDtoToFindOneQuery = createMapper<
+  DiarioFindOneInputRestDto,
+  DiarioFindOneQuery
+>((dto) => {
   const input = new DiarioFindOneQuery();
   input.id = dto.id;
   return input;
 });
 
-export const toListInput = createPaginatedInputMapper<DiarioListInputRestDto, DiarioListQuery>(
-  DiarioListQuery,
-  (dto, query) => {
-    mapField(query, "filter.id", dto, "filter.id");
-    mapField(query, "filter.turma.id", dto, "filter.turma.id");
-    mapField(query, "filter.disciplina.id", dto, "filter.disciplina.id");
-    mapField(query, "filter.calendarioLetivo.id", dto, "filter.calendarioLetivo.id");
-  },
-);
+export const listInputDtoToListQuery = createPaginatedInputMapper<
+  DiarioListInputRestDto,
+  DiarioListQuery
+>(DiarioListQuery, (dto, query) => {
+  mapField(query, "filter.id", dto, "filter.id");
+  mapField(query, "filter.turma.id", dto, "filter.turma.id");
+  mapField(query, "filter.disciplina.id", dto, "filter.disciplina.id");
+  mapField(query, "filter.calendarioLetivo.id", dto, "filter.calendarioLetivo.id");
+});
 
-export const toCreateInput = createMapper<DiarioCreateInputRestDto, DiarioCreateCommand>((dto) => ({
+export const createInputDtoToCreateCommand = createMapper<
+  DiarioCreateInputRestDto,
+  DiarioCreateCommand
+>((dto) => ({
   ativo: dto.ativo,
   calendarioLetivo: { id: dto.calendarioLetivo.id },
   turma: { id: dto.turma.id },
@@ -58,7 +64,7 @@ export const toCreateInput = createMapper<DiarioCreateInputRestDto, DiarioCreate
       : undefined,
 }));
 
-export const toUpdateInput = createMapper<
+export const updateInputDtoToUpdateCommand = createMapper<
   { params: DiarioFindOneInputRestDto; dto: DiarioUpdateInputRestDto },
   DiarioFindOneQuery & DiarioUpdateCommand
 >(({ params, dto }) => ({
@@ -79,21 +85,27 @@ export const toUpdateInput = createMapper<
 // Interna -> Externa (Output: Core -> Presentation)
 // ============================================================================
 
-export const toFindOneOutput = createMapper<DiarioFindOneQueryResult, DiarioFindOneOutputRestDto>(
-  (output) => ({
-    id: output.id,
-    ativo: output.ativo,
-    calendarioLetivo: CalendarioLetivoRestMapper.toFindOneOutput.map(output.calendarioLetivo),
-    turma: TurmaRestMapper.toFindOneOutput.map(output.turma),
-    disciplina: DisciplinaRestMapper.toFindOneOutput.map(output.disciplina),
-    ambientePadrao: output.ambientePadrao
-      ? AmbienteRestMapper.toFindOneOutput.map(output.ambientePadrao)
-      : null,
-    imagemCapa: output.imagemCapa ? BlocoRestMapper.toImagemOutput(output.imagemCapa) : null,
-    dateCreated: output.dateCreated,
-    dateUpdated: output.dateUpdated,
-    dateDeleted: output.dateDeleted,
-  }),
-);
+export const findOneQueryResultToOutputDto = createMapper<
+  DiarioFindOneQueryResult,
+  DiarioFindOneOutputRestDto
+>((output) => ({
+  id: output.id,
+  ativo: output.ativo,
+  calendarioLetivo: CalendarioLetivoRestMapper.findOneQueryResultToOutputDto.map(
+    output.calendarioLetivo,
+  ),
+  turma: TurmaRestMapper.findOneQueryResultToOutputDto.map(output.turma),
+  disciplina: DisciplinaRestMapper.findOneQueryResultToOutputDto.map(output.disciplina),
+  ambientePadrao: output.ambientePadrao
+    ? AmbienteRestMapper.findOneQueryResultToOutputDto.map(output.ambientePadrao)
+    : null,
+  imagemCapa: output.imagemCapa ? BlocoRestMapper.toImagemOutput(output.imagemCapa) : null,
+  dateCreated: output.dateCreated,
+  dateUpdated: output.dateUpdated,
+  dateDeleted: output.dateDeleted,
+}));
 
-export const toListOutput = createListMapper(DiarioListOutputRestDto, toFindOneOutput);
+export const listQueryResultToListOutputDto = createListMapper(
+  DiarioListOutputRestDto,
+  findOneQueryResultToOutputDto,
+);

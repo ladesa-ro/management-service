@@ -29,21 +29,27 @@ import {
 // Externa -> Interna (Input: Presentation -> Core)
 // ============================================================================
 
-export const toFindOneInput = createMapper<BlocoFindOneInputRestDto, BlocoFindOneQuery>((dto) => {
+export const findOneInputDtoToFindOneQuery = createMapper<
+  BlocoFindOneInputRestDto,
+  BlocoFindOneQuery
+>((dto) => {
   const input = new BlocoFindOneQuery();
   input.id = dto.id;
   return input;
 });
 
-export const toListInput = createPaginatedInputMapper<BlocoListInputRestDto, BlocoListQuery>(
-  BlocoListQuery,
-  (dto, query) => {
-    mapField(query, "filter.id", dto, "filter.id");
-    mapField(query, "filter.campus.id", dto, "filter.campus.id");
-  },
-);
+export const listInputDtoToListQuery = createPaginatedInputMapper<
+  BlocoListInputRestDto,
+  BlocoListQuery
+>(BlocoListQuery, (dto, query) => {
+  mapField(query, "filter.id", dto, "filter.id");
+  mapField(query, "filter.campus.id", dto, "filter.campus.id");
+});
 
-export const toCreateInput = createMapper<BlocoCreateInputRestDto, BlocoCreateCommand>((dto) => {
+export const createInputDtoToCreateCommand = createMapper<
+  BlocoCreateInputRestDto,
+  BlocoCreateCommand
+>((dto) => {
   const input = new BlocoCreateCommand();
   input.nome = dto.nome;
   input.codigo = dto.codigo;
@@ -51,7 +57,7 @@ export const toCreateInput = createMapper<BlocoCreateInputRestDto, BlocoCreateCo
   return input;
 });
 
-export const toUpdateInput = createMapper<
+export const updateInputDtoToUpdateCommand = createMapper<
   { params: BlocoFindOneInputRestDto; dto: BlocoUpdateInputRestDto },
   BlocoFindOneQuery & BlocoUpdateCommand
 >(({ params, dto }) => ({
@@ -89,17 +95,21 @@ export function toImagemOutput(output: ImagemFindOneQueryResult): ImagemFindOneO
   return dto;
 }
 
-export const toFindOneOutput = createMapper<BlocoFindOneQueryResult, BlocoFindOneOutputRestDto>(
-  (output) => ({
-    id: output.id,
-    nome: output.nome,
-    codigo: output.codigo,
-    campus: CampusRestMapper.toFindOneOutput.map(output.campus),
-    imagemCapa: output.imagemCapa ? toImagemOutput(output.imagemCapa) : null,
-    dateCreated: output.dateCreated,
-    dateUpdated: output.dateUpdated,
-    dateDeleted: output.dateDeleted,
-  }),
-);
+export const findOneQueryResultToOutputDto = createMapper<
+  BlocoFindOneQueryResult,
+  BlocoFindOneOutputRestDto
+>((output) => ({
+  id: output.id,
+  nome: output.nome,
+  codigo: output.codigo,
+  campus: CampusRestMapper.findOneQueryResultToOutputDto.map(output.campus),
+  imagemCapa: output.imagemCapa ? toImagemOutput(output.imagemCapa) : null,
+  dateCreated: output.dateCreated,
+  dateUpdated: output.dateUpdated,
+  dateDeleted: output.dateDeleted,
+}));
 
-export const toListOutput = createListMapper(BlocoListOutputRestDto, toFindOneOutput);
+export const listQueryResultToListOutputDto = createListMapper(
+  BlocoListOutputRestDto,
+  findOneQueryResultToOutputDto,
+);

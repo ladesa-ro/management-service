@@ -87,7 +87,7 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
       EmpresaTypeormEntity,
       { ...config, paginateConfig: empresaPaginateConfig },
       dto,
-      EmpresaTypeormMapper.entityToOutput.map,
+      EmpresaTypeormMapper.entityToFindOneQueryResult.map,
     );
   }
 
@@ -98,7 +98,7 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
       { ...config, paginateConfig: empresaPaginateConfig },
       this.paginationAdapter,
       dto,
-      EmpresaTypeormMapper.entityToOutput.map,
+      EmpresaTypeormMapper.entityToFindOneQueryResult.map,
     );
   }
 }

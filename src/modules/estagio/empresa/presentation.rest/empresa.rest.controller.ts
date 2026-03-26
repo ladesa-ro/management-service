@@ -66,9 +66,9 @@ export class EmpresaRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Query() dto: EmpresaListInputRestDto,
   ): Promise<EmpresaListOutputRestDto> {
-    const input = EmpresaRestMapper.toListInput.map(dto);
-    const result = await this.listHandler.execute(accessContext, input);
-    return EmpresaRestMapper.toListOutput(result);
+    const query = EmpresaRestMapper.listInputDtoToListQuery.map(dto);
+    const queryResult = await this.listHandler.execute(accessContext, query);
+    return EmpresaRestMapper.listQueryResultToListOutputDto(queryResult);
   }
 
   @Get("/:id")
@@ -80,10 +80,10 @@ export class EmpresaRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: EmpresaFindOneInputRestDto,
   ): Promise<EmpresaFindOneOutputRestDto> {
-    const input = EmpresaRestMapper.toFindOneInput.map(params);
-    const result = await this.findOneHandler.execute(accessContext, input);
-    ensureExists(result, Empresa.entityName, input.id);
-    return EmpresaRestMapper.toFindOneOutput.map(result);
+    const query = EmpresaRestMapper.findOneInputDtoToFindOneQuery.map(params);
+    const queryResult = await this.findOneHandler.execute(accessContext, query);
+    ensureExists(queryResult, Empresa.entityName, query.id);
+    return EmpresaRestMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Post("/")
@@ -94,9 +94,9 @@ export class EmpresaRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Body() dto: EmpresaCreateInputRestDto,
   ): Promise<EmpresaFindOneOutputRestDto> {
-    const input = EmpresaRestMapper.toCreateInput.map(dto);
-    const result = await this.createHandler.execute(accessContext, input);
-    return EmpresaRestMapper.toFindOneOutput.map(result);
+    const command = EmpresaRestMapper.createInputDtoToCreateCommand.map(dto);
+    const queryResult = await this.createHandler.execute(accessContext, command);
+    return EmpresaRestMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Patch("/:id")
@@ -109,9 +109,9 @@ export class EmpresaRestController {
     @Param() params: EmpresaFindOneInputRestDto,
     @Body() dto: EmpresaUpdateInputRestDto,
   ): Promise<EmpresaFindOneOutputRestDto> {
-    const input = EmpresaRestMapper.toUpdateInput.map({ params, dto });
-    const result = await this.updateHandler.execute(accessContext, input);
-    return EmpresaRestMapper.toFindOneOutput.map(result);
+    const command = EmpresaRestMapper.updateInputDtoToUpdateCommand.map({ params, dto });
+    const queryResult = await this.updateHandler.execute(accessContext, command);
+    return EmpresaRestMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Delete("/:id")
@@ -123,8 +123,8 @@ export class EmpresaRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: EmpresaFindOneInputRestDto,
   ): Promise<boolean> {
-    const input = EmpresaRestMapper.toFindOneInput.map(params);
-    await this.deleteHandler.execute(accessContext, input);
+    const query = EmpresaRestMapper.findOneInputDtoToFindOneQuery.map(params);
+    await this.deleteHandler.execute(accessContext, query);
     return true;
   }
 }

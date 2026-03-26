@@ -16,7 +16,7 @@ import {
 // Externa -> Interna (Input: Presentation -> Core)
 // ============================================================================
 
-export function toListInput(
+export function listInputDtoToListQuery(
   parentParams: DiarioProfessorParentParamsRestDto,
   dto: DiarioProfessorListInputRestDto,
 ): DiarioProfessorListQuery {
@@ -49,14 +49,14 @@ export function toBulkReplaceInput(
 // Interna -> Externa (Output: Core -> Presentation)
 // ============================================================================
 
-export const toFindOneOutput = createMapper<
+export const findOneQueryResultToOutputDto = createMapper<
   DiarioProfessorFindOneQueryResult,
   DiarioProfessorFindOneOutputRestDto
 >((output) => ({
   id: output.id,
   situacao: output.situacao,
-  perfil: PerfilRestMapper.toFindOneOutput.map(output.perfil),
-  diario: DiarioRestMapper.toFindOneOutput.map(output.diario),
+  perfil: PerfilRestMapper.findOneQueryResultToOutputDto.map(output.perfil),
+  diario: DiarioRestMapper.findOneQueryResultToOutputDto.map(output.diario),
   dateCreated: output.dateCreated
     ? new Date(output.dateCreated).toISOString()
     : getNow().toISOString(),
@@ -66,4 +66,7 @@ export const toFindOneOutput = createMapper<
   dateDeleted: output.dateDeleted ? new Date(output.dateDeleted).toISOString() : null,
 }));
 
-export const toListOutput = createListMapper(DiarioProfessorListOutputRestDto, toFindOneOutput);
+export const listQueryResultToListOutputDto = createListMapper(
+  DiarioProfessorListOutputRestDto,
+  findOneQueryResultToOutputDto,
+);

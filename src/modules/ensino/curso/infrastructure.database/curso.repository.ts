@@ -82,7 +82,7 @@ export class CursoTypeOrmRepositoryAdapter implements ICursoRepository {
       { ...config, paginateConfig: cursoPaginateConfig },
       this.paginationAdapter,
       dto,
-      CursoTypeormMapper.entityToOutput.map,
+      CursoTypeormMapper.entityToFindOneQueryResult.map,
     );
   }
 
@@ -92,7 +92,7 @@ export class CursoTypeOrmRepositoryAdapter implements ICursoRepository {
       CursoEntity,
       { ...config, paginateConfig: cursoPaginateConfig },
       dto,
-      CursoTypeormMapper.entityToOutput.map,
+      CursoTypeormMapper.entityToFindOneQueryResult.map,
     );
   }
 }

@@ -46,7 +46,7 @@ export class CidadeTypeOrmRepositoryAdapter implements ICidadeRepository {
       { ...config, paginateConfig: cidadePaginateConfig },
       this.paginationAdapter,
       dto,
-      CidadeTypeormMapper.entityToOutput.map,
+      CidadeTypeormMapper.entityToFindOneQueryResult.map,
     );
   }
 
@@ -56,7 +56,7 @@ export class CidadeTypeOrmRepositoryAdapter implements ICidadeRepository {
       CidadeEntity,
       { ...config, paginateConfig: cidadePaginateConfig },
       dto,
-      CidadeTypeormMapper.entityToOutput.map,
+      CidadeTypeormMapper.entityToFindOneQueryResult.map,
     );
   }
 

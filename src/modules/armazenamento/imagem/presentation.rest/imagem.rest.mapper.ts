@@ -20,32 +20,39 @@ import {
 // Externa → Interna (Input: Presentation → Core)
 // ============================================================================
 
-export const toFindOneInput = createMapper<ImagemFindOneInputRestDto, ImagemFindOneQuery>((dto) => {
+export const findOneInputDtoToFindOneQuery = createMapper<
+  ImagemFindOneInputRestDto,
+  ImagemFindOneQuery
+>((dto) => {
   const input = new ImagemFindOneQuery();
   input.id = dto.id;
   return input;
 });
 
-export const toListInput = createPaginatedInputMapper<ImagemListInputRestDto, ImagemListQuery>(
-  ImagemListQuery,
-  (dto, query) => {
-    mapField(query, "filter.id", dto, "filter.id");
-  },
-);
+export const listInputDtoToListQuery = createPaginatedInputMapper<
+  ImagemListInputRestDto,
+  ImagemListQuery
+>(ImagemListQuery, (dto, query) => {
+  mapField(query, "filter.id", dto, "filter.id");
+});
 
 // ============================================================================
 // Interna → Externa (Output: Core → Presentation)
 // ============================================================================
 
-export const toFindOneOutput = createMapper<ImagemFindOneQueryResult, ImagemFindOneOutputRestDto>(
-  (output) => ({
-    id: output.id,
-    descricao: output.descricao,
-    versoes: [],
-    dateCreated: output.dateCreated,
-    dateUpdated: output.dateUpdated,
-    dateDeleted: output.dateDeleted,
-  }),
-);
+export const findOneQueryResultToOutputDto = createMapper<
+  ImagemFindOneQueryResult,
+  ImagemFindOneOutputRestDto
+>((output) => ({
+  id: output.id,
+  descricao: output.descricao,
+  versoes: [],
+  dateCreated: output.dateCreated,
+  dateUpdated: output.dateUpdated,
+  dateDeleted: output.dateDeleted,
+}));
 
-export const toListOutput = createListMapper(ImagemListOutputRestDto, toFindOneOutput);
+export const listQueryResultToListOutputDto = createListMapper(
+  ImagemListOutputRestDto,
+  findOneQueryResultToOutputDto,
+);

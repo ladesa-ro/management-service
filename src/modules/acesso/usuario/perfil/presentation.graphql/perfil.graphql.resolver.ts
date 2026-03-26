@@ -24,10 +24,10 @@ export class PerfilGraphqlResolver {
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<PerfilFindOneOutputGraphQlDto | null> {
-    const result = await this.findOneHandler.execute(accessContext, { id });
-    if (!result) {
+    const queryResult = await this.findOneHandler.execute(accessContext, { id });
+    if (!queryResult) {
       return null;
     }
-    return PerfilGraphqlMapper.toFindOneOutput.map(result);
+    return PerfilGraphqlMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 }

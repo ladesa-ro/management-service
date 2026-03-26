@@ -105,9 +105,9 @@ export class TurmaRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Query() dto: TurmaListInputRestDto,
   ): Promise<TurmaListOutputRestDto> {
-    const input = TurmaRestMapper.toListInput.map(dto);
-    const result = await this.listHandler.execute(accessContext, input);
-    return TurmaRestMapper.toListOutput(result);
+    const query = TurmaRestMapper.listInputDtoToListQuery.map(dto);
+    const queryResult = await this.listHandler.execute(accessContext, query);
+    return TurmaRestMapper.listQueryResultToListOutputDto(queryResult);
   }
 
   @Get("/:id")
@@ -119,10 +119,10 @@ export class TurmaRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: TurmaFindOneInputRestDto,
   ): Promise<TurmaFindOneOutputRestDto> {
-    const input = TurmaRestMapper.toFindOneInput.map(params);
-    const result = await this.findOneHandler.execute(accessContext, input);
-    ensureExists(result, Turma.entityName, input.id);
-    return TurmaRestMapper.toFindOneOutput.map(result);
+    const query = TurmaRestMapper.findOneInputDtoToFindOneQuery.map(params);
+    const queryResult = await this.findOneHandler.execute(accessContext, query);
+    ensureExists(queryResult, Turma.entityName, query.id);
+    return TurmaRestMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Post("/")
@@ -133,9 +133,9 @@ export class TurmaRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Body() dto: TurmaCreateInputRestDto,
   ): Promise<TurmaFindOneOutputRestDto> {
-    const input = TurmaRestMapper.toCreateInput.map(dto);
-    const result = await this.createHandler.execute(accessContext, input);
-    return TurmaRestMapper.toFindOneOutput.map(result);
+    const command = TurmaRestMapper.createInputDtoToCreateCommand.map(dto);
+    const queryResult = await this.createHandler.execute(accessContext, command);
+    return TurmaRestMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Patch("/:id")
@@ -148,9 +148,9 @@ export class TurmaRestController {
     @Param() params: TurmaFindOneInputRestDto,
     @Body() dto: TurmaUpdateInputRestDto,
   ): Promise<TurmaFindOneOutputRestDto> {
-    const input = TurmaRestMapper.toUpdateInput.map({ params, dto });
-    const result = await this.updateHandler.execute(accessContext, input);
-    return TurmaRestMapper.toFindOneOutput.map(result);
+    const command = TurmaRestMapper.updateInputDtoToUpdateCommand.map({ params, dto });
+    const queryResult = await this.updateHandler.execute(accessContext, command);
+    return TurmaRestMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Get("/:id/horario")
@@ -178,10 +178,10 @@ export class TurmaRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: TurmaFindOneInputRestDto,
   ) {
-    const result = await this.getImagemCapaHandler.execute(accessContext, { id: params.id });
-    return new StreamableFile(result.stream, {
-      type: result.mimeType,
-      disposition: result.disposition,
+    const queryResult = await this.getImagemCapaHandler.execute(accessContext, { id: params.id });
+    return new StreamableFile(queryResult.stream, {
+      type: queryResult.mimeType,
+      disposition: queryResult.disposition,
     });
   }
 
@@ -218,7 +218,7 @@ export class TurmaRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: TurmaFindOneInputRestDto,
   ): Promise<boolean> {
-    const input = TurmaRestMapper.toFindOneInput.map(params);
-    return this.deleteHandler.execute(accessContext, input);
+    const query = TurmaRestMapper.findOneInputDtoToFindOneQuery.map(params);
+    return this.deleteHandler.execute(accessContext, query);
   }
 }

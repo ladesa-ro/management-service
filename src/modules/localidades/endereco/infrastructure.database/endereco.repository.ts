@@ -61,7 +61,7 @@ export class EnderecoTypeOrmRepositoryAdapter implements IEnderecoRepository {
       { ...config, paginateConfig: enderecoPaginateConfig },
       this.paginationAdapter,
       dto,
-      EnderecoTypeormMapper.entityToOutput.map,
+      EnderecoTypeormMapper.entityToFindOneQueryResult.map,
     );
   }
 
@@ -71,7 +71,7 @@ export class EnderecoTypeOrmRepositoryAdapter implements IEnderecoRepository {
       EnderecoEntity,
       { ...config, paginateConfig: enderecoPaginateConfig },
       dto,
-      EnderecoTypeormMapper.entityToOutput.map,
+      EnderecoTypeormMapper.entityToFindOneQueryResult.map,
     );
   }
 
@@ -87,7 +87,7 @@ export class EnderecoTypeOrmRepositoryAdapter implements IEnderecoRepository {
     });
 
     if (!endereco) return null;
-    return EnderecoTypeormMapper.entityToOutput.map(endereco);
+    return EnderecoTypeormMapper.entityToFindOneQueryResult.map(endereco);
   }
 
   async exists(id: string): Promise<boolean> {

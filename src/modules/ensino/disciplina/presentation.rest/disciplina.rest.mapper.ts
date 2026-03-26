@@ -25,32 +25,34 @@ import {
 // Externa → Interna (Input: Presentation → Core)
 // ============================================================================
 
-export const toFindOneInput = createMapper<DisciplinaFindOneInputRestDto, DisciplinaFindOneQuery>(
-  (dto) => {
-    const input = new DisciplinaFindOneQuery();
-    input.id = dto.id;
-    return input;
-  },
-);
+export const findOneInputDtoToFindOneQuery = createMapper<
+  DisciplinaFindOneInputRestDto,
+  DisciplinaFindOneQuery
+>((dto) => {
+  const input = new DisciplinaFindOneQuery();
+  input.id = dto.id;
+  return input;
+});
 
-export const toListInput = createPaginatedInputMapper<
+export const listInputDtoToListQuery = createPaginatedInputMapper<
   DisciplinaListInputRestDto,
   DisciplinaListQuery
 >(DisciplinaListQuery, (dto, query) => {
   mapField(query, "filter.id", dto, "filter.id");
 });
 
-export const toCreateInput = createMapper<DisciplinaCreateInputRestDto, DisciplinaCreateCommand>(
-  (dto) => {
-    const input = new DisciplinaCreateCommand();
-    input.nome = dto.nome;
-    input.nomeAbreviado = dto.nomeAbreviado;
-    input.cargaHoraria = dto.cargaHoraria;
-    return input;
-  },
-);
+export const createInputDtoToCreateCommand = createMapper<
+  DisciplinaCreateInputRestDto,
+  DisciplinaCreateCommand
+>((dto) => {
+  const input = new DisciplinaCreateCommand();
+  input.nome = dto.nome;
+  input.nomeAbreviado = dto.nomeAbreviado;
+  input.cargaHoraria = dto.cargaHoraria;
+  return input;
+});
 
-export const toUpdateInput = createMapper<
+export const updateInputDtoToUpdateCommand = createMapper<
   { params: DisciplinaFindOneInputRestDto; dto: DisciplinaUpdateInputRestDto },
   DisciplinaFindOneQuery & DisciplinaUpdateCommand
 >(({ params, dto }) => ({
@@ -64,7 +66,7 @@ export const toUpdateInput = createMapper<
 // Interna → Externa (Output: Core → Presentation)
 // ============================================================================
 
-export const toFindOneOutput = createMapper<
+export const findOneQueryResultToOutputDto = createMapper<
   DisciplinaFindOneQueryResult,
   DisciplinaFindOneOutputRestDto
 >((output) => ({
@@ -78,4 +80,7 @@ export const toFindOneOutput = createMapper<
   dateDeleted: output.dateDeleted,
 }));
 
-export const toListOutput = createListMapper(DisciplinaListOutputRestDto, toFindOneOutput);
+export const listQueryResultToListOutputDto = createListMapper(
+  DisciplinaListOutputRestDto,
+  findOneQueryResultToOutputDto,
+);

@@ -19,7 +19,7 @@ export const entityToDomain = createMapper<CalendarioLetivoEntity, ICalendarioLe
   dateDeleted: e.dateDeleted,
 }));
 
-export const entityToOutput = createMapper<
+export const entityToFindOneQueryResult = createMapper<
   CalendarioLetivoEntity,
   CalendarioLetivoFindOneQueryResult
 >((e) => ({

@@ -25,20 +25,24 @@ export const entityToDomain = createMapper<DiarioEntity, DeepPartial<DiarioEntit
   dateDeleted: e.dateDeleted,
 }));
 
-export const entityToOutput = createMapper<DiarioEntity, DiarioFindOneQueryResult>((e) => ({
-  id: e.id,
-  ativo: e.ativo,
-  calendarioLetivo: CalendarioLetivoTypeormMapper.entityToOutput.map(e.calendarioLetivo),
-  turma: TurmaTypeormMapper.entityToOutput.map(e.turma),
-  disciplina: DisciplinaTypeormMapper.entityToOutput.map(e.disciplina),
-  ambientePadrao: e.ambientePadrao
-    ? AmbienteTypeormMapper.entityToOutput.map(e.ambientePadrao)
-    : null,
-  imagemCapa: e.imagemCapa ?? null,
-  dateCreated: e.dateCreated,
-  dateUpdated: e.dateUpdated,
-  dateDeleted: e.dateDeleted,
-}));
+export const entityToFindOneQueryResult = createMapper<DiarioEntity, DiarioFindOneQueryResult>(
+  (e) => ({
+    id: e.id,
+    ativo: e.ativo,
+    calendarioLetivo: CalendarioLetivoTypeormMapper.entityToFindOneQueryResult.map(
+      e.calendarioLetivo,
+    ),
+    turma: TurmaTypeormMapper.entityToFindOneQueryResult.map(e.turma),
+    disciplina: DisciplinaTypeormMapper.entityToFindOneQueryResult.map(e.disciplina),
+    ambientePadrao: e.ambientePadrao
+      ? AmbienteTypeormMapper.entityToFindOneQueryResult.map(e.ambientePadrao)
+      : null,
+    imagemCapa: e.imagemCapa ?? null,
+    dateCreated: e.dateCreated,
+    dateUpdated: e.dateUpdated,
+    dateDeleted: e.dateDeleted,
+  }),
+);
 
 // ============================================================================
 // Dominio -> Persistencia (Domain -> TypeORM Entity)

@@ -130,7 +130,7 @@ export class OfertaFormacaoTypeOrmRepositoryAdapter implements IOfertaFormacaoRe
 
     if (!entity) return null;
 
-    return OfertaFormacaoTypeormMapper.entityToOutput.map(entity);
+    return OfertaFormacaoTypeormMapper.entityToFindOneQueryResult.map(entity);
   }
 
   getFindAllQueryResult(
@@ -147,7 +147,7 @@ export class OfertaFormacaoTypeOrmRepositoryAdapter implements IOfertaFormacaoRe
       { ...config, paginateConfig: ofertaFormacaoPaginateConfig },
       this.paginationAdapter,
       dto,
-      OfertaFormacaoTypeormMapper.entityToOutput.map,
+      OfertaFormacaoTypeormMapper.entityToFindOneQueryResult.map,
     );
   }
 

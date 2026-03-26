@@ -94,9 +94,9 @@ export class BlocoRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Query() dto: BlocoListInputRestDto,
   ): Promise<BlocoListOutputRestDto> {
-    const input = BlocoRestMapper.toListInput.map(dto);
-    const result = await this.listHandler.execute(accessContext, input);
-    return BlocoRestMapper.toListOutput(result);
+    const query = BlocoRestMapper.listInputDtoToListQuery.map(dto);
+    const queryResult = await this.listHandler.execute(accessContext, query);
+    return BlocoRestMapper.listQueryResultToListOutputDto(queryResult);
   }
 
   @Get("/:id")
@@ -108,10 +108,10 @@ export class BlocoRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: BlocoFindOneInputRestDto,
   ): Promise<BlocoFindOneOutputRestDto> {
-    const input = BlocoRestMapper.toFindOneInput.map(params);
-    const result = await this.findOneHandler.execute(accessContext, input);
-    ensureExists(result, Bloco.entityName, input.id);
-    return BlocoRestMapper.toFindOneOutput.map(result);
+    const query = BlocoRestMapper.findOneInputDtoToFindOneQuery.map(params);
+    const queryResult = await this.findOneHandler.execute(accessContext, query);
+    ensureExists(queryResult, Bloco.entityName, query.id);
+    return BlocoRestMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Post("/")
@@ -122,9 +122,9 @@ export class BlocoRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Body() dto: BlocoCreateInputRestDto,
   ): Promise<BlocoFindOneOutputRestDto> {
-    const input = BlocoRestMapper.toCreateInput.map(dto);
-    const result = await this.createHandler.execute(accessContext, input);
-    return BlocoRestMapper.toFindOneOutput.map(result);
+    const command = BlocoRestMapper.createInputDtoToCreateCommand.map(dto);
+    const queryResult = await this.createHandler.execute(accessContext, command);
+    return BlocoRestMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Patch("/:id")
@@ -137,9 +137,9 @@ export class BlocoRestController {
     @Param() params: BlocoFindOneInputRestDto,
     @Body() dto: BlocoUpdateInputRestDto,
   ): Promise<BlocoFindOneOutputRestDto> {
-    const input = BlocoRestMapper.toUpdateInput.map({ params, dto });
-    const result = await this.updateHandler.execute(accessContext, input);
-    return BlocoRestMapper.toFindOneOutput.map(result);
+    const command = BlocoRestMapper.updateInputDtoToUpdateCommand.map({ params, dto });
+    const queryResult = await this.updateHandler.execute(accessContext, command);
+    return BlocoRestMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Get("/:id/imagem/capa")
@@ -151,10 +151,10 @@ export class BlocoRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: BlocoFindOneInputRestDto,
   ) {
-    const result = await this.getImagemCapaHandler.execute(accessContext, { id: params.id });
-    return new StreamableFile(result.stream, {
-      type: result.mimeType,
-      disposition: result.disposition,
+    const queryResult = await this.getImagemCapaHandler.execute(accessContext, { id: params.id });
+    return new StreamableFile(queryResult.stream, {
+      type: queryResult.mimeType,
+      disposition: queryResult.disposition,
     });
   }
 
@@ -191,7 +191,7 @@ export class BlocoRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: BlocoFindOneInputRestDto,
   ): Promise<boolean> {
-    const input = BlocoRestMapper.toFindOneInput.map(params);
-    return this.deleteHandler.execute(accessContext, input);
+    const query = BlocoRestMapper.findOneInputDtoToFindOneQuery.map(params);
+    return this.deleteHandler.execute(accessContext, query);
   }
 }

@@ -118,7 +118,9 @@ export class EstagioTypeOrmRepositoryAdapter implements IEstagioRepository {
         where: { id: dto.id, dateDeleted: IsNull() },
         relations: estagioRelations,
       })
-      .then((entity) => (entity ? EstagioTypeormMapper.entityToOutput.map(entity) : null));
+      .then((entity) =>
+        entity ? EstagioTypeormMapper.entityToFindOneQueryResult.map(entity) : null,
+      );
   }
 
   getFindAllQueryResult(
@@ -131,7 +133,7 @@ export class EstagioTypeOrmRepositoryAdapter implements IEstagioRepository {
       { ...config, paginateConfig: estagioPaginateConfig },
       this.paginationAdapter,
       dto,
-      EstagioTypeormMapper.entityToOutput.map,
+      EstagioTypeormMapper.entityToFindOneQueryResult.map,
     );
   }
 }

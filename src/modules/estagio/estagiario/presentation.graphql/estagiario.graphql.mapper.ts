@@ -26,7 +26,7 @@ import {
 // Externa -> Interna (Input: Presentation -> Core)
 // ============================================================================
 
-export const toFindOneInput = createMapper<string, EstagiarioFindOneQuery>((id) => {
+export const findOneInputDtoToFindOneQuery = createMapper<string, EstagiarioFindOneQuery>((id) => {
   const input = new EstagiarioFindOneQuery();
   input.id = id;
   return input;
@@ -42,23 +42,26 @@ const listInputMapper = createPaginatedInputMapper<
   mapField(query, "filter.turma.id", dto, "filterTurmaId");
 });
 
-export function toListInput(dto: EstagiarioListInputGraphQlDto | null): EstagiarioListQuery | null {
+export function listInputDtoToListQuery(
+  dto: EstagiarioListInputGraphQlDto | null,
+): EstagiarioListQuery | null {
   if (!dto) return null;
   return listInputMapper.map(dto);
 }
 
-export const toCreateInput = createMapper<EstagiarioCreateInputGraphQlDto, EstagiarioCreateCommand>(
-  (dto) => ({
-    perfil: { id: dto.perfil.id },
-    curso: { id: dto.curso.id },
-    turma: { id: dto.turma.id },
-    telefone: dto.telefone,
-    emailInstitucional: dto.emailInstitucional,
-    dataNascimento: dto.dataNascimento,
-  }),
-);
+export const createInputDtoToCreateCommand = createMapper<
+  EstagiarioCreateInputGraphQlDto,
+  EstagiarioCreateCommand
+>((dto) => ({
+  perfil: { id: dto.perfil.id },
+  curso: { id: dto.curso.id },
+  turma: { id: dto.turma.id },
+  telefone: dto.telefone,
+  emailInstitucional: dto.emailInstitucional,
+  dataNascimento: dto.dataNascimento,
+}));
 
-export const toUpdateInput = createMapper<
+export const updateInputDtoToUpdateCommand = createMapper<
   { id: string; dto: EstagiarioUpdateInputGraphQlDto },
   EstagiarioFindOneQuery & EstagiarioUpdateCommand
 >(({ id, dto }) => ({
@@ -75,14 +78,14 @@ export const toUpdateInput = createMapper<
 // Interna -> Externa (Output: Core -> Presentation)
 // ============================================================================
 
-export const toFindOneOutput = createMapper<
+export const findOneQueryResultToOutputDto = createMapper<
   EstagiarioFindOneQueryResult,
   EstagiarioFindOneOutputGraphQlDto
 >((output) => ({
   id: output.id,
-  perfil: PerfilGraphqlMapper.toFindOneOutput.map(output.perfil),
-  curso: CursoGraphqlMapper.toFindOneOutput.map(output.curso),
-  turma: TurmaGraphqlMapper.toFindOneOutput.map(output.turma),
+  perfil: PerfilGraphqlMapper.findOneQueryResultToOutputDto.map(output.perfil),
+  curso: CursoGraphqlMapper.findOneQueryResultToOutputDto.map(output.curso),
+  turma: TurmaGraphqlMapper.findOneQueryResultToOutputDto.map(output.turma),
   telefone: output.telefone,
   emailInstitucional: output.emailInstitucional,
   dataNascimento: output.dataNascimento,
@@ -92,4 +95,7 @@ export const toFindOneOutput = createMapper<
   dateDeleted: output.dateDeleted ? new Date(output.dateDeleted) : null,
 }));
 
-export const toListOutput = createListMapper(EstagiarioListOutputGraphQlDto, toFindOneOutput);
+export const listQueryResultToListOutputDto = createListMapper(
+  EstagiarioListOutputGraphQlDto,
+  findOneQueryResultToOutputDto,
+);

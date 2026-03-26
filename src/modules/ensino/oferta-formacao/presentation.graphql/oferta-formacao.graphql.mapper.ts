@@ -26,11 +26,13 @@ import {
 // Externa -> Interna (Input: Presentation -> Core)
 // ============================================================================
 
-export const toFindOneInput = createMapper<string, OfertaFormacaoFindOneQuery>((id) => {
-  const input = new OfertaFormacaoFindOneQuery();
-  input.id = id;
-  return input;
-});
+export const findOneInputDtoToFindOneQuery = createMapper<string, OfertaFormacaoFindOneQuery>(
+  (id) => {
+    const input = new OfertaFormacaoFindOneQuery();
+    input.id = id;
+    return input;
+  },
+);
 
 const listInputMapper = createPaginatedInputMapper<
   OfertaFormacaoListInputGraphQlDto,
@@ -41,14 +43,14 @@ const listInputMapper = createPaginatedInputMapper<
   mapField(query, "filter.campus.id", dto, "filterCampusId");
 });
 
-export function toListInput(
+export function listInputDtoToListQuery(
   dto: OfertaFormacaoListInputGraphQlDto | null,
 ): OfertaFormacaoListQuery | null {
   if (!dto) return null;
   return listInputMapper.map(dto);
 }
 
-export const toCreateInput = createMapper<
+export const createInputDtoToCreateCommand = createMapper<
   OfertaFormacaoCreateInputGraphQlDto,
   OfertaFormacaoCreateCommand
 >((dto) => {
@@ -66,7 +68,7 @@ export const toCreateInput = createMapper<
   return input;
 });
 
-export const toUpdateInput = createMapper<
+export const updateInputDtoToUpdateCommand = createMapper<
   { id: string; dto: OfertaFormacaoUpdateInputGraphQlDto },
   OfertaFormacaoFindOneQuery & OfertaFormacaoUpdateCommand
 >(({ id, dto }) => ({
@@ -91,7 +93,7 @@ export const toUpdateInput = createMapper<
 // Interna -> Externa (Output: Core -> Presentation)
 // ============================================================================
 
-export const toFindOneOutput = createMapper<
+export const findOneQueryResultToOutputDto = createMapper<
   OfertaFormacaoFindOneQueryResult,
   OfertaFormacaoFindOneOutputGraphQlDto
 >((output) => ({
@@ -100,9 +102,9 @@ export const toFindOneOutput = createMapper<
   slug: output.slug,
   duracaoPeriodoEmMeses: output.duracaoPeriodoEmMeses,
   modalidade: ModalidadeGraphqlMapper.findOneQueryResultToOutputDto.map(output.modalidade),
-  campus: CampusGraphqlMapper.toFindOneOutput.map(output.campus),
+  campus: CampusGraphqlMapper.findOneQueryResultToOutputDto.map(output.campus),
   niveisFormacoes: (output.niveisFormacoes ?? []).map((nf) =>
-    NivelFormacaoGraphqlMapper.toFindOneOutput.map(nf),
+    NivelFormacaoGraphqlMapper.findOneQueryResultToOutputDto.map(nf),
   ),
   periodos: (output.periodos ?? []).map((p) => ({
     id: p.id,
@@ -118,4 +120,7 @@ export const toFindOneOutput = createMapper<
   dateDeleted: output.dateDeleted ? new Date(output.dateDeleted) : null,
 }));
 
-export const toListOutput = createListMapper(OfertaFormacaoListOutputGraphQlDto, toFindOneOutput);
+export const listQueryResultToListOutputDto = createListMapper(
+  OfertaFormacaoListOutputGraphQlDto,
+  findOneQueryResultToOutputDto,
+);

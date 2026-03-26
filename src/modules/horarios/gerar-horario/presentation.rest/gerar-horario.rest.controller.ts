@@ -57,8 +57,8 @@ export class GerarHorarioRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Body() dto: GerarHorarioCreateInputRestDto,
   ): Promise<GerarHorarioFindOneOutputRestDto> {
-    const result = await this.createHandler.execute(accessContext, dto);
-    return GerarHorarioRestMapper.toFindOneOutput.map(result);
+    const queryResult = await this.createHandler.execute(accessContext, dto);
+    return GerarHorarioRestMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Get("/:id")
@@ -70,9 +70,9 @@ export class GerarHorarioRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: GerarHorarioFindOneParamsRestDto,
   ): Promise<GerarHorarioFindOneOutputRestDto> {
-    const result = await this.findOneHandler.execute(accessContext, { id: params.id });
-    ensureExists(result, "GerarHorario", params.id);
-    return GerarHorarioRestMapper.toFindOneOutput.map(result!);
+    const queryResult = await this.findOneHandler.execute(accessContext, { id: params.id });
+    ensureExists(queryResult, "GerarHorario", params.id);
+    return GerarHorarioRestMapper.findOneQueryResultToOutputDto.map(queryResult!);
   }
 
   @Post("/:id/aceitar")
@@ -84,8 +84,8 @@ export class GerarHorarioRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: GerarHorarioFindOneParamsRestDto,
   ): Promise<GerarHorarioFindOneOutputRestDto> {
-    const result = await this.aceitarHandler.execute(accessContext, { id: params.id });
-    return GerarHorarioRestMapper.toFindOneOutput.map(result);
+    const queryResult = await this.aceitarHandler.execute(accessContext, { id: params.id });
+    return GerarHorarioRestMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Post("/:id/rejeitar")
@@ -97,7 +97,7 @@ export class GerarHorarioRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: GerarHorarioFindOneParamsRestDto,
   ): Promise<GerarHorarioFindOneOutputRestDto> {
-    const result = await this.rejeitarHandler.execute(accessContext, { id: params.id });
-    return GerarHorarioRestMapper.toFindOneOutput.map(result);
+    const queryResult = await this.rejeitarHandler.execute(accessContext, { id: params.id });
+    return GerarHorarioRestMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 }

@@ -121,7 +121,7 @@ export class DiarioTypeOrmRepositoryAdapter implements IDiarioRepository {
 
     if (!entity) return null;
 
-    return DiarioTypeormMapper.entityToOutput.map(entity);
+    return DiarioTypeormMapper.entityToFindOneQueryResult.map(entity);
   }
 
   getFindAllQueryResult(
@@ -134,7 +134,7 @@ export class DiarioTypeOrmRepositoryAdapter implements IDiarioRepository {
       { ...config, paginateConfig: diarioPaginateConfig },
       this.paginationAdapter,
       dto,
-      DiarioTypeormMapper.entityToOutput.map,
+      DiarioTypeormMapper.entityToFindOneQueryResult.map,
     );
   }
 }

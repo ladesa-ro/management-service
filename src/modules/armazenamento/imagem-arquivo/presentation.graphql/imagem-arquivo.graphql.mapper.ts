@@ -19,11 +19,13 @@ import {
 // Externa → Interna (Input: Presentation → Core)
 // ============================================================================
 
-export const toFindOneInput = createMapper<string, ImagemArquivoFindOneQuery>((id) => {
-  const input = new ImagemArquivoFindOneQuery();
-  input.id = id;
-  return input;
-});
+export const findOneInputDtoToFindOneQuery = createMapper<string, ImagemArquivoFindOneQuery>(
+  (id) => {
+    const input = new ImagemArquivoFindOneQuery();
+    input.id = id;
+    return input;
+  },
+);
 
 const listInputMapper = createPaginatedInputMapper<
   ImagemArquivoListInputGraphQlDto,
@@ -32,7 +34,7 @@ const listInputMapper = createPaginatedInputMapper<
   mapField(query, "filter.id", dto, "filterId");
 });
 
-export function toListInput(
+export function listInputDtoToListQuery(
   dto: ImagemArquivoListInputGraphQlDto | null,
 ): ImagemArquivoListQuery | null {
   if (!dto) return null;
@@ -43,7 +45,7 @@ export function toListInput(
 // Interna → Externa (Output: Core → Presentation)
 // ============================================================================
 
-export const toFindOneOutput = createMapper<
+export const findOneQueryResultToOutputDto = createMapper<
   ImagemArquivoFindOneQueryResult,
   ImagemArquivoFindOneOutputGraphQlDto
 >((output) => ({
@@ -70,4 +72,7 @@ export const toFindOneOutput = createMapper<
   dateDeleted: output.dateDeleted ? new Date(output.dateDeleted) : null,
 }));
 
-export const toListOutput = createListMapper(ImagemArquivoListOutputGraphQlDto, toFindOneOutput);
+export const listQueryResultToListOutputDto = createListMapper(
+  ImagemArquivoListOutputGraphQlDto,
+  findOneQueryResultToOutputDto,
+);

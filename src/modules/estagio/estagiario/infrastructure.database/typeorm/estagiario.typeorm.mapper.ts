@@ -30,21 +30,22 @@ export const entityToDomain = createMapper<EstagiarioTypeormEntity, IEstagiario>
  * Perfil is passed through structurally: the loaded PerfilEntity with full
  * relations is runtime-compatible with PerfilFindOneQueryResult.
  */
-export const entityToOutput = createMapper<EstagiarioTypeormEntity, EstagiarioFindOneQueryResult>(
-  (e) => ({
-    id: e.id,
-    perfil: e.perfil satisfies { id: string } as unknown as PerfilFindOneQueryResult,
-    curso: CursoTypeormMapper.entityToOutput.map(e.curso),
-    turma: TurmaTypeormMapper.entityToOutput.map(e.turma),
-    telefone: e.telefone,
-    emailInstitucional: e.emailInstitucional,
-    dataNascimento: e.dataNascimento,
-    ativo: e.dateDeleted === null,
-    dateCreated: e.dateCreated,
-    dateUpdated: e.dateUpdated,
-    dateDeleted: e.dateDeleted,
-  }),
-);
+export const entityToFindOneQueryResult = createMapper<
+  EstagiarioTypeormEntity,
+  EstagiarioFindOneQueryResult
+>((e) => ({
+  id: e.id,
+  perfil: e.perfil satisfies { id: string } as unknown as PerfilFindOneQueryResult,
+  curso: CursoTypeormMapper.entityToFindOneQueryResult.map(e.curso),
+  turma: TurmaTypeormMapper.entityToFindOneQueryResult.map(e.turma),
+  telefone: e.telefone,
+  emailInstitucional: e.emailInstitucional,
+  dataNascimento: e.dataNascimento,
+  ativo: e.dateDeleted === null,
+  dateCreated: e.dateCreated,
+  dateUpdated: e.dateUpdated,
+  dateDeleted: e.dateDeleted,
+}));
 
 // ============================================================================
 // Dominio -> Persistencia (Domain -> TypeORM Entity)

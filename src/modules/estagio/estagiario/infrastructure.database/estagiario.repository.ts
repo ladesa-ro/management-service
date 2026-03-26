@@ -115,7 +115,7 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
       EstagiarioTypeormEntity,
       { ...config, paginateConfig: estagiarioPaginateConfig },
       dto,
-      EstagiarioTypeormMapper.entityToOutput.map,
+      EstagiarioTypeormMapper.entityToFindOneQueryResult.map,
     );
   }
 
@@ -129,7 +129,7 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
       { ...config, paginateConfig: estagiarioPaginateConfig },
       this.paginationAdapter,
       dto,
-      EstagiarioTypeormMapper.entityToOutput.map,
+      EstagiarioTypeormMapper.entityToFindOneQueryResult.map,
     );
   }
 }

@@ -21,21 +21,22 @@ export const entityToDomain = createMapper<EmpresaTypeormEntity, IEmpresa>((e) =
   dateDeleted: e.dateDeleted,
 }));
 
-export const entityToOutput = createMapper<EmpresaTypeormEntity, EmpresaFindOneQueryResult>(
-  (e) => ({
-    id: e.id,
-    razaoSocial: e.razaoSocial,
-    nomeFantasia: e.nomeFantasia,
-    cnpj: e.cnpj,
-    telefone: e.telefone,
-    email: e.email,
-    endereco: e.endereco,
-    ativo: e.dateDeleted === null,
-    dateCreated: e.dateCreated,
-    dateUpdated: e.dateUpdated,
-    dateDeleted: e.dateDeleted,
-  }),
-);
+export const entityToFindOneQueryResult = createMapper<
+  EmpresaTypeormEntity,
+  EmpresaFindOneQueryResult
+>((e) => ({
+  id: e.id,
+  razaoSocial: e.razaoSocial,
+  nomeFantasia: e.nomeFantasia,
+  cnpj: e.cnpj,
+  telefone: e.telefone,
+  email: e.email,
+  endereco: e.endereco,
+  ativo: e.dateDeleted === null,
+  dateCreated: e.dateCreated,
+  dateUpdated: e.dateUpdated,
+  dateDeleted: e.dateDeleted,
+}));
 
 // ============================================================================
 // Domínio → Persistência (Domain → TypeORM Entity)

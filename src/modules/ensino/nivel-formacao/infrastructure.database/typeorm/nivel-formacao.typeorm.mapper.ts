@@ -15,15 +15,16 @@ export const entityToDomain = createMapper<NivelFormacaoEntity, INivelFormacao>(
   dateDeleted: e.dateDeleted,
 }));
 
-export const entityToOutput = createMapper<NivelFormacaoEntity, NivelFormacaoFindOneQueryResult>(
-  (e) => ({
-    id: e.id,
-    slug: e.slug,
-    dateCreated: e.dateCreated,
-    dateUpdated: e.dateUpdated,
-    dateDeleted: e.dateDeleted,
-  }),
-);
+export const entityToFindOneQueryResult = createMapper<
+  NivelFormacaoEntity,
+  NivelFormacaoFindOneQueryResult
+>((e) => ({
+  id: e.id,
+  slug: e.slug,
+  dateCreated: e.dateCreated,
+  dateUpdated: e.dateUpdated,
+  dateDeleted: e.dateDeleted,
+}));
 
 // ============================================================================
 // Domínio → Persistência (Domain → TypeORM Entity)

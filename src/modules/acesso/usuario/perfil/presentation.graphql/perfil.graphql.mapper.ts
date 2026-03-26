@@ -12,7 +12,7 @@ function getCargoNome(output: PerfilFindOneQueryResult): string {
   return output.cargo?.nome ?? "";
 }
 
-export const toFindOneOutput = createMapper<
+export const findOneQueryResultToOutputDto = createMapper<
   PerfilFindOneQueryResult,
   PerfilFindOneOutputGraphQlDto
 >((output) => {
@@ -20,8 +20,8 @@ export const toFindOneOutput = createMapper<
   dto.id = output.id;
   dto.ativo = output.ativo;
   dto.cargo = getCargoNome(output);
-  dto.campus = CampusGraphqlMapper.toFindOneOutput.map(output.campus);
-  dto.usuario = UsuarioGraphqlMapper.toFindOneOutput.map(output.usuario);
+  dto.campus = CampusGraphqlMapper.findOneQueryResultToOutputDto.map(output.campus);
+  dto.usuario = UsuarioGraphqlMapper.findOneQueryResultToOutputDto.map(output.usuario);
   dto.dateCreated = new Date(output.dateCreated);
   dto.dateUpdated = new Date(output.dateUpdated);
   dto.dateDeleted = output.dateDeleted ? new Date(output.dateDeleted) : null;

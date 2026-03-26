@@ -53,9 +53,9 @@ export class DisciplinaGraphqlResolver {
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args() dto: DisciplinaListInputGraphQlDto,
   ): Promise<DisciplinaListOutputGraphQlDto> {
-    const input = DisciplinaGraphqlMapper.toListInput(dto);
-    const result = await this.listHandler.execute(accessContext, input);
-    return DisciplinaGraphqlMapper.toListOutput(result);
+    const query = DisciplinaGraphqlMapper.listInputDtoToListQuery(dto);
+    const queryResult = await this.listHandler.execute(accessContext, query);
+    return DisciplinaGraphqlMapper.listQueryResultToListOutputDto(queryResult);
   }
 
   @Query(() => DisciplinaFindOneOutputGraphQlDto, DisciplinaFindOneQueryMetadata.gqlMetadata)
@@ -63,10 +63,10 @@ export class DisciplinaGraphqlResolver {
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<DisciplinaFindOneOutputGraphQlDto> {
-    const input = DisciplinaGraphqlMapper.toFindOneInput.map(id);
-    const result = await this.findOneHandler.execute(accessContext, input);
-    ensureExists(result, Disciplina.entityName, input.id);
-    return DisciplinaGraphqlMapper.toFindOneOutput.map(result);
+    const query = DisciplinaGraphqlMapper.findOneInputDtoToFindOneQuery.map(id);
+    const queryResult = await this.findOneHandler.execute(accessContext, query);
+    ensureExists(queryResult, Disciplina.entityName, query.id);
+    return DisciplinaGraphqlMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Mutation(() => DisciplinaFindOneOutputGraphQlDto, DisciplinaCreateCommandMetadata.gqlMetadata)
@@ -74,9 +74,9 @@ export class DisciplinaGraphqlResolver {
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("input") dto: DisciplinaCreateInputGraphQlDto,
   ): Promise<DisciplinaFindOneOutputGraphQlDto> {
-    const input = DisciplinaGraphqlMapper.toCreateInput.map(dto);
-    const result = await this.createHandler.execute(accessContext, input);
-    return DisciplinaGraphqlMapper.toFindOneOutput.map(result);
+    const command = DisciplinaGraphqlMapper.createInputDtoToCreateCommand.map(dto);
+    const queryResult = await this.createHandler.execute(accessContext, command);
+    return DisciplinaGraphqlMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Mutation(() => DisciplinaFindOneOutputGraphQlDto, DisciplinaUpdateCommandMetadata.gqlMetadata)
@@ -85,9 +85,9 @@ export class DisciplinaGraphqlResolver {
     @Args("id", { type: () => ID }) id: string,
     @Args("input") dto: DisciplinaUpdateInputGraphQlDto,
   ): Promise<DisciplinaFindOneOutputGraphQlDto> {
-    const input = DisciplinaGraphqlMapper.toUpdateInput.map({ id, dto });
-    const result = await this.updateHandler.execute(accessContext, input);
-    return DisciplinaGraphqlMapper.toFindOneOutput.map(result);
+    const command = DisciplinaGraphqlMapper.updateInputDtoToUpdateCommand.map({ id, dto });
+    const queryResult = await this.updateHandler.execute(accessContext, command);
+    return DisciplinaGraphqlMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Mutation(() => Boolean, DisciplinaDeleteCommandMetadata.gqlMetadata)

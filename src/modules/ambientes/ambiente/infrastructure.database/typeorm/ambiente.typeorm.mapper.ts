@@ -23,19 +23,21 @@ export const entityToDomain = createMapper<AmbienteEntity, IAmbiente>((e) => ({
   dateDeleted: e.dateDeleted,
 }));
 
-export const entityToOutput = createMapper<AmbienteEntity, AmbienteFindOneQueryResult>((e) => ({
-  id: e.id,
-  nome: e.nome,
-  descricao: e.descricao,
-  codigo: e.codigo,
-  capacidade: e.capacidade,
-  tipo: e.tipo,
-  bloco: BlocoTypeormMapper.entityToOutput.map(e.bloco),
-  imagemCapa: e.imagemCapa ?? null,
-  dateCreated: e.dateCreated,
-  dateUpdated: e.dateUpdated,
-  dateDeleted: e.dateDeleted,
-}));
+export const entityToFindOneQueryResult = createMapper<AmbienteEntity, AmbienteFindOneQueryResult>(
+  (e) => ({
+    id: e.id,
+    nome: e.nome,
+    descricao: e.descricao,
+    codigo: e.codigo,
+    capacidade: e.capacidade,
+    tipo: e.tipo,
+    bloco: BlocoTypeormMapper.entityToFindOneQueryResult.map(e.bloco),
+    imagemCapa: e.imagemCapa ?? null,
+    dateCreated: e.dateCreated,
+    dateUpdated: e.dateUpdated,
+    dateDeleted: e.dateDeleted,
+  }),
+);
 
 // ============================================================================
 // Dominio -> Persistencia (Domain -> TypeORM Entity)

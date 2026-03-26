@@ -24,7 +24,7 @@ import {
 // Externa → Interna (Input: Presentation → Core)
 // ============================================================================
 
-export const toFindOneInput = createMapper<string, DisciplinaFindOneQuery>((id) => {
+export const findOneInputDtoToFindOneQuery = createMapper<string, DisciplinaFindOneQuery>((id) => {
   const input = new DisciplinaFindOneQuery();
   input.id = id;
   return input;
@@ -38,23 +38,26 @@ const listInputMapper = createPaginatedInputMapper<
   mapField(query, "filter.diarios.id", dto, "filterDiariosId");
 });
 
-export function toListInput(dto: DisciplinaListInputGraphQlDto | null): DisciplinaListQuery | null {
+export function listInputDtoToListQuery(
+  dto: DisciplinaListInputGraphQlDto | null,
+): DisciplinaListQuery | null {
   if (!dto) return null;
   return listInputMapper.map(dto);
 }
 
-export const toCreateInput = createMapper<DisciplinaCreateInputGraphQlDto, DisciplinaCreateCommand>(
-  (dto) => {
-    const input = new DisciplinaCreateCommand();
-    input.nome = dto.nome;
-    input.nomeAbreviado = dto.nomeAbreviado;
-    input.cargaHoraria = dto.cargaHoraria;
-    input.imagemCapa = dto.imagemCapa ? { id: dto.imagemCapa.id } : null;
-    return input;
-  },
-);
+export const createInputDtoToCreateCommand = createMapper<
+  DisciplinaCreateInputGraphQlDto,
+  DisciplinaCreateCommand
+>((dto) => {
+  const input = new DisciplinaCreateCommand();
+  input.nome = dto.nome;
+  input.nomeAbreviado = dto.nomeAbreviado;
+  input.cargaHoraria = dto.cargaHoraria;
+  input.imagemCapa = dto.imagemCapa ? { id: dto.imagemCapa.id } : null;
+  return input;
+});
 
-export const toUpdateInput = createMapper<
+export const updateInputDtoToUpdateCommand = createMapper<
   { id: string; dto: DisciplinaUpdateInputGraphQlDto },
   DisciplinaFindOneQuery & DisciplinaUpdateCommand
 >(({ id, dto }) => ({
@@ -70,7 +73,7 @@ export const toUpdateInput = createMapper<
 // Interna → Externa (Output: Core → Presentation)
 // ============================================================================
 
-export const toFindOneOutput = createMapper<
+export const findOneQueryResultToOutputDto = createMapper<
   DisciplinaFindOneQueryResult,
   DisciplinaFindOneOutputGraphQlDto
 >((output) => ({
@@ -84,4 +87,7 @@ export const toFindOneOutput = createMapper<
   dateDeleted: output.dateDeleted ? new Date(output.dateDeleted) : null,
 }));
 
-export const toListOutput = createListMapper(DisciplinaListOutputGraphQlDto, toFindOneOutput);
+export const listQueryResultToListOutputDto = createListMapper(
+  DisciplinaListOutputGraphQlDto,
+  findOneQueryResultToOutputDto,
+);

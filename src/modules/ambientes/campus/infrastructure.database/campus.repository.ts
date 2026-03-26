@@ -100,7 +100,7 @@ export class CampusTypeOrmRepositoryAdapter implements ICampusRepository {
 
     if (!entity) return null;
 
-    return CampusTypeormMapper.entityToOutput.map(entity);
+    return CampusTypeormMapper.entityToFindOneQueryResult.map(entity);
   }
 
   getFindAllQueryResult(
@@ -113,7 +113,7 @@ export class CampusTypeOrmRepositoryAdapter implements ICampusRepository {
       { ...config, paginateConfig: campusPaginateConfig },
       this.paginationAdapter,
       dto,
-      CampusTypeormMapper.entityToOutput.map,
+      CampusTypeormMapper.entityToFindOneQueryResult.map,
     );
   }
 }

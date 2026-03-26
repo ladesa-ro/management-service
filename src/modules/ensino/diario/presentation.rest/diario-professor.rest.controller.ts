@@ -38,9 +38,9 @@ export class DiarioProfessorRestController {
     @Param() parentParams: DiarioProfessorParentParamsRestDto,
     @Query() dto: DiarioProfessorListInputRestDto,
   ): Promise<DiarioProfessorListOutputRestDto> {
-    const input = DiarioProfessorRestMapper.toListInput(parentParams, dto);
-    const result = await this.listHandler.execute(accessContext, input);
-    return DiarioProfessorRestMapper.toListOutput(result);
+    const query = DiarioProfessorRestMapper.listInputDtoToListQuery(parentParams, dto);
+    const queryResult = await this.listHandler.execute(accessContext, query);
+    return DiarioProfessorRestMapper.listQueryResultToListOutputDto(queryResult);
   }
 
   @Put("/")
@@ -52,8 +52,8 @@ export class DiarioProfessorRestController {
     @Param() parentParams: DiarioProfessorParentParamsRestDto,
     @Body() dto: DiarioProfessorBulkReplaceInputRestDto,
   ): Promise<DiarioProfessorListOutputRestDto> {
-    const input = DiarioProfessorRestMapper.toBulkReplaceInput(parentParams, dto);
-    const result = await this.bulkReplaceHandler.execute(accessContext, input);
-    return DiarioProfessorRestMapper.toListOutput(result);
+    const command = DiarioProfessorRestMapper.toBulkReplaceInput(parentParams, dto);
+    const queryResult = await this.bulkReplaceHandler.execute(accessContext, command);
+    return DiarioProfessorRestMapper.listQueryResultToListOutputDto(queryResult);
   }
 }

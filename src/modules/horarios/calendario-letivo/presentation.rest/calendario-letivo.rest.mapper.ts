@@ -26,7 +26,7 @@ import {
 // Externa -> Interna (Input: Presentation -> Core)
 // ============================================================================
 
-export const toFindOneInput = createMapper<
+export const findOneInputDtoToFindOneQuery = createMapper<
   CalendarioLetivoFindOneInputRestDto,
   CalendarioLetivoFindOneQuery
 >((dto) => {
@@ -35,7 +35,7 @@ export const toFindOneInput = createMapper<
   return input;
 });
 
-export const toListInput = createPaginatedInputMapper<
+export const listInputDtoToListQuery = createPaginatedInputMapper<
   CalendarioLetivoListInputRestDto,
   CalendarioLetivoListQuery
 >(CalendarioLetivoListQuery, (dto, query) => {
@@ -45,7 +45,7 @@ export const toListInput = createPaginatedInputMapper<
   mapField(query, "filter.ofertaFormacao.id", dto, "filter.ofertaFormacao.id");
 });
 
-export const toCreateInput = createMapper<
+export const createInputDtoToCreateCommand = createMapper<
   CalendarioLetivoCreateInputRestDto,
   CalendarioLetivoCreateCommand
 >((dto) => {
@@ -57,7 +57,7 @@ export const toCreateInput = createMapper<
   return input;
 });
 
-export const toUpdateInput = createMapper<
+export const updateInputDtoToUpdateCommand = createMapper<
   { params: CalendarioLetivoFindOneInputRestDto; dto: CalendarioLetivoUpdateInputRestDto },
   CalendarioLetivoFindOneQuery & CalendarioLetivoUpdateCommand
 >(({ params, dto }) => ({
@@ -72,7 +72,7 @@ export const toUpdateInput = createMapper<
 // Interna -> Externa (Output: Core -> Presentation)
 // ============================================================================
 
-export const toFindOneOutput = createMapper<
+export const findOneQueryResultToOutputDto = createMapper<
   CalendarioLetivoFindOneQueryResult,
   CalendarioLetivoFindOneOutputRestDto
 >((output) => {
@@ -80,12 +80,17 @@ export const toFindOneOutput = createMapper<
   dto.id = output.id;
   dto.nome = output.nome;
   dto.ano = output.ano;
-  dto.campus = CampusRestMapper.toFindOneOutput.map(output.campus);
-  dto.ofertaFormacao = OfertaFormacaoRestMapper.toFindOneOutput.map(output.ofertaFormacao);
+  dto.campus = CampusRestMapper.findOneQueryResultToOutputDto.map(output.campus);
+  dto.ofertaFormacao = OfertaFormacaoRestMapper.findOneQueryResultToOutputDto.map(
+    output.ofertaFormacao,
+  );
   dto.dateCreated = output.dateCreated;
   dto.dateUpdated = output.dateUpdated;
   dto.dateDeleted = output.dateDeleted;
   return dto;
 });
 
-export const toListOutput = createListMapper(CalendarioLetivoListOutputRestDto, toFindOneOutput);
+export const listQueryResultToListOutputDto = createListMapper(
+  CalendarioLetivoListOutputRestDto,
+  findOneQueryResultToOutputDto,
+);

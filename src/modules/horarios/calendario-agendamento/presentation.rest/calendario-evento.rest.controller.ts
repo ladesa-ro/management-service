@@ -74,7 +74,7 @@ export class CalendarioEventoRestController {
     });
 
     return {
-      data: CalendarioEventoRestMapper.toFindOneOutput.mapArray(results),
+      data: CalendarioEventoRestMapper.findOneQueryResultToOutputDto.mapArray(results),
     };
   }
 
@@ -87,9 +87,9 @@ export class CalendarioEventoRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: CalendarioEventoFindOneParamsRestDto,
   ): Promise<CalendarioEventoFindOneOutputRestDto> {
-    const result = await this.findOneHandler.execute(accessContext, { id: params.id });
-    ensureExists(result, CalendarioAgendamento.entityName, params.id);
-    return CalendarioEventoRestMapper.toFindOneOutput.map(result);
+    const queryResult = await this.findOneHandler.execute(accessContext, { id: params.id });
+    ensureExists(queryResult, CalendarioAgendamento.entityName, params.id);
+    return CalendarioEventoRestMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Post("/")
@@ -100,9 +100,9 @@ export class CalendarioEventoRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Body() dto: CalendarioEventoCreateInputRestDto,
   ): Promise<CalendarioEventoFindOneOutputRestDto> {
-    const input = CalendarioEventoRestMapper.toCreateInput.map(dto);
-    const result = await this.createHandler.execute(accessContext, input);
-    return CalendarioEventoRestMapper.toFindOneOutput.map(result);
+    const command = CalendarioEventoRestMapper.createInputDtoToCreateCommand.map(dto);
+    const queryResult = await this.createHandler.execute(accessContext, command);
+    return CalendarioEventoRestMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Patch("/:id")
@@ -115,9 +115,9 @@ export class CalendarioEventoRestController {
     @Param() params: CalendarioEventoFindOneParamsRestDto,
     @Body() dto: CalendarioEventoUpdateInputRestDto,
   ): Promise<CalendarioEventoFindOneOutputRestDto> {
-    const input = CalendarioEventoRestMapper.toUpdateInput.map({ params, dto });
-    const result = await this.updateHandler.execute(accessContext, input);
-    return CalendarioEventoRestMapper.toFindOneOutput.map(result);
+    const command = CalendarioEventoRestMapper.updateInputDtoToUpdateCommand.map({ params, dto });
+    const queryResult = await this.updateHandler.execute(accessContext, command);
+    return CalendarioEventoRestMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Delete("/:id")

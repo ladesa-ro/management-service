@@ -21,32 +21,39 @@ import {
 // Externa → Interna (Input: Presentation → Core)
 // ============================================================================
 
-export const toFindOneInput = createMapper<CidadeFindOneInputRestDto, CidadeFindOneQuery>((dto) => {
+export const findOneInputDtoToFindOneQuery = createMapper<
+  CidadeFindOneInputRestDto,
+  CidadeFindOneQuery
+>((dto) => {
   const input = new CidadeFindOneQuery();
   input.id = dto.id;
   return input;
 });
 
-export const toListInput = createPaginatedInputMapper<CidadeListInputRestDto, CidadeListQuery>(
-  CidadeListQuery,
-  (dto, query) => {
-    mapField(query, "filter.id", dto, "filter.id");
-    mapField(query, "filter.estado.id", dto, "filter.estado.id");
-    mapField(query, "filter.estado.nome", dto, "filter.estado.nome");
-    mapField(query, "filter.estado.sigla", dto, "filter.estado.sigla");
-  },
-);
+export const listInputDtoToListQuery = createPaginatedInputMapper<
+  CidadeListInputRestDto,
+  CidadeListQuery
+>(CidadeListQuery, (dto, query) => {
+  mapField(query, "filter.id", dto, "filter.id");
+  mapField(query, "filter.estado.id", dto, "filter.estado.id");
+  mapField(query, "filter.estado.nome", dto, "filter.estado.nome");
+  mapField(query, "filter.estado.sigla", dto, "filter.estado.sigla");
+});
 
 // ============================================================================
 // Interna → Externa (Output: Core → Presentation)
 // ============================================================================
 
-export const toFindOneOutput = createMapper<CidadeFindOneQueryResult, CidadeFindOneOutputRestDto>(
-  (output) => ({
-    id: output.id,
-    nome: output.nome,
-    estado: EstadoRestMapper.findOneQueryResultToOutputDto.map(output.estado),
-  }),
-);
+export const findOneQueryResultToOutputDto = createMapper<
+  CidadeFindOneQueryResult,
+  CidadeFindOneOutputRestDto
+>((output) => ({
+  id: output.id,
+  nome: output.nome,
+  estado: EstadoRestMapper.findOneQueryResultToOutputDto.map(output.estado),
+}));
 
-export const toListOutput = createListMapper(CidadeListOutputRestDto, toFindOneOutput);
+export const listQueryResultToListOutputDto = createListMapper(
+  CidadeListOutputRestDto,
+  findOneQueryResultToOutputDto,
+);

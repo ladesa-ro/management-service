@@ -33,9 +33,9 @@ export class ImagemArquivoGraphqlResolver {
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args() dto: ImagemArquivoListInputGraphQlDto,
   ): Promise<ImagemArquivoListOutputGraphQlDto> {
-    const input = ImagemArquivoGraphqlMapper.toListInput(dto);
-    const result = await this.listHandler.execute(accessContext, input);
-    return ImagemArquivoGraphqlMapper.toListOutput(result);
+    const query = ImagemArquivoGraphqlMapper.listInputDtoToListQuery(dto);
+    const queryResult = await this.listHandler.execute(accessContext, query);
+    return ImagemArquivoGraphqlMapper.listQueryResultToListOutputDto(queryResult);
   }
 
   @Query(() => ImagemArquivoFindOneOutputGraphQlDto, ImagemArquivoFindOneQueryMetadata.gqlMetadata)
@@ -43,9 +43,9 @@ export class ImagemArquivoGraphqlResolver {
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<ImagemArquivoFindOneOutputGraphQlDto> {
-    const input = ImagemArquivoGraphqlMapper.toFindOneInput.map(id);
-    const result = await this.findOneHandler.execute(accessContext, input);
-    ensureExists(result, ImagemArquivo.entityName, input.id);
-    return ImagemArquivoGraphqlMapper.toFindOneOutput.map(result);
+    const query = ImagemArquivoGraphqlMapper.findOneInputDtoToFindOneQuery.map(id);
+    const queryResult = await this.findOneHandler.execute(accessContext, query);
+    ensureExists(queryResult, ImagemArquivo.entityName, query.id);
+    return ImagemArquivoGraphqlMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 }

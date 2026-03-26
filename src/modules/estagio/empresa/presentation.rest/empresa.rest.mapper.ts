@@ -25,38 +25,40 @@ import {
 // Externa → Interna (Input: Presentation → Core)
 // ============================================================================
 
-export const toFindOneInput = createMapper<EmpresaFindOneInputRestDto, EmpresaFindOneQuery>(
-  (dto) => {
-    const input = new EmpresaFindOneQuery();
-    input.id = dto.id;
-    return input;
-  },
-);
+export const findOneInputDtoToFindOneQuery = createMapper<
+  EmpresaFindOneInputRestDto,
+  EmpresaFindOneQuery
+>((dto) => {
+  const input = new EmpresaFindOneQuery();
+  input.id = dto.id;
+  return input;
+});
 
-export const toListInput = createPaginatedInputMapper<EmpresaListInputRestDto, EmpresaListQuery>(
-  EmpresaListQuery,
-  (dto, query) => {
-    mapField(query, "filter.id", dto, "filter.id");
-    mapField(query, "filter.cnpj", dto, "filter.cnpj");
-    mapField(query, "filter.nomeFantasia", dto, "filter.nomeFantasia");
-    mapField(query, "filter.endereco.id", dto, "filter.endereco.id");
-  },
-);
+export const listInputDtoToListQuery = createPaginatedInputMapper<
+  EmpresaListInputRestDto,
+  EmpresaListQuery
+>(EmpresaListQuery, (dto, query) => {
+  mapField(query, "filter.id", dto, "filter.id");
+  mapField(query, "filter.cnpj", dto, "filter.cnpj");
+  mapField(query, "filter.nomeFantasia", dto, "filter.nomeFantasia");
+  mapField(query, "filter.endereco.id", dto, "filter.endereco.id");
+});
 
-export const toCreateInput = createMapper<EmpresaCreateInputRestDto, EmpresaCreateCommand>(
-  (dto) => {
-    const input = new EmpresaCreateCommand();
-    input.razaoSocial = dto.razaoSocial;
-    input.nomeFantasia = dto.nomeFantasia;
-    input.cnpj = dto.cnpj;
-    input.telefone = dto.telefone;
-    input.email = dto.email;
-    input.endereco = { id: dto.endereco.id };
-    return input;
-  },
-);
+export const createInputDtoToCreateCommand = createMapper<
+  EmpresaCreateInputRestDto,
+  EmpresaCreateCommand
+>((dto) => {
+  const input = new EmpresaCreateCommand();
+  input.razaoSocial = dto.razaoSocial;
+  input.nomeFantasia = dto.nomeFantasia;
+  input.cnpj = dto.cnpj;
+  input.telefone = dto.telefone;
+  input.email = dto.email;
+  input.endereco = { id: dto.endereco.id };
+  return input;
+});
 
-export const toUpdateInput = createMapper<
+export const updateInputDtoToUpdateCommand = createMapper<
   { params: EmpresaFindOneInputRestDto; dto: EmpresaUpdateInputRestDto },
   EmpresaFindOneQuery & EmpresaUpdateCommand
 >(({ params, dto }) => ({
@@ -73,20 +75,24 @@ export const toUpdateInput = createMapper<
 // Interna → Externa (Output: Core → Presentation)
 // ============================================================================
 
-export const toFindOneOutput = createMapper<EmpresaFindOneQueryResult, EmpresaFindOneOutputRestDto>(
-  (output) => ({
-    id: output.id,
-    razaoSocial: output.razaoSocial,
-    nomeFantasia: output.nomeFantasia,
-    cnpj: output.cnpj,
-    telefone: output.telefone,
-    email: output.email,
-    endereco: EnderecoRestMapper.toFindOneOutput.map(output.endereco),
-    ativo: output.ativo,
-    dateCreated: output.dateCreated,
-    dateUpdated: output.dateUpdated,
-    dateDeleted: output.dateDeleted,
-  }),
-);
+export const findOneQueryResultToOutputDto = createMapper<
+  EmpresaFindOneQueryResult,
+  EmpresaFindOneOutputRestDto
+>((output) => ({
+  id: output.id,
+  razaoSocial: output.razaoSocial,
+  nomeFantasia: output.nomeFantasia,
+  cnpj: output.cnpj,
+  telefone: output.telefone,
+  email: output.email,
+  endereco: EnderecoRestMapper.findOneQueryResultToOutputDto.map(output.endereco),
+  ativo: output.ativo,
+  dateCreated: output.dateCreated,
+  dateUpdated: output.dateUpdated,
+  dateDeleted: output.dateDeleted,
+}));
 
-export const toListOutput = createListMapper(EmpresaListOutputRestDto, toFindOneOutput);
+export const listQueryResultToListOutputDto = createListMapper(
+  EmpresaListOutputRestDto,
+  findOneQueryResultToOutputDto,
+);

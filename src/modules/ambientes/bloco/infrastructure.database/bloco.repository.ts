@@ -101,7 +101,7 @@ export class BlocoTypeOrmRepositoryAdapter implements IBlocoRepository {
 
     if (!entity) return null;
 
-    return BlocoTypeormMapper.entityToOutput.map(entity);
+    return BlocoTypeormMapper.entityToFindOneQueryResult.map(entity);
   }
 
   getFindAllQueryResult(
@@ -114,7 +114,7 @@ export class BlocoTypeOrmRepositoryAdapter implements IBlocoRepository {
       { ...config, paginateConfig: blocoPaginateConfig },
       this.paginationAdapter,
       dto,
-      BlocoTypeormMapper.entityToOutput.map,
+      BlocoTypeormMapper.entityToFindOneQueryResult.map,
     );
   }
 }

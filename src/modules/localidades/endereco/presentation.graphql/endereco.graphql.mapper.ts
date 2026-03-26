@@ -10,7 +10,7 @@ import { EnderecoFindOneOutputGraphQlDto } from "./endereco.graphql.dto";
 // Externa → Interna (Input: Presentation → Core)
 // ============================================================================
 
-export const toFindOneInput = createMapper<string, EnderecoFindOneQuery>((id) => {
+export const findOneInputDtoToFindOneQuery = createMapper<string, EnderecoFindOneQuery>((id) => {
   const input = new EnderecoFindOneQuery();
   input.id = id;
   return input;
@@ -20,7 +20,7 @@ export const toFindOneInput = createMapper<string, EnderecoFindOneQuery>((id) =>
 // Interna → Externa (Output: Core → Presentation)
 // ============================================================================
 
-export const toFindOneOutput = createMapper<
+export const findOneQueryResultToOutputDto = createMapper<
   EnderecoFindOneQueryResult,
   EnderecoFindOneOutputGraphQlDto
 >((output) => ({
@@ -31,7 +31,7 @@ export const toFindOneOutput = createMapper<
   bairro: output.bairro,
   complemento: output.complemento,
   pontoReferencia: output.pontoReferencia,
-  cidade: CidadeGraphqlMapper.toFindOneOutput.map(output.cidade),
+  cidade: CidadeGraphqlMapper.findOneQueryResultToOutputDto.map(output.cidade),
   dateCreated: new Date(output.dateCreated),
   dateUpdated: new Date(output.dateUpdated),
   dateDeleted: output.dateDeleted ? new Date(output.dateDeleted) : null,

@@ -54,9 +54,9 @@ export class CalendarioLetivoDiaRestController {
     @Param() parentParams: CalendarioLetivoDiaParentParamsRestDto,
     @Query() dto: CalendarioLetivoDiaListInputRestDto,
   ): Promise<CalendarioLetivoDiaListOutputRestDto> {
-    const input = CalendarioLetivoDiaRestMapper.toListInput(parentParams, dto);
-    const result = await this.listHandler.execute(accessContext, input);
-    return CalendarioLetivoDiaRestMapper.toListOutput(result);
+    const query = CalendarioLetivoDiaRestMapper.listInputDtoToListQuery(parentParams, dto);
+    const queryResult = await this.listHandler.execute(accessContext, query);
+    return CalendarioLetivoDiaRestMapper.listQueryResultToListOutputDto(queryResult);
   }
 
   @Get("/:data")
@@ -68,10 +68,10 @@ export class CalendarioLetivoDiaRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: CalendarioLetivoDiaFindByDataParamsRestDto,
   ): Promise<CalendarioLetivoDiaFindOneOutputRestDto> {
-    const input = CalendarioLetivoDiaRestMapper.toFindByDataInput.map(params);
-    const result = await this.findOneHandler.execute(accessContext, input);
-    ensureExists(result, CalendarioLetivoDia.entityName, params.data);
-    return CalendarioLetivoDiaRestMapper.toFindOneOutput.map(result);
+    const query = CalendarioLetivoDiaRestMapper.toFindByDataInput.map(params);
+    const queryResult = await this.findOneHandler.execute(accessContext, query);
+    ensureExists(queryResult, CalendarioLetivoDia.entityName, params.data);
+    return CalendarioLetivoDiaRestMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Patch("/:data")
@@ -84,8 +84,11 @@ export class CalendarioLetivoDiaRestController {
     @Param() params: CalendarioLetivoDiaFindByDataParamsRestDto,
     @Body() dto: CalendarioLetivoDiaUpdateInputRestDto,
   ): Promise<CalendarioLetivoDiaFindOneOutputRestDto> {
-    const input = CalendarioLetivoDiaRestMapper.toUpdateInput.map({ params, dto });
-    const result = await this.updateHandler.execute(accessContext, input);
-    return CalendarioLetivoDiaRestMapper.toFindOneOutput.map(result);
+    const command = CalendarioLetivoDiaRestMapper.updateInputDtoToUpdateCommand.map({
+      params,
+      dto,
+    });
+    const queryResult = await this.updateHandler.execute(accessContext, command);
+    return CalendarioLetivoDiaRestMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 }

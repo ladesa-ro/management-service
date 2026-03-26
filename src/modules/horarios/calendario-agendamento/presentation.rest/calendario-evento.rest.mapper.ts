@@ -15,7 +15,7 @@ import type {
 // Externa → Interna (Input: Presentation → Core)
 // ============================================================================
 
-export const toCreateInput = createMapper<
+export const createInputDtoToCreateCommand = createMapper<
   CalendarioEventoCreateInputRestDto,
   CalendarioAgendamentoCreateCommand
 >((dto) => {
@@ -39,7 +39,7 @@ export const toCreateInput = createMapper<
   return input;
 });
 
-export const toUpdateInput = createMapper<
+export const updateInputDtoToUpdateCommand = createMapper<
   { params: CalendarioEventoFindOneParamsRestDto; dto: CalendarioEventoUpdateInputRestDto },
   CalendarioAgendamentoFindOneQuery & CalendarioAgendamentoUpdateCommand
 >(({ params, dto }) => ({
@@ -65,7 +65,7 @@ export const toUpdateInput = createMapper<
 // Interna → Externa (Output: Core → Presentation)
 // ============================================================================
 
-export const toFindOneOutput = createMapper<
+export const findOneQueryResultToOutputDto = createMapper<
   CalendarioAgendamentoFindOneQueryResult,
   CalendarioEventoFindOneOutputRestDto
 >((output) => ({

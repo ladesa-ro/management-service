@@ -122,7 +122,7 @@ export class TurmaTypeOrmRepositoryAdapter implements ITurmaRepository {
 
     if (!entity) return null;
 
-    return TurmaTypeormMapper.entityToOutput.map(entity);
+    return TurmaTypeormMapper.entityToFindOneQueryResult.map(entity);
   }
 
   getFindAllQueryResult(
@@ -135,7 +135,7 @@ export class TurmaTypeOrmRepositoryAdapter implements ITurmaRepository {
       { ...config, paginateConfig: turmaPaginateConfig },
       this.paginationAdapter,
       dto,
-      TurmaTypeormMapper.entityToOutput.map,
+      TurmaTypeormMapper.entityToFindOneQueryResult.map,
     );
   }
 }

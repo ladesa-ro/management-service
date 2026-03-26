@@ -20,16 +20,18 @@ export const entityToDomain = createMapper<BlocoEntity, IBloco>((e) => ({
   dateDeleted: e.dateDeleted,
 }));
 
-export const entityToOutput = createMapper<BlocoEntity, BlocoFindOneQueryResult>((e) => ({
-  id: e.id,
-  nome: e.nome,
-  codigo: e.codigo,
-  campus: CampusTypeormMapper.entityToOutput.map(e.campus),
-  imagemCapa: e.imagemCapa ?? null,
-  dateCreated: e.dateCreated,
-  dateUpdated: e.dateUpdated,
-  dateDeleted: e.dateDeleted,
-}));
+export const entityToFindOneQueryResult = createMapper<BlocoEntity, BlocoFindOneQueryResult>(
+  (e) => ({
+    id: e.id,
+    nome: e.nome,
+    codigo: e.codigo,
+    campus: CampusTypeormMapper.entityToFindOneQueryResult.map(e.campus),
+    imagemCapa: e.imagemCapa ?? null,
+    dateCreated: e.dateCreated,
+    dateUpdated: e.dateUpdated,
+    dateDeleted: e.dateDeleted,
+  }),
+);
 
 // ============================================================================
 // Dominio -> Persistencia (Domain -> TypeORM Entity)

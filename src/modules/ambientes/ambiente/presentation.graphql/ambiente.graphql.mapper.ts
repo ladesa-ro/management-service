@@ -25,7 +25,7 @@ import {
 // Externa -> Interna (Input: Presentation -> Core)
 // ============================================================================
 
-export const toFindOneInput = createMapper<string, AmbienteFindOneQuery>((id) => {
+export const findOneInputDtoToFindOneQuery = createMapper<string, AmbienteFindOneQuery>((id) => {
   const input = new AmbienteFindOneQuery();
   input.id = id;
   return input;
@@ -40,23 +40,26 @@ const listInputMapper = createPaginatedInputMapper<AmbienteListInputGraphQlDto, 
   },
 );
 
-export function toListInput(dto: AmbienteListInputGraphQlDto | null): AmbienteListQuery | null {
+export function listInputDtoToListQuery(
+  dto: AmbienteListInputGraphQlDto | null,
+): AmbienteListQuery | null {
   if (!dto) return null;
   return listInputMapper.map(dto);
 }
 
-export const toCreateInput = createMapper<AmbienteCreateInputGraphQlDto, AmbienteCreateCommand>(
-  (dto) => ({
-    nome: dto.nome,
-    descricao: dto.descricao ?? null,
-    codigo: dto.codigo,
-    capacidade: dto.capacidade ?? null,
-    tipo: dto.tipo ?? null,
-    bloco: { id: dto.bloco.id },
-  }),
-);
+export const createInputDtoToCreateCommand = createMapper<
+  AmbienteCreateInputGraphQlDto,
+  AmbienteCreateCommand
+>((dto) => ({
+  nome: dto.nome,
+  descricao: dto.descricao ?? null,
+  codigo: dto.codigo,
+  capacidade: dto.capacidade ?? null,
+  tipo: dto.tipo ?? null,
+  bloco: { id: dto.bloco.id },
+}));
 
-export const toUpdateInput = createMapper<
+export const updateInputDtoToUpdateCommand = createMapper<
   { id: string; dto: AmbienteUpdateInputGraphQlDto },
   AmbienteFindOneQuery & AmbienteUpdateCommand
 >(({ id, dto }) => ({
@@ -73,7 +76,7 @@ export const toUpdateInput = createMapper<
 // Interna -> Externa (Output: Core -> Presentation)
 // ============================================================================
 
-export const toFindOneOutput = createMapper<
+export const findOneQueryResultToOutputDto = createMapper<
   AmbienteFindOneQueryResult,
   AmbienteFindOneOutputGraphQlDto
 >((output) => ({
@@ -83,11 +86,14 @@ export const toFindOneOutput = createMapper<
   codigo: output.codigo,
   capacidade: output.capacidade,
   tipo: output.tipo,
-  bloco: BlocoGraphqlMapper.toFindOneOutput.map(output.bloco),
+  bloco: BlocoGraphqlMapper.findOneQueryResultToOutputDto.map(output.bloco),
   imagemCapa: mapImagemOutput(output.imagemCapa),
   dateCreated: new Date(output.dateCreated),
   dateUpdated: new Date(output.dateUpdated),
   dateDeleted: output.dateDeleted ? new Date(output.dateDeleted) : null,
 }));
 
-export const toListOutput = createListMapper(AmbienteListOutputGraphQlDto, toFindOneOutput);
+export const listQueryResultToListOutputDto = createListMapper(
+  AmbienteListOutputGraphQlDto,
+  findOneQueryResultToOutputDto,
+);

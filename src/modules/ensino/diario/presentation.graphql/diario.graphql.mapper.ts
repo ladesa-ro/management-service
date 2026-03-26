@@ -76,7 +76,7 @@ function mapAmbiente(
 // Externa -> Interna (Input: Presentation -> Core)
 // ============================================================================
 
-export const toFindOneInput = createMapper<string, DiarioFindOneQuery>((id) => {
+export const findOneInputDtoToFindOneQuery = createMapper<string, DiarioFindOneQuery>((id) => {
   const input = new DiarioFindOneQuery();
   input.id = id;
   return input;
@@ -93,23 +93,26 @@ const listInputMapper = createPaginatedInputMapper<DiarioListInputGraphQlDto, Di
   },
 );
 
-export function toListInput(dto: DiarioListInputGraphQlDto | null): DiarioListQuery | null {
+export function listInputDtoToListQuery(
+  dto: DiarioListInputGraphQlDto | null,
+): DiarioListQuery | null {
   if (!dto) return null;
   return listInputMapper.map(dto);
 }
 
-export const toCreateInput = createMapper<DiarioCreateInputGraphQlDto, DiarioCreateCommand>(
-  (dto) => ({
-    ativo: dto.ativo,
-    calendarioLetivo: { id: dto.calendarioLetivo.id },
-    turma: { id: dto.turma.id },
-    disciplina: { id: dto.disciplina.id },
-    ambientePadrao: dto.ambientePadrao ? { id: dto.ambientePadrao.id } : null,
-    imagemCapa: dto.imagemCapa ? { id: dto.imagemCapa.id } : null,
-  }),
-);
+export const createInputDtoToCreateCommand = createMapper<
+  DiarioCreateInputGraphQlDto,
+  DiarioCreateCommand
+>((dto) => ({
+  ativo: dto.ativo,
+  calendarioLetivo: { id: dto.calendarioLetivo.id },
+  turma: { id: dto.turma.id },
+  disciplina: { id: dto.disciplina.id },
+  ambientePadrao: dto.ambientePadrao ? { id: dto.ambientePadrao.id } : null,
+  imagemCapa: dto.imagemCapa ? { id: dto.imagemCapa.id } : null,
+}));
 
-export const toUpdateInput = createMapper<
+export const updateInputDtoToUpdateCommand = createMapper<
   { id: string; dto: DiarioUpdateInputGraphQlDto },
   DiarioFindOneQuery & DiarioUpdateCommand
 >(({ id, dto }) => ({
@@ -132,13 +135,15 @@ export const toUpdateInput = createMapper<
 // Interna -> Externa (Output: Core -> Presentation)
 // ============================================================================
 
-export const toFindOneOutput = createMapper<
+export const findOneQueryResultToOutputDto = createMapper<
   DiarioFindOneQueryResult,
   DiarioFindOneOutputGraphQlDto
 >((output) => ({
   id: output.id,
   ativo: output.ativo,
-  calendarioLetivo: CalendarioLetivoGraphqlMapper.toFindOneOutput.map(output.calendarioLetivo),
+  calendarioLetivo: CalendarioLetivoGraphqlMapper.findOneQueryResultToOutputDto.map(
+    output.calendarioLetivo,
+  ),
   turma: mapTurma(output.turma),
   disciplina: mapDisciplina(output.disciplina),
   ambientePadrao: mapAmbiente(output.ambientePadrao),
@@ -148,4 +153,7 @@ export const toFindOneOutput = createMapper<
   dateDeleted: output.dateDeleted ? new Date(output.dateDeleted) : null,
 }));
 
-export const toListOutput = createListMapper(DiarioListOutputGraphQlDto, toFindOneOutput);
+export const listQueryResultToListOutputDto = createListMapper(
+  DiarioListOutputGraphQlDto,
+  findOneQueryResultToOutputDto,
+);

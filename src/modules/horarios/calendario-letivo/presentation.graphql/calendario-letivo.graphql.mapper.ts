@@ -25,11 +25,13 @@ import {
 // Externa -> Interna (Input: Presentation -> Core)
 // ============================================================================
 
-export const toFindOneInput = createMapper<string, CalendarioLetivoFindOneQuery>((id) => {
-  const input = new CalendarioLetivoFindOneQuery();
-  input.id = id;
-  return input;
-});
+export const findOneInputDtoToFindOneQuery = createMapper<string, CalendarioLetivoFindOneQuery>(
+  (id) => {
+    const input = new CalendarioLetivoFindOneQuery();
+    input.id = id;
+    return input;
+  },
+);
 
 const listInputMapper = createPaginatedInputMapper<
   CalendarioLetivoListInputGraphQlDto,
@@ -40,14 +42,14 @@ const listInputMapper = createPaginatedInputMapper<
   mapField(query, "filter.ofertaFormacao.id", dto, "filterOfertaFormacaoId");
 });
 
-export function toListInput(
+export function listInputDtoToListQuery(
   dto: CalendarioLetivoListInputGraphQlDto | null,
 ): CalendarioLetivoListQuery | null {
   if (!dto) return null;
   return listInputMapper.map(dto);
 }
 
-export const toCreateInput = createMapper<
+export const createInputDtoToCreateCommand = createMapper<
   CalendarioLetivoCreateInputGraphQlDto,
   CalendarioLetivoCreateCommand
 >((dto) => {
@@ -59,7 +61,7 @@ export const toCreateInput = createMapper<
   return input;
 });
 
-export const toUpdateInput = createMapper<
+export const updateInputDtoToUpdateCommand = createMapper<
   { id: string; dto: CalendarioLetivoUpdateInputGraphQlDto },
   CalendarioLetivoFindOneQuery & CalendarioLetivoUpdateCommand
 >(({ id, dto }) => ({
@@ -74,7 +76,7 @@ export const toUpdateInput = createMapper<
 // Interna -> Externa (Output: Core -> Presentation)
 // ============================================================================
 
-export const toFindOneOutput = createMapper<
+export const findOneQueryResultToOutputDto = createMapper<
   CalendarioLetivoFindOneQueryResult,
   CalendarioLetivoFindOneOutputGraphQlDto
 >((output) => {
@@ -82,12 +84,17 @@ export const toFindOneOutput = createMapper<
   dto.id = output.id;
   dto.nome = output.nome;
   dto.ano = output.ano;
-  dto.campus = CampusGraphqlMapper.toFindOneOutput.map(output.campus);
-  dto.ofertaFormacao = OfertaFormacaoGraphqlMapper.toFindOneOutput.map(output.ofertaFormacao);
+  dto.campus = CampusGraphqlMapper.findOneQueryResultToOutputDto.map(output.campus);
+  dto.ofertaFormacao = OfertaFormacaoGraphqlMapper.findOneQueryResultToOutputDto.map(
+    output.ofertaFormacao,
+  );
   dto.dateCreated = new Date(output.dateCreated);
   dto.dateUpdated = new Date(output.dateUpdated);
   dto.dateDeleted = output.dateDeleted ? new Date(output.dateDeleted) : null;
   return dto;
 });
 
-export const toListOutput = createListMapper(CalendarioLetivoListOutputGraphQlDto, toFindOneOutput);
+export const listQueryResultToListOutputDto = createListMapper(
+  CalendarioLetivoListOutputGraphQlDto,
+  findOneQueryResultToOutputDto,
+);

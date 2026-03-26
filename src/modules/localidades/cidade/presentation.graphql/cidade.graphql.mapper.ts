@@ -20,7 +20,7 @@ import {
 // Externa → Interna (Input: Presentation → Core)
 // ============================================================================
 
-export const toFindOneInput = createMapper<number, CidadeFindOneQuery>((id) => {
+export const findOneInputDtoToFindOneQuery = createMapper<number, CidadeFindOneQuery>((id) => {
   const input = new CidadeFindOneQuery();
   input.id = id;
   return input;
@@ -36,7 +36,9 @@ const listInputMapper = createPaginatedInputMapper<CidadeListInputGraphQlDto, Ci
   },
 );
 
-export function toListInput(dto: CidadeListInputGraphQlDto | null): CidadeListQuery | null {
+export function listInputDtoToListQuery(
+  dto: CidadeListInputGraphQlDto | null,
+): CidadeListQuery | null {
   if (!dto) return null;
   return listInputMapper.map(dto);
 }
@@ -45,7 +47,7 @@ export function toListInput(dto: CidadeListInputGraphQlDto | null): CidadeListQu
 // Interna → Externa (Output: Core → Presentation)
 // ============================================================================
 
-export const toFindOneOutput = createMapper<
+export const findOneQueryResultToOutputDto = createMapper<
   CidadeFindOneQueryResult,
   CidadeFindOneOutputGraphQlDto
 >((output) => ({
@@ -54,4 +56,7 @@ export const toFindOneOutput = createMapper<
   estado: EstadoGraphqlMapper.findOneQueryResultToOutputDto.map(output.estado),
 }));
 
-export const toListOutput = createListMapper(CidadeListOutputGraphQlDto, toFindOneOutput);
+export const listQueryResultToListOutputDto = createListMapper(
+  CidadeListOutputGraphQlDto,
+  findOneQueryResultToOutputDto,
+);

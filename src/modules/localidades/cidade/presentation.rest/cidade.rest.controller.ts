@@ -45,9 +45,9 @@ export class CidadeRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Query() dto: CidadeListInputRestDto,
   ): Promise<CidadeListOutputRestDto> {
-    const input = CidadeRestMapper.toListInput.map(dto);
-    const result = await this.listHandler.execute(accessContext, input);
-    return CidadeRestMapper.toListOutput(result);
+    const query = CidadeRestMapper.listInputDtoToListQuery.map(dto);
+    const queryResult = await this.listHandler.execute(accessContext, query);
+    return CidadeRestMapper.listQueryResultToListOutputDto(queryResult);
   }
 
   @Get("/:id")
@@ -59,9 +59,9 @@ export class CidadeRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: CidadeFindOneInputRestDto,
   ): Promise<CidadeFindOneOutputRestDto> {
-    const input = CidadeRestMapper.toFindOneInput.map(params);
-    const result = await this.findOneHandler.execute(accessContext, input);
-    ensureExists(result, Cidade.entityName, input.id);
-    return CidadeRestMapper.toFindOneOutput.map(result);
+    const query = CidadeRestMapper.findOneInputDtoToFindOneQuery.map(params);
+    const queryResult = await this.findOneHandler.execute(accessContext, query);
+    ensureExists(queryResult, Cidade.entityName, query.id);
+    return CidadeRestMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 }

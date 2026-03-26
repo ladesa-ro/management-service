@@ -53,9 +53,9 @@ export class CalendarioLetivoGraphqlResolver {
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args() dto: CalendarioLetivoListInputGraphQlDto,
   ): Promise<CalendarioLetivoListOutputGraphQlDto> {
-    const input = CalendarioLetivoGraphqlMapper.toListInput(dto);
-    const result = await this.listHandler.execute(accessContext, input);
-    return CalendarioLetivoGraphqlMapper.toListOutput(result);
+    const query = CalendarioLetivoGraphqlMapper.listInputDtoToListQuery(dto);
+    const queryResult = await this.listHandler.execute(accessContext, query);
+    return CalendarioLetivoGraphqlMapper.listQueryResultToListOutputDto(queryResult);
   }
 
   @Query(
@@ -66,9 +66,9 @@ export class CalendarioLetivoGraphqlResolver {
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<CalendarioLetivoFindOneOutputGraphQlDto> {
-    const result = await this.findOneHandler.execute(accessContext, { id });
-    ensureExists(result, CalendarioLetivo.entityName, id);
-    return CalendarioLetivoGraphqlMapper.toFindOneOutput.map(result);
+    const queryResult = await this.findOneHandler.execute(accessContext, { id });
+    ensureExists(queryResult, CalendarioLetivo.entityName, id);
+    return CalendarioLetivoGraphqlMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Mutation(
@@ -79,9 +79,9 @@ export class CalendarioLetivoGraphqlResolver {
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("input") dto: CalendarioLetivoCreateInputGraphQlDto,
   ): Promise<CalendarioLetivoFindOneOutputGraphQlDto> {
-    const input = CalendarioLetivoGraphqlMapper.toCreateInput.map(dto);
-    const result = await this.createHandler.execute(accessContext, input);
-    return CalendarioLetivoGraphqlMapper.toFindOneOutput.map(result);
+    const command = CalendarioLetivoGraphqlMapper.createInputDtoToCreateCommand.map(dto);
+    const queryResult = await this.createHandler.execute(accessContext, command);
+    return CalendarioLetivoGraphqlMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Mutation(
@@ -93,9 +93,9 @@ export class CalendarioLetivoGraphqlResolver {
     @Args("id", { type: () => ID }) id: string,
     @Args("input") dto: CalendarioLetivoUpdateInputGraphQlDto,
   ): Promise<CalendarioLetivoFindOneOutputGraphQlDto> {
-    const input = CalendarioLetivoGraphqlMapper.toUpdateInput.map({ id, dto });
-    const result = await this.updateHandler.execute(accessContext, input);
-    return CalendarioLetivoGraphqlMapper.toFindOneOutput.map(result);
+    const command = CalendarioLetivoGraphqlMapper.updateInputDtoToUpdateCommand.map({ id, dto });
+    const queryResult = await this.updateHandler.execute(accessContext, command);
+    return CalendarioLetivoGraphqlMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Mutation(() => Boolean, CalendarioLetivoDeleteCommandMetadata.gqlMetadata)

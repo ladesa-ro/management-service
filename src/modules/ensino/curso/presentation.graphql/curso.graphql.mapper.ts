@@ -26,7 +26,7 @@ import {
 // Externa → Interna (Input: Presentation → Core)
 // ============================================================================
 
-export const toFindOneInput = createMapper<string, CursoFindOneQuery>((id) => {
+export const findOneInputDtoToFindOneQuery = createMapper<string, CursoFindOneQuery>((id) => {
   const input = new CursoFindOneQuery();
   input.id = id;
   return input;
@@ -41,12 +41,17 @@ const listInputMapper = createPaginatedInputMapper<CursoListInputGraphQlDto, Cur
   },
 );
 
-export function toListInput(dto: CursoListInputGraphQlDto | null): CursoListQuery | null {
+export function listInputDtoToListQuery(
+  dto: CursoListInputGraphQlDto | null,
+): CursoListQuery | null {
   if (!dto) return null;
   return listInputMapper.map(dto);
 }
 
-export const toCreateInput = createMapper<CursoCreateInputGraphQlDto, CursoCreateCommand>((dto) => {
+export const createInputDtoToCreateCommand = createMapper<
+  CursoCreateInputGraphQlDto,
+  CursoCreateCommand
+>((dto) => {
   const input = new CursoCreateCommand();
   input.nome = dto.nome;
   input.nomeAbreviado = dto.nomeAbreviado;
@@ -56,7 +61,7 @@ export const toCreateInput = createMapper<CursoCreateInputGraphQlDto, CursoCreat
   return input;
 });
 
-export const toUpdateInput = createMapper<
+export const updateInputDtoToUpdateCommand = createMapper<
   { id: string; dto: CursoUpdateInputGraphQlDto },
   CursoFindOneQuery & CursoUpdateCommand
 >(({ id, dto }) => ({
@@ -73,18 +78,24 @@ export const toUpdateInput = createMapper<
 // Interna → Externa (Output: Core → Presentation)
 // ============================================================================
 
-export const toFindOneOutput = createMapper<CursoFindOneQueryResult, CursoFindOneOutputGraphQlDto>(
-  (output) => ({
-    id: output.id,
-    nome: output.nome,
-    nomeAbreviado: output.nomeAbreviado,
-    campus: CampusGraphqlMapper.toFindOneOutput.map(output.campus),
-    ofertaFormacao: OfertaFormacaoGraphqlMapper.toFindOneOutput.map(output.ofertaFormacao),
-    imagemCapa: mapImagemOutput(output.imagemCapa),
-    dateCreated: new Date(output.dateCreated),
-    dateUpdated: new Date(output.dateUpdated),
-    dateDeleted: output.dateDeleted ? new Date(output.dateDeleted) : null,
-  }),
-);
+export const findOneQueryResultToOutputDto = createMapper<
+  CursoFindOneQueryResult,
+  CursoFindOneOutputGraphQlDto
+>((output) => ({
+  id: output.id,
+  nome: output.nome,
+  nomeAbreviado: output.nomeAbreviado,
+  campus: CampusGraphqlMapper.findOneQueryResultToOutputDto.map(output.campus),
+  ofertaFormacao: OfertaFormacaoGraphqlMapper.findOneQueryResultToOutputDto.map(
+    output.ofertaFormacao,
+  ),
+  imagemCapa: mapImagemOutput(output.imagemCapa),
+  dateCreated: new Date(output.dateCreated),
+  dateUpdated: new Date(output.dateUpdated),
+  dateDeleted: output.dateDeleted ? new Date(output.dateDeleted) : null,
+}));
 
-export const toListOutput = createListMapper(CursoListOutputGraphQlDto, toFindOneOutput);
+export const listQueryResultToListOutputDto = createListMapper(
+  CursoListOutputGraphQlDto,
+  findOneQueryResultToOutputDto,
+);

@@ -27,7 +27,7 @@ import {
 // Externa -> Interna (Input: Presentation -> Core)
 // ============================================================================
 
-export const toFindOneInput = createMapper<
+export const findOneInputDtoToFindOneQuery = createMapper<
   OfertaFormacaoFindOneInputRestDto,
   OfertaFormacaoFindOneQuery
 >((dto) => {
@@ -36,7 +36,7 @@ export const toFindOneInput = createMapper<
   return input;
 });
 
-export const toListInput = createPaginatedInputMapper<
+export const listInputDtoToListQuery = createPaginatedInputMapper<
   OfertaFormacaoListInputRestDto,
   OfertaFormacaoListQuery
 >(OfertaFormacaoListQuery, (dto, query) => {
@@ -45,7 +45,7 @@ export const toListInput = createPaginatedInputMapper<
   mapField(query, "filter.campus.id", dto, "filter.campus.id");
 });
 
-export const toCreateInput = createMapper<
+export const createInputDtoToCreateCommand = createMapper<
   OfertaFormacaoCreateInputRestDto,
   OfertaFormacaoCreateCommand
 >((dto) => {
@@ -63,7 +63,7 @@ export const toCreateInput = createMapper<
   return input;
 });
 
-export const toUpdateInput = createMapper<
+export const updateInputDtoToUpdateCommand = createMapper<
   { params: OfertaFormacaoFindOneInputRestDto; dto: OfertaFormacaoUpdateInputRestDto },
   OfertaFormacaoFindOneQuery & OfertaFormacaoUpdateCommand
 >(({ params, dto }) => ({
@@ -88,7 +88,7 @@ export const toUpdateInput = createMapper<
 // Interna -> Externa (Output: Core -> Presentation)
 // ============================================================================
 
-export const toFindOneOutput = createMapper<
+export const findOneQueryResultToOutputDto = createMapper<
   OfertaFormacaoFindOneQueryResult,
   OfertaFormacaoFindOneOutputRestDto
 >((output) => ({
@@ -97,9 +97,9 @@ export const toFindOneOutput = createMapper<
   slug: output.slug,
   duracaoPeriodoEmMeses: output.duracaoPeriodoEmMeses,
   modalidade: ModalidadeRestMapper.findOneQueryResultToOutputDto.map(output.modalidade),
-  campus: CampusRestMapper.toFindOneOutput.map(output.campus),
+  campus: CampusRestMapper.findOneQueryResultToOutputDto.map(output.campus),
   niveisFormacoes: (output.niveisFormacoes ?? []).map((nf) =>
-    NivelFormacaoRestMapper.toFindOneOutput.map(nf),
+    NivelFormacaoRestMapper.findOneQueryResultToOutputDto.map(nf),
   ),
   periodos: (output.periodos ?? []).map((p) => ({
     id: p.id,
@@ -115,4 +115,7 @@ export const toFindOneOutput = createMapper<
   dateDeleted: output.dateDeleted,
 }));
 
-export const toListOutput = createListMapper(OfertaFormacaoListOutputRestDto, toFindOneOutput);
+export const listQueryResultToListOutputDto = createListMapper(
+  OfertaFormacaoListOutputRestDto,
+  findOneQueryResultToOutputDto,
+);

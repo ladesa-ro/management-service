@@ -10,7 +10,10 @@ import { EnderecoFindOneOutputRestDto, type EnderecoInputRestDto } from "./ender
 // Externa → Interna (Input: Presentation → Core)
 // ============================================================================
 
-export const toCreateInput = createMapper<EnderecoInputRestDto, EnderecoCreateCommand>((dto) => {
+export const createInputDtoToCreateCommand = createMapper<
+  EnderecoInputRestDto,
+  EnderecoCreateCommand
+>((dto) => {
   const input = new EnderecoCreateCommand();
   input.cep = dto.cep;
   input.logradouro = dto.logradouro;
@@ -26,7 +29,7 @@ export const toCreateInput = createMapper<EnderecoInputRestDto, EnderecoCreateCo
 // Interna → Externa (Output: Core → Presentation)
 // ============================================================================
 
-export const toFindOneOutput = createMapper<
+export const findOneQueryResultToOutputDto = createMapper<
   EnderecoFindOneQueryResult,
   EnderecoFindOneOutputRestDto
 >((output) => ({
@@ -37,7 +40,7 @@ export const toFindOneOutput = createMapper<
   bairro: output.bairro,
   complemento: output.complemento,
   pontoReferencia: output.pontoReferencia,
-  cidade: CidadeRestMapper.toFindOneOutput.map(output.cidade),
+  cidade: CidadeRestMapper.findOneQueryResultToOutputDto.map(output.cidade),
   dateCreated: output.dateCreated,
   dateUpdated: output.dateUpdated,
   dateDeleted: output.dateDeleted,

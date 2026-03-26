@@ -23,11 +23,13 @@ import {
 // Externa → Interna (Input: Presentation → Core)
 // ============================================================================
 
-export const toFindOneInput = createMapper<string, NivelFormacaoFindOneQuery>((id) => {
-  const input = new NivelFormacaoFindOneQuery();
-  input.id = id;
-  return input;
-});
+export const findOneInputDtoToFindOneQuery = createMapper<string, NivelFormacaoFindOneQuery>(
+  (id) => {
+    const input = new NivelFormacaoFindOneQuery();
+    input.id = id;
+    return input;
+  },
+);
 
 const listInputMapper = createPaginatedInputMapper<
   NivelFormacaoListInputGraphQlDto,
@@ -36,14 +38,14 @@ const listInputMapper = createPaginatedInputMapper<
   mapField(query, "filter.id", dto, "filterId");
 });
 
-export function toListInput(
+export function listInputDtoToListQuery(
   dto: NivelFormacaoListInputGraphQlDto | null,
 ): NivelFormacaoListQuery | null {
   if (!dto) return null;
   return listInputMapper.map(dto);
 }
 
-export const toCreateInput = createMapper<
+export const createInputDtoToCreateCommand = createMapper<
   NivelFormacaoCreateInputGraphQlDto,
   NivelFormacaoCreateCommand
 >((dto) => {
@@ -52,7 +54,7 @@ export const toCreateInput = createMapper<
   return input;
 });
 
-export const toUpdateInput = createMapper<
+export const updateInputDtoToUpdateCommand = createMapper<
   { id: string; dto: NivelFormacaoUpdateInputGraphQlDto },
   NivelFormacaoFindOneQuery & NivelFormacaoUpdateCommand
 >(({ id, dto }) => ({
@@ -64,7 +66,7 @@ export const toUpdateInput = createMapper<
 // Interna → Externa (Output: Core → Presentation)
 // ============================================================================
 
-export const toFindOneOutput = createMapper<
+export const findOneQueryResultToOutputDto = createMapper<
   NivelFormacaoFindOneQueryResult,
   NivelFormacaoFindOneOutputGraphQlDto
 >((output) => ({
@@ -75,4 +77,7 @@ export const toFindOneOutput = createMapper<
   dateDeleted: output.dateDeleted ? new Date(output.dateDeleted) : null,
 }));
 
-export const toListOutput = createListMapper(NivelFormacaoListOutputGraphQlDto, toFindOneOutput);
+export const listQueryResultToListOutputDto = createListMapper(
+  NivelFormacaoListOutputGraphQlDto,
+  findOneQueryResultToOutputDto,
+);

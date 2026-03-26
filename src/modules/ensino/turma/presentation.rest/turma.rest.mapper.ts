@@ -27,44 +27,50 @@ import {
 // Externa -> Interna (Input: Presentation -> Core)
 // ============================================================================
 
-export const toFindOneInput = createMapper<TurmaFindOneInputRestDto, TurmaFindOneQuery>((dto) => {
+export const findOneInputDtoToFindOneQuery = createMapper<
+  TurmaFindOneInputRestDto,
+  TurmaFindOneQuery
+>((dto) => {
   const input = new TurmaFindOneQuery();
   input.id = dto.id;
   return input;
 });
 
-export const toListInput = createPaginatedInputMapper<TurmaListInputRestDto, TurmaListQuery>(
-  TurmaListQuery,
-  (dto, query) => {
-    mapField(query, "filter.id", dto, "filter.id");
-    mapField(query, "filter.periodo", dto, "filter.periodo");
-    mapField(query, "filter.ambientePadraoAula.nome", dto, "filter.ambientePadraoAula.nome");
-    mapField(query, "filter.ambientePadraoAula.codigo", dto, "filter.ambientePadraoAula.codigo");
-    mapField(
-      query,
-      "filter.ambientePadraoAula.capacidade",
-      dto,
-      "filter.ambientePadraoAula.capacidade",
-    );
-    mapField(query, "filter.ambientePadraoAula.tipo", dto, "filter.ambientePadraoAula.tipo");
-    mapField(query, "filter.curso.id", dto, "filter.curso.id");
-    mapField(query, "filter.curso.nome", dto, "filter.curso.nome");
-    mapField(query, "filter.curso.nomeAbreviado", dto, "filter.curso.nomeAbreviado");
-    mapField(query, "filter.curso.campus.id", dto, "filter.curso.campus.id");
-    mapField(query, "filter.curso.ofertaFormacao.id", dto, "filter.curso.ofertaFormacao.id");
-    mapField(query, "filter.curso.ofertaFormacao.nome", dto, "filter.curso.ofertaFormacao.nome");
-    mapField(query, "filter.curso.ofertaFormacao.slug", dto, "filter.curso.ofertaFormacao.slug");
-  },
-);
+export const listInputDtoToListQuery = createPaginatedInputMapper<
+  TurmaListInputRestDto,
+  TurmaListQuery
+>(TurmaListQuery, (dto, query) => {
+  mapField(query, "filter.id", dto, "filter.id");
+  mapField(query, "filter.periodo", dto, "filter.periodo");
+  mapField(query, "filter.ambientePadraoAula.nome", dto, "filter.ambientePadraoAula.nome");
+  mapField(query, "filter.ambientePadraoAula.codigo", dto, "filter.ambientePadraoAula.codigo");
+  mapField(
+    query,
+    "filter.ambientePadraoAula.capacidade",
+    dto,
+    "filter.ambientePadraoAula.capacidade",
+  );
+  mapField(query, "filter.ambientePadraoAula.tipo", dto, "filter.ambientePadraoAula.tipo");
+  mapField(query, "filter.curso.id", dto, "filter.curso.id");
+  mapField(query, "filter.curso.nome", dto, "filter.curso.nome");
+  mapField(query, "filter.curso.nomeAbreviado", dto, "filter.curso.nomeAbreviado");
+  mapField(query, "filter.curso.campus.id", dto, "filter.curso.campus.id");
+  mapField(query, "filter.curso.ofertaFormacao.id", dto, "filter.curso.ofertaFormacao.id");
+  mapField(query, "filter.curso.ofertaFormacao.nome", dto, "filter.curso.ofertaFormacao.nome");
+  mapField(query, "filter.curso.ofertaFormacao.slug", dto, "filter.curso.ofertaFormacao.slug");
+});
 
-export const toCreateInput = createMapper<TurmaCreateInputRestDto, TurmaCreateCommand>((dto) => ({
+export const createInputDtoToCreateCommand = createMapper<
+  TurmaCreateInputRestDto,
+  TurmaCreateCommand
+>((dto) => ({
   periodo: dto.periodo,
   nome: dto.nome ?? null,
   curso: { id: dto.curso.id },
   ambientePadraoAula: dto.ambientePadraoAula ? { id: dto.ambientePadraoAula.id } : null,
 }));
 
-export const toUpdateInput = createMapper<
+export const updateInputDtoToUpdateCommand = createMapper<
   { params: TurmaFindOneInputRestDto; dto: TurmaUpdateInputRestDto },
   TurmaFindOneQuery & TurmaUpdateCommand
 >(({ params, dto }) => ({
@@ -84,20 +90,24 @@ export const toUpdateInput = createMapper<
 // Interna -> Externa (Output: Core -> Presentation)
 // ============================================================================
 
-export const toFindOneOutput = createMapper<TurmaFindOneQueryResult, TurmaFindOneOutputRestDto>(
-  (output) => ({
-    id: output.id,
-    periodo: output.periodo,
-    nome: output.nome ?? null,
-    curso: CursoRestMapper.toFindOneOutput.map(output.curso),
-    ambientePadraoAula: output.ambientePadraoAula
-      ? AmbienteRestMapper.toFindOneOutput.map(output.ambientePadraoAula)
-      : null,
-    imagemCapa: output.imagemCapa ? BlocoRestMapper.toImagemOutput(output.imagemCapa) : null,
-    dateCreated: output.dateCreated,
-    dateUpdated: output.dateUpdated,
-    dateDeleted: output.dateDeleted,
-  }),
-);
+export const findOneQueryResultToOutputDto = createMapper<
+  TurmaFindOneQueryResult,
+  TurmaFindOneOutputRestDto
+>((output) => ({
+  id: output.id,
+  periodo: output.periodo,
+  nome: output.nome ?? null,
+  curso: CursoRestMapper.findOneQueryResultToOutputDto.map(output.curso),
+  ambientePadraoAula: output.ambientePadraoAula
+    ? AmbienteRestMapper.findOneQueryResultToOutputDto.map(output.ambientePadraoAula)
+    : null,
+  imagemCapa: output.imagemCapa ? BlocoRestMapper.toImagemOutput(output.imagemCapa) : null,
+  dateCreated: output.dateCreated,
+  dateUpdated: output.dateUpdated,
+  dateDeleted: output.dateDeleted,
+}));
 
-export const toListOutput = createListMapper(TurmaListOutputRestDto, toFindOneOutput);
+export const listQueryResultToListOutputDto = createListMapper(
+  TurmaListOutputRestDto,
+  findOneQueryResultToOutputDto,
+);

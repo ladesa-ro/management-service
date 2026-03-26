@@ -78,25 +78,26 @@ export function horarioToPersistence(
 // Persistência → Query Result (TypeORM Entity → Query Result)
 // ============================================================================
 
-export const entityToOutput = createMapper<EstagioTypeormEntity, EstagioFindOneQueryResult>(
-  (entity) => ({
-    id: entity.id,
-    empresa: { id: entity.empresa.id },
-    estagiario: entity.estagiario ? { id: entity.estagiario.id } : null,
-    cargaHoraria: entity.cargaHoraria,
-    dataInicio: entity.dataInicio,
-    dataFim: entity.dataFim,
-    status: entity.status,
-    horariosEstagio: (entity.horariosEstagio ?? [])
-      .filter((horario) => !horario.dateDeleted)
-      .map((horario) => ({
-        id: horario.id,
-        diaSemana: horario.diaSemana,
-        horaInicio: horario.horaInicio,
-        horaFim: horario.horaFim,
-      })),
-    ativo: !entity.dateDeleted,
-    dateCreated: entity.dateCreated,
-    dateUpdated: entity.dateUpdated,
-  }),
-);
+export const entityToFindOneQueryResult = createMapper<
+  EstagioTypeormEntity,
+  EstagioFindOneQueryResult
+>((entity) => ({
+  id: entity.id,
+  empresa: { id: entity.empresa.id },
+  estagiario: entity.estagiario ? { id: entity.estagiario.id } : null,
+  cargaHoraria: entity.cargaHoraria,
+  dataInicio: entity.dataInicio,
+  dataFim: entity.dataFim,
+  status: entity.status,
+  horariosEstagio: (entity.horariosEstagio ?? [])
+    .filter((horario) => !horario.dateDeleted)
+    .map((horario) => ({
+      id: horario.id,
+      diaSemana: horario.diaSemana,
+      horaInicio: horario.horaInicio,
+      horaFim: horario.horaFim,
+    })),
+  ativo: !entity.dateDeleted,
+  dateCreated: entity.dateCreated,
+  dateUpdated: entity.dateUpdated,
+}));

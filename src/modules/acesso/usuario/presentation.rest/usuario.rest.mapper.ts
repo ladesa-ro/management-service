@@ -33,34 +33,36 @@ import {
 // Externa -> Interna (Input: Presentation -> Core)
 // ============================================================================
 
-export const toFindOneInput = createMapper<UsuarioFindOneInputRestDto, UsuarioFindOneQuery>(
-  (dto) => {
-    const input = new UsuarioFindOneQuery();
-    input.id = dto.id;
-    return input;
-  },
-);
+export const findOneInputDtoToFindOneQuery = createMapper<
+  UsuarioFindOneInputRestDto,
+  UsuarioFindOneQuery
+>((dto) => {
+  const input = new UsuarioFindOneQuery();
+  input.id = dto.id;
+  return input;
+});
 
-export const toListInput = createPaginatedInputMapper<UsuarioListInputRestDto, UsuarioListQuery>(
-  UsuarioListQuery,
-  (dto, query) => {
-    mapField(query, "filter.id", dto, "filter.id");
-    mapField(query, "filter.vinculos.cargo.nome", dto, "filter.vinculos.cargo.nome");
-  },
-);
+export const listInputDtoToListQuery = createPaginatedInputMapper<
+  UsuarioListInputRestDto,
+  UsuarioListQuery
+>(UsuarioListQuery, (dto, query) => {
+  mapField(query, "filter.id", dto, "filter.id");
+  mapField(query, "filter.vinculos.cargo.nome", dto, "filter.vinculos.cargo.nome");
+});
 
-export const toCreateInput = createMapper<UsuarioCreateInputRestDto, UsuarioCreateCommand>(
-  (dto) => {
-    const input = new UsuarioCreateCommand();
-    input.nome = dto.nome;
-    input.matricula = dto.matricula;
-    input.email = dto.email;
-    input.vinculos = dto.vinculos;
-    return input;
-  },
-);
+export const createInputDtoToCreateCommand = createMapper<
+  UsuarioCreateInputRestDto,
+  UsuarioCreateCommand
+>((dto) => {
+  const input = new UsuarioCreateCommand();
+  input.nome = dto.nome;
+  input.matricula = dto.matricula;
+  input.email = dto.email;
+  input.vinculos = dto.vinculos;
+  return input;
+});
 
-export const toUpdateInput = createMapper<
+export const updateInputDtoToUpdateCommand = createMapper<
   { params: UsuarioFindOneInputRestDto; dto: UsuarioUpdateInputRestDto },
   UsuarioFindOneQuery & UsuarioUpdateCommand
 >(({ params, dto }) => ({
@@ -86,38 +88,42 @@ export function toPerfilNestedOutputDto(
   dto.id = output.id;
   dto.ativo = output.ativo;
   dto.cargo = getCargoNome(output);
-  dto.campus = CampusRestMapper.toFindOneOutput.map(output.campus);
+  dto.campus = CampusRestMapper.findOneQueryResultToOutputDto.map(output.campus);
   dto.dateCreated = output.dateCreated;
   dto.dateUpdated = output.dateUpdated;
   dto.dateDeleted = output.dateDeleted;
   return dto;
 }
 
-export const toFindOneOutput = createMapper<UsuarioFindOneQueryResult, UsuarioFindOneOutputRestDto>(
-  (output) => {
-    const dto = new UsuarioFindOneOutputRestDto();
-    dto.id = output.id;
-    dto.nome = output.nome;
-    dto.matricula = output.matricula;
-    dto.email = output.email;
-    dto.isSuperUser = output.isSuperUser;
-    dto.imagemCapa = output.imagemCapa ? BlocoRestMapper.toImagemOutput(output.imagemCapa) : null;
-    dto.imagemPerfil = output.imagemPerfil
-      ? BlocoRestMapper.toImagemOutput(output.imagemPerfil)
-      : null;
-    dto.vinculos = (output.vinculos ?? []).map(toPerfilNestedOutputDto);
-    dto.dateCreated = output.dateCreated;
-    dto.dateUpdated = output.dateUpdated;
-    dto.dateDeleted = output.dateDeleted;
-    return dto;
-  },
-);
+export const findOneQueryResultToOutputDto = createMapper<
+  UsuarioFindOneQueryResult,
+  UsuarioFindOneOutputRestDto
+>((output) => {
+  const dto = new UsuarioFindOneOutputRestDto();
+  dto.id = output.id;
+  dto.nome = output.nome;
+  dto.matricula = output.matricula;
+  dto.email = output.email;
+  dto.isSuperUser = output.isSuperUser;
+  dto.imagemCapa = output.imagemCapa ? BlocoRestMapper.toImagemOutput(output.imagemCapa) : null;
+  dto.imagemPerfil = output.imagemPerfil
+    ? BlocoRestMapper.toImagemOutput(output.imagemPerfil)
+    : null;
+  dto.vinculos = (output.vinculos ?? []).map(toPerfilNestedOutputDto);
+  dto.dateCreated = output.dateCreated;
+  dto.dateUpdated = output.dateUpdated;
+  dto.dateDeleted = output.dateDeleted;
+  return dto;
+});
 
-export const toListOutput = createListMapper(UsuarioListOutputRestDto, toFindOneOutput);
+export const listQueryResultToListOutputDto = createListMapper(
+  UsuarioListOutputRestDto,
+  findOneQueryResultToOutputDto,
+);
 
 export function toEnsinoOutputDto(output: UsuarioEnsinoQueryResult): UsuarioEnsinoOutputRestDto {
   const dto = new UsuarioEnsinoOutputRestDto();
-  dto.usuario = toFindOneOutput.map(output.usuario);
+  dto.usuario = findOneQueryResultToOutputDto.map(output.usuario);
   dto.disciplinas = output.disciplinas.map((vinculoDisciplina) => {
     const disciplinaRef = new UsuarioEnsinoDisciplinaRefRestDto();
     disciplinaRef.id = vinculoDisciplina.disciplina.id;

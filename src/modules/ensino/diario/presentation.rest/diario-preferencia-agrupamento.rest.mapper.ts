@@ -17,7 +17,7 @@ import {
 // Externa -> Interna (Input: Presentation -> Core)
 // ============================================================================
 
-export function toListInput(
+export function listInputDtoToListQuery(
   parentParams: DiarioPreferenciaAgrupamentoParentParamsRestDto,
   dto: DiarioPreferenciaAgrupamentoListInputRestDto,
 ): DiarioPreferenciaAgrupamentoListQuery {
@@ -50,7 +50,7 @@ export function toBulkReplaceInput(
 // Interna -> Externa (Output: Core -> Presentation)
 // ============================================================================
 
-export const toFindOneOutput = createMapper<
+export const findOneQueryResultToOutputDto = createMapper<
   DiarioPreferenciaAgrupamentoFindOneQueryResult,
   DiarioPreferenciaAgrupamentoFindOneOutputRestDto
 >((output) => ({
@@ -59,13 +59,13 @@ export const toFindOneOutput = createMapper<
   dataFim: output.dataFim,
   diaSemanaIso: output.diaSemanaIso,
   aulasSeguidas: output.aulasSeguidas,
-  diario: DiarioRestMapper.toFindOneOutput.map(output.diario),
+  diario: DiarioRestMapper.findOneQueryResultToOutputDto.map(output.diario),
   dateCreated: output.dateCreated,
   dateUpdated: output.dateUpdated,
   dateDeleted: output.dateDeleted,
 }));
 
-export const toListOutput = createListMapper(
+export const listQueryResultToListOutputDto = createListMapper(
   DiarioPreferenciaAgrupamentoListOutputRestDto,
-  toFindOneOutput,
+  findOneQueryResultToOutputDto,
 );
