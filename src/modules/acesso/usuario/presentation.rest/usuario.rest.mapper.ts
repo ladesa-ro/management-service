@@ -29,6 +29,10 @@ import {
 } from "./usuario.rest.dto";
 
 export class UsuarioRestMapper {
+  private static getCargoNome(output: PerfilNestedQueryResult): string {
+    return output.cargo?.nome ?? "";
+  }
+
   // ============================================================================
   // Input: Server DTO -> Core DTO
   // ============================================================================
@@ -37,7 +41,7 @@ export class UsuarioRestMapper {
 
   static toListInput = createListInputMapper(UsuarioListQuery, [
     "filter.id",
-    "filter.vinculos.cargo",
+    "filter.vinculos.cargo.nome",
   ]);
 
   static toCreateInput(dto: UsuarioCreateInputRestDto): UsuarioCreateCommand {
@@ -98,7 +102,7 @@ export class UsuarioRestMapper {
     const dto = new UsuarioPerfilNestedOutputRestDto();
     dto.id = output.id;
     dto.ativo = output.ativo;
-    dto.cargo = output.cargo;
+    dto.cargo = UsuarioRestMapper.getCargoNome(output);
     dto.campus = CampusRestMapper.toFindOneOutputDto(output.campus);
     mapDatedFields(dto, output);
     return dto;
