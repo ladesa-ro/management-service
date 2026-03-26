@@ -1,4 +1,5 @@
 export * from "./base.mapper";
+export { createMapper, type Mapper } from "./create-mapper";
 export {
   type BidirectionalField,
   type BidirectionalMapping,
