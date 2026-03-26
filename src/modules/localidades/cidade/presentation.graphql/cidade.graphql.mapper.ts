@@ -51,7 +51,7 @@ export const toFindOneOutput = createMapper<
 >((output) => ({
   id: output.id,
   nome: output.nome,
-  estado: EstadoGraphqlMapper.toFindOneOutput.map(output.estado),
+  estado: EstadoGraphqlMapper.findOneQueryResultToOutputDto.map(output.estado),
 }));
 
 export const toListOutput = createListMapper(CidadeListOutputGraphQlDto, toFindOneOutput);

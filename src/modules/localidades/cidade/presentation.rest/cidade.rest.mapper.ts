@@ -45,7 +45,7 @@ export const toFindOneOutput = createMapper<CidadeFindOneQueryResult, CidadeFind
   (output) => ({
     id: output.id,
     nome: output.nome,
-    estado: EstadoRestMapper.toFindOneOutput.map(output.estado),
+    estado: EstadoRestMapper.findOneQueryResultToOutputDto.map(output.estado),
   }),
 );
 

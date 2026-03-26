@@ -1,39 +1,56 @@
 import type { IModalidade } from "@/modules/ensino/modalidade/domain/modalidade";
-import type { ModalidadeFindOneQueryResult } from "@/modules/ensino/modalidade/domain/queries/modalidade-find-one.query.result";
-import { createMapper } from "@/shared/mapping";
+import { ModalidadeFindOneQueryResult } from "@/modules/ensino/modalidade/domain/queries/modalidade-find-one.query.result";
+import { createMapper, into } from "@/shared/mapping";
 import type { ModalidadeEntity } from "./modalidade.typeorm.entity";
 
 // ============================================================================
 // Persistência → Domínio (TypeORM Entity → Domain / Query Result)
 // ============================================================================
 
-export const entityToDomain = createMapper<ModalidadeEntity, IModalidade>((e) => ({
-  id: e.id,
-  nome: e.nome,
-  slug: e.slug,
-  dateCreated: e.dateCreated,
-  dateUpdated: e.dateUpdated,
-  dateDeleted: e.dateDeleted,
-}));
+export const entityToDomain = createMapper<ModalidadeEntity, IModalidade>((entity) => {
+  const domain = {} as IModalidade;
+  into(domain)
+    .from(entity)
+    .field("id")
+    .field("nome")
+    .field("slug")
+    .field("dateCreated")
+    .field("dateUpdated")
+    .field("dateDeleted");
+  return domain;
+});
 
-export const entityToOutput = createMapper<ModalidadeEntity, ModalidadeFindOneQueryResult>((e) => ({
-  id: e.id,
-  nome: e.nome,
-  slug: e.slug,
-  dateCreated: e.dateCreated,
-  dateUpdated: e.dateUpdated,
-  dateDeleted: e.dateDeleted,
-}));
+export const entityToFindOneQueryResult = createMapper<
+  ModalidadeEntity,
+  ModalidadeFindOneQueryResult
+>((entity) => {
+  const queryResult = new ModalidadeFindOneQueryResult();
+  into(queryResult)
+    .from(entity)
+    .field("id")
+    .field("nome")
+    .field("slug")
+    .field("dateCreated")
+    .field("dateUpdated")
+    .field("dateDeleted");
+  return queryResult;
+});
 
 // ============================================================================
 // Domínio → Persistência (Domain → TypeORM Entity)
 // ============================================================================
 
-export const domainToPersistence = createMapper<IModalidade, Partial<ModalidadeEntity>>((d) => ({
-  id: d.id,
-  nome: d.nome,
-  slug: d.slug,
-  dateCreated: d.dateCreated,
-  dateUpdated: d.dateUpdated,
-  dateDeleted: d.dateDeleted,
-}));
+export const domainToPersistence = createMapper<IModalidade, Partial<ModalidadeEntity>>(
+  (domain) => {
+    const entity: Partial<ModalidadeEntity> = {};
+    into(entity)
+      .from(domain)
+      .field("id")
+      .field("nome")
+      .field("slug")
+      .field("dateCreated")
+      .field("dateUpdated")
+      .field("dateDeleted");
+    return entity;
+  },
+);

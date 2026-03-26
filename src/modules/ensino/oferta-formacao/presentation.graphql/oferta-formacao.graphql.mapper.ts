@@ -99,7 +99,7 @@ export const toFindOneOutput = createMapper<
   nome: output.nome,
   slug: output.slug,
   duracaoPeriodoEmMeses: output.duracaoPeriodoEmMeses,
-  modalidade: ModalidadeGraphqlMapper.toFindOneOutput.map(output.modalidade),
+  modalidade: ModalidadeGraphqlMapper.findOneQueryResultToOutputDto.map(output.modalidade),
   campus: CampusGraphqlMapper.toFindOneOutput.map(output.campus),
   niveisFormacoes: (output.niveisFormacoes ?? []).map((nf) =>
     NivelFormacaoGraphqlMapper.toFindOneOutput.map(nf),

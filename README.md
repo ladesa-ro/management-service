@@ -2977,12 +2977,12 @@ graph LR
     subgraph "Apresentação (REST/GraphQL)"
         DTO_IN["DTO de Entrada"]
         DTO_OUT["DTO de Saída"]
-        PMAP["RestMapper / GraphqlMapper\n• toFindOneInput.map(dto)\n• toFindOneOutput.map(result)\n• toListInput.map(dto)\n• toListOutput(result)"]
+        PMAP["RestMapper / GraphqlMapper\n• findOneInputDtoToFindOneQuery.map(dto)\n• findOneQueryResultToOutputDto.map(queryResult)\n• listInputDtoToListQuery.map(dto)\n• listQueryResultToListOutputDto(queryResult)"]
     end
 
     subgraph "Infraestrutura (TypeORM)"
         ENTITY["TypeORM Entity\ndatas: Date\nrelações: Relation&lt;T&gt;"]
-        IMAP["TypeormMapper\n• entityToOutput.map(entity)"]
+        IMAP["TypeormMapper\n• entityToFindOneQueryResult.map(entity)"]
     end
 
     subgraph "Domínio"
@@ -3022,50 +3022,68 @@ into(query)
 
 #### Mapper de infraestrutura (TypeORM Entity → Query Result)
 
-Cada módulo define um mapper em `infrastructure.database/typeorm/{nome}.typeorm.mapper.ts`:
+Cada módulo define um mapper em `infrastructure.database/typeorm/{nome}.typeorm.mapper.ts`. O nome do export descreve o fluxo **de onde → para onde**:
 
 ```typescript
-export const entityToOutput = createMapper<EstadoEntity, EstadoFindOneQueryResult>((e) => ({
-  id: e.id,
-  nome: e.nome,
-  sigla: e.sigla,
-}));
+// estado.typeorm.mapper.ts
+export const entityToFindOneQueryResult = createMapper<EstadoEntity, EstadoFindOneQueryResult>(
+  (entity) => {
+    const queryResult = new EstadoFindOneQueryResult();
+    into(queryResult).from(entity).field("id").field("nome").field("sigla");
+    return queryResult;
+  },
+);
 ```
 
-O barrel re-exporta via namespace (`export * as EstadoTypeormMapper`) e o repositório usa como callback (`EstadoTypeormMapper.entityToOutput.map`).
+O barrel re-exporta via namespace (`export * as EstadoTypeormMapper`) e o repositório usa como callback (`EstadoTypeormMapper.entityToFindOneQueryResult.map`).
 
 #### Mapper de apresentação (DTO ↔ Command/Query)
 
-Cada mapper de apresentação organiza exports em duas regiões ("Externa → Interna" e "Interna → Externa"):
+Cada mapper de apresentação organiza exports em duas regiões ("Externa → Interna" e "Interna → Externa"). Os nomes dos exports seguem o padrão `origemToDestino`:
 
 ```typescript
 import { createListMapper, createMapper, createPaginatedInputMapper, into } from "@/shared/mapping";
 
 // Externa → Interna
-export const toListInput = createPaginatedInputMapper<EstadoListInputRestDto, EstadoListQuery>(
+export const findOneInputDtoToFindOneQuery = createMapper<...>((dto) => { ... });
+
+export const listInputDtoToListQuery = createPaginatedInputMapper<...>(
   EstadoListQuery,
   (dto, query) => {
     into(query).field("filter.id").from(dto, "filter.id");
   },
 );
 
-// Interna → Externa
-export const toFindOneOutput = createMapper<EstadoFindOneQueryResult, EstadoFindOneOutputRestDto>(
-  (output) => ({ id: output.id, nome: output.nome, sigla: output.sigla }),
-);
+export const createInputDtoToCreateCommand = createMapper<...>((dto) => { ... });
 
-export const toListOutput = createListMapper(EstadoListOutputRestDto, toFindOneOutput);
+// Interna → Externa
+export const findOneQueryResultToOutputDto = createMapper<
+  EstadoFindOneQueryResult,
+  EstadoFindOneOutputRestDto
+>((queryResult) => ({ id: queryResult.id, nome: queryResult.nome, sigla: queryResult.sigla }));
+
+export const listQueryResultToListOutputDto = createListMapper(
+  EstadoListOutputRestDto,
+  findOneQueryResultToOutputDto,
+);
 ```
 
-Controllers e resolvers importam via namespace:
+Controllers e resolvers importam via namespace e usam variáveis com nomes semânticos:
 ```typescript
 import * as EstadoRestMapper from "./estado.rest.mapper";
 
-const input = EstadoRestMapper.toListInput.map(dto);
-return EstadoRestMapper.toFindOneOutput.map(result);
+// Query handler
+const query = EstadoRestMapper.listInputDtoToListQuery.map(dto);
+const queryResult = await this.listHandler.execute(accessContext, query);
+return EstadoRestMapper.listQueryResultToListOutputDto(queryResult);
+
+// Command handler
+const command = ModalidadeRestMapper.createInputDtoToCreateCommand.map(dto);
+const queryResult = await this.createHandler.execute(accessContext, command);
+return ModalidadeRestMapper.findOneQueryResultToOutputDto.map(queryResult);
 ```
 
-> **Para ir mais fundo:** a documentação completa do padrão de mapeamento (incluindo `into`, pipelines, transforms e convenções) está em [`.claude/docs/mapeamento.md`](.claude/docs/mapeamento.md).
+> **Para ir mais fundo:** a documentação completa do padrão de mapeamento (incluindo `into`, pipelines, transforms, convenções de nomenclatura e variáveis) está em [`.claude/docs/mapeamento.md`](.claude/docs/mapeamento.md).
 
 ### Command e Query Handlers
 

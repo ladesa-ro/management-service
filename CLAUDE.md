@@ -66,3 +66,58 @@ Campos de data (`dateCreated`, `dateUpdated`, `dateDeleted`, `dataNascimento`, e
 - **Mapper GraphQL** — converte `string` → `Date` com `new Date(output.dateCreated)`
 
 > Migração em andamento. Módulos legados ainda usam `Date` na entity. Consultar [`CHECKLIST.md`](CHECKLIST.md) para status.
+
+---
+
+## Convenções de mapeamento
+
+Documentação completa em [`.claude/docs/mapeamento.md`](.claude/docs/mapeamento.md). Resumo das regras de nomenclatura:
+
+### Nomes de exports nos mappers
+
+O nome do export descreve **de onde → para onde** o dado flui:
+
+| Export | Padrão |
+|--------|--------|
+| `findOneInputDtoToFindOneQuery` | DTO de input → FindOneQuery |
+| `listInputDtoToListQuery` | DTO de list input → ListQuery |
+| `createInputDtoToCreateCommand` | DTO de create → CreateCommand |
+| `updateInputDtoToUpdateCommand` | DTO de update → UpdateCommand |
+| `findOneQueryResultToOutputDto` | QueryResult → DTO de output |
+| `listQueryResultToListOutputDto` | ListQueryResult → ListOutputDto |
+| `entityToFindOneQueryResult` | TypeORM Entity → FindOneQueryResult (infraestrutura) |
+| `entityToDomain` | TypeORM Entity → Domain Interface (infraestrutura) |
+| `domainToPersistence` | Domain → Entity parcial (infraestrutura) |
+
+### Nomes de variáveis nos callbacks e consumers
+
+| Contexto | Parâmetro | Variável local |
+|----------|-----------|----------------|
+| Typeorm mapper: entity → domain | `(entity)` | `domain` |
+| Typeorm mapper: entity → queryResult | `(entity)` | `queryResult` |
+| Typeorm mapper: domain → entity | `(domain)` | `entity` |
+| Presentation: dto → query | `(dto)` | `query` |
+| Presentation: dto → command | `(dto)` | `command` |
+| Presentation: queryResult → dto | `(queryResult)` | — (retorna literal) |
+| Controller/Resolver: query handler | — | `query`, `queryResult` |
+| Controller/Resolver: command handler | — | `command`, `queryResult` |
+| `createPaginatedInputMapper` callback | `(dto, query)` ou `(source, query)` | — |
+
+### API `into` para mapeamento de campos
+
+```typescript
+// Forma canônica — source global
+into(query).from(dto).field("filter.id", "filterId").field("page");
+
+// Forma per-field — múltiplas sources
+into(query)
+  .field("filter.id").from(dto, "filterId")
+  .field("tenantId").from(context);
+
+// Pipeline por campo
+into(query)
+  .field("page").default(1).from(dto)
+  .field("userId").required().from(auth);
+```
+
+`mapField` é **deprecated** — usar `into` em código novo.

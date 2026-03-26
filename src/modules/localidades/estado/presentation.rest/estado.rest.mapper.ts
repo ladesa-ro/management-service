@@ -15,29 +15,36 @@ import {
 // Externa → Interna (Input: Presentation → Core)
 // ============================================================================
 
-export const toFindOneInput = createMapper<EstadoFindOneInputRestDto, EstadoFindOneQuery>((dto) => {
-  const input = new EstadoFindOneQuery();
-  input.id = dto.id;
-  return input;
+export const findOneInputDtoToFindOneQuery = createMapper<
+  EstadoFindOneInputRestDto,
+  EstadoFindOneQuery
+>((dto) => {
+  const query = new EstadoFindOneQuery();
+  query.id = dto.id;
+  return query;
 });
 
-export const toListInput = createPaginatedInputMapper<EstadoListInputRestDto, EstadoListQuery>(
-  EstadoListQuery,
-  (dto, query) => {
-    into(query).field("filter.id").from(dto, "filter.id");
-  },
-);
+export const listInputDtoToListQuery = createPaginatedInputMapper<
+  EstadoListInputRestDto,
+  EstadoListQuery
+>(EstadoListQuery, (dto, query) => {
+  into(query).field("filter.id").from(dto, "filter.id");
+});
 
 // ============================================================================
 // Interna → Externa (Output: Core → Presentation)
 // ============================================================================
 
-export const toFindOneOutput = createMapper<EstadoFindOneQueryResult, EstadoFindOneOutputRestDto>(
-  (output) => ({
-    id: output.id,
-    nome: output.nome,
-    sigla: output.sigla,
-  }),
-);
+export const findOneQueryResultToOutputDto = createMapper<
+  EstadoFindOneQueryResult,
+  EstadoFindOneOutputRestDto
+>((queryResult) => ({
+  id: queryResult.id,
+  nome: queryResult.nome,
+  sigla: queryResult.sigla,
+}));
 
-export const toListOutput = createListMapper(EstadoListOutputRestDto, toFindOneOutput);
+export const listQueryResultToListOutputDto = createListMapper(
+  EstadoListOutputRestDto,
+  findOneQueryResultToOutputDto,
+);

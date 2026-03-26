@@ -33,11 +33,9 @@ export class EstadoGraphqlResolver {
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args() dto: EstadoListInputGraphQlDto,
   ): Promise<EstadoListOutputGraphQlDto> {
-    const input = EstadoGraphqlMapper.toListInput(dto);
-
-    const result = await this.listHandler.execute(accessContext, input);
-
-    return EstadoGraphqlMapper.toListOutput(result);
+    const query = EstadoGraphqlMapper.listInputDtoToListQuery(dto);
+    const queryResult = await this.listHandler.execute(accessContext, query);
+    return EstadoGraphqlMapper.listQueryResultToListOutputDto(queryResult);
   }
 
   @Query(() => EstadoFindOneOutputGraphQlDto, EstadoFindOneQueryMetadata.gqlMetadata)
@@ -45,11 +43,9 @@ export class EstadoGraphqlResolver {
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("id", { type: () => Int }) id: number,
   ): Promise<EstadoFindOneOutputGraphQlDto> {
-    const input = EstadoGraphqlMapper.toFindOneInput.map(id);
-
-    const result = await this.findOneHandler.execute(accessContext, input);
-    ensureExists(result, Estado.entityName, input.id);
-
-    return EstadoGraphqlMapper.toFindOneOutput.map(result);
+    const query = EstadoGraphqlMapper.findOneInputDtoToFindOneQuery.map(id);
+    const queryResult = await this.findOneHandler.execute(accessContext, query);
+    ensureExists(queryResult, Estado.entityName, query.id);
+    return EstadoGraphqlMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 }

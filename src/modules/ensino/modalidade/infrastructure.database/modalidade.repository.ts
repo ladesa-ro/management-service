@@ -75,7 +75,7 @@ export class ModalidadeTypeOrmRepositoryAdapter implements IModalidadeRepository
       ModalidadeEntity,
       { ...config, paginateConfig: modalidadePaginateConfig },
       dto,
-      ModalidadeTypeormMapper.entityToOutput.map,
+      ModalidadeTypeormMapper.entityToFindOneQueryResult.map,
     );
   }
 
@@ -89,7 +89,7 @@ export class ModalidadeTypeOrmRepositoryAdapter implements IModalidadeRepository
       { ...config, paginateConfig: modalidadePaginateConfig },
       this.paginationAdapter,
       dto,
-      ModalidadeTypeormMapper.entityToOutput.map,
+      ModalidadeTypeormMapper.entityToFindOneQueryResult.map,
     );
   }
 }

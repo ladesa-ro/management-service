@@ -45,7 +45,7 @@ export class EstadoTypeOrmRepositoryAdapter implements IEstadoRepository {
       { ...config, paginateConfig: estadoPaginateConfig },
       this.paginationAdapter,
       dto,
-      EstadoTypeormMapper.entityToOutput.map,
+      EstadoTypeormMapper.entityToFindOneQueryResult.map,
     );
   }
 
@@ -55,7 +55,7 @@ export class EstadoTypeOrmRepositoryAdapter implements IEstadoRepository {
       EstadoEntity,
       { ...config, paginateConfig: estadoPaginateConfig },
       dto,
-      EstadoTypeormMapper.entityToOutput.map,
+      EstadoTypeormMapper.entityToFindOneQueryResult.map,
     );
   }
 }

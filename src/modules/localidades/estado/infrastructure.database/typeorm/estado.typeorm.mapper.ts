@@ -6,8 +6,10 @@ import type { EstadoEntity } from "./estado.typeorm.entity";
 // Persistência → Domínio (TypeORM Entity → Query Result)
 // ============================================================================
 
-export const entityToOutput = createMapper<EstadoEntity, EstadoFindOneQueryResult>((e) => {
-  const result = new EstadoFindOneQueryResult();
-  into(result).from(e).field("id").field("nome").field("sigla");
-  return result;
-});
+export const entityToFindOneQueryResult = createMapper<EstadoEntity, EstadoFindOneQueryResult>(
+  (entity) => {
+    const queryResult = new EstadoFindOneQueryResult();
+    into(queryResult).from(entity).field("id").field("nome").field("sigla");
+    return queryResult;
+  },
+);

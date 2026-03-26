@@ -80,7 +80,7 @@ resolve source → transform → default → when → required/optional → set 
 O helper `createPaginatedInputMapper` usa `into` internamente para mapear page/limit/search/sortBy. O callback de filtros deve usar `into` também:
 
 ```typescript
-export const toListInput = createPaginatedInputMapper<EstadoListInputRestDto, EstadoListQuery>(
+export const listInputDtoToListQuery = createPaginatedInputMapper<EstadoListInputRestDto, EstadoListQuery>(
   EstadoListQuery,
   (dto, query) => {
     into(query)
@@ -107,7 +107,7 @@ const listInputMapper = createPaginatedInputMapper<EstadoListInputGraphQlDto, Es
 Cria um mapper unitário com `.map(input)` e `.mapArray(inputs)`.
 
 ```typescript
-export const toFindOneOutput = createMapper<EstadoFindOneQueryResult, EstadoFindOneOutputRestDto>(
+export const findOneQueryResultToOutputDto = createMapper<EstadoFindOneQueryResult, EstadoFindOneOutputRestDto>(
   (output) => ({
     id: output.id,
     nome: output.nome,
@@ -121,7 +121,10 @@ export const toFindOneOutput = createMapper<EstadoFindOneQueryResult, EstadoFind
 Cria um mapper de lista paginada. Instancia o DTO de lista, repassa o `meta` e mapeia o `data` usando um mapper de item.
 
 ```typescript
-export const toListOutput = createListMapper(EstadoListOutputRestDto, toFindOneOutput);
+export const listQueryResultToListOutputDto = createListMapper(
+  EstadoListOutputRestDto,
+  findOneQueryResultToOutputDto,
+);
 ```
 
 ### `createPaginatedInputMapper`
@@ -129,7 +132,7 @@ export const toListOutput = createListMapper(EstadoListOutputRestDto, toFindOneO
 Cria um mapper de input paginado (DTO → Query). Mapeia automaticamente page/limit/search/sortBy via `into` e delega filtros ao callback.
 
 ```typescript
-export const toListInput = createPaginatedInputMapper<EstadoListInputRestDto, EstadoListQuery>(
+export const listInputDtoToListQuery = createPaginatedInputMapper<EstadoListInputRestDto, EstadoListQuery>(
   EstadoListQuery,
   (dto, query) => {
     into(query).field("filter.id").from(dto, "filter.id");
@@ -164,7 +167,7 @@ export * as EstadoTypeormMapper from "./estado.typeorm.mapper";
 ```
 
 **Exports típicos:**
-- `entityToOutput` — Entity → Query Result (leitura)
+- `entityToFindOneQueryResult` — Entity → Query Result (leitura)
 - `entityToDomain` — Entity → Domain Interface (aggregate pattern)
 - `domainToPersistence` — Domain → Entity parcial (escrita)
 
@@ -180,7 +183,7 @@ Regiões: "Externa → Interna" e "Interna → Externa".
 
 Mesmo padrão do REST. Diferenças:
 - Output dates: `new Date(output.dateCreated)` (GraphQL scalar)
-- `toListInput`: null check wrapper
+- `listInputDtoToListQuery`: null check wrapper
 - Schemas GraphQL definidos no arquivo de DTO (não no domain)
 
 ---
@@ -190,11 +193,11 @@ Mesmo padrão do REST. Diferenças:
 ```typescript
 import * as EstadoRestMapper from "@/modules/localidades/estado/presentation.rest/estado.rest.mapper";
 
-export const toFindOneOutput = createMapper<CidadeFindOneQueryResult, CidadeFindOneOutputRestDto>(
-  (output) => ({
-    id: output.id,
-    nome: output.nome,
-    estado: EstadoRestMapper.toFindOneOutput.map(output.estado),
+export const findOneQueryResultToOutputDto = createMapper<CidadeFindOneQueryResult, CidadeFindOneOutputRestDto>(
+  (queryResult) => ({
+    id: queryResult.id,
+    nome: queryResult.nome,
+    estado: EstadoRestMapper.findOneQueryResultToOutputDto.map(queryResult.estado),
   }),
 );
 ```
@@ -203,17 +206,34 @@ export const toFindOneOutput = createMapper<CidadeFindOneQueryResult, CidadeFind
 
 ## Convenções de nomenclatura
 
-| Export | Uso |
-|--------|-----|
-| `toFindOneInput` | DTO → FindOneQuery |
-| `toListInput` | DTO → ListQuery |
-| `toFindOneOutput` | QueryResult → FindOneOutputDto |
-| `toListOutput` | PaginatedQueryResult → ListOutputDto |
-| `toCreateInput` | CreateDto → CreateCommand |
-| `toUpdateInput` | UpdateDto → UpdateCommand |
-| `entityToOutput` | Entity → QueryResult (infraestrutura) |
+### Exports dos mappers
+
+O nome descreve o fluxo **de onde → para onde**:
+
+| Export | Fluxo |
+|--------|-------|
+| `findOneInputDtoToFindOneQuery` | DTO de input → FindOneQuery |
+| `listInputDtoToListQuery` | DTO de list → ListQuery |
+| `createInputDtoToCreateCommand` | DTO de create → CreateCommand |
+| `updateInputDtoToUpdateCommand` | DTO de update → UpdateCommand |
+| `findOneQueryResultToOutputDto` | QueryResult → DTO de output |
+| `listQueryResultToListOutputDto` | ListQueryResult → ListOutputDto |
+| `entityToFindOneQueryResult` | Entity → QueryResult (infraestrutura) |
 | `entityToDomain` | Entity → Domain Interface (infraestrutura) |
 | `domainToPersistence` | Domain → Entity parcial (infraestrutura) |
+
+### Variáveis nos callbacks e consumers
+
+| Contexto | Parâmetro do callback | Variável local construída |
+|----------|-----------------------|---------------------------|
+| entity → domain | `(entity)` | `domain` |
+| entity → queryResult | `(entity)` | `queryResult` |
+| domain → entity | `(domain)` | `entity` |
+| dto → query | `(dto)` | `query` |
+| dto → command | `(dto)` | `command` |
+| queryResult → dto | `(queryResult)` | — (retorna literal) |
+| Controller: query handler | — | `query`, `queryResult` |
+| Controller: command handler | — | `command`, `queryResult` |
 
 ---
 
@@ -222,7 +242,7 @@ export const toFindOneOutput = createMapper<CidadeFindOneQueryResult, CidadeFind
 Retorne um plain object — nunca instancie classe com cast:
 
 ```typescript
-export const toUpdateInput = createMapper<
+export const updateInputDtoToUpdateCommand = createMapper<
   { params: ModalidadeFindOneInputRestDto; dto: ModalidadeUpdateInputRestDto },
   ModalidadeFindOneQuery & ModalidadeUpdateCommand
 >(({ params, dto }) => ({
