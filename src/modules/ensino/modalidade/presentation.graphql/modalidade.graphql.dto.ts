@@ -3,8 +3,8 @@ import {
   PaginatedFilterByIdGraphQlDto,
   PaginationMetaGraphQlDto,
 } from "@/infrastructure.graphql/dtos";
-import { ModalidadeGraphqlListInputSchema } from "@/modules/ensino/modalidade/domain/queries/modalidade-list.query.schemas";
 import { ArgsType, Field, InputType, ObjectType } from "@/shared/presentation/graphql";
+import { createGraphqlListInputSchema } from "@/shared/validation/schemas";
 import { ModalidadeCreateCommandFields } from "../domain/commands/modalidade-create.command";
 import { ModalidadeUpdateCommandFields } from "../domain/commands/modalidade-update.command";
 import { ModalidadeCreateSchema, ModalidadeUpdateSchema } from "../domain/modalidade.schemas";
@@ -50,6 +50,8 @@ export class ModalidadeUpdateInputGraphQlDto {
 // ============================================================================
 // List Input
 // ============================================================================
+
+const ModalidadeGraphqlListInputSchema = createGraphqlListInputSchema();
 
 @ArgsType()
 export class ModalidadeListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {

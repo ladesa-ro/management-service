@@ -1,70 +1,71 @@
 import {
   ModalidadeCreateCommand,
   ModalidadeFindOneQuery,
-  ModalidadeFindOneQueryResult,
+  type ModalidadeFindOneQueryResult,
   ModalidadeListQuery,
   ModalidadeUpdateCommand,
 } from "@/modules/ensino/modalidade";
+import { createListMapper, createMapper, createPaginatedInputMapper } from "@/shared/mapping";
 import {
-  createFindOneInputMapper,
-  createListInputMapper,
-  createListOutputMapper,
-  mapDatedFields,
-} from "@/shared/mapping";
-import {
-  ModalidadeCreateInputRestDto,
-  ModalidadeFindOneInputRestDto,
+  type ModalidadeCreateInputRestDto,
+  type ModalidadeFindOneInputRestDto,
   ModalidadeFindOneOutputRestDto,
+  type ModalidadeListInputRestDto,
   ModalidadeListOutputRestDto,
-  ModalidadeUpdateInputRestDto,
+  type ModalidadeUpdateInputRestDto,
 } from "./modalidade.rest.dto";
 
-export class ModalidadeRestMapper {
-  // ============================================================================
-  // Input: Server DTO -> Core DTO
-  // ============================================================================
+// ============================================================================
+// Externa → Interna (Input: Presentation → Core)
+// ============================================================================
 
-  static toFindOneInput = createFindOneInputMapper(ModalidadeFindOneQuery);
+export const toFindOneInput = createMapper<ModalidadeFindOneInputRestDto, ModalidadeFindOneQuery>(
+  (dto) => {
+    const input = new ModalidadeFindOneQuery();
+    input.id = dto.id;
+    return input;
+  },
+);
 
-  static toListInput = createListInputMapper(ModalidadeListQuery, ["filter.id"]);
+export const toListInput = createPaginatedInputMapper<
+  ModalidadeListInputRestDto,
+  ModalidadeListQuery
+>(ModalidadeListQuery, (dto, query) => {
+  if (dto["filter.id"] !== undefined) query["filter.id"] = dto["filter.id"];
+});
 
-  static toCreateInput(dto: ModalidadeCreateInputRestDto): ModalidadeCreateCommand {
+export const toCreateInput = createMapper<ModalidadeCreateInputRestDto, ModalidadeCreateCommand>(
+  (dto) => {
     const input = new ModalidadeCreateCommand();
     input.nome = dto.nome;
     input.slug = dto.slug;
     return input;
-  }
+  },
+);
 
-  static toUpdateInput(
-    params: ModalidadeFindOneInputRestDto,
-    dto: ModalidadeUpdateInputRestDto,
-  ): ModalidadeFindOneQuery & ModalidadeUpdateCommand {
-    const input = new ModalidadeFindOneQuery() as ModalidadeFindOneQuery & ModalidadeUpdateCommand;
-    input.id = params.id;
-    if (dto.nome !== undefined) {
-      input.nome = dto.nome;
-    }
-    if (dto.slug !== undefined) {
-      input.slug = dto.slug;
-    }
-    return input;
-  }
+export const toUpdateInput = createMapper<
+  { params: ModalidadeFindOneInputRestDto; dto: ModalidadeUpdateInputRestDto },
+  ModalidadeFindOneQuery & ModalidadeUpdateCommand
+>(({ params, dto }) => ({
+  id: params.id,
+  nome: dto.nome,
+  slug: dto.slug,
+}));
 
-  // ============================================================================
-  // Output: Core DTO -> Server DTO
-  // ============================================================================
+// ============================================================================
+// Interna → Externa (Output: Core → Presentation)
+// ============================================================================
 
-  static toFindOneOutputDto(output: ModalidadeFindOneQueryResult): ModalidadeFindOneOutputRestDto {
-    const dto = new ModalidadeFindOneOutputRestDto();
-    dto.id = output.id;
-    dto.nome = output.nome;
-    dto.slug = output.slug;
-    mapDatedFields(dto, output);
-    return dto;
-  }
+export const toFindOneOutput = createMapper<
+  ModalidadeFindOneQueryResult,
+  ModalidadeFindOneOutputRestDto
+>((output) => ({
+  id: output.id,
+  nome: output.nome,
+  slug: output.slug,
+  dateCreated: output.dateCreated,
+  dateUpdated: output.dateUpdated,
+  dateDeleted: output.dateDeleted,
+}));
 
-  static toListOutputDto = createListOutputMapper(
-    ModalidadeListOutputRestDto,
-    ModalidadeRestMapper.toFindOneOutputDto,
-  );
-}
+export const toListOutput = createListMapper(ModalidadeListOutputRestDto, toFindOneOutput);

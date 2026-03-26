@@ -74,7 +74,11 @@ export function createListOutputMapper<
  * Usado em todos os toFindOneOutputDto.
  */
 export function mapDatedFields(
-  dto: { dateCreated: Date; dateUpdated: Date; dateDeleted: Date | null },
+  dto: {
+    dateCreated: Date | string;
+    dateUpdated: Date | string;
+    dateDeleted: Date | string | null;
+  },
   output: { dateCreated: unknown; dateUpdated: unknown; dateDeleted: unknown },
 ): void {
   dto.dateCreated = new Date(output.dateCreated as string);

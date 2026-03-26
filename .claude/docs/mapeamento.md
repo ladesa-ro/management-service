@@ -11,6 +11,7 @@ Este documento descreve o padrão de mapeamento adotado no projeto para transfor
 3. **Tipado de ponta a ponta.** Os tipos de entrada e saída são declarados nos generics do `createMapper<I, O>`. Sem `Record<string, unknown>`, sem `as any`, sem `as`.
 4. **Um mapper por camada, por módulo.** Cada camada do módulo tem exatamente um arquivo mapper com múltiplos exports. Sem classes — exports individuais.
 5. **Namespace import nos consumers.** Consumers usam `import * as XxxMapper from "./xxx.mapper"` para agrupar os mappers por contexto.
+6. **Datas são strings em todas as camadas exceto GraphQL.** TypeORM entities, domain, REST DTOs — todos usam `string` (ISO 8601) para campos de data. A coluna no banco continua `timestamptz`/`date`/`timestamp`, apenas o tipo TypeScript na entity é `string`. GraphQL DTOs mantêm `Date` por exigência do scalar `@Field(() => Date)`.
 
 ---
 
@@ -240,6 +241,44 @@ export class EstadoListInputGraphQlDto {
 
 ---
 
+## Transforms tipadas (`src/shared/mapping/transforms.ts`)
+
+Como datas são `string` em entity/domain/REST, **conversões de data não são necessárias na maioria dos mappers** — os campos passam direto (passthrough). Transforms são necessárias apenas em dois cenários:
+
+1. **GraphQL output** — `@Field(() => Date)` exige objetos `Date`, então o mapper GraphQL converte: `new Date(output.dateCreated)`
+2. **Relações** — `pickId` extrai `{ id }` de uma relação carregada
+
+| Função | Assinatura | Quando usar |
+|--------|------------|-------------|
+| `pickId` | `({ id: TId }) → { id: TId }` / nullable | Extrair referência de relação carregada |
+| `dateToISOString` | `(Date) → string` / nullable | Converter Date para string (módulos legados com entity Date) |
+| `isoStringToDate` | `(string) → Date` / nullable | Converter string para Date (saída GraphQL) |
+| `dateToDateOnlyString` | `(Date) → "YYYY-MM-DD"` / nullable | Campos date-only |
+| `dateOnlyStringToDate` | `("YYYY-MM-DD") → Date` / nullable | Campos date-only (entrada) |
+
+As funções legadas (`dateToISO`, `isoToDate`, `normalizeRelationRef`, etc.) estão marcadas `@deprecated` e tipadas como `(unknown) → unknown`.
+
+### Update input (Query & Command)
+
+Para mappers de update que retornam `FindOneQuery & UpdateCommand`, **não instancie a classe e faça cast**. Retorne um plain object que satisfaz a interseção:
+
+```typescript
+// Errado — usa `as`
+const input = new ModalidadeFindOneQuery() as ModalidadeFindOneQuery & ModalidadeUpdateCommand;
+
+// Correto — plain object
+export const toUpdateInput = createMapper<
+  { params: ModalidadeFindOneInputRestDto; dto: ModalidadeUpdateInputRestDto },
+  ModalidadeFindOneQuery & ModalidadeUpdateCommand
+>(({ params, dto }) => ({
+  id: params.id,
+  nome: dto.nome,
+  slug: dto.slug,
+}));
+```
+
+---
+
 ## Migração de módulos legados
 
 Módulos não migrados ainda usam o padrão antigo (classes com static methods, `createEntityDomainMapper`, `createMapping`). Os arquivos legados em `src/shared/mapping/` estão marcados como `@deprecated`:
@@ -251,6 +290,6 @@ Módulos não migrados ainda usam o padrão antigo (classes com static methods, 
 
 **Ativo (novo padrão):**
 - `create-mapper.ts` — `createMapper`, `createListMapper`, `createPaginatedInputMapper`
-- `transforms.ts` — funções de transformação reutilizáveis (`dateToISO`, `isoToDate`, `normalizeRelationRef`, etc.)
+- `transforms.ts` — funções tipadas (`dateToISOString`, `isoStringToDate`, `pickId`, etc.) + legadas deprecated
 
-Ao migrar um módulo, siga o padrão do módulo `estado` como referência.
+Ao migrar um módulo, siga o padrão dos módulos `estado` e `modalidade` como referência.

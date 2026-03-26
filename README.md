@@ -446,39 +446,7 @@ A documentação da API REST é gerada automaticamente a partir dos decorators d
 - **Autenticar** — clicar em "Authorize" e inserir o Bearer token (ex.: `mock.matricula.1234` em desenvolvimento).
 - **Exportar** — baixar o schema OpenAPI em JSON para importar no Postman, Insomnia ou outra ferramenta.
 
-**Principais endpoints REST:**
-
-| Área | Path base | Métodos |
-|------|-----------|---------|
-| Campi | `/api/campi` | GET /, GET /:id, POST /, PATCH /:id, DELETE /:id |
-| Blocos | `/api/blocos` | GET /, GET /:id, POST /, PATCH /:id, DELETE /:id |
-| Ambientes | `/api/ambientes` | GET /, GET /:id, POST /, PATCH /:id, DELETE /:id |
-| Turmas | `/api/turmas` | GET /, GET /:id, POST /, PATCH /:id, DELETE /:id, GET /:id/horario |
-| Diários | `/api/diarios` | GET /, GET /:id, POST /, PATCH /:id, DELETE /:id |
-| Cursos | `/api/cursos` | GET /, GET /:id, POST /, PATCH /:id |
-| Disciplinas | `/api/disciplinas` | GET /, GET /:id, POST /, PATCH /:id, DELETE /:id |
-| Modalidades | `/api/modalidades` | GET /, GET /:id, POST /, PATCH /:id, DELETE /:id |
-| Usuários | `/api/usuarios` | GET /, GET /:id, POST /, PATCH /:id |
-| Autenticação | `/api/autenticacao` | GET /quem-sou-eu, POST /login, POST /login/refresh |
-| Calendários letivos | `/api/calendarios-letivos` | GET /, GET /:id, POST /, PATCH /:id, DELETE /:id |
-| Horários de aula | `/api/horarios-aula` | GET /, GET /:id, POST /, PATCH /:id, DELETE /:id |
-| Empresas | `/api/empresas` | GET /, GET /:id, POST /, PATCH /:id, DELETE /:id |
-| Estágios | `/api/estagios` | GET /, GET /:id, POST /, PATCH /:id, DELETE /:id |
-| Estados | `/api/base/estados` | GET /, GET /:id |
-| Cidades | `/api/base/cidades` | GET /, GET /:id |
-| Arquivos | `/api/arquivos` | GET /, POST / |
-| Gerar horário | `/api/gerar-horario` | POST /, GET /:id, POST /:id/aceitar, POST /:id/rejeitar |
-
-<!--
-Source of Trust
-commit_hash: ebb2cb05b8e21e5d4aae2cfcf0429805ebc7f344
-verified_at: 2026-03-23T12:30:00Z
-source_patterns:
-  - src/modules/*/presentation.rest/*.controller.ts
-  - src/infrastructure.graphql/**/*.ts
-  - src/server/nest/setup/**/*.ts
-confidence_scope: URLs da aplicação (porta 3701, prefixo /api/, endpoints /docs, /graphql, /health), endpoints REST listados por módulo
--->
+A lista completa de endpoints está disponível na documentação interativa Swagger/Scalar em `http://localhost:3701/api/docs/`.
 
 ---
 

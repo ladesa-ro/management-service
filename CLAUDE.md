@@ -49,5 +49,20 @@ Consulte os arquivos abaixo conforme o contexto da tarefa. **Leia o arquivo rele
 | [`.claude/docs/convencoes.md`](.claude/docs/convencoes.md) | Ao nomear arquivos, variáveis, imports, tipagem, formatação — regras de estilo e linguagem (PT-BR/EN) |
 | [`.claude/docs/decisoes-arquiteturais.md`](.claude/docs/decisoes-arquiteturais.md) | Antes de propor mudanças arquiteturais — lista de decisões intencionais que **não devem ser questionadas** |
 | [`.claude/docs/mapeamento.md`](.claude/docs/mapeamento.md) | Ao criar/modificar mappers — padrão `createMapper`, helpers de lista, convenções de nomenclatura, namespace imports |
+| [`CHECKLIST.md`](CHECKLIST.md) | Ao migrar módulos para o novo padrão de mappers — progresso, ordem de migração, instruções de limpeza |
 | [`.claude/docs/principios.md`](.claude/docs/principios.md) | Ao revisar ou propor código — SOLID, DDD, Clean Code, anti-patterns, qualidade técnica |
 | [`.claude/docs/ambiente.md`](.claude/docs/ambiente.md) | Ao configurar ambiente, portas, autenticação, serviços externos |
+
+---
+
+## Datas: string em vez de Date
+
+Campos de data (`dateCreated`, `dateUpdated`, `dateDeleted`, `dataNascimento`, etc.) usam **`string` (ISO 8601)** em todas as camadas TypeScript — TypeORM entities, domain, REST DTOs. A coluna no banco permanece `timestamptz`/`date`/`timestamp`.
+
+- **TypeORM Entity** — `dateCreated!: string` (não `Date`)
+- **REST DTO** — `dateCreated: string` (Swagger: `type: "string", format: "date-time"`)
+- **Mappers typeorm/REST** — passthrough, sem conversão
+- **GraphQL DTO** — exceção: mantém `Date` por exigência do scalar `@Field(() => Date)`
+- **Mapper GraphQL** — converte `string` → `Date` com `new Date(output.dateCreated)`
+
+> Migração em andamento. Módulos legados ainda usam `Date` na entity. Consultar [`CHECKLIST.md`](CHECKLIST.md) para status.

@@ -31,7 +31,7 @@ import {
   ModalidadeListOutputGraphQlDto,
   ModalidadeUpdateInputGraphQlDto,
 } from "./modalidade.graphql.dto";
-import { ModalidadeGraphqlMapper } from "./modalidade.graphql.mapper";
+import * as ModalidadeGraphqlMapper from "./modalidade.graphql.mapper";
 
 @Resolver(() => ModalidadeFindOneOutputGraphQlDto)
 export class ModalidadeGraphqlResolver {
@@ -55,7 +55,7 @@ export class ModalidadeGraphqlResolver {
   ): Promise<ModalidadeListOutputGraphQlDto> {
     const input = ModalidadeGraphqlMapper.toListInput(dto);
     const result = await this.listHandler.execute(accessContext, input);
-    return ModalidadeGraphqlMapper.toListOutputDto(result);
+    return ModalidadeGraphqlMapper.toListOutput(result);
   }
 
   @Query(() => ModalidadeFindOneOutputGraphQlDto, ModalidadeFindOneQueryMetadata.gqlMetadata)
@@ -63,9 +63,10 @@ export class ModalidadeGraphqlResolver {
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<ModalidadeFindOneOutputGraphQlDto> {
-    const result = await this.findOneHandler.execute(accessContext, { id });
-    ensureExists(result, Modalidade.entityName, id);
-    return ModalidadeGraphqlMapper.toFindOneOutputDto(result);
+    const input = ModalidadeGraphqlMapper.toFindOneInput.map(id);
+    const result = await this.findOneHandler.execute(accessContext, input);
+    ensureExists(result, Modalidade.entityName, input.id);
+    return ModalidadeGraphqlMapper.toFindOneOutput.map(result);
   }
 
   @Mutation(() => ModalidadeFindOneOutputGraphQlDto, ModalidadeCreateCommandMetadata.gqlMetadata)
@@ -73,9 +74,9 @@ export class ModalidadeGraphqlResolver {
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("input") dto: ModalidadeCreateInputGraphQlDto,
   ): Promise<ModalidadeFindOneOutputGraphQlDto> {
-    const input = ModalidadeGraphqlMapper.toCreateInput(dto);
+    const input = ModalidadeGraphqlMapper.toCreateInput.map(dto);
     const result = await this.createHandler.execute(accessContext, input);
-    return ModalidadeGraphqlMapper.toFindOneOutputDto(result);
+    return ModalidadeGraphqlMapper.toFindOneOutput.map(result);
   }
 
   @Mutation(() => ModalidadeFindOneOutputGraphQlDto, ModalidadeUpdateCommandMetadata.gqlMetadata)
@@ -84,9 +85,9 @@ export class ModalidadeGraphqlResolver {
     @Args("id", { type: () => ID }) id: string,
     @Args("input") dto: ModalidadeUpdateInputGraphQlDto,
   ): Promise<ModalidadeFindOneOutputGraphQlDto> {
-    const input = ModalidadeGraphqlMapper.toUpdateInput({ id }, dto);
+    const input = ModalidadeGraphqlMapper.toUpdateInput.map({ id, dto });
     const result = await this.updateHandler.execute(accessContext, input);
-    return ModalidadeGraphqlMapper.toFindOneOutputDto(result);
+    return ModalidadeGraphqlMapper.toFindOneOutput.map(result);
   }
 
   @Mutation(() => Boolean, ModalidadeDeleteCommandMetadata.gqlMetadata)

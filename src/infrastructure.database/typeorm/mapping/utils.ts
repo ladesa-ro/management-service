@@ -49,7 +49,11 @@ export function isoToDateNullable(iso: string | null): Date | null {
  * Útil para mapear relações carregadas sem cast manual.
  */
 export function mapDatedEntity<
-  T extends { dateCreated: Date; dateUpdated: Date; dateDeleted: Date | null },
+  T extends {
+    dateCreated: Date | string;
+    dateUpdated: Date | string;
+    dateDeleted: Date | string | null;
+  },
 >(
   entity: T,
 ): Omit<T, "dateCreated" | "dateUpdated" | "dateDeleted"> & {
@@ -57,10 +61,11 @@ export function mapDatedEntity<
   dateUpdated: string;
   dateDeleted: string | null;
 } {
+  const toISO = (v: Date | string): string => (v instanceof Date ? v.toISOString() : v);
   return {
     ...entity,
-    dateCreated: entity.dateCreated.toISOString(),
-    dateUpdated: entity.dateUpdated.toISOString(),
-    dateDeleted: entity.dateDeleted?.toISOString() ?? null,
+    dateCreated: toISO(entity.dateCreated),
+    dateUpdated: toISO(entity.dateUpdated),
+    dateDeleted: entity.dateDeleted ? toISO(entity.dateDeleted) : null,
   };
 }
