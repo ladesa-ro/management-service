@@ -142,7 +142,7 @@ export class UsuarioListInputRestDto extends PaginatedFilterByIdRestDto {
   static schema = UsuarioPaginationInputSchema;
 
   @ApiPropertyOptional(UsuarioListQueryFields.filterVinculosCargo.swaggerMetadata)
-  "filter.vinculos.cargo"?: string;
+  "filter.vinculos.cargo.nome"?: string;
 }
 
 @ApiSchema({ name: "UsuarioListOutputDto" })
