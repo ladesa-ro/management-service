@@ -1,4 +1,4 @@
-import { Provider } from "@nestjs/common";
+import { Logger, Provider } from "@nestjs/common";
 import type { IAuthOptions } from "@/infrastructure.identity-provider/options/auth-options.interface";
 import { IAuthOptions as IAuthOptionsToken } from "@/infrastructure.identity-provider/options/auth-options.interface";
 import type { IConfigService } from "../../config-service/config-service.interface";
@@ -7,14 +7,10 @@ import { ConfigTokens } from "../../config-tokens";
 
 export const AuthOptionsProvider: Provider = {
   provide: IAuthOptionsToken,
-  useFactory: (configService: IConfigService): IAuthOptions => {
+  useFactory: (configService: IConfigService): IAuthOptions | null => {
     const oidcIssuer = configService.get<string>(ConfigTokens.AuthOptions.Oidc.Issuer);
     const oidcClientId = configService.get<string>(ConfigTokens.AuthOptions.Oidc.ClientId);
     const oidcClientSecret = configService.get<string>(ConfigTokens.AuthOptions.Oidc.ClientSecret);
-
-    if (oidcIssuer === undefined || oidcClientId === undefined || oidcClientSecret === undefined) {
-      throw new Error("Please provide correct OAUTH2_CLIENT credentials.");
-    }
 
     const keycloakBaseUrl = configService.get<string>(ConfigTokens.AuthOptions.Keycloak.BaseUrl);
     const keycloakRealm = configService.get<string>(ConfigTokens.AuthOptions.Keycloak.Realm);
@@ -23,18 +19,25 @@ export const AuthOptionsProvider: Provider = {
       ConfigTokens.AuthOptions.Keycloak.ClientSecret,
     );
 
-    if (!keycloakBaseUrl) {
-      throw new Error("KeyCloak baseUrl config not provided.");
+    if (
+      !oidcIssuer ||
+      !oidcClientId ||
+      !oidcClientSecret ||
+      !keycloakBaseUrl ||
+      !keycloakRealm ||
+      !keycloakClientId ||
+      !keycloakClientSecret
+    ) {
+      Logger.warn(
+        "Auth/Keycloak credentials not fully configured. Identity provider features will be unavailable.",
+        "AppConfig",
+      );
+      return null;
     }
-    if (!keycloakRealm) {
-      throw new Error("KeyCloak realm config not provided.");
-    }
-    if (!keycloakClientId) {
-      throw new Error("KeyCloak clientId config not provided.");
-    }
-    if (!keycloakClientSecret) {
-      throw new Error("KeyCloak clientSecret config not provided.");
-    }
+
+    const keycloakPasswordResetRedirectUri =
+      configService.get<string>(ConfigTokens.AuthOptions.Keycloak.PasswordResetRedirectUri) ??
+      "https://dev.ladesa.com.br";
 
     return {
       oidcIssuer,
@@ -44,6 +47,7 @@ export const AuthOptionsProvider: Provider = {
       keycloakRealm,
       keycloakClientId,
       keycloakClientSecret,
+      keycloakPasswordResetRedirectUri,
     };
   },
   inject: [IConfigServiceToken],

@@ -1,4 +1,5 @@
 import { JwksClient, SigningKey } from "jwks-rsa";
+import { ServiceUnavailableError } from "@/application/errors";
 import { ILoggerPort, ILoggerPort as ILoggerPortToken } from "@/domain/abstractions/logging";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { OpenidConnectService } from "../openid-connect/openid-connect.service";
@@ -17,7 +18,7 @@ export class JwksRsaClientService {
     await this.setup();
 
     if (!this.#jwksClient) {
-      throw new Error("[JwksRsaClientService::error] can not create JwksClient.");
+      throw new ServiceUnavailableError(undefined, "identity-provider");
     }
 
     return this.#jwksClient;

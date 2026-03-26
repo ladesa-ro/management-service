@@ -6,6 +6,7 @@ import { IRuntimeOptions as IRuntimeOptionsToken } from "@/infrastructure.config
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import { AppController } from "@/server/nest/app.controller";
 import { AppService } from "@/server/nest/app.service";
+import { IConnectionHealthRegistry } from "@/shared/resilience/connection-health-registry.interface";
 
 /**
  * Mock RuntimeOptions for E2E tests
@@ -55,6 +56,17 @@ describe("AppController (e2e)", () => {
         {
           provide: IAppTypeormConnection,
           useValue: mockDataSource,
+        },
+        {
+          provide: IConnectionHealthRegistry,
+          useValue: {
+            register: () => {},
+            markHealthy: () => {},
+            markUnavailable: () => {},
+            getStatus: () => "healthy",
+            getAllEntries: () => [],
+            isAvailable: () => true,
+          },
         },
       ],
     }).compile();

@@ -52,7 +52,8 @@
 
 ## Transações
 
-- Automáticas via `TransactionInterceptor` global. **Nunca** chamar `.transaction()`.
+- Automáticas via `TransactionInterceptor` global apenas para **operações de escrita** (POST/PUT/PATCH/DELETE em REST, mutations em GraphQL). **Nunca** chamar `.transaction()`.
+- Operações de leitura (GET/HEAD em REST, queries em GraphQL) **não** abrem transação.
 - Repositórios participam da transação via `AppTypeormConnectionProxy` + `AsyncLocalStorage`.
 
 ## Permission checkers

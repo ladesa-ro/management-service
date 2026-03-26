@@ -1,4 +1,4 @@
-import { Provider } from "@nestjs/common";
+import { Logger, Provider } from "@nestjs/common";
 import type { IConfigService } from "../../config-service/config-service.interface";
 import { IConfigService as IConfigServiceToken } from "../../config-service/config-service.interface";
 import { ConfigTokens } from "../../config-tokens";
@@ -7,11 +7,15 @@ import { IMessageBrokerOptions as IMessageBrokerOptionsToken } from "./message-b
 
 export const MessageBrokerOptionsProvider: Provider = {
   provide: IMessageBrokerOptionsToken,
-  useFactory: (configService: IConfigService): IMessageBrokerOptions => {
+  useFactory: (configService: IConfigService): IMessageBrokerOptions | null => {
     const url = configService.get<string>(ConfigTokens.MessageBrokerOptions.Url);
 
     if (!url) {
-      throw new Error("Please provide env.MESSAGE_BROKER_URL (e.g. amqp://admin:admin@localhost)");
+      Logger.warn(
+        "MESSAGE_BROKER_URL not configured. Message broker features will be unavailable.",
+        "AppConfig",
+      );
+      return null;
     }
 
     return {

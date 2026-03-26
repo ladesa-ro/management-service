@@ -426,7 +426,7 @@ Após iniciar o servidor com `bun run dev`, acesse:
 
 | Recurso | URL | Descrição |
 |---------|-----|-----------|
-| Health check | <http://localhost:3701/health> | Verificação de saúde da aplicação (fora do prefixo) |
+| Health check | <http://localhost:3701/health> | Status de saúde por dependência (database, keycloak, etc.). Sempre retorna 200 com payload informativo. |
 | Documentação Swagger/Scalar | <http://localhost:3701/api/docs> | Documentação interativa da API REST com Scalar |
 | OpenAPI JSON | <http://localhost:3701/api/docs/openapi.v3.json> | Schema OpenAPI em JSON (para importação em Postman, Insomnia, etc.) |
 | Swagger UI | <http://localhost:3701/api/docs/swagger> | Interface Swagger UI clássica |
@@ -532,6 +532,7 @@ As variáveis são definidas no arquivo `.env`, criado automaticamente a partir 
 | `KC_REALM` | `sisgea-playground` | Realm do Keycloak |
 | `KC_CLIENT_ID` | `luna-backend` | Client ID para operações administrativas |
 | `KC_CLIENT_SECRET` | `8c9jOX...` | Client Secret para admin client |
+| `KC_PASSWORD_RESET_REDIRECT_URI` | `https://dev.ladesa.com.br` | URL de redirecionamento após reset de senha (opcional) |
 
 ### Mock de autenticação
 
@@ -772,7 +773,12 @@ graph TD
     style ROLLBACK fill:#e74c3c,stroke:#c0392b,color:#fff
 ```
 
-**Neste projeto**, as transações são **automáticas**. O `TransactionInterceptor` (em `src/server/nest/interceptors/transaction.interceptor.ts`) abre uma transação antes de cada handler. Se o handler completa sem erro → `COMMIT`. Se lança exceção → `ROLLBACK`. Como desenvolvedor, você **nunca** precisa chamar `.transaction()` manualmente.
+**Neste projeto**, as transações são **automáticas para operações de escrita**. O `TransactionInterceptor` (em `src/server/nest/interceptors/transaction.interceptor.ts`) detecta o tipo de operação e aplica transação apenas quando necessário:
+
+- **Leitura** (GET/HEAD em REST, queries em GraphQL) — executa **sem transação**, reduzindo overhead e contenção de recursos.
+- **Escrita** (POST/PUT/PATCH/DELETE em REST, mutations em GraphQL) — abre uma transação antes do handler. Se completa sem erro → `COMMIT`. Se lança exceção → `ROLLBACK`.
+
+Como desenvolvedor, você **nunca** precisa chamar `.transaction()` manualmente.
 
 ```mermaid
 sequenceDiagram
@@ -3334,7 +3340,7 @@ graph TD
 
 O mecanismo envolve três peças:
 
-1. **`TransactionInterceptor`** (`src/server/nest/interceptors/transaction.interceptor.ts`) — interceptor global que abre uma transação via `appTypeormConnection.transaction()` antes de cada handler.
+1. **`TransactionInterceptor`** (`src/server/nest/interceptors/transaction.interceptor.ts`) — interceptor global que detecta se a operação é de leitura ou escrita. Para escritas (POST/PUT/PATCH/DELETE em REST, mutations em GraphQL), abre uma transação via `appTypeormConnection.transaction()`. Leituras (GET/HEAD, queries GraphQL) executam sem transação.
 
 2. **`transactionStorage`** (`src/infrastructure.database/typeorm/connection/transaction-storage.ts`) — `AsyncLocalStorage<EntityManager>` que propaga o `EntityManager` transacional por toda a call stack:
 
@@ -3356,6 +3362,30 @@ getRepository<Entity extends ObjectLiteral>(target: EntityTarget<Entity>): Repos
   return this.dataSource.getRepository(target);
 }
 ```
+
+### Resiliência e tolerância a falhas
+
+A aplicação é projetada para iniciar e operar mesmo quando dependências externas (banco de dados, RabbitMQ, Keycloak) estão indisponíveis ou não configuradas:
+
+- **Bootstrap tolerante** — a API sobe independentemente da disponibilidade das dependências. Se uma dependência não está configurada (variáveis de ambiente ausentes), ela é marcada como `unavailable` sem tentativas de conexão. Se está configurada mas indisponível, a aplicação tenta reconectar automaticamente em background.
+- **Reconexão automática** — conexões persistentes (DB, RabbitMQ, Keycloak/OIDC) usam retry com **backoff exponencial + jitter** (`src/shared/resilience/retry-with-backoff.ts`). As tentativas continuam indefinidamente até sucesso ou encerramento do processo.
+- **Degradação controlada** — quando uma operação requer uma dependência indisponível, a API retorna `503 Service Unavailable` (via `ServiceUnavailableError`). A aplicação permanece operacional para endpoints que não dependem do serviço afetado.
+- **Mock token** — login via mock token (`ENABLE_MOCK_ACCESS_TOKEN=true`) funciona mesmo com o identity provider indisponível, desde que o banco de dados esteja acessível.
+- **Health check enriquecido** — `GET /health` sempre retorna HTTP 200 com status detalhado por dependência (`healthy`/`unavailable`), útil para monitoramento e dashboards:
+
+```json
+{
+  "status": "degraded",
+  "dependencies": {
+    "database": { "status": "healthy", "lastCheckedAt": "2026-03-26T..." },
+    "identity-provider": { "status": "unavailable", "lastCheckedAt": "...", "lastError": "..." },
+    "keycloak": { "status": "unavailable", "lastCheckedAt": "..." },
+    "message-broker": { "status": "unavailable", "lastCheckedAt": "..." }
+  }
+}
+```
+
+O registro de saúde é gerenciado por `ConnectionHealthRegistry` (`src/shared/resilience/connection-health-registry.ts`), injetável globalmente via `IConnectionHealthRegistry`.
 
 ### ZodGlobalValidationPipe
 

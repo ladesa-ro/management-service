@@ -8,4 +8,5 @@ export interface IAuthOptions {
   keycloakRealm: string;
   keycloakClientId: string;
   keycloakClientSecret: string;
+  keycloakPasswordResetRedirectUri: string;
 }
