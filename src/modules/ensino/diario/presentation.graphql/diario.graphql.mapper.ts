@@ -13,7 +13,7 @@ import {
   createListMapper,
   createMapper,
   createPaginatedInputMapper,
-  mapField,
+  into,
   mapImagemOutput,
 } from "@/shared/mapping";
 import {
@@ -85,10 +85,13 @@ export const findOneInputDtoToFindOneQuery = createMapper<string, DiarioFindOneQ
 const listInputMapper = createPaginatedInputMapper<DiarioListInputGraphQlDto, DiarioListQuery>(
   DiarioListQuery,
   (dto, query) => {
-    mapField(query, "filter.id", dto, "filterId");
-    mapField(query, "filter.turma.id", dto, "filterTurmaId");
-    mapField(query, "filter.disciplina.id", dto, "filterDisciplinaId");
-    mapField(query, "filter.calendarioLetivo.id", dto, "filterCalendarioLetivoId");
+    into(query).field("filter.id").from(dto, "filterId");
+
+    into(query).field("filter.turma.id").from(dto, "filterTurmaId");
+
+    into(query).field("filter.disciplina.id").from(dto, "filterDisciplinaId");
+
+    into(query).field("filter.calendarioLetivo.id").from(dto, "filterCalendarioLetivoId");
     // Note: filter.ambientePadrao.id is not in DiarioListQuery
   },
 );

@@ -1,5 +1,6 @@
 import type { ICommandHandler } from "@/domain/abstractions";
 import type { EnderecoInputCommand } from "./endereco-input.command";
+
 export type IEnderecoCreateOrUpdateCommand = {
   id: string | null;
   dto: EnderecoInputCommand;

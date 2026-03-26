@@ -6,12 +6,7 @@ import {
   AmbienteUpdateCommand,
 } from "@/modules/ambientes/ambiente";
 import * as BlocoRestMapper from "@/modules/ambientes/bloco/presentation.rest/bloco.rest.mapper";
-import {
-  createListMapper,
-  createMapper,
-  createPaginatedInputMapper,
-  mapField,
-} from "@/shared/mapping";
+import { createListMapper, createMapper, createPaginatedInputMapper, into } from "@/shared/mapping";
 import {
   type AmbienteCreateInputRestDto,
   type AmbienteFindOneInputRestDto,
@@ -38,9 +33,9 @@ export const listInputDtoToListQuery = createPaginatedInputMapper<
   AmbienteListInputRestDto,
   AmbienteListQuery
 >(AmbienteListQuery, (dto, query) => {
-  mapField(query, "filter.id", dto, "filter.id");
-  mapField(query, "filter.bloco.id", dto, "filter.bloco.id");
-  mapField(query, "filter.bloco.campus.id", dto, "filter.bloco.campus.id");
+  into(query).field("filter.id").from(dto);
+  into(query).field("filter.bloco.id").from(dto);
+  into(query).field("filter.bloco.campus.id").from(dto);
 });
 
 export const createInputDtoToCreateCommand = createMapper<

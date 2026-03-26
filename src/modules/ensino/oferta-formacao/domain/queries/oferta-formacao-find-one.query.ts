@@ -1,4 +1,5 @@
 import { FindOneQuery, SharedFields } from "@/domain/abstractions";
+
 export const OfertaFormacaoFindOneQueryFields = {
   id: SharedFields.idUuid,
 };

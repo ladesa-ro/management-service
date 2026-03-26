@@ -8,12 +8,7 @@ import {
   OfertaFormacaoListQuery,
   OfertaFormacaoUpdateCommand,
 } from "@/modules/ensino/oferta-formacao";
-import {
-  createListMapper,
-  createMapper,
-  createPaginatedInputMapper,
-  mapField,
-} from "@/shared/mapping";
+import { createListMapper, createMapper, createPaginatedInputMapper, into } from "@/shared/mapping";
 import {
   type OfertaFormacaoCreateInputGraphQlDto,
   OfertaFormacaoFindOneOutputGraphQlDto,
@@ -38,9 +33,9 @@ const listInputMapper = createPaginatedInputMapper<
   OfertaFormacaoListInputGraphQlDto,
   OfertaFormacaoListQuery
 >(OfertaFormacaoListQuery, (dto, query) => {
-  mapField(query, "filter.id", dto, "filterId");
-  mapField(query, "filter.modalidade.id", dto, "filterModalidadeId");
-  mapField(query, "filter.campus.id", dto, "filterCampusId");
+  into(query).field("filter.id").from(dto, "filterId");
+  into(query).field("filter.modalidade.id").from(dto, "filterModalidadeId");
+  into(query).field("filter.campus.id").from(dto, "filterCampusId");
 });
 
 export function listInputDtoToListQuery(

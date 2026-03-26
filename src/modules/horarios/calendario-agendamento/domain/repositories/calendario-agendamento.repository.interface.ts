@@ -7,6 +7,7 @@ import type { CalendarioAgendamentoFindOneQueryResult } from "../queries/calenda
 /**
  * Token de injecao para o repositorio de CalendarioAgendamento
  */
+
 export const ICalendarioAgendamentoRepository = Symbol("ICalendarioAgendamentoRepository");
 
 /**
@@ -15,6 +16,7 @@ export const ICalendarioAgendamentoRepository = Symbol("ICalendarioAgendamentoRe
  * Unifica write side (aggregate) e read side (query results).
  * Junções são gerenciadas atomicamente dentro do save().
  */
+
 export interface ICalendarioAgendamentoRepository {
   // ==========================================
   // Write side — usado por command handlers

@@ -7,6 +7,7 @@
  */
 
 /** Filtra itens ativos (dateDeleted === null) de uma coleção. */
+
 export function filterActive<T extends { dateDeleted: Date | string | null }>(
   items: T[] | undefined | null,
 ): T[] {
@@ -14,32 +15,38 @@ export function filterActive<T extends { dateDeleted: Date | string | null }>(
 }
 
 /** Extrai { id } de uma relação carregada. Retorna null se a relação for null/undefined. */
+
 export function toRef(relation: { id: string } | null | undefined): { id: string } | null {
   return relation ? { id: relation.id } : null;
 }
 
 /** Extrai { id } de uma relação carregada. Lança erro se a relação for null/undefined. */
+
 export function toRefRequired(relation: { id: string } | null | undefined): { id: string } {
   if (!relation) throw new Error("Required relation is null");
   return { id: relation.id };
 }
 
 /** Converte Date ou string do TypeORM para ISO string do domínio. */
+
 export function dateToISO(date: Date | string): string {
   return date instanceof Date ? date.toISOString() : date;
 }
 
 /** Converte ISO string do domínio para string (identity — entidades agora usam string). */
+
 export function isoToDate(iso: string): string {
   return iso;
 }
 
 /** Converte Date | string | null para string | null. */
+
 export function dateToISONullable(date: Date | string | null): string | null {
   return date instanceof Date ? date.toISOString() : date;
 }
 
 /** Converte string | null para string | null (identity — entidades agora usam string). */
+
 export function isoToDateNullable(iso: string | null): string | null {
   return iso;
 }
@@ -48,6 +55,7 @@ export function isoToDateNullable(iso: string | null): string | null {
  * Converte campos de data de uma entity TypeORM (Date) para formato query result (string).
  * Útil para mapear relações carregadas sem cast manual.
  */
+
 export function mapDatedEntity<
   T extends {
     dateCreated: Date | string;

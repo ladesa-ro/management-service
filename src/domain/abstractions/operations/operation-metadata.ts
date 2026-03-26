@@ -7,6 +7,7 @@
  *
  * Uso: instanciar via createOperationMetadata() nos *.handler.interface.ts.
  */
+
 export interface ISwaggerOperationMetadata {
   operationId: string;
   summary: string;

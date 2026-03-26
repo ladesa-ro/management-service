@@ -22,6 +22,7 @@ export const IAmbienteRepository = Symbol("IAmbienteRepository");
  * O write side retorna o aggregate de domínio reconstituído.
  * O read side retorna dados hidratados para exibição (query results).
  */
+
 export interface IAmbienteRepository {
   // ==========================================
   // Write side — usado por command handlers

@@ -6,12 +6,7 @@ import {
   CampusUpdateCommand,
 } from "@/modules/ambientes/campus";
 import * as EnderecoGraphqlMapper from "@/modules/localidades/endereco/presentation.graphql/endereco.graphql.mapper";
-import {
-  createListMapper,
-  createMapper,
-  createPaginatedInputMapper,
-  mapField,
-} from "@/shared/mapping";
+import { createListMapper, createMapper, createPaginatedInputMapper, into } from "@/shared/mapping";
 import {
   type CampusCreateInputGraphQlDto,
   CampusFindOneOutputGraphQlDto,
@@ -27,7 +22,7 @@ import {
 const listInputMapper = createPaginatedInputMapper<CampusListInputGraphQlDto, CampusListQuery>(
   CampusListQuery,
   (dto, query) => {
-    mapField(query, "filter.id", dto, "filterId");
+    into(query).field("filter.id").from(dto, "filterId");
   },
 );
 

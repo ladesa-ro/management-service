@@ -597,7 +597,9 @@ describe("into", () => {
     const source: { a?: number; b?: number } = {};
 
     // Only "a" has a default — "b" should NOT get it
+
     into(target).field("a").default(10).from(source);
+
     into(target).from(source).field("b");
 
     expect(target.a).toBe(10);

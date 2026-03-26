@@ -10,12 +10,7 @@ import {
   type EstagiarioFindOneQueryResult,
   EstagiarioListQuery,
 } from "@/modules/estagio/estagiario/domain/queries";
-import {
-  createListMapper,
-  createMapper,
-  createPaginatedInputMapper,
-  mapField,
-} from "@/shared/mapping";
+import { createListMapper, createMapper, createPaginatedInputMapper, into } from "@/shared/mapping";
 import {
   type EstagiarioCreateInputRestDto,
   type EstagiarioFindOneInputRestDto,
@@ -42,10 +37,10 @@ export const listInputDtoToListQuery = createPaginatedInputMapper<
   EstagiarioListInputRestDto,
   EstagiarioListQuery
 >(EstagiarioListQuery, (dto, query) => {
-  mapField(query, "filter.id", dto, "filter.id");
-  mapField(query, "filter.perfil.id", dto, "filter.perfil.id");
-  mapField(query, "filter.curso.id", dto, "filter.curso.id");
-  mapField(query, "filter.turma.id", dto, "filter.turma.id");
+  into(query).field("filter.id").from(dto);
+  into(query).field("filter.perfil.id").from(dto);
+  into(query).field("filter.curso.id").from(dto);
+  into(query).field("filter.turma.id").from(dto);
 });
 
 export const createInputDtoToCreateCommand = createMapper<

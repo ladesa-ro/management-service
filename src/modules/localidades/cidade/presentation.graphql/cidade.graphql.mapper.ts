@@ -4,12 +4,7 @@ import {
   CidadeListQuery,
 } from "@/modules/localidades/cidade";
 import * as EstadoGraphqlMapper from "@/modules/localidades/estado/presentation.graphql/estado.graphql.mapper";
-import {
-  createListMapper,
-  createMapper,
-  createPaginatedInputMapper,
-  mapField,
-} from "@/shared/mapping";
+import { createListMapper, createMapper, createPaginatedInputMapper, into } from "@/shared/mapping";
 import {
   CidadeFindOneOutputGraphQlDto,
   type CidadeListInputGraphQlDto,
@@ -29,10 +24,13 @@ export const findOneInputDtoToFindOneQuery = createMapper<number, CidadeFindOneQ
 const listInputMapper = createPaginatedInputMapper<CidadeListInputGraphQlDto, CidadeListQuery>(
   CidadeListQuery,
   (dto, query) => {
-    mapField(query, "filter.id", dto, "filterId");
-    mapField(query, "filter.estado.id", dto, "filterEstadoId");
-    mapField(query, "filter.estado.nome", dto, "filterEstadoNome");
-    mapField(query, "filter.estado.sigla", dto, "filterEstadoSigla");
+    into(query).field("filter.id").from(dto, "filterId");
+
+    into(query).field("filter.estado.id").from(dto, "filterEstadoId");
+
+    into(query).field("filter.estado.nome").from(dto, "filterEstadoNome");
+
+    into(query).field("filter.estado.sigla").from(dto, "filterEstadoSigla");
   },
 );
 

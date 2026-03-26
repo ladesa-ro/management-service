@@ -6,12 +6,7 @@ import {
   CampusUpdateCommand,
 } from "@/modules/ambientes/campus";
 import * as EnderecoRestMapper from "@/modules/localidades/endereco/presentation.rest/endereco.rest.mapper";
-import {
-  createListMapper,
-  createMapper,
-  createPaginatedInputMapper,
-  mapField,
-} from "@/shared/mapping";
+import { createListMapper, createMapper, createPaginatedInputMapper, into } from "@/shared/mapping";
 import {
   type CampusCreateInputRestDto,
   type CampusFindOneInputRestDto,
@@ -38,7 +33,7 @@ export const listInputDtoToListQuery = createPaginatedInputMapper<
   CampusListInputRestDto,
   CampusListQuery
 >(CampusListQuery, (dto, query) => {
-  mapField(query, "filter.id", dto, "filter.id");
+  into(query).field("filter.id").from(dto);
 });
 
 export const createInputDtoToCreateCommand = createMapper<

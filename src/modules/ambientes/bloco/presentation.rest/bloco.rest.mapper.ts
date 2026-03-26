@@ -7,12 +7,7 @@ import {
 } from "@/modules/ambientes/bloco";
 import * as CampusRestMapper from "@/modules/ambientes/campus/presentation.rest/campus.rest.mapper";
 import type { ImagemFindOneQueryResult } from "@/modules/armazenamento/imagem";
-import {
-  createListMapper,
-  createMapper,
-  createPaginatedInputMapper,
-  mapField,
-} from "@/shared/mapping";
+import { createListMapper, createMapper, createPaginatedInputMapper, into } from "@/shared/mapping";
 import { getNow } from "@/utils/date";
 import {
   type BlocoCreateInputRestDto,
@@ -42,8 +37,8 @@ export const listInputDtoToListQuery = createPaginatedInputMapper<
   BlocoListInputRestDto,
   BlocoListQuery
 >(BlocoListQuery, (dto, query) => {
-  mapField(query, "filter.id", dto, "filter.id");
-  mapField(query, "filter.campus.id", dto, "filter.campus.id");
+  into(query).field("filter.id").from(dto);
+  into(query).field("filter.campus.id").from(dto);
 });
 
 export const createInputDtoToCreateCommand = createMapper<

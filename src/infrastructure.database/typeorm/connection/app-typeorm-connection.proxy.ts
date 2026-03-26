@@ -9,6 +9,7 @@ import { getActiveEntityManager } from "./transaction-storage";
  * Isso permite que repositórios injetados participem automaticamente de transações
  * sem precisar receber o EntityManager manualmente.
  */
+
 export class AppTypeormConnectionProxy implements IAppTypeormConnection {
   constructor(private readonly dataSource: DataSource) {}
 

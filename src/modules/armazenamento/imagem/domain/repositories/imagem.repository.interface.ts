@@ -5,12 +5,14 @@ import type { ImagemArquivo } from "@/modules/armazenamento/imagem-arquivo/domai
 /**
  * Token de injecao para o repositorio de Imagem
  */
+
 export const IImagemRepository = Symbol("IImagemRepository");
 
 /**
  * Port de saida para operacoes de persistencia de Imagem
  * Define o contrato que os adapters de persistencia devem implementar
  */
+
 export interface IImagemRepository {
   create(): Imagem;
   merge(entity: Imagem, data: PartialEntity<Imagem>): void;
@@ -20,11 +22,13 @@ export interface IImagemRepository {
 /**
  * Token de injecao para o repositorio de ImagemArquivo
  */
+
 export const IImagemArquivoRepository = Symbol("IImagemArquivoRepository");
 
 /**
  * Port de saida para operacoes de persistencia de ImagemArquivo
  */
+
 export interface IImagemArquivoRepository {
   create(): ImagemArquivo;
 

@@ -43,6 +43,7 @@ export const entityToFindOneQueryResult = createMapper<
 export const domainToPersistence = createMapper<IModalidade, Partial<ModalidadeEntity>>(
   (domain) => {
     const entity: Partial<ModalidadeEntity> = {};
+
     into(entity)
       .from(domain)
       .field("id")

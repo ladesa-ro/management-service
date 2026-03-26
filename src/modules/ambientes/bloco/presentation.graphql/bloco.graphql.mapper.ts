@@ -10,7 +10,7 @@ import {
   createListMapper,
   createMapper,
   createPaginatedInputMapper,
-  mapField,
+  into,
   mapImagemOutput,
 } from "@/shared/mapping";
 import {
@@ -34,8 +34,9 @@ export const findOneInputDtoToFindOneQuery = createMapper<string, BlocoFindOneQu
 const listInputMapper = createPaginatedInputMapper<BlocoListInputGraphQlDto, BlocoListQuery>(
   BlocoListQuery,
   (dto, query) => {
-    mapField(query, "filter.id", dto, "filterId");
-    mapField(query, "filter.campus.id", dto, "filterCampusId");
+    into(query).field("filter.id").from(dto, "filterId");
+
+    into(query).field("filter.campus.id").from(dto, "filterCampusId");
   },
 );
 

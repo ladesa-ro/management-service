@@ -5,6 +5,7 @@ import type { FilterOperator } from "./pagination-config";
  * Reutiliza o type `FilterOperator` existente — valores idênticos aos do nestjs-paginate.
  * Módulos devem usar estas constantes em vez de importar diretamente de nestjs-paginate.
  */
+
 export const PaginationFilter = {
   EQ: "$eq",
   NE: "$ne",

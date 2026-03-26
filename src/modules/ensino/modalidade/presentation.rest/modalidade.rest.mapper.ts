@@ -32,7 +32,7 @@ export const listInputDtoToListQuery = createPaginatedInputMapper<
   ModalidadeListInputRestDto,
   ModalidadeListQuery
 >(ModalidadeListQuery, (dto, query) => {
-  into(query).field("filter.id").from(dto, "filter.id");
+  into(query).field("filter.id").from(dto);
 });
 
 export const createInputDtoToCreateCommand = createMapper<

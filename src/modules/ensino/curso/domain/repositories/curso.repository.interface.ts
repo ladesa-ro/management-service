@@ -15,6 +15,7 @@ import type {
 /**
  * Token de injeção para o repositório de Curso
  */
+
 export const ICursoRepository = Symbol("ICursoRepository");
 
 /**
@@ -23,6 +24,7 @@ export const ICursoRepository = Symbol("ICursoRepository");
  * Separado em write side (command handlers) e read side (query handlers).
  * O read side retorna dados hidratados para exibição (query results).
  */
+
 export interface ICursoRepository {
   // ==========================================
   // Write side — usado por command handlers

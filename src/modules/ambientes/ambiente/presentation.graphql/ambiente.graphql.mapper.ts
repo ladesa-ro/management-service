@@ -10,7 +10,7 @@ import {
   createListMapper,
   createMapper,
   createPaginatedInputMapper,
-  mapField,
+  into,
   mapImagemOutput,
 } from "@/shared/mapping";
 import {
@@ -34,9 +34,11 @@ export const findOneInputDtoToFindOneQuery = createMapper<string, AmbienteFindOn
 const listInputMapper = createPaginatedInputMapper<AmbienteListInputGraphQlDto, AmbienteListQuery>(
   AmbienteListQuery,
   (dto, query) => {
-    mapField(query, "filter.id", dto, "filterId");
-    mapField(query, "filter.bloco.id", dto, "filterBlocoId");
-    mapField(query, "filter.bloco.campus.id", dto, "filterBlocoCampusId");
+    into(query).field("filter.id").from(dto, "filterId");
+
+    into(query).field("filter.bloco.id").from(dto, "filterBlocoId");
+
+    into(query).field("filter.bloco.campus.id").from(dto, "filterBlocoCampusId");
   },
 );
 

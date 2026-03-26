@@ -710,6 +710,7 @@ graph TD
 ```typescript
 // src/modules/ambientes/campus/infrastructure.database/typeorm/campus.typeorm.entity.ts
 @Entity("campus")
+
 export class CampusEntity {
   @PrimaryColumn("uuid") id!: string;
   @Column("text") nomeFantasia!: string;
@@ -806,6 +807,7 @@ sequenceDiagram
 ```typescript
 // src/server/nest/interceptors/transaction.interceptor.ts (código real)
 @Injectable()
+
 export class TransactionInterceptor implements NestInterceptor {
   intercept(_context: ExecutionContext, next: CallHandler): Observable<unknown> {
     return from(
@@ -1204,6 +1206,7 @@ graph LR
 
 ```typescript
 // src/modules/ambientes/campus/domain/campus.schemas.ts (trecho)
+
 export const CampusCreateSchema = z.object({
   nomeFantasia: CampusFields.nomeFantasia.schema,
   razaoSocial: CampusFields.razaoSocial.schema,
@@ -2406,6 +2409,7 @@ graph TD
 
 ```typescript
 // src/modules/ambientes/campus/presentation.rest/campus.rest.dto.ts (exemplo simplificado)
+
 export class CampusCreateInputRestDto {
   static schema = CampusCreateSchema;  // Schema Zod reutilizado do domínio
 
@@ -2744,7 +2748,9 @@ import { zodValidate } from "@/shared/validation/index";
 import { getNowISO } from "@/utils/date";
 import { CampusCreateSchema, CampusSchema, CampusUpdateSchema } from "./campus.schemas";
 
+
 export type ICampus = z.infer<typeof CampusSchema>;
+
 
 export class Campus {
   static readonly entityName = "Campus";
@@ -2829,6 +2835,7 @@ import { z } from "zod";
 import { datedSchema, uuidSchema } from "@/shared/validation/schemas";
 import { CampusFields } from "./campus.fields";
 
+
 export const CampusSchema = z.object({
   id: uuidSchema,
   nomeFantasia: CampusFields.nomeFantasia.schema,
@@ -2838,6 +2845,7 @@ export const CampusSchema = z.object({
   endereco: z.object({ id: uuidSchema, /* ... */ }).passthrough(),
 }).merge(datedSchema);
 
+
 export const CampusCreateSchema = z.object({
   nomeFantasia: CampusFields.nomeFantasia.schema,
   razaoSocial: CampusFields.razaoSocial.schema,
@@ -2845,6 +2853,7 @@ export const CampusCreateSchema = z.object({
   cnpj: CampusFields.cnpj.schema,
   endereco: CampusEnderecoRefSchema,
 });
+
 
 export const CampusUpdateSchema = z.object({
   nomeFantasia: CampusFields.nomeFantasia.schema.optional(),
@@ -2889,6 +2898,7 @@ graph TD
 // src/modules/ambientes/campus/domain/campus.fields.ts
 import { z } from "zod";
 import { createFieldMetadata } from "@/domain/abstractions";
+
 
 export const CampusFields = {
   nomeFantasia: createFieldMetadata({
@@ -2939,12 +2949,15 @@ graph TD
 
 ```typescript
 // src/domain/abstractions/repositories/repository-create.interface.ts
+
 export interface IRepositoryCreate<DomainData> {
   create(data: Partial<PersistInput<DomainData>>): Promise<{ id: string | number }>;
 }
 
 // src/modules/ambientes/campus/domain/repositories/campus.repository.interface.ts
+
 export const ICampusRepository = Symbol("ICampusRepository");
+
 
 export type ICampusRepository = IRepositoryFindAll<CampusListQueryResult> &
   IRepositoryFindById<CampusFindOneQueryResult> &
@@ -3022,20 +3035,24 @@ into(query)
 
 #### Mapper de infraestrutura (TypeORM Entity → Query Result)
 
-Cada módulo define um mapper em `infrastructure.database/typeorm/{nome}.typeorm.mapper.ts`. O nome do export descreve o fluxo **de onde → para onde**:
+Cada módulo define um mapper em `infrastructure.database/typeorm/{nome}.typeorm.mapper.ts`. O nome do
+export descreve o fluxo **de onde → para onde**:
 
 ```typescript
 // estado.typeorm.mapper.ts
+
 export const entityToFindOneQueryResult = createMapper<EstadoEntity, EstadoFindOneQueryResult>(
   (entity) => {
     const queryResult = new EstadoFindOneQueryResult();
+
     into(queryResult).from(entity).field("id").field("nome").field("sigla");
     return queryResult;
   },
 );
 ```
 
-O barrel re-exporta via namespace (`export * as EstadoTypeormMapper`) e o repositório usa como callback (`EstadoTypeormMapper.entityToFindOneQueryResult.map`).
+O barrel re-exporta via namespace (`
+export * as EstadoTypeormMapper`) e o repositório usa como callback (`EstadoTypeormMapper.entityToFindOneQueryResult.map`).
 
 #### Mapper de apresentação (DTO ↔ Command/Query)
 
@@ -3045,22 +3062,28 @@ Cada mapper de apresentação organiza exports em duas regiões ("Externa → In
 import { createListMapper, createMapper, createPaginatedInputMapper, into } from "@/shared/mapping";
 
 // Externa → Interna
+
 export const findOneInputDtoToFindOneQuery = createMapper<...>((dto) => { ... });
+
 
 export const listInputDtoToListQuery = createPaginatedInputMapper<...>(
   EstadoListQuery,
   (dto, query) => {
+
     into(query).field("filter.id").from(dto, "filter.id");
   },
 );
 
+
 export const createInputDtoToCreateCommand = createMapper<...>((dto) => { ... });
 
 // Interna → Externa
+
 export const findOneQueryResultToOutputDto = createMapper<
   EstadoFindOneQueryResult,
   EstadoFindOneOutputRestDto
 >((queryResult) => ({ id: queryResult.id, nome: queryResult.nome, sigla: queryResult.sigla }));
+
 
 export const listQueryResultToListOutputDto = createListMapper(
   EstadoListOutputRestDto,
@@ -3119,12 +3142,14 @@ graph TD
 
 ```typescript
 // Contrato genérico
+
 export interface ICommandHandler<TCommand, TResult = void> {
   execute(accessContext: IAccessContext | null, command: TCommand): Promise<TResult>;
 }
 
 // Implementação real — src/modules/ambientes/campus/application/commands/campus-create.command.handler.ts
 @DeclareImplementation()
+
 export class CampusCreateCommandHandlerImpl implements ICampusCreateCommandHandler {
   constructor(
     @DeclareDependency(ICampusRepository) private readonly repository: ICampusRepository,
@@ -3172,6 +3197,7 @@ graph TD
 
 ```typescript
 // Contrato — src/domain/abstractions/permission-checker.interface.ts
+
 export interface IPermissionChecker {
   ensureCanCreate(ac: IAccessContext | null, payload: { dto: unknown }): Promise<void>;
   ensureCanUpdate(ac: IAccessContext | null, payload: { dto: unknown }, id: string): Promise<void>;
@@ -3217,6 +3243,7 @@ graph LR
 
 ```typescript
 // src/domain/dependency-injection/declare-dependency.ts
+
 export const DeclareDependency = (token: any): ParameterDecorator => {
   const injectDecorator = NestjsInject(token);
   return (target, propertyKey, parameterIndex) => {
@@ -3225,6 +3252,7 @@ export const DeclareDependency = (token: any): ParameterDecorator => {
 };
 
 // src/domain/dependency-injection/declare-implementation.ts
+
 export const DeclareImplementation = (): ClassDecorator => {
   return Injectable();
 };
@@ -3311,7 +3339,9 @@ O mecanismo envolve três peças:
 2. **`transactionStorage`** (`src/infrastructure.database/typeorm/connection/transaction-storage.ts`) — `AsyncLocalStorage<EntityManager>` que propaga o `EntityManager` transacional por toda a call stack:
 
 ```typescript
+
 export const transactionStorage = new AsyncLocalStorage<EntityManager>();
+
 export function getActiveEntityManager(): EntityManager | undefined {
   return transactionStorage.getStore();
 }
@@ -3352,6 +3382,7 @@ sequenceDiagram
 
 ```typescript
 @Injectable()
+
 export class ZodGlobalValidationPipe implements PipeTransform {
   transform(value: unknown, metadata: ArgumentMetadata) {
     const metatype = metadata.metatype;
@@ -3408,6 +3439,7 @@ graph LR
 
 ```typescript
 @Catch(ApplicationError, DomainError)
+
 export class ApplicationErrorFilter implements ExceptionFilter {
   catch(exception: ApplicationError | DomainError, host: ArgumentsHost) {
     const errorResponse = buildHttpErrorResponse(exception, request.url);
@@ -4003,7 +4035,9 @@ graph LR
 
 ```typescript
 // src/modules/ambientes/campus/domain/repositories/campus.repository.interface.ts
+
 export const ICampusRepository = Symbol("ICampusRepository");  // Token de injeção
+
 
 export type ICampusRepository =                                // Contrato
   IRepositoryFindAll<CampusListQueryResult> &
@@ -4019,6 +4053,7 @@ export type ICampusRepository =                                // Contrato
 ```typescript
 // src/modules/ambientes/campus/infrastructure.database/campus.repository.ts
 @DeclareImplementation()
+
 export class CampusTypeormRepository implements ICampusRepository {
   constructor(
     @DeclareDependency(IAppTypeormConnection) private readonly conn: IAppTypeormConnection,
@@ -4034,6 +4069,7 @@ export class CampusTypeormRepository implements ICampusRepository {
 ```typescript
 // src/modules/ambientes/campus/application/commands/campus-create.command.handler.ts
 @DeclareImplementation()
+
 export class CampusCreateCommandHandlerImpl {
   constructor(
     @DeclareDependency(ICampusRepository) private readonly repo: ICampusRepository,

@@ -28,7 +28,7 @@ export const listInputDtoToListQuery = createPaginatedInputMapper<
   EstadoListInputRestDto,
   EstadoListQuery
 >(EstadoListQuery, (dto, query) => {
-  into(query).field("filter.id").from(dto, "filter.id");
+  into(query).field("filter.id").from(dto);
 });
 
 // ============================================================================

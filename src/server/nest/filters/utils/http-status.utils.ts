@@ -1,6 +1,7 @@
 /**
  * Mapeamento de códigos de status HTTP para nomes.
  */
+
 export const HTTP_STATUS_NAMES: Record<number, string> = {
   400: "BAD_REQUEST",
   401: "UNAUTHORIZED",
@@ -22,6 +23,7 @@ export const HTTP_STATUS_NAMES: Record<number, string> = {
 /**
  * Retorna o nome do código de status HTTP.
  */
+
 export function getHttpStatusName(status: number): string {
   return HTTP_STATUS_NAMES[status] ?? "UNKNOWN_ERROR";
 }

@@ -7,12 +7,7 @@ import {
   CalendarioLetivoListQuery,
   CalendarioLetivoUpdateCommand,
 } from "@/modules/horarios/calendario-letivo";
-import {
-  createListMapper,
-  createMapper,
-  createPaginatedInputMapper,
-  mapField,
-} from "@/shared/mapping";
+import { createListMapper, createMapper, createPaginatedInputMapper, into } from "@/shared/mapping";
 import {
   type CalendarioLetivoCreateInputRestDto,
   type CalendarioLetivoFindOneInputRestDto,
@@ -39,10 +34,10 @@ export const listInputDtoToListQuery = createPaginatedInputMapper<
   CalendarioLetivoListInputRestDto,
   CalendarioLetivoListQuery
 >(CalendarioLetivoListQuery, (dto, query) => {
-  mapField(query, "filter.id", dto, "filter.id");
-  mapField(query, "filter.ano", dto, "filter.ano");
-  mapField(query, "filter.campus.id", dto, "filter.campus.id");
-  mapField(query, "filter.ofertaFormacao.id", dto, "filter.ofertaFormacao.id");
+  into(query).field("filter.id").from(dto);
+  into(query).field("filter.ano").from(dto);
+  into(query).field("filter.campus.id").from(dto);
+  into(query).field("filter.ofertaFormacao.id").from(dto);
 });
 
 export const createInputDtoToCreateCommand = createMapper<

@@ -10,12 +10,7 @@ import {
 import * as DisciplinaRestMapper from "@/modules/ensino/disciplina/presentation.rest/disciplina.rest.mapper";
 import * as TurmaRestMapper from "@/modules/ensino/turma/presentation.rest/turma.rest.mapper";
 import * as CalendarioLetivoRestMapper from "@/modules/horarios/calendario-letivo/presentation.rest/calendario-letivo.rest.mapper";
-import {
-  createListMapper,
-  createMapper,
-  createPaginatedInputMapper,
-  mapField,
-} from "@/shared/mapping";
+import { createListMapper, createMapper, createPaginatedInputMapper, into } from "@/shared/mapping";
 import {
   type DiarioCreateInputRestDto,
   type DiarioFindOneInputRestDto,
@@ -42,10 +37,10 @@ export const listInputDtoToListQuery = createPaginatedInputMapper<
   DiarioListInputRestDto,
   DiarioListQuery
 >(DiarioListQuery, (dto, query) => {
-  mapField(query, "filter.id", dto, "filter.id");
-  mapField(query, "filter.turma.id", dto, "filter.turma.id");
-  mapField(query, "filter.disciplina.id", dto, "filter.disciplina.id");
-  mapField(query, "filter.calendarioLetivo.id", dto, "filter.calendarioLetivo.id");
+  into(query).field("filter.id").from(dto);
+  into(query).field("filter.turma.id").from(dto);
+  into(query).field("filter.disciplina.id").from(dto);
+  into(query).field("filter.calendarioLetivo.id").from(dto);
 });
 
 export const createInputDtoToCreateCommand = createMapper<

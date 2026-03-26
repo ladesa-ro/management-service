@@ -9,12 +9,7 @@ import {
 import type { PerfilNestedQueryResult } from "@/modules/acesso/usuario/perfil/domain/queries/perfil-nested.query.result";
 import * as BlocoRestMapper from "@/modules/ambientes/bloco/presentation.rest/bloco.rest.mapper";
 import * as CampusRestMapper from "@/modules/ambientes/campus/presentation.rest/campus.rest.mapper";
-import {
-  createListMapper,
-  createMapper,
-  createPaginatedInputMapper,
-  mapField,
-} from "@/shared/mapping";
+import { createListMapper, createMapper, createPaginatedInputMapper, into } from "@/shared/mapping";
 import {
   type UsuarioCreateInputRestDto,
   UsuarioEnsinoCursoRefRestDto,
@@ -46,8 +41,8 @@ export const listInputDtoToListQuery = createPaginatedInputMapper<
   UsuarioListInputRestDto,
   UsuarioListQuery
 >(UsuarioListQuery, (dto, query) => {
-  mapField(query, "filter.id", dto, "filter.id");
-  mapField(query, "filter.vinculos.cargo.nome", dto, "filter.vinculos.cargo.nome");
+  into(query).field("filter.id").from(dto);
+  into(query).field("filter.vinculos.cargo.nome").from(dto);
 });
 
 export const createInputDtoToCreateCommand = createMapper<

@@ -11,7 +11,7 @@ import {
   createListMapper,
   createMapper,
   createPaginatedInputMapper,
-  mapField,
+  into,
   mapImagemOutput,
 } from "@/shared/mapping";
 import {
@@ -35,9 +35,11 @@ export const findOneInputDtoToFindOneQuery = createMapper<string, CursoFindOneQu
 const listInputMapper = createPaginatedInputMapper<CursoListInputGraphQlDto, CursoListQuery>(
   CursoListQuery,
   (dto, query) => {
-    mapField(query, "filter.id", dto, "filterId");
-    mapField(query, "filter.campus.id", dto, "filterCampusId");
-    mapField(query, "filter.ofertaFormacao.id", dto, "filterOfertaFormacaoId");
+    into(query).field("filter.id").from(dto, "filterId");
+
+    into(query).field("filter.campus.id").from(dto, "filterCampusId");
+
+    into(query).field("filter.ofertaFormacao.id").from(dto, "filterOfertaFormacaoId");
   },
 );
 

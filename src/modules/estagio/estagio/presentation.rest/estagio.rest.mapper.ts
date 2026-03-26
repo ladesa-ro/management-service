@@ -9,7 +9,7 @@ import type {
   EstagioListQuery,
   EstagioListQueryResult,
 } from "@/modules/estagio/estagio/domain/queries";
-import { createMapper, mapField } from "@/shared/mapping";
+import { createMapper, into } from "@/shared/mapping";
 import type {
   EstagioCreateInputRestDto,
   EstagioFindOneInputRestDto,
@@ -38,9 +38,11 @@ export const listInputDtoToListQuery = createMapper<EstagioListInputRestDto, Est
       search: dto.search,
     };
 
-    mapField(query, "filterEmpresaId", dto, "filter.empresa.id");
-    mapField(query, "filterEstagiarioId", dto, "filter.estagiario.id");
-    mapField(query, "filterStatus", dto, "filter.status");
+    into(query).field("filterEmpresaId").from(dto, "filter.empresa.id");
+
+    into(query).field("filterEstagiarioId").from(dto, "filter.estagiario.id");
+
+    into(query).field("filterStatus").from(dto, "filter.status");
 
     return query;
   },

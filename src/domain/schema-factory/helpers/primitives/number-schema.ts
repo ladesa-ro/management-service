@@ -9,6 +9,7 @@ const INVALID_TOKENS = new Set(["NaN", "Infinity", "-Infinity", "null", "undefin
  * Exported so that derived schemas (IntSchema, IdIntSchema) can reuse the
  * same coercion logic with their own inner Zod schema (e.g. `z.number().int()`).
  */
+
 export function numberPreprocess(value: unknown): unknown {
   if (value === null || value === undefined) return value;
 
@@ -61,6 +62,7 @@ export const NumberSchema = createSchema((standard) => {
  * schema: createSchema((standard) => safeInt(standard)) // plain int, no extra constraints
  * ```
  */
+
 export function safeInt(
   standard: { coerce: boolean },
   configure?: (schema: z.ZodNumber) => z.ZodNumber,

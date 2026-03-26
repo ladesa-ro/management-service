@@ -6,12 +6,7 @@ import {
   DisciplinaListQuery,
   DisciplinaUpdateCommand,
 } from "@/modules/ensino/disciplina";
-import {
-  createListMapper,
-  createMapper,
-  createPaginatedInputMapper,
-  mapField,
-} from "@/shared/mapping";
+import { createListMapper, createMapper, createPaginatedInputMapper, into } from "@/shared/mapping";
 import {
   type DisciplinaCreateInputRestDto,
   type DisciplinaFindOneInputRestDto,
@@ -38,7 +33,7 @@ export const listInputDtoToListQuery = createPaginatedInputMapper<
   DisciplinaListInputRestDto,
   DisciplinaListQuery
 >(DisciplinaListQuery, (dto, query) => {
-  mapField(query, "filter.id", dto, "filter.id");
+  into(query).field("filter.id").from(dto);
 });
 
 export const createInputDtoToCreateCommand = createMapper<

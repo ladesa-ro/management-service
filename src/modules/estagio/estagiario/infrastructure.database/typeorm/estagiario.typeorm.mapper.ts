@@ -30,6 +30,7 @@ export const entityToDomain = createMapper<EstagiarioTypeormEntity, IEstagiario>
  * Perfil is passed through structurally: the loaded PerfilEntity with full
  * relations is runtime-compatible with PerfilFindOneQueryResult.
  */
+
 export const entityToFindOneQueryResult = createMapper<
   EstagiarioTypeormEntity,
   EstagiarioFindOneQueryResult

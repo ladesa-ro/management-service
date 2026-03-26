@@ -14,6 +14,7 @@ export const IEstadoRepository = Symbol("IEstadoRepository");
 /**
  * Port de saída para operações de consulta de Estado (read-only).
  */
+
 export interface IEstadoRepository {
   getFindOneQueryResult: IRepositoryGetFindOneQueryResult<
     EstadoFindOneQuery,

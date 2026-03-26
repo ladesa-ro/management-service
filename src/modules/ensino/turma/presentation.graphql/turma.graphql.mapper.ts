@@ -11,7 +11,7 @@ import {
   createListMapper,
   createMapper,
   createPaginatedInputMapper,
-  mapField,
+  into,
   mapImagemOutput,
 } from "@/shared/mapping";
 import {
@@ -35,23 +35,37 @@ export const findOneInputDtoToFindOneQuery = createMapper<string, TurmaFindOneQu
 const listInputMapper = createPaginatedInputMapper<TurmaListInputGraphQlDto, TurmaListQuery>(
   TurmaListQuery,
   (dto, query) => {
-    mapField(query, "filter.id", dto, "filterId");
-    mapField(query, "filter.ambientePadraoAula.nome", dto, "filterAmbientePadraoAulaNome");
-    mapField(query, "filter.ambientePadraoAula.codigo", dto, "filterAmbientePadraoAulaCodigo");
-    mapField(
-      query,
-      "filter.ambientePadraoAula.capacidade",
-      dto,
-      "filterAmbientePadraoAulaCapacidade",
-    );
-    mapField(query, "filter.ambientePadraoAula.tipo", dto, "filterAmbientePadraoAulaTipo");
-    mapField(query, "filter.curso.id", dto, "filterCursoId");
-    mapField(query, "filter.curso.nome", dto, "filterCursoNome");
-    mapField(query, "filter.curso.nomeAbreviado", dto, "filterCursoNomeAbreviado");
-    mapField(query, "filter.curso.campus.id", dto, "filterCursoCampusId");
-    mapField(query, "filter.curso.ofertaFormacao.id", dto, "filterCursoOfertaFormacaoId");
-    mapField(query, "filter.curso.ofertaFormacao.nome", dto, "filterCursoOfertaFormacaoNome");
-    mapField(query, "filter.curso.ofertaFormacao.slug", dto, "filterCursoOfertaFormacaoSlug");
+    into(query).field("filter.id").from(dto, "filterId");
+
+    into(query).field("filter.ambientePadraoAula.nome").from(dto, "filterAmbientePadraoAulaNome");
+
+    into(query)
+      .field("filter.ambientePadraoAula.codigo")
+      .from(dto, "filterAmbientePadraoAulaCodigo");
+
+    into(query)
+      .field("filter.ambientePadraoAula.capacidade")
+      .from(dto, "filterAmbientePadraoAulaCapacidade");
+
+    into(query).field("filter.ambientePadraoAula.tipo").from(dto, "filterAmbientePadraoAulaTipo");
+
+    into(query).field("filter.curso.id").from(dto, "filterCursoId");
+
+    into(query).field("filter.curso.nome").from(dto, "filterCursoNome");
+
+    into(query).field("filter.curso.nomeAbreviado").from(dto, "filterCursoNomeAbreviado");
+
+    into(query).field("filter.curso.campus.id").from(dto, "filterCursoCampusId");
+
+    into(query).field("filter.curso.ofertaFormacao.id").from(dto, "filterCursoOfertaFormacaoId");
+
+    into(query)
+      .field("filter.curso.ofertaFormacao.nome")
+      .from(dto, "filterCursoOfertaFormacaoNome");
+
+    into(query)
+      .field("filter.curso.ofertaFormacao.slug")
+      .from(dto, "filterCursoOfertaFormacaoSlug");
   },
 );
 

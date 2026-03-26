@@ -1,6 +1,7 @@
 /**
  * Detalhe de um erro de validação
  */
+
 export interface IValidationErrorDetail {
   /** Campo que falhou na validação */
   field: string;
@@ -16,6 +17,7 @@ export interface IValidationErrorDetail {
  * Resultado de validação de domínio.
  * Acumula erros de validação e permite verificar se a entidade é válida.
  */
+
 export class ValidationResult {
   private readonly _errors: IValidationErrorDetail[] = [];
 

@@ -7,6 +7,7 @@ import type { IPaginationResult } from "./pagination-result";
  *
  * @template TQueryBuilder - Tipo do query builder da fonte de dados
  */
+
 export interface IPaginationPort<TQueryBuilder = unknown> {
   paginate<T>(
     queryBuilder: TQueryBuilder,

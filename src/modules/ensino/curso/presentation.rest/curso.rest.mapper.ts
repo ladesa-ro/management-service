@@ -8,12 +8,7 @@ import {
   CursoUpdateCommand,
 } from "@/modules/ensino/curso";
 import * as OfertaFormacaoRestMapper from "@/modules/ensino/oferta-formacao/presentation.rest/oferta-formacao.rest.mapper";
-import {
-  createListMapper,
-  createMapper,
-  createPaginatedInputMapper,
-  mapField,
-} from "@/shared/mapping";
+import { createListMapper, createMapper, createPaginatedInputMapper, into } from "@/shared/mapping";
 import {
   type CursoCreateInputRestDto,
   type CursoFindOneInputRestDto,
@@ -40,9 +35,9 @@ export const listInputDtoToListQuery = createPaginatedInputMapper<
   CursoListInputRestDto,
   CursoListQuery
 >(CursoListQuery, (dto, query) => {
-  mapField(query, "filter.id", dto, "filter.id");
-  mapField(query, "filter.campus.id", dto, "filter.campus.id");
-  mapField(query, "filter.ofertaFormacao.id", dto, "filter.ofertaFormacao.id");
+  into(query).field("filter.id").from(dto);
+  into(query).field("filter.campus.id").from(dto);
+  into(query).field("filter.ofertaFormacao.id").from(dto);
 });
 
 export const createInputDtoToCreateCommand = createMapper<

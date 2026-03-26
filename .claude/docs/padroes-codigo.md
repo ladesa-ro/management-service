@@ -13,7 +13,9 @@ import { zodValidate } from "@/shared/validation/index";
 import { getNowISO } from "@/utils/date";
 import { CampusCreateSchema, CampusSchema, CampusUpdateSchema } from "./campus.schemas";
 
+
 export type ICampus = z.infer<typeof CampusSchema>;
+
 
 export class Campus {
   static readonly entityName = "Campus";
@@ -73,6 +75,7 @@ import { z } from "zod";
 import { EntityBaseSchema } from "@/domain/entities/entity-base.schemas";
 import { EnderecoFindOneQueryResultSchema } from "@/modules/localidades/endereco/domain/queries";
 
+
 export const CampusSchema = EntityBaseSchema.extend({
   nomeFantasia: z.string().min(1),
   razaoSocial: z.string().min(1),
@@ -81,12 +84,14 @@ export const CampusSchema = EntityBaseSchema.extend({
   endereco: z.object({ id: z.string().uuid() }).or(EnderecoFindOneQueryResultSchema),
 });
 
+
 export const CampusCreateSchema = CampusSchema.omit({
   id: true,
   dateCreated: true,
   dateUpdated: true,
   dateDeleted: true,
 });
+
 
 export const CampusUpdateSchema = CampusCreateSchema.partial();
 ```
@@ -108,13 +113,16 @@ import type { ICampusRepository } from "../../../domain/repositories/campus.repo
 import type { ICampusPermissionChecker } from "../../../domain/authorization/campus.permission-checker";
 import { Campus } from "../../../domain/campus";
 
+
 export const ICampusCreateCommandHandler = Symbol("ICampusCreateCommandHandler");
+
 
 export type ICampusCreateCommandHandler = {
   execute(accessContext: IAccessContext, input: unknown): Promise<{ id: string }>;
 };
 
 @DeclareDependency(ICampusCreateCommandHandler)
+
 export class CampusCreateCommandHandler implements ICampusCreateCommandHandler {
   constructor(
     @Inject(ICampusRepository) private readonly campusRepository: ICampusRepository,
@@ -140,6 +148,7 @@ export class CampusCreateCommandHandler implements ICampusCreateCommandHandler {
 ```typescript
 // src/modules/ambientes/campus/application/queries/find-one/campus-find-one.query-handler.ts
 @DeclareDependency(ICampusFindOneQueryHandler)
+
 export class CampusFindOneQueryHandler implements ICampusFindOneQueryHandler {
   constructor(
     @Inject(ICampusRepository) private readonly campusRepository: ICampusRepository,
@@ -166,7 +175,9 @@ import type {
   IRepositorySoftDeleteById,
 } from "@/domain/abstractions";
 
+
 export const ICampusRepository = Symbol("ICampusRepository");
+
 
 export interface ICampusRepository {
   // Write side — command handlers
@@ -193,6 +204,7 @@ export interface ICampusRepository {
 ```typescript
 // src/modules/ambientes/campus/infrastructure.database/campus.repository.ts
 @DeclareImplementation(ICampusRepository)
+
 export class CampusTypeormRepository implements ICampusRepository {
   constructor(
     @Inject(IAppTypeormConnection) private readonly conn: IAppTypeormConnection,
@@ -220,11 +232,14 @@ export class CampusTypeormRepository implements ICampusRepository {
 
 ```typescript
 // Interface (domínio)
+
 export const ICampusPermissionChecker = Symbol("ICampusPermissionChecker");
+
 export type ICampusPermissionChecker = IPermissionChecker;
 
 // Implementação (aplicação)
 @DeclareDependency(ICampusPermissionChecker)
+
 export class CampusPermissionChecker implements ICampusPermissionChecker {
   async ensureCanCreate(_accessContext: IAccessContext): Promise<void> {}
   async ensureCanUpdate(_accessContext: IAccessContext): Promise<void> {}
@@ -242,6 +257,7 @@ export class CampusPermissionChecker implements ICampusPermissionChecker {
 // src/modules/ambientes/campus/presentation.rest/campus.controller.ts
 @ApiTags("Ambientes - Campus")
 @Controller("/ambientes/campus")
+
 export class CampusController {
   constructor(
     @Inject(ICampusCreateCommandHandler) private readonly createHandler: ICampusCreateCommandHandler,
@@ -272,6 +288,7 @@ export class CampusController {
 
 ```typescript
 // src/modules/ambientes/campus/presentation.rest/dto/campus-create.input.rest-dto.ts
+
 export class CampusCreateInputRestDto {
   static schema = CampusCreateSchema;
 
@@ -291,6 +308,7 @@ export class CampusCreateInputRestDto {
 
 ```typescript
 @ObjectType("Campus")
+
 export class CampusFindOneOutputGraphQlDto {
   @Field(() => String, { ...CampusQueryFields.id.gqlMetadata })
   id!: string;
@@ -301,6 +319,7 @@ export class CampusFindOneOutputGraphQlDto {
 }
 
 @Resolver(() => CampusFindOneOutputGraphQlDto)
+
 export class CampusResolver {
   @Query(() => CampusFindOneOutputGraphQlDto)
   async campusFindOne(@Args("id") id: string, @GqlAccessContext() ac: IAccessContext | null) {
@@ -318,6 +337,7 @@ export class CampusResolver {
 
 ```typescript
 // src/modules/ambientes/campus/domain/shared/campus.query-fields.ts
+
 export const CampusQueryFields = {
   id: new FieldMetadata({ description: "ID do campus", nullable: false }),
   nomeFantasia: new FieldMetadata({ description: "Nome fantasia", nullable: false }),
@@ -335,10 +355,12 @@ export const CampusQueryFields = {
 ```typescript
 // Declarando que um handler PRECISA ser injetado
 @DeclareDependency(ICampusCreateCommandHandler)
+
 export class CampusCreateCommandHandler { ... }
 
 // Declarando que uma classe IMPLEMENTA um contrato
 @DeclareImplementation(ICampusRepository)
+
 export class CampusTypeormRepository { ... }
 ```
 
@@ -382,6 +404,7 @@ Usa `nestjs-paginate` com adapter próprio. A configuração de paginação é s
 // src/modules/ambientes/campus/domain/campus.pagination-spec.ts
 import type { IPaginationSpec } from "@/application/pagination";
 import { PaginationFilter } from "@/application/pagination";
+
 
 export const campusPaginationSpec: IPaginationSpec = {
   sortableColumns: ["id", "nomeFantasia", "dateCreated"],

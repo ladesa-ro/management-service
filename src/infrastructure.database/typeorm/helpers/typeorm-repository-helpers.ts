@@ -40,6 +40,7 @@ function getRepository<Entity extends ObjectLiteral>(
  * This ensures nestjs-paginate has the JOINs needed for those columns
  * without including deep display-only relations that cause alias overflow.
  */
+
 export function buildRelationsFromColumns(columns: string[]): Record<string, unknown> {
   const relations: Record<string, unknown> = {};
 

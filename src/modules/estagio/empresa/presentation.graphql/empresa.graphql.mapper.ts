@@ -6,12 +6,7 @@ import {
   EmpresaUpdateCommand,
 } from "@/modules/estagio/empresa";
 import * as EnderecoGraphqlMapper from "@/modules/localidades/endereco/presentation.graphql/endereco.graphql.mapper";
-import {
-  createListMapper,
-  createMapper,
-  createPaginatedInputMapper,
-  mapField,
-} from "@/shared/mapping";
+import { createListMapper, createMapper, createPaginatedInputMapper, into } from "@/shared/mapping";
 import {
   type EmpresaCreateInputGraphQlDto,
   EmpresaFindOneOutputGraphQlDto,
@@ -27,10 +22,13 @@ import {
 const listInputMapper = createPaginatedInputMapper<EmpresaListInputGraphQlDto, EmpresaListQuery>(
   EmpresaListQuery,
   (dto, query) => {
-    mapField(query, "filter.id", dto, "filterId");
-    mapField(query, "filter.cnpj", dto, "filterCnpj");
-    mapField(query, "filter.nomeFantasia", dto, "filterNomeFantasia");
-    mapField(query, "filter.endereco.id", dto, "filterEnderecoId");
+    into(query).field("filter.id").from(dto, "filterId");
+
+    into(query).field("filter.cnpj").from(dto, "filterCnpj");
+
+    into(query).field("filter.nomeFantasia").from(dto, "filterNomeFantasia");
+
+    into(query).field("filter.endereco.id").from(dto, "filterEnderecoId");
   },
 );
 

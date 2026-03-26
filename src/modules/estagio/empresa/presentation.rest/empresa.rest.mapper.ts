@@ -6,12 +6,7 @@ import {
   EmpresaUpdateCommand,
 } from "@/modules/estagio/empresa";
 import * as EnderecoRestMapper from "@/modules/localidades/endereco/presentation.rest/endereco.rest.mapper";
-import {
-  createListMapper,
-  createMapper,
-  createPaginatedInputMapper,
-  mapField,
-} from "@/shared/mapping";
+import { createListMapper, createMapper, createPaginatedInputMapper, into } from "@/shared/mapping";
 import {
   type EmpresaCreateInputRestDto,
   type EmpresaFindOneInputRestDto,
@@ -38,10 +33,10 @@ export const listInputDtoToListQuery = createPaginatedInputMapper<
   EmpresaListInputRestDto,
   EmpresaListQuery
 >(EmpresaListQuery, (dto, query) => {
-  mapField(query, "filter.id", dto, "filter.id");
-  mapField(query, "filter.cnpj", dto, "filter.cnpj");
-  mapField(query, "filter.nomeFantasia", dto, "filter.nomeFantasia");
-  mapField(query, "filter.endereco.id", dto, "filter.endereco.id");
+  into(query).field("filter.id").from(dto);
+  into(query).field("filter.cnpj").from(dto);
+  into(query).field("filter.nomeFantasia").from(dto);
+  into(query).field("filter.endereco.id").from(dto);
 });
 
 export const createInputDtoToCreateCommand = createMapper<

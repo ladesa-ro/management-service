@@ -4,12 +4,7 @@ import {
   CidadeListQuery,
 } from "@/modules/localidades/cidade";
 import * as EstadoRestMapper from "@/modules/localidades/estado/presentation.rest/estado.rest.mapper";
-import {
-  createListMapper,
-  createMapper,
-  createPaginatedInputMapper,
-  mapField,
-} from "@/shared/mapping";
+import { createListMapper, createMapper, createPaginatedInputMapper, into } from "@/shared/mapping";
 import {
   type CidadeFindOneInputRestDto,
   CidadeFindOneOutputRestDto,
@@ -34,10 +29,10 @@ export const listInputDtoToListQuery = createPaginatedInputMapper<
   CidadeListInputRestDto,
   CidadeListQuery
 >(CidadeListQuery, (dto, query) => {
-  mapField(query, "filter.id", dto, "filter.id");
-  mapField(query, "filter.estado.id", dto, "filter.estado.id");
-  mapField(query, "filter.estado.nome", dto, "filter.estado.nome");
-  mapField(query, "filter.estado.sigla", dto, "filter.estado.sigla");
+  into(query).field("filter.id").from(dto);
+  into(query).field("filter.estado.id").from(dto);
+  into(query).field("filter.estado.nome").from(dto);
+  into(query).field("filter.estado.sigla").from(dto);
 });
 
 // ============================================================================

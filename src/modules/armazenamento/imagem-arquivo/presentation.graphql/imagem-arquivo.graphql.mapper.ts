@@ -3,12 +3,7 @@ import {
   type ImagemArquivoFindOneQueryResult,
   ImagemArquivoListQuery,
 } from "@/modules/armazenamento/imagem-arquivo";
-import {
-  createListMapper,
-  createMapper,
-  createPaginatedInputMapper,
-  mapField,
-} from "@/shared/mapping";
+import { createListMapper, createMapper, createPaginatedInputMapper, into } from "@/shared/mapping";
 import {
   ImagemArquivoFindOneOutputGraphQlDto,
   type ImagemArquivoListInputGraphQlDto,
@@ -31,7 +26,7 @@ const listInputMapper = createPaginatedInputMapper<
   ImagemArquivoListInputGraphQlDto,
   ImagemArquivoListQuery
 >(ImagemArquivoListQuery, (dto, query) => {
-  mapField(query, "filter.id", dto, "filterId");
+  into(query).field("filter.id").from(dto, "filterId");
 });
 
 export function listInputDtoToListQuery(

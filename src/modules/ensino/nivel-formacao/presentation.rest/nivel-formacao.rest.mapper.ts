@@ -5,12 +5,7 @@ import {
   NivelFormacaoListQuery,
   NivelFormacaoUpdateCommand,
 } from "@/modules/ensino/nivel-formacao";
-import {
-  createListMapper,
-  createMapper,
-  createPaginatedInputMapper,
-  mapField,
-} from "@/shared/mapping";
+import { createListMapper, createMapper, createPaginatedInputMapper, into } from "@/shared/mapping";
 import {
   type NivelFormacaoCreateInputRestDto,
   type NivelFormacaoFindOneInputRestDto,
@@ -37,7 +32,7 @@ export const listInputDtoToListQuery = createPaginatedInputMapper<
   NivelFormacaoListInputRestDto,
   NivelFormacaoListQuery
 >(NivelFormacaoListQuery, (dto, query) => {
-  mapField(query, "filter.id", dto, "filter.id");
+  into(query).field("filter.id").from(dto);
 });
 
 export const createInputDtoToCreateCommand = createMapper<

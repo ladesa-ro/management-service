@@ -22,6 +22,7 @@ export const IBlocoRepository = Symbol("IBlocoRepository");
  * O write side retorna o aggregate de domínio reconstituído.
  * O read side retorna dados hidratados para exibição (query results).
  */
+
 export interface IBlocoRepository {
   // ==========================================
   // Write side — usado por command handlers

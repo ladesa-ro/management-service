@@ -17,6 +17,7 @@ export const IEnderecoRepository = Symbol("IEnderecoRepository");
 /**
  * Port de saída para operações de persistência de Endereco.
  */
+
 export interface IEnderecoRepository {
   // ==========================================
   // Write side — usado por command handlers

@@ -8,12 +8,7 @@ import {
   TurmaListQuery,
   TurmaUpdateCommand,
 } from "@/modules/ensino/turma";
-import {
-  createListMapper,
-  createMapper,
-  createPaginatedInputMapper,
-  mapField,
-} from "@/shared/mapping";
+import { createListMapper, createMapper, createPaginatedInputMapper, into } from "@/shared/mapping";
 import {
   type TurmaCreateInputRestDto,
   type TurmaFindOneInputRestDto,
@@ -40,24 +35,27 @@ export const listInputDtoToListQuery = createPaginatedInputMapper<
   TurmaListInputRestDto,
   TurmaListQuery
 >(TurmaListQuery, (dto, query) => {
-  mapField(query, "filter.id", dto, "filter.id");
-  mapField(query, "filter.periodo", dto, "filter.periodo");
-  mapField(query, "filter.ambientePadraoAula.nome", dto, "filter.ambientePadraoAula.nome");
-  mapField(query, "filter.ambientePadraoAula.codigo", dto, "filter.ambientePadraoAula.codigo");
-  mapField(
-    query,
-    "filter.ambientePadraoAula.capacidade",
-    dto,
-    "filter.ambientePadraoAula.capacidade",
-  );
-  mapField(query, "filter.ambientePadraoAula.tipo", dto, "filter.ambientePadraoAula.tipo");
-  mapField(query, "filter.curso.id", dto, "filter.curso.id");
-  mapField(query, "filter.curso.nome", dto, "filter.curso.nome");
-  mapField(query, "filter.curso.nomeAbreviado", dto, "filter.curso.nomeAbreviado");
-  mapField(query, "filter.curso.campus.id", dto, "filter.curso.campus.id");
-  mapField(query, "filter.curso.ofertaFormacao.id", dto, "filter.curso.ofertaFormacao.id");
-  mapField(query, "filter.curso.ofertaFormacao.nome", dto, "filter.curso.ofertaFormacao.nome");
-  mapField(query, "filter.curso.ofertaFormacao.slug", dto, "filter.curso.ofertaFormacao.slug");
+  into(query).field("filter.id").from(dto);
+  into(query).field("filter.periodo").from(dto);
+  into(query).field("filter.ambientePadraoAula.nome").from(dto);
+  into(query)
+    .field("filter.ambientePadraoAula.codigo")
+    .from(dto, "filter.ambientePadraoAula.codigo");
+  into(query)
+    .field("filter.ambientePadraoAula.capacidade")
+    .from(dto, "filter.ambientePadraoAula.capacidade");
+  into(query).field("filter.ambientePadraoAula.tipo").from(dto);
+  into(query).field("filter.curso.id").from(dto);
+  into(query).field("filter.curso.nome").from(dto);
+  into(query).field("filter.curso.nomeAbreviado").from(dto);
+  into(query).field("filter.curso.campus.id").from(dto);
+  into(query).field("filter.curso.ofertaFormacao.id").from(dto);
+  into(query)
+    .field("filter.curso.ofertaFormacao.nome")
+    .from(dto, "filter.curso.ofertaFormacao.nome");
+  into(query)
+    .field("filter.curso.ofertaFormacao.slug")
+    .from(dto, "filter.curso.ofertaFormacao.slug");
 });
 
 export const createInputDtoToCreateCommand = createMapper<

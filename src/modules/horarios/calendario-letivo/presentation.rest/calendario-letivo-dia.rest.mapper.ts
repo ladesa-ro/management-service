@@ -1,4 +1,4 @@
-import { createListMapper, createMapper, mapField } from "@/shared/mapping";
+import { createListMapper, createMapper, into } from "@/shared/mapping";
 import {
   CalendarioLetivoDiaFindOneQuery,
   CalendarioLetivoDiaListQuery,
@@ -29,7 +29,7 @@ export function listInputDtoToListQuery(
   input.limit = dto.limit;
   input.search = dto.search;
   input.sortBy = dto.sortBy;
-  mapField(input, "filter.id", dto, "filter.id");
+  into(input).field("filter.id").from(dto);
   input["filter.calendario.id"] = [parentParams.calendarioLetivoId];
   return input;
 }

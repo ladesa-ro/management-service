@@ -1,6 +1,7 @@
 /**
  * Metadados de paginação
  */
+
 export interface IPaginationMeta {
   /** Itens por página */
   itemsPerPage: number;
@@ -30,6 +31,7 @@ export interface IPaginationMeta {
 /**
  * Links de navegação para paginação (HATEOAS)
  */
+
 export interface IPaginationLinks {
   first?: string;
   previous?: string;
@@ -41,6 +43,7 @@ export interface IPaginationLinks {
 /**
  * Resultado de uma consulta paginada
  */
+
 export interface IPaginationResult<T> {
   data: T[];
   meta: IPaginationMeta;

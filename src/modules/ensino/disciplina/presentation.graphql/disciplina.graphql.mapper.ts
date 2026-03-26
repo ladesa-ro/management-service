@@ -9,7 +9,7 @@ import {
   createListMapper,
   createMapper,
   createPaginatedInputMapper,
-  mapField,
+  into,
   mapImagemOutput,
 } from "@/shared/mapping";
 import {
@@ -34,8 +34,8 @@ const listInputMapper = createPaginatedInputMapper<
   DisciplinaListInputGraphQlDto,
   DisciplinaListQuery
 >(DisciplinaListQuery, (dto, query) => {
-  mapField(query, "filter.id", dto, "filterId");
-  mapField(query, "filter.diarios.id", dto, "filterDiariosId");
+  into(query).field("filter.id").from(dto, "filterId");
+  into(query).field("filter.diarios.id").from(dto, "filterDiariosId");
 });
 
 export function listInputDtoToListQuery(

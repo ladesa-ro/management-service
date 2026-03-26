@@ -20,6 +20,7 @@ export function createMapper<I, O>(mapFn: (input: I) => O): Mapper<I, O> {
 /**
  * @deprecated Use `into(target).from(source).field(...)` em vez de `mapField`.
  */
+
 export function mapField<
   TTarget,
   TKTarget extends keyof TTarget,
@@ -92,6 +93,7 @@ interface IntoChain<TTarget> {
  *   .field("page").default(1).from(dto)
  *   .field("userId").required().from(auth);
  */
+
 export function into<TTarget>(target: TTarget): IntoChain<TTarget> {
   let globalSource: object | undefined;
 
@@ -210,6 +212,7 @@ export function into<TTarget>(target: TTarget): IntoChain<TTarget> {
  *
  * Instancia o DTO de lista, copia o meta de paginação e mapeia cada item do data.
  */
+
 export function createListMapper<
   TItemIn,
   TItemOut,
@@ -251,7 +254,8 @@ function mapPaginationFields(dto: PaginationLike, query: PaginationLike): void {
  *
  * @example
  * // REST (filter fields usam dot notation)
- * export const toListInput = createPaginatedInputMapper(EstadoListQuery, (dto, query) => {
+ *
+export const toListInput = createPaginatedInputMapper(EstadoListQuery, (dto, query) => {
  *   into(query).field("filter.id").from(dto, "filter.id");
  * });
  *
@@ -260,6 +264,7 @@ function mapPaginationFields(dto: PaginationLike, query: PaginationLike): void {
  *   into(query).field("filter.id").from(dto, "filterId");
  * });
  */
+
 export function createPaginatedInputMapper<
   TDto extends PaginationLike,
   TQuery extends PaginationLike,
@@ -315,6 +320,7 @@ export interface ImagemLike {
  * Mapeia uma imagem com versões para o formato de output GraphQL.
  * Usa interfaces estruturais para acomodar diferentes shapes de query result.
  */
+
 export function mapImagemOutput<T = unknown>(imagem: ImagemLike | null | undefined): T | null {
   if (!imagem) return null;
   return {

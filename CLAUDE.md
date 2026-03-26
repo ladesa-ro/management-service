@@ -75,9 +75,11 @@ Documentação completa em [`.claude/docs/mapeamento.md`](.claude/docs/mapeament
 
 ### Nomes de exports nos mappers
 
-O nome do export descreve **de onde → para onde** o dado flui:
+O nome do
+export descreve **de onde → para onde** o dado flui:
 
-| Export | Padrão |
+|
+export | Padrão |
 |--------|--------|
 | `findOneInputDtoToFindOneQuery` | DTO de input → FindOneQuery |
 | `listInputDtoToListQuery` | DTO de list input → ListQuery |

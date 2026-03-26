@@ -8,12 +8,7 @@ import {
   EstagiarioListQuery,
   EstagiarioUpdateCommand,
 } from "@/modules/estagio/estagiario";
-import {
-  createListMapper,
-  createMapper,
-  createPaginatedInputMapper,
-  mapField,
-} from "@/shared/mapping";
+import { createListMapper, createMapper, createPaginatedInputMapper, into } from "@/shared/mapping";
 import {
   type EstagiarioCreateInputGraphQlDto,
   EstagiarioFindOneOutputGraphQlDto,
@@ -36,10 +31,10 @@ const listInputMapper = createPaginatedInputMapper<
   EstagiarioListInputGraphQlDto,
   EstagiarioListQuery
 >(EstagiarioListQuery, (dto, query) => {
-  mapField(query, "filter.id", dto, "filterId");
-  mapField(query, "filter.perfil.id", dto, "filterPerfilId");
-  mapField(query, "filter.curso.id", dto, "filterCursoId");
-  mapField(query, "filter.turma.id", dto, "filterTurmaId");
+  into(query).field("filter.id").from(dto, "filterId");
+  into(query).field("filter.perfil.id").from(dto, "filterPerfilId");
+  into(query).field("filter.curso.id").from(dto, "filterCursoId");
+  into(query).field("filter.turma.id").from(dto, "filterTurmaId");
 });
 
 export function listInputDtoToListQuery(

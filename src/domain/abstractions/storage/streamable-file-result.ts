@@ -7,6 +7,7 @@ import type { Readable } from "node:stream";
  * acoplar a NestJS StreamableFile. A conversão para StreamableFile
  * é feita na camada de presentation.
  */
+
 export interface IStreamableFileResult {
   readonly stream: Readable;
   readonly mimeType?: string;

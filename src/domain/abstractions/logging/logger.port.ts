@@ -4,6 +4,7 @@
  * Domain e application NUNCA importam logger concreto.
  * Infrastructure e presentation injetam a implementação.
  */
+
 export const ILoggerPort = Symbol("ILoggerPort");
 
 export interface ILoggerPort {

@@ -4,6 +4,7 @@ import { createOperationMetadata } from "@/domain/abstractions";
 /**
  * Opcoes para salvar imagem
  */
+
 export type ISaveImageOptions = {
   minWidth: number;
   minHeight: number;

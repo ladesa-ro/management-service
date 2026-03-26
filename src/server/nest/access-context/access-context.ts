@@ -6,6 +6,7 @@ import type { IAppTypeormConnection } from "@/infrastructure.database/typeorm/co
  * Contexto de acesso simplificado.
  * Contém apenas o DataSource e o ator da requisição.
  */
+
 export class AccessContext implements IAccessContext {
   constructor(
     readonly appTypeormConnection: IAppTypeormConnection,
