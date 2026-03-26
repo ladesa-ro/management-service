@@ -3,12 +3,7 @@ import {
   type EstadoFindOneQueryResult,
   EstadoListQuery,
 } from "@/modules/localidades/estado";
-import {
-  createListMapper,
-  createMapper,
-  createPaginatedInputMapper,
-  mapField,
-} from "@/shared/mapping";
+import { createListMapper, createMapper, createPaginatedInputMapper, into } from "@/shared/mapping";
 import {
   EstadoFindOneOutputGraphQlDto,
   type EstadoListInputGraphQlDto,
@@ -22,7 +17,7 @@ import {
 const listInputMapper = createPaginatedInputMapper<EstadoListInputGraphQlDto, EstadoListQuery>(
   EstadoListQuery,
   (dto, query) => {
-    mapField(query, "filter.id", dto, "filterId");
+    into(query).field("filter.id").from(dto, "filterId");
   },
 );
 
