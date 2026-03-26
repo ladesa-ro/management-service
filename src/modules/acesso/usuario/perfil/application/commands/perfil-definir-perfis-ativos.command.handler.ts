@@ -2,6 +2,7 @@ import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
+import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import { IUsuarioFindByIdSimpleQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-find-by-id-simple.query.handler.interface";
 import { Usuario } from "@/modules/acesso/usuario/domain/usuario";
 import type { PerfilDefinirPerfisAtivosCommand } from "@/modules/acesso/usuario/perfil/domain/commands/perfil-definir-perfis-ativos.command";
@@ -12,11 +13,15 @@ import { ICampusFindOneQueryHandler } from "@/modules/ambientes/campus/domain/qu
 import type { PerfilListQuery, PerfilListQueryResult } from "../../domain/queries";
 import { IPerfilRepository } from "../../domain/repositories";
 
+type CargoResult = { id: string; nome: string };
+
 @DeclareImplementation()
 export class PerfilDefinirPerfisAtivosCommandHandlerImpl
   implements IPerfilDefinirPerfisAtivosCommandHandler
 {
   constructor(
+    @DeclareDependency(IAppTypeormConnection)
+    private readonly appTypeormConnection: IAppTypeormConnection,
     @DeclareDependency(IPerfilRepository)
     private readonly perfilRepository: IPerfilRepository,
     @DeclareDependency(ICampusFindOneQueryHandler)
@@ -76,8 +81,14 @@ export class PerfilDefinirPerfisAtivosCommandHandlerImpl
       campusId,
     );
 
-    for (const cargo of cargos) {
-      const vinculoExistente = vinculosExistentes.find((v) => v.cargo === cargo);
+    for (const cargoNome of cargos) {
+      const cargo = await this.findOrCreateCargoByNome(cargoNome);
+
+      const vinculoExistente = vinculosExistentes.find((v) => {
+        const vinculoCargoId = v.cargo?.id;
+        const vinculoCargoNome = v.cargo?.nome;
+        return vinculoCargoId === cargo.id || vinculoCargoNome === cargo.nome;
+      });
 
       if (vinculoExistente) {
         vinculosParaManter.add(vinculoExistente.id);
@@ -95,7 +106,7 @@ export class PerfilDefinirPerfisAtivosCommandHandlerImpl
       const data = {
         id: vinculoExistente?.id ?? generateUuidV7(),
         ativo: true,
-        cargo,
+        cargo: { id: cargo.id },
         dateDeleted: null,
         usuario: { id: usuarioId },
         campus: { id: campusId },
@@ -116,5 +127,36 @@ export class PerfilDefinirPerfisAtivosCommandHandlerImpl
     if (vinculosParaDesativar.length > 0) {
       await this.perfilRepository.deactivateByIds(vinculosParaDesativar.map((v) => v.id));
     }
+  }
+
+  private normalizeCargoNome(cargoNome: string): string {
+    return cargoNome.trim();
+  }
+
+  private async findOrCreateCargoByNome(cargoNome: string): Promise<CargoResult> {
+    const nome = this.normalizeCargoNome(cargoNome);
+
+    const repo = this.appTypeormConnection.getRepository("cargo");
+
+    const existente = await repo
+      .createQueryBuilder("cargo")
+      .select(["cargo.id AS id", "cargo.nome AS nome"])
+      .where("cargo.nome = :nome", { nome })
+      .getRawOne<CargoResult>();
+
+    if (existente) {
+      return existente;
+    }
+
+    const novoCargo: CargoResult = { id: generateUuidV7(), nome };
+
+    await repo
+      .createQueryBuilder()
+      .insert()
+      .into("cargo")
+      .values(novoCargo)
+      .execute();
+
+    return novoCargo;
   }
 }
