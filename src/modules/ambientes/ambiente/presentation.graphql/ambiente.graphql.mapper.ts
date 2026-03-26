@@ -1,86 +1,101 @@
 import {
   AmbienteCreateCommand,
   AmbienteFindOneQuery,
-  AmbienteFindOneQueryResult,
+  type AmbienteFindOneQueryResult,
   AmbienteListQuery,
   AmbienteUpdateCommand,
 } from "@/modules/ambientes/ambiente";
-import { BlocoGraphqlMapper } from "@/modules/ambientes/bloco/presentation.graphql/bloco.graphql.mapper";
+import * as BlocoGraphqlMapper from "@/modules/ambientes/bloco/presentation.graphql/bloco.graphql.mapper";
 import {
-  createFindOneInputMapper,
-  createListOutputMapper,
-  mapDatedFields,
+  createListMapper,
+  createMapper,
+  createPaginatedInputMapper,
+  into,
   mapImagemOutput,
 } from "@/shared/mapping";
 import {
-  AmbienteCreateInputGraphQlDto,
+  type AmbienteCreateInputGraphQlDto,
   AmbienteFindOneOutputGraphQlDto,
-  AmbienteListInputGraphQlDto,
+  type AmbienteListInputGraphQlDto,
   AmbienteListOutputGraphQlDto,
-  AmbienteUpdateInputGraphQlDto,
+  type AmbienteUpdateInputGraphQlDto,
 } from "./ambiente.graphql.dto";
 
-export class AmbienteGraphqlMapper {
-  static toListInput(dto: AmbienteListInputGraphQlDto | null): AmbienteListQuery | null {
-    if (!dto) {
-      return null;
-    }
+// ============================================================================
+// Externa -> Interna (Input: Presentation -> Core)
+// ============================================================================
 
-    const input = new AmbienteListQuery();
-    input.page = dto.page;
-    input.limit = dto.limit;
-    input.search = dto.search;
-    input.sortBy = dto.sortBy;
-    input["filter.id"] = dto.filterId;
-    input["filter.bloco.id"] = dto.filterBlocoId;
-    input["filter.bloco.campus.id"] = dto.filterBlocoCampusId;
-    return input;
-  }
+export const findOneInputDtoToFindOneQuery = createMapper<string, AmbienteFindOneQuery>((id) => {
+  const input = new AmbienteFindOneQuery();
+  input.id = id;
+  return input;
+});
 
-  static toFindOneInput = createFindOneInputMapper(AmbienteFindOneQuery);
+const listInputMapper = createPaginatedInputMapper<AmbienteListInputGraphQlDto, AmbienteListQuery>(
+  AmbienteListQuery,
+  (dto, query) => {
+    into(query).field("filter.id").from(dto, "filterId");
 
-  static toCreateInput(dto: AmbienteCreateInputGraphQlDto): AmbienteCreateCommand {
-    const input = new AmbienteCreateCommand();
-    input.nome = dto.nome;
-    input.descricao = dto.descricao ?? null;
-    input.codigo = dto.codigo;
-    input.capacidade = dto.capacidade ?? null;
-    input.tipo = dto.tipo ?? null;
-    input.bloco = { id: dto.bloco.id };
-    return input;
-  }
+    into(query).field("filter.bloco.id").from(dto, "filterBlocoId");
 
-  static toUpdateInput(
-    params: { id: string },
-    dto: AmbienteUpdateInputGraphQlDto,
-  ): AmbienteFindOneQuery & AmbienteUpdateCommand {
-    const input = new AmbienteFindOneQuery() as AmbienteFindOneQuery & AmbienteUpdateCommand;
-    input.id = params.id;
-    if (dto.nome !== undefined) input.nome = dto.nome;
-    if (dto.descricao !== undefined) input.descricao = dto.descricao ?? null;
-    if (dto.codigo !== undefined) input.codigo = dto.codigo;
-    if (dto.capacidade !== undefined) input.capacidade = dto.capacidade ?? null;
-    if (dto.tipo !== undefined) input.tipo = dto.tipo ?? null;
-    if (dto.bloco !== undefined) input.bloco = { id: dto.bloco.id };
-    return input;
-  }
+    into(query).field("filter.bloco.campus.id").from(dto, "filterBlocoCampusId");
+  },
+);
 
-  static toFindOneOutputDto(output: AmbienteFindOneQueryResult): AmbienteFindOneOutputGraphQlDto {
-    const dto = new AmbienteFindOneOutputGraphQlDto();
-    dto.id = output.id;
-    dto.nome = output.nome;
-    dto.descricao = output.descricao;
-    dto.codigo = output.codigo;
-    dto.capacidade = output.capacidade;
-    dto.tipo = output.tipo;
-    dto.bloco = BlocoGraphqlMapper.toFindOneOutputDto(output.bloco);
-    dto.imagemCapa = mapImagemOutput(output.imagemCapa);
-    mapDatedFields(dto, output);
-    return dto;
-  }
-
-  static toListOutputDto = createListOutputMapper(
-    AmbienteListOutputGraphQlDto,
-    AmbienteGraphqlMapper.toFindOneOutputDto,
-  );
+export function listInputDtoToListQuery(
+  dto: AmbienteListInputGraphQlDto | null,
+): AmbienteListQuery | null {
+  if (!dto) return null;
+  return listInputMapper.map(dto);
 }
+
+export const createInputDtoToCreateCommand = createMapper<
+  AmbienteCreateInputGraphQlDto,
+  AmbienteCreateCommand
+>((dto) => ({
+  nome: dto.nome,
+  descricao: dto.descricao ?? null,
+  codigo: dto.codigo,
+  capacidade: dto.capacidade ?? null,
+  tipo: dto.tipo ?? null,
+  bloco: { id: dto.bloco.id },
+}));
+
+export const updateInputDtoToUpdateCommand = createMapper<
+  { id: string; dto: AmbienteUpdateInputGraphQlDto },
+  AmbienteFindOneQuery & AmbienteUpdateCommand
+>(({ id, dto }) => ({
+  id,
+  nome: dto.nome,
+  descricao: dto.descricao !== undefined ? (dto.descricao ?? null) : undefined,
+  codigo: dto.codigo,
+  capacidade: dto.capacidade !== undefined ? (dto.capacidade ?? null) : undefined,
+  tipo: dto.tipo !== undefined ? (dto.tipo ?? null) : undefined,
+  bloco: dto.bloco ? { id: dto.bloco.id } : undefined,
+}));
+
+// ============================================================================
+// Interna -> Externa (Output: Core -> Presentation)
+// ============================================================================
+
+export const findOneQueryResultToOutputDto = createMapper<
+  AmbienteFindOneQueryResult,
+  AmbienteFindOneOutputGraphQlDto
+>((output) => ({
+  id: output.id,
+  nome: output.nome,
+  descricao: output.descricao,
+  codigo: output.codigo,
+  capacidade: output.capacidade,
+  tipo: output.tipo,
+  bloco: BlocoGraphqlMapper.findOneQueryResultToOutputDto.map(output.bloco),
+  imagemCapa: mapImagemOutput(output.imagemCapa),
+  dateCreated: new Date(output.dateCreated),
+  dateUpdated: new Date(output.dateUpdated),
+  dateDeleted: output.dateDeleted ? new Date(output.dateDeleted) : null,
+}));
+
+export const listQueryResultToListOutputDto = createListMapper(
+  AmbienteListOutputGraphQlDto,
+  findOneQueryResultToOutputDto,
+);

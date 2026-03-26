@@ -68,7 +68,7 @@ import {
   AmbienteListOutputRestDto,
   AmbienteUpdateInputRestDto,
 } from "./ambiente.rest.dto";
-import { AmbienteRestMapper } from "./ambiente.rest.mapper";
+import * as AmbienteRestMapper from "./ambiente.rest.mapper";
 
 @ApiTags("ambientes")
 @Controller("/ambientes")
@@ -107,9 +107,9 @@ export class AmbienteRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Query() dto: AmbienteListInputRestDto,
   ): Promise<AmbienteListOutputRestDto> {
-    const input = AmbienteRestMapper.toListInput(dto);
-    const result = await this.listHandler.execute(accessContext, input);
-    return AmbienteRestMapper.toListOutputDto(result);
+    const query = AmbienteRestMapper.listInputDtoToListQuery.map(dto);
+    const queryResult = await this.listHandler.execute(accessContext, query);
+    return AmbienteRestMapper.listQueryResultToListOutputDto(queryResult);
   }
 
   @Get("/:id/disponibilidade")
@@ -134,10 +134,10 @@ export class AmbienteRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: AmbienteFindOneInputRestDto,
   ): Promise<AmbienteFindOneOutputRestDto> {
-    const input = AmbienteRestMapper.toFindOneInput(params);
-    const result = await this.findOneHandler.execute(accessContext, input);
-    ensureExists(result, Ambiente.entityName, input.id);
-    return AmbienteRestMapper.toFindOneOutputDto(result);
+    const query = AmbienteRestMapper.findOneInputDtoToFindOneQuery.map(params);
+    const queryResult = await this.findOneHandler.execute(accessContext, query);
+    ensureExists(queryResult, Ambiente.entityName, query.id);
+    return AmbienteRestMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Post("/")
@@ -148,9 +148,9 @@ export class AmbienteRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Body() dto: AmbienteCreateInputRestDto,
   ): Promise<AmbienteFindOneOutputRestDto> {
-    const input = AmbienteRestMapper.toCreateInput(dto);
-    const result = await this.createHandler.execute(accessContext, input);
-    return AmbienteRestMapper.toFindOneOutputDto(result);
+    const command = AmbienteRestMapper.createInputDtoToCreateCommand.map(dto);
+    const queryResult = await this.createHandler.execute(accessContext, command);
+    return AmbienteRestMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Patch("/:id")
@@ -163,9 +163,9 @@ export class AmbienteRestController {
     @Param() params: AmbienteFindOneInputRestDto,
     @Body() dto: AmbienteUpdateInputRestDto,
   ): Promise<AmbienteFindOneOutputRestDto> {
-    const input = AmbienteRestMapper.toUpdateInput(params, dto);
-    const result = await this.updateHandler.execute(accessContext, input);
-    return AmbienteRestMapper.toFindOneOutputDto(result);
+    const command = AmbienteRestMapper.updateInputDtoToUpdateCommand.map({ params, dto });
+    const queryResult = await this.updateHandler.execute(accessContext, command);
+    return AmbienteRestMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Get("/:id/imagem/capa")
@@ -177,10 +177,10 @@ export class AmbienteRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: AmbienteFindOneInputRestDto,
   ) {
-    const result = await this.getImagemCapaHandler.execute(accessContext, { id: params.id });
-    return new StreamableFile(result.stream, {
-      type: result.mimeType,
-      disposition: result.disposition,
+    const queryResult = await this.getImagemCapaHandler.execute(accessContext, { id: params.id });
+    return new StreamableFile(queryResult.stream, {
+      type: queryResult.mimeType,
+      disposition: queryResult.disposition,
     });
   }
 
@@ -217,7 +217,7 @@ export class AmbienteRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: AmbienteFindOneInputRestDto,
   ): Promise<boolean> {
-    const input = AmbienteRestMapper.toFindOneInput(params);
-    return this.deleteHandler.execute(accessContext, input);
+    const query = AmbienteRestMapper.findOneInputDtoToFindOneQuery.map(params);
+    return this.deleteHandler.execute(accessContext, query);
   }
 }

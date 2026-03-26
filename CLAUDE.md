@@ -48,5 +48,78 @@ Consulte os arquivos abaixo conforme o contexto da tarefa. **Leia o arquivo rele
 | [`.claude/docs/padroes-codigo.md`](.claude/docs/padroes-codigo.md) | Ao escrever código novo — contém exemplos reais de entidades, handlers, repositórios, controllers, DTOs, schemas, mappers |
 | [`.claude/docs/convencoes.md`](.claude/docs/convencoes.md) | Ao nomear arquivos, variáveis, imports, tipagem, formatação — regras de estilo e linguagem (PT-BR/EN) |
 | [`.claude/docs/decisoes-arquiteturais.md`](.claude/docs/decisoes-arquiteturais.md) | Antes de propor mudanças arquiteturais — lista de decisões intencionais que **não devem ser questionadas** |
+| [`.claude/docs/mapeamento.md`](.claude/docs/mapeamento.md) | Ao criar/modificar mappers — API `into`, `createMapper`, helpers de lista, convenções de nomenclatura, namespace imports |
+| [`CHECKLIST.md`](CHECKLIST.md) | Ao migrar módulos para o novo padrão de mappers — progresso, ordem de migração, instruções de limpeza |
 | [`.claude/docs/principios.md`](.claude/docs/principios.md) | Ao revisar ou propor código — SOLID, DDD, Clean Code, anti-patterns, qualidade técnica |
 | [`.claude/docs/ambiente.md`](.claude/docs/ambiente.md) | Ao configurar ambiente, portas, autenticação, serviços externos |
+
+---
+
+## Datas: string em vez de Date
+
+Campos de data (`dateCreated`, `dateUpdated`, `dateDeleted`, `dataNascimento`, etc.) usam **`string` (ISO 8601)** em todas as camadas TypeScript — TypeORM entities, domain, REST DTOs. A coluna no banco permanece `timestamptz`/`date`/`timestamp`.
+
+- **TypeORM Entity** — `dateCreated!: string` (não `Date`)
+- **REST DTO** — `dateCreated: string` (Swagger: `type: "string", format: "date-time"`)
+- **Mappers typeorm/REST** — passthrough, sem conversão
+- **GraphQL DTO** — exceção: mantém `Date` por exigência do scalar `@Field(() => Date)`
+- **Mapper GraphQL** — converte `string` → `Date` com `new Date(output.dateCreated)`
+
+> Migração em andamento. Módulos legados ainda usam `Date` na entity. Consultar [`CHECKLIST.md`](CHECKLIST.md) para status.
+
+---
+
+## Convenções de mapeamento
+
+Documentação completa em [`.claude/docs/mapeamento.md`](.claude/docs/mapeamento.md). Resumo das regras de nomenclatura:
+
+### Nomes de exports nos mappers
+
+O nome do
+export descreve **de onde → para onde** o dado flui:
+
+|
+export | Padrão |
+|--------|--------|
+| `findOneInputDtoToFindOneQuery` | DTO de input → FindOneQuery |
+| `listInputDtoToListQuery` | DTO de list input → ListQuery |
+| `createInputDtoToCreateCommand` | DTO de create → CreateCommand |
+| `updateInputDtoToUpdateCommand` | DTO de update → UpdateCommand |
+| `findOneQueryResultToOutputDto` | QueryResult → DTO de output |
+| `listQueryResultToListOutputDto` | ListQueryResult → ListOutputDto |
+| `entityToFindOneQueryResult` | TypeORM Entity → FindOneQueryResult (infraestrutura) |
+| `entityToDomain` | TypeORM Entity → Domain Interface (infraestrutura) |
+| `domainToPersistence` | Domain → Entity parcial (infraestrutura) |
+
+### Nomes de variáveis nos callbacks e consumers
+
+| Contexto | Parâmetro | Variável local |
+|----------|-----------|----------------|
+| Typeorm mapper: entity → domain | `(entity)` | `domain` |
+| Typeorm mapper: entity → queryResult | `(entity)` | `queryResult` |
+| Typeorm mapper: domain → entity | `(domain)` | `entity` |
+| Presentation: dto → query | `(dto)` | `query` |
+| Presentation: dto → command | `(dto)` | `command` |
+| Presentation: queryResult → dto | `(queryResult)` | — (retorna literal) |
+| Controller/Resolver: query handler | — | `query`, `queryResult` |
+| Controller/Resolver: command handler | — | `command`, `queryResult` |
+| `createPaginatedInputMapper` callback | `(dto, query)` ou `(source, query)` | — |
+
+### API `into` para mapeamento de campos
+
+```typescript
+// Forma canônica — source global
+into(query).from(dto).field("filter.id", "filterId").field("page");
+
+// Forma per-field — múltiplas sources
+into(query)
+  .field("filter.id").from(dto, "filterId")
+  .field("tenantId").from(context);
+
+// Pipeline por campo
+into(query)
+  .field("page").default(1).from(dto)
+  .field("userId").required().from(auth);
+```
+
+`mapField` é **deprecated** — usar `into` em código novo.

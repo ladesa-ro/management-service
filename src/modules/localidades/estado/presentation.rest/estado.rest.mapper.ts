@@ -1,40 +1,50 @@
 import {
   EstadoFindOneQuery,
-  EstadoFindOneQueryResult,
+  type EstadoFindOneQueryResult,
   EstadoListQuery,
 } from "@/modules/localidades/estado";
-import { createListInputMapper, createListOutputMapper, createMapping } from "@/shared/mapping";
+import { createListMapper, createMapper, createPaginatedInputMapper, into } from "@/shared/mapping";
 import {
-  EstadoFindOneInputRestDto,
+  type EstadoFindOneInputRestDto,
   EstadoFindOneOutputRestDto,
+  type EstadoListInputRestDto,
   EstadoListOutputRestDto,
 } from "./estado.rest.dto";
 
-const outputMapping = createMapping(["id", "nome", "sigla"]);
+// ============================================================================
+// Externa → Interna (Input: Presentation → Core)
+// ============================================================================
 
-export class EstadoRestMapper {
-  // ============================================================================
-  // Input: Server DTO -> Core DTO
-  // ============================================================================
+export const findOneInputDtoToFindOneQuery = createMapper<
+  EstadoFindOneInputRestDto,
+  EstadoFindOneQuery
+>((dto) => {
+  const query = new EstadoFindOneQuery();
+  query.id = dto.id;
+  return query;
+});
 
-  static toFindOneInput(dto: EstadoFindOneInputRestDto): EstadoFindOneQuery {
-    const input = new EstadoFindOneQuery();
-    input.id = dto.id;
-    return input;
-  }
+export const listInputDtoToListQuery = createPaginatedInputMapper<
+  EstadoListInputRestDto,
+  EstadoListQuery
+>(EstadoListQuery, (dto, query) => {
+  into(query).field("filter.id").from(dto);
+});
 
-  static toListInput = createListInputMapper(EstadoListQuery, ["filter.id"]);
+// ============================================================================
+// Interna → Externa (Output: Core → Presentation)
+// ============================================================================
 
-  // ============================================================================
-  // Output: Core DTO -> Server DTO
-  // ============================================================================
+export const findOneQueryResultToOutputDto = createMapper<
+  EstadoFindOneQueryResult,
+  EstadoFindOneOutputRestDto
+>((queryResult) => ({
+  id: queryResult.id,
+  nome: queryResult.nome,
+  sigla: queryResult.sigla,
+}));
 
-  static toFindOneOutputDto(output: EstadoFindOneQueryResult): EstadoFindOneOutputRestDto {
-    return outputMapping.map<EstadoFindOneOutputRestDto>(output);
-  }
-
-  static toListOutputDto = createListOutputMapper(
-    EstadoListOutputRestDto,
-    EstadoRestMapper.toFindOneOutputDto,
-  );
-}
+export const listQueryResultToListOutputDto = createListMapper(
+  EstadoListOutputRestDto,
+  findOneQueryResultToOutputDto,
+);

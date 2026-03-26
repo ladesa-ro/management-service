@@ -17,7 +17,7 @@ import {
   DiarioPreferenciaAgrupamentoListOutputRestDto,
   DiarioPreferenciaAgrupamentoParentParamsRestDto,
 } from "./diario-preferencia-agrupamento.rest.dto";
-import { DiarioPreferenciaAgrupamentoRestMapper } from "./diario-preferencia-agrupamento.rest.mapper";
+import * as DiarioPreferenciaAgrupamentoRestMapper from "./diario-preferencia-agrupamento.rest.mapper";
 
 @ApiTags("diarios")
 @Controller("/diarios/:diarioId/preferencias-agrupamento")
@@ -38,9 +38,9 @@ export class DiarioPreferenciaAgrupamentoRestController {
     @Param() parentParams: DiarioPreferenciaAgrupamentoParentParamsRestDto,
     @Query() dto: DiarioPreferenciaAgrupamentoListInputRestDto,
   ): Promise<DiarioPreferenciaAgrupamentoListOutputRestDto> {
-    const input = DiarioPreferenciaAgrupamentoRestMapper.toListInput(parentParams, dto);
-    const result = await this.listHandler.execute(accessContext, input);
-    return DiarioPreferenciaAgrupamentoRestMapper.toListOutputDto(result);
+    const query = DiarioPreferenciaAgrupamentoRestMapper.listInputDtoToListQuery(parentParams, dto);
+    const queryResult = await this.listHandler.execute(accessContext, query);
+    return DiarioPreferenciaAgrupamentoRestMapper.listQueryResultToListOutputDto(queryResult);
   }
 
   @Put("/")
@@ -52,8 +52,8 @@ export class DiarioPreferenciaAgrupamentoRestController {
     @Param() parentParams: DiarioPreferenciaAgrupamentoParentParamsRestDto,
     @Body() dto: DiarioPreferenciaAgrupamentoBulkReplaceInputRestDto,
   ): Promise<DiarioPreferenciaAgrupamentoListOutputRestDto> {
-    const input = DiarioPreferenciaAgrupamentoRestMapper.toBulkReplaceInput(parentParams, dto);
-    const result = await this.bulkReplaceHandler.execute(accessContext, input);
-    return DiarioPreferenciaAgrupamentoRestMapper.toListOutputDto(result);
+    const command = DiarioPreferenciaAgrupamentoRestMapper.toBulkReplaceInput(parentParams, dto);
+    const queryResult = await this.bulkReplaceHandler.execute(accessContext, command);
+    return DiarioPreferenciaAgrupamentoRestMapper.listQueryResultToListOutputDto(queryResult);
   }
 }

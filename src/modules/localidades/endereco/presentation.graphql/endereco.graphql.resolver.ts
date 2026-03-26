@@ -6,7 +6,7 @@ import { Endereco } from "@/modules/localidades/endereco/domain/endereco";
 import { IEnderecoFindOneQueryHandler } from "@/modules/localidades/endereco/domain/queries/endereco-find-one.query.handler.interface";
 import { AccessContextGraphQL } from "@/server/nest/access-context";
 import { EnderecoFindOneOutputGraphQlDto } from "./endereco.graphql.dto";
-import { EnderecoGraphqlMapper } from "./endereco.graphql.mapper";
+import * as EnderecoGraphqlMapper from "./endereco.graphql.mapper";
 
 @Resolver(() => EnderecoFindOneOutputGraphQlDto)
 export class EnderecoGraphqlResolver {
@@ -20,8 +20,9 @@ export class EnderecoGraphqlResolver {
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<EnderecoFindOneOutputGraphQlDto> {
-    const result = await this.findOneHandler.execute(accessContext, { id });
-    ensureExists(result, Endereco.entityName, id);
-    return EnderecoGraphqlMapper.toFindOneOutputDto(result);
+    const query = EnderecoGraphqlMapper.findOneInputDtoToFindOneQuery.map(id);
+    const queryResult = await this.findOneHandler.execute(accessContext, query);
+    ensureExists(queryResult, Endereco.entityName, query.id);
+    return EnderecoGraphqlMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 }

@@ -8,6 +8,7 @@ import type { ITypeOrmPaginationConfig } from "../interfaces/pagination-config.t
  * Os valores de FilterOperator são idênticos entre application e nestjs-paginate,
  * portanto não há necessidade de mapeamento — apenas composição com defaults.
  */
+
 export function buildTypeOrmPaginateConfig<Entity>(
   spec: IPaginationSpec,
   relations?: FindOptionsRelations<Entity>,

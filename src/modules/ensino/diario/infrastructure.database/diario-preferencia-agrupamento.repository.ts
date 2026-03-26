@@ -20,7 +20,7 @@ import type {
 } from "@/modules/ensino/diario";
 import { diarioPreferenciaAgrupamentoPaginationSpec } from "@/modules/ensino/diario/domain/queries";
 import type { IDiarioPreferenciaAgrupamentoRepository } from "@/modules/ensino/diario/domain/repositories";
-import { getNow } from "@/utils/date";
+import { getNowISO } from "@/utils/date";
 import { DiarioPreferenciaAgrupamentoEntity } from "./typeorm/diario-preferencia-agrupamento.typeorm.entity";
 
 const config = {
@@ -142,7 +142,7 @@ export class DiarioPreferenciaAgrupamentoTypeOrmRepositoryAdapter
       .getRepository(DiarioPreferenciaAgrupamentoEntity)
       .createQueryBuilder()
       .update(DiarioPreferenciaAgrupamentoEntity)
-      .set({ dateDeleted: getNow() })
+      .set({ dateDeleted: getNowISO() })
       .where("id_diario_fk = :diarioId AND date_deleted IS NULL", { diarioId })
       .execute();
   }
@@ -159,12 +159,12 @@ export class DiarioPreferenciaAgrupamentoTypeOrmRepositoryAdapter
     if (entries.length === 0) return;
 
     const repo = this.appTypeormConnection.getRepository(DiarioPreferenciaAgrupamentoEntity);
-    const now = getNow();
+    const now = getNowISO();
     const entities = entries.map((p) => {
       const entity = new DiarioPreferenciaAgrupamentoEntity();
       entity.id = generateUuidV7();
-      entity.dataInicio = new Date(p.dataInicio);
-      entity.dataFim = p.dataFim ? new Date(p.dataFim) : null;
+      entity.dataInicio = p.dataInicio;
+      entity.dataFim = p.dataFim ?? null;
       entity.diaSemanaIso = p.diaSemanaIso;
       entity.aulasSeguidas = p.aulasSeguidas;
       Object.assign(entity, { diario: { id: p.diarioId } });

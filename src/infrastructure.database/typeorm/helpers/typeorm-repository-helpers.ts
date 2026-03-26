@@ -40,6 +40,7 @@ function getRepository<Entity extends ObjectLiteral>(
  * This ensures nestjs-paginate has the JOINs needed for those columns
  * without including deep display-only relations that cause alias overflow.
  */
+
 export function buildRelationsFromColumns(columns: string[]): Record<string, unknown> {
   const relations: Record<string, unknown> = {};
 
@@ -203,10 +204,10 @@ export async function typeormFindById<
 export async function typeormCreate<Entity extends IEntityWithId>(
   conn: IAppTypeormConnection,
   entity: EntityTarget<Entity>,
-  data: Record<string, unknown>,
-): Promise<{ id: string | number }> {
+  data: DeepPartial<Entity>,
+): Promise<{ id: Entity["id"] }> {
   const repo = getRepository(conn, entity);
-  const created = repo.create(data as DeepPartial<Entity>);
+  const created = repo.create(data);
   const saved = await repo.save(created);
   return { id: saved.id };
 }
@@ -215,24 +216,24 @@ export async function typeormUpdate<Entity extends IEntityWithId>(
   conn: IAppTypeormConnection,
   entity: EntityTarget<Entity>,
   id: string | number,
-  data: Record<string, unknown>,
+  data: DeepPartial<Entity>,
 ): Promise<void> {
   const repo = getRepository(conn, entity);
   const created = repo.create({ id, ...data } as DeepPartial<Entity>);
   await repo.save(created);
 }
 
-export async function typeormSoftDeleteById<Entity extends ObjectLiteral>(
+export async function typeormSoftDeleteById(
   conn: IAppTypeormConnection,
-  entity: EntityTarget<Entity>,
+  entity: EntityTarget<ObjectLiteral>,
   alias: string,
-  id: string,
+  id: string | number,
 ): Promise<void> {
   const repo = getRepository(conn, entity);
   await repo
     .createQueryBuilder(alias)
     .update()
-    .set({ dateDeleted: () => "NOW()" } as unknown as Partial<Entity>)
+    .set({ dateDeleted: () => "NOW()" } as unknown as Partial<ObjectLiteral>)
     .where("id = :id", { id })
     .andWhere("dateDeleted IS NULL")
     .execute();

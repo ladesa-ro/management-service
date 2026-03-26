@@ -18,7 +18,7 @@ import type {
 } from "../domain/queries";
 import { calendarioLetivoPaginationSpec } from "../domain/queries";
 import type { ICalendarioLetivoRepository } from "../domain/repositories";
-import { CalendarioLetivoEntity, calendarioLetivoEntityDomainMapper } from "./typeorm";
+import { CalendarioLetivoEntity, CalendarioLetivoTypeormMapper } from "./typeorm";
 
 const config = {
   alias: "calendario_letivo",
@@ -78,15 +78,11 @@ export class CalendarioLetivoTypeOrmRepositoryAdapter implements ICalendarioLeti
 
     if (!entity) return null;
 
-    return CalendarioLetivo.load(
-      calendarioLetivoEntityDomainMapper.toOutputData(entity as unknown as Record<string, unknown>),
-    );
+    return CalendarioLetivo.load(CalendarioLetivoTypeormMapper.entityToDomain.map(entity));
   }
 
   async save(aggregate: CalendarioLetivo): Promise<void> {
-    const entityData = calendarioLetivoEntityDomainMapper.toPersistenceData({
-      ...aggregate,
-    });
+    const entityData = CalendarioLetivoTypeormMapper.domainToPersistence.map({ ...aggregate });
     const repo = this.appTypeormConnection.getRepository(CalendarioLetivoEntity);
     await repo.save(repo.create({ id: aggregate.id, ...entityData } as CalendarioLetivoEntity));
   }

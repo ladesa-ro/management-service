@@ -1,86 +1,93 @@
 import {
   DisciplinaCreateCommand,
   DisciplinaFindOneQuery,
-  DisciplinaFindOneQueryResult,
+  type DisciplinaFindOneQueryResult,
   DisciplinaListQuery,
   DisciplinaUpdateCommand,
 } from "@/modules/ensino/disciplina";
-import { createListOutputMapper, mapDatedFields, mapImagemOutput } from "@/shared/mapping";
 import {
-  DisciplinaCreateInputGraphQlDto,
+  createListMapper,
+  createMapper,
+  createPaginatedInputMapper,
+  into,
+  mapImagemOutput,
+} from "@/shared/mapping";
+import {
+  type DisciplinaCreateInputGraphQlDto,
   DisciplinaFindOneOutputGraphQlDto,
-  DisciplinaListInputGraphQlDto,
+  type DisciplinaListInputGraphQlDto,
   DisciplinaListOutputGraphQlDto,
-  DisciplinaUpdateInputGraphQlDto,
+  type DisciplinaUpdateInputGraphQlDto,
 } from "./disciplina.graphql.dto";
 
-export class DisciplinaGraphqlMapper {
-  static toListInput(dto: DisciplinaListInputGraphQlDto | null): DisciplinaListQuery | null {
-    if (!dto) {
-      return null;
-    }
+// ============================================================================
+// Externa → Interna (Input: Presentation → Core)
+// ============================================================================
 
-    const input = new DisciplinaListQuery();
-    input.page = dto.page;
-    input.limit = dto.limit;
-    input.search = dto.search;
-    input.sortBy = dto.sortBy;
-    input["filter.id"] = dto.filterId;
-    input["filter.diarios.id"] = dto.filterDiariosId;
-    return input;
-  }
+export const findOneInputDtoToFindOneQuery = createMapper<string, DisciplinaFindOneQuery>((id) => {
+  const input = new DisciplinaFindOneQuery();
+  input.id = id;
+  return input;
+});
 
-  static toFindOneInput(id: string): DisciplinaFindOneQuery {
-    const input = new DisciplinaFindOneQuery();
-    input.id = id;
-    return input;
-  }
+const listInputMapper = createPaginatedInputMapper<
+  DisciplinaListInputGraphQlDto,
+  DisciplinaListQuery
+>(DisciplinaListQuery, (dto, query) => {
+  into(query).field("filter.id").from(dto, "filterId");
+  into(query).field("filter.diarios.id").from(dto, "filterDiariosId");
+});
 
-  static toCreateInput(dto: DisciplinaCreateInputGraphQlDto): DisciplinaCreateCommand {
-    const input = new DisciplinaCreateCommand();
-    input.nome = dto.nome;
-    input.nomeAbreviado = dto.nomeAbreviado;
-    input.cargaHoraria = dto.cargaHoraria;
-    input.imagemCapa = dto.imagemCapa ? { id: dto.imagemCapa.id } : null;
-    return input;
-  }
-
-  static toUpdateInput(
-    params: { id: string },
-    dto: DisciplinaUpdateInputGraphQlDto,
-  ): DisciplinaFindOneQuery & DisciplinaUpdateCommand {
-    const input = new DisciplinaFindOneQuery() as DisciplinaFindOneQuery & DisciplinaUpdateCommand;
-    input.id = params.id;
-    if (dto.nome !== undefined) {
-      input.nome = dto.nome;
-    }
-    if (dto.nomeAbreviado !== undefined) {
-      input.nomeAbreviado = dto.nomeAbreviado;
-    }
-    if (dto.cargaHoraria !== undefined) {
-      input.cargaHoraria = dto.cargaHoraria;
-    }
-    if (dto.imagemCapa !== undefined) {
-      input.imagemCapa = dto.imagemCapa ? { id: dto.imagemCapa.id } : null;
-    }
-    return input;
-  }
-
-  static toFindOneOutputDto(
-    output: DisciplinaFindOneQueryResult,
-  ): DisciplinaFindOneOutputGraphQlDto {
-    const dto = new DisciplinaFindOneOutputGraphQlDto();
-    dto.id = output.id;
-    dto.nome = output.nome;
-    dto.nomeAbreviado = output.nomeAbreviado;
-    dto.cargaHoraria = output.cargaHoraria;
-    dto.imagemCapa = mapImagemOutput(output.imagemCapa);
-    mapDatedFields(dto, output);
-    return dto;
-  }
-
-  static toListOutputDto = createListOutputMapper(
-    DisciplinaListOutputGraphQlDto,
-    DisciplinaGraphqlMapper.toFindOneOutputDto,
-  );
+export function listInputDtoToListQuery(
+  dto: DisciplinaListInputGraphQlDto | null,
+): DisciplinaListQuery | null {
+  if (!dto) return null;
+  return listInputMapper.map(dto);
 }
+
+export const createInputDtoToCreateCommand = createMapper<
+  DisciplinaCreateInputGraphQlDto,
+  DisciplinaCreateCommand
+>((dto) => {
+  const input = new DisciplinaCreateCommand();
+  input.nome = dto.nome;
+  input.nomeAbreviado = dto.nomeAbreviado;
+  input.cargaHoraria = dto.cargaHoraria;
+  input.imagemCapa = dto.imagemCapa ? { id: dto.imagemCapa.id } : null;
+  return input;
+});
+
+export const updateInputDtoToUpdateCommand = createMapper<
+  { id: string; dto: DisciplinaUpdateInputGraphQlDto },
+  DisciplinaFindOneQuery & DisciplinaUpdateCommand
+>(({ id, dto }) => ({
+  id,
+  nome: dto.nome,
+  nomeAbreviado: dto.nomeAbreviado,
+  cargaHoraria: dto.cargaHoraria,
+  imagemCapa:
+    dto.imagemCapa !== undefined ? (dto.imagemCapa ? { id: dto.imagemCapa.id } : null) : undefined,
+}));
+
+// ============================================================================
+// Interna → Externa (Output: Core → Presentation)
+// ============================================================================
+
+export const findOneQueryResultToOutputDto = createMapper<
+  DisciplinaFindOneQueryResult,
+  DisciplinaFindOneOutputGraphQlDto
+>((output) => ({
+  id: output.id,
+  nome: output.nome,
+  nomeAbreviado: output.nomeAbreviado,
+  cargaHoraria: output.cargaHoraria,
+  imagemCapa: mapImagemOutput(output.imagemCapa),
+  dateCreated: new Date(output.dateCreated),
+  dateUpdated: new Date(output.dateUpdated),
+  dateDeleted: output.dateDeleted ? new Date(output.dateDeleted) : null,
+}));
+
+export const listQueryResultToListOutputDto = createListMapper(
+  DisciplinaListOutputGraphQlDto,
+  findOneQueryResultToOutputDto,
+);

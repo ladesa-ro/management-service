@@ -88,7 +88,7 @@ export class UsuarioEventoRestController {
     @Param() params: UsuarioEventoItemParamsRestDto,
     @Body() dto: UsuarioEventoUpdateInputRestDto,
   ): Promise<UsuarioEventoFindOneOutputRestDto> {
-    const result = await this.eventoRepository.updateEvento(params.eventoId, {
+    const queryResult = await this.eventoRepository.updateEvento(params.eventoId, {
       nome: dto.nome,
       dataInicio: dto.dataInicio,
       dataFim: dto.dataFim,
@@ -99,9 +99,9 @@ export class UsuarioEventoRestController {
       repeticao: dto.repeticao,
     });
 
-    ensureExists(result, "UsuarioEvento", params.eventoId);
+    ensureExists(queryResult, "UsuarioEvento", params.eventoId);
 
-    return result!;
+    return queryResult!;
   }
 
   @Delete("/:eventoId")

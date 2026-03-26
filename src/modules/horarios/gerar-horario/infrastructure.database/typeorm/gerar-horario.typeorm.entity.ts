@@ -16,10 +16,10 @@ export class GerarHorarioEntity {
   duracao!: GerarHorarioDuracao;
 
   @Column({ name: "data_inicio", type: "date", nullable: false })
-  dataInicio!: Date;
+  dataInicio!: string;
 
   @Column({ name: "data_termino", type: "date", nullable: true })
-  dataTermino!: Date | null;
+  dataTermino!: string | null;
 
   @Column({ name: "requisicao_gerador", type: "jsonb", nullable: true })
   requisicaoGerador!: Record<string, unknown> | null;
@@ -32,5 +32,5 @@ export class GerarHorarioEntity {
   usuarioGeracao!: Relation<UsuarioEntity> | null;
 
   @Column({ name: "date_created", type: "timestamptz", nullable: false })
-  dateCreated!: Date;
+  dateCreated!: string;
 }

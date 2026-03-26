@@ -4,5 +4,5 @@ export interface INotificacao {
   conteudo: string;
   lida: boolean;
   usuario: { id: string };
-  dateCreated: Date;
+  dateCreated: string;
 }

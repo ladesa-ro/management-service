@@ -16,6 +16,7 @@ import type {
 /**
  * Token de injecao para o repositorio de CalendarioLetivo
  */
+
 export const ICalendarioLetivoRepository = Symbol("ICalendarioLetivoRepository");
 
 /**
@@ -25,6 +26,7 @@ export const ICalendarioLetivoRepository = Symbol("ICalendarioLetivoRepository")
  * O write side retorna o aggregate de dominio reconstituido.
  * O read side retorna dados hidratados para exibicao (query results).
  */
+
 export interface ICalendarioLetivoRepository {
   // ==========================================
   // Write side — usado por command handlers

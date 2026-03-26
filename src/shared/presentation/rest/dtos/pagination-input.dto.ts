@@ -2,6 +2,7 @@ import { ApiPropertyOptional } from "@/shared/presentation/rest";
 /**
  * Base pagination input DTO for REST list queries.
  */
+
 export class PaginationInputRestDto {
   // Index signature for filter properties (compatible with SearchOptions)
   [key: string]: string | number | string[] | null | undefined;

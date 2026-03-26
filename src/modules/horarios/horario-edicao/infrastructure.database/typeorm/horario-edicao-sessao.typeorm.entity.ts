@@ -20,8 +20,8 @@ export class HorarioEdicaoSessaoEntity {
   usuario!: Relation<UsuarioEntity>;
 
   @Column({ name: "date_created", type: "timestamptz", nullable: false })
-  dateCreated!: Date;
+  dateCreated!: string;
 
   @Column({ name: "date_updated", type: "timestamptz", nullable: false })
-  dateUpdated!: Date;
+  dateUpdated!: string;
 }

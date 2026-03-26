@@ -446,39 +446,7 @@ A documentação da API REST é gerada automaticamente a partir dos decorators d
 - **Autenticar** — clicar em "Authorize" e inserir o Bearer token (ex.: `mock.matricula.1234` em desenvolvimento).
 - **Exportar** — baixar o schema OpenAPI em JSON para importar no Postman, Insomnia ou outra ferramenta.
 
-**Principais endpoints REST:**
-
-| Área | Path base | Métodos |
-|------|-----------|---------|
-| Campi | `/api/campi` | GET /, GET /:id, POST /, PATCH /:id, DELETE /:id |
-| Blocos | `/api/blocos` | GET /, GET /:id, POST /, PATCH /:id, DELETE /:id |
-| Ambientes | `/api/ambientes` | GET /, GET /:id, POST /, PATCH /:id, DELETE /:id |
-| Turmas | `/api/turmas` | GET /, GET /:id, POST /, PATCH /:id, DELETE /:id, GET /:id/horario |
-| Diários | `/api/diarios` | GET /, GET /:id, POST /, PATCH /:id, DELETE /:id |
-| Cursos | `/api/cursos` | GET /, GET /:id, POST /, PATCH /:id |
-| Disciplinas | `/api/disciplinas` | GET /, GET /:id, POST /, PATCH /:id, DELETE /:id |
-| Modalidades | `/api/modalidades` | GET /, GET /:id, POST /, PATCH /:id, DELETE /:id |
-| Usuários | `/api/usuarios` | GET /, GET /:id, POST /, PATCH /:id |
-| Autenticação | `/api/autenticacao` | GET /quem-sou-eu, POST /login, POST /login/refresh |
-| Calendários letivos | `/api/calendarios-letivos` | GET /, GET /:id, POST /, PATCH /:id, DELETE /:id |
-| Horários de aula | `/api/horarios-aula` | GET /, GET /:id, POST /, PATCH /:id, DELETE /:id |
-| Empresas | `/api/empresas` | GET /, GET /:id, POST /, PATCH /:id, DELETE /:id |
-| Estágios | `/api/estagios` | GET /, GET /:id, POST /, PATCH /:id, DELETE /:id |
-| Estados | `/api/base/estados` | GET /, GET /:id |
-| Cidades | `/api/base/cidades` | GET /, GET /:id |
-| Arquivos | `/api/arquivos` | GET /, POST / |
-| Gerar horário | `/api/gerar-horario` | POST /, GET /:id, POST /:id/aceitar, POST /:id/rejeitar |
-
-<!--
-Source of Trust
-commit_hash: ebb2cb05b8e21e5d4aae2cfcf0429805ebc7f344
-verified_at: 2026-03-23T12:30:00Z
-source_patterns:
-  - src/modules/*/presentation.rest/*.controller.ts
-  - src/infrastructure.graphql/**/*.ts
-  - src/server/nest/setup/**/*.ts
-confidence_scope: URLs da aplicação (porta 3701, prefixo /api/, endpoints /docs, /graphql, /health), endpoints REST listados por módulo
--->
+A lista completa de endpoints está disponível na documentação interativa Swagger/Scalar em `http://localhost:3701/api/docs/`.
 
 ---
 
@@ -742,6 +710,7 @@ graph TD
 ```typescript
 // src/modules/ambientes/campus/infrastructure.database/typeorm/campus.typeorm.entity.ts
 @Entity("campus")
+
 export class CampusEntity {
   @PrimaryColumn("uuid") id!: string;
   @Column("text") nomeFantasia!: string;
@@ -838,6 +807,7 @@ sequenceDiagram
 ```typescript
 // src/server/nest/interceptors/transaction.interceptor.ts (código real)
 @Injectable()
+
 export class TransactionInterceptor implements NestInterceptor {
   intercept(_context: ExecutionContext, next: CallHandler): Observable<unknown> {
     return from(
@@ -1236,6 +1206,7 @@ graph LR
 
 ```typescript
 // src/modules/ambientes/campus/domain/campus.schemas.ts (trecho)
+
 export const CampusCreateSchema = z.object({
   nomeFantasia: CampusFields.nomeFantasia.schema,
   razaoSocial: CampusFields.razaoSocial.schema,
@@ -2438,6 +2409,7 @@ graph TD
 
 ```typescript
 // src/modules/ambientes/campus/presentation.rest/campus.rest.dto.ts (exemplo simplificado)
+
 export class CampusCreateInputRestDto {
   static schema = CampusCreateSchema;  // Schema Zod reutilizado do domínio
 
@@ -2776,7 +2748,9 @@ import { zodValidate } from "@/shared/validation/index";
 import { getNowISO } from "@/utils/date";
 import { CampusCreateSchema, CampusSchema, CampusUpdateSchema } from "./campus.schemas";
 
+
 export type ICampus = z.infer<typeof CampusSchema>;
+
 
 export class Campus {
   static readonly entityName = "Campus";
@@ -2861,6 +2835,7 @@ import { z } from "zod";
 import { datedSchema, uuidSchema } from "@/shared/validation/schemas";
 import { CampusFields } from "./campus.fields";
 
+
 export const CampusSchema = z.object({
   id: uuidSchema,
   nomeFantasia: CampusFields.nomeFantasia.schema,
@@ -2870,6 +2845,7 @@ export const CampusSchema = z.object({
   endereco: z.object({ id: uuidSchema, /* ... */ }).passthrough(),
 }).merge(datedSchema);
 
+
 export const CampusCreateSchema = z.object({
   nomeFantasia: CampusFields.nomeFantasia.schema,
   razaoSocial: CampusFields.razaoSocial.schema,
@@ -2877,6 +2853,7 @@ export const CampusCreateSchema = z.object({
   cnpj: CampusFields.cnpj.schema,
   endereco: CampusEnderecoRefSchema,
 });
+
 
 export const CampusUpdateSchema = z.object({
   nomeFantasia: CampusFields.nomeFantasia.schema.optional(),
@@ -2921,6 +2898,7 @@ graph TD
 // src/modules/ambientes/campus/domain/campus.fields.ts
 import { z } from "zod";
 import { createFieldMetadata } from "@/domain/abstractions";
+
 
 export const CampusFields = {
   nomeFantasia: createFieldMetadata({
@@ -2971,12 +2949,15 @@ graph TD
 
 ```typescript
 // src/domain/abstractions/repositories/repository-create.interface.ts
+
 export interface IRepositoryCreate<DomainData> {
   create(data: Partial<PersistInput<DomainData>>): Promise<{ id: string | number }>;
 }
 
 // src/modules/ambientes/campus/domain/repositories/campus.repository.interface.ts
+
 export const ICampusRepository = Symbol("ICampusRepository");
+
 
 export type ICampusRepository = IRepositoryFindAll<CampusListQueryResult> &
   IRepositoryFindById<CampusFindOneQueryResult> &
@@ -2998,7 +2979,7 @@ O type `PersistInput<T>` converte relações em referências `{ id }` para desac
 
 ### Mappers (mapeamento entre camadas)
 
-**Mappers** são funções que **traduzem dados de um formato para outro** quando eles cruzam fronteiras entre camadas. Como a arquitetura hexagonal isola o domínio da infraestrutura, cada camada pode representar os mesmos dados de formas diferentes — por exemplo, o domínio armazena datas como strings ISO (`"2025-06-15T10:30:00.000Z"`) enquanto o TypeORM usa objetos `Date` do JavaScript. O mapper é quem faz essa conversão.
+**Mappers** são funções puras que **traduzem dados de um formato para outro** quando eles cruzam fronteiras entre camadas. Como a arquitetura hexagonal isola o domínio da infraestrutura, cada camada pode representar os mesmos dados de formas diferentes — por exemplo, o domínio armazena datas como strings ISO (`"2025-06-15T10:30:00.000Z"`) enquanto o TypeORM usa objetos `Date` do JavaScript. O mapper é quem faz essa conversão.
 
 > **Analogia:** imagine que um hospital brasileiro recebe um paciente estrangeiro. O prontuário interno é em português, mas o paciente trouxe exames em inglês. O **mapper** é o tradutor que converte os exames para português (entrada) e traduz o diagnóstico de volta para inglês (saída) — sem alterar o conteúdo médico, apenas o formato.
 
@@ -3007,18 +2988,18 @@ O projeto possui mappers em **duas camadas**:
 ```mermaid
 graph LR
     subgraph "Apresentação (REST/GraphQL)"
-        DTO_IN["DTO de Entrada\n(CampusCreateInputRestDto)"]
-        DTO_OUT["DTO de Saída\n(CampusFindOneOutputRestDto)"]
-        PMAP["RestMapper / GraphqlMapper\n• toCreateInput(dto) → Command\n• toFindOneOutputDto(result) → DTO\n• toListInput(dto) → Query"]
+        DTO_IN["DTO de Entrada"]
+        DTO_OUT["DTO de Saída"]
+        PMAP["RestMapper / GraphqlMapper\n• findOneInputDtoToFindOneQuery.map(dto)\n• findOneQueryResultToOutputDto.map(queryResult)\n• listInputDtoToListQuery.map(dto)\n• listQueryResultToListOutputDto(queryResult)"]
     end
 
     subgraph "Infraestrutura (TypeORM)"
-        ENTITY["TypeORM Entity\n(CampusEntity)\ndatas: Date\nrelações: Relation&lt;T&gt;"]
-        IMAP["EntityDomainMapper\n• toDomainData(entity)\n• toPersistenceData(domain)\n• toOutputData(entity)"]
+        ENTITY["TypeORM Entity\ndatas: Date\nrelações: Relation&lt;T&gt;"]
+        IMAP["TypeormMapper\n• entityToFindOneQueryResult.map(entity)"]
     end
 
     subgraph "Domínio"
-        DOMAIN["Entidade de Domínio\n(Campus)\ndatas: ISO string\nrelações: { id }"]
+        DOMAIN["Entidade de Domínio\ndatas: ISO string\nrelações: { id }"]
         CMD["Command / Query Result"]
     end
 
@@ -3033,89 +3014,99 @@ graph LR
     style PMAP fill:#3498db,stroke:#2980b9,color:#fff
 ```
 
-#### Mapper de infraestrutura (domain ↔ TypeORM entity)
-
-Cada módulo define um mapper declarativo em `infrastructure.database/typeorm/{nome}.mapper.ts` usando o helper `createEntityDomainMapper`. Ele converte automaticamente entre os tipos do domínio (strings ISO, referências `{ id }`) e os tipos do TypeORM (objetos `Date`, relações carregadas):
+Todos os mappers são construídos com `createMapper<I, O>` de `src/shared/mapping/create-mapper.ts` — funções puras, síncronas, tipadas de ponta a ponta. Para mapeamento imperativo de campos individuais (filtros, paginação, input mapping), o projeto usa a DSL `into`:
 
 ```typescript
-// src/modules/ambientes/campus/infrastructure.database/typeorm/campus.mapper.ts
-import { createEntityDomainMapper } from "@/infrastructure.database/typeorm/helpers/entity-domain-mapper";
-import type { ICampus } from "@/modules/ambientes/campus/domain/campus";
-
-export const campusEntityDomainMapper = createEntityDomainMapper<ICampus, Record<string, unknown>>({
-  fields: [
-    "id",                                    // campo direto — sem conversão
-    "nomeFantasia",                          // campo direto
-    "razaoSocial",                           // campo direto
-    "apelido",                               // campo direto
-    "cnpj",                                  // campo direto
-    { field: "endereco", type: "relation" }, // { id, logradouro, ... } → { id }
-    { field: "dateCreated", type: "date" },  // Date ↔ ISO string
-    { field: "dateUpdated", type: "date" },  // Date ↔ ISO string
-    { field: "dateDeleted", type: "date" },  // Date | null ↔ ISO string | null
-  ],
-});
+// into — DSL imperativa centrada no destino
+into(query)
+  .field("filter.id").from(dto, "filterId")   // rename camelCase → dot notation
+  .field("page").default(1).from(dto)          // default se undefined/null
+  .field("userId").required().from(auth);      // erro se ausente
 ```
 
-**Tipos de campo disponíveis:**
+#### Utilitários de mapeamento (`src/shared/mapping/create-mapper.ts`)
 
-| Tipo | Entity → Domain | Domain → Entity | Quando usar |
-|------|----------------|----------------|-------------|
-| `string` (nome do campo) | passthrough | passthrough | Campos com mesmo tipo em ambas as camadas |
-| `"date"` | `Date` → `"2025-06-15T10:30:00.000Z"` | ISO string → `Date` | `dateCreated`, `dateUpdated`, `dateDeleted` |
-| `"date-only"` | `Date` → `"2025-06-15"` | `"YYYY-MM-DD"` → `Date` | `dataNascimento` e similares |
-| `"relation"` | `{ id, nome, ... }` → `{ id }` | passthrough | Quando o domínio armazena apenas a referência (`{ id }`) |
-| `"relation-loaded"` | passthrough | `{ id, nome, ... }` → `{ id }` | Quando o domínio armazena o objeto completo (ex: `cidade.estado`) |
-| `{ forward, reverse }` | função custom | função custom | Casos especiais |
+| Helper | Propósito |
+|--------|-----------|
+| `into(target)` | DSL imperativa para mapeamento de campos — `.from()`, `.field()`, `.transform()`, `.default()`, `.when()`, `.required()`, `.optional()` |
+| `createMapper<I, O>(fn)` | Mapper unitário com `.map(input)` e `.mapArray(inputs)` |
+| `createListMapper(DtoClass, itemMapper)` | Lista paginada — instancia DTO, repassa meta, mapeia data |
+| `createPaginatedInputMapper(QueryClass, mapFilters)` | Input paginado — mapeia page/limit/search/sortBy via `into`, filtra via callback |
 
-O mapper é **interno à infraestrutura** — handlers e controllers nunca o acessam diretamente. O repositório usa `toPersistenceData()` para converter dados do domínio antes de salvar:
+#### Mapper de infraestrutura (TypeORM Entity → Query Result)
+
+Cada módulo define um mapper em `infrastructure.database/typeorm/{nome}.typeorm.mapper.ts`. O nome do
+export descreve o fluxo **de onde → para onde**:
 
 ```typescript
-// Dentro do repositório (infraestrutura)
-create(data: Record<string, unknown>) {
-  const entityData = campusEntityDomainMapper.toPersistenceData(data);
-  return typeormCreate(this.appTypeormConnection, CampusEntity, entityData);
-}
+// estado.typeorm.mapper.ts
+
+export const entityToFindOneQueryResult = createMapper<EstadoEntity, EstadoFindOneQueryResult>(
+  (entity) => {
+    const queryResult = new EstadoFindOneQueryResult();
+
+    into(queryResult).from(entity).field("id").field("nome").field("sigla");
+    return queryResult;
+  },
+);
 ```
 
-Para módulos com campos computados no output (ex: `ativo = !dateDeleted`), o mapper aceita uma config `output` adicional:
-
-```typescript
-// src/modules/estagio/empresa/infrastructure.database/typeorm/empresa.mapper.ts
-export const empresaEntityDomainMapper = createEntityDomainMapper<...>({
-  fields: [ /* ... campos bidirecionais ... */ ],
-  output: [
-    "id", "razaoSocial", "nomeFantasia", /* ... */
-    ["dateCreated", "dateCreated", dateToISO],
-    ["dateDeleted", "ativo", (v) => !v],     // campo computado
-  ],
-});
-```
+O barrel re-exporta via namespace (`
+export * as EstadoTypeormMapper`) e o repositório usa como callback (`EstadoTypeormMapper.entityToFindOneQueryResult.map`).
 
 #### Mapper de apresentação (DTO ↔ Command/Query)
 
-Os mappers de apresentação ficam em `presentation.rest/{nome}.rest.mapper.ts` e `presentation.graphql/{nome}.graphql.mapper.ts`. Eles usam os helpers de `@/shared/mapping`:
-
-- `createMapping(fields)` — mapeia campos entre objetos (suporta dot notation, transforms)
-- `createListInputMapper(QueryClass, filterKeys)` — mapeia paginação, busca, filtros (REST)
-- `createListOutputMapper(DtoClass, itemMapper)` — mapeia listas paginadas
-- `mapFilterCase("filter.estado.id")` — converte `filterEstadoId` (GraphQL camelCase) → `"filter.estado.id"` (dot notation)
+Cada mapper de apresentação organiza exports em duas regiões ("Externa → Interna" e "Interna → Externa"). Os nomes dos exports seguem o padrão `origemToDestino`:
 
 ```typescript
-// REST — filtros usam dot notation diretamente
-static toListInput = createListInputMapper(CidadeListQuery, [
-  "filter.id", "filter.estado.id", "filter.estado.nome",
-]);
+import { createListMapper, createMapper, createPaginatedInputMapper, into } from "@/shared/mapping";
 
-// GraphQL — converte camelCase para dot notation
-const listInputMapping = createMapping([
-  "page", "limit", "search", "sortBy",
-  mapFilterCase("filter.id"),            // filterId → filter.id
-  mapFilterCase("filter.estado.id"),     // filterEstadoId → filter.estado.id
-]);
+// Externa → Interna
+
+export const findOneInputDtoToFindOneQuery = createMapper<...>((dto) => { ... });
+
+
+export const listInputDtoToListQuery = createPaginatedInputMapper<...>(
+  EstadoListQuery,
+  (dto, query) => {
+
+    into(query).field("filter.id").from(dto, "filter.id");
+  },
+);
+
+
+export const createInputDtoToCreateCommand = createMapper<...>((dto) => { ... });
+
+// Interna → Externa
+
+export const findOneQueryResultToOutputDto = createMapper<
+  EstadoFindOneQueryResult,
+  EstadoFindOneOutputRestDto
+>((queryResult) => ({ id: queryResult.id, nome: queryResult.nome, sigla: queryResult.sigla }));
+
+
+export const listQueryResultToListOutputDto = createListMapper(
+  EstadoListOutputRestDto,
+  findOneQueryResultToOutputDto,
+);
 ```
 
-> **Para ir mais fundo:** os transforms reutilizáveis ficam em `src/shared/mapping/transforms.ts` (`dateToISO`, `isoToDate`, `normalizeRelationRef`, etc.). O helper `createBidirectionalMapping` em `src/shared/mapping/field-mapper.ts` permite definir um mapeamento uma vez e obter ambas as direções automaticamente — é a base do `createEntityDomainMapper`.
+Controllers e resolvers importam via namespace e usam variáveis com nomes semânticos:
+```typescript
+import * as EstadoRestMapper from "./estado.rest.mapper";
+
+// Query handler
+const query = EstadoRestMapper.listInputDtoToListQuery.map(dto);
+const queryResult = await this.listHandler.execute(accessContext, query);
+return EstadoRestMapper.listQueryResultToListOutputDto(queryResult);
+
+// Command handler
+const command = ModalidadeRestMapper.createInputDtoToCreateCommand.map(dto);
+const queryResult = await this.createHandler.execute(accessContext, command);
+return ModalidadeRestMapper.findOneQueryResultToOutputDto.map(queryResult);
+```
+
+> **Para ir mais fundo:** a documentação completa do padrão de mapeamento (incluindo `into`, pipelines, transforms, convenções de nomenclatura e variáveis) está em [`.claude/docs/mapeamento.md`](.claude/docs/mapeamento.md).
 
 ### Command e Query Handlers
 
@@ -3151,12 +3142,14 @@ graph TD
 
 ```typescript
 // Contrato genérico
+
 export interface ICommandHandler<TCommand, TResult = void> {
   execute(accessContext: IAccessContext | null, command: TCommand): Promise<TResult>;
 }
 
 // Implementação real — src/modules/ambientes/campus/application/commands/campus-create.command.handler.ts
 @DeclareImplementation()
+
 export class CampusCreateCommandHandlerImpl implements ICampusCreateCommandHandler {
   constructor(
     @DeclareDependency(ICampusRepository) private readonly repository: ICampusRepository,
@@ -3204,6 +3197,7 @@ graph TD
 
 ```typescript
 // Contrato — src/domain/abstractions/permission-checker.interface.ts
+
 export interface IPermissionChecker {
   ensureCanCreate(ac: IAccessContext | null, payload: { dto: unknown }): Promise<void>;
   ensureCanUpdate(ac: IAccessContext | null, payload: { dto: unknown }, id: string): Promise<void>;
@@ -3249,6 +3243,7 @@ graph LR
 
 ```typescript
 // src/domain/dependency-injection/declare-dependency.ts
+
 export const DeclareDependency = (token: any): ParameterDecorator => {
   const injectDecorator = NestjsInject(token);
   return (target, propertyKey, parameterIndex) => {
@@ -3257,6 +3252,7 @@ export const DeclareDependency = (token: any): ParameterDecorator => {
 };
 
 // src/domain/dependency-injection/declare-implementation.ts
+
 export const DeclareImplementation = (): ClassDecorator => {
   return Injectable();
 };
@@ -3343,7 +3339,9 @@ O mecanismo envolve três peças:
 2. **`transactionStorage`** (`src/infrastructure.database/typeorm/connection/transaction-storage.ts`) — `AsyncLocalStorage<EntityManager>` que propaga o `EntityManager` transacional por toda a call stack:
 
 ```typescript
+
 export const transactionStorage = new AsyncLocalStorage<EntityManager>();
+
 export function getActiveEntityManager(): EntityManager | undefined {
   return transactionStorage.getStore();
 }
@@ -3384,6 +3382,7 @@ sequenceDiagram
 
 ```typescript
 @Injectable()
+
 export class ZodGlobalValidationPipe implements PipeTransform {
   transform(value: unknown, metadata: ArgumentMetadata) {
     const metatype = metadata.metatype;
@@ -3440,6 +3439,7 @@ graph LR
 
 ```typescript
 @Catch(ApplicationError, DomainError)
+
 export class ApplicationErrorFilter implements ExceptionFilter {
   catch(exception: ApplicationError | DomainError, host: ArgumentsHost) {
     const errorResponse = buildHttpErrorResponse(exception, request.url);
@@ -4035,7 +4035,9 @@ graph LR
 
 ```typescript
 // src/modules/ambientes/campus/domain/repositories/campus.repository.interface.ts
+
 export const ICampusRepository = Symbol("ICampusRepository");  // Token de injeção
+
 
 export type ICampusRepository =                                // Contrato
   IRepositoryFindAll<CampusListQueryResult> &
@@ -4051,6 +4053,7 @@ export type ICampusRepository =                                // Contrato
 ```typescript
 // src/modules/ambientes/campus/infrastructure.database/campus.repository.ts
 @DeclareImplementation()
+
 export class CampusTypeormRepository implements ICampusRepository {
   constructor(
     @DeclareDependency(IAppTypeormConnection) private readonly conn: IAppTypeormConnection,
@@ -4066,6 +4069,7 @@ export class CampusTypeormRepository implements ICampusRepository {
 ```typescript
 // src/modules/ambientes/campus/application/commands/campus-create.command.handler.ts
 @DeclareImplementation()
+
 export class CampusCreateCommandHandlerImpl {
   constructor(
     @DeclareDependency(ICampusRepository) private readonly repo: ICampusRepository,

@@ -64,7 +64,7 @@ import {
   DisciplinaListOutputRestDto,
   DisciplinaUpdateInputRestDto,
 } from "./disciplina.rest.dto";
-import { DisciplinaRestMapper } from "./disciplina.rest.mapper";
+import * as DisciplinaRestMapper from "./disciplina.rest.mapper";
 
 @ApiTags("disciplinas")
 @Controller("/disciplinas")
@@ -94,9 +94,9 @@ export class DisciplinaRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Query() dto: DisciplinaListInputRestDto,
   ): Promise<DisciplinaListOutputRestDto> {
-    const input = DisciplinaRestMapper.toListInput(dto);
-    const result = await this.listHandler.execute(accessContext, input);
-    return DisciplinaRestMapper.toListOutputDto(result);
+    const query = DisciplinaRestMapper.listInputDtoToListQuery.map(dto);
+    const queryResult = await this.listHandler.execute(accessContext, query);
+    return DisciplinaRestMapper.listQueryResultToListOutputDto(queryResult);
   }
 
   @Get("/:id")
@@ -108,10 +108,10 @@ export class DisciplinaRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: DisciplinaFindOneInputRestDto,
   ): Promise<DisciplinaFindOneOutputRestDto> {
-    const input = DisciplinaRestMapper.toFindOneInput(params);
-    const result = await this.findOneHandler.execute(accessContext, input);
-    ensureExists(result, Disciplina.entityName, input.id);
-    return DisciplinaRestMapper.toFindOneOutputDto(result);
+    const query = DisciplinaRestMapper.findOneInputDtoToFindOneQuery.map(params);
+    const queryResult = await this.findOneHandler.execute(accessContext, query);
+    ensureExists(queryResult, Disciplina.entityName, query.id);
+    return DisciplinaRestMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Post("/")
@@ -122,9 +122,9 @@ export class DisciplinaRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Body() dto: DisciplinaCreateInputRestDto,
   ): Promise<DisciplinaFindOneOutputRestDto> {
-    const input = DisciplinaRestMapper.toCreateInput(dto);
-    const result = await this.createHandler.execute(accessContext, input);
-    return DisciplinaRestMapper.toFindOneOutputDto(result);
+    const command = DisciplinaRestMapper.createInputDtoToCreateCommand.map(dto);
+    const queryResult = await this.createHandler.execute(accessContext, command);
+    return DisciplinaRestMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Patch("/:id")
@@ -137,9 +137,9 @@ export class DisciplinaRestController {
     @Param() params: DisciplinaFindOneInputRestDto,
     @Body() dto: DisciplinaUpdateInputRestDto,
   ): Promise<DisciplinaFindOneOutputRestDto> {
-    const input = DisciplinaRestMapper.toUpdateInput(params, dto);
-    const result = await this.updateHandler.execute(accessContext, input);
-    return DisciplinaRestMapper.toFindOneOutputDto(result);
+    const command = DisciplinaRestMapper.updateInputDtoToUpdateCommand.map({ params, dto });
+    const queryResult = await this.updateHandler.execute(accessContext, command);
+    return DisciplinaRestMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Get("/:id/imagem/capa")
@@ -151,10 +151,10 @@ export class DisciplinaRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: DisciplinaFindOneInputRestDto,
   ) {
-    const result = await this.getImagemCapaHandler.execute(accessContext, { id: params.id });
-    return new StreamableFile(result.stream, {
-      type: result.mimeType,
-      disposition: result.disposition,
+    const queryResult = await this.getImagemCapaHandler.execute(accessContext, { id: params.id });
+    return new StreamableFile(queryResult.stream, {
+      type: queryResult.mimeType,
+      disposition: queryResult.disposition,
     });
   }
 
@@ -191,7 +191,7 @@ export class DisciplinaRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: DisciplinaFindOneInputRestDto,
   ): Promise<boolean> {
-    const input = DisciplinaRestMapper.toFindOneInput(params);
-    return this.deleteHandler.execute(accessContext, input);
+    const query = DisciplinaRestMapper.findOneInputDtoToFindOneQuery.map(params);
+    return this.deleteHandler.execute(accessContext, query);
   }
 }

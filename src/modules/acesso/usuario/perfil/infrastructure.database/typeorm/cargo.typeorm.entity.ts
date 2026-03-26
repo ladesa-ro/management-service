@@ -9,6 +9,9 @@ export class CargoEntity {
   @Column({ name: "nome", type: "text", unique: true })
   nome!: string;
 
-  @OneToMany(() => PerfilEntity, (perfil) => perfil.cargo)
+  @OneToMany(
+    () => PerfilEntity,
+    (perfil) => perfil.cargo,
+  )
   perfis!: Relation<PerfilEntity[]>;
 }

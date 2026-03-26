@@ -18,7 +18,7 @@ import {
   disciplinaPaginationSpec,
 } from "@/modules/ensino/disciplina/domain/queries";
 import type { IDisciplinaRepository } from "@/modules/ensino/disciplina/domain/repositories";
-import { DisciplinaEntity, disciplinaEntityDomainMapper } from "./typeorm";
+import { DisciplinaEntity, DisciplinaTypeormMapper } from "./typeorm";
 
 const config = {
   alias: "disciplina",
@@ -40,26 +40,19 @@ export class DisciplinaTypeOrmRepositoryAdapter implements IDisciplinaRepository
     private readonly paginationAdapter: NestJsPaginateAdapter,
   ) {}
 
-  // ==========================================
-  // Write side
-  // ==========================================
+  // ============================================================================
+  // Write (Command handlers)
+  // ============================================================================
 
   async loadById(_accessContext: IAccessContext | null, id: string): Promise<Disciplina | null> {
     const repo = this.appTypeormConnection.getRepository(DisciplinaEntity);
-
-    const entity = await repo.findOne({
-      where: { id, dateDeleted: IsNull() },
-    });
-
+    const entity = await repo.findOne({ where: { id, dateDeleted: IsNull() } });
     if (!entity) return null;
-
-    return Disciplina.load(
-      disciplinaEntityDomainMapper.toOutputData(entity as unknown as Record<string, unknown>),
-    );
+    return Disciplina.load(DisciplinaTypeormMapper.entityToDomain.map(entity));
   }
 
   async save(aggregate: Disciplina): Promise<void> {
-    const entityData = disciplinaEntityDomainMapper.toPersistenceData({ ...aggregate });
+    const entityData = DisciplinaTypeormMapper.domainToPersistence.map({ ...aggregate });
     const repo = this.appTypeormConnection.getRepository(DisciplinaEntity);
     await repo.save(repo.create({ id: aggregate.id, ...entityData } as DisciplinaEntity));
   }
@@ -68,9 +61,9 @@ export class DisciplinaTypeOrmRepositoryAdapter implements IDisciplinaRepository
     return typeormSoftDeleteById(this.appTypeormConnection, DisciplinaEntity, config.alias, id);
   }
 
-  // ==========================================
-  // Read side
-  // ==========================================
+  // ============================================================================
+  // Read (Query handlers)
+  // ============================================================================
 
   getFindOneQueryResult(accessContext: IAccessContext | null, dto: DisciplinaFindOneQuery) {
     return typeormFindById<DisciplinaEntity, DisciplinaFindOneQuery, DisciplinaFindOneQueryResult>(
@@ -78,6 +71,7 @@ export class DisciplinaTypeOrmRepositoryAdapter implements IDisciplinaRepository
       DisciplinaEntity,
       { ...config, paginateConfig: disciplinaPaginateConfig },
       dto,
+      DisciplinaTypeormMapper.entityToFindOneQueryResult.map,
     );
   }
 
@@ -91,6 +85,7 @@ export class DisciplinaTypeOrmRepositoryAdapter implements IDisciplinaRepository
       { ...config, paginateConfig: disciplinaPaginateConfig },
       this.paginationAdapter,
       dto,
+      DisciplinaTypeormMapper.entityToFindOneQueryResult.map,
     );
   }
 }

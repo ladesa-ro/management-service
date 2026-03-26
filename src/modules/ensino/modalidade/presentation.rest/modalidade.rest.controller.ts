@@ -40,7 +40,7 @@ import {
   ModalidadeListOutputRestDto,
   ModalidadeUpdateInputRestDto,
 } from "./modalidade.rest.dto";
-import { ModalidadeRestMapper } from "./modalidade.rest.mapper";
+import * as ModalidadeRestMapper from "./modalidade.rest.mapper";
 
 @ApiTags("modalidades")
 @Controller("/modalidades")
@@ -66,9 +66,9 @@ export class ModalidadeRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Query() dto: ModalidadeListInputRestDto,
   ): Promise<ModalidadeListOutputRestDto> {
-    const input = ModalidadeRestMapper.toListInput(dto);
-    const result = await this.listHandler.execute(accessContext, input);
-    return ModalidadeRestMapper.toListOutputDto(result);
+    const query = ModalidadeRestMapper.listInputDtoToListQuery.map(dto);
+    const queryResult = await this.listHandler.execute(accessContext, query);
+    return ModalidadeRestMapper.listQueryResultToListOutputDto(queryResult);
   }
 
   @Get("/:id")
@@ -80,10 +80,10 @@ export class ModalidadeRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: ModalidadeFindOneInputRestDto,
   ): Promise<ModalidadeFindOneOutputRestDto> {
-    const input = ModalidadeRestMapper.toFindOneInput(params);
-    const result = await this.findOneHandler.execute(accessContext, input);
-    ensureExists(result, Modalidade.entityName, input.id);
-    return ModalidadeRestMapper.toFindOneOutputDto(result);
+    const query = ModalidadeRestMapper.findOneInputDtoToFindOneQuery.map(params);
+    const queryResult = await this.findOneHandler.execute(accessContext, query);
+    ensureExists(queryResult, Modalidade.entityName, query.id);
+    return ModalidadeRestMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Post("/")
@@ -94,9 +94,9 @@ export class ModalidadeRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Body() dto: ModalidadeCreateInputRestDto,
   ): Promise<ModalidadeFindOneOutputRestDto> {
-    const input = ModalidadeRestMapper.toCreateInput(dto);
-    const result = await this.createHandler.execute(accessContext, input);
-    return ModalidadeRestMapper.toFindOneOutputDto(result);
+    const command = ModalidadeRestMapper.createInputDtoToCreateCommand.map(dto);
+    const queryResult = await this.createHandler.execute(accessContext, command);
+    return ModalidadeRestMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Patch("/:id")
@@ -109,9 +109,9 @@ export class ModalidadeRestController {
     @Param() params: ModalidadeFindOneInputRestDto,
     @Body() dto: ModalidadeUpdateInputRestDto,
   ): Promise<ModalidadeFindOneOutputRestDto> {
-    const input = ModalidadeRestMapper.toUpdateInput(params, dto);
-    const result = await this.updateHandler.execute(accessContext, input);
-    return ModalidadeRestMapper.toFindOneOutputDto(result);
+    const command = ModalidadeRestMapper.updateInputDtoToUpdateCommand.map({ params, dto });
+    const queryResult = await this.updateHandler.execute(accessContext, command);
+    return ModalidadeRestMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Delete("/:id")
@@ -123,7 +123,7 @@ export class ModalidadeRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: ModalidadeFindOneInputRestDto,
   ): Promise<boolean> {
-    const input = ModalidadeRestMapper.toFindOneInput(params);
-    return this.deleteHandler.execute(accessContext, input);
+    const query = ModalidadeRestMapper.findOneInputDtoToFindOneQuery.map(params);
+    return this.deleteHandler.execute(accessContext, query);
   }
 }

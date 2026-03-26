@@ -25,6 +25,7 @@
  * // }
  * ```
  */
+
 export type PersistInput<T> = {
   [K in keyof T]: NonNullable<T[K]> extends { id: infer I }
     ? null extends T[K]

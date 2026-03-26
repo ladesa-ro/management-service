@@ -12,11 +12,13 @@ import type {
 /**
  * Token de injeção para o repositório de Cidade
  */
+
 export const ICidadeRepository = Symbol("ICidadeRepository");
 
 /**
  * Port de saída para operações de consulta de Cidade (read-only).
  */
+
 export interface ICidadeRepository {
   getFindOneQueryResult: IRepositoryGetFindOneQueryResult<
     CidadeFindOneQuery,

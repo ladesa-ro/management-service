@@ -7,6 +7,7 @@ export type PaginationSortDirection = "ASC" | "DESC";
  * com campos obrigatórios e sem opções de infraestrutura (select, limits).
  * Relations ficam na camada de infraestrutura (conceito ORM).
  */
+
 export type IPaginationSpec = Required<
   Pick<IPaginationConfig, "sortableColumns" | "searchableColumns">
 > & {

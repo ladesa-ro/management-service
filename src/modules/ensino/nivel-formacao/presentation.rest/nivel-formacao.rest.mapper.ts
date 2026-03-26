@@ -1,62 +1,73 @@
 import {
   NivelFormacaoCreateCommand,
   NivelFormacaoFindOneQuery,
-  NivelFormacaoFindOneQueryResult,
+  type NivelFormacaoFindOneQueryResult,
   NivelFormacaoListQuery,
   NivelFormacaoUpdateCommand,
 } from "@/modules/ensino/nivel-formacao";
+import { createListMapper, createMapper, createPaginatedInputMapper, into } from "@/shared/mapping";
 import {
-  createFindOneInputMapper,
-  createListInputMapper,
-  createListOutputMapper,
-  mapDatedFields,
-} from "@/shared/mapping";
-import {
-  NivelFormacaoCreateInputRestDto,
+  type NivelFormacaoCreateInputRestDto,
+  type NivelFormacaoFindOneInputRestDto,
   NivelFormacaoFindOneOutputRestDto,
+  type NivelFormacaoListInputRestDto,
   NivelFormacaoListOutputRestDto,
-  NivelFormacaoUpdateInputRestDto,
+  type NivelFormacaoUpdateInputRestDto,
 } from "./nivel-formacao.rest.dto";
 
-export class NivelFormacaoRestMapper {
-  // ============================================================================
-  // Input: Server DTO -> Core DTO
-  // ============================================================================
+// ============================================================================
+// Externa → Interna (Input: Presentation → Core)
+// ============================================================================
 
-  static toFindOneInput = createFindOneInputMapper(NivelFormacaoFindOneQuery);
+export const findOneInputDtoToFindOneQuery = createMapper<
+  NivelFormacaoFindOneInputRestDto,
+  NivelFormacaoFindOneQuery
+>((dto) => {
+  const input = new NivelFormacaoFindOneQuery();
+  input.id = dto.id;
+  return input;
+});
 
-  static toListInput = createListInputMapper(NivelFormacaoListQuery, ["filter.id"]);
+export const listInputDtoToListQuery = createPaginatedInputMapper<
+  NivelFormacaoListInputRestDto,
+  NivelFormacaoListQuery
+>(NivelFormacaoListQuery, (dto, query) => {
+  into(query).field("filter.id").from(dto);
+});
 
-  static toCreateInput(dto: NivelFormacaoCreateInputRestDto): NivelFormacaoCreateCommand {
-    const input = new NivelFormacaoCreateCommand();
-    input.slug = dto.slug;
-    return input;
-  }
+export const createInputDtoToCreateCommand = createMapper<
+  NivelFormacaoCreateInputRestDto,
+  NivelFormacaoCreateCommand
+>((dto) => {
+  const input = new NivelFormacaoCreateCommand();
+  input.slug = dto.slug;
+  return input;
+});
 
-  static toUpdateInput(dto: NivelFormacaoUpdateInputRestDto): NivelFormacaoUpdateCommand {
-    const input = new NivelFormacaoUpdateCommand();
-    if (dto.slug !== undefined) {
-      input.slug = dto.slug;
-    }
-    return input;
-  }
+export const updateInputDtoToUpdateCommand = createMapper<
+  { params: NivelFormacaoFindOneInputRestDto; dto: NivelFormacaoUpdateInputRestDto },
+  NivelFormacaoFindOneQuery & NivelFormacaoUpdateCommand
+>(({ params, dto }) => ({
+  id: params.id,
+  slug: dto.slug,
+}));
 
-  // ============================================================================
-  // Output: Core DTO -> Server DTO
-  // ============================================================================
+// ============================================================================
+// Interna → Externa (Output: Core → Presentation)
+// ============================================================================
 
-  static toFindOneOutputDto(
-    output: NivelFormacaoFindOneQueryResult,
-  ): NivelFormacaoFindOneOutputRestDto {
-    const dto = new NivelFormacaoFindOneOutputRestDto();
-    dto.id = output.id;
-    dto.slug = output.slug;
-    mapDatedFields(dto, output);
-    return dto;
-  }
+export const findOneQueryResultToOutputDto = createMapper<
+  NivelFormacaoFindOneQueryResult,
+  NivelFormacaoFindOneOutputRestDto
+>((output) => ({
+  id: output.id,
+  slug: output.slug,
+  dateCreated: output.dateCreated,
+  dateUpdated: output.dateUpdated,
+  dateDeleted: output.dateDeleted,
+}));
 
-  static toListOutputDto = createListOutputMapper(
-    NivelFormacaoListOutputRestDto,
-    NivelFormacaoRestMapper.toFindOneOutputDto,
-  );
-}
+export const listQueryResultToListOutputDto = createListMapper(
+  NivelFormacaoListOutputRestDto,
+  findOneQueryResultToOutputDto,
+);

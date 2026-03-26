@@ -5,11 +5,8 @@ import { paginateConfig } from "@/infrastructure.database/pagination/config/pagi
 import type { ITypeOrmPaginationConfig } from "@/infrastructure.database/pagination/interfaces/pagination-config.types";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import {
-  typeormCreate,
   typeormFindAll,
   typeormFindById,
-  typeormSoftDeleteById,
-  typeormUpdate,
 } from "@/infrastructure.database/typeorm/helpers/typeorm-repository-helpers";
 import type {
   EstadoFindOneQuery,
@@ -18,7 +15,7 @@ import type {
   EstadoListQueryResult,
 } from "@/modules/localidades/estado/domain/queries";
 import type { IEstadoRepository } from "@/modules/localidades/estado/domain/repositories";
-import { EstadoEntity, estadoEntityDomainMapper } from "./typeorm";
+import { EstadoEntity, EstadoTypeormMapper } from "./typeorm";
 
 const config = {
   alias: "estado",
@@ -48,6 +45,7 @@ export class EstadoTypeOrmRepositoryAdapter implements IEstadoRepository {
       { ...config, paginateConfig: estadoPaginateConfig },
       this.paginationAdapter,
       dto,
+      EstadoTypeormMapper.entityToFindOneQueryResult.map,
     );
   }
 
@@ -57,24 +55,7 @@ export class EstadoTypeOrmRepositoryAdapter implements IEstadoRepository {
       EstadoEntity,
       { ...config, paginateConfig: estadoPaginateConfig },
       dto,
+      EstadoTypeormMapper.entityToFindOneQueryResult.map,
     );
-  }
-
-  findByIdSimple(accessContext: IAccessContext | null, id: string) {
-    return this.getFindOneQueryResult(accessContext, { id: Number(id) } as EstadoFindOneQuery);
-  }
-
-  create(data: Record<string, unknown>) {
-    const entityData = estadoEntityDomainMapper.toPersistenceData(data);
-    return typeormCreate(this.appTypeormConnection, EstadoEntity, entityData);
-  }
-
-  update(id: string | number, data: Record<string, unknown>) {
-    const entityData = estadoEntityDomainMapper.toPersistenceData(data);
-    return typeormUpdate(this.appTypeormConnection, EstadoEntity, id, entityData);
-  }
-
-  softDeleteById(id: string) {
-    return typeormSoftDeleteById(this.appTypeormConnection, EstadoEntity, config.alias, id);
   }
 }

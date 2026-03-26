@@ -112,17 +112,16 @@ describe("dateToISONullable", () => {
 });
 
 describe("isoToDate", () => {
-  it("should convert ISO string to Date", () => {
+  it("should return the same ISO string (identity)", () => {
     const result = isoToDate("2025-06-15T10:30:00.000Z");
-    expect(result).toBeInstanceOf(Date);
-    expect(result.toISOString()).toBe("2025-06-15T10:30:00.000Z");
+    expect(result).toBe("2025-06-15T10:30:00.000Z");
   });
 });
 
 describe("isoToDateNullable", () => {
-  it("should convert ISO string to Date", () => {
+  it("should return the same ISO string (identity)", () => {
     const result = isoToDateNullable("2025-06-15T10:30:00.000Z");
-    expect(result).toBeInstanceOf(Date);
+    expect(result).toBe("2025-06-15T10:30:00.000Z");
   });
 
   it("should return null for null input", () => {

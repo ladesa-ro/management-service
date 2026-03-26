@@ -15,7 +15,7 @@ import {
 } from "@/modules/armazenamento/arquivo/domain/queries";
 import { AccessContextHttp } from "@/server/nest/access-context";
 import { ArquivoFindOneInputRestDto, ArquivoGetFileQueryInputRestDto } from "./arquivo.rest.dto";
-import { ArquivoRestMapper } from "./arquivo.rest.mapper";
+import * as ArquivoRestMapper from "./arquivo.rest.mapper";
 
 @ApiTags("arquivos")
 @Controller("/arquivos")
@@ -35,11 +35,11 @@ export class ArquivoRestController {
     @Param() params: ArquivoFindOneInputRestDto,
     @Query() query: ArquivoGetFileQueryInputRestDto,
   ): Promise<StreamableFile> {
-    const input = ArquivoRestMapper.toGetFileInput(params, query);
-    const result = await this.getStreamableFileHandler.execute(accessContext, input);
-    return new StreamableFile(result.stream, {
-      type: result.mimeType,
-      disposition: result.disposition,
+    const getFileQuery = ArquivoRestMapper.toGetFileInput.map({ params, query });
+    const queryResult = await this.getStreamableFileHandler.execute(accessContext, getFileQuery);
+    return new StreamableFile(queryResult.stream, {
+      type: queryResult.mimeType,
+      disposition: queryResult.disposition,
     });
   }
 }

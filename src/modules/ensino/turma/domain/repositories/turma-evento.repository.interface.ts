@@ -9,8 +9,8 @@ export interface ITurmaEventoRepository {
     turmaId: string,
     data: {
       nome: string | null;
-      dataInicio: Date;
-      dataFim: Date | null;
+      dataInicio: string;
+      dataFim: string | null;
       diaInteiro: boolean;
       horarioInicio: string;
       horarioFim: string;

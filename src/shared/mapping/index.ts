@@ -1,12 +1,12 @@
-export * from "./base.mapper";
 export {
-  type BidirectionalField,
-  type BidirectionalMapping,
-  createBidirectionalMapping,
-  createMapping,
-  type FieldMapping,
-  type Mapping,
-  mapFilterCase,
-} from "./field-mapper";
-export { mapImagemOutput } from "./imagem-output.mapper";
+  createListMapper,
+  createMapper,
+  createPaginatedInputMapper,
+  type ImagemLike,
+  into,
+  type Mapper,
+  mapField,
+  mapImagemOutput,
+} from "./create-mapper";
+
 export * from "./transforms";

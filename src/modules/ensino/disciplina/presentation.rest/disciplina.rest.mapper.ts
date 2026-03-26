@@ -1,79 +1,81 @@
-import { BlocoRestMapper } from "@/modules/ambientes/bloco/presentation.rest";
+import * as BlocoRestMapper from "@/modules/ambientes/bloco/presentation.rest/bloco.rest.mapper";
 import {
   DisciplinaCreateCommand,
   DisciplinaFindOneQuery,
-  DisciplinaFindOneQueryResult,
+  type DisciplinaFindOneQueryResult,
   DisciplinaListQuery,
   DisciplinaUpdateCommand,
 } from "@/modules/ensino/disciplina";
+import { createListMapper, createMapper, createPaginatedInputMapper, into } from "@/shared/mapping";
 import {
-  createFindOneInputMapper,
-  createListInputMapper,
-  createListOutputMapper,
-  mapDatedFields,
-} from "@/shared/mapping";
-import {
-  DisciplinaCreateInputRestDto,
-  DisciplinaFindOneInputRestDto,
+  type DisciplinaCreateInputRestDto,
+  type DisciplinaFindOneInputRestDto,
   DisciplinaFindOneOutputRestDto,
+  type DisciplinaListInputRestDto,
   DisciplinaListOutputRestDto,
-  DisciplinaUpdateInputRestDto,
+  type DisciplinaUpdateInputRestDto,
 } from "./disciplina.rest.dto";
 
-export class DisciplinaRestMapper {
-  // ============================================================================
-  // Input: Server DTO -> Core DTO
-  // ============================================================================
+// ============================================================================
+// Externa → Interna (Input: Presentation → Core)
+// ============================================================================
 
-  static toFindOneInput = createFindOneInputMapper(DisciplinaFindOneQuery);
+export const findOneInputDtoToFindOneQuery = createMapper<
+  DisciplinaFindOneInputRestDto,
+  DisciplinaFindOneQuery
+>((dto) => {
+  const input = new DisciplinaFindOneQuery();
+  input.id = dto.id;
+  return input;
+});
 
-  static toListInput = createListInputMapper(DisciplinaListQuery, ["filter.id"]);
+export const listInputDtoToListQuery = createPaginatedInputMapper<
+  DisciplinaListInputRestDto,
+  DisciplinaListQuery
+>(DisciplinaListQuery, (dto, query) => {
+  into(query).field("filter.id").from(dto);
+});
 
-  static toCreateInput(dto: DisciplinaCreateInputRestDto): DisciplinaCreateCommand {
-    const input = new DisciplinaCreateCommand();
-    input.nome = dto.nome;
-    input.nomeAbreviado = dto.nomeAbreviado;
-    input.cargaHoraria = dto.cargaHoraria;
-    return input;
-  }
+export const createInputDtoToCreateCommand = createMapper<
+  DisciplinaCreateInputRestDto,
+  DisciplinaCreateCommand
+>((dto) => {
+  const input = new DisciplinaCreateCommand();
+  input.nome = dto.nome;
+  input.nomeAbreviado = dto.nomeAbreviado;
+  input.cargaHoraria = dto.cargaHoraria;
+  return input;
+});
 
-  static toUpdateInput(
-    params: DisciplinaFindOneInputRestDto,
-    dto: DisciplinaUpdateInputRestDto,
-  ): DisciplinaFindOneQuery & DisciplinaUpdateCommand {
-    const input = new DisciplinaFindOneQuery() as DisciplinaFindOneQuery & DisciplinaUpdateCommand;
-    input.id = params.id;
-    if (dto.nome !== undefined) {
-      input.nome = dto.nome;
-    }
-    if (dto.nomeAbreviado !== undefined) {
-      input.nomeAbreviado = dto.nomeAbreviado;
-    }
-    if (dto.cargaHoraria !== undefined) {
-      input.cargaHoraria = dto.cargaHoraria;
-    }
-    return input;
-  }
+export const updateInputDtoToUpdateCommand = createMapper<
+  { params: DisciplinaFindOneInputRestDto; dto: DisciplinaUpdateInputRestDto },
+  DisciplinaFindOneQuery & DisciplinaUpdateCommand
+>(({ params, dto }) => ({
+  id: params.id,
+  nome: dto.nome,
+  nomeAbreviado: dto.nomeAbreviado,
+  cargaHoraria: dto.cargaHoraria,
+}));
 
-  // ============================================================================
-  // Output: Core DTO -> Server DTO
-  // ============================================================================
+// ============================================================================
+// Interna → Externa (Output: Core → Presentation)
+// ============================================================================
 
-  static toFindOneOutputDto(output: DisciplinaFindOneQueryResult): DisciplinaFindOneOutputRestDto {
-    const dto = new DisciplinaFindOneOutputRestDto();
-    dto.id = output.id;
-    dto.nome = output.nome;
-    dto.nomeAbreviado = output.nomeAbreviado;
-    dto.cargaHoraria = output.cargaHoraria;
-    dto.imagemCapa = output.imagemCapa
-      ? BlocoRestMapper.toImagemOutputDto(output.imagemCapa)
-      : null;
-    mapDatedFields(dto, output);
-    return dto;
-  }
+export const findOneQueryResultToOutputDto = createMapper<
+  DisciplinaFindOneQueryResult,
+  DisciplinaFindOneOutputRestDto
+>((output) => ({
+  id: output.id,
+  nome: output.nome,
+  nomeAbreviado: output.nomeAbreviado,
+  cargaHoraria: output.cargaHoraria,
+  imagemCapa: output.imagemCapa ? BlocoRestMapper.toImagemOutput(output.imagemCapa) : null,
+  dateCreated: output.dateCreated,
+  dateUpdated: output.dateUpdated,
+  dateDeleted: output.dateDeleted,
+}));
 
-  static toListOutputDto = createListOutputMapper(
-    DisciplinaListOutputRestDto,
-    DisciplinaRestMapper.toFindOneOutputDto,
-  );
-}
+export const listQueryResultToListOutputDto = createListMapper(
+  DisciplinaListOutputRestDto,
+  findOneQueryResultToOutputDto,
+);

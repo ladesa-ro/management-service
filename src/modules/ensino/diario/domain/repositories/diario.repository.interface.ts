@@ -16,6 +16,7 @@ import type {
 /**
  * Token de injeção para o repositório de Diario
  */
+
 export const IDiarioRepository = Symbol("IDiarioRepository");
 
 /**
@@ -25,6 +26,7 @@ export const IDiarioRepository = Symbol("IDiarioRepository");
  * O write side retorna o aggregate de domínio reconstituído.
  * O read side retorna dados hidratados para exibição (query results).
  */
+
 export interface IDiarioRepository {
   // ==========================================
   // Write side — usado por command handlers

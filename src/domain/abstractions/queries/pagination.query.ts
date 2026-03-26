@@ -1,6 +1,7 @@
 /**
  * Base para query de paginação
  */
+
 export class PaginationQuery {
   page?: number | null | undefined;
   limit?: number | null | undefined;

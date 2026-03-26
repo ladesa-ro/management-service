@@ -6,6 +6,7 @@ import type { IRequestActor } from "@/domain/abstractions/request-actor";
 /**
  * Generates a valid UUID v7 for testing.
  */
+
 export function createTestId(): string {
   return uuidv7();
 }
@@ -13,6 +14,7 @@ export function createTestId(): string {
 /**
  * Generates a fixed ISO date string for deterministic tests.
  */
+
 export function createTestDate(offset = 0): string {
   return new Date(Date.UTC(2026, 0, 1, 0, 0, 0, offset)).toISOString();
 }
@@ -20,6 +22,7 @@ export function createTestDate(offset = 0): string {
 /**
  * Creates a mock IRequestActor for testing.
  */
+
 export function createTestRequestActor(
   overrides: Partial<NonNullable<IRequestActor>> = {},
 ): NonNullable<IRequestActor> {
@@ -36,6 +39,7 @@ export function createTestRequestActor(
 /**
  * Creates a mock IAccessContext for testing application handlers.
  */
+
 export function createTestAccessContext(
   requestActor: IRequestActor = createTestRequestActor(),
 ): IAccessContext {
@@ -45,6 +49,7 @@ export function createTestAccessContext(
 /**
  * Creates a mock IAccessContext with superuser privileges.
  */
+
 export function createTestSuperUserAccessContext(): IAccessContext {
   return createTestAccessContext(createTestRequestActor({ isSuperUser: true }));
 }
@@ -52,6 +57,7 @@ export function createTestSuperUserAccessContext(): IAccessContext {
 /**
  * Creates a { id: string } reference object for relation fields.
  */
+
 export function createTestRef(id?: string): { id: string } {
   return { id: id ?? createTestId() };
 }
@@ -59,6 +65,7 @@ export function createTestRef(id?: string): { id: string } {
 /**
  * Creates a complete set of dated fields for loading entities.
  */
+
 export function createTestDatedFields(offset = 0) {
   return {
     dateCreated: createTestDate(offset),
@@ -71,6 +78,7 @@ export function createTestDatedFields(offset = 0) {
  * Creates a minimal domain entity stub for CQRS tests.
  * Has `id`, dated fields, `isActive()` and `update()` stubs.
  */
+
 export function createTestDomainEntity(
   overrides: Record<string, unknown> = {},
 ): Record<string, unknown> & { id: string; update: (...args: unknown[]) => void } {

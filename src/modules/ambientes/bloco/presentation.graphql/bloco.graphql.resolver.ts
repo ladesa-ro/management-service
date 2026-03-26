@@ -31,7 +31,7 @@ import {
   BlocoListOutputGraphQlDto,
   BlocoUpdateInputGraphQlDto,
 } from "./bloco.graphql.dto";
-import { BlocoGraphqlMapper } from "./bloco.graphql.mapper";
+import * as BlocoGraphqlMapper from "./bloco.graphql.mapper";
 
 @Resolver(() => BlocoFindOneOutputGraphQlDto)
 export class BlocoGraphqlResolver {
@@ -53,9 +53,9 @@ export class BlocoGraphqlResolver {
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args() dto: BlocoListInputGraphQlDto,
   ): Promise<BlocoListOutputGraphQlDto> {
-    const input = BlocoGraphqlMapper.toListInput(dto);
-    const result = await this.listHandler.execute(accessContext, input);
-    return BlocoGraphqlMapper.toListOutputDto(result);
+    const query = BlocoGraphqlMapper.listInputDtoToListQuery(dto);
+    const queryResult = await this.listHandler.execute(accessContext, query);
+    return BlocoGraphqlMapper.listQueryResultToListOutputDto(queryResult);
   }
 
   @Query(() => BlocoFindOneOutputGraphQlDto, BlocoFindOneQueryMetadata.gqlMetadata)
@@ -63,9 +63,10 @@ export class BlocoGraphqlResolver {
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<BlocoFindOneOutputGraphQlDto> {
-    const result = await this.findOneHandler.execute(accessContext, { id });
-    ensureExists(result, Bloco.entityName, id);
-    return BlocoGraphqlMapper.toFindOneOutputDto(result);
+    const query = BlocoGraphqlMapper.findOneInputDtoToFindOneQuery.map(id);
+    const queryResult = await this.findOneHandler.execute(accessContext, query);
+    ensureExists(queryResult, Bloco.entityName, query.id);
+    return BlocoGraphqlMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Mutation(() => BlocoFindOneOutputGraphQlDto, BlocoCreateCommandMetadata.gqlMetadata)
@@ -73,9 +74,9 @@ export class BlocoGraphqlResolver {
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("input") dto: BlocoCreateInputGraphQlDto,
   ): Promise<BlocoFindOneOutputGraphQlDto> {
-    const input = BlocoGraphqlMapper.toCreateInput(dto);
-    const result = await this.createHandler.execute(accessContext, input);
-    return BlocoGraphqlMapper.toFindOneOutputDto(result);
+    const command = BlocoGraphqlMapper.createInputDtoToCreateCommand.map(dto);
+    const queryResult = await this.createHandler.execute(accessContext, command);
+    return BlocoGraphqlMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Mutation(() => BlocoFindOneOutputGraphQlDto, BlocoUpdateCommandMetadata.gqlMetadata)
@@ -84,9 +85,9 @@ export class BlocoGraphqlResolver {
     @Args("id", { type: () => ID }) id: string,
     @Args("input") dto: BlocoUpdateInputGraphQlDto,
   ): Promise<BlocoFindOneOutputGraphQlDto> {
-    const input = BlocoGraphqlMapper.toUpdateInput({ id }, dto);
-    const result = await this.updateHandler.execute(accessContext, input);
-    return BlocoGraphqlMapper.toFindOneOutputDto(result);
+    const command = BlocoGraphqlMapper.updateInputDtoToUpdateCommand.map({ id, dto });
+    const queryResult = await this.updateHandler.execute(accessContext, command);
+    return BlocoGraphqlMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Mutation(() => Boolean, BlocoDeleteCommandMetadata.gqlMetadata)

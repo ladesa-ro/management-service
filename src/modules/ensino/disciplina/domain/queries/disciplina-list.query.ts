@@ -15,4 +15,5 @@ export const DisciplinaListQueryFields = {
 
 export class DisciplinaListQuery extends PaginationQuery {
   "filter.id"?: IFilterAcceptableValues;
+  "filter.diarios.id"?: IFilterAcceptableValues;
 }

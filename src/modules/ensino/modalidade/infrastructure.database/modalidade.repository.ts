@@ -18,7 +18,7 @@ import type {
 } from "@/modules/ensino/modalidade";
 import { Modalidade } from "@/modules/ensino/modalidade/domain/modalidade";
 import type { IModalidadeRepository } from "@/modules/ensino/modalidade/domain/repositories";
-import { ModalidadeEntity, modalidadeEntityDomainMapper } from "./typeorm";
+import { ModalidadeEntity, ModalidadeTypeormMapper } from "./typeorm";
 
 const config = {
   alias: "modalidade",
@@ -44,26 +44,19 @@ export class ModalidadeTypeOrmRepositoryAdapter implements IModalidadeRepository
     private readonly paginationAdapter: NestJsPaginateAdapter,
   ) {}
 
-  // ==========================================
-  // Write side
-  // ==========================================
+  // ============================================================================
+  // Write (Command handlers)
+  // ============================================================================
 
   async loadById(_accessContext: IAccessContext | null, id: string): Promise<Modalidade | null> {
     const repo = this.appTypeormConnection.getRepository(ModalidadeEntity);
-
-    const entity = await repo.findOne({
-      where: { id, dateDeleted: IsNull() },
-    });
-
+    const entity = await repo.findOne({ where: { id, dateDeleted: IsNull() } });
     if (!entity) return null;
-
-    return Modalidade.load(
-      modalidadeEntityDomainMapper.toOutputData(entity as unknown as Record<string, unknown>),
-    );
+    return Modalidade.load(ModalidadeTypeormMapper.entityToDomain.map(entity));
   }
 
   async save(aggregate: Modalidade): Promise<void> {
-    const entityData = modalidadeEntityDomainMapper.toPersistenceData({ ...aggregate });
+    const entityData = ModalidadeTypeormMapper.domainToPersistence.map({ ...aggregate });
     const repo = this.appTypeormConnection.getRepository(ModalidadeEntity);
     await repo.save(repo.create({ id: aggregate.id, ...entityData } as ModalidadeEntity));
   }
@@ -72,9 +65,9 @@ export class ModalidadeTypeOrmRepositoryAdapter implements IModalidadeRepository
     return typeormSoftDeleteById(this.appTypeormConnection, ModalidadeEntity, config.alias, id);
   }
 
-  // ==========================================
-  // Read side
-  // ==========================================
+  // ============================================================================
+  // Read (Query handlers)
+  // ============================================================================
 
   getFindOneQueryResult(accessContext: IAccessContext | null, dto: ModalidadeFindOneQuery) {
     return typeormFindById<ModalidadeEntity, ModalidadeFindOneQuery, ModalidadeFindOneQueryResult>(
@@ -82,6 +75,7 @@ export class ModalidadeTypeOrmRepositoryAdapter implements IModalidadeRepository
       ModalidadeEntity,
       { ...config, paginateConfig: modalidadePaginateConfig },
       dto,
+      ModalidadeTypeormMapper.entityToFindOneQueryResult.map,
     );
   }
 
@@ -95,6 +89,7 @@ export class ModalidadeTypeOrmRepositoryAdapter implements IModalidadeRepository
       { ...config, paginateConfig: modalidadePaginateConfig },
       this.paginationAdapter,
       dto,
+      ModalidadeTypeormMapper.entityToFindOneQueryResult.map,
     );
   }
 }

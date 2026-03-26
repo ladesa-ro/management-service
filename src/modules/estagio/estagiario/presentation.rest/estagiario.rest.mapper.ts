@@ -1,6 +1,6 @@
-import { PerfilRestMapper } from "@/modules/acesso/usuario/perfil/presentation.rest/perfil.rest.mapper";
-import { CursoRestMapper } from "@/modules/ensino/curso/presentation.rest/curso.rest.mapper";
-import { TurmaRestMapper } from "@/modules/ensino/turma/presentation.rest/turma.rest.mapper";
+import * as PerfilRestMapper from "@/modules/acesso/usuario/perfil/presentation.rest/perfil.rest.mapper";
+import * as CursoRestMapper from "@/modules/ensino/curso/presentation.rest/curso.rest.mapper";
+import * as TurmaRestMapper from "@/modules/ensino/turma/presentation.rest/turma.rest.mapper";
 import {
   EstagiarioCreateCommand,
   EstagiarioUpdateCommand,
@@ -10,84 +10,86 @@ import {
   type EstagiarioFindOneQueryResult,
   EstagiarioListQuery,
 } from "@/modules/estagio/estagiario/domain/queries";
+import { createListMapper, createMapper, createPaginatedInputMapper, into } from "@/shared/mapping";
 import {
-  createFindOneInputMapper,
-  createListInputMapper,
-  createListOutputMapper,
-  mapDatedFields,
-} from "@/shared/mapping";
-import {
-  EstagiarioCreateInputRestDto,
-  EstagiarioFindOneInputRestDto,
+  type EstagiarioCreateInputRestDto,
+  type EstagiarioFindOneInputRestDto,
   EstagiarioFindOneOutputRestDto,
+  type EstagiarioListInputRestDto,
   EstagiarioListOutputRestDto,
-  EstagiarioUpdateInputRestDto,
+  type EstagiarioUpdateInputRestDto,
 } from "./estagiario.rest.dto";
 
-export class EstagiarioRestMapper {
-  static toFindOneInput = createFindOneInputMapper(EstagiarioFindOneQuery);
+// ============================================================================
+// Externa -> Interna (Input: Presentation -> Core)
+// ============================================================================
 
-  static toListInput = createListInputMapper(EstagiarioListQuery, [
-    "filter.id",
-    "filter.perfil.id",
-    "filter.curso.id",
-    "filter.turma.id",
-  ]);
+export const findOneInputDtoToFindOneQuery = createMapper<
+  EstagiarioFindOneInputRestDto,
+  EstagiarioFindOneQuery
+>((dto) => {
+  const input = new EstagiarioFindOneQuery();
+  input.id = dto.id;
+  return input;
+});
 
-  static toCreateInput(dto: EstagiarioCreateInputRestDto): EstagiarioCreateCommand {
-    const input = new EstagiarioCreateCommand();
-    input.perfil = { id: dto.perfil.id };
-    input.curso = { id: dto.curso.id };
-    input.turma = { id: dto.turma.id };
-    input.telefone = dto.telefone;
-    input.emailInstitucional = dto.emailInstitucional;
-    input.dataNascimento = dto.dataNascimento;
-    return input;
-  }
+export const listInputDtoToListQuery = createPaginatedInputMapper<
+  EstagiarioListInputRestDto,
+  EstagiarioListQuery
+>(EstagiarioListQuery, (dto, query) => {
+  into(query).field("filter.id").from(dto);
+  into(query).field("filter.perfil.id").from(dto);
+  into(query).field("filter.curso.id").from(dto);
+  into(query).field("filter.turma.id").from(dto);
+});
 
-  static toUpdateInput(
-    params: EstagiarioFindOneInputRestDto,
-    dto: EstagiarioUpdateInputRestDto,
-  ): EstagiarioFindOneQuery & EstagiarioUpdateCommand {
-    const input = new EstagiarioFindOneQuery() as EstagiarioFindOneQuery & EstagiarioUpdateCommand;
-    input.id = params.id;
-    if (dto.perfil !== undefined) {
-      input.perfil = { id: dto.perfil.id };
-    }
-    if (dto.curso !== undefined) {
-      input.curso = { id: dto.curso.id };
-    }
-    if (dto.turma !== undefined) {
-      input.turma = { id: dto.turma.id };
-    }
-    if (dto.telefone !== undefined) {
-      input.telefone = dto.telefone;
-    }
-    if (dto.emailInstitucional !== undefined) {
-      input.emailInstitucional = dto.emailInstitucional;
-    }
-    if (dto.dataNascimento !== undefined) {
-      input.dataNascimento = dto.dataNascimento;
-    }
-    return input;
-  }
+export const createInputDtoToCreateCommand = createMapper<
+  EstagiarioCreateInputRestDto,
+  EstagiarioCreateCommand
+>((dto) => ({
+  perfil: { id: dto.perfil.id },
+  curso: { id: dto.curso.id },
+  turma: { id: dto.turma.id },
+  telefone: dto.telefone,
+  emailInstitucional: dto.emailInstitucional,
+  dataNascimento: dto.dataNascimento,
+}));
 
-  static toFindOneOutputDto(output: EstagiarioFindOneQueryResult): EstagiarioFindOneOutputRestDto {
-    const dto = new EstagiarioFindOneOutputRestDto();
-    dto.id = output.id;
-    dto.perfil = PerfilRestMapper.toFindOneOutputDto(output.perfil);
-    dto.curso = CursoRestMapper.toFindOneOutputDto(output.curso);
-    dto.turma = TurmaRestMapper.toFindOneOutputDto(output.turma);
-    dto.telefone = output.telefone;
-    dto.emailInstitucional = output.emailInstitucional;
-    dto.dataNascimento = output.dataNascimento;
-    dto.ativo = output.ativo;
-    mapDatedFields(dto, output);
-    return dto;
-  }
+export const updateInputDtoToUpdateCommand = createMapper<
+  { params: EstagiarioFindOneInputRestDto; dto: EstagiarioUpdateInputRestDto },
+  EstagiarioFindOneQuery & EstagiarioUpdateCommand
+>(({ params, dto }) => ({
+  id: params.id,
+  perfil: dto.perfil ? { id: dto.perfil.id } : undefined,
+  curso: dto.curso ? { id: dto.curso.id } : undefined,
+  turma: dto.turma ? { id: dto.turma.id } : undefined,
+  telefone: dto.telefone,
+  emailInstitucional: dto.emailInstitucional,
+  dataNascimento: dto.dataNascimento,
+}));
 
-  static toListOutputDto = createListOutputMapper(
-    EstagiarioListOutputRestDto,
-    EstagiarioRestMapper.toFindOneOutputDto,
-  );
-}
+// ============================================================================
+// Interna -> Externa (Output: Core -> Presentation)
+// ============================================================================
+
+export const findOneQueryResultToOutputDto = createMapper<
+  EstagiarioFindOneQueryResult,
+  EstagiarioFindOneOutputRestDto
+>((output) => ({
+  id: output.id,
+  perfil: PerfilRestMapper.findOneQueryResultToOutputDto.map(output.perfil),
+  curso: CursoRestMapper.findOneQueryResultToOutputDto.map(output.curso),
+  turma: TurmaRestMapper.findOneQueryResultToOutputDto.map(output.turma),
+  telefone: output.telefone,
+  emailInstitucional: output.emailInstitucional,
+  dataNascimento: output.dataNascimento,
+  ativo: output.ativo,
+  dateCreated: output.dateCreated,
+  dateUpdated: output.dateUpdated,
+  dateDeleted: output.dateDeleted,
+}));
+
+export const listQueryResultToListOutputDto = createListMapper(
+  EstagiarioListOutputRestDto,
+  findOneQueryResultToOutputDto,
+);

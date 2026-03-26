@@ -1,22 +1,29 @@
-import { PerfilFindOneQueryResult } from "@/modules/acesso/usuario/perfil";
-import { UsuarioGraphqlMapper } from "@/modules/acesso/usuario/presentation.graphql/usuario.graphql.mapper";
-import { CampusGraphqlMapper } from "@/modules/ambientes/campus/presentation.graphql/campus.graphql.mapper";
-import { mapDatedFields } from "@/shared/mapping";
+import type { PerfilFindOneQueryResult } from "@/modules/acesso/usuario/perfil";
+import * as UsuarioGraphqlMapper from "@/modules/acesso/usuario/presentation.graphql/usuario.graphql.mapper";
+import * as CampusGraphqlMapper from "@/modules/ambientes/campus/presentation.graphql/campus.graphql.mapper";
+import { createMapper } from "@/shared/mapping";
 import { PerfilFindOneOutputGraphQlDto } from "./perfil.graphql.dto";
 
-export class PerfilGraphqlMapper {
-  private static getCargoNome(output: PerfilFindOneQueryResult): string {
-    return output.cargo?.nome ?? "";
-  }
+// ============================================================================
+// Interna -> Externa (Output: Core -> Presentation)
+// ============================================================================
 
-  static toFindOneOutputDto(output: PerfilFindOneQueryResult): PerfilFindOneOutputGraphQlDto {
-    const dto = new PerfilFindOneOutputGraphQlDto();
-    dto.id = output.id;
-    dto.ativo = output.ativo;
-    dto.cargo = PerfilGraphqlMapper.getCargoNome(output);
-    dto.campus = CampusGraphqlMapper.toFindOneOutputDto(output.campus);
-    dto.usuario = UsuarioGraphqlMapper.toFindOneOutputDto(output.usuario);
-    mapDatedFields(dto, output);
-    return dto;
-  }
+function getCargoNome(output: PerfilFindOneQueryResult): string {
+  return output.cargo?.nome ?? "";
 }
+
+export const findOneQueryResultToOutputDto = createMapper<
+  PerfilFindOneQueryResult,
+  PerfilFindOneOutputGraphQlDto
+>((output) => {
+  const dto = new PerfilFindOneOutputGraphQlDto();
+  dto.id = output.id;
+  dto.ativo = output.ativo;
+  dto.cargo = getCargoNome(output);
+  dto.campus = CampusGraphqlMapper.findOneQueryResultToOutputDto.map(output.campus);
+  dto.usuario = UsuarioGraphqlMapper.findOneQueryResultToOutputDto.map(output.usuario);
+  dto.dateCreated = new Date(output.dateCreated);
+  dto.dateUpdated = new Date(output.dateUpdated);
+  dto.dateDeleted = output.dateDeleted ? new Date(output.dateDeleted) : null;
+  return dto;
+});

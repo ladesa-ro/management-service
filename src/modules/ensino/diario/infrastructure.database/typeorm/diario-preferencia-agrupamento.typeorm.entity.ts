@@ -7,10 +7,10 @@ export class DiarioPreferenciaAgrupamentoEntity {
   id!: string;
 
   @Column({ name: "data_inicio", type: "timestamptz", nullable: false })
-  dataInicio!: Date;
+  dataInicio!: string;
 
   @Column({ name: "data_fim", type: "timestamptz", nullable: true })
-  dataFim!: Date | null;
+  dataFim!: string | null;
 
   @Column({ name: "dia_semana_iso", type: "int", nullable: false })
   diaSemanaIso!: number;
@@ -23,11 +23,11 @@ export class DiarioPreferenciaAgrupamentoEntity {
   diario!: Relation<DiarioEntity>;
 
   @Column({ name: "date_created", type: "timestamptz", nullable: false })
-  dateCreated!: Date;
+  dateCreated!: string;
 
   @Column({ name: "date_updated", type: "timestamptz", nullable: false })
-  dateUpdated!: Date;
+  dateUpdated!: string;
 
   @Column({ name: "date_deleted", type: "timestamptz", nullable: true })
-  dateDeleted!: Date | null;
+  dateDeleted!: string | null;
 }

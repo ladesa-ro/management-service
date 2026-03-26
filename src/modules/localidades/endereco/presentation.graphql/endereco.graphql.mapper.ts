@@ -1,26 +1,38 @@
-import { CidadeGraphqlMapper } from "@/modules/localidades/cidade/presentation.graphql/cidade.graphql.mapper";
-import { EnderecoFindOneQuery, EnderecoFindOneQueryResult } from "@/modules/localidades/endereco";
-import { mapDatedFields } from "@/shared/mapping";
+import * as CidadeGraphqlMapper from "@/modules/localidades/cidade/presentation.graphql/cidade.graphql.mapper";
+import {
+  EnderecoFindOneQuery,
+  type EnderecoFindOneQueryResult,
+} from "@/modules/localidades/endereco";
+import { createMapper } from "@/shared/mapping";
 import { EnderecoFindOneOutputGraphQlDto } from "./endereco.graphql.dto";
 
-export class EnderecoGraphqlMapper {
-  static toFindOneInput(id: string): EnderecoFindOneQuery {
-    const input = new EnderecoFindOneQuery();
-    input.id = id;
-    return input;
-  }
+// ============================================================================
+// Externa → Interna (Input: Presentation → Core)
+// ============================================================================
 
-  static toFindOneOutputDto(output: EnderecoFindOneQueryResult): EnderecoFindOneOutputGraphQlDto {
-    const dto = new EnderecoFindOneOutputGraphQlDto();
-    dto.id = output.id;
-    dto.cep = output.cep;
-    dto.logradouro = output.logradouro;
-    dto.numero = output.numero;
-    dto.bairro = output.bairro;
-    dto.complemento = output.complemento;
-    dto.pontoReferencia = output.pontoReferencia;
-    dto.cidade = CidadeGraphqlMapper.toFindOneOutputDto(output.cidade);
-    mapDatedFields(dto, output);
-    return dto;
-  }
-}
+export const findOneInputDtoToFindOneQuery = createMapper<string, EnderecoFindOneQuery>((id) => {
+  const input = new EnderecoFindOneQuery();
+  input.id = id;
+  return input;
+});
+
+// ============================================================================
+// Interna → Externa (Output: Core → Presentation)
+// ============================================================================
+
+export const findOneQueryResultToOutputDto = createMapper<
+  EnderecoFindOneQueryResult,
+  EnderecoFindOneOutputGraphQlDto
+>((output) => ({
+  id: output.id,
+  cep: output.cep,
+  logradouro: output.logradouro,
+  numero: output.numero,
+  bairro: output.bairro,
+  complemento: output.complemento,
+  pontoReferencia: output.pontoReferencia,
+  cidade: CidadeGraphqlMapper.findOneQueryResultToOutputDto.map(output.cidade),
+  dateCreated: new Date(output.dateCreated),
+  dateUpdated: new Date(output.dateUpdated),
+  dateDeleted: output.dateDeleted ? new Date(output.dateDeleted) : null,
+}));

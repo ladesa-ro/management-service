@@ -6,6 +6,7 @@
 /**
  * Credenciais de sessão do usuário autenticado
  */
+
 export interface IAuthSessionCredentials {
   accessToken: string | null;
   tokenType: string | null;
@@ -20,6 +21,7 @@ export interface IAuthSessionCredentials {
 /**
  * Dados para login
  */
+
 export interface IAuthLoginInput {
   matricula: string;
   senha: string;
@@ -28,6 +30,7 @@ export interface IAuthLoginInput {
 /**
  * Dados para refresh de token
  */
+
 export interface IAuthRefreshInput {
   refreshToken: string;
 }
@@ -35,6 +38,7 @@ export interface IAuthRefreshInput {
 /**
  * Dados para definir senha inicial
  */
+
 export interface IAuthSetInitialPasswordInput {
   matricula: string;
   senha: string;
@@ -43,6 +47,7 @@ export interface IAuthSetInitialPasswordInput {
 /**
  * Dados para recuperação de senha
  */
+
 export interface IAuthRecoverPasswordInput {
   email: string;
 }

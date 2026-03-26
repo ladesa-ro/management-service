@@ -8,8 +8,7 @@ const PERFIL_CARGO_FK_COL = "id_cargo_fk";
 const FK_PERFIL_CARGO = "fk_perfil_id_cargo";
 
 export class EditTablePerfilUseCargoTable1774515947429 implements MigrationInterface {
-
-    public async up(queryRunner: QueryRunner): Promise<void> {
+  public async up(queryRunner: QueryRunner): Promise<void> {
     if (!(await queryRunner.hasColumn(PERFIL, PERFIL_CARGO_FK_COL))) {
       await queryRunner.addColumn(
         PERFIL,

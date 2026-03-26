@@ -9,32 +9,22 @@ import {
   typeormFindAll,
   typeormSoftDeleteById,
 } from "@/infrastructure.database/typeorm/helpers/typeorm-repository-helpers";
-import {
-  dateToISO,
-  dateToISONullable,
-  filterActive,
-  mapDatedEntity,
-  toRefRequired,
-} from "@/infrastructure.database/typeorm/mapping";
-import {
-  type OfertaFormacaoFindOneQuery,
+import type {
+  OfertaFormacaoFindOneQuery,
   OfertaFormacaoFindOneQueryResult,
-  type OfertaFormacaoListQuery,
-  type OfertaFormacaoListQueryResult,
+  OfertaFormacaoListQuery,
+  OfertaFormacaoListQueryResult,
 } from "@/modules/ensino/oferta-formacao";
-import {
-  type IOfertaFormacao,
-  OfertaFormacao,
-} from "@/modules/ensino/oferta-formacao/domain/oferta-formacao";
+import { OfertaFormacao } from "@/modules/ensino/oferta-formacao/domain/oferta-formacao";
 import { ofertaFormacaoPaginationSpec } from "@/modules/ensino/oferta-formacao/domain/queries";
 import type { IOfertaFormacaoRepository } from "@/modules/ensino/oferta-formacao/domain/repositories";
-import { getNow } from "@/utils/date";
+import { getNowISO } from "@/utils/date";
 import {
   OfertaFormacaoEntity,
   OfertaFormacaoNivelFormacaoEntity,
   OfertaFormacaoPeriodoEntity,
   OfertaFormacaoPeriodoEtapaEntity,
-  ofertaFormacaoEntityDomainMapper,
+  OfertaFormacaoTypeormMapper,
 } from "./typeorm";
 
 const config = {
@@ -66,8 +56,8 @@ const ofertaFormacaoPaginateConfig = buildTypeOrmPaginateConfig<OfertaFormacaoEn
 
 /**
  * Relations para o write side (loadById).
- * Carrega o mínimo necessário para reconstituir o aggregate:
- * - modalidade/campus: join para extrair o ID (TypeORM não expõe FK sem join)
+ * Carrega o minimo necessario para reconstituir o aggregate:
+ * - modalidade/campus: join para extrair o ID (TypeORM nao expoe FK sem join)
  * - ofertaFormacaoNiveisFormacoes + nivelFormacao: junction table para extrair IDs
  * - periodosEntities + etapas: value objects do aggregate
  */
@@ -107,11 +97,11 @@ export class OfertaFormacaoTypeOrmRepositoryAdapter implements IOfertaFormacaoRe
 
     if (!entity) return null;
 
-    return OfertaFormacao.load(this.toDomainData(entity));
+    return OfertaFormacao.load(OfertaFormacaoTypeormMapper.entityToDomain.map(entity));
   }
 
   async save(aggregate: OfertaFormacao): Promise<void> {
-    const entityData = ofertaFormacaoEntityDomainMapper.toPersistenceData({ ...aggregate });
+    const entityData = OfertaFormacaoTypeormMapper.domainToPersistence.map({ ...aggregate });
     const repo = this.appTypeormConnection.getRepository(OfertaFormacaoEntity);
     await repo.save(repo.create({ id: aggregate.id, ...entityData } as OfertaFormacaoEntity));
 
@@ -140,7 +130,7 @@ export class OfertaFormacaoTypeOrmRepositoryAdapter implements IOfertaFormacaoRe
 
     if (!entity) return null;
 
-    return this.toQueryResult(entity);
+    return OfertaFormacaoTypeormMapper.entityToFindOneQueryResult.map(entity);
   }
 
   getFindAllQueryResult(
@@ -157,100 +147,12 @@ export class OfertaFormacaoTypeOrmRepositoryAdapter implements IOfertaFormacaoRe
       { ...config, paginateConfig: ofertaFormacaoPaginateConfig },
       this.paginationAdapter,
       dto,
-      (entity) => this.toQueryResult(entity),
+      OfertaFormacaoTypeormMapper.entityToFindOneQueryResult.map,
     );
   }
 
   // ==========================================
-  // Mappers privados — fronteira de tradução do adapter
-  // ==========================================
-
-  /**
-   * Entity TypeORM → dados para Domain.load() (write side).
-   *
-   * Projeta relações como { id } — o domínio não carrega dados de outros aggregates.
-   * Achata junction tables extraindo apenas os IDs.
-   * Value objects (periodos, etapas) são mapeados na forma mínima do domínio.
-   * Datas Date → ISO string (o domínio usa ScalarDateTimeString).
-   */
-  private toDomainData(entity: OfertaFormacaoEntity): IOfertaFormacao {
-    return {
-      id: entity.id,
-      nome: entity.nome,
-      slug: entity.slug,
-      duracaoPeriodoEmMeses: entity.duracaoPeriodoEmMeses,
-
-      modalidade: toRefRequired(entity.modalidade),
-      campus: toRefRequired(entity.campus),
-
-      niveisFormacoes: filterActive(entity.ofertaFormacaoNiveisFormacoes).map((nf) => ({
-        id: nf.nivelFormacao.id,
-      })),
-
-      periodos: filterActive(entity.periodosEntities)
-        .sort((a, b) => a.numeroPeriodo - b.numeroPeriodo)
-        .map((p) => ({
-          numeroPeriodo: p.numeroPeriodo,
-          etapas: filterActive(p.etapas).map((e) => ({
-            nome: e.nome,
-            cor: e.cor,
-          })),
-        })),
-
-      dateCreated: dateToISO(entity.dateCreated),
-      dateUpdated: dateToISO(entity.dateUpdated),
-      dateDeleted: dateToISONullable(entity.dateDeleted),
-    };
-  }
-
-  /**
-   * Entity TypeORM → Query Result (read side).
-   *
-   * Projeta relações como objetos completos — a UI precisa dos dados para exibição.
-   * Achata junction tables mas preserva os objetos internos completos.
-   * Value objects incluem IDs de persistência (para links na UI).
-   */
-  private toQueryResult(entity: OfertaFormacaoEntity): OfertaFormacaoFindOneQueryResult {
-    const result = new OfertaFormacaoFindOneQueryResult();
-
-    result.id = entity.id;
-    result.nome = entity.nome;
-    result.slug = entity.slug;
-    result.duracaoPeriodoEmMeses = entity.duracaoPeriodoEmMeses;
-    result.dateCreated = dateToISO(entity.dateCreated);
-    result.dateUpdated = dateToISO(entity.dateUpdated);
-    result.dateDeleted = dateToISONullable(entity.dateDeleted);
-
-    result.modalidade = mapDatedEntity(entity.modalidade);
-    result.campus = {
-      ...mapDatedEntity(entity.campus),
-      endereco: {
-        ...mapDatedEntity(entity.campus.endereco),
-        cidade: entity.campus.endereco.cidade,
-      },
-    };
-
-    result.niveisFormacoes = filterActive(entity.ofertaFormacaoNiveisFormacoes).map((nf) =>
-      mapDatedEntity(nf.nivelFormacao),
-    );
-
-    result.periodos = filterActive(entity.periodosEntities)
-      .sort((a, b) => a.numeroPeriodo - b.numeroPeriodo)
-      .map((p) => ({
-        id: p.id,
-        numeroPeriodo: p.numeroPeriodo,
-        etapas: filterActive(p.etapas).map((e) => ({
-          id: e.id,
-          nome: e.nome,
-          cor: e.cor,
-        })),
-      }));
-
-    return result;
-  }
-
-  // ==========================================
-  // Métodos privados de persistência
+  // Metodos privados de persistencia
   // ==========================================
 
   private async replaceNiveisFormacoes(
@@ -258,7 +160,7 @@ export class OfertaFormacaoTypeOrmRepositoryAdapter implements IOfertaFormacaoRe
     niveisFormacoes: Array<{ id: string }>,
   ): Promise<void> {
     const repo = this.appTypeormConnection.getRepository(OfertaFormacaoNivelFormacaoEntity);
-    const now = getNow();
+    const now = getNowISO();
 
     await repo
       .createQueryBuilder()
@@ -290,7 +192,7 @@ export class OfertaFormacaoTypeOrmRepositoryAdapter implements IOfertaFormacaoRe
   ): Promise<void> {
     const periodoRepo = this.appTypeormConnection.getRepository(OfertaFormacaoPeriodoEntity);
     const etapaRepo = this.appTypeormConnection.getRepository(OfertaFormacaoPeriodoEtapaEntity);
-    const now = getNow();
+    const now = getNowISO();
 
     const existingPeriodos = await periodoRepo.find({
       where: { ofertaFormacao: { id: ofertaFormacaoId }, dateDeleted: IsNull() },

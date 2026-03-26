@@ -19,6 +19,7 @@ export const IPerfilRepository = Symbol("IPerfilRepository");
  * Separado em write side (command handlers) e read side (query handlers).
  * O read side retorna dados hidratados para exibição (query results).
  */
+
 export interface IPerfilRepository {
   // ==========================================
   // Write side — usado por command handlers

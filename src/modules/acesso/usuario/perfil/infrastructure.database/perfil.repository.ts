@@ -23,7 +23,7 @@ import type {
 } from "@/modules/acesso/usuario/perfil/domain/queries";
 import { perfilPaginationSpec } from "@/modules/acesso/usuario/perfil/domain/queries";
 import type { IPerfilRepository } from "@/modules/acesso/usuario/perfil/domain/repositories";
-import { PerfilEntity, perfilEntityDomainMapper } from "./typeorm";
+import { PerfilEntity, PerfilTypeormMapper } from "./typeorm";
 
 const config = {
   alias: "vinculo",
@@ -144,12 +144,12 @@ export class PerfilTypeOrmRepositoryAdapter implements IPerfilRepository {
   }
 
   create(data: Record<string, unknown>) {
-    const entityData = perfilEntityDomainMapper.toPersistenceData(data);
+    const entityData = PerfilTypeormMapper.domainToPersistence.map(data as never);
     return typeormCreate(this.appTypeormConnection, PerfilEntity, entityData);
   }
 
   update(id: string | number, data: Record<string, unknown>) {
-    const entityData = perfilEntityDomainMapper.toPersistenceData(data);
+    const entityData = PerfilTypeormMapper.domainToPersistence.map(data as never);
     return typeormUpdate(this.appTypeormConnection, PerfilEntity, id, entityData);
   }
 

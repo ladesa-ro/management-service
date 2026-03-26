@@ -17,6 +17,7 @@ import { buildValidationMessage, extractZodErrors, getHttpStatusName } from "./u
 /**
  * Resposta padronizada para erros (usada em REST e GraphQL).
  */
+
 export interface StandardizedErrorResponse {
   statusCode: number;
   code: string;
@@ -88,6 +89,7 @@ function buildErrorResponse(
  * Constrói a resposta padronizada a partir de qualquer exceção.
  * Função centralizada usada por REST (filters) e GraphQL (formatError).
  */
+
 export function buildStandardizedErrorResponse(
   exception: unknown,
   path?: string,

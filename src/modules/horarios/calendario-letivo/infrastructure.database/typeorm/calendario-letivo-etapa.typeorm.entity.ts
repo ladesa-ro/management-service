@@ -8,10 +8,10 @@ export class CalendarioLetivoEtapaEntity {
   id!: string;
 
   @Column({ name: "data_inicio", type: "date", nullable: false })
-  dataInicio!: Date;
+  dataInicio!: string;
 
   @Column({ name: "data_termino", type: "date", nullable: false })
-  dataTermino!: Date;
+  dataTermino!: string;
 
   @ManyToOne(() => OfertaFormacaoPeriodoEtapaEntity, {})
   @JoinColumn({ name: "id_oferta_formacao_periodo_etapa_fk" })
@@ -22,11 +22,11 @@ export class CalendarioLetivoEtapaEntity {
   calendarioLetivo!: Relation<CalendarioLetivoEntity>;
 
   @Column({ name: "date_created", type: "timestamptz", nullable: false })
-  dateCreated!: Date;
+  dateCreated!: string;
 
   @Column({ name: "date_updated", type: "timestamptz", nullable: false })
-  dateUpdated!: Date;
+  dateUpdated!: string;
 
   @Column({ name: "date_deleted", type: "timestamptz", nullable: true })
-  dateDeleted!: Date | null;
+  dateDeleted!: string | null;
 }

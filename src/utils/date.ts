@@ -9,6 +9,7 @@
 /**
  * Retorna a data/hora atual como Date.
  */
+
 export function getNow(): Date {
   return new Date();
 }
@@ -16,6 +17,7 @@ export function getNow(): Date {
 /**
  * Retorna a data/hora atual como string ISO 8601.
  */
+
 export function getNowISO(): string {
   return getNow().toISOString();
 }
@@ -23,6 +25,7 @@ export function getNowISO(): string {
 /**
  * Retorna a data/hora atual como timestamp numérico (ms).
  */
+
 export function getNowTime(): number {
   return getNow().getTime();
 }

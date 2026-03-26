@@ -2,6 +2,7 @@ import { ApiProperty, ApiPropertyOptional } from "@/shared/presentation/rest";
 /**
  * Representa uma entrada de ordenação [campo, direcao]
  */
+
 export class SortByEntryRestDto {
   @ApiProperty({ type: "string", description: "Nome do campo", example: "nome" })
   0: string;
@@ -18,6 +19,7 @@ export class SortByEntryRestDto {
 /**
  * Pagination metadata DTO for REST.
  */
+
 export class PaginationMetaRestDto {
   @ApiProperty({ type: "integer", description: "Quantidade de itens por pagina" })
   itemsPerPage: number;

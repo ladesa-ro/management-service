@@ -1,75 +1,76 @@
 import {
   ModalidadeCreateCommand,
   ModalidadeFindOneQuery,
-  ModalidadeFindOneQueryResult,
+  type ModalidadeFindOneQueryResult,
   ModalidadeListQuery,
   ModalidadeUpdateCommand,
 } from "@/modules/ensino/modalidade";
-import { createListOutputMapper, mapDatedFields } from "@/shared/mapping";
+import { createListMapper, createMapper, createPaginatedInputMapper, into } from "@/shared/mapping";
 import {
-  ModalidadeCreateInputGraphQlDto,
+  type ModalidadeCreateInputGraphQlDto,
   ModalidadeFindOneOutputGraphQlDto,
-  ModalidadeListInputGraphQlDto,
+  type ModalidadeListInputGraphQlDto,
   ModalidadeListOutputGraphQlDto,
-  ModalidadeUpdateInputGraphQlDto,
+  type ModalidadeUpdateInputGraphQlDto,
 } from "./modalidade.graphql.dto";
 
-export class ModalidadeGraphqlMapper {
-  static toListInput(dto: ModalidadeListInputGraphQlDto | null): ModalidadeListQuery | null {
-    if (!dto) {
-      return null;
-    }
+// ============================================================================
+// Externa → Interna (Input: Presentation → Core)
+// ============================================================================
 
-    const input = new ModalidadeListQuery();
-    input.page = dto.page;
-    input.limit = dto.limit;
-    input.search = dto.search;
-    input.sortBy = dto.sortBy;
-    input["filter.id"] = dto.filterId;
-    return input;
-  }
+export const findOneInputDtoToFindOneQuery = createMapper<string, ModalidadeFindOneQuery>((id) => {
+  const query = new ModalidadeFindOneQuery();
+  query.id = id;
+  return query;
+});
 
-  static toFindOneInput(id: string): ModalidadeFindOneQuery {
-    const input = new ModalidadeFindOneQuery();
-    input.id = id;
-    return input;
-  }
-
-  static toCreateInput(dto: ModalidadeCreateInputGraphQlDto): ModalidadeCreateCommand {
-    const input = new ModalidadeCreateCommand();
-    input.nome = dto.nome;
-    input.slug = dto.slug;
-    return input;
-  }
-
-  static toUpdateInput(
-    params: { id: string },
-    dto: ModalidadeUpdateInputGraphQlDto,
-  ): ModalidadeFindOneQuery & ModalidadeUpdateCommand {
-    const input = new ModalidadeFindOneQuery() as ModalidadeFindOneQuery & ModalidadeUpdateCommand;
-    input.id = params.id;
-    if (dto.nome !== undefined) {
-      input.nome = dto.nome;
-    }
-    if (dto.slug !== undefined) {
-      input.slug = dto.slug;
-    }
-    return input;
-  }
-
-  static toFindOneOutputDto(
-    output: ModalidadeFindOneQueryResult,
-  ): ModalidadeFindOneOutputGraphQlDto {
-    const dto = new ModalidadeFindOneOutputGraphQlDto();
-    dto.id = output.id;
-    dto.nome = output.nome;
-    dto.slug = output.slug;
-    mapDatedFields(dto, output);
-    return dto;
-  }
-
-  static toListOutputDto = createListOutputMapper(
-    ModalidadeListOutputGraphQlDto,
-    ModalidadeGraphqlMapper.toFindOneOutputDto,
-  );
+export function listInputDtoToListQuery(
+  dto: ModalidadeListInputGraphQlDto | null,
+): ModalidadeListQuery | null {
+  if (!dto) return null;
+  return createPaginatedInputMapper<ModalidadeListInputGraphQlDto, ModalidadeListQuery>(
+    ModalidadeListQuery,
+    (source, query) => {
+      into(query).field("filter.id").from(source, "filterId");
+    },
+  ).map(dto);
 }
+
+export const createInputDtoToCreateCommand = createMapper<
+  ModalidadeCreateInputGraphQlDto,
+  ModalidadeCreateCommand
+>((dto) => {
+  const command = new ModalidadeCreateCommand();
+  into(command).from(dto).field("nome").field("slug");
+  return command;
+});
+
+export const updateInputDtoToUpdateCommand = createMapper<
+  { id: string; dto: ModalidadeUpdateInputGraphQlDto },
+  ModalidadeFindOneQuery & ModalidadeUpdateCommand
+>(({ id, dto }) => ({
+  id,
+  nome: dto.nome,
+  slug: dto.slug,
+}));
+
+// ============================================================================
+// Interna → Externa (Output: Core → Presentation)
+// ============================================================================
+
+export const findOneQueryResultToOutputDto = createMapper<
+  ModalidadeFindOneQueryResult,
+  ModalidadeFindOneOutputGraphQlDto
+>((queryResult) => ({
+  id: queryResult.id,
+  nome: queryResult.nome,
+  slug: queryResult.slug,
+  dateCreated: new Date(queryResult.dateCreated),
+  dateUpdated: new Date(queryResult.dateUpdated),
+  dateDeleted: queryResult.dateDeleted ? new Date(queryResult.dateDeleted) : null,
+}));
+
+export const listQueryResultToListOutputDto = createListMapper(
+  ModalidadeListOutputGraphQlDto,
+  findOneQueryResultToOutputDto,
+);

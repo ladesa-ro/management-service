@@ -25,7 +25,7 @@ import {
   CidadeListInputRestDto,
   CidadeListOutputRestDto,
 } from "./cidade.rest.dto";
-import { CidadeRestMapper } from "./cidade.rest.mapper";
+import * as CidadeRestMapper from "./cidade.rest.mapper";
 
 @ApiTags("cidades")
 @Controller("/base/cidades")
@@ -45,9 +45,9 @@ export class CidadeRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Query() dto: CidadeListInputRestDto,
   ): Promise<CidadeListOutputRestDto> {
-    const input = CidadeRestMapper.toListInput(dto);
-    const result = await this.listHandler.execute(accessContext, input);
-    return CidadeRestMapper.toListOutputDto(result);
+    const query = CidadeRestMapper.listInputDtoToListQuery.map(dto);
+    const queryResult = await this.listHandler.execute(accessContext, query);
+    return CidadeRestMapper.listQueryResultToListOutputDto(queryResult);
   }
 
   @Get("/:id")
@@ -59,9 +59,9 @@ export class CidadeRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: CidadeFindOneInputRestDto,
   ): Promise<CidadeFindOneOutputRestDto> {
-    const input = CidadeRestMapper.toFindOneInput(params);
-    const result = await this.findOneHandler.execute(accessContext, input);
-    ensureExists(result, Cidade.entityName, input.id);
-    return CidadeRestMapper.toFindOneOutputDto(result);
+    const query = CidadeRestMapper.findOneInputDtoToFindOneQuery.map(params);
+    const queryResult = await this.findOneHandler.execute(accessContext, query);
+    ensureExists(queryResult, Cidade.entityName, query.id);
+    return CidadeRestMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 }

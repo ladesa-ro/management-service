@@ -31,7 +31,7 @@ import {
   EmpresaListOutputGraphQlDto,
   EmpresaUpdateInputGraphQlDto,
 } from "./empresa.graphql.dto";
-import { EmpresaGraphqlMapper } from "./empresa.graphql.mapper";
+import * as EmpresaGraphqlMapper from "./empresa.graphql.mapper";
 
 @Resolver(() => EmpresaFindOneOutputGraphQlDto)
 export class EmpresaGraphqlResolver {
@@ -53,9 +53,9 @@ export class EmpresaGraphqlResolver {
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args() dto: EmpresaListInputGraphQlDto,
   ): Promise<EmpresaListOutputGraphQlDto> {
-    const input = EmpresaGraphqlMapper.toListInput(dto);
-    const result = await this.listHandler.execute(accessContext, input);
-    return EmpresaGraphqlMapper.toListOutputDto(result);
+    const query = EmpresaGraphqlMapper.listInputDtoToListQuery(dto);
+    const queryResult = await this.listHandler.execute(accessContext, query);
+    return EmpresaGraphqlMapper.listQueryResultToListOutputDto(queryResult);
   }
 
   @Query(() => EmpresaFindOneOutputGraphQlDto, EmpresaFindOneQueryMetadata.gqlMetadata)
@@ -63,9 +63,10 @@ export class EmpresaGraphqlResolver {
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<EmpresaFindOneOutputGraphQlDto> {
-    const result = await this.findOneHandler.execute(accessContext, { id });
-    ensureExists(result, Empresa.entityName, id);
-    return EmpresaGraphqlMapper.toFindOneOutputDto(result);
+    const query = EmpresaGraphqlMapper.findOneInputDtoToFindOneQuery.map(id);
+    const queryResult = await this.findOneHandler.execute(accessContext, query);
+    ensureExists(queryResult, Empresa.entityName, query.id);
+    return EmpresaGraphqlMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Mutation(() => EmpresaFindOneOutputGraphQlDto, EmpresaCreateCommandMetadata.gqlMetadata)
@@ -73,9 +74,9 @@ export class EmpresaGraphqlResolver {
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("input") dto: EmpresaCreateInputGraphQlDto,
   ): Promise<EmpresaFindOneOutputGraphQlDto> {
-    const input = EmpresaGraphqlMapper.toCreateInput(dto);
-    const result = await this.createHandler.execute(accessContext, input);
-    return EmpresaGraphqlMapper.toFindOneOutputDto(result);
+    const command = EmpresaGraphqlMapper.createInputDtoToCreateCommand.map(dto);
+    const queryResult = await this.createHandler.execute(accessContext, command);
+    return EmpresaGraphqlMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Mutation(() => EmpresaFindOneOutputGraphQlDto, EmpresaUpdateCommandMetadata.gqlMetadata)
@@ -84,9 +85,9 @@ export class EmpresaGraphqlResolver {
     @Args("id", { type: () => ID }) id: string,
     @Args("input") dto: EmpresaUpdateInputGraphQlDto,
   ): Promise<EmpresaFindOneOutputGraphQlDto> {
-    const input = EmpresaGraphqlMapper.toUpdateInput({ id }, dto);
-    const result = await this.updateHandler.execute(accessContext, input);
-    return EmpresaGraphqlMapper.toFindOneOutputDto(result);
+    const command = EmpresaGraphqlMapper.updateInputDtoToUpdateCommand.map({ params: { id }, dto });
+    const queryResult = await this.updateHandler.execute(accessContext, command);
+    return EmpresaGraphqlMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Mutation(() => Boolean, EmpresaDeleteCommandMetadata.gqlMetadata)

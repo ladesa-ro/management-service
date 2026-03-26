@@ -9,11 +9,6 @@ import {
   typeormFindById,
   typeormSoftDeleteById,
 } from "@/infrastructure.database/typeorm/helpers/typeorm-repository-helpers";
-import {
-  dateToISO,
-  dateToISONullable,
-  toRefRequired,
-} from "@/infrastructure.database/typeorm/mapping";
 import { Estagiario } from "@/modules/estagio/estagiario/domain/estagiario";
 import type {
   EstagiarioFindOneQuery,
@@ -23,7 +18,7 @@ import type {
 } from "@/modules/estagio/estagiario/domain/queries";
 import { estagiarioPaginationSpec } from "@/modules/estagio/estagiario/domain/queries";
 import type { IEstagiarioRepository } from "@/modules/estagio/estagiario/domain/repositories";
-import { EstagiarioTypeormEntity, estagiarioEntityDomainMapper } from "./typeorm";
+import { EstagiarioTypeormEntity, EstagiarioTypeormMapper } from "./typeorm";
 
 const config = {
   alias: "estagiario",
@@ -88,29 +83,13 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
 
     if (!entity) return null;
 
-    return Estagiario.load({
-      id: entity.id,
-      perfil: toRefRequired(entity.perfil),
-      curso: toRefRequired(entity.curso),
-      turma: toRefRequired(entity.turma),
-      telefone: entity.telefone,
-      emailInstitucional: entity.emailInstitucional,
-      dataNascimento:
-        entity.dataNascimento instanceof Date
-          ? entity.dataNascimento.toISOString().slice(0, 10)
-          : entity.dataNascimento,
-      dateCreated: dateToISO(entity.dateCreated),
-      dateUpdated: dateToISO(entity.dateUpdated),
-      dateDeleted: dateToISONullable(entity.dateDeleted),
-    });
+    return Estagiario.load(EstagiarioTypeormMapper.entityToDomain.map(entity));
   }
 
   async save(aggregate: Estagiario): Promise<void> {
-    const entityData = estagiarioEntityDomainMapper.toPersistenceData({
-      ...aggregate,
-    }) as Record<string, unknown>;
+    const entityData = EstagiarioTypeormMapper.domainToPersistence.map({ ...aggregate });
     const repo = this.appTypeormConnection.getRepository(EstagiarioTypeormEntity);
-    await repo.save(repo.create({ id: aggregate.id, ...entityData } as EstagiarioTypeormEntity));
+    await repo.save(repo.create(entityData));
   }
 
   softDeleteById(id: string) {
@@ -136,6 +115,7 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
       EstagiarioTypeormEntity,
       { ...config, paginateConfig: estagiarioPaginateConfig },
       dto,
+      EstagiarioTypeormMapper.entityToFindOneQueryResult.map,
     );
   }
 
@@ -149,6 +129,7 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
       { ...config, paginateConfig: estagiarioPaginateConfig },
       this.paginationAdapter,
       dto,
+      EstagiarioTypeormMapper.entityToFindOneQueryResult.map,
     );
   }
 }

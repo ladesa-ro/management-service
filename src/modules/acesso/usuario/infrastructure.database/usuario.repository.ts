@@ -22,7 +22,7 @@ import { usuarioPaginationSpec } from "@/modules/acesso/usuario/domain/queries";
 import { CursoEntity } from "@/modules/ensino/curso/infrastructure.database/typeorm/curso.typeorm.entity";
 import { DisciplinaEntity } from "@/modules/ensino/disciplina/infrastructure.database/typeorm/disciplina.typeorm.entity";
 import { TurmaEntity } from "@/modules/ensino/turma/infrastructure.database/typeorm/turma.typeorm.entity";
-import { UsuarioEntity, usuarioEntityDomainMapper } from "./typeorm";
+import { UsuarioEntity, UsuarioTypeormMapper } from "./typeorm";
 
 const config = {
   alias: "usuario",
@@ -250,13 +250,13 @@ export class UsuarioTypeOrmRepositoryAdapter implements IUsuarioRepository {
   }
 
   async create(data: Record<string, unknown>): Promise<{ id: string }> {
-    const entityData = usuarioEntityDomainMapper.toPersistenceData(data);
+    const entityData = UsuarioTypeormMapper.domainToPersistence.map(data as never);
     const result = await typeormCreate(this.appTypeormConnection, UsuarioEntity, entityData);
     return { id: result.id as string };
   }
 
   update(id: string | number, data: Record<string, unknown>) {
-    const entityData = usuarioEntityDomainMapper.toPersistenceData(data);
+    const entityData = UsuarioTypeormMapper.domainToPersistence.map(data as never);
     return typeormUpdate(this.appTypeormConnection, UsuarioEntity, id, entityData);
   }
 

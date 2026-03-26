@@ -3,6 +3,7 @@ import type { IPaginationMeta } from "@/application/pagination";
 /**
  * Metadados de paginação
  */
+
 export class PaginationMeta implements IPaginationMeta {
   currentPage!: number;
   totalPages!: number;

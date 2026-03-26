@@ -16,6 +16,7 @@ import type {
 /**
  * Token de injeção para o repositório de Turma
  */
+
 export const ITurmaRepository = Symbol("ITurmaRepository");
 
 /**
@@ -25,6 +26,7 @@ export const ITurmaRepository = Symbol("ITurmaRepository");
  * O write side retorna o aggregate de domínio reconstituído.
  * O read side retorna dados hidratados para exibição (query results).
  */
+
 export interface ITurmaRepository {
   // ==========================================
   // Write side — usado por command handlers

@@ -12,6 +12,7 @@ import { ConflictError, InternalError, ValidationError } from "./application.err
  * Converte erros de domínio para erros de aplicação apropriados.
  * Usado pelos casos de uso para traduzir erros de domínio.
  */
+
 export class DomainErrorHandler {
   /**
    * Converte um DomainError para o ApplicationError correspondente
@@ -102,6 +103,7 @@ export class DomainErrorHandler {
 /**
  * Decorator para métodos de use case que devem converter erros de domínio
  */
+
 export function HandleDomainErrors() {
   return function (
     _target: unknown,

@@ -1,32 +1,41 @@
-import { PerfilFindOneQuery, PerfilFindOneQueryResult } from "@/modules/acesso/usuario/perfil";
-import { UsuarioRestMapper } from "@/modules/acesso/usuario/presentation.rest";
-import { CampusRestMapper } from "@/modules/ambientes/campus/presentation.rest";
-import { createFindOneInputMapper, mapDatedFields } from "@/shared/mapping";
+import { PerfilFindOneQuery, type PerfilFindOneQueryResult } from "@/modules/acesso/usuario/perfil";
+import * as UsuarioRestMapper from "@/modules/acesso/usuario/presentation.rest/usuario.rest.mapper";
+import * as CampusRestMapper from "@/modules/ambientes/campus/presentation.rest/campus.rest.mapper";
+import { createMapper } from "@/shared/mapping";
 import { PerfilFindOneOutputRestDto } from "./perfil.rest.dto";
 
-export class PerfilRestMapper {
-  private static getCargoNome(output: PerfilFindOneQueryResult): string {
-    return output.cargo?.nome ?? "";
-  }
+// ============================================================================
+// Externa -> Interna (Input: Presentation -> Core)
+// ============================================================================
 
-  // ============================================================================
-  // Input: Server DTO -> Core DTO
-  // ============================================================================
+export const findOneInputDtoToFindOneQuery = createMapper<{ id: string }, PerfilFindOneQuery>(
+  (dto) => {
+    const input = new PerfilFindOneQuery();
+    input.id = dto.id;
+    return input;
+  },
+);
 
-  static toFindOneInput = createFindOneInputMapper(PerfilFindOneQuery);
+// ============================================================================
+// Interna -> Externa (Output: Core -> Presentation)
+// ============================================================================
 
-  // ============================================================================
-  // Output: Core DTO -> Server DTO
-  // ============================================================================
-
-  static toFindOneOutputDto(output: PerfilFindOneQueryResult): PerfilFindOneOutputRestDto {
-    const dto = new PerfilFindOneOutputRestDto();
-    dto.id = output.id;
-    dto.ativo = output.ativo;
-    dto.cargo = PerfilRestMapper.getCargoNome(output);
-    dto.campus = CampusRestMapper.toFindOneOutputDto(output.campus);
-    dto.usuario = UsuarioRestMapper.toFindOneOutputDto(output.usuario);
-    mapDatedFields(dto, output);
-    return dto;
-  }
+function getCargoNome(output: PerfilFindOneQueryResult): string {
+  return output.cargo?.nome ?? "";
 }
+
+export const findOneQueryResultToOutputDto = createMapper<
+  PerfilFindOneQueryResult,
+  PerfilFindOneOutputRestDto
+>((output) => {
+  const dto = new PerfilFindOneOutputRestDto();
+  dto.id = output.id;
+  dto.ativo = output.ativo;
+  dto.cargo = getCargoNome(output);
+  dto.campus = CampusRestMapper.findOneQueryResultToOutputDto.map(output.campus);
+  dto.usuario = UsuarioRestMapper.findOneQueryResultToOutputDto.map(output.usuario);
+  dto.dateCreated = output.dateCreated;
+  dto.dateUpdated = output.dateUpdated;
+  dto.dateDeleted = output.dateDeleted;
+  return dto;
+});

@@ -10,6 +10,7 @@ import { z } from "zod";
 import { createFieldMetadata, createSchema, safeInt } from "@/domain/abstractions";
 
 export const EstagioStatusValues = ["ABERTA", "EM_ANDAMENTO", "CONCLUIDA"] as const;
+
 export const EstagioStatusSchema = z.enum(EstagioStatusValues);
 
 export const EstagioFields = {

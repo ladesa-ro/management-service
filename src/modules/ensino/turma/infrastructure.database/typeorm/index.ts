@@ -1,2 +1,3 @@
-export { turmaEntityDomainMapper } from "./turma.mapper";
 export * from "./turma.typeorm.entity";
+
+export * as TurmaTypeormMapper from "./turma.typeorm.mapper";

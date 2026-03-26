@@ -8,7 +8,7 @@ export class CalendarioLetivoDiaEntity {
   id!: string;
 
   @Column({ name: "data", type: "date", nullable: false })
-  data!: Date;
+  data!: string;
 
   @Column({ name: "dia_letivo", type: "bool", nullable: false })
   diaLetivo!: boolean;
@@ -30,11 +30,11 @@ export class CalendarioLetivoDiaEntity {
   calendario!: Relation<CalendarioLetivoEntity>;
 
   @Column({ name: "date_created", type: "timestamptz", nullable: false })
-  dateCreated!: Date;
+  dateCreated!: string;
 
   @Column({ name: "date_updated", type: "timestamptz", nullable: false })
-  dateUpdated!: Date;
+  dateUpdated!: string;
 
   @Column({ name: "date_deleted", type: "timestamptz", nullable: true })
-  dateDeleted!: Date | null;
+  dateDeleted!: string | null;
 }

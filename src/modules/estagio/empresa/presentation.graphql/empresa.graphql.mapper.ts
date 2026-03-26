@@ -1,98 +1,99 @@
 import {
   EmpresaCreateCommand,
   EmpresaFindOneQuery,
-  EmpresaFindOneQueryResult,
+  type EmpresaFindOneQueryResult,
   EmpresaListQuery,
   EmpresaUpdateCommand,
 } from "@/modules/estagio/empresa";
-import { EnderecoGraphqlMapper } from "@/modules/localidades/endereco/presentation.graphql/endereco.graphql.mapper";
-import { createListOutputMapper, mapDatedFields } from "@/shared/mapping";
+import * as EnderecoGraphqlMapper from "@/modules/localidades/endereco/presentation.graphql/endereco.graphql.mapper";
+import { createListMapper, createMapper, createPaginatedInputMapper, into } from "@/shared/mapping";
 import {
-  EmpresaCreateInputGraphQlDto,
+  type EmpresaCreateInputGraphQlDto,
   EmpresaFindOneOutputGraphQlDto,
-  EmpresaListInputGraphQlDto,
+  type EmpresaListInputGraphQlDto,
   EmpresaListOutputGraphQlDto,
-  EmpresaUpdateInputGraphQlDto,
+  type EmpresaUpdateInputGraphQlDto,
 } from "./empresa.graphql.dto";
 
-export class EmpresaGraphqlMapper {
-  static toListInput(dto: EmpresaListInputGraphQlDto | null): EmpresaListQuery | null {
-    if (!dto) {
-      return null;
-    }
+// ============================================================================
+// Externa → Interna (Input: Presentation → Core)
+// ============================================================================
 
-    const input = new EmpresaListQuery();
-    input.page = dto.page;
-    input.limit = dto.limit;
-    input.search = dto.search;
-    input.sortBy = dto.sortBy;
-    input["filter.id"] = dto.filterId;
-    input["filter.cnpj"] = dto.filterCnpj;
-    input["filter.nomeFantasia"] = dto.filterNomeFantasia;
-    input["filter.endereco.id"] = dto.filterEnderecoId;
-    return input;
-  }
+const listInputMapper = createPaginatedInputMapper<EmpresaListInputGraphQlDto, EmpresaListQuery>(
+  EmpresaListQuery,
+  (dto, query) => {
+    into(query).field("filter.id").from(dto, "filterId");
 
-  static toFindOneInput(id: string): EmpresaFindOneQuery {
-    const input = new EmpresaFindOneQuery();
-    input.id = id;
-    return input;
-  }
+    into(query).field("filter.cnpj").from(dto, "filterCnpj");
 
-  static toCreateInput(dto: EmpresaCreateInputGraphQlDto): EmpresaCreateCommand {
-    const input = new EmpresaCreateCommand();
-    input.razaoSocial = dto.razaoSocial;
-    input.nomeFantasia = dto.nomeFantasia;
-    input.cnpj = dto.cnpj;
-    input.telefone = dto.telefone;
-    input.email = dto.email;
-    input.endereco = { id: dto.endereco.id };
-    return input;
-  }
+    into(query).field("filter.nomeFantasia").from(dto, "filterNomeFantasia");
 
-  static toUpdateInput(
-    params: { id: string },
-    dto: EmpresaUpdateInputGraphQlDto,
-  ): EmpresaFindOneQuery & EmpresaUpdateCommand {
-    const input = new EmpresaFindOneQuery() as EmpresaFindOneQuery & EmpresaUpdateCommand;
-    input.id = params.id;
-    if (dto.razaoSocial !== undefined) {
-      input.razaoSocial = dto.razaoSocial;
-    }
-    if (dto.nomeFantasia !== undefined) {
-      input.nomeFantasia = dto.nomeFantasia;
-    }
-    if (dto.cnpj !== undefined) {
-      input.cnpj = dto.cnpj;
-    }
-    if (dto.telefone !== undefined) {
-      input.telefone = dto.telefone;
-    }
-    if (dto.email !== undefined) {
-      input.email = dto.email;
-    }
-    if (dto.endereco !== undefined) {
-      input.endereco = { id: dto.endereco.id };
-    }
-    return input;
-  }
+    into(query).field("filter.endereco.id").from(dto, "filterEnderecoId");
+  },
+);
 
-  static toFindOneOutputDto(output: EmpresaFindOneQueryResult): EmpresaFindOneOutputGraphQlDto {
-    const dto = new EmpresaFindOneOutputGraphQlDto();
-    dto.id = output.id;
-    dto.razaoSocial = output.razaoSocial;
-    dto.nomeFantasia = output.nomeFantasia;
-    dto.cnpj = output.cnpj;
-    dto.telefone = output.telefone;
-    dto.email = output.email;
-    dto.endereco = EnderecoGraphqlMapper.toFindOneOutputDto(output.endereco);
-    dto.ativo = output.ativo;
-    mapDatedFields(dto, output);
-    return dto;
-  }
+export const findOneInputDtoToFindOneQuery = createMapper<string, EmpresaFindOneQuery>((id) => {
+  const input = new EmpresaFindOneQuery();
+  input.id = id;
+  return input;
+});
 
-  static toListOutputDto = createListOutputMapper(
-    EmpresaListOutputGraphQlDto,
-    EmpresaGraphqlMapper.toFindOneOutputDto,
-  );
+export function listInputDtoToListQuery(
+  dto: EmpresaListInputGraphQlDto | null,
+): EmpresaListQuery | null {
+  if (!dto) return null;
+  return listInputMapper.map(dto);
 }
+
+export const createInputDtoToCreateCommand = createMapper<
+  EmpresaCreateInputGraphQlDto,
+  EmpresaCreateCommand
+>((dto) => {
+  const input = new EmpresaCreateCommand();
+  input.razaoSocial = dto.razaoSocial;
+  input.nomeFantasia = dto.nomeFantasia;
+  input.cnpj = dto.cnpj;
+  input.telefone = dto.telefone;
+  input.email = dto.email;
+  input.endereco = { id: dto.endereco.id };
+  return input;
+});
+
+export const updateInputDtoToUpdateCommand = createMapper<
+  { params: { id: string }; dto: EmpresaUpdateInputGraphQlDto },
+  EmpresaFindOneQuery & EmpresaUpdateCommand
+>(({ params, dto }) => ({
+  id: params.id,
+  razaoSocial: dto.razaoSocial,
+  nomeFantasia: dto.nomeFantasia,
+  cnpj: dto.cnpj,
+  telefone: dto.telefone,
+  email: dto.email,
+  endereco: dto.endereco ? { id: dto.endereco.id } : undefined,
+}));
+
+// ============================================================================
+// Interna → Externa (Output: Core → Presentation)
+// ============================================================================
+
+export const findOneQueryResultToOutputDto = createMapper<
+  EmpresaFindOneQueryResult,
+  EmpresaFindOneOutputGraphQlDto
+>((output) => ({
+  id: output.id,
+  razaoSocial: output.razaoSocial,
+  nomeFantasia: output.nomeFantasia,
+  cnpj: output.cnpj,
+  telefone: output.telefone,
+  email: output.email,
+  endereco: EnderecoGraphqlMapper.findOneQueryResultToOutputDto.map(output.endereco),
+  ativo: output.ativo,
+  dateCreated: new Date(output.dateCreated),
+  dateUpdated: new Date(output.dateUpdated),
+  dateDeleted: output.dateDeleted ? new Date(output.dateDeleted) : null,
+}));
+
+export const listQueryResultToListOutputDto = createListMapper(
+  EmpresaListOutputGraphQlDto,
+  findOneQueryResultToOutputDto,
+);

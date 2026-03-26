@@ -7,7 +7,7 @@ import {
 } from "@/modules/acesso/usuario/perfil/domain/queries/perfil-find-one.query.handler.interface";
 import { AccessContextGraphQL } from "@/server/nest/access-context";
 import { PerfilFindOneOutputGraphQlDto } from "./perfil.graphql.dto";
-import { PerfilGraphqlMapper } from "./perfil.graphql.mapper";
+import * as PerfilGraphqlMapper from "./perfil.graphql.mapper";
 
 @Resolver(() => PerfilFindOneOutputGraphQlDto)
 export class PerfilGraphqlResolver {
@@ -24,10 +24,10 @@ export class PerfilGraphqlResolver {
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<PerfilFindOneOutputGraphQlDto | null> {
-    const result = await this.findOneHandler.execute(accessContext, { id });
-    if (!result) {
+    const queryResult = await this.findOneHandler.execute(accessContext, { id });
+    if (!queryResult) {
       return null;
     }
-    return PerfilGraphqlMapper.toFindOneOutputDto(result);
+    return PerfilGraphqlMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 }

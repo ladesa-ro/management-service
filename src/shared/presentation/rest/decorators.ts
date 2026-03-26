@@ -17,9 +17,11 @@ function _TransformToArray(): PropertyDecorator {
 }
 
 export const ApiProperty = mixable(_ApiProperty);
+
 export const ApiPropertyOptional = mixable(_ApiPropertyOptional);
+
 export const ApiSchema = mixable(_ApiSchema);
+
 export const TransformToArray = mixable(_TransformToArray);
 
-// Re-export utilities that are not decorators
 export { PartialType } from "@nestjs/swagger";

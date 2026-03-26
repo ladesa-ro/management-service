@@ -28,10 +28,10 @@ export class HorarioEdicaoSessaoOutputRestDto {
   idUsuarioFk!: string;
 
   @ApiProperty()
-  dateCreated!: Date;
+  dateCreated!: string;
 
   @ApiProperty()
-  dateUpdated!: Date;
+  dateUpdated!: string;
 }
 
 export class HorarioEdicaoMudancaOutputRestDto {
@@ -51,5 +51,5 @@ export class HorarioEdicaoMudancaOutputRestDto {
   dados!: Record<string, unknown>;
 
   @ApiProperty()
-  dateCreated!: Date;
+  dateCreated!: string;
 }

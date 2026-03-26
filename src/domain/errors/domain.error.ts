@@ -4,6 +4,7 @@ import { PrimitiveException } from "./primitive.exception";
 /**
  * Códigos de erro de domínio.
  */
+
 export enum DomainErrorCode {
   ENTITY_VALIDATION = "DOMAIN.ENTITY_VALIDATION",
   BUSINESS_RULE_VIOLATION = "DOMAIN.BUSINESS_RULE_VIOLATION",
@@ -15,6 +16,7 @@ export enum DomainErrorCode {
  * Classe base para todos os erros de domínio.
  * Erros de domínio representam violações de regras de negócio.
  */
+
 export abstract class DomainError extends PrimitiveException {
   abstract readonly code: DomainErrorCode;
 }
@@ -23,6 +25,7 @@ export abstract class DomainError extends PrimitiveException {
  * Erro de validação de entidade de domínio.
  * Pode conter múltiplos erros de validação.
  */
+
 export class EntityValidationError extends DomainError {
   readonly code = DomainErrorCode.ENTITY_VALIDATION;
   readonly details: readonly IValidationErrorDetail[];
@@ -96,6 +99,7 @@ export class EntityValidationError extends DomainError {
 /**
  * Erro de regra de negócio violada.
  */
+
 export class BusinessRuleViolationError extends DomainError {
   readonly code = DomainErrorCode.BUSINESS_RULE_VIOLATION;
 
@@ -110,6 +114,7 @@ export class BusinessRuleViolationError extends DomainError {
 /**
  * Erro de estado inválido da entidade.
  */
+
 export class InvalidStateError extends DomainError {
   readonly code = DomainErrorCode.INVALID_STATE;
 
@@ -125,6 +130,7 @@ export class InvalidStateError extends DomainError {
 /**
  * Erro de invariante violada.
  */
+
 export class InvariantViolationError extends DomainError {
   readonly code = DomainErrorCode.INVARIANT_VIOLATION;
 

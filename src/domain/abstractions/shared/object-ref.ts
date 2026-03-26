@@ -3,6 +3,7 @@ import type { IdNumeric, IdUuid } from "@/domain/abstractions/scalars";
 /**
  * Referência a objeto por UUID
  */
+
 export class ObjectUuidRef {
   id!: IdUuid;
 }
@@ -10,6 +11,7 @@ export class ObjectUuidRef {
 /**
  * Referência a objeto por ID numérico
  */
+
 export class ObjectIntRef {
   id!: IdNumeric;
 }

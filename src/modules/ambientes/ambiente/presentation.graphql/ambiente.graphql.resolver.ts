@@ -31,7 +31,7 @@ import {
   AmbienteListOutputGraphQlDto,
   AmbienteUpdateInputGraphQlDto,
 } from "./ambiente.graphql.dto";
-import { AmbienteGraphqlMapper } from "./ambiente.graphql.mapper";
+import * as AmbienteGraphqlMapper from "./ambiente.graphql.mapper";
 
 @Resolver(() => AmbienteFindOneOutputGraphQlDto)
 export class AmbienteGraphqlResolver {
@@ -53,9 +53,9 @@ export class AmbienteGraphqlResolver {
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args() dto: AmbienteListInputGraphQlDto,
   ): Promise<AmbienteListOutputGraphQlDto> {
-    const input = AmbienteGraphqlMapper.toListInput(dto);
-    const result = await this.listHandler.execute(accessContext, input);
-    return AmbienteGraphqlMapper.toListOutputDto(result);
+    const query = AmbienteGraphqlMapper.listInputDtoToListQuery(dto);
+    const queryResult = await this.listHandler.execute(accessContext, query);
+    return AmbienteGraphqlMapper.listQueryResultToListOutputDto(queryResult);
   }
 
   @Query(() => AmbienteFindOneOutputGraphQlDto, AmbienteFindOneQueryMetadata.gqlMetadata)
@@ -63,9 +63,10 @@ export class AmbienteGraphqlResolver {
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<AmbienteFindOneOutputGraphQlDto> {
-    const result = await this.findOneHandler.execute(accessContext, { id });
-    ensureExists(result, Ambiente.entityName, id);
-    return AmbienteGraphqlMapper.toFindOneOutputDto(result);
+    const query = AmbienteGraphqlMapper.findOneInputDtoToFindOneQuery.map(id);
+    const queryResult = await this.findOneHandler.execute(accessContext, query);
+    ensureExists(queryResult, Ambiente.entityName, query.id);
+    return AmbienteGraphqlMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Mutation(() => AmbienteFindOneOutputGraphQlDto, AmbienteCreateCommandMetadata.gqlMetadata)
@@ -73,9 +74,9 @@ export class AmbienteGraphqlResolver {
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("input") dto: AmbienteCreateInputGraphQlDto,
   ): Promise<AmbienteFindOneOutputGraphQlDto> {
-    const input = AmbienteGraphqlMapper.toCreateInput(dto);
-    const result = await this.createHandler.execute(accessContext, input);
-    return AmbienteGraphqlMapper.toFindOneOutputDto(result);
+    const command = AmbienteGraphqlMapper.createInputDtoToCreateCommand.map(dto);
+    const queryResult = await this.createHandler.execute(accessContext, command);
+    return AmbienteGraphqlMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Mutation(() => AmbienteFindOneOutputGraphQlDto, AmbienteUpdateCommandMetadata.gqlMetadata)
@@ -84,9 +85,9 @@ export class AmbienteGraphqlResolver {
     @Args("id", { type: () => ID }) id: string,
     @Args("input") dto: AmbienteUpdateInputGraphQlDto,
   ): Promise<AmbienteFindOneOutputGraphQlDto> {
-    const input = AmbienteGraphqlMapper.toUpdateInput({ id }, dto);
-    const result = await this.updateHandler.execute(accessContext, input);
-    return AmbienteGraphqlMapper.toFindOneOutputDto(result);
+    const command = AmbienteGraphqlMapper.updateInputDtoToUpdateCommand.map({ id, dto });
+    const queryResult = await this.updateHandler.execute(accessContext, command);
+    return AmbienteGraphqlMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Mutation(() => Boolean, AmbienteDeleteCommandMetadata.gqlMetadata)

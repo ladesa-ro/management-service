@@ -11,6 +11,7 @@ import { createFieldMetadata, createSchema } from "@/domain/abstractions";
 import { uuidSchema } from "@/shared/validation/schemas";
 
 export const GerarHorarioDuracaoValues = ["TEMPORARIO", "PERMANENTE"] as const;
+
 export const GerarHorarioStatusValues = [
   "SOLICITADO",
   "PENDENTE",

@@ -188,6 +188,7 @@ function extractViaInspection(schema: z.ZodType): ZodExtractedOptions {
  * nome: string;
  * ```
  */
+
 export function zodApiProperty(
   schema: z.ZodType,
   overrides?: Record<string, unknown>,

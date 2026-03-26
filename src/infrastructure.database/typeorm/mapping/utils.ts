@@ -7,49 +7,61 @@
  */
 
 /** Filtra itens ativos (dateDeleted === null) de uma coleção. */
-export function filterActive<T extends { dateDeleted: Date | null }>(
+
+export function filterActive<T extends { dateDeleted: Date | string | null }>(
   items: T[] | undefined | null,
 ): T[] {
   return (items ?? []).filter((item) => item.dateDeleted === null);
 }
 
 /** Extrai { id } de uma relação carregada. Retorna null se a relação for null/undefined. */
+
 export function toRef(relation: { id: string } | null | undefined): { id: string } | null {
   return relation ? { id: relation.id } : null;
 }
 
 /** Extrai { id } de uma relação carregada. Lança erro se a relação for null/undefined. */
+
 export function toRefRequired(relation: { id: string } | null | undefined): { id: string } {
   if (!relation) throw new Error("Required relation is null");
   return { id: relation.id };
 }
 
-/** Converte Date do TypeORM para ISO string do domínio. */
-export function dateToISO(date: Date): string {
-  return date.toISOString();
+/** Converte Date ou string do TypeORM para ISO string do domínio. */
+
+export function dateToISO(date: Date | string): string {
+  return date instanceof Date ? date.toISOString() : date;
 }
 
-/** Converte ISO string do domínio para Date do TypeORM. */
-export function isoToDate(iso: string): Date {
-  return new Date(iso);
+/** Converte ISO string do domínio para string (identity — entidades agora usam string). */
+
+export function isoToDate(iso: string): string {
+  return iso;
 }
 
-/** Converte Date | null para string | null. */
-export function dateToISONullable(date: Date | null): string | null {
-  return date ? date.toISOString() : null;
+/** Converte Date | string | null para string | null. */
+
+export function dateToISONullable(date: Date | string | null): string | null {
+  return date instanceof Date ? date.toISOString() : date;
 }
 
-/** Converte string | null para Date | null. */
-export function isoToDateNullable(iso: string | null): Date | null {
-  return iso ? new Date(iso) : null;
+/** Converte string | null para string | null (identity — entidades agora usam string). */
+
+export function isoToDateNullable(iso: string | null): string | null {
+  return iso;
 }
 
 /**
  * Converte campos de data de uma entity TypeORM (Date) para formato query result (string).
  * Útil para mapear relações carregadas sem cast manual.
  */
+
 export function mapDatedEntity<
-  T extends { dateCreated: Date; dateUpdated: Date; dateDeleted: Date | null },
+  T extends {
+    dateCreated: Date | string;
+    dateUpdated: Date | string;
+    dateDeleted: Date | string | null;
+  },
 >(
   entity: T,
 ): Omit<T, "dateCreated" | "dateUpdated" | "dateDeleted"> & {
@@ -57,10 +69,11 @@ export function mapDatedEntity<
   dateUpdated: string;
   dateDeleted: string | null;
 } {
+  const toISO = (v: Date | string): string => (v instanceof Date ? v.toISOString() : v);
   return {
     ...entity,
-    dateCreated: entity.dateCreated.toISOString(),
-    dateUpdated: entity.dateUpdated.toISOString(),
-    dateDeleted: entity.dateDeleted?.toISOString() ?? null,
+    dateCreated: toISO(entity.dateCreated),
+    dateUpdated: toISO(entity.dateUpdated),
+    dateDeleted: entity.dateDeleted ? toISO(entity.dateDeleted) : null,
   };
 }

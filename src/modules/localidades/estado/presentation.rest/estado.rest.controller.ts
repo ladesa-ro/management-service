@@ -25,7 +25,7 @@ import {
   EstadoListInputRestDto,
   EstadoListOutputRestDto,
 } from "./estado.rest.dto";
-import { EstadoRestMapper } from "./estado.rest.mapper";
+import * as EstadoRestMapper from "./estado.rest.mapper";
 
 @ApiTags("estados")
 @Controller("/base/estados")
@@ -45,9 +45,9 @@ export class EstadoRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Query() dto: EstadoListInputRestDto,
   ): Promise<EstadoListOutputRestDto> {
-    const input = EstadoRestMapper.toListInput(dto);
-    const result = await this.listHandler.execute(accessContext, input);
-    return EstadoRestMapper.toListOutputDto(result);
+    const query = EstadoRestMapper.listInputDtoToListQuery.map(dto);
+    const queryResult = await this.listHandler.execute(accessContext, query);
+    return EstadoRestMapper.listQueryResultToListOutputDto(queryResult);
   }
 
   @Get("/:id")
@@ -59,9 +59,9 @@ export class EstadoRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: EstadoFindOneInputRestDto,
   ): Promise<EstadoFindOneOutputRestDto> {
-    const input = EstadoRestMapper.toFindOneInput(params);
-    const result = await this.findOneHandler.execute(accessContext, input);
-    ensureExists(result, Estado.entityName, input.id);
-    return EstadoRestMapper.toFindOneOutputDto(result);
+    const query = EstadoRestMapper.findOneInputDtoToFindOneQuery.map(params);
+    const queryResult = await this.findOneHandler.execute(accessContext, query);
+    ensureExists(queryResult, Estado.entityName, query.id);
+    return EstadoRestMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 }

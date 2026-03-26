@@ -7,6 +7,7 @@ import type { IStreamableFileResult } from "@/domain/abstractions/storage";
  *
  * Reutilizável por qualquer handler que possua campos de imagem.
  */
+
 export async function getEntityImagemStreamableFile(
   entity: Record<string, unknown>,
   fieldName: string,
@@ -43,6 +44,7 @@ export async function getEntityImagemStreamableFile(
  *
  * Reutilizável por qualquer handler que possua campos de imagem.
  */
+
 export async function saveEntityImagemField(
   currentId: string | number,
   file: Express.Multer.File,

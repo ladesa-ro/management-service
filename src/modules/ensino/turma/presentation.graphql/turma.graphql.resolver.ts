@@ -31,7 +31,7 @@ import {
   TurmaListOutputGraphQlDto,
   TurmaUpdateInputGraphQlDto,
 } from "./turma.graphql.dto";
-import { TurmaGraphqlMapper } from "./turma.graphql.mapper";
+import * as TurmaGraphqlMapper from "./turma.graphql.mapper";
 
 @Resolver(() => TurmaFindOneOutputGraphQlDto)
 export class TurmaGraphqlResolver {
@@ -53,9 +53,9 @@ export class TurmaGraphqlResolver {
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args() dto: TurmaListInputGraphQlDto,
   ): Promise<TurmaListOutputGraphQlDto> {
-    const input = TurmaGraphqlMapper.toListInput(dto);
-    const result = await this.listHandler.execute(accessContext, input);
-    return TurmaGraphqlMapper.toListOutputDto(result);
+    const query = TurmaGraphqlMapper.listInputDtoToListQuery(dto);
+    const queryResult = await this.listHandler.execute(accessContext, query);
+    return TurmaGraphqlMapper.listQueryResultToListOutputDto(queryResult);
   }
 
   @Query(() => TurmaFindOneOutputGraphQlDto, TurmaFindOneQueryMetadata.gqlMetadata)
@@ -63,9 +63,10 @@ export class TurmaGraphqlResolver {
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<TurmaFindOneOutputGraphQlDto> {
-    const result = await this.findOneHandler.execute(accessContext, { id });
-    ensureExists(result, Turma.entityName, id);
-    return TurmaGraphqlMapper.toFindOneOutputDto(result);
+    const query = TurmaGraphqlMapper.findOneInputDtoToFindOneQuery.map(id);
+    const queryResult = await this.findOneHandler.execute(accessContext, query);
+    ensureExists(queryResult, Turma.entityName, query.id);
+    return TurmaGraphqlMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Mutation(() => TurmaFindOneOutputGraphQlDto, TurmaCreateCommandMetadata.gqlMetadata)
@@ -73,9 +74,9 @@ export class TurmaGraphqlResolver {
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("input") dto: TurmaCreateInputGraphQlDto,
   ): Promise<TurmaFindOneOutputGraphQlDto> {
-    const input = TurmaGraphqlMapper.toCreateInput(dto);
-    const result = await this.createHandler.execute(accessContext, input);
-    return TurmaGraphqlMapper.toFindOneOutputDto(result);
+    const command = TurmaGraphqlMapper.createInputDtoToCreateCommand.map(dto);
+    const queryResult = await this.createHandler.execute(accessContext, command);
+    return TurmaGraphqlMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Mutation(() => TurmaFindOneOutputGraphQlDto, TurmaUpdateCommandMetadata.gqlMetadata)
@@ -84,9 +85,9 @@ export class TurmaGraphqlResolver {
     @Args("id", { type: () => ID }) id: string,
     @Args("input") dto: TurmaUpdateInputGraphQlDto,
   ): Promise<TurmaFindOneOutputGraphQlDto> {
-    const input = TurmaGraphqlMapper.toUpdateInput({ id }, dto);
-    const result = await this.updateHandler.execute(accessContext, input);
-    return TurmaGraphqlMapper.toFindOneOutputDto(result);
+    const command = TurmaGraphqlMapper.updateInputDtoToUpdateCommand.map({ id, dto });
+    const queryResult = await this.updateHandler.execute(accessContext, command);
+    return TurmaGraphqlMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Mutation(() => Boolean, TurmaDeleteCommandMetadata.gqlMetadata)

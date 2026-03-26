@@ -28,5 +28,5 @@ export class HorarioEdicaoMudancaEntity {
   dados!: Record<string, unknown>;
 
   @Column({ name: "date_created", type: "timestamptz", nullable: false })
-  dateCreated!: Date;
+  dateCreated!: string;
 }

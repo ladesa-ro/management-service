@@ -15,7 +15,7 @@ import type {
   ICidadeRepository,
 } from "@/modules/localidades/cidade";
 import { cidadePaginationSpec } from "@/modules/localidades/cidade/domain/queries";
-import { CidadeEntity } from "./typeorm/cidade.typeorm.entity";
+import { CidadeEntity, CidadeTypeormMapper } from "./typeorm";
 
 const config = {
   alias: "cidade",
@@ -46,6 +46,7 @@ export class CidadeTypeOrmRepositoryAdapter implements ICidadeRepository {
       { ...config, paginateConfig: cidadePaginateConfig },
       this.paginationAdapter,
       dto,
+      CidadeTypeormMapper.entityToFindOneQueryResult.map,
     );
   }
 
@@ -55,6 +56,7 @@ export class CidadeTypeOrmRepositoryAdapter implements ICidadeRepository {
       CidadeEntity,
       { ...config, paginateConfig: cidadePaginateConfig },
       dto,
+      CidadeTypeormMapper.entityToFindOneQueryResult.map,
     );
   }
 

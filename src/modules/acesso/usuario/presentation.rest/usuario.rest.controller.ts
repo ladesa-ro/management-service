@@ -88,7 +88,7 @@ import {
   UsuarioListOutputRestDto,
   UsuarioUpdateInputRestDto,
 } from "./usuario.rest.dto";
-import { UsuarioRestMapper } from "./usuario.rest.mapper";
+import * as UsuarioRestMapper from "./usuario.rest.mapper";
 
 @ApiTags("usuarios")
 @Controller("/usuarios")
@@ -128,9 +128,9 @@ export class UsuarioRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Query() dto: UsuarioListInputRestDto,
   ): Promise<UsuarioListOutputRestDto> {
-    const input = UsuarioRestMapper.toListInput(dto);
-    const result = await this.listHandler.execute(accessContext, input);
-    return UsuarioRestMapper.toListOutputDto(result);
+    const query = UsuarioRestMapper.listInputDtoToListQuery.map(dto);
+    const queryResult = await this.listHandler.execute(accessContext, query);
+    return UsuarioRestMapper.listQueryResultToListOutputDto(queryResult);
   }
 
   @Get("/:id")
@@ -142,10 +142,10 @@ export class UsuarioRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: UsuarioFindOneInputRestDto,
   ): Promise<UsuarioFindOneOutputRestDto> {
-    const input = UsuarioRestMapper.toFindOneInput(params);
-    const result = await this.findOneHandler.execute(accessContext, input);
-    ensureExists(result, Usuario.entityName, input.id);
-    return UsuarioRestMapper.toFindOneOutputDto(result);
+    const query = UsuarioRestMapper.findOneInputDtoToFindOneQuery.map(params);
+    const queryResult = await this.findOneHandler.execute(accessContext, query);
+    ensureExists(queryResult, Usuario.entityName, query.id);
+    return UsuarioRestMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Get("/:id/ensino")
@@ -157,9 +157,9 @@ export class UsuarioRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: UsuarioFindOneInputRestDto,
   ): Promise<UsuarioEnsinoOutputRestDto> {
-    const input = UsuarioRestMapper.toFindOneInput(params);
-    const result = await this.ensinoHandler.execute(accessContext, input);
-    return UsuarioRestMapper.toEnsinoOutputDto(result);
+    const query = UsuarioRestMapper.findOneInputDtoToFindOneQuery.map(params);
+    const queryResult = await this.ensinoHandler.execute(accessContext, query);
+    return UsuarioRestMapper.toEnsinoOutputDto(queryResult);
   }
 
   @Post("/")
@@ -170,9 +170,9 @@ export class UsuarioRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Body() dto: UsuarioCreateInputRestDto,
   ): Promise<UsuarioFindOneOutputRestDto> {
-    const input = UsuarioRestMapper.toCreateInput(dto);
-    const result = await this.createHandler.execute(accessContext, input);
-    return UsuarioRestMapper.toFindOneOutputDto(result);
+    const command = UsuarioRestMapper.createInputDtoToCreateCommand.map(dto);
+    const queryResult = await this.createHandler.execute(accessContext, command);
+    return UsuarioRestMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Patch("/:id")
@@ -185,9 +185,9 @@ export class UsuarioRestController {
     @Param() params: UsuarioFindOneInputRestDto,
     @Body() dto: UsuarioUpdateInputRestDto,
   ): Promise<UsuarioFindOneOutputRestDto> {
-    const input = UsuarioRestMapper.toUpdateInput(params, dto);
-    const result = await this.updateHandler.execute(accessContext, input);
-    return UsuarioRestMapper.toFindOneOutputDto(result);
+    const command = UsuarioRestMapper.updateInputDtoToUpdateCommand.map({ params, dto });
+    const queryResult = await this.updateHandler.execute(accessContext, command);
+    return UsuarioRestMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Get("/:id/horario")
@@ -275,10 +275,10 @@ export class UsuarioRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: UsuarioFindOneInputRestDto,
   ) {
-    const result = await this.getImagemCapaHandler.execute(accessContext, { id: params.id });
-    return new StreamableFile(result.stream, {
-      type: result.mimeType,
-      disposition: result.disposition,
+    const queryResult = await this.getImagemCapaHandler.execute(accessContext, { id: params.id });
+    return new StreamableFile(queryResult.stream, {
+      type: queryResult.mimeType,
+      disposition: queryResult.disposition,
     });
   }
 
@@ -315,10 +315,12 @@ export class UsuarioRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: UsuarioFindOneInputRestDto,
   ) {
-    const result = await this.getImagemPerfilHandler.execute(accessContext, { id: params.id });
-    return new StreamableFile(result.stream, {
-      type: result.mimeType,
-      disposition: result.disposition,
+    const queryResult = await this.getImagemPerfilHandler.execute(accessContext, {
+      id: params.id,
+    });
+    return new StreamableFile(queryResult.stream, {
+      type: queryResult.mimeType,
+      disposition: queryResult.disposition,
     });
   }
 
@@ -355,7 +357,7 @@ export class UsuarioRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: UsuarioFindOneInputRestDto,
   ): Promise<boolean> {
-    const input = UsuarioRestMapper.toFindOneInput(params);
-    return this.deleteHandler.execute(accessContext, input);
+    const query = UsuarioRestMapper.findOneInputDtoToFindOneQuery.map(params);
+    return this.deleteHandler.execute(accessContext, query);
   }
 }

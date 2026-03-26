@@ -3,6 +3,7 @@ import { PrimitiveException } from "@/domain/errors";
 /**
  * Códigos de erro de aplicação.
  */
+
 export enum ApplicationErrorCode {
   RESOURCE_NOT_FOUND = "APP.RESOURCE_NOT_FOUND",
   FORBIDDEN = "APP.FORBIDDEN",
@@ -18,6 +19,7 @@ export enum ApplicationErrorCode {
  * Classe base para todos os erros de aplicação.
  * Erros de aplicação representam falhas em casos de uso.
  */
+
 export abstract class ApplicationError extends PrimitiveException {
   abstract readonly code: ApplicationErrorCode;
 }
@@ -25,6 +27,7 @@ export abstract class ApplicationError extends PrimitiveException {
 /**
  * Recurso não encontrado.
  */
+
 export class ResourceNotFoundError extends ApplicationError {
   readonly code = ApplicationErrorCode.RESOURCE_NOT_FOUND;
 
@@ -40,6 +43,7 @@ export class ResourceNotFoundError extends ApplicationError {
 /**
  * Acesso negado ao recurso.
  */
+
 export class ForbiddenError extends ApplicationError {
   readonly code = ApplicationErrorCode.FORBIDDEN;
 
@@ -54,6 +58,7 @@ export class ForbiddenError extends ApplicationError {
 /**
  * Usuário não autenticado.
  */
+
 export class UnauthorizedError extends ApplicationError {
   readonly code = ApplicationErrorCode.UNAUTHORIZED;
 
@@ -65,6 +70,7 @@ export class UnauthorizedError extends ApplicationError {
 /**
  * Detalhe de um erro de validação em um campo específico.
  */
+
 export interface ValidationErrorDetail {
   field: string;
   message: string;
@@ -75,6 +81,7 @@ export interface ValidationErrorDetail {
 /**
  * Dados de entrada inválidos.
  */
+
 export class ValidationError extends ApplicationError {
   readonly code = ApplicationErrorCode.VALIDATION;
 
@@ -114,6 +121,7 @@ export class ValidationError extends ApplicationError {
 /**
  * Recurso existe mas não está mais ativo.
  */
+
 export class GoneError extends ApplicationError {
   readonly code = ApplicationErrorCode.GONE;
 
@@ -129,6 +137,7 @@ export class GoneError extends ApplicationError {
 /**
  * Conflito com estado atual do recurso.
  */
+
 export class ConflictError extends ApplicationError {
   readonly code = ApplicationErrorCode.CONFLICT;
 
@@ -143,6 +152,7 @@ export class ConflictError extends ApplicationError {
 /**
  * Erro interno da aplicação.
  */
+
 export class InternalError extends ApplicationError {
   readonly code = ApplicationErrorCode.INTERNAL;
 
@@ -157,6 +167,7 @@ export class InternalError extends ApplicationError {
 /**
  * Serviço externo indisponível.
  */
+
 export class ServiceUnavailableError extends ApplicationError {
   readonly code = ApplicationErrorCode.SERVICE_UNAVAILABLE;
 

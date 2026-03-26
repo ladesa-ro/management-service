@@ -20,13 +20,13 @@ export class ArquivoEntity {
   storageType!: string;
 
   @Column({ name: "date_created", type: "timestamptz", nullable: false })
-  dateCreated!: Date;
+  dateCreated!: string;
 
   @Column({ name: "date_updated", type: "timestamptz", nullable: false })
-  dateUpdated!: Date;
+  dateUpdated!: string;
 
   @Column({ name: "date_deleted", type: "timestamptz", nullable: true })
-  dateDeleted!: Date | null;
+  dateDeleted!: string | null;
 
   @OneToMany(
     () => ImagemArquivoEntity,

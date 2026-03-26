@@ -1,6 +1,7 @@
 /**
  * Operadores de filtro suportados
  */
+
 export type FilterOperator =
   | "$eq"
   | "$ne"
@@ -22,6 +23,7 @@ export type FilterOperator =
 /**
  * Configuração de paginação para um recurso (framework-agnostic)
  */
+
 export interface IPaginationConfig {
   /** Campos a serem selecionados na consulta */
   select?: string[];

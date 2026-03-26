@@ -3,6 +3,7 @@ import { ApiProperty, ApiPropertyOptional } from "@/shared/presentation/rest";
 /**
  * Base DTO for REST entities identified by UUID.
  */
+
 export class EntityIdUuidRestDto {
   @ApiProperty({
     type: "string",
@@ -15,21 +16,25 @@ export class EntityIdUuidRestDto {
 
 /**
  * Base DTO for REST entities with timestamps.
+ *
+ * Usa string (ISO 8601) em vez de Date — o JSON serializado é sempre string,
+ * e o domínio já armazena datas como ScalarDateTimeString.
  */
+
 export class EntityDatedRestDto {
   @ApiProperty({
     type: "string",
     description: "Data e hora da criacao do registro",
     format: "date-time",
   })
-  dateCreated: Date;
+  dateCreated: string;
 
   @ApiProperty({
     type: "string",
     description: "Data e hora da alteracao do registro",
     format: "date-time",
   })
-  dateUpdated: Date;
+  dateUpdated: string;
 
   @ApiPropertyOptional({
     type: "string",
@@ -37,10 +42,11 @@ export class EntityDatedRestDto {
     format: "date-time",
     nullable: true,
   })
-  dateDeleted: Date | null;
+  dateDeleted: string | null;
 }
 
 /**
  * Combined base DTO for REST with UUID and timestamps.
  */
+
 export class EntityBaseRestDto extends Mixin(EntityIdUuidRestDto, EntityDatedRestDto) {}

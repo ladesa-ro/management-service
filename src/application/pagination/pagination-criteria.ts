@@ -2,6 +2,7 @@
  * Critérios de paginação genéricos (framework-agnostic)
  * Usado para passar parâmetros de paginação entre camadas
  */
+
 export interface IPaginationCriteria {
   /** Número da página (1-indexed) */
   page?: number | null;

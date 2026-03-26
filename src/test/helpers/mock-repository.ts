@@ -5,6 +5,7 @@ import { vi } from "vitest";
  * Read side: getFindOneQueryResult, getFindAllQueryResult.
  * All methods are vi.fn() stubs that can be configured per test.
  */
+
 export function createMockCrudRepository() {
   return {
     getFindAllQueryResult: vi.fn().mockResolvedValue({ meta: { itemCount: 0 }, data: [] }),
@@ -23,6 +24,7 @@ export function createMockCrudRepository() {
  * Write side: loadById, save, softDeleteById
  * Read side: getFindOneQueryResult, getFindAllQueryResult
  */
+
 export function createMockCqrsRepository() {
   return {
     loadById: vi.fn().mockResolvedValue(null),
@@ -36,6 +38,7 @@ export function createMockCqrsRepository() {
 /**
  * Creates a mock permission checker where all ensureCan* methods resolve.
  */
+
 export function createMockPermissionChecker() {
   return {
     ensureCanCreate: vi.fn().mockResolvedValue(undefined),

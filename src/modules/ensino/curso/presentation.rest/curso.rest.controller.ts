@@ -64,7 +64,7 @@ import {
   CursoListOutputRestDto,
   CursoUpdateInputRestDto,
 } from "./curso.rest.dto";
-import { CursoRestMapper } from "./curso.rest.mapper";
+import * as CursoRestMapper from "./curso.rest.mapper";
 
 @ApiTags("cursos")
 @Controller("/cursos")
@@ -94,9 +94,9 @@ export class CursoRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Query() dto: CursoListInputRestDto,
   ): Promise<CursoListOutputRestDto> {
-    const input = CursoRestMapper.toListInput(dto);
-    const result = await this.listHandler.execute(accessContext, input);
-    return CursoRestMapper.toListOutputDto(result);
+    const query = CursoRestMapper.listInputDtoToListQuery.map(dto);
+    const queryResult = await this.listHandler.execute(accessContext, query);
+    return CursoRestMapper.listQueryResultToListOutputDto(queryResult);
   }
 
   @Get("/:id")
@@ -108,10 +108,10 @@ export class CursoRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: CursoFindOneInputRestDto,
   ): Promise<CursoFindOneOutputRestDto> {
-    const input = CursoRestMapper.toFindOneInput(params);
-    const result = await this.findOneHandler.execute(accessContext, input);
-    ensureExists(result, Curso.entityName, input.id);
-    return CursoRestMapper.toFindOneOutputDto(result);
+    const query = CursoRestMapper.findOneInputDtoToFindOneQuery.map(params);
+    const queryResult = await this.findOneHandler.execute(accessContext, query);
+    ensureExists(queryResult, Curso.entityName, query.id);
+    return CursoRestMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Post("/")
@@ -122,9 +122,9 @@ export class CursoRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Body() dto: CursoCreateInputRestDto,
   ): Promise<CursoFindOneOutputRestDto> {
-    const input = CursoRestMapper.toCreateInput(dto);
-    const result = await this.createHandler.execute(accessContext, input);
-    return CursoRestMapper.toFindOneOutputDto(result);
+    const command = CursoRestMapper.createInputDtoToCreateCommand.map(dto);
+    const queryResult = await this.createHandler.execute(accessContext, command);
+    return CursoRestMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Patch("/:id")
@@ -137,9 +137,9 @@ export class CursoRestController {
     @Param() params: CursoFindOneInputRestDto,
     @Body() dto: CursoUpdateInputRestDto,
   ): Promise<CursoFindOneOutputRestDto> {
-    const input = CursoRestMapper.toUpdateInput(params, dto);
-    const result = await this.updateHandler.execute(accessContext, input);
-    return CursoRestMapper.toFindOneOutputDto(result);
+    const command = CursoRestMapper.updateInputDtoToUpdateCommand.map({ params, dto });
+    const queryResult = await this.updateHandler.execute(accessContext, command);
+    return CursoRestMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Get("/:id/imagem/capa")
@@ -151,10 +151,10 @@ export class CursoRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: CursoFindOneInputRestDto,
   ) {
-    const result = await this.getImagemCapaHandler.execute(accessContext, { id: params.id });
-    return new StreamableFile(result.stream, {
-      type: result.mimeType,
-      disposition: result.disposition,
+    const queryResult = await this.getImagemCapaHandler.execute(accessContext, { id: params.id });
+    return new StreamableFile(queryResult.stream, {
+      type: queryResult.mimeType,
+      disposition: queryResult.disposition,
     });
   }
 
@@ -164,9 +164,7 @@ export class CursoRestController {
   @ApiBody({
     schema: {
       type: "object",
-      properties: {
-        file: { type: "string", format: "binary" },
-      },
+      properties: { file: { type: "string", format: "binary" } },
       required: ["file"],
     },
   })
@@ -191,7 +189,7 @@ export class CursoRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: CursoFindOneInputRestDto,
   ): Promise<boolean> {
-    const input = CursoRestMapper.toFindOneInput(params);
-    return this.deleteHandler.execute(accessContext, input);
+    const query = CursoRestMapper.findOneInputDtoToFindOneQuery.map(params);
+    return this.deleteHandler.execute(accessContext, query);
   }
 }

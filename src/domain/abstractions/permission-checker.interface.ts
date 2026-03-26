@@ -5,6 +5,7 @@ import type { IAccessContext } from "@/domain/abstractions";
  * Os métodos lançam exceção se o acesso for negado — padrão "throw on deny" para
  * garantir que a ausência de checagem nunca permita acesso silencioso.
  */
+
 export interface IPermissionChecker {
   ensureCanCreate(accessContext: IAccessContext | null, payload: { dto: unknown }): Promise<void>;
   ensureCanUpdate(

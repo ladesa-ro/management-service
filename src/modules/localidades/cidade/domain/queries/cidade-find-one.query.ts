@@ -1,5 +1,6 @@
 import { SharedFields } from "@/domain/abstractions";
 import type { IdNumeric } from "@/domain/abstractions/scalars";
+
 export const CidadeFindOneQueryFields = {
   id: SharedFields.idNumeric,
 };

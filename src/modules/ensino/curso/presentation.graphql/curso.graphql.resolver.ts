@@ -31,7 +31,7 @@ import {
   CursoListOutputGraphQlDto,
   CursoUpdateInputGraphQlDto,
 } from "./curso.graphql.dto";
-import { CursoGraphqlMapper } from "./curso.graphql.mapper";
+import * as CursoGraphqlMapper from "./curso.graphql.mapper";
 
 @Resolver(() => CursoFindOneOutputGraphQlDto)
 export class CursoGraphqlResolver {
@@ -53,9 +53,9 @@ export class CursoGraphqlResolver {
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args() dto: CursoListInputGraphQlDto,
   ): Promise<CursoListOutputGraphQlDto> {
-    const input = CursoGraphqlMapper.toListInput(dto);
-    const result = await this.listHandler.execute(accessContext, input);
-    return CursoGraphqlMapper.toListOutputDto(result);
+    const query = CursoGraphqlMapper.listInputDtoToListQuery(dto);
+    const queryResult = await this.listHandler.execute(accessContext, query);
+    return CursoGraphqlMapper.listQueryResultToListOutputDto(queryResult);
   }
 
   @Query(() => CursoFindOneOutputGraphQlDto, CursoFindOneQueryMetadata.gqlMetadata)
@@ -63,9 +63,10 @@ export class CursoGraphqlResolver {
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<CursoFindOneOutputGraphQlDto> {
-    const result = await this.findOneHandler.execute(accessContext, { id });
-    ensureExists(result, Curso.entityName, id);
-    return CursoGraphqlMapper.toFindOneOutputDto(result);
+    const query = CursoGraphqlMapper.findOneInputDtoToFindOneQuery.map(id);
+    const queryResult = await this.findOneHandler.execute(accessContext, query);
+    ensureExists(queryResult, Curso.entityName, query.id);
+    return CursoGraphqlMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Mutation(() => CursoFindOneOutputGraphQlDto, CursoCreateCommandMetadata.gqlMetadata)
@@ -73,9 +74,9 @@ export class CursoGraphqlResolver {
     @AccessContextGraphQL() accessContext: IAccessContext,
     @Args("input") dto: CursoCreateInputGraphQlDto,
   ): Promise<CursoFindOneOutputGraphQlDto> {
-    const input = CursoGraphqlMapper.toCreateInput(dto);
-    const result = await this.createHandler.execute(accessContext, input);
-    return CursoGraphqlMapper.toFindOneOutputDto(result);
+    const command = CursoGraphqlMapper.createInputDtoToCreateCommand.map(dto);
+    const queryResult = await this.createHandler.execute(accessContext, command);
+    return CursoGraphqlMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Mutation(() => CursoFindOneOutputGraphQlDto, CursoUpdateCommandMetadata.gqlMetadata)
@@ -84,9 +85,9 @@ export class CursoGraphqlResolver {
     @Args("id", { type: () => ID }) id: string,
     @Args("input") dto: CursoUpdateInputGraphQlDto,
   ): Promise<CursoFindOneOutputGraphQlDto> {
-    const input = CursoGraphqlMapper.toUpdateInput({ id }, dto);
-    const result = await this.updateHandler.execute(accessContext, input);
-    return CursoGraphqlMapper.toFindOneOutputDto(result);
+    const command = CursoGraphqlMapper.updateInputDtoToUpdateCommand.map({ id, dto });
+    const queryResult = await this.updateHandler.execute(accessContext, command);
+    return CursoGraphqlMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Mutation(() => Boolean, CursoDeleteCommandMetadata.gqlMetadata)

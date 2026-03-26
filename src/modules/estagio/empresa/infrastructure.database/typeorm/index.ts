@@ -1,2 +1,3 @@
-export { empresaEntityDomainMapper } from "./empresa.mapper";
 export * from "./empresa.typeorm.entity";
+
+export * as EmpresaTypeormMapper from "./empresa.typeorm.mapper";

@@ -22,6 +22,7 @@ export const IOfertaFormacaoRepository = Symbol("IOfertaFormacaoRepository");
  * O write side retorna o aggregate de domínio reconstituído.
  * O read side retorna dados hidratados para exibição (query results).
  */
+
 export interface IOfertaFormacaoRepository {
   // ==========================================
   // Write side — usado por command handlers

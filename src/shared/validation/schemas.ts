@@ -10,6 +10,7 @@ export const uuidSchema = z.string().uuid();
  * Coerce a single value or array to always be an array.
  * Query params come as string when single, array when multiple.
  */
+
 export function coerceArray<T extends z.ZodType>(itemSchema: T) {
   return z.preprocess((val) => {
     if (val === undefined || val === null) return undefined;
@@ -23,6 +24,7 @@ export function coerceArray<T extends z.ZodType>(itemSchema: T) {
  * que causaria erros no banco (ex: "invalid input syntax for type uuid").
  * Retorna undefined se nenhum valor válido restar.
  */
+
 export function coerceFilterArray<T extends z.ZodType>(itemSchema: T) {
   return z.preprocess((val) => {
     if (val === undefined || val === null) return undefined;
@@ -33,6 +35,7 @@ export function coerceFilterArray<T extends z.ZodType>(itemSchema: T) {
 }
 
 export const uuidFilterSchema = coerceFilterArray(uuidSchema);
+
 export const stringFilterSchema = coerceFilterArray(z.string());
 
 // ============================================================================
@@ -40,6 +43,7 @@ export const stringFilterSchema = coerceFilterArray(z.string());
 // ============================================================================
 
 export const findOneUuidInputSchema = z.object({ id: uuidSchema });
+
 export const findOneNumericInputSchema = z.object({ id: z.coerce.number().int() });
 
 // ============================================================================
@@ -63,6 +67,7 @@ export const graphqlPaginationInputSchema = z.object({
 /**
  * Cria schema de paginação REST com filtros adicionais.
  */
+
 export function createPaginationInputSchema(filters: Record<string, z.ZodType> = {}) {
   return paginationInputSchema.extend({
     "filter.id": stringFilterSchema,
@@ -73,6 +78,7 @@ export function createPaginationInputSchema(filters: Record<string, z.ZodType> =
 /**
  * Cria schema de paginação GraphQL com filtros adicionais.
  */
+
 export function createGraphqlListInputSchema(filters: Record<string, z.ZodType> = {}) {
   return graphqlPaginationInputSchema.extend({
     filterId: z.array(z.string()).optional(),

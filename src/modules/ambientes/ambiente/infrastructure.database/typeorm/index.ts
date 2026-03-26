@@ -1,2 +1,3 @@
-export { ambienteEntityDomainMapper } from "./ambiente.mapper";
 export * from "./ambiente.typeorm.entity";
+
+export * as AmbienteTypeormMapper from "./ambiente.typeorm.mapper";

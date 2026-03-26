@@ -10,6 +10,7 @@ import {
   typeormSoftDeleteById,
   typeormUpdate,
 } from "@/infrastructure.database/typeorm/helpers/typeorm-repository-helpers";
+import type { ICurso } from "@/modules/ensino/curso/domain/curso";
 import {
   type CursoFindOneQuery,
   type CursoFindOneQueryResult,
@@ -18,7 +19,7 @@ import {
   cursoPaginationSpec,
 } from "@/modules/ensino/curso/domain/queries";
 import type { ICursoRepository } from "@/modules/ensino/curso/domain/repositories";
-import { CursoEntity, cursoEntityDomainMapper } from "./typeorm";
+import { CursoEntity, CursoTypeormMapper } from "./typeorm";
 
 const config = {
   alias: "curso",
@@ -51,6 +52,29 @@ export class CursoTypeOrmRepositoryAdapter implements ICursoRepository {
     private readonly paginationAdapter: NestJsPaginateAdapter,
   ) {}
 
+  // ============================================================================
+  // Write (Command handlers)
+  // ============================================================================
+
+  async create(data: ICurso): Promise<{ id: string }> {
+    const entityData = CursoTypeormMapper.domainToPersistence.map(data);
+    const result = await typeormCreate(this.appTypeormConnection, CursoEntity, entityData);
+    return { id: result.id };
+  }
+
+  update(id: string, data: ICurso) {
+    const entityData = CursoTypeormMapper.domainToPersistence.map(data);
+    return typeormUpdate(this.appTypeormConnection, CursoEntity, id, entityData);
+  }
+
+  softDeleteById(id: string) {
+    return typeormSoftDeleteById(this.appTypeormConnection, CursoEntity, config.alias, id);
+  }
+
+  // ============================================================================
+  // Read (Query handlers)
+  // ============================================================================
+
   getFindAllQueryResult(accessContext: IAccessContext | null, dto: CursoListQuery | null = null) {
     return typeormFindAll<CursoEntity, CursoListQuery, CursoListQueryResult>(
       this.appTypeormConnection,
@@ -58,6 +82,7 @@ export class CursoTypeOrmRepositoryAdapter implements ICursoRepository {
       { ...config, paginateConfig: cursoPaginateConfig },
       this.paginationAdapter,
       dto,
+      CursoTypeormMapper.entityToFindOneQueryResult.map,
     );
   }
 
@@ -67,21 +92,7 @@ export class CursoTypeOrmRepositoryAdapter implements ICursoRepository {
       CursoEntity,
       { ...config, paginateConfig: cursoPaginateConfig },
       dto,
+      CursoTypeormMapper.entityToFindOneQueryResult.map,
     );
-  }
-
-  async create(data: Record<string, unknown>): Promise<{ id: string }> {
-    const entityData = cursoEntityDomainMapper.toPersistenceData(data);
-    const result = await typeormCreate(this.appTypeormConnection, CursoEntity, entityData);
-    return { id: result.id as string };
-  }
-
-  update(id: string | number, data: Record<string, unknown>) {
-    const entityData = cursoEntityDomainMapper.toPersistenceData(data);
-    return typeormUpdate(this.appTypeormConnection, CursoEntity, id, entityData);
-  }
-
-  softDeleteById(id: string) {
-    return typeormSoftDeleteById(this.appTypeormConnection, CursoEntity, config.alias, id);
   }
 }

@@ -12,11 +12,13 @@ import type {
 /**
  * Token de injeção para o repositório de consulta de ImagemArquivo
  */
+
 export const IImagemArquivoQueryRepository = Symbol("IImagemArquivoQueryRepository");
 
 /**
  * Port de saída para operações de consulta de ImagemArquivo (read-only).
  */
+
 export interface IImagemArquivoQueryRepository {
   getFindOneQueryResult: IRepositoryGetFindOneQueryResult<
     ImagemArquivoFindOneQuery,

@@ -18,7 +18,7 @@ import type {
 } from "@/modules/ensino/nivel-formacao";
 import { NivelFormacao } from "@/modules/ensino/nivel-formacao/domain/nivel-formacao";
 import type { INivelFormacaoRepository } from "@/modules/ensino/nivel-formacao/domain/repositories";
-import { NivelFormacaoEntity, nivelFormacaoEntityDomainMapper } from "./typeorm";
+import { NivelFormacaoEntity, NivelFormacaoTypeormMapper } from "./typeorm";
 
 const config = {
   alias: "nivel_formacao",
@@ -44,26 +44,19 @@ export class NivelFormacaoTypeOrmRepositoryAdapter implements INivelFormacaoRepo
     private readonly paginationAdapter: NestJsPaginateAdapter,
   ) {}
 
-  // ==========================================
-  // Write side
-  // ==========================================
+  // ============================================================================
+  // Write (Command handlers)
+  // ============================================================================
 
   async loadById(_accessContext: IAccessContext | null, id: string): Promise<NivelFormacao | null> {
     const repo = this.appTypeormConnection.getRepository(NivelFormacaoEntity);
-
-    const entity = await repo.findOne({
-      where: { id, dateDeleted: IsNull() },
-    });
-
+    const entity = await repo.findOne({ where: { id, dateDeleted: IsNull() } });
     if (!entity) return null;
-
-    return NivelFormacao.load(
-      nivelFormacaoEntityDomainMapper.toOutputData(entity as unknown as Record<string, unknown>),
-    );
+    return NivelFormacao.load(NivelFormacaoTypeormMapper.entityToDomain.map(entity));
   }
 
   async save(aggregate: NivelFormacao): Promise<void> {
-    const entityData = nivelFormacaoEntityDomainMapper.toPersistenceData({ ...aggregate });
+    const entityData = NivelFormacaoTypeormMapper.domainToPersistence.map({ ...aggregate });
     const repo = this.appTypeormConnection.getRepository(NivelFormacaoEntity);
     await repo.save(repo.create({ id: aggregate.id, ...entityData } as NivelFormacaoEntity));
   }
@@ -72,9 +65,9 @@ export class NivelFormacaoTypeOrmRepositoryAdapter implements INivelFormacaoRepo
     return typeormSoftDeleteById(this.appTypeormConnection, NivelFormacaoEntity, config.alias, id);
   }
 
-  // ==========================================
-  // Read side
-  // ==========================================
+  // ============================================================================
+  // Read (Query handlers)
+  // ============================================================================
 
   getFindOneQueryResult(accessContext: IAccessContext | null, dto: NivelFormacaoFindOneQuery) {
     return typeormFindById<
@@ -86,6 +79,7 @@ export class NivelFormacaoTypeOrmRepositoryAdapter implements INivelFormacaoRepo
       NivelFormacaoEntity,
       { ...config, paginateConfig: nivelFormacaoPaginateConfig },
       dto,
+      NivelFormacaoTypeormMapper.entityToFindOneQueryResult.map,
     );
   }
 
@@ -103,6 +97,7 @@ export class NivelFormacaoTypeOrmRepositoryAdapter implements INivelFormacaoRepo
       { ...config, paginateConfig: nivelFormacaoPaginateConfig },
       this.paginationAdapter,
       dto,
+      NivelFormacaoTypeormMapper.entityToFindOneQueryResult.map,
     );
   }
 }

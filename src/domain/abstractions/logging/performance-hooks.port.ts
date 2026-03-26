@@ -7,6 +7,7 @@
  *
  * Checkpoints: início/fim de request, execução de handler, queries de repositório.
  */
+
 export const IPerformanceHooks = Symbol("IPerformanceHooks");
 
 export interface IPerformanceCheckpoint {

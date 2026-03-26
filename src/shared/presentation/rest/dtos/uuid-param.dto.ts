@@ -2,6 +2,7 @@ import { ApiProperty } from "@/shared/presentation/rest";
 /**
  * DTO for UUID path parameter (REST).
  */
+
 export class UuidParamRestDto {
   @ApiProperty({
     type: "string",

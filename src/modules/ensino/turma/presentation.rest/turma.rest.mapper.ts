@@ -1,102 +1,111 @@
-import { AmbienteRestMapper } from "@/modules/ambientes/ambiente/presentation.rest";
-import { BlocoRestMapper } from "@/modules/ambientes/bloco/presentation.rest";
-import { CursoRestMapper } from "@/modules/ensino/curso/presentation.rest";
+import * as AmbienteRestMapper from "@/modules/ambientes/ambiente/presentation.rest/ambiente.rest.mapper";
+import * as BlocoRestMapper from "@/modules/ambientes/bloco/presentation.rest/bloco.rest.mapper";
+import * as CursoRestMapper from "@/modules/ensino/curso/presentation.rest/curso.rest.mapper";
 import {
   TurmaCreateCommand,
   TurmaFindOneQuery,
-  TurmaFindOneQueryResult,
+  type TurmaFindOneQueryResult,
   TurmaListQuery,
   TurmaUpdateCommand,
 } from "@/modules/ensino/turma";
+import { createListMapper, createMapper, createPaginatedInputMapper, into } from "@/shared/mapping";
 import {
-  createFindOneInputMapper,
-  createListInputMapper,
-  createListOutputMapper,
-  mapDatedFields,
-} from "@/shared/mapping";
-import {
-  TurmaCreateInputRestDto,
-  TurmaFindOneInputRestDto,
+  type TurmaCreateInputRestDto,
+  type TurmaFindOneInputRestDto,
   TurmaFindOneOutputRestDto,
+  type TurmaListInputRestDto,
   TurmaListOutputRestDto,
-  TurmaUpdateInputRestDto,
+  type TurmaUpdateInputRestDto,
 } from "./turma.rest.dto";
 
-export class TurmaRestMapper {
-  // ============================================================================
-  // Input: Server DTO -> Core DTO
-  // ============================================================================
+// ============================================================================
+// Externa -> Interna (Input: Presentation -> Core)
+// ============================================================================
 
-  static toFindOneInput = createFindOneInputMapper(TurmaFindOneQuery);
+export const findOneInputDtoToFindOneQuery = createMapper<
+  TurmaFindOneInputRestDto,
+  TurmaFindOneQuery
+>((dto) => {
+  const input = new TurmaFindOneQuery();
+  input.id = dto.id;
+  return input;
+});
 
-  static toListInput = createListInputMapper(TurmaListQuery, [
-    "filter.id",
-    "filter.periodo",
-    "filter.ambientePadraoAula.nome",
-    "filter.ambientePadraoAula.codigo",
-    "filter.ambientePadraoAula.capacidade",
-    "filter.ambientePadraoAula.tipo",
-    "filter.curso.id",
-    "filter.curso.nome",
-    "filter.curso.nomeAbreviado",
-    "filter.curso.campus.id",
-    "filter.curso.ofertaFormacao.id",
-    "filter.curso.ofertaFormacao.nome",
-    "filter.curso.ofertaFormacao.slug",
-  ]);
+export const listInputDtoToListQuery = createPaginatedInputMapper<
+  TurmaListInputRestDto,
+  TurmaListQuery
+>(TurmaListQuery, (dto, query) => {
+  into(query).field("filter.id").from(dto);
+  into(query).field("filter.periodo").from(dto);
+  into(query).field("filter.ambientePadraoAula.nome").from(dto);
+  into(query)
+    .field("filter.ambientePadraoAula.codigo")
+    .from(dto, "filter.ambientePadraoAula.codigo");
+  into(query)
+    .field("filter.ambientePadraoAula.capacidade")
+    .from(dto, "filter.ambientePadraoAula.capacidade");
+  into(query).field("filter.ambientePadraoAula.tipo").from(dto);
+  into(query).field("filter.curso.id").from(dto);
+  into(query).field("filter.curso.nome").from(dto);
+  into(query).field("filter.curso.nomeAbreviado").from(dto);
+  into(query).field("filter.curso.campus.id").from(dto);
+  into(query).field("filter.curso.ofertaFormacao.id").from(dto);
+  into(query)
+    .field("filter.curso.ofertaFormacao.nome")
+    .from(dto, "filter.curso.ofertaFormacao.nome");
+  into(query)
+    .field("filter.curso.ofertaFormacao.slug")
+    .from(dto, "filter.curso.ofertaFormacao.slug");
+});
 
-  static toCreateInput(dto: TurmaCreateInputRestDto): TurmaCreateCommand {
-    const input = new TurmaCreateCommand();
-    input.periodo = dto.periodo;
-    input.nome = dto.nome ?? null;
-    input.curso = { id: dto.curso.id };
-    input.ambientePadraoAula = dto.ambientePadraoAula ? { id: dto.ambientePadraoAula.id } : null;
-    return input;
-  }
+export const createInputDtoToCreateCommand = createMapper<
+  TurmaCreateInputRestDto,
+  TurmaCreateCommand
+>((dto) => ({
+  periodo: dto.periodo,
+  nome: dto.nome ?? null,
+  curso: { id: dto.curso.id },
+  ambientePadraoAula: dto.ambientePadraoAula ? { id: dto.ambientePadraoAula.id } : null,
+}));
 
-  static toUpdateInput(
-    params: TurmaFindOneInputRestDto,
-    dto: TurmaUpdateInputRestDto,
-  ): TurmaFindOneQuery & TurmaUpdateCommand {
-    const input = new TurmaFindOneQuery() as TurmaFindOneQuery & TurmaUpdateCommand;
-    input.id = params.id;
-    if (dto.periodo !== undefined) {
-      input.periodo = dto.periodo;
-    }
-    if (dto.nome !== undefined) {
-      input.nome = dto.nome ?? null;
-    }
-    if (dto.curso !== undefined) {
-      input.curso = { id: dto.curso.id };
-    }
-    if (dto.ambientePadraoAula !== undefined) {
-      input.ambientePadraoAula = dto.ambientePadraoAula ? { id: dto.ambientePadraoAula.id } : null;
-    }
-    return input;
-  }
+export const updateInputDtoToUpdateCommand = createMapper<
+  { params: TurmaFindOneInputRestDto; dto: TurmaUpdateInputRestDto },
+  TurmaFindOneQuery & TurmaUpdateCommand
+>(({ params, dto }) => ({
+  id: params.id,
+  periodo: dto.periodo,
+  nome: dto.nome !== undefined ? (dto.nome ?? null) : undefined,
+  curso: dto.curso ? { id: dto.curso.id } : undefined,
+  ambientePadraoAula:
+    dto.ambientePadraoAula !== undefined
+      ? dto.ambientePadraoAula
+        ? { id: dto.ambientePadraoAula.id }
+        : null
+      : undefined,
+}));
 
-  // ============================================================================
-  // Output: Core DTO -> Server DTO
-  // ============================================================================
+// ============================================================================
+// Interna -> Externa (Output: Core -> Presentation)
+// ============================================================================
 
-  static toFindOneOutputDto(output: TurmaFindOneQueryResult): TurmaFindOneOutputRestDto {
-    const dto = new TurmaFindOneOutputRestDto();
-    dto.id = output.id;
-    dto.periodo = output.periodo;
-    dto.nome = output.nome ?? null;
-    dto.curso = CursoRestMapper.toFindOneOutputDto(output.curso);
-    dto.ambientePadraoAula = output.ambientePadraoAula
-      ? AmbienteRestMapper.toFindOneOutputDto(output.ambientePadraoAula)
-      : null;
-    dto.imagemCapa = output.imagemCapa
-      ? BlocoRestMapper.toImagemOutputDto(output.imagemCapa)
-      : null;
-    mapDatedFields(dto, output);
-    return dto;
-  }
+export const findOneQueryResultToOutputDto = createMapper<
+  TurmaFindOneQueryResult,
+  TurmaFindOneOutputRestDto
+>((output) => ({
+  id: output.id,
+  periodo: output.periodo,
+  nome: output.nome ?? null,
+  curso: CursoRestMapper.findOneQueryResultToOutputDto.map(output.curso),
+  ambientePadraoAula: output.ambientePadraoAula
+    ? AmbienteRestMapper.findOneQueryResultToOutputDto.map(output.ambientePadraoAula)
+    : null,
+  imagemCapa: output.imagemCapa ? BlocoRestMapper.toImagemOutput(output.imagemCapa) : null,
+  dateCreated: output.dateCreated,
+  dateUpdated: output.dateUpdated,
+  dateDeleted: output.dateDeleted,
+}));
 
-  static toListOutputDto = createListOutputMapper(
-    TurmaListOutputRestDto,
-    TurmaRestMapper.toFindOneOutputDto,
-  );
-}
+export const listQueryResultToListOutputDto = createListMapper(
+  TurmaListOutputRestDto,
+  findOneQueryResultToOutputDto,
+);

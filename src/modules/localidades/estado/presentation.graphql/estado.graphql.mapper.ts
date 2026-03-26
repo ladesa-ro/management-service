@@ -1,43 +1,51 @@
 import {
   EstadoFindOneQuery,
-  EstadoFindOneQueryResult,
+  type EstadoFindOneQueryResult,
   EstadoListQuery,
 } from "@/modules/localidades/estado";
-import { createListOutputMapper, createMapping, mapFilterCase } from "@/shared/mapping";
+import { createListMapper, createMapper, createPaginatedInputMapper, into } from "@/shared/mapping";
 import {
   EstadoFindOneOutputGraphQlDto,
-  EstadoListInputGraphQlDto,
+  type EstadoListInputGraphQlDto,
   EstadoListOutputGraphQlDto,
 } from "./estado.graphql.dto";
 
-const outputMapping = createMapping(["id", "nome", "sigla"]);
+// ============================================================================
+// Externa → Interna (Input: Presentation → Core)
+// ============================================================================
 
-const listInputMapping = createMapping([
-  "page",
-  "limit",
-  "search",
-  "sortBy",
-  mapFilterCase("filter.id"),
-]);
+export const findOneInputDtoToFindOneQuery = createMapper<number, EstadoFindOneQuery>((id) => {
+  const query = new EstadoFindOneQuery();
+  query.id = id;
+  return query;
+});
 
-export class EstadoGraphqlMapper {
-  static toListInput(dto: EstadoListInputGraphQlDto | null): EstadoListQuery | null {
-    if (!dto) return null;
-    return listInputMapping.mapDefined<EstadoListQuery>(dto);
-  }
-
-  static toFindOneInput(id: number): EstadoFindOneQuery {
-    const input = new EstadoFindOneQuery();
-    input.id = id;
-    return input;
-  }
-
-  static toFindOneOutputDto(output: EstadoFindOneQueryResult): EstadoFindOneOutputGraphQlDto {
-    return outputMapping.map<EstadoFindOneOutputGraphQlDto>(output);
-  }
-
-  static toListOutputDto = createListOutputMapper(
-    EstadoListOutputGraphQlDto,
-    EstadoGraphqlMapper.toFindOneOutputDto,
-  );
+export function listInputDtoToListQuery(
+  dto: EstadoListInputGraphQlDto | null,
+): EstadoListQuery | null {
+  if (!dto) return null;
+  return createPaginatedInputMapper<EstadoListInputGraphQlDto, EstadoListQuery>(
+    EstadoListQuery,
+    (source, query) => {
+      into(query).field("filter.id").from(source, "filterId");
+    },
+  ).map(dto);
 }
+
+// ============================================================================
+// Interna → Externa (Output: Core → Presentation)
+// ============================================================================
+
+export const findOneQueryResultToOutputDto = createMapper<
+  EstadoFindOneQueryResult,
+  EstadoFindOneOutputGraphQlDto
+>((queryResult) => ({
+  id: queryResult.id,
+  nome: queryResult.nome,
+  sigla: queryResult.sigla,
+}));
+
+export const listQueryResultToListOutputDto = createListMapper(
+  EstadoListOutputGraphQlDto,
+  findOneQueryResultToOutputDto,
+);

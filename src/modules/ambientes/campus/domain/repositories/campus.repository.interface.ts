@@ -22,6 +22,7 @@ export const ICampusRepository = Symbol("ICampusRepository");
  * O write side retorna o aggregate de domínio reconstituído.
  * O read side retorna dados hidratados para exibição (query results).
  */
+
 export interface ICampusRepository {
   // ==========================================
   // Write side — usado por command handlers

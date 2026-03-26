@@ -22,6 +22,7 @@ export const IModalidadeRepository = Symbol("IModalidadeRepository");
  * O write side retorna o aggregate de dominio reconstituido.
  * O read side retorna dados hidratados para exibicao (query results).
  */
+
 export interface IModalidadeRepository {
   // ==========================================
   // Write side — usado por command handlers

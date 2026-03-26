@@ -10,11 +10,6 @@ import {
   typeormUpdate,
 } from "@/infrastructure.database/typeorm/helpers/typeorm-repository-helpers";
 import {
-  dateToISO,
-  dateToISONullable,
-  toRefRequired,
-} from "@/infrastructure.database/typeorm/mapping";
-import {
   type TurmaFindOneQuery,
   type TurmaFindOneQueryResult,
   type TurmaListQuery,
@@ -22,8 +17,8 @@ import {
   turmaPaginationSpec,
 } from "@/modules/ensino/turma/domain/queries";
 import type { ITurmaRepository } from "@/modules/ensino/turma/domain/repositories";
-import { type ITurma, Turma } from "@/modules/ensino/turma/domain/turma";
-import { TurmaEntity, turmaEntityDomainMapper } from "./typeorm";
+import { Turma } from "@/modules/ensino/turma/domain/turma";
+import { TurmaEntity, TurmaTypeormMapper } from "./typeorm";
 
 const config = {
   alias: "turma",
@@ -55,8 +50,8 @@ const turmaRelations = {
 
 /**
  * Relations para o write side (loadById).
- * Carrega o mínimo necessário para reconstituir o aggregate:
- * - curso: join para extrair o ID (TypeORM não expõe FK sem join)
+ * Carrega o minimo necessario para reconstituir o aggregate:
+ * - curso: join para extrair o ID (TypeORM nao expoe FK sem join)
  * - ambientePadraoAula: join para extrair o ID
  * - imagemCapa: join para extrair o ID
  */
@@ -93,18 +88,17 @@ export class TurmaTypeOrmRepositoryAdapter implements ITurmaRepository {
 
     if (!entity) return null;
 
-    return Turma.load(this.toDomainData(entity));
+    return Turma.load(TurmaTypeormMapper.entityToDomain.map(entity));
   }
 
   async save(aggregate: Turma): Promise<void> {
-    const entityData = turmaEntityDomainMapper.toPersistenceData({ ...aggregate });
+    const entityData = TurmaTypeormMapper.domainToPersistence.map({ ...aggregate });
     const repo = this.appTypeormConnection.getRepository(TurmaEntity);
-    await repo.save(repo.create({ id: aggregate.id, ...entityData } as TurmaEntity));
+    await repo.save(repo.create(entityData));
   }
 
   update(id: string | number, data: Record<string, unknown>) {
-    const entityData = turmaEntityDomainMapper.toPersistenceData(data);
-    return typeormUpdate(this.appTypeormConnection, TurmaEntity, id, entityData);
+    return typeormUpdate(this.appTypeormConnection, TurmaEntity, id, data);
   }
 
   softDeleteById(id: string) {
@@ -128,7 +122,7 @@ export class TurmaTypeOrmRepositoryAdapter implements ITurmaRepository {
 
     if (!entity) return null;
 
-    return entity as unknown as TurmaFindOneQueryResult;
+    return TurmaTypeormMapper.entityToFindOneQueryResult.map(entity);
   }
 
   getFindAllQueryResult(
@@ -141,29 +135,7 @@ export class TurmaTypeOrmRepositoryAdapter implements ITurmaRepository {
       { ...config, paginateConfig: turmaPaginateConfig },
       this.paginationAdapter,
       dto,
+      TurmaTypeormMapper.entityToFindOneQueryResult.map,
     );
-  }
-
-  // ==========================================
-  // Mappers privados — fronteira de tradução do adapter
-  // ==========================================
-
-  /**
-   * Entity TypeORM → dados para Domain.load() (write side).
-   *
-   * Projeta relações como { id } — o domínio não carrega dados de outros aggregates.
-   * Datas Date → ISO string (o domínio usa ScalarDateTimeString).
-   */
-  private toDomainData(entity: TurmaEntity): ITurma {
-    return {
-      id: entity.id,
-      periodo: entity.periodo,
-      curso: toRefRequired(entity.curso),
-      ambientePadraoAula: entity.ambientePadraoAula ? { id: entity.ambientePadraoAula.id } : null,
-      imagemCapa: entity.imagemCapa ? { id: entity.imagemCapa.id } : null,
-      dateCreated: dateToISO(entity.dateCreated),
-      dateUpdated: dateToISO(entity.dateUpdated),
-      dateDeleted: dateToISONullable(entity.dateDeleted),
-    };
   }
 }
