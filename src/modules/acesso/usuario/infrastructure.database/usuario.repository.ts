@@ -30,6 +30,7 @@ const config = {
 
 const usuarioRelations = {
   vinculos: {
+    cargo: true,
     campus: {
       endereco: {
         cidade: {
