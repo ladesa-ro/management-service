@@ -11,7 +11,7 @@ import {
 } from "@/shared/validation/schemas";
 
 export const UsuarioPaginationInputSchema = createPaginationInputSchema({
-  "filter.vinculos.cargo": z.string().optional(),
+  "filter.vinculos.cargo.nome": z.string().optional(),
 });
 
 export const UsuarioGraphqlListInputSchema = createGraphqlListInputSchema();
