@@ -45,8 +45,6 @@ export class DisciplinaFindOneOutputRestDto extends EntityBaseRestDto {
 export class DisciplinaListInputRestDto {
   static schema = DisciplinaPaginationInputSchema;
 
-  [key: string]: string | number | string[] | null | undefined;
-
   @ApiPropertyOptional(DisciplinaListQueryFields.page.swaggerMetadata)
   page?: number;
 

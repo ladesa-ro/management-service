@@ -56,8 +56,6 @@ export class CursoFindOneOutputRestDto extends EntityBaseRestDto {
 export class CursoListInputRestDto {
   static schema = CursoPaginationInputSchema;
 
-  [key: string]: string | number | string[] | null | undefined;
-
   @ApiPropertyOptional(CursoListQueryFields.page.swaggerMetadata)
   page?: number;
 

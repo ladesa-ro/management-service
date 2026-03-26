@@ -58,8 +58,6 @@ export class AmbienteFindOneOutputRestDto extends EntityBaseRestDto {
 export class AmbienteListInputRestDto {
   static schema = AmbientePaginationInputSchema;
 
-  [key: string]: string | number | string[] | null | undefined;
-
   @ApiPropertyOptional(AmbienteListQueryFields.page.swaggerMetadata)
   page?: number;
 

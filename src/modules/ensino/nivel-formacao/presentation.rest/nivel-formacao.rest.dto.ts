@@ -26,8 +26,6 @@ export class NivelFormacaoFindOneOutputRestDto extends EntityBaseRestDto {
 export class NivelFormacaoListInputRestDto {
   static schema = NivelFormacaoPaginationInputSchema;
 
-  [key: string]: string | number | string[] | null | undefined;
-
   @ApiPropertyOptional(NivelFormacaoListQueryFields.page.swaggerMetadata)
   page?: number;
 

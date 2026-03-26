@@ -5,7 +5,6 @@ import { ApiPropertyOptional } from "@/shared/presentation/rest";
 
 export class PaginationInputRestDto {
   // Index signature for filter properties (compatible with SearchOptions)
-  [key: string]: string | number | string[] | null | undefined;
 
   @ApiPropertyOptional({
     type: "integer",
