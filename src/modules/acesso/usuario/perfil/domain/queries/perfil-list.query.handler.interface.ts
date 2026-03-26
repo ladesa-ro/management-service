@@ -10,11 +10,11 @@ export type IPerfilListQueryHandler = IQueryHandler<PerfilListQuery | null, Perf
 
 export const perfilPaginationSpec: IPaginationSpec = {
   sortableColumns: ["id"],
-  searchableColumns: ["cargo"],
+  searchableColumns: ["cargo.nome"],
   defaultSortBy: [],
   filterableColumns: {
     ativo: [PaginationFilter.EQ],
-    cargo: [PaginationFilter.EQ],
+    "cargo.nome": [PaginationFilter.EQ],
     "campus.id": [PaginationFilter.EQ],
     "usuario.id": [PaginationFilter.EQ],
   },
