@@ -2,7 +2,6 @@ import { Body, Controller, Get, Param, Put } from "@nestjs/common";
 import { ApiForbiddenResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
-import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { ITurmaHorarioAulaRepository } from "@/modules/horarios/turma-horario-aula/domain/repositories";
 import {
   TurmaHorarioAulaBulkReplaceCommandMetadata,
@@ -31,15 +30,10 @@ export class TurmaHorarioAulaRestController {
     @AccessContextHttp() _accessContext: IAccessContext,
     @Param() parentParams: TurmaHorarioAulaParentParamsRestDto,
   ): Promise<TurmaHorarioAulaListOutputRestDto> {
-    const entries = await this.turmaHorarioAulaRepository.findByTurmaId(parentParams.turmaId);
+    const items = await this.turmaHorarioAulaRepository.findItemsByTurmaId(parentParams.turmaId);
 
     return {
-      data: entries.map((e) => ({
-        id: e.id,
-        horarioAulaId: e.horarioAula?.id,
-        inicio: e.horarioAula?.inicio ?? "",
-        fim: e.horarioAula?.fim ?? "",
-      })),
+      data: items.map((item) => ({ inicio: item.inicio, fim: item.fim })),
     };
   }
 
@@ -52,15 +46,10 @@ export class TurmaHorarioAulaRestController {
     @Param() parentParams: TurmaHorarioAulaParentParamsRestDto,
     @Body() dto: TurmaHorarioAulaBulkReplaceInputRestDto,
   ): Promise<TurmaHorarioAulaListOutputRestDto> {
-    await this.turmaHorarioAulaRepository.deleteByTurmaId(parentParams.turmaId);
-
-    for (const horarioAulaId of dto.horarioAulaIds) {
-      await this.turmaHorarioAulaRepository.save({
-        id: generateUuidV7(),
-        turma: { id: parentParams.turmaId },
-        horarioAula: { id: horarioAulaId },
-      });
-    }
+    await this.turmaHorarioAulaRepository.replaceItems(
+      parentParams.turmaId,
+      dto.horarios.map((h) => ({ inicio: h.inicio, fim: h.fim })),
+    );
 
     return this.findAll(_accessContext, parentParams);
   }

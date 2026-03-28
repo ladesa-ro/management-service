@@ -1,3 +1,5 @@
+import { z } from "zod";
+import { horariosAulaArraySchema } from "@/modules/horarios/horarios-de-aula/domain/horario-aula-configuracao.schemas";
 import { ApiProperty, ApiSchema } from "@/shared/presentation/rest";
 
 // ============================================================================
@@ -11,33 +13,49 @@ export class TurmaHorarioAulaParentParamsRestDto {
 }
 
 // ============================================================================
+// Item (value object)
+// ============================================================================
+
+@ApiSchema({ name: "TurmaHorarioAulaItemInputDto" })
+export class TurmaHorarioAulaItemInputRestDto {
+  @ApiProperty({ type: "string", description: "Horario inicio (HH:MM:SS)" })
+  inicio: string;
+
+  @ApiProperty({ type: "string", description: "Horario fim (HH:MM:SS)" })
+  fim: string;
+}
+
+@ApiSchema({ name: "TurmaHorarioAulaItemOutputDto" })
+export class TurmaHorarioAulaItemOutputRestDto {
+  @ApiProperty({ type: "string" }) inicio: string;
+  @ApiProperty({ type: "string" }) fim: string;
+}
+
+// ============================================================================
 // Bulk Replace Input
 // ============================================================================
 
+const TurmaHorarioAulaBulkReplaceInputSchema = z.object({
+  horarios: horariosAulaArraySchema,
+});
+
 @ApiSchema({ name: "TurmaHorarioAulaBulkReplaceInputDto" })
 export class TurmaHorarioAulaBulkReplaceInputRestDto {
+  static schema = TurmaHorarioAulaBulkReplaceInputSchema;
+
   @ApiProperty({
-    type: "string",
-    isArray: true,
-    description: "IDs dos horarios de aula selecionados",
+    type: () => [TurmaHorarioAulaItemInputRestDto],
+    description: "Horarios de aula da turma (substituicao completa)",
   })
-  horarioAulaIds: string[];
+  horarios: TurmaHorarioAulaItemInputRestDto[];
 }
 
 // ============================================================================
 // Output
 // ============================================================================
 
-@ApiSchema({ name: "TurmaHorarioAulaFindOneOutputDto" })
-export class TurmaHorarioAulaFindOneOutputRestDto {
-  @ApiProperty({ type: "string" }) id: string;
-  @ApiProperty({ type: "string" }) horarioAulaId: string;
-  @ApiProperty({ type: "string" }) inicio: string;
-  @ApiProperty({ type: "string" }) fim: string;
-}
-
 @ApiSchema({ name: "TurmaHorarioAulaListOutputDto" })
 export class TurmaHorarioAulaListOutputRestDto {
-  @ApiProperty({ type: () => [TurmaHorarioAulaFindOneOutputRestDto] })
-  data: TurmaHorarioAulaFindOneOutputRestDto[];
+  @ApiProperty({ type: () => [TurmaHorarioAulaItemOutputRestDto] })
+  data: TurmaHorarioAulaItemOutputRestDto[];
 }

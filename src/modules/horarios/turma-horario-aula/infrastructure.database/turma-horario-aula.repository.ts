@@ -1,8 +1,11 @@
 import type { FindOptionsWhere } from "typeorm";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import type { ITurmaHorarioAulaRepository } from "../domain/repositories";
-import { TurmaHorarioAulaEntity } from "./typeorm/turma-horario-aula.typeorm.entity";
+import type { ITurmaHorarioAulaItem } from "../domain/turma-horario-aula.types";
+import { TurmaHorarioAulaConfiguracaoEntity } from "./typeorm/turma-horario-aula-configuracao.typeorm.entity";
+import { TurmaHorarioAulaConfiguracaoItemEntity } from "./typeorm/turma-horario-aula-configuracao-item.typeorm.entity";
 
 @DeclareImplementation()
 export class TurmaHorarioAulaTypeOrmRepositoryAdapter implements ITurmaHorarioAulaRepository {
@@ -11,24 +14,58 @@ export class TurmaHorarioAulaTypeOrmRepositoryAdapter implements ITurmaHorarioAu
     private readonly appTypeormConnection: IAppTypeormConnection,
   ) {}
 
-  private get repository() {
-    return this.appTypeormConnection.getRepository(TurmaHorarioAulaEntity);
-  }
+  async findItemsByTurmaId(turmaId: string): Promise<ITurmaHorarioAulaItem[]> {
+    const configRepo = this.appTypeormConnection.getRepository(TurmaHorarioAulaConfiguracaoEntity);
+    const itemRepo = this.appTypeormConnection.getRepository(
+      TurmaHorarioAulaConfiguracaoItemEntity,
+    );
 
-  async findByTurmaId(turmaId: string): Promise<TurmaHorarioAulaEntity[]> {
-    return this.repository.find({
+    const config = await configRepo.findOne({
       where: { turma: { id: turmaId } },
-      relations: ["horarioAula"],
     });
+
+    if (!config) {
+      return [];
+    }
+
+    const items = await itemRepo.find({
+      where: { turmaHorarioAulaConfiguracao: { id: config.id } },
+      order: { inicio: "ASC" },
+    });
+
+    return items.map((item) => ({ inicio: item.inicio, fim: item.fim }));
   }
 
-  async deleteByTurmaId(turmaId: string): Promise<void> {
-    await this.repository.delete({
-      turma: { id: turmaId },
-    } as FindOptionsWhere<TurmaHorarioAulaEntity>);
-  }
+  async replaceItems(turmaId: string, items: ITurmaHorarioAulaItem[]): Promise<void> {
+    const configRepo = this.appTypeormConnection.getRepository(TurmaHorarioAulaConfiguracaoEntity);
+    const itemRepo = this.appTypeormConnection.getRepository(
+      TurmaHorarioAulaConfiguracaoItemEntity,
+    );
 
-  async save(entity: TurmaHorarioAulaEntity): Promise<TurmaHorarioAulaEntity> {
-    return this.repository.save(entity);
+    // Buscar ou criar a configuracao da turma
+    let config = await configRepo.findOne({
+      where: { turma: { id: turmaId } },
+    });
+
+    if (!config) {
+      config = configRepo.create({ id: generateUuidV7() });
+      Object.assign(config, { turma: { id: turmaId } });
+      await configRepo.save(config);
+    }
+
+    // Deletar items existentes
+    await itemRepo.delete({
+      turmaHorarioAulaConfiguracao: { id: config.id },
+    } as FindOptionsWhere<TurmaHorarioAulaConfiguracaoItemEntity>);
+
+    // Criar novos items
+    for (const item of items) {
+      const entity = new TurmaHorarioAulaConfiguracaoItemEntity();
+      entity.id = generateUuidV7();
+      entity.inicio = item.inicio;
+      entity.fim = item.fim;
+      Object.assign(entity, { turmaHorarioAulaConfiguracao: { id: config.id } });
+      await itemRepo.save(entity);
+    }
   }
 }
