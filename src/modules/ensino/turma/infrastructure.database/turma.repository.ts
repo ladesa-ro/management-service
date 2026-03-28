@@ -34,6 +34,9 @@ const turmaRelations = {
         },
       },
     },
+    ofertaFormacao: {
+      modalidade: true,
+    },
   },
   ambientePadraoAula: {
     bloco: {
