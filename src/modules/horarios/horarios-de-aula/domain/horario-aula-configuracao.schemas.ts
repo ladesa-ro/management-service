@@ -9,10 +9,29 @@ import { uuidSchema } from "@/shared/validation/schemas";
 // Horario item (value object)
 // ============================================================================
 
-const horarioAulaItemSchema = z.object({
-  inicio: z.string().min(1),
-  fim: z.string().min(1),
-});
+const horarioAulaItemSchema = z
+  .object({
+    inicio: z.string().min(1),
+    fim: z.string().min(1),
+  })
+  .refine((h) => h.inicio < h.fim, {
+    message: "Horario inicio deve ser anterior ao fim",
+  });
+
+// ============================================================================
+// Array de horarios com validacao de sobreposicao
+// ============================================================================
+
+const horariosAulaArraySchema = z.array(horarioAulaItemSchema).refine(
+  (horarios) => {
+    const sorted = [...horarios].sort((a, b) => a.inicio.localeCompare(b.inicio));
+    for (let i = 0; i < sorted.length - 1; i++) {
+      if (sorted[i].fim > sorted[i + 1].inicio) return false;
+    }
+    return true;
+  },
+  { message: "Horarios nao podem ter conflitos de sobreposicao" },
+);
 
 // ============================================================================
 // Schema completo
@@ -24,7 +43,7 @@ export const HorarioAulaConfiguracaoSchema = z.object({
   dataFim: z.string().nullable(),
   ativo: z.boolean(),
   campus: ObjectIdUuidFactory.domain.loose(),
-  horarios: z.array(horarioAulaItemSchema),
+  horarios: horariosAulaArraySchema,
 });
 
 // ============================================================================
@@ -36,17 +55,13 @@ export const HorarioAulaConfiguracaoCreateSchema = z.object({
   dataFim: z.string().nullable().optional(),
   ativo: z.boolean(),
   campus: ObjectIdUuidFactory.domain.loose(),
-  horarios: z.array(horarioAulaItemSchema).optional().default([]),
+  horarios: horariosAulaArraySchema.optional().default([]),
 });
 
 // ============================================================================
-// Update
+// Replace horarios (PUT)
 // ============================================================================
 
-export const HorarioAulaConfiguracaoUpdateSchema = z.object({
-  dataInicio: z.string().min(1).optional(),
-  dataFim: z.string().nullable().optional(),
-  ativo: z.boolean().optional(),
-  campus: ObjectIdUuidFactory.domain.loose().optional(),
-  horarios: z.array(horarioAulaItemSchema).optional(),
+export const HorarioDeAulaReplaceSchema = z.object({
+  horarios: horariosAulaArraySchema,
 });

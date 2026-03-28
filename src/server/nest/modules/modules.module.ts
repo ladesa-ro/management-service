@@ -22,9 +22,9 @@ import { EstagioModule } from "@/modules/estagio/estagio/estagio.module";
 import { CalendarioAgendamentoModule } from "@/modules/horarios/calendario-agendamento/calendario-agendamento.module";
 import { CalendarioLetivoModule } from "@/modules/horarios/calendario-letivo/calendario-letivo.module";
 import { GerarHorarioModule } from "@/modules/horarios/gerar-horario/gerar-horario.module";
-import { HorarioAulaConfiguracaoModule } from "@/modules/horarios/horario-aula-configuracao/horario-aula-configuracao.module";
 import { HorarioConsultaModule } from "@/modules/horarios/horario-consulta/horario-consulta.module";
 import { HorarioEdicaoModule } from "@/modules/horarios/horario-edicao/horario-edicao.module";
+import { HorariosDeAulaModule } from "@/modules/horarios/horarios-de-aula/horarios-de-aula.module";
 import { RelatorioModule } from "@/modules/horarios/relatorio/relatorio.module";
 import { CidadeModule } from "@/modules/localidades/cidade/cidade.module";
 import { EnderecoModule } from "@/modules/localidades/endereco/endereco.module";
@@ -61,7 +61,7 @@ import { EstadoModule } from "@/modules/localidades/estado/estado.module";
     EstagiarioModule,
     NotificacaoModule,
     RelatorioModule,
-    HorarioAulaConfiguracaoModule,
+    HorariosDeAulaModule,
   ],
 })
 export class ModulesModule {}

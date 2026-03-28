@@ -5,7 +5,7 @@ import { zodValidate } from "@/shared/validation/index";
 import {
   HorarioAulaConfiguracaoCreateSchema,
   HorarioAulaConfiguracaoSchema,
-  HorarioAulaConfiguracaoUpdateSchema,
+  HorarioDeAulaReplaceSchema,
 } from "./horario-aula-configuracao.schemas";
 import type { IHorarioAulaItem } from "./horario-aula-configuracao.types";
 
@@ -61,19 +61,11 @@ export class HorarioAulaConfiguracao {
     return instance;
   }
 
-  update(dados: unknown): void {
-    const parsed = zodValidate(
-      HorarioAulaConfiguracao.entityName,
-      HorarioAulaConfiguracaoUpdateSchema,
-      dados,
-    );
+  replaceHorarios(newHorarios: unknown): void {
+    const parsed = zodValidate(HorarioAulaConfiguracao.entityName, HorarioDeAulaReplaceSchema, {
+      horarios: newHorarios,
+    });
 
-    if (parsed.dataInicio !== undefined) this.dataInicio = parsed.dataInicio;
-    if (parsed.dataFim !== undefined) this.dataFim = parsed.dataFim;
-    if (parsed.ativo !== undefined) this.ativo = parsed.ativo;
-    if (parsed.campus !== undefined) this.campus = parsed.campus;
-    if (parsed.horarios !== undefined) this.horarios = parsed.horarios;
-
-    zodValidate(HorarioAulaConfiguracao.entityName, HorarioAulaConfiguracaoSchema, this);
+    this.horarios = parsed.horarios;
   }
 }
