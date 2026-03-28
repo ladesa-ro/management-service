@@ -25,19 +25,21 @@ export class HorariosDeAulaReplaceCommandHandlerImpl
   ): Promise<HorariosDeAulaFindAtualQueryResult> {
     await this.permissionChecker.ensureCanUpdate(accessContext, { dto: command }, command.campusId);
 
-    let config = await this.repository.findActiveByCampusId(command.campusId);
-
-    if (!config) {
-      config = HorarioAulaConfiguracao.create({
-        dataInicio: getNowISO().split("T")[0],
-        ativo: true,
-        campus: { id: command.campusId },
-        horarios: [],
-      });
+    // Desativar configuracao atual (preserva historico)
+    const currentConfig = await this.repository.findActiveByCampusId(command.campusId);
+    if (currentConfig) {
+      currentConfig.deactivate();
+      await this.repository.saveConfig(currentConfig);
     }
 
-    config.replaceHorarios(command.horarios);
-    await this.repository.save(config);
+    // Criar nova configuracao ativa com os horarios
+    const newConfig = HorarioAulaConfiguracao.create({
+      dataInicio: getNowISO().split("T")[0],
+      ativo: true,
+      campus: { id: command.campusId },
+      horarios: command.horarios,
+    });
+    await this.repository.saveNew(newConfig);
 
     return this.repository.getFindAtualQueryResult(accessContext, {
       campusId: command.campusId,

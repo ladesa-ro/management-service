@@ -839,21 +839,6 @@ Migrações são scripts que alteram a estrutura do banco de dados de forma **ve
 
 O projeto usa **TypeORM** com migrações manuais (`synchronize: false` — o banco **nunca** é alterado automaticamente). As migrações ficam em `src/infrastructure.database/migrations/` e são nomeadas com timestamp (ex.: `1742515200000-create-function-change-date-updated.ts`).
 
-Atualmente o projeto possui **58 migrações** organizadas em categorias:
-
-| Categoria | Quantidade | Exemplos |
-|-----------|-----------|----------|
-| Funções e procedures | 2 | `change_date_updated()`, `ensure_change_date_trigger()` |
-| Tabelas de referência | 2 | `base_estado`, `base_cidade` |
-| Tabelas de infraestrutura | 3 | `endereco`, `arquivo`, `imagem` |
-| Tabelas de acesso | 3 | `usuario`, `perfil`, `notificacao` |
-| Tabelas de ambientes | 3 | `campus`, `bloco`, `ambiente` |
-| Tabelas de ensino | 15 | `modalidade`, `curso`, `disciplina`, `turma`, `diario`, etc. |
-| Tabelas de horários | 18 | `horario_aula`, `calendario_letivo`, `gerar_horario`, etc. |
-| Tabelas de estágio | 5 | `empresa`, `estagiario`, `estagio`, etc. |
-| Dados seed | 4 | Estados do Brasil, cidades de Rondônia, campus IFRO, superuser |
-| Correções | 1 | Colunas e triggers faltantes |
-
 **Comandos:**
 
 ```bash
@@ -2621,18 +2606,6 @@ modules/<grupo>/<nome-do-modulo>/
 ├── presentation.rest/      # Controllers REST, DTOs, mappers (Swagger)
 └── presentation.graphql/   # Resolvers GraphQL, DTOs, mappers
 ```
-
-**Módulos organizados por área de negócio (38 módulos no total):**
-
-| Área | Descrição | Módulos |
-|------|-----------|---------|
-| **Acesso** | Gestão de usuários, autenticação, perfis e notificações | `usuario` (inclui `perfil`), `autenticacao`, `notificacao` |
-| **Ambientes** | Estrutura física da instituição: campus, blocos e salas | `campus`, `bloco`, `ambiente` |
-| **Armazenamento** | Upload e gerenciamento de arquivos e imagens | `arquivo`, `imagem`, `imagem-arquivo` |
-| **Ensino** | Estrutura acadêmica: cursos, disciplinas, turmas, diários e ofertas de formação | `curso`, `disciplina`, `modalidade`, `nivel-formacao`, `oferta-formacao`, `oferta-formacao-periodo`, `oferta-formacao-periodo-etapa`, `turma`, `diario` |
-| **Estágio** | Gestão de estágios, empresas parceiras e estagiários | `empresa`, `estagiario`, `estagio`, `responsavel-empresa` |
-| **Horários** | Calendários letivos, agendamentos e geração automática de horários | `calendario-letivo`, `calendario-agendamento` (junções internas), `gerar-horario` (junções internas), `horario-aula-configuracao` (inclui `horario-aula`), `horario-consulta`, `horario-edicao`, `relatorio`, `turma-horario-aula` |
-| **Localidades** | Estados, cidades e endereços (dados IBGE) | `estado`, `cidade`, `endereco` |
 
 ### Diagrama de entidades e relacionamentos
 

@@ -2,10 +2,10 @@ import type { z } from "zod";
 import type { IdUuid } from "@/domain/abstractions/scalars";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { zodValidate } from "@/shared/validation/index";
+import { getNowISO } from "@/utils/date";
 import {
   HorarioAulaConfiguracaoCreateSchema,
   HorarioAulaConfiguracaoSchema,
-  HorarioDeAulaReplaceSchema,
 } from "./horario-aula-configuracao.schemas";
 import type { IHorarioAulaItem } from "./horario-aula-configuracao.types";
 
@@ -37,7 +37,7 @@ export class HorarioAulaConfiguracao {
     instance.dataFim = parsed.dataFim ?? null;
     instance.ativo = parsed.ativo;
     instance.campus = parsed.campus;
-    instance.horarios = parsed.horarios ?? [];
+    instance.horarios = parsed.horarios;
 
     return instance;
   }
@@ -61,11 +61,8 @@ export class HorarioAulaConfiguracao {
     return instance;
   }
 
-  replaceHorarios(newHorarios: unknown): void {
-    const parsed = zodValidate(HorarioAulaConfiguracao.entityName, HorarioDeAulaReplaceSchema, {
-      horarios: newHorarios,
-    });
-
-    this.horarios = parsed.horarios;
+  deactivate(): void {
+    this.ativo = false;
+    this.dataFim = getNowISO().split("T")[0];
   }
 }

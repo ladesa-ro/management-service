@@ -7,7 +7,12 @@ export const IHorarioAulaConfiguracaoRepository = Symbol("IHorarioAulaConfigurac
 export interface IHorarioAulaConfiguracaoRepository {
   // Write side
   findActiveByCampusId(campusId: string): Promise<HorarioAulaConfiguracao | null>;
-  save(aggregate: HorarioAulaConfiguracao): Promise<void>;
+
+  /** Persiste metadados da configuracao (sem tocar nos items). */
+  saveConfig(aggregate: HorarioAulaConfiguracao): Promise<void>;
+
+  /** Persiste uma nova configuracao completa (metadados + items). */
+  saveNew(aggregate: HorarioAulaConfiguracao): Promise<void>;
 
   // Read side
   getFindAtualQueryResult(

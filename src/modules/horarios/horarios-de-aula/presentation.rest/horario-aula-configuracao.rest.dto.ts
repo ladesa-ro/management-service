@@ -1,5 +1,6 @@
+import { z } from "zod";
 import { ApiProperty, ApiSchema } from "@/shared/presentation/rest";
-import { HorarioDeAulaReplaceSchema } from "../domain/horario-aula-configuracao.schemas";
+import { horariosAulaArraySchema } from "../domain/horario-aula-configuracao.schemas";
 
 // ============================================================================
 // Horario Item (value object)
@@ -36,7 +37,7 @@ export class HorarioDeAulaCampusParamsRestDto {
 
 @ApiSchema({ name: "HorarioDeAulaReplaceInputDto" })
 export class HorarioDeAulaReplaceInputRestDto {
-  static schema = HorarioDeAulaReplaceSchema;
+  static schema = z.object({ horarios: horariosAulaArraySchema });
 
   @ApiProperty({
     type: () => [HorarioAulaItemInputRestDto],

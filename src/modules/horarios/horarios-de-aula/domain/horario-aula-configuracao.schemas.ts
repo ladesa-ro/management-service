@@ -9,7 +9,7 @@ import { uuidSchema } from "@/shared/validation/schemas";
 // Horario item (value object)
 // ============================================================================
 
-const horarioAulaItemSchema = z
+export const horarioAulaItemSchema = z
   .object({
     inicio: z.string().min(1),
     fim: z.string().min(1),
@@ -22,7 +22,7 @@ const horarioAulaItemSchema = z
 // Array de horarios com validacao de sobreposicao
 // ============================================================================
 
-const horariosAulaArraySchema = z.array(horarioAulaItemSchema).refine(
+export const horariosAulaArraySchema = z.array(horarioAulaItemSchema).refine(
   (horarios) => {
     const sorted = [...horarios].sort((a, b) => a.inicio.localeCompare(b.inicio));
     for (let i = 0; i < sorted.length - 1; i++) {
@@ -55,13 +55,5 @@ export const HorarioAulaConfiguracaoCreateSchema = z.object({
   dataFim: z.string().nullable().optional(),
   ativo: z.boolean(),
   campus: ObjectIdUuidFactory.domain.loose(),
-  horarios: horariosAulaArraySchema.optional().default([]),
-});
-
-// ============================================================================
-// Replace horarios (PUT)
-// ============================================================================
-
-export const HorarioDeAulaReplaceSchema = z.object({
   horarios: horariosAulaArraySchema,
 });

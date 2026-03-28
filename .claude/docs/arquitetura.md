@@ -54,7 +54,7 @@ presentation.graphql/        # Resolvers GraphQL (quando aplicável)
 | `armazenamento/` | `arquivo`, `imagem`, `imagem-arquivo` |
 | `ensino/` | `curso`, `diario`, `disciplina`, `modalidade`, `nivel-formacao`, `oferta-formacao`, `turma`, etc. |
 | `estagio/` | `empresa`, `estagiario`, `estagio`, `responsavel-empresa` |
-| `horarios/` | `calendario-letivo`, `calendario-agendamento`, `gerar-horario`, `horario-aula-configuracao` (inclui `horario-aula`), `horario-consulta`, `horario-edicao`, `turma-horario-aula`, `relatorio` |
+| `horarios/` | `calendario-letivo`, `calendario-agendamento`, `gerar-horario`, `horarios-de-aula` (inclui `horario-aula-configuracao-item`), `horario-consulta`, `horario-edicao`, `turma-horario-aula` (inclui `turma-horario-aula-configuracao`, `turma-horario-aula-configuracao-item`), `relatorio` |
 | `localidades/` | `cidade`, `endereco`, `estado` |
 
 ## Diretórios compartilhados

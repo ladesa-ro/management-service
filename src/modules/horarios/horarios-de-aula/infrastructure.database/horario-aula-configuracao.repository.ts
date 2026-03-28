@@ -1,4 +1,3 @@
-import type { FindOptionsWhere } from "typeorm";
 import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
@@ -39,7 +38,7 @@ export class HorarioAulaConfiguracaoTypeOrmRepositoryAdapter
     return HorarioAulaConfiguracao.load(await this.toDomainData(entity));
   }
 
-  async save(aggregate: HorarioAulaConfiguracao): Promise<void> {
+  async saveConfig(aggregate: HorarioAulaConfiguracao): Promise<void> {
     const repo = this.appTypeormConnection.getRepository(HorarioAulaConfiguracaoEntity);
 
     const entity = repo.create({
@@ -50,8 +49,11 @@ export class HorarioAulaConfiguracaoTypeOrmRepositoryAdapter
     });
     Object.assign(entity, { campus: { id: aggregate.campus.id } });
     await repo.save(entity);
+  }
 
-    await this.replaceItems(aggregate.id, aggregate.horarios);
+  async saveNew(aggregate: HorarioAulaConfiguracao): Promise<void> {
+    await this.saveConfig(aggregate);
+    await this.createItems(aggregate.id, aggregate.horarios);
   }
 
   // ============================================================================
@@ -110,18 +112,14 @@ export class HorarioAulaConfiguracaoTypeOrmRepositoryAdapter
   }
 
   // ============================================================================
-  // Items (value objects do aggregate)
+  // Items (value objects do aggregate — append-only)
   // ============================================================================
 
-  private async replaceItems(
+  private async createItems(
     configuracaoId: string,
     horarios: Array<{ inicio: string; fim: string }>,
   ): Promise<void> {
     const itemRepo = this.appTypeormConnection.getRepository(HorarioAulaConfiguracaoItemEntity);
-
-    await itemRepo.delete({
-      horarioAulaConfiguracao: { id: configuracaoId },
-    } as FindOptionsWhere<HorarioAulaConfiguracaoItemEntity>);
 
     for (const h of horarios) {
       const entity = new HorarioAulaConfiguracaoItemEntity();
