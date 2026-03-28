@@ -1,8 +1,8 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, type Relation } from "typeorm";
 import { HorarioAulaConfiguracaoEntity } from "./horario-aula-configuracao.typeorm.entity";
 
-@Entity("horario_aula")
-export class HorarioAulaEntity {
+@Entity("horario_aula_configuracao_item")
+export class HorarioAulaConfiguracaoItemEntity {
   @PrimaryColumn("uuid")
   id!: string;
 
