@@ -40,8 +40,9 @@ export class AmbienteFindOneOutputRestDto extends EntityBaseRestDto {
   @ApiProperty({
     type: () => BlocoFindOneOutputRestDto,
     ...AmbienteFindOneQueryResultFields.bloco.swaggerMetadata,
+    nullable: true,
   })
-  bloco: BlocoFindOneOutputRestDto;
+  bloco: BlocoFindOneOutputRestDto | null;
 
   @ApiPropertyOptional({
     type: () => ImagemFindOneOutputRestDto,

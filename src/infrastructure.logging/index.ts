@@ -8,6 +8,8 @@ export { NestJsLoggerAdapter } from "./nestjs-logger.adapter";
 
 export { PerformanceHooksAdapter } from "./noop-performance-hooks";
 
-export { installOutgoingRequestLogger } from "./outgoing-request-logger";
+export { OutgoingRequestLogger } from "./outgoing-request-logger";
 
 export { RequestLoggingInterceptor } from "./request-logging.interceptor";
+
+export { UnhandledErrorLogger } from "./unhandled-error-logger";

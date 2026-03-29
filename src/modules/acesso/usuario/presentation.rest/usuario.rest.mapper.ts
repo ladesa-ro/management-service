@@ -83,7 +83,7 @@ export function toPerfilNestedOutputDto(
   dto.id = output.id;
   dto.ativo = output.ativo;
   dto.cargo = getCargoNome(output);
-  dto.campus = CampusRestMapper.findOneQueryResultToOutputDto.map(output.campus);
+  dto.campus = CampusRestMapper.findOneQueryResultToOutputDto.mapOptional(output.campus);
   dto.dateCreated = output.dateCreated;
   dto.dateUpdated = output.dateUpdated;
   dto.dateDeleted = output.dateDeleted;
@@ -118,7 +118,7 @@ export const listQueryResultToListOutputDto = createListMapper(
 
 export function toEnsinoOutputDto(output: UsuarioEnsinoQueryResult): UsuarioEnsinoOutputRestDto {
   const dto = new UsuarioEnsinoOutputRestDto();
-  dto.usuario = findOneQueryResultToOutputDto.map(output.usuario);
+  dto.usuario = findOneQueryResultToOutputDto.mapOptional(output.usuario);
   dto.disciplinas = output.disciplinas.map((vinculoDisciplina) => {
     const disciplinaRef = new UsuarioEnsinoDisciplinaRefRestDto();
     disciplinaRef.id = vinculoDisciplina.disciplina.id;

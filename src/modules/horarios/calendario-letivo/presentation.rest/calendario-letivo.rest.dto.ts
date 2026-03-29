@@ -52,14 +52,16 @@ export class CalendarioLetivoFindOneOutputRestDto extends EntityBaseRestDto {
   @ApiProperty({
     type: () => CampusFindOneOutputRestDto,
     ...CalendarioLetivoFindOneQueryResultFields.campus.swaggerMetadata,
+    nullable: true,
   })
-  campus: CampusFindOneOutputRestDto;
+  campus: CampusFindOneOutputRestDto | null;
 
   @ApiProperty({
     type: () => OfertaFormacaoFindOneOutputRestDto,
     ...CalendarioLetivoFindOneQueryResultFields.ofertaFormacao.swaggerMetadata,
+    nullable: true,
   })
-  ofertaFormacao: OfertaFormacaoFindOneOutputRestDto;
+  ofertaFormacao: OfertaFormacaoFindOneOutputRestDto | null;
 }
 
 // ============================================================================

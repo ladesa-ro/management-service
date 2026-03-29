@@ -22,8 +22,9 @@ export class CidadeFindOneOutputRestDto {
   @ApiProperty({
     type: () => EstadoFindOneOutputRestDto,
     ...CidadeFindOneQueryResultFields.estado.swaggerMetadata,
+    nullable: true,
   })
-  estado: EstadoFindOneOutputRestDto;
+  estado: EstadoFindOneOutputRestDto | null;
 }
 
 // ============================================================================

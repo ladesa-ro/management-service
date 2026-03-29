@@ -97,8 +97,9 @@ export class CalendarioLetivoDiaFindOneOutputRestDto extends EntityBaseRestDto {
   @ApiProperty({
     type: () => CalendarioLetivoFindOneOutputRestDto,
     ...CalendarioLetivoDiaFindOneQueryResultFields.calendario.swaggerMetadata,
+    nullable: true,
   })
-  calendario: CalendarioLetivoFindOneOutputRestDto;
+  calendario: CalendarioLetivoFindOneOutputRestDto | null;
 }
 
 // ============================================================================

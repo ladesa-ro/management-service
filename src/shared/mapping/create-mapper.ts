@@ -1,11 +1,16 @@
 export interface Mapper<I, O> {
   map(input: I): O;
+  mapOptional(input: I | null | undefined): O | null;
   mapArray(inputs: I[]): O[];
 }
 
 export function createMapper<I, O>(mapFn: (input: I) => O): Mapper<I, O> {
   return {
     map: mapFn,
+
+    mapOptional(input: I | null | undefined): O | null {
+      return input != null ? mapFn(input) : null;
+    },
 
     mapArray(inputs: I[]): O[] {
       return inputs.map(mapFn);

@@ -40,7 +40,7 @@ export const findOneQueryResultToOutputDto = createMapper<
   bairro: output.bairro,
   complemento: output.complemento,
   pontoReferencia: output.pontoReferencia,
-  cidade: CidadeRestMapper.findOneQueryResultToOutputDto.map(output.cidade),
+  cidade: CidadeRestMapper.findOneQueryResultToOutputDto.mapOptional(output.cidade),
   dateCreated: output.dateCreated,
   dateUpdated: output.dateUpdated,
   dateDeleted: output.dateDeleted,

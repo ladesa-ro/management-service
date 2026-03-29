@@ -31,8 +31,8 @@ export class EnderecoFindOneOutputRestDto extends EntityBaseRestDto {
   @ApiPropertyOptional({ type: "string", description: "Ponto de referencia", nullable: true })
   declare pontoReferencia: string | null;
 
-  @ApiProperty({ type: () => CidadeFindOneOutputRestDto, description: "Cidade" })
-  cidade: CidadeFindOneOutputRestDto;
+  @ApiProperty({ type: () => CidadeFindOneOutputRestDto, description: "Cidade", nullable: true })
+  cidade: CidadeFindOneOutputRestDto | null;
 }
 
 // ============================================================================

@@ -95,10 +95,10 @@ export const findOneQueryResultToOutputDto = createMapper<
   id: output.id,
   periodo: output.periodo,
   nome: output.nome ?? null,
-  curso: CursoRestMapper.findOneQueryResultToOutputDto.map(output.curso),
-  ambientePadraoAula: output.ambientePadraoAula
-    ? AmbienteRestMapper.findOneQueryResultToOutputDto.map(output.ambientePadraoAula)
-    : null,
+  curso: CursoRestMapper.findOneQueryResultToOutputDto.mapOptional(output.curso),
+  ambientePadraoAula: AmbienteRestMapper.findOneQueryResultToOutputDto.mapOptional(
+    output.ambientePadraoAula,
+  ),
   imagemCapa: output.imagemCapa ? BlocoRestMapper.toImagemOutput(output.imagemCapa) : null,
   dateCreated: output.dateCreated,
   dateUpdated: output.dateUpdated,

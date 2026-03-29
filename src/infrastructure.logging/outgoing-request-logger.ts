@@ -1,51 +1,59 @@
-import { Logger } from "@nestjs/common";
+import { Inject, Injectable, type OnModuleInit } from "@nestjs/common";
+import type { ILoggerPort } from "@/domain/abstractions/logging";
+import { ILoggerPort as ILoggerPortToken } from "@/domain/abstractions/logging";
 
-const logger = new Logger("OutgoingHTTP");
+const CONTEXT = "OutgoingHTTP";
 
 /**
  * Intercepta `globalThis.fetch` para logar todas as requisições HTTP
  * originadas pelo servidor (Keycloak, OpenID Connect, JWKS, etc.).
  *
- * Deve ser chamado uma única vez no bootstrap da aplicação, antes de
- * qualquer outro código que use fetch.
+ * Instalado automaticamente via NestJS lifecycle (OnModuleInit),
+ * usando o logger principal do projeto (ILoggerPort).
  */
-export function installOutgoingRequestLogger(): void {
-  const originalFetch = globalThis.fetch;
+@Injectable()
+export class OutgoingRequestLogger implements OnModuleInit {
+  constructor(@Inject(ILoggerPortToken) readonly _logger: ILoggerPort) {}
 
-  globalThis.fetch = new Proxy(originalFetch, {
-    async apply(target, thisArg, args: Parameters<typeof fetch>) {
-      const [input, init] = args;
+  onModuleInit(): void {
+    const logger = this._logger;
+    const originalFetch = globalThis.fetch;
 
-      const url = extractUrl(input);
-      const method = extractMethod(input, init);
+    globalThis.fetch = new Proxy(originalFetch, {
+      async apply(target, thisArg, args: Parameters<typeof fetch>) {
+        const [input, init] = args;
 
-      const start = performance.now();
+        const url = extractUrl(input);
+        const method = extractMethod(input, init);
 
-      logger.log(`→ ${method} ${url}`);
+        const start = performance.now();
 
-      try {
-        const response = await Reflect.apply(target, thisArg, args);
-        const durationMs = (performance.now() - start).toFixed(0);
+        logger.log(`→ ${method} ${url}`, CONTEXT);
 
-        const logLine = `← ${method} ${url} ${response.status} (${durationMs}ms)`;
+        try {
+          const response = await Reflect.apply(target, thisArg, args);
+          const durationMs = (performance.now() - start).toFixed(0);
 
-        if (response.ok) {
-          logger.log(logLine);
-        } else {
-          logger.warn(logLine);
+          const logLine = `← ${method} ${url} ${response.status} (${durationMs}ms)`;
+
+          if (response.ok) {
+            logger.log(logLine, CONTEXT);
+          } else {
+            logger.warn(logLine, CONTEXT);
+          }
+
+          return response;
+        } catch (error) {
+          const durationMs = (performance.now() - start).toFixed(0);
+          const message = error instanceof Error ? error.message : String(error);
+
+          logger.error(`✗ ${method} ${url} (${durationMs}ms) ${message}`, undefined, CONTEXT);
+
+          throw error;
         }
-
-        return response;
-      } catch (error) {
-        const durationMs = (performance.now() - start).toFixed(0);
-        const message = error instanceof Error ? error.message : String(error);
-
-        logger.error(`✗ ${method} ${url} (${durationMs}ms) ${message}`);
-
-        throw error;
-      }
-    },
-  });
+      },
+    });
+  }
 }
 
 function extractUrl(input: string | URL | Request): string {

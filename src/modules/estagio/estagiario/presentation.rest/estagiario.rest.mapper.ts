@@ -77,9 +77,9 @@ export const findOneQueryResultToOutputDto = createMapper<
   EstagiarioFindOneOutputRestDto
 >((output) => ({
   id: output.id,
-  perfil: PerfilRestMapper.findOneQueryResultToOutputDto.map(output.perfil),
-  curso: CursoRestMapper.findOneQueryResultToOutputDto.map(output.curso),
-  turma: TurmaRestMapper.findOneQueryResultToOutputDto.map(output.turma),
+  perfil: PerfilRestMapper.findOneQueryResultToOutputDto.mapOptional(output.perfil),
+  curso: CursoRestMapper.findOneQueryResultToOutputDto.mapOptional(output.curso),
+  turma: TurmaRestMapper.findOneQueryResultToOutputDto.mapOptional(output.turma),
   telefone: output.telefone,
   emailInstitucional: output.emailInstitucional,
   dataNascimento: output.dataNascimento,

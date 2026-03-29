@@ -25,7 +25,25 @@ const config = {
 } as const;
 
 const calendarioLetivoDiaRelations = {
-  calendario: true,
+  calendario: {
+    campus: {
+      endereco: {
+        cidade: {
+          estado: true,
+        },
+      },
+    },
+    ofertaFormacao: {
+      modalidade: true,
+      campus: {
+        endereco: {
+          cidade: {
+            estado: true,
+          },
+        },
+      },
+    },
+  },
 };
 
 const calendarioLetivoDiaPaginateConfig = buildTypeOrmPaginateConfig<CalendarioLetivoDiaEntity>(

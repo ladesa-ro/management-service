@@ -34,6 +34,13 @@ const calendarioLetivoRelations = {
   },
   ofertaFormacao: {
     modalidade: true,
+    campus: {
+      endereco: {
+        cidade: {
+          estado: true,
+        },
+      },
+    },
   },
 };
 

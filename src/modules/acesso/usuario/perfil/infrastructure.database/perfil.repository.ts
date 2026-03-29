@@ -30,7 +30,13 @@ const config = {
 } as const;
 
 const perfilRelations = {
-  campus: true,
+  campus: {
+    endereco: {
+      cidade: {
+        estado: true,
+      },
+    },
+  },
   usuario: true,
   cargo: true,
 };

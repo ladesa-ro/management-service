@@ -36,8 +36,9 @@ export class CampusFindOneOutputRestDto extends EntityBaseRestDto {
   @ApiProperty({
     type: () => EnderecoFindOneOutputRestDto,
     ...CampusFindOneQueryResultFields.endereco.swaggerMetadata,
+    nullable: true,
   })
-  endereco: EnderecoFindOneOutputRestDto;
+  endereco: EnderecoFindOneOutputRestDto | null;
 }
 
 // ============================================================================

@@ -93,14 +93,16 @@ export class OfertaFormacaoFindOneOutputRestDto extends EntityBaseRestDto {
   @ApiProperty({
     type: () => ModalidadeFindOneOutputRestDto,
     ...OfertaFormacaoFindOneQueryResultFields.modalidade.swaggerMetadata,
+    nullable: true,
   })
-  modalidade: ModalidadeFindOneOutputRestDto;
+  modalidade: ModalidadeFindOneOutputRestDto | null;
 
   @ApiProperty({
     type: () => CampusFindOneOutputRestDto,
     ...OfertaFormacaoFindOneQueryResultFields.campus.swaggerMetadata,
+    nullable: true,
   })
-  campus: CampusFindOneOutputRestDto;
+  campus: CampusFindOneOutputRestDto | null;
 
   @ApiProperty({
     type: () => [NivelFormacaoFindOneOutputRestDto],

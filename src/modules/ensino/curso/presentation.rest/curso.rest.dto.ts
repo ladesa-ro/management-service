@@ -31,14 +31,16 @@ export class CursoFindOneOutputRestDto extends EntityBaseRestDto {
   @ApiProperty({
     type: () => CampusFindOneOutputRestDto,
     ...CursoFindOneQueryResultFields.campus.swaggerMetadata,
+    nullable: true,
   })
-  campus: CampusFindOneOutputRestDto;
+  campus: CampusFindOneOutputRestDto | null;
 
   @ApiProperty({
     type: () => OfertaFormacaoFindOneOutputRestDto,
     ...CursoFindOneQueryResultFields.ofertaFormacao.swaggerMetadata,
+    nullable: true,
   })
-  ofertaFormacao: OfertaFormacaoFindOneOutputRestDto;
+  ofertaFormacao: OfertaFormacaoFindOneOutputRestDto | null;
 
   @ApiPropertyOptional({
     type: () => ImagemFindOneOutputRestDto,

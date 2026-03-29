@@ -37,8 +37,9 @@ export class UsuarioPerfilNestedOutputRestDto extends EntityBaseRestDto {
   @ApiProperty({
     type: () => CampusFindOneOutputRestDto,
     ...PerfilFindOneQueryResultFields.campus.swaggerMetadata,
+    nullable: true,
   })
-  campus: CampusFindOneOutputRestDto;
+  campus: CampusFindOneOutputRestDto | null;
 }
 
 // ============================================================================
@@ -123,8 +124,12 @@ export class UsuarioEnsinoDisciplinaRefRestDto {
 
 @ApiSchema({ name: "UsuarioEnsinoOutputDto" })
 export class UsuarioEnsinoOutputRestDto {
-  @ApiProperty({ description: "Dados do usuario", type: () => UsuarioFindOneOutputRestDto })
-  usuario: UsuarioFindOneOutputRestDto;
+  @ApiProperty({
+    description: "Dados do usuario",
+    type: () => UsuarioFindOneOutputRestDto,
+    nullable: true,
+  })
+  usuario: UsuarioFindOneOutputRestDto | null;
 
   @ApiProperty({
     description: "Disciplinas onde o usuario leciona (com cursos e turmas)",

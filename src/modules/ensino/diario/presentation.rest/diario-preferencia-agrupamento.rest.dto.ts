@@ -65,8 +65,9 @@ export class DiarioPreferenciaAgrupamentoFindOneOutputRestDto extends EntityBase
   @ApiProperty({
     type: () => DiarioFindOneOutputRestDto,
     ...DiarioPreferenciaAgrupamentoFindOneQueryResultFields.diario.swaggerMetadata,
+    nullable: true,
   })
-  diario: DiarioFindOneOutputRestDto;
+  diario: DiarioFindOneOutputRestDto | null;
 }
 
 // ============================================================================

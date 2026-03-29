@@ -77,7 +77,9 @@ export const findOneQueryResultToOutputDto = createMapper<
   dto.diaPresencial = output.diaPresencial;
   dto.tipo = output.tipo as TipoCalendarioLetivoDia;
   dto.extraCurricular = output.extraCurricular;
-  dto.calendario = CalendarioLetivoRestMapper.findOneQueryResultToOutputDto.map(output.calendario);
+  dto.calendario = CalendarioLetivoRestMapper.findOneQueryResultToOutputDto.mapOptional(
+    output.calendario,
+  );
   dto.dateCreated = output.dateCreated;
   dto.dateUpdated = output.dateUpdated;
   dto.dateDeleted = output.dateDeleted;

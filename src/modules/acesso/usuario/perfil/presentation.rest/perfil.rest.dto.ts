@@ -21,14 +21,16 @@ export class PerfilFindOneOutputRestDto extends EntityBaseRestDto {
   @ApiProperty({
     type: () => CampusFindOneOutputRestDto,
     ...PerfilFindOneQueryResultFields.campus.swaggerMetadata,
+    nullable: true,
   })
-  campus: CampusFindOneOutputRestDto;
+  campus: CampusFindOneOutputRestDto | null;
 
   @ApiProperty({
     type: () => UsuarioFindOneOutputRestDto,
     ...PerfilFindOneQueryResultFields.usuario.swaggerMetadata,
+    nullable: true,
   })
-  usuario: UsuarioFindOneOutputRestDto;
+  usuario: UsuarioFindOneOutputRestDto | null;
 }
 
 // ============================================================================

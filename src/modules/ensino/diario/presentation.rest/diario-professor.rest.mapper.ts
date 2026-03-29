@@ -55,8 +55,8 @@ export const findOneQueryResultToOutputDto = createMapper<
 >((output) => ({
   id: output.id,
   situacao: output.situacao,
-  perfil: PerfilRestMapper.findOneQueryResultToOutputDto.map(output.perfil),
-  diario: DiarioRestMapper.findOneQueryResultToOutputDto.map(output.diario),
+  perfil: PerfilRestMapper.findOneQueryResultToOutputDto.mapOptional(output.perfil),
+  diario: DiarioRestMapper.findOneQueryResultToOutputDto.mapOptional(output.diario),
   dateCreated: output.dateCreated
     ? new Date(output.dateCreated).toISOString()
     : getNow().toISOString(),

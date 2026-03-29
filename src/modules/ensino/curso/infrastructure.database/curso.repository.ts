@@ -36,6 +36,13 @@ const cursoRelations = {
   },
   ofertaFormacao: {
     modalidade: true,
+    campus: {
+      endereco: {
+        cidade: {
+          estado: true,
+        },
+      },
+    },
   },
 };
 

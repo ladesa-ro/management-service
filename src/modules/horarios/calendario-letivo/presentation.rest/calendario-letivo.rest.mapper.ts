@@ -75,8 +75,8 @@ export const findOneQueryResultToOutputDto = createMapper<
   dto.id = output.id;
   dto.nome = output.nome;
   dto.ano = output.ano;
-  dto.campus = CampusRestMapper.findOneQueryResultToOutputDto.map(output.campus);
-  dto.ofertaFormacao = OfertaFormacaoRestMapper.findOneQueryResultToOutputDto.map(
+  dto.campus = CampusRestMapper.findOneQueryResultToOutputDto.mapOptional(output.campus);
+  dto.ofertaFormacao = OfertaFormacaoRestMapper.findOneQueryResultToOutputDto.mapOptional(
     output.ofertaFormacao,
   );
   dto.dateCreated = output.dateCreated;

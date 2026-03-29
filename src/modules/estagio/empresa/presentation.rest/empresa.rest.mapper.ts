@@ -80,7 +80,7 @@ export const findOneQueryResultToOutputDto = createMapper<
   cnpj: output.cnpj,
   telefone: output.telefone,
   email: output.email,
-  endereco: EnderecoRestMapper.findOneQueryResultToOutputDto.map(output.endereco),
+  endereco: EnderecoRestMapper.findOneQueryResultToOutputDto.mapOptional(output.endereco),
   ativo: output.ativo,
   dateCreated: output.dateCreated,
   dateUpdated: output.dateUpdated,

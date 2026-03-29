@@ -36,6 +36,13 @@ const turmaRelations = {
     },
     ofertaFormacao: {
       modalidade: true,
+      campus: {
+        endereco: {
+          cidade: {
+            estado: true,
+          },
+        },
+      },
     },
   },
   ambientePadraoAula: {

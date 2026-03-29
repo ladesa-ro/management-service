@@ -86,14 +86,14 @@ export const findOneQueryResultToOutputDto = createMapper<
 >((output) => ({
   id: output.id,
   ativo: output.ativo,
-  calendarioLetivo: CalendarioLetivoRestMapper.findOneQueryResultToOutputDto.map(
+  calendarioLetivo: CalendarioLetivoRestMapper.findOneQueryResultToOutputDto.mapOptional(
     output.calendarioLetivo,
   ),
-  turma: TurmaRestMapper.findOneQueryResultToOutputDto.map(output.turma),
-  disciplina: DisciplinaRestMapper.findOneQueryResultToOutputDto.map(output.disciplina),
-  ambientePadrao: output.ambientePadrao
-    ? AmbienteRestMapper.findOneQueryResultToOutputDto.map(output.ambientePadrao)
-    : null,
+  turma: TurmaRestMapper.findOneQueryResultToOutputDto.mapOptional(output.turma),
+  disciplina: DisciplinaRestMapper.findOneQueryResultToOutputDto.mapOptional(output.disciplina),
+  ambientePadrao: AmbienteRestMapper.findOneQueryResultToOutputDto.mapOptional(
+    output.ambientePadrao,
+  ),
   imagemCapa: output.imagemCapa ? BlocoRestMapper.toImagemOutput(output.imagemCapa) : null,
   dateCreated: output.dateCreated,
   dateUpdated: output.dateUpdated,

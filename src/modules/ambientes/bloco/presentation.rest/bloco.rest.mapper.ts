@@ -97,7 +97,7 @@ export const findOneQueryResultToOutputDto = createMapper<
   id: output.id,
   nome: output.nome,
   codigo: output.codigo,
-  campus: CampusRestMapper.findOneQueryResultToOutputDto.map(output.campus),
+  campus: CampusRestMapper.findOneQueryResultToOutputDto.mapOptional(output.campus),
   imagemCapa: output.imagemCapa ? toImagemOutput(output.imagemCapa) : null,
   dateCreated: output.dateCreated,
   dateUpdated: output.dateUpdated,

@@ -25,6 +25,25 @@ const config = {
 } as const;
 
 const diarioRelations = {
+  calendarioLetivo: {
+    campus: {
+      endereco: {
+        cidade: {
+          estado: true,
+        },
+      },
+    },
+    ofertaFormacao: {
+      modalidade: true,
+      campus: {
+        endereco: {
+          cidade: {
+            estado: true,
+          },
+        },
+      },
+    },
+  },
   turma: {
     curso: {
       campus: {
