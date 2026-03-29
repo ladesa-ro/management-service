@@ -1,3 +1,4 @@
+import type UserRepresentation from "@keycloak/keycloak-admin-client/lib/defs/userRepresentation";
 import { ServiceUnavailableError } from "@/application/errors";
 import type { IIdpUserService } from "@/domain/abstractions/identity-provider";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
@@ -49,6 +50,7 @@ export class KeycloakUserService implements IIdpUserService {
     currentMatricula: string,
     data: { matricula?: string | null; email?: string | null },
   ): Promise<void> {
+    console.log(currentMatricula);
     const user = await this.keycloakService.findUserByMatricula(currentMatricula);
 
     if (!user?.id) {
@@ -57,16 +59,24 @@ export class KeycloakUserService implements IIdpUserService {
 
     const kcAdminClient = await this.keycloakService.getAdminClient();
 
-    await kcAdminClient.users.update(
-      { id: user.id },
-      {
-        username: data.matricula ?? undefined,
-        email: data.email ?? undefined,
-        attributes: {
-          "usuario.matricula": data.matricula,
-        } as Record<string, string>,
-      },
-    );
+    try {
+      const payload: UserRepresentation = {};
+
+      if (typeof data.email === "string") {
+        payload.email = data.email;
+      }
+
+      if (typeof data.matricula === "string") {
+        payload.attributes ??= {};
+        payload.attributes["usuario.matricula"] = data.matricula;
+      }
+
+      await kcAdminClient.users.update({ id: user.id }, payload);
+    } catch (err) {
+      console.error(JSON.stringify(err, null, 2));
+
+      throw err;
+    }
   }
 
   async canSetInitialPassword(matricula: string): Promise<boolean> {
