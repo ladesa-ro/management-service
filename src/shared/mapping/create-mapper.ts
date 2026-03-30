@@ -59,7 +59,7 @@ interface IntoChain<TTarget> {
   /** Mapeia um campo. Se há source global, executa imediatamente. Senão, abre pipeline. */
   field<TK extends keyof TTarget>(targetKey: TK, sourceKey?: string): IntoChain<TTarget>;
 
-  /** Define transform para o campo corrente (antes de .from() per-field) */
+  /** Defines a transform for the current field (before per-field .from()) */
   transform(fn: (value: unknown) => unknown): IntoChain<TTarget>;
 
   /** Define valor default se nil */
