@@ -53,7 +53,7 @@ function isNil(value: unknown): value is undefined | null {
  * `.from().field().field()` e `.field().from().field().from()`.
  */
 interface IntoChain<TTarget> {
-  /** Define a source global para os próximos .field(), ou executa per-field com sourceKey opcional */
+  /** Defines a global source for the next .field() calls, or executes per-field with an optional sourceKey. */
   from(source: object, sourceKey?: string): IntoChain<TTarget>;
 
   /** Maps a field. If there is a global source, it executes immediately; otherwise, it opens a pipeline. */
