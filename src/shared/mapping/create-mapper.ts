@@ -56,7 +56,7 @@ interface IntoChain<TTarget> {
   /** Define a source global para os próximos .field(), ou executa per-field com sourceKey opcional */
   from(source: object, sourceKey?: string): IntoChain<TTarget>;
 
-  /** Mapeia um campo. Se há source global, executa imediatamente. Senão, abre pipeline. */
+  /** Maps a field. If there is a global source, it executes immediately; otherwise, it opens a pipeline. */
   field<TK extends keyof TTarget>(targetKey: TK, sourceKey?: string): IntoChain<TTarget>;
 
   /** Defines a transform for the current field (before per-field .from()) */
