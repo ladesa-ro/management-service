@@ -23,7 +23,7 @@ export function createMapper<I, O>(mapFn: (input: I) => O): Mapper<I, O> {
 // ============================================================================
 
 /**
- * @deprecated Use `into(target).from(source).field(...)` em vez de `mapField`.
+ * @deprecated Use `into(target).from(source).field(...)` instead of `mapField`.
  */
 
 export function mapField<
