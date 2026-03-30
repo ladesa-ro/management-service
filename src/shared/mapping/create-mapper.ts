@@ -23,7 +23,7 @@ export function createMapper<I, O>(mapFn: (input: I) => O): Mapper<I, O> {
 // ============================================================================
 
 /**
- * @deprecated Use `into(target).from(source).field(...)` em vez de `mapField`.
+ * @deprecated Use `into(target).from(source).field(...)` instead of `mapField`.
  */
 
 export function mapField<
@@ -47,19 +47,19 @@ function isNil(value: unknown): value is undefined | null {
 }
 
 /**
- * Builder fluente retornado por `into()`.
+ * Fluent builder returned by `into()`.
  *
- * Cada método retorna `this` para permitir encadeamento total:
- * `.from().field().field()` e `.field().from().field().from()`.
+ * Each method returns `this` to allow full method chaining, for example:
+ * `.from().field().field()` and `.field().from().field().from()`.
  */
 interface IntoChain<TTarget> {
-  /** Define a source global para os próximos .field(), ou executa per-field com sourceKey opcional */
+  /** Defines a global source for the next .field() calls, or executes per-field with an optional sourceKey. */
   from(source: object, sourceKey?: string): IntoChain<TTarget>;
 
-  /** Mapeia um campo. Se há source global, executa imediatamente. Senão, abre pipeline. */
+  /** Maps a field. If there is a global source, it executes immediately; otherwise, it opens a pipeline. */
   field<TK extends keyof TTarget>(targetKey: TK, sourceKey?: string): IntoChain<TTarget>;
 
-  /** Define transform para o campo corrente (antes de .from() per-field) */
+  /** Defines a transform for the current field (before per-field .from()) */
   transform(fn: (value: unknown) => unknown): IntoChain<TTarget>;
 
   /** Define valor default se nil */
