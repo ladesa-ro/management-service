@@ -166,7 +166,10 @@ export class OfertaFormacaoCreateInputRestDto {
   @ApiProperty(OfertaFormacaoCreateCommandFields.campus.swaggerMetadata)
   campus: { id: string };
 
-  @ApiProperty(OfertaFormacaoCreateCommandFields.niveisFormacoes.swaggerMetadata)
+  @ApiProperty({
+    ...OfertaFormacaoCreateCommandFields.niveisFormacoes.swaggerMetadata,
+    isArray: true,
+  })
   niveisFormacoes: Array<{ id: string }>;
 
   @ApiProperty({

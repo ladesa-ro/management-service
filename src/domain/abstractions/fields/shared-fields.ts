@@ -74,3 +74,27 @@ export const SharedListFields = {
   meta: SharedFields.meta,
   data: SharedFields.data,
 };
+
+/** Campos de paginacao para DTOs de output (nao-nullable). */
+export const SharedPaginationOutputFields = {
+  itemsPerPage: createFieldMetadata({
+    description: "Quantidade de itens por pagina",
+    schema: z.number().int().min(1),
+  }),
+  totalItems: createFieldMetadata({
+    description: "Total de itens",
+    schema: z.number().int(),
+  }),
+  currentPage: createFieldMetadata({
+    description: "Pagina atual",
+    schema: z.number().int().min(1),
+  }),
+  totalPages: createFieldMetadata({
+    description: "Quantidade total de paginas",
+    schema: z.number().int(),
+  }),
+  search: createFieldMetadata({
+    description: "Termo textual da busca",
+    schema: z.string(),
+  }),
+};

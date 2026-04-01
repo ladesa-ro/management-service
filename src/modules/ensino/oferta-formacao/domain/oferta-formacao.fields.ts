@@ -7,7 +7,12 @@
  * @see createFieldMetadata (domain/abstractions/fields/field-metadata.ts)
  */
 import { z } from "zod";
-import { createFieldMetadata, createSchema, safeInt } from "@/domain/abstractions";
+import {
+  createFieldMetadata,
+  createSchema,
+  ObjectIdUuidFactory,
+  safeInt,
+} from "@/domain/abstractions";
 
 export const OfertaFormacaoFields = {
   nome: createFieldMetadata({
@@ -32,12 +37,15 @@ export const OfertaFormacaoFields = {
   }),
   modalidade: createFieldMetadata({
     description: "Modalidade da oferta de formacao",
+    schema: ObjectIdUuidFactory,
   }),
   campus: createFieldMetadata({
     description: "Campus da oferta de formacao",
+    schema: ObjectIdUuidFactory,
   }),
   niveisFormacoes: createFieldMetadata({
     description: "Niveis de formacao vinculados a oferta de formacao",
+    schema: ObjectIdUuidFactory,
   }),
   periodos: createFieldMetadata({
     description: "Periodos com suas etapas do ano letivo",

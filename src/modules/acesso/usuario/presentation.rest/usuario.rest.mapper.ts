@@ -118,7 +118,7 @@ export const listQueryResultToListOutputDto = createListMapper(
 
 export function toEnsinoOutputDto(output: UsuarioEnsinoQueryResult): UsuarioEnsinoOutputRestDto {
   const dto = new UsuarioEnsinoOutputRestDto();
-  dto.usuario = findOneQueryResultToOutputDto.mapOptional(output.usuario);
+  dto.usuario = findOneQueryResultToOutputDto.map(output.usuario);
   dto.disciplinas = output.disciplinas.map((vinculoDisciplina) => {
     const disciplinaRef = new UsuarioEnsinoDisciplinaRefRestDto();
     disciplinaRef.id = vinculoDisciplina.disciplina.id;

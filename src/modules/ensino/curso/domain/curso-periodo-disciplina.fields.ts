@@ -25,7 +25,6 @@ export const CursoPeriodoDisciplinaItemFields = {
   cargaHoraria: createFieldMetadata({
     description: "Carga horaria",
     schema: z.number().int().min(0),
-    nullable: true,
   }),
 };
 

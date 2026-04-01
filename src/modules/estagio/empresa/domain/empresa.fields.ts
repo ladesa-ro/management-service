@@ -7,7 +7,7 @@
  * @see createFieldMetadata (domain/abstractions/fields/field-metadata.ts)
  */
 import { z } from "zod";
-import { createFieldMetadata, createSchema } from "@/domain/abstractions";
+import { createFieldMetadata, createSchema, ObjectIdUuidFactory } from "@/domain/abstractions";
 
 export const EmpresaFields = {
   razaoSocial: createFieldMetadata({
@@ -43,6 +43,7 @@ export const EmpresaFields = {
   }),
   endereco: createFieldMetadata({
     description: "Endereço vinculado à empresa",
+    schema: ObjectIdUuidFactory,
   }),
   ativo: createFieldMetadata({
     description: "Se a empresa está ativa",

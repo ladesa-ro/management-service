@@ -45,7 +45,10 @@ export class CursoPeriodoDisciplinaOutputItemRestDto {
   @ApiProperty(CursoPeriodoDisciplinaItemFields.disciplinaId.swaggerMetadata) disciplinaId: string;
   @ApiPropertyOptional(CursoPeriodoDisciplinaItemFields.disciplinaNome.swaggerMetadata)
   disciplinaNome: string | null;
-  @ApiPropertyOptional(CursoPeriodoDisciplinaItemFields.cargaHoraria.swaggerMetadata)
+  @ApiPropertyOptional({
+    ...CursoPeriodoDisciplinaItemFields.cargaHoraria.swaggerMetadata,
+    nullable: true,
+  })
   cargaHoraria: number | null;
 }
 

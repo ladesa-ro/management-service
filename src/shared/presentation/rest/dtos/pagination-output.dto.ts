@@ -1,23 +1,23 @@
-import { SharedFields } from "@/domain/abstractions";
+import { SharedPaginationOutputFields } from "@/domain/abstractions";
 import { ApiProperty, ApiPropertyOptional } from "@/shared/presentation/rest";
 /**
  * Pagination metadata DTO for REST.
  */
 
 export class PaginationMetaRestDto {
-  @ApiProperty(SharedFields.limit.swaggerMetadata)
+  @ApiProperty(SharedPaginationOutputFields.itemsPerPage.swaggerMetadata)
   itemsPerPage: number;
 
-  @ApiProperty({ type: "integer", description: "Total de itens" })
+  @ApiProperty(SharedPaginationOutputFields.totalItems.swaggerMetadata)
   totalItems: number;
 
-  @ApiProperty(SharedFields.page.swaggerMetadata)
+  @ApiProperty(SharedPaginationOutputFields.currentPage.swaggerMetadata)
   currentPage: number;
 
-  @ApiProperty({ type: "integer", description: "Quantidade total de paginas" })
+  @ApiProperty(SharedPaginationOutputFields.totalPages.swaggerMetadata)
   totalPages: number;
 
-  @ApiProperty(SharedFields.search.swaggerMetadata)
+  @ApiProperty(SharedPaginationOutputFields.search.swaggerMetadata)
   search: string;
 
   @ApiProperty({

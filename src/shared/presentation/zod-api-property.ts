@@ -10,12 +10,13 @@ interface ZodExtractedOptions {
   maximum?: number;
   format?: string;
   nullable?: boolean;
-  required?: boolean;
+  required?: boolean | string[];
   isArray?: boolean;
   example?: unknown;
   enum?: unknown[];
   pattern?: string;
   default?: unknown;
+  properties?: Record<string, unknown>;
 }
 
 /**
@@ -73,6 +74,14 @@ function extractViaJsonSchema(schema: z.ZodType): ZodExtractedOptions {
 
     // Default
     if (jsonSchema.default !== undefined) result.default = jsonSchema.default;
+
+    // Object handling: extract properties and required from z.object() schemas
+    if (schemaType === "object" && jsonSchema.properties) {
+      result.properties = jsonSchema.properties as Record<string, unknown>;
+      if (Array.isArray(jsonSchema.required)) {
+        result.required = jsonSchema.required as string[];
+      }
+    }
 
     // Array handling
     if (schemaType === "array" && jsonSchema.items) {
