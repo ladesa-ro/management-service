@@ -1,4 +1,6 @@
 import { z } from "zod";
+import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@/shared/presentation/rest";
+import { uuidSchema } from "@/shared/validation/schemas";
 import {
   TurmaDisponibilidadeConfigFields,
   TurmaDisponibilidadeDiaFields,
@@ -6,16 +8,14 @@ import {
   TurmaDisponibilidadeParamsFields,
   TurmaDisponibilidadeQueryFields,
   TurmaDisponibilidadeSaveFields,
-} from "@/modules/ensino/turma/domain/turma-disponibilidade.fields";
-import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@/shared/presentation/rest";
-import { uuidSchema } from "@/shared/validation/schemas";
+} from "../domain/turma-disponibilidade.fields";
 
 // ============================================================================
 // Parent Route Params
 // ============================================================================
 
 const TurmaDisponibilidadeParentParamsSchema = z.object({
-  turmaId: uuidSchema,
+  id: uuidSchema,
 });
 
 @ApiSchema({ name: "TurmaDisponibilidadeParentParamsDto" })
@@ -23,7 +23,7 @@ export class TurmaDisponibilidadeParentParamsRestDto {
   static schema = TurmaDisponibilidadeParentParamsSchema;
 
   @ApiProperty(TurmaDisponibilidadeParamsFields.turmaId.swaggerMetadata)
-  turmaId: string;
+  id: string;
 }
 
 // ============================================================================
@@ -159,7 +159,7 @@ export class TurmaDisponibilidadeAllOutputRestDto {
 // ============================================================================
 
 const TurmaDisponibilidadeConfigIdParamsSchema = z.object({
-  turmaId: uuidSchema,
+  id: uuidSchema,
   configId: uuidSchema,
 });
 
@@ -168,7 +168,7 @@ export class TurmaDisponibilidadeConfigIdParamsRestDto {
   static schema = TurmaDisponibilidadeConfigIdParamsSchema;
 
   @ApiProperty(TurmaDisponibilidadeParamsFields.turmaId.swaggerMetadata)
-  turmaId: string;
+  id: string;
 
   @ApiProperty({
     description: "ID da configuracao de disponibilidade",

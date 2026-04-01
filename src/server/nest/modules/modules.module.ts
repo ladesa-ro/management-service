@@ -26,6 +26,7 @@ import { GradeHorariaModule } from "@/modules/horarios/grade-horaria/grade-horar
 import { HorarioConsultaModule } from "@/modules/horarios/horario-consulta/horario-consulta.module";
 import { HorarioEdicaoModule } from "@/modules/horarios/horario-edicao/horario-edicao.module";
 import { RelatorioModule } from "@/modules/horarios/relatorio/relatorio.module";
+import { TurmaDisponibilidadeModule } from "@/modules/horarios/turmas/disponibilidade/turma-disponibilidade.module";
 import { CidadeModule } from "@/modules/localidades/cidade/cidade.module";
 import { EnderecoModule } from "@/modules/localidades/endereco/endereco.module";
 import { EstadoModule } from "@/modules/localidades/estado/estado.module";
@@ -62,6 +63,7 @@ import { EstadoModule } from "@/modules/localidades/estado/estado.module";
     NotificacaoModule,
     RelatorioModule,
     GradeHorariaModule,
+    TurmaDisponibilidadeModule,
   ],
 })
 export class ModulesModule {}
