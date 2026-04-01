@@ -70,7 +70,6 @@ export class TurmaDisponibilidadeRestController {
           intervalos: h.intervalos,
         })),
       })),
-      aplicarFuturas: dto.aplicar_futuras,
     });
 
     return { configs: savedConfigs.map((c) => this.mapConfigToOutput(c)) };

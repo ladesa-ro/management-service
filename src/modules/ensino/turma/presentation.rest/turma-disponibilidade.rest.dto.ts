@@ -125,7 +125,6 @@ const TurmaDisponibilidadeConfigInputSchema = z.object({
 
 const TurmaDisponibilidadeSaveInputSchema = z.object({
   configs: z.array(TurmaDisponibilidadeConfigInputSchema),
-  aplicar_futuras: z.boolean().optional(),
 });
 
 @ApiSchema({ name: "TurmaDisponibilidadeSaveInputDto" })
@@ -137,9 +136,6 @@ export class TurmaDisponibilidadeSaveInputRestDto {
     type: () => [TurmaDisponibilidadeConfigInputRestDto],
   })
   configs: TurmaDisponibilidadeConfigInputRestDto[];
-
-  @ApiPropertyOptional(TurmaDisponibilidadeSaveFields.aplicar_futuras.swaggerMetadata)
-  aplicar_futuras?: boolean;
 }
 
 @ApiSchema({ name: "TurmaDisponibilidadeConfigInputDto" })
