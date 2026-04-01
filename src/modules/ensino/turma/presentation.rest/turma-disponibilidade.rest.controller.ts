@@ -65,6 +65,7 @@ export class TurmaDisponibilidadeRestController {
       configs: dto.configs.map((c) => ({
         dataInicio: c.data_inicio,
         dataFim: c.data_fim,
+        identificadorExternoGradeHoraria: c.identificador_externo_grade_horaria ?? null,
         horarios: c.horarios.map((h) => ({
           diaSemana: h.dia_semana,
           intervalos: h.intervalos,
@@ -96,6 +97,7 @@ export class TurmaDisponibilidadeRestController {
     return {
       data_inicio: config.dataInicio,
       data_fim: config.dataFim,
+      identificador_externo_grade_horaria: config.identificadorExternoGradeHoraria ?? null,
       horarios,
     };
   }

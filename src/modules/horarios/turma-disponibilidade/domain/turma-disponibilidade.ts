@@ -1,5 +1,6 @@
 import type { z } from "zod";
 import type { IdUuid, ScalarDateTimeString } from "@/domain/abstractions/scalars";
+
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { zodValidate } from "@/shared/validation/index";
 import { getNowISO } from "@/utils/date";
@@ -22,6 +23,7 @@ export class TurmaDisponibilidadeConfiguracao {
   dataFim!: string | null;
   ativo!: boolean;
   horarios!: ITurmaDisponibilidadeItem[];
+  identificadorExternoGradeHoraria!: string | null;
   dateCreated!: ScalarDateTimeString;
   dateUpdated!: ScalarDateTimeString;
   dateDeleted!: ScalarDateTimeString | null;
@@ -43,6 +45,7 @@ export class TurmaDisponibilidadeConfiguracao {
     instance.dataFim = parsed.dataFim ?? null;
     instance.ativo = true;
     instance.horarios = parsed.horarios;
+    instance.identificadorExternoGradeHoraria = parsed.identificadorExternoGradeHoraria ?? null;
     instance.dateCreated = getNowISO();
     instance.dateUpdated = getNowISO();
     instance.dateDeleted = null;
@@ -65,6 +68,7 @@ export class TurmaDisponibilidadeConfiguracao {
     instance.dataFim = parsed.dataFim;
     instance.ativo = parsed.ativo;
     instance.horarios = parsed.horarios;
+    instance.identificadorExternoGradeHoraria = parsed.identificadorExternoGradeHoraria ?? null;
     instance.dateCreated = parsed.dateCreated;
     instance.dateUpdated = parsed.dateUpdated;
     instance.dateDeleted = parsed.dateDeleted;
@@ -86,6 +90,7 @@ export class TurmaDisponibilidadeConfiguracao {
       dataInicio: overrides.dataInicio,
       dataFim: overrides.dataFim,
       horarios: source.horarios,
+      identificadorExternoGradeHoraria: source.identificadorExternoGradeHoraria,
     });
   }
 }
