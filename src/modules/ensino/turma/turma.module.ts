@@ -41,12 +41,16 @@ import {
 import { TurmaGraphqlResolver } from "@/modules/ensino/turma/presentation.graphql/turma.graphql.resolver";
 import { TurmaRestController } from "@/modules/ensino/turma/presentation.rest/turma.rest.controller";
 import { TurmaDiarioConfigurarRestController } from "@/modules/ensino/turma/presentation.rest/turma-diario-configurar.rest.controller";
+import { TurmaDisponibilidadeRestController } from "@/modules/ensino/turma/presentation.rest/turma-disponibilidade.rest.controller";
 import { TurmaEventoRestController } from "@/modules/ensino/turma/presentation.rest/turma-evento.rest.controller";
-import { TurmaHorarioAulaRestController } from "@/modules/ensino/turma/presentation.rest/turma-horario-aula.rest.controller";
 import { CalendarioAgendamentoModule } from "@/modules/horarios/calendario-agendamento/calendario-agendamento.module";
 import { HorarioConsultaModule } from "@/modules/horarios/horario-consulta/horario-consulta.module";
-import { ITurmaHorarioAulaRepository } from "@/modules/horarios/turma-horario-aula/domain/repositories";
-import { TurmaHorarioAulaTypeOrmRepositoryAdapter } from "@/modules/horarios/turma-horario-aula/infrastructure.database";
+import { TurmaDisponibilidadeSaveCommandHandlerImpl } from "@/modules/horarios/turma-disponibilidade/application/commands";
+import { TurmaDisponibilidadeFindByWeekQueryHandlerImpl } from "@/modules/horarios/turma-disponibilidade/application/queries";
+import { ITurmaDisponibilidadeSaveCommandHandler } from "@/modules/horarios/turma-disponibilidade/domain/commands";
+import { ITurmaDisponibilidadeFindByWeekQueryHandler } from "@/modules/horarios/turma-disponibilidade/domain/queries";
+import { ITurmaDisponibilidadeRepository } from "@/modules/horarios/turma-disponibilidade/domain/repositories";
+import { TurmaDisponibilidadeTypeOrmRepositoryAdapter } from "@/modules/horarios/turma-disponibilidade/infrastructure.database";
 
 @Module({
   imports: [
@@ -59,7 +63,7 @@ import { TurmaHorarioAulaTypeOrmRepositoryAdapter } from "@/modules/horarios/tur
   ],
   controllers: [
     TurmaRestController,
-    TurmaHorarioAulaRestController,
+    TurmaDisponibilidadeRestController,
     TurmaEventoRestController,
     TurmaDiarioConfigurarRestController,
   ],
@@ -71,8 +75,8 @@ import { TurmaHorarioAulaTypeOrmRepositoryAdapter } from "@/modules/horarios/tur
       useClass: TurmaTypeOrmRepositoryAdapter,
     },
     {
-      provide: ITurmaHorarioAulaRepository,
-      useClass: TurmaHorarioAulaTypeOrmRepositoryAdapter,
+      provide: ITurmaDisponibilidadeRepository,
+      useClass: TurmaDisponibilidadeTypeOrmRepositoryAdapter,
     },
     {
       provide: IDiarioConfigurarRepository,
@@ -84,7 +88,7 @@ import { TurmaHorarioAulaTypeOrmRepositoryAdapter } from "@/modules/horarios/tur
     },
     { provide: ITurmaPermissionChecker, useClass: TurmaPermissionCheckerImpl },
 
-    // Commands
+    // Turma - Commands
     { provide: ITurmaCreateCommandHandler, useClass: TurmaCreateCommandHandlerImpl },
     { provide: ITurmaUpdateCommandHandler, useClass: TurmaUpdateCommandHandlerImpl },
     { provide: ITurmaDeleteCommandHandler, useClass: TurmaDeleteCommandHandlerImpl },
@@ -92,10 +96,21 @@ import { TurmaHorarioAulaTypeOrmRepositoryAdapter } from "@/modules/horarios/tur
       provide: ITurmaUpdateImagemCapaCommandHandler,
       useClass: TurmaUpdateImagemCapaCommandHandlerImpl,
     },
-    // Queries
+    // Turma - Queries
     { provide: ITurmaListQueryHandler, useClass: TurmaListQueryHandlerImpl },
     { provide: ITurmaFindOneQueryHandler, useClass: TurmaFindOneQueryHandlerImpl },
     { provide: ITurmaGetImagemCapaQueryHandler, useClass: TurmaGetImagemCapaQueryHandlerImpl },
+
+    // TurmaDisponibilidade - Commands
+    {
+      provide: ITurmaDisponibilidadeSaveCommandHandler,
+      useClass: TurmaDisponibilidadeSaveCommandHandlerImpl,
+    },
+    // TurmaDisponibilidade - Queries
+    {
+      provide: ITurmaDisponibilidadeFindByWeekQueryHandler,
+      useClass: TurmaDisponibilidadeFindByWeekQueryHandlerImpl,
+    },
   ],
   exports: [ITurmaFindOneQueryHandler],
 })
