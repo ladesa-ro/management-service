@@ -136,26 +136,6 @@ describe("Disciplina (domain entity)", () => {
       expect(entity.nome).toBe(originalNome);
     });
 
-    it("should update imagemCapa to a ref", () => {
-      const entity = Disciplina.create(validCreateInput);
-      const imgRef = createTestRef();
-
-      entity.update({ imagemCapa: imgRef });
-
-      expect(entity.imagemCapa).toEqual(imgRef);
-      expect(entity.temImagemCapa()).toBe(true);
-    });
-
-    it("should update imagemCapa to null", () => {
-      const imgRef = createTestRef();
-      const entity = Disciplina.create({ ...validCreateInput, imagemCapa: imgRef });
-
-      entity.update({ imagemCapa: null });
-
-      expect(entity.imagemCapa).toBeNull();
-      expect(entity.temImagemCapa()).toBe(false);
-    });
-
     it("should reject cargaHoraria less than 1 on update", () => {
       const entity = Disciplina.create(validCreateInput);
 

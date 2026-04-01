@@ -93,26 +93,6 @@ describe("Curso (domain entity)", () => {
       expect(entity.nomeAbreviado).toBe("NEW");
       expect(entity.nome).toBe(originalNome);
     });
-
-    it("should update imagemCapa to a ref", () => {
-      const entity = Curso.create(validCreateInput);
-      const imgRef = createTestRef();
-
-      entity.update({ imagemCapa: imgRef });
-
-      expect(entity.imagemCapa).toEqual(imgRef);
-      expect(entity.temImagemCapa()).toBe(true);
-    });
-
-    it("should update imagemCapa to null", () => {
-      const imgRef = createTestRef();
-      const entity = Curso.create({ ...validCreateInput, imagemCapa: imgRef });
-
-      entity.update({ imagemCapa: null });
-
-      expect(entity.imagemCapa).toBeNull();
-      expect(entity.temImagemCapa()).toBe(false);
-    });
   });
 
   describe("temImagemCapa", () => {

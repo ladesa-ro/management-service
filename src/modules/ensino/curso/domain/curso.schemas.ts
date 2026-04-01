@@ -57,6 +57,5 @@ export const CursoUpdateSchema = createSchema((standard) =>
     nomeAbreviado: CursoFields.nomeAbreviado.create(standard).optional(),
     campus: CursoCampusRefSchema.create(standard).optional(),
     ofertaFormacao: CursoOfertaFormacaoRefSchema.create(standard).optional(),
-    imagemCapa: CursoImagemCapaRefSchema.create(standard),
   }),
 );

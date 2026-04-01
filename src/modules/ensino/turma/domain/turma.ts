@@ -62,7 +62,6 @@ export class Turma {
     if (parsed.curso !== undefined) this.curso = parsed.curso;
     if (parsed.ambientePadraoAula !== undefined)
       this.ambientePadraoAula = parsed.ambientePadraoAula ?? null;
-    if (parsed.imagemCapa !== undefined) this.imagemCapa = parsed.imagemCapa ?? null;
 
     this.dateUpdated = getNowISO();
 

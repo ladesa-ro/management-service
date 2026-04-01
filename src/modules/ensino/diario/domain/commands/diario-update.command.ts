@@ -1,5 +1,4 @@
 import { AmbienteInputRef } from "@/modules/ambientes/ambiente";
-import { ImagemInputRef } from "@/modules/armazenamento/imagem";
 import { DisciplinaInputRef } from "@/modules/ensino/disciplina";
 import { TurmaInputRef } from "@/modules/ensino/turma";
 import { CalendarioLetivoInputRef } from "@/modules/horarios/calendario-letivo";
@@ -11,7 +10,6 @@ export const DiarioUpdateCommandFields = {
   turma: DiarioFields.turma,
   disciplina: DiarioFields.disciplina,
   ambientePadrao: DiarioFields.ambientePadrao,
-  imagemCapa: DiarioFields.imagemCapa,
 };
 
 export class DiarioUpdateCommand {
@@ -20,5 +18,4 @@ export class DiarioUpdateCommand {
   turma?: TurmaInputRef;
   disciplina?: DisciplinaInputRef;
   ambientePadrao?: AmbienteInputRef | null;
-  imagemCapa?: ImagemInputRef | null;
 }
