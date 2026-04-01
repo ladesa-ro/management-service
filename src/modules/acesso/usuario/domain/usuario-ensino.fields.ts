@@ -3,7 +3,7 @@
  * de dados de ensino do usuario (turma ref, curso ref, disciplina ref).
  */
 import { z } from "zod";
-import { createFieldMetadata, SharedFields } from "@/domain/abstractions";
+import { createFieldMetadata, ObjectIdUuidFactory, SharedFields } from "@/domain/abstractions";
 
 export const UsuarioEnsinoTurmaRefFields = {
   id: SharedFields.idUuid,
@@ -38,7 +38,6 @@ export const UsuarioEnsinoDisciplinaRefFields = {
 export const UsuarioEnsinoOutputFields = {
   usuario: createFieldMetadata({
     description: "Dados do usuario",
-    nullable: true,
   }),
   disciplinas: createFieldMetadata({
     description: "Disciplinas onde o usuario leciona (com cursos e turmas)",
@@ -48,6 +47,7 @@ export const UsuarioEnsinoOutputFields = {
 export const VinculoInputFields = {
   campus: createFieldMetadata({
     description: "Campus associado ao vinculo",
+    schema: ObjectIdUuidFactory,
   }),
   cargo: createFieldMetadata({
     description: "Cargo do usuario no vinculo",

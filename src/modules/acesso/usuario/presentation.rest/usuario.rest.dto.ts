@@ -134,7 +134,7 @@ export class UsuarioEnsinoOutputRestDto {
     type: () => UsuarioFindOneOutputRestDto,
     ...UsuarioEnsinoOutputFields.usuario.swaggerMetadata,
   })
-  usuario: UsuarioFindOneOutputRestDto | null;
+  usuario: UsuarioFindOneOutputRestDto;
 
   @ApiProperty({
     type: () => [UsuarioEnsinoDisciplinaRefRestDto],
