@@ -48,6 +48,27 @@ export class TurmaDisponibilidadeTypeOrmRepositoryAdapter
     return this.loadConfigWithItems(config, turmaId);
   }
 
+  async findAllActiveByTurmaId(turmaId: string): Promise<TurmaDisponibilidadeConfiguracao[]> {
+    const configRepo = this.appTypeormConnection.getRepository(
+      TurmaDisponibilidadeConfiguracaoEntity,
+    );
+
+    const configs = await configRepo
+      .createQueryBuilder("config")
+      .where("config.id_turma_fk = :turmaId", { turmaId })
+      .andWhere("config.ativo = true")
+      .orderBy("config.data_inicio", "ASC")
+      .getMany();
+
+    const results: TurmaDisponibilidadeConfiguracao[] = [];
+
+    for (const config of configs) {
+      results.push(await this.loadConfigWithItems(config, turmaId));
+    }
+
+    return results;
+  }
+
   async save(config: TurmaDisponibilidadeConfiguracao): Promise<void> {
     const configRepo = this.appTypeormConnection.getRepository(
       TurmaDisponibilidadeConfiguracaoEntity,
