@@ -31,20 +31,20 @@ import {
 @ApiSchema({ name: "EstagiarioFindOneOutputDto" })
 export class EstagiarioFindOneOutputRestDto extends EntityBaseRestDto {
   @ApiProperty({
-    type: () => PerfilFindOneOutputRestDto,
     ...EstagiarioFindOneQueryResultFields.perfil.swaggerMetadata,
+    type: () => PerfilFindOneOutputRestDto,
   })
   perfil: PerfilFindOneOutputRestDto | null;
 
   @ApiProperty({
-    type: () => CursoFindOneOutputRestDto,
     ...EstagiarioFindOneQueryResultFields.curso.swaggerMetadata,
+    type: () => CursoFindOneOutputRestDto,
   })
   curso: CursoFindOneOutputRestDto | null;
 
   @ApiProperty({
-    type: () => TurmaFindOneOutputRestDto,
     ...EstagiarioFindOneQueryResultFields.turma.swaggerMetadata,
+    type: () => TurmaFindOneOutputRestDto,
   })
   turma: TurmaFindOneOutputRestDto | null;
 
@@ -85,14 +85,14 @@ export class EstagiarioListInputRestDto extends PaginatedFilterByIdRestDto {
 @ApiSchema({ name: "EstagiarioListOutputDto" })
 export class EstagiarioListOutputRestDto {
   @ApiProperty({
-    type: () => PaginationMetaRestDto,
     ...EstagiarioListQueryFields.meta.swaggerMetadata,
+    type: () => PaginationMetaRestDto,
   })
   meta: PaginationMetaRestDto;
 
   @ApiProperty({
-    type: () => [EstagiarioFindOneOutputRestDto],
     ...EstagiarioListQueryFields.data.swaggerMetadata,
+    type: () => [EstagiarioFindOneOutputRestDto],
   })
   data: EstagiarioFindOneOutputRestDto[];
 }

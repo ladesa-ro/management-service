@@ -43,8 +43,8 @@ export class ImagemArquivoFindOneFromImagemOutputRestDto {
   mimeType: string | null;
 
   @ApiProperty({
-    type: () => ArquivoFindOneOutputFromBlocoRestDto,
     ...ImagemArquivoFromImagemFields.arquivo.swaggerMetadata,
+    type: () => ArquivoFindOneOutputFromBlocoRestDto,
   })
   arquivo: ArquivoFindOneOutputFromBlocoRestDto;
 }
@@ -55,8 +55,8 @@ export class ImagemFindOneOutputRestDto extends EntityBaseRestDto {
   descricao: string | null;
 
   @ApiProperty({
-    type: () => [ImagemArquivoFindOneFromImagemOutputRestDto],
     ...ImagemFields.versoes.swaggerMetadata,
+    type: () => [ImagemArquivoFindOneFromImagemOutputRestDto],
   })
   versoes: ImagemArquivoFindOneFromImagemOutputRestDto[];
 }
@@ -74,14 +74,14 @@ export class BlocoFindOneOutputRestDto extends EntityBaseRestDto {
   codigo: string;
 
   @ApiProperty({
-    type: () => CampusFindOneOutputRestDto,
     ...BlocoFindOneQueryResultFields.campus.swaggerMetadata,
+    type: () => CampusFindOneOutputRestDto,
   })
   campus: CampusFindOneOutputRestDto;
 
   @ApiPropertyOptional({
-    type: () => ImagemFindOneOutputRestDto,
     ...BlocoFindOneQueryResultFields.imagemCapa.swaggerMetadata,
+    type: () => ImagemFindOneOutputRestDto,
   })
   imagemCapa: ImagemFindOneOutputRestDto | null;
 }
@@ -115,12 +115,12 @@ export class BlocoListInputRestDto {
 
 @ApiSchema({ name: "BlocoListOutputDto" })
 export class BlocoListOutputRestDto {
-  @ApiProperty({ type: () => PaginationMetaRestDto, ...BlocoListQueryFields.meta.swaggerMetadata })
+  @ApiProperty({ ...BlocoListQueryFields.meta.swaggerMetadata, type: () => PaginationMetaRestDto })
   meta: PaginationMetaRestDto;
 
   @ApiProperty({
-    type: () => [BlocoFindOneOutputRestDto],
     ...BlocoListQueryFields.data.swaggerMetadata,
+    type: () => [BlocoFindOneOutputRestDto],
   })
   data: BlocoFindOneOutputRestDto[];
 }
@@ -146,8 +146,8 @@ export class BlocoCreateInputRestDto {
   codigo: string;
 
   @ApiProperty({
-    type: () => BlocoCampusRefInputRestDto,
     ...BlocoCreateCommandFields.campus.swaggerMetadata,
+    type: () => BlocoCampusRefInputRestDto,
   })
   campus: BlocoCampusRefInputRestDto;
 }
@@ -163,8 +163,8 @@ export class BlocoUpdateInputRestDto {
   codigo?: string;
 
   @ApiPropertyOptional({
-    type: () => BlocoCampusRefInputRestDto,
     ...BlocoUpdateCommandFields.campus.swaggerMetadata,
+    type: () => BlocoCampusRefInputRestDto,
   })
   campus?: BlocoCampusRefInputRestDto;
 }

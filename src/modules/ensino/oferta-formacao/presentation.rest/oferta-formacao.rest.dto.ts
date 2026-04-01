@@ -43,8 +43,8 @@ export class OfertaFormacaoPeriodoOutputRestDto {
   @ApiProperty(OfertaFormacaoPeriodoFields.id.swaggerMetadata) id: string;
   @ApiProperty(OfertaFormacaoPeriodoFields.numeroPeriodo.swaggerMetadata) numeroPeriodo: number;
   @ApiProperty({
-    type: () => [OfertaFormacaoPeriodoEtapaOutputRestDto],
     ...OfertaFormacaoPeriodoFields.etapas.swaggerMetadata,
+    type: () => [OfertaFormacaoPeriodoEtapaOutputRestDto],
   })
   etapas: OfertaFormacaoPeriodoEtapaOutputRestDto[];
 }
@@ -65,8 +65,8 @@ export class OfertaFormacaoPeriodoInputRestDto {
   numeroPeriodo: number;
 
   @ApiProperty({
-    type: () => [OfertaFormacaoPeriodoEtapaInputRestDto],
     ...OfertaFormacaoPeriodoFields.etapas.swaggerMetadata,
+    type: () => [OfertaFormacaoPeriodoEtapaInputRestDto],
   })
   etapas: OfertaFormacaoPeriodoEtapaInputRestDto[];
 }
@@ -87,26 +87,26 @@ export class OfertaFormacaoFindOneOutputRestDto extends EntityBaseRestDto {
   duracaoPeriodoEmMeses: number;
 
   @ApiProperty({
-    type: () => ModalidadeFindOneOutputRestDto,
     ...OfertaFormacaoFindOneQueryResultFields.modalidade.swaggerMetadata,
+    type: () => ModalidadeFindOneOutputRestDto,
   })
   modalidade: ModalidadeFindOneOutputRestDto;
 
   @ApiProperty({
-    type: () => CampusFindOneOutputRestDto,
     ...OfertaFormacaoFindOneQueryResultFields.campus.swaggerMetadata,
+    type: () => CampusFindOneOutputRestDto,
   })
   campus: CampusFindOneOutputRestDto;
 
   @ApiProperty({
-    type: () => [NivelFormacaoFindOneOutputRestDto],
     ...OfertaFormacaoFindOneQueryResultFields.niveisFormacoes.swaggerMetadata,
+    type: () => [NivelFormacaoFindOneOutputRestDto],
   })
   niveisFormacoes: NivelFormacaoFindOneOutputRestDto[];
 
   @ApiProperty({
-    type: () => [OfertaFormacaoPeriodoOutputRestDto],
     ...OfertaFormacaoFindOneQueryResultFields.periodos.swaggerMetadata,
+    type: () => [OfertaFormacaoPeriodoOutputRestDto],
   })
   periodos: OfertaFormacaoPeriodoOutputRestDto[];
 }
@@ -131,14 +131,14 @@ export class OfertaFormacaoListInputRestDto extends PaginatedFilterByIdRestDto {
 @ApiSchema({ name: "OfertaFormacaoListOutputDto" })
 export class OfertaFormacaoListOutputRestDto {
   @ApiProperty({
-    type: () => PaginationMetaRestDto,
     ...OfertaFormacaoListQueryFields.meta.swaggerMetadata,
+    type: () => PaginationMetaRestDto,
   })
   meta: PaginationMetaRestDto;
 
   @ApiProperty({
-    type: () => [OfertaFormacaoFindOneOutputRestDto],
     ...OfertaFormacaoListQueryFields.data.swaggerMetadata,
+    type: () => [OfertaFormacaoFindOneOutputRestDto],
   })
   data: OfertaFormacaoFindOneOutputRestDto[];
 }
@@ -173,8 +173,8 @@ export class OfertaFormacaoCreateInputRestDto {
   niveisFormacoes: Array<{ id: string }>;
 
   @ApiProperty({
-    type: () => [OfertaFormacaoPeriodoInputRestDto],
     ...OfertaFormacaoCreateCommandFields.periodos.swaggerMetadata,
+    type: () => [OfertaFormacaoPeriodoInputRestDto],
   })
   periodos: OfertaFormacaoPeriodoInputRestDto[];
 }

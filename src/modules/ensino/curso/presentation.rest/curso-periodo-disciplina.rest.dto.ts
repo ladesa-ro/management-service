@@ -27,8 +27,8 @@ export class CursoPeriodoDisciplinaPeriodoItemRestDto {
   numeroPeriodo: number;
 
   @ApiProperty({
-    type: () => [CursoPeriodoDisciplinaItemRestDto],
     ...CursoPeriodoDisciplinaPeriodoFields.disciplinas.swaggerMetadata,
+    type: () => [CursoPeriodoDisciplinaItemRestDto],
   })
   disciplinas: CursoPeriodoDisciplinaItemRestDto[];
 }
@@ -63,8 +63,8 @@ export class CursoPeriodoDisciplinaOutputPeriodoRestDto {
 @ApiSchema({ name: "CursoPeriodoDisciplinaListOutputDto" })
 export class CursoPeriodoDisciplinaListOutputRestDto {
   @ApiProperty({
-    type: () => [CursoPeriodoDisciplinaOutputPeriodoRestDto],
     ...SharedFields.data.swaggerMetadata,
+    type: () => [CursoPeriodoDisciplinaOutputPeriodoRestDto],
   })
   data: CursoPeriodoDisciplinaOutputPeriodoRestDto[];
 }

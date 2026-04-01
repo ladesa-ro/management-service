@@ -29,20 +29,20 @@ export class CursoFindOneOutputRestDto extends EntityBaseRestDto {
   nomeAbreviado: string;
 
   @ApiProperty({
-    type: () => CampusFindOneOutputRestDto,
     ...CursoFindOneQueryResultFields.campus.swaggerMetadata,
+    type: () => CampusFindOneOutputRestDto,
   })
   campus: CampusFindOneOutputRestDto;
 
   @ApiProperty({
-    type: () => OfertaFormacaoFindOneOutputRestDto,
     ...CursoFindOneQueryResultFields.ofertaFormacao.swaggerMetadata,
+    type: () => OfertaFormacaoFindOneOutputRestDto,
   })
   ofertaFormacao: OfertaFormacaoFindOneOutputRestDto;
 
   @ApiPropertyOptional({
-    type: () => ImagemFindOneOutputRestDto,
     ...CursoFindOneQueryResultFields.imagemCapa.swaggerMetadata,
+    type: () => ImagemFindOneOutputRestDto,
   })
   imagemCapa: ImagemFindOneOutputRestDto | null;
 }
@@ -81,12 +81,12 @@ export class CursoListInputRestDto {
 
 @ApiSchema({ name: "CursoListOutputDto" })
 export class CursoListOutputRestDto {
-  @ApiProperty({ type: () => PaginationMetaRestDto, ...CursoListQueryFields.meta.swaggerMetadata })
+  @ApiProperty({ ...CursoListQueryFields.meta.swaggerMetadata, type: () => PaginationMetaRestDto })
   meta: PaginationMetaRestDto;
 
   @ApiProperty({
-    type: () => [CursoFindOneOutputRestDto],
     ...CursoListQueryFields.data.swaggerMetadata,
+    type: () => [CursoFindOneOutputRestDto],
   })
   data: CursoFindOneOutputRestDto[];
 }

@@ -63,8 +63,8 @@ export class DiarioPreferenciaAgrupamentoFindOneOutputRestDto extends EntityBase
   aulasSeguidas: number;
 
   @ApiProperty({
-    type: () => DiarioFindOneOutputRestDto,
     ...DiarioPreferenciaAgrupamentoFindOneQueryResultFields.diario.swaggerMetadata,
+    type: () => DiarioFindOneOutputRestDto,
   })
   diario: DiarioFindOneOutputRestDto;
 }
@@ -87,14 +87,14 @@ export class DiarioPreferenciaAgrupamentoListInputRestDto extends PaginatedFilte
 @ApiSchema({ name: "DiarioPreferenciaAgrupamentoListOutputDto" })
 export class DiarioPreferenciaAgrupamentoListOutputRestDto {
   @ApiProperty({
-    type: () => PaginationMetaRestDto,
     ...DiarioPreferenciaAgrupamentoListQueryFields.meta.swaggerMetadata,
+    type: () => PaginationMetaRestDto,
   })
   meta: PaginationMetaRestDto;
 
   @ApiProperty({
-    type: () => [DiarioPreferenciaAgrupamentoFindOneOutputRestDto],
     ...DiarioPreferenciaAgrupamentoListQueryFields.data.swaggerMetadata,
+    type: () => [DiarioPreferenciaAgrupamentoFindOneOutputRestDto],
   })
   data: DiarioPreferenciaAgrupamentoFindOneOutputRestDto[];
 }
@@ -137,8 +137,8 @@ export class DiarioPreferenciaAgrupamentoBulkReplaceItemRestDto {
 @ApiSchema({ name: "DiarioPreferenciaAgrupamentoBulkReplaceInputDto" })
 export class DiarioPreferenciaAgrupamentoBulkReplaceInputRestDto {
   @ApiProperty({
-    type: () => [DiarioPreferenciaAgrupamentoBulkReplaceItemRestDto],
     ...DiarioPreferenciaAgrupamentoBulkReplaceCommandFields.preferenciasAgrupamento.swaggerMetadata,
+    type: () => [DiarioPreferenciaAgrupamentoBulkReplaceItemRestDto],
   })
   preferenciasAgrupamento: DiarioPreferenciaAgrupamentoBulkReplaceItemRestDto[];
 }

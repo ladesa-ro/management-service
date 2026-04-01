@@ -58,9 +58,4 @@ export const TurmaDisponibilidadeSaveFields = {
   configs: createFieldMetadata({
     description: "Configuracoes de disponibilidade",
   }),
-  aplicar_futuras: createFieldMetadata({
-    description: "Aplicar tambem para semanas futuras",
-    schema: z.boolean().optional(),
-    nullable: true,
-  }),
 };

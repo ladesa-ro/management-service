@@ -42,14 +42,14 @@ export class DiarioProfessorFindOneOutputRestDto extends EntityBaseRestDto {
   situacao: boolean;
 
   @ApiProperty({
-    type: () => PerfilFindOneOutputRestDto,
     ...DiarioProfessorFindOneQueryResultFields.perfil.swaggerMetadata,
+    type: () => PerfilFindOneOutputRestDto,
   })
   perfil: PerfilFindOneOutputRestDto;
 
   @ApiProperty({
-    type: () => DiarioFindOneOutputRestDto,
     ...DiarioProfessorFindOneQueryResultFields.diario.swaggerMetadata,
+    type: () => DiarioFindOneOutputRestDto,
   })
   diario: DiarioFindOneOutputRestDto;
 }
@@ -80,14 +80,14 @@ export class DiarioProfessorListInputRestDto extends PaginatedFilterByIdRestDto 
 @ApiSchema({ name: "DiarioProfessorListOutputDto" })
 export class DiarioProfessorListOutputRestDto {
   @ApiProperty({
-    type: () => PaginationMetaRestDto,
     ...DiarioProfessorListQueryFields.meta.swaggerMetadata,
+    type: () => PaginationMetaRestDto,
   })
   meta: PaginationMetaRestDto;
 
   @ApiProperty({
-    type: () => [DiarioProfessorFindOneOutputRestDto],
     ...DiarioProfessorListQueryFields.data.swaggerMetadata,
+    type: () => [DiarioProfessorFindOneOutputRestDto],
   })
   data: DiarioProfessorFindOneOutputRestDto[];
 }
@@ -115,8 +115,8 @@ export class DiarioProfessorBulkReplaceItemRestDto {
 @ApiSchema({ name: "DiarioProfessorBulkReplaceInputDto" })
 export class DiarioProfessorBulkReplaceInputRestDto {
   @ApiProperty({
-    type: () => [DiarioProfessorBulkReplaceItemRestDto],
     ...DiarioProfessorBulkReplaceCommandFields.professores.swaggerMetadata,
+    type: () => [DiarioProfessorBulkReplaceItemRestDto],
   })
   professores: DiarioProfessorBulkReplaceItemRestDto[];
 }

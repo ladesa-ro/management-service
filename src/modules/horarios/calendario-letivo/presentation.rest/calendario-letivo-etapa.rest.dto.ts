@@ -45,8 +45,8 @@ export class CalendarioLetivoEtapaFindOneOutputRestDto {
 @ApiSchema({ name: "CalendarioLetivoEtapaListOutputDto" })
 export class CalendarioLetivoEtapaListOutputRestDto {
   @ApiProperty({
-    type: () => [CalendarioLetivoEtapaFindOneOutputRestDto],
     ...SharedFields.data.swaggerMetadata,
+    type: () => [CalendarioLetivoEtapaFindOneOutputRestDto],
   })
   data: CalendarioLetivoEtapaFindOneOutputRestDto[];
 }

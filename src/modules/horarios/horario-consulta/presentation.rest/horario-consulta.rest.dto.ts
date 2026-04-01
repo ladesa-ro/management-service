@@ -53,13 +53,13 @@ export class HorarioAulaItemTurmaRestDto {
 export class HorarioAulaItemDiarioRestDto {
   @ApiProperty(HorarioAulaItemDiarioFields.id.swaggerMetadata) id: string;
   @ApiProperty({
-    type: () => HorarioAulaItemDisciplinaRestDto,
     ...HorarioAulaItemDiarioFields.disciplina.swaggerMetadata,
+    type: () => HorarioAulaItemDisciplinaRestDto,
   })
   disciplina: HorarioAulaItemDisciplinaRestDto;
   @ApiProperty({
-    type: () => HorarioAulaItemTurmaRestDto,
     ...HorarioAulaItemDiarioFields.turma.swaggerMetadata,
+    type: () => HorarioAulaItemTurmaRestDto,
   })
   turma: HorarioAulaItemTurmaRestDto;
 }
@@ -81,13 +81,13 @@ export class HorarioAulaItemProfessorPerfilRestDto {
 export class HorarioAulaItemProfessorRestDto {
   @ApiProperty(HorarioAulaItemProfessorFields.id.swaggerMetadata) id: string;
   @ApiProperty({
-    type: () => HorarioAulaItemProfessorPerfilRestDto,
     ...HorarioAulaItemProfessorFields.perfil.swaggerMetadata,
+    type: () => HorarioAulaItemProfessorPerfilRestDto,
   })
   perfil: HorarioAulaItemProfessorPerfilRestDto;
   @ApiProperty({
-    type: () => HorarioAulaItemProfessorUsuarioRestDto,
     ...HorarioAulaItemProfessorFields.usuario.swaggerMetadata,
+    type: () => HorarioAulaItemProfessorUsuarioRestDto,
   })
   usuario: HorarioAulaItemProfessorUsuarioRestDto;
 }
@@ -109,18 +109,18 @@ export class HorarioAulaItemRestDto {
   @ApiPropertyOptional(HorarioAulaItemFields.nome.swaggerMetadata) nome: string | null;
   @ApiPropertyOptional(HorarioAulaItemFields.cor.swaggerMetadata) cor: string | null;
   @ApiPropertyOptional({
-    type: () => HorarioAulaItemDiarioRestDto,
     ...HorarioAulaItemFields.diario.swaggerMetadata,
+    type: () => HorarioAulaItemDiarioRestDto,
   })
   diario: HorarioAulaItemDiarioRestDto | null;
   @ApiProperty({
-    type: () => [HorarioAulaItemProfessorRestDto],
     ...HorarioAulaItemFields.professores.swaggerMetadata,
+    type: () => [HorarioAulaItemProfessorRestDto],
   })
   professores: HorarioAulaItemProfessorRestDto[];
   @ApiPropertyOptional({
-    type: () => HorarioAulaItemAmbienteRestDto,
     ...HorarioAulaItemFields.ambiente.swaggerMetadata,
+    type: () => HorarioAulaItemAmbienteRestDto,
   })
   ambiente: HorarioAulaItemAmbienteRestDto | null;
 }
@@ -130,8 +130,8 @@ export class HorarioSemanalDiaRestDto {
   @ApiProperty(HorarioSemanalDiaFields.data.swaggerMetadata) data: string;
   @ApiProperty(HorarioSemanalDiaFields.diaSemana.swaggerMetadata) diaSemana: number;
   @ApiProperty({
-    type: () => [HorarioAulaItemRestDto],
     ...HorarioSemanalDiaFields.aulas.swaggerMetadata,
+    type: () => [HorarioAulaItemRestDto],
   })
   aulas: HorarioAulaItemRestDto[];
 }
@@ -141,8 +141,8 @@ export class HorarioSemanalOutputRestDto {
   @ApiProperty(HorarioSemanalOutputFields.semanaInicio.swaggerMetadata) semanaInicio: string;
   @ApiProperty(HorarioSemanalOutputFields.semanaFim.swaggerMetadata) semanaFim: string;
   @ApiProperty({
-    type: () => [HorarioSemanalDiaRestDto],
     ...HorarioSemanalOutputFields.dias.swaggerMetadata,
+    type: () => [HorarioSemanalDiaRestDto],
   })
   dias: HorarioSemanalDiaRestDto[];
 }

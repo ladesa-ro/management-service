@@ -8,5 +8,4 @@ export class TurmaDisponibilidadeSaveCommand {
       intervalos: Array<{ inicio: string; fim: string }>;
     }>;
   }>;
-  aplicarFuturas?: boolean;
 }

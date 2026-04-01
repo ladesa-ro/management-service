@@ -45,14 +45,14 @@ export class NivelFormacaoListInputRestDto {
 @ApiSchema({ name: "NivelFormacaoListOutputDto" })
 export class NivelFormacaoListOutputRestDto {
   @ApiProperty({
-    type: () => PaginationMetaRestDto,
     ...NivelFormacaoListQueryFields.meta.swaggerMetadata,
+    type: () => PaginationMetaRestDto,
   })
   meta: PaginationMetaRestDto;
 
   @ApiProperty({
-    type: () => [NivelFormacaoFindOneOutputRestDto],
     ...NivelFormacaoListQueryFields.data.swaggerMetadata,
+    type: () => [NivelFormacaoFindOneOutputRestDto],
   })
   data: NivelFormacaoFindOneOutputRestDto[];
 }

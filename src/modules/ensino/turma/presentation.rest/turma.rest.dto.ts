@@ -33,20 +33,20 @@ export class TurmaFindOneOutputRestDto extends EntityBaseRestDto {
   nome: string | null;
 
   @ApiProperty({
-    type: () => CursoFindOneOutputRestDto,
     ...TurmaFindOneQueryResultFields.curso.swaggerMetadata,
+    type: () => CursoFindOneOutputRestDto,
   })
   curso: CursoFindOneOutputRestDto;
 
   @ApiPropertyOptional({
-    type: () => AmbienteFindOneOutputRestDto,
     ...TurmaFindOneQueryResultFields.ambientePadraoAula.swaggerMetadata,
+    type: () => AmbienteFindOneOutputRestDto,
   })
   ambientePadraoAula: AmbienteFindOneOutputRestDto | null;
 
   @ApiPropertyOptional({
-    type: () => ImagemFindOneOutputRestDto,
     ...TurmaFindOneQueryResultFields.imagemCapa.swaggerMetadata,
+    type: () => ImagemFindOneOutputRestDto,
   })
   imagemCapa: ImagemFindOneOutputRestDto | null;
 }
@@ -110,12 +110,12 @@ export class TurmaListInputRestDto extends PaginatedFilterByIdRestDto {
 
 @ApiSchema({ name: "TurmaListOutputDto" })
 export class TurmaListOutputRestDto {
-  @ApiProperty({ type: () => PaginationMetaRestDto, ...TurmaListQueryFields.meta.swaggerMetadata })
+  @ApiProperty({ ...TurmaListQueryFields.meta.swaggerMetadata, type: () => PaginationMetaRestDto })
   meta: PaginationMetaRestDto;
 
   @ApiProperty({
-    type: () => [TurmaFindOneOutputRestDto],
     ...TurmaListQueryFields.data.swaggerMetadata,
+    type: () => [TurmaFindOneOutputRestDto],
   })
   data: TurmaFindOneOutputRestDto[];
 }

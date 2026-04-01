@@ -38,14 +38,14 @@ export class AmbienteFindOneOutputRestDto extends EntityBaseRestDto {
   tipo: string | null;
 
   @ApiProperty({
-    type: () => BlocoFindOneOutputRestDto,
     ...AmbienteFindOneQueryResultFields.bloco.swaggerMetadata,
+    type: () => BlocoFindOneOutputRestDto,
   })
   bloco: BlocoFindOneOutputRestDto;
 
   @ApiPropertyOptional({
-    type: () => ImagemFindOneOutputRestDto,
     ...AmbienteFindOneQueryResultFields.imagemCapa.swaggerMetadata,
+    type: () => ImagemFindOneOutputRestDto,
   })
   imagemCapa: ImagemFindOneOutputRestDto | null;
 }
@@ -83,14 +83,14 @@ export class AmbienteListInputRestDto {
 @ApiSchema({ name: "AmbienteListOutputDto" })
 export class AmbienteListOutputRestDto {
   @ApiProperty({
-    type: () => PaginationMetaRestDto,
     ...AmbienteListQueryFields.meta.swaggerMetadata,
+    type: () => PaginationMetaRestDto,
   })
   meta: PaginationMetaRestDto;
 
   @ApiProperty({
-    type: () => [AmbienteFindOneOutputRestDto],
     ...AmbienteListQueryFields.data.swaggerMetadata,
+    type: () => [AmbienteFindOneOutputRestDto],
   })
   data: AmbienteFindOneOutputRestDto[];
 }
@@ -125,8 +125,8 @@ export class AmbienteCreateInputRestDto {
   tipo?: string | null;
 
   @ApiProperty({
-    type: () => AmbienteBlocoRefInputRestDto,
     ...AmbienteCreateCommandFields.bloco.swaggerMetadata,
+    type: () => AmbienteBlocoRefInputRestDto,
   })
   bloco: AmbienteBlocoRefInputRestDto;
 }
@@ -151,8 +151,8 @@ export class AmbienteUpdateInputRestDto {
   tipo?: string | null;
 
   @ApiPropertyOptional({
-    type: () => AmbienteBlocoRefInputRestDto,
     ...AmbienteUpdateCommandFields.bloco.swaggerMetadata,
+    type: () => AmbienteBlocoRefInputRestDto,
   })
   bloco?: AmbienteBlocoRefInputRestDto;
 }

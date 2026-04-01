@@ -77,8 +77,8 @@ export class UsuarioEventoFindOneOutputRestDto {
 @ApiSchema({ name: "UsuarioEventoListOutputDto" })
 export class UsuarioEventoListOutputRestDto {
   @ApiProperty({
-    type: () => [UsuarioEventoFindOneOutputRestDto],
     ...SharedFields.data.swaggerMetadata,
+    type: () => [UsuarioEventoFindOneOutputRestDto],
   })
   data: UsuarioEventoFindOneOutputRestDto[];
 }

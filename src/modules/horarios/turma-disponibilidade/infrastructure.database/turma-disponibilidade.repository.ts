@@ -172,6 +172,10 @@ export class TurmaDisponibilidadeTypeOrmRepositoryAdapter
       fim: item.fim,
     }));
 
+    // TypeORM retorna Date para colunas timestamptz — converter para ISO string
+    const toISO = (v: string | Date | null): string | null =>
+      v instanceof Date ? v.toISOString() : v;
+
     return TurmaDisponibilidadeConfiguracao.load({
       id: config.id,
       turma: { id: turmaId },
@@ -179,9 +183,9 @@ export class TurmaDisponibilidadeTypeOrmRepositoryAdapter
       dataFim: config.dataFim,
       ativo: config.ativo,
       horarios,
-      dateCreated: config.dateCreated,
-      dateUpdated: config.dateUpdated,
-      dateDeleted: config.dateDeleted,
+      dateCreated: toISO(config.dateCreated) as string,
+      dateUpdated: toISO(config.dateUpdated) as string,
+      dateDeleted: toISO(config.dateDeleted),
     });
   }
 }

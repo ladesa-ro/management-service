@@ -41,14 +41,14 @@ export class CalendarioLetivoFindOneOutputRestDto extends EntityBaseRestDto {
   ano: number;
 
   @ApiProperty({
-    type: () => CampusFindOneOutputRestDto,
     ...CalendarioLetivoFindOneQueryResultFields.campus.swaggerMetadata,
+    type: () => CampusFindOneOutputRestDto,
   })
   campus: CampusFindOneOutputRestDto;
 
   @ApiProperty({
-    type: () => OfertaFormacaoFindOneOutputRestDto,
     ...CalendarioLetivoFindOneQueryResultFields.ofertaFormacao.swaggerMetadata,
+    type: () => OfertaFormacaoFindOneOutputRestDto,
   })
   ofertaFormacao: OfertaFormacaoFindOneOutputRestDto;
 }
@@ -77,14 +77,14 @@ export class CalendarioLetivoListInputRestDto extends PaginatedFilterByIdRestDto
 @ApiSchema({ name: "CalendarioLetivoListOutputDto" })
 export class CalendarioLetivoListOutputRestDto {
   @ApiProperty({
-    type: () => PaginationMetaRestDto,
     ...CalendarioLetivoListQueryFields.meta.swaggerMetadata,
+    type: () => PaginationMetaRestDto,
   })
   meta: PaginationMetaRestDto;
 
   @ApiProperty({
-    type: () => [CalendarioLetivoFindOneOutputRestDto],
     ...CalendarioLetivoListQueryFields.data.swaggerMetadata,
+    type: () => [CalendarioLetivoFindOneOutputRestDto],
   })
   data: CalendarioLetivoFindOneOutputRestDto[];
 }
@@ -104,14 +104,14 @@ export class CalendarioLetivoCreateInputRestDto {
   ano: number;
 
   @ApiProperty({
-    type: () => CampusFindOneInputRestDto,
     ...CalendarioLetivoCreateCommandFields.campus.swaggerMetadata,
+    type: () => CampusFindOneInputRestDto,
   })
   campus: CampusFindOneInputRestDto;
 
   @ApiProperty({
-    type: () => OfertaFormacaoFindOneInputRestDto,
     ...CalendarioLetivoCreateCommandFields.ofertaFormacao.swaggerMetadata,
+    type: () => OfertaFormacaoFindOneInputRestDto,
   })
   ofertaFormacao: OfertaFormacaoFindOneInputRestDto;
 }

@@ -26,11 +26,10 @@ export class TurmaDisponibilidadeSaveCommandHandlerImpl
       return [];
     }
 
-    const aplicarFuturas = command.aplicarFuturas ?? false;
     const results: TurmaDisponibilidadeConfiguracao[] = [];
 
     for (const configInput of command.configs) {
-      const saved = await this.processConfig(turmaId, configInput, aplicarFuturas);
+      const saved = await this.processConfig(turmaId, configInput);
       if (saved) {
         results.push(saved);
       }
@@ -42,7 +41,6 @@ export class TurmaDisponibilidadeSaveCommandHandlerImpl
   private async processConfig(
     turmaId: string,
     configInput: TurmaDisponibilidadeSaveCommand["configs"][number],
-    aplicarFuturas: boolean,
   ): Promise<TurmaDisponibilidadeConfiguracao | null> {
     const domingo = this.normalizeToDomingo(configInput.dataInicio);
     const sabado = this.addDays(domingo, 6);
@@ -65,7 +63,8 @@ export class TurmaDisponibilidadeSaveCommandHandlerImpl
     );
 
     const dataInicio = domingo;
-    const dataFim = aplicarFuturas ? null : sabado;
+    // data_fim null = aplicar para esta semana e futuras; com valor = apenas o range especificado
+    const dataFim = configInput.dataFim;
 
     // Encontrar configs ativas que se sobrepoem ao novo range
     const affected = await this.repository.findActiveOverlapping(turmaId, dataInicio, dataFim);

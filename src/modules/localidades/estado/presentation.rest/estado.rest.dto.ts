@@ -48,12 +48,12 @@ export class EstadoListInputRestDto {
 
 @ApiSchema({ name: "EstadoListOutputDto" })
 export class EstadoListOutputRestDto {
-  @ApiProperty({ type: () => PaginationMetaRestDto, ...EstadoListQueryFields.meta.swaggerMetadata })
+  @ApiProperty({ ...EstadoListQueryFields.meta.swaggerMetadata, type: () => PaginationMetaRestDto })
   meta: PaginationMetaRestDto;
 
   @ApiProperty({
-    type: () => [EstadoFindOneOutputRestDto],
     ...EstadoListQueryFields.data.swaggerMetadata,
+    type: () => [EstadoFindOneOutputRestDto],
   })
   data: EstadoFindOneOutputRestDto[];
 }
