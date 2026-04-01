@@ -18,24 +18,19 @@ import {
 } from "@nestjs/swagger";
 import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
+import { AccessContextHttp } from "@/server/nest/access-context";
 import {
   ITurmaDisponibilidadeDeactivateCommandHandler,
   ITurmaDisponibilidadeSaveCommandHandler,
   TurmaDisponibilidadeDeactivateCommandMetadata,
   TurmaDisponibilidadeSaveCommandMetadata,
-} from "@/modules/horarios/turma-disponibilidade/domain/commands";
+} from "../domain/commands";
 import {
   ITurmaDisponibilidadeFindAllActiveQueryHandler,
   ITurmaDisponibilidadeFindByWeekQueryHandler,
   TurmaDisponibilidadeFindAllActiveQueryMetadata,
   TurmaDisponibilidadeFindByWeekQueryMetadata,
-} from "@/modules/horarios/turma-disponibilidade/domain/queries";
-import type { TurmaDisponibilidadeConfiguracao } from "@/modules/horarios/turma-disponibilidade/domain/turma-disponibilidade";
-import { AccessContextHttp } from "@/server/nest/access-context";
-import type {
-  TurmaDisponibilidadeConfigOutputRestDto,
-  TurmaDisponibilidadeConfigWithIdOutputRestDto,
-} from "./turma-disponibilidade.rest.dto";
+} from "../domain/queries";
 import {
   TurmaDisponibilidadeAllOutputRestDto,
   TurmaDisponibilidadeConfigIdParamsRestDto,
@@ -44,9 +39,10 @@ import {
   TurmaDisponibilidadeSaveInputRestDto,
   TurmaDisponibilidadeWeekOutputRestDto,
 } from "./turma-disponibilidade.rest.dto";
+import * as TurmaDisponibilidadeRestMapper from "./turma-disponibilidade.rest.mapper";
 
-@ApiTags("turmas")
-@Controller("/turmas/:turmaId/disponibilidade")
+@ApiTags("turmas-disponibilidade")
+@Controller("/horarios/turmas/:id/disponibilidade")
 export class TurmaDisponibilidadeRestController {
   constructor(
     @DeclareDependency(ITurmaDisponibilidadeFindAllActiveQueryHandler)
@@ -68,10 +64,12 @@ export class TurmaDisponibilidadeRestController {
     @Param() parentParams: TurmaDisponibilidadeParentParamsRestDto,
   ): Promise<TurmaDisponibilidadeAllOutputRestDto> {
     const configs = await this.findAllActiveHandler.execute(accessContext, {
-      turmaId: parentParams.turmaId,
+      turmaId: parentParams.id,
     });
 
-    return { configs: configs.map((c) => this.mapConfigToOutputWithId(c)) };
+    return {
+      configs: configs.map((c) => TurmaDisponibilidadeRestMapper.mapConfigToOutputWithId(c)),
+    };
   }
 
   @Get("/")
@@ -84,7 +82,7 @@ export class TurmaDisponibilidadeRestController {
     @Query() queryParams: TurmaDisponibilidadeFindByWeekQueryRestDto,
   ): Promise<TurmaDisponibilidadeWeekOutputRestDto> {
     const config = await this.findByWeekHandler.execute(accessContext, {
-      turmaId: parentParams.turmaId,
+      turmaId: parentParams.id,
       semana: queryParams.semana,
     });
 
@@ -92,7 +90,7 @@ export class TurmaDisponibilidadeRestController {
       return { configs: [] };
     }
 
-    return { configs: [this.mapConfigToOutput(config)] };
+    return { configs: [TurmaDisponibilidadeRestMapper.mapConfigToOutput(config)] };
   }
 
   @Put("/")
@@ -105,7 +103,7 @@ export class TurmaDisponibilidadeRestController {
     @Body() dto: TurmaDisponibilidadeSaveInputRestDto,
   ): Promise<TurmaDisponibilidadeWeekOutputRestDto> {
     const savedConfigs = await this.saveHandler.execute(accessContext, {
-      turmaId: parentParams.turmaId,
+      turmaId: parentParams.id,
       configs: dto.configs.map((c) => ({
         dataInicio: c.data_inicio,
         dataFim: c.data_fim,
@@ -117,7 +115,9 @@ export class TurmaDisponibilidadeRestController {
       })),
     });
 
-    return { configs: savedConfigs.map((c) => this.mapConfigToOutput(c)) };
+    return {
+      configs: savedConfigs.map((c) => TurmaDisponibilidadeRestMapper.mapConfigToOutput(c)),
+    };
   }
 
   @Delete("/:configId")
@@ -130,43 +130,8 @@ export class TurmaDisponibilidadeRestController {
     @Param() params: TurmaDisponibilidadeConfigIdParamsRestDto,
   ): Promise<void> {
     await this.deactivateHandler.execute(accessContext, {
-      turmaId: params.turmaId,
+      turmaId: params.id,
       configId: params.configId,
     });
-  }
-
-  private mapConfigToOutputWithId(
-    config: TurmaDisponibilidadeConfiguracao,
-  ): TurmaDisponibilidadeConfigWithIdOutputRestDto {
-    return {
-      id: config.id,
-      ...this.mapConfigToOutput(config),
-    };
-  }
-
-  private mapConfigToOutput(
-    config: TurmaDisponibilidadeConfiguracao,
-  ): TurmaDisponibilidadeConfigOutputRestDto {
-    const diasMap = new Map<number, { inicio: string; fim: string }[]>();
-
-    for (const item of config.horarios) {
-      const intervalos = diasMap.get(item.diaSemana) ?? [];
-      intervalos.push({ inicio: item.inicio, fim: item.fim });
-      diasMap.set(item.diaSemana, intervalos);
-    }
-
-    const horarios = Array.from(diasMap.entries())
-      .sort(([a], [b]) => a - b)
-      .map(([diaSemana, intervalos]) => ({
-        dia_semana: diaSemana,
-        intervalos: intervalos.sort((a, b) => a.inicio.localeCompare(b.inicio)),
-      }));
-
-    return {
-      data_inicio: config.dataInicio,
-      data_fim: config.dataFim,
-      identificador_externo_grade_horaria: config.identificadorExternoGradeHoraria ?? null,
-      horarios,
-    };
   }
 }

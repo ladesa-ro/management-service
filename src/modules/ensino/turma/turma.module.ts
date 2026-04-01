@@ -41,28 +41,9 @@ import {
 import { TurmaGraphqlResolver } from "@/modules/ensino/turma/presentation.graphql/turma.graphql.resolver";
 import { TurmaRestController } from "@/modules/ensino/turma/presentation.rest/turma.rest.controller";
 import { TurmaDiarioConfigurarRestController } from "@/modules/ensino/turma/presentation.rest/turma-diario-configurar.rest.controller";
-import { TurmaDisponibilidadeRestController } from "@/modules/ensino/turma/presentation.rest/turma-disponibilidade.rest.controller";
 import { TurmaEventoRestController } from "@/modules/ensino/turma/presentation.rest/turma-evento.rest.controller";
 import { CalendarioAgendamentoModule } from "@/modules/horarios/calendario-agendamento/calendario-agendamento.module";
 import { HorarioConsultaModule } from "@/modules/horarios/horario-consulta/horario-consulta.module";
-import {
-  TurmaDisponibilidadeDeactivateCommandHandlerImpl,
-  TurmaDisponibilidadeSaveCommandHandlerImpl,
-} from "@/modules/horarios/turma-disponibilidade/application/commands";
-import {
-  TurmaDisponibilidadeFindAllActiveQueryHandlerImpl,
-  TurmaDisponibilidadeFindByWeekQueryHandlerImpl,
-} from "@/modules/horarios/turma-disponibilidade/application/queries";
-import {
-  ITurmaDisponibilidadeDeactivateCommandHandler,
-  ITurmaDisponibilidadeSaveCommandHandler,
-} from "@/modules/horarios/turma-disponibilidade/domain/commands";
-import {
-  ITurmaDisponibilidadeFindAllActiveQueryHandler,
-  ITurmaDisponibilidadeFindByWeekQueryHandler,
-} from "@/modules/horarios/turma-disponibilidade/domain/queries";
-import { ITurmaDisponibilidadeRepository } from "@/modules/horarios/turma-disponibilidade/domain/repositories";
-import { TurmaDisponibilidadeTypeOrmRepositoryAdapter } from "@/modules/horarios/turma-disponibilidade/infrastructure.database";
 
 @Module({
   imports: [
@@ -75,7 +56,6 @@ import { TurmaDisponibilidadeTypeOrmRepositoryAdapter } from "@/modules/horarios
   ],
   controllers: [
     TurmaRestController,
-    TurmaDisponibilidadeRestController,
     TurmaEventoRestController,
     TurmaDiarioConfigurarRestController,
   ],
@@ -85,10 +65,6 @@ import { TurmaDisponibilidadeTypeOrmRepositoryAdapter } from "@/modules/horarios
     {
       provide: ITurmaRepository,
       useClass: TurmaTypeOrmRepositoryAdapter,
-    },
-    {
-      provide: ITurmaDisponibilidadeRepository,
-      useClass: TurmaDisponibilidadeTypeOrmRepositoryAdapter,
     },
     {
       provide: IDiarioConfigurarRepository,
@@ -112,25 +88,6 @@ import { TurmaDisponibilidadeTypeOrmRepositoryAdapter } from "@/modules/horarios
     { provide: ITurmaListQueryHandler, useClass: TurmaListQueryHandlerImpl },
     { provide: ITurmaFindOneQueryHandler, useClass: TurmaFindOneQueryHandlerImpl },
     { provide: ITurmaGetImagemCapaQueryHandler, useClass: TurmaGetImagemCapaQueryHandlerImpl },
-
-    // TurmaDisponibilidade - Commands
-    {
-      provide: ITurmaDisponibilidadeSaveCommandHandler,
-      useClass: TurmaDisponibilidadeSaveCommandHandlerImpl,
-    },
-    {
-      provide: ITurmaDisponibilidadeDeactivateCommandHandler,
-      useClass: TurmaDisponibilidadeDeactivateCommandHandlerImpl,
-    },
-    // TurmaDisponibilidade - Queries
-    {
-      provide: ITurmaDisponibilidadeFindByWeekQueryHandler,
-      useClass: TurmaDisponibilidadeFindByWeekQueryHandlerImpl,
-    },
-    {
-      provide: ITurmaDisponibilidadeFindAllActiveQueryHandler,
-      useClass: TurmaDisponibilidadeFindAllActiveQueryHandlerImpl,
-    },
   ],
   exports: [ITurmaFindOneQueryHandler],
 })
