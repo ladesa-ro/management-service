@@ -69,8 +69,8 @@ export class CalendarioLetivoDiaFindOneOutputRestDto extends EntityBaseRestDto {
   extraCurricular: boolean;
 
   @ApiProperty({
-    type: () => CalendarioLetivoFindOneOutputRestDto,
     ...CalendarioLetivoDiaFindOneQueryResultFields.calendario.swaggerMetadata,
+    type: () => CalendarioLetivoFindOneOutputRestDto,
   })
   calendario: CalendarioLetivoFindOneOutputRestDto;
 }
@@ -93,14 +93,14 @@ export class CalendarioLetivoDiaListInputRestDto extends PaginatedFilterByIdRest
 @ApiSchema({ name: "CalendarioLetivoDiaListOutputDto" })
 export class CalendarioLetivoDiaListOutputRestDto {
   @ApiProperty({
-    type: () => PaginationMetaRestDto,
     ...CalendarioLetivoDiaListQueryFields.meta.swaggerMetadata,
+    type: () => PaginationMetaRestDto,
   })
   meta: PaginationMetaRestDto;
 
   @ApiProperty({
-    type: () => [CalendarioLetivoDiaFindOneOutputRestDto],
     ...CalendarioLetivoDiaListQueryFields.data.swaggerMetadata,
+    type: () => [CalendarioLetivoDiaFindOneOutputRestDto],
   })
   data: CalendarioLetivoDiaFindOneOutputRestDto[];
 }

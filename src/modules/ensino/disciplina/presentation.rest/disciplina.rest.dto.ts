@@ -30,9 +30,9 @@ export class DisciplinaFindOneOutputRestDto extends EntityBaseRestDto {
   cargaHoraria: number;
 
   @ApiPropertyOptional({
-    type: () => ImagemFindOneOutputRestDto,
     ...DisciplinaFindOneQueryResultFields.imagemCapa.swaggerMetadata,
     nullable: true,
+    type: () => ImagemFindOneOutputRestDto,
   })
   imagemCapa: ImagemFindOneOutputRestDto | null;
 }
@@ -68,14 +68,14 @@ export class DisciplinaListInputRestDto {
 @ApiSchema({ name: "DisciplinaListOutputDto" })
 export class DisciplinaListOutputRestDto {
   @ApiProperty({
-    type: () => PaginationMetaRestDto,
     ...DisciplinaListQueryFields.meta.swaggerMetadata,
+    type: () => PaginationMetaRestDto,
   })
   meta: PaginationMetaRestDto;
 
   @ApiProperty({
-    type: () => [DisciplinaFindOneOutputRestDto],
     ...DisciplinaListQueryFields.data.swaggerMetadata,
+    type: () => [DisciplinaFindOneOutputRestDto],
   })
   data: DisciplinaFindOneOutputRestDto[];
 }

@@ -38,14 +38,14 @@ export class AuthRefreshInputRestDto {
 @ApiSchema({ name: "AuthWhoAmIOutputDto" })
 export class AuthWhoAmIOutputRestDto {
   @ApiPropertyOptional({
-    type: () => UsuarioFindOneOutputRestDto,
     ...AuthWhoAmIQueryResultFields.usuario.swaggerMetadata,
+    type: () => UsuarioFindOneOutputRestDto,
   })
   usuario: UsuarioFindOneOutputRestDto | null;
 
   @ApiProperty({
-    type: () => [PerfilFindOneOutputRestDto],
     ...AuthWhoAmIQueryResultFields.perfisAtivos.swaggerMetadata,
+    type: () => [PerfilFindOneOutputRestDto],
   })
   perfisAtivos: PerfilFindOneOutputRestDto[];
 }

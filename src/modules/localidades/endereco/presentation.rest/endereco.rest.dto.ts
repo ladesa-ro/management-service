@@ -34,8 +34,8 @@ export class EnderecoFindOneOutputRestDto extends EntityBaseRestDto {
   declare pontoReferencia: string | null;
 
   @ApiProperty({
-    type: () => CidadeFindOneOutputRestDto,
     ...EnderecoFields.cidade.swaggerMetadata,
+    type: () => CidadeFindOneOutputRestDto,
   })
   cidade: CidadeFindOneOutputRestDto;
 }
@@ -67,8 +67,8 @@ export class EnderecoInputRestDto {
   declare pontoReferencia: string | null;
 
   @ApiProperty({
-    type: () => CidadeFindOneInputRestDto,
     ...EnderecoFields.cidade.swaggerMetadata,
+    type: () => CidadeFindOneInputRestDto,
   })
   cidade: CidadeFindOneInputRestDto;
 }

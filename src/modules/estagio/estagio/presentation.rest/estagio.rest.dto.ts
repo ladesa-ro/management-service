@@ -55,8 +55,8 @@ export class EstagioCreateInputRestDto {
   status?: string;
 
   @ApiPropertyOptional({
-    type: () => [HorarioEstagioInputRestDto],
     ...EstagioCreateCommandFields.horariosEstagio.swaggerMetadata,
+    type: () => [HorarioEstagioInputRestDto],
   })
   horariosEstagio?: HorarioEstagioInputRestDto[];
 }
@@ -87,8 +87,8 @@ export class EstagioUpdateInputRestDto {
   status?: string;
 
   @ApiPropertyOptional({
-    type: () => [HorarioEstagioInputRestDto],
     ...EstagioUpdateCommandFields.horariosEstagio.swaggerMetadata,
+    type: () => [HorarioEstagioInputRestDto],
   })
   horariosEstagio?: HorarioEstagioInputRestDto[];
 }
@@ -136,8 +136,8 @@ export class EstagioFindOneOutputRestDto {
   status!: string;
 
   @ApiProperty({
-    type: () => [HorarioEstagioOutputRestDto],
     ...EstagioFindOneQueryResultFields.horariosEstagio.swaggerMetadata,
+    type: () => [HorarioEstagioOutputRestDto],
   })
   horariosEstagio!: HorarioEstagioOutputRestDto[];
 
@@ -154,8 +154,8 @@ export class EstagioFindOneOutputRestDto {
 @ApiSchema({ name: "EstagioListOutputDto" })
 export class EstagioListOutputRestDto {
   @ApiProperty({
-    type: () => [EstagioFindOneOutputRestDto],
     ...SharedFields.data.swaggerMetadata,
+    type: () => [EstagioFindOneOutputRestDto],
   })
   data!: EstagioFindOneOutputRestDto[];
 

@@ -46,8 +46,8 @@ export class HorarioDeAulaReplaceInputRestDto {
   static schema = z.object({ horarios: horariosAulaArraySchema });
 
   @ApiProperty({
-    type: () => [HorarioAulaItemInputRestDto],
     ...HorarioDeAulaReplaceFields.horarios.swaggerMetadata,
+    type: () => [HorarioAulaItemInputRestDto],
   })
   horarios: HorarioAulaItemInputRestDto[];
 }
@@ -59,8 +59,8 @@ export class HorarioDeAulaReplaceInputRestDto {
 @ApiSchema({ name: "HorarioDeAulaListOutputDto" })
 export class HorarioDeAulaListOutputRestDto {
   @ApiProperty({
-    type: () => [HorarioAulaItemOutputRestDto],
     ...SharedFields.data.swaggerMetadata,
+    type: () => [HorarioAulaItemOutputRestDto],
   })
   data: HorarioAulaItemOutputRestDto[];
 }

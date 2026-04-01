@@ -65,8 +65,8 @@ export class TurmaDisponibilidadeDiaRestDto {
   dia_semana: number;
 
   @ApiProperty({
-    type: () => [TurmaDisponibilidadeIntervaloRestDto],
     ...TurmaDisponibilidadeDiaFields.intervalos.swaggerMetadata,
+    type: () => [TurmaDisponibilidadeIntervaloRestDto],
   })
   intervalos: TurmaDisponibilidadeIntervaloRestDto[];
 }
@@ -84,8 +84,8 @@ export class TurmaDisponibilidadeConfigOutputRestDto {
   data_fim: string | null;
 
   @ApiProperty({
-    type: () => [TurmaDisponibilidadeDiaRestDto],
     ...TurmaDisponibilidadeConfigFields.horarios.swaggerMetadata,
+    type: () => [TurmaDisponibilidadeDiaRestDto],
   })
   horarios: TurmaDisponibilidadeDiaRestDto[];
 }
@@ -97,8 +97,8 @@ export class TurmaDisponibilidadeConfigOutputRestDto {
 @ApiSchema({ name: "TurmaDisponibilidadeWeekOutputDto" })
 export class TurmaDisponibilidadeWeekOutputRestDto {
   @ApiProperty({
-    type: () => [TurmaDisponibilidadeConfigOutputRestDto],
     ...TurmaDisponibilidadeSaveFields.configs.swaggerMetadata,
+    type: () => [TurmaDisponibilidadeConfigOutputRestDto],
   })
   configs: TurmaDisponibilidadeConfigOutputRestDto[];
 }
@@ -133,8 +133,8 @@ export class TurmaDisponibilidadeSaveInputRestDto {
   static schema = TurmaDisponibilidadeSaveInputSchema;
 
   @ApiProperty({
-    type: () => [TurmaDisponibilidadeConfigInputRestDto],
     ...TurmaDisponibilidadeSaveFields.configs.swaggerMetadata,
+    type: () => [TurmaDisponibilidadeConfigInputRestDto],
   })
   configs: TurmaDisponibilidadeConfigInputRestDto[];
 
@@ -151,8 +151,8 @@ export class TurmaDisponibilidadeConfigInputRestDto {
   data_fim: string | null;
 
   @ApiProperty({
-    type: () => [TurmaDisponibilidadeDiaInputRestDto],
     ...TurmaDisponibilidadeConfigFields.horarios.swaggerMetadata,
+    type: () => [TurmaDisponibilidadeDiaInputRestDto],
   })
   horarios: TurmaDisponibilidadeDiaInputRestDto[];
 }
@@ -163,8 +163,8 @@ export class TurmaDisponibilidadeDiaInputRestDto {
   dia_semana: number;
 
   @ApiProperty({
-    type: () => [TurmaDisponibilidadeIntervaloRestDto],
     ...TurmaDisponibilidadeDiaFields.intervalos.swaggerMetadata,
+    type: () => [TurmaDisponibilidadeIntervaloRestDto],
   })
   intervalos: TurmaDisponibilidadeIntervaloRestDto[];
 }

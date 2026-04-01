@@ -20,8 +20,8 @@ export class CidadeFindOneOutputRestDto {
   nome: string;
 
   @ApiProperty({
-    type: () => EstadoFindOneOutputRestDto,
     ...CidadeFindOneQueryResultFields.estado.swaggerMetadata,
+    type: () => EstadoFindOneOutputRestDto,
   })
   estado: EstadoFindOneOutputRestDto;
 }
@@ -61,12 +61,12 @@ export class CidadeListInputRestDto {
 
 @ApiSchema({ name: "CidadeListOutputDto" })
 export class CidadeListOutputRestDto {
-  @ApiProperty({ type: () => PaginationMetaRestDto, ...CidadeListQueryFields.meta.swaggerMetadata })
+  @ApiProperty({ ...CidadeListQueryFields.meta.swaggerMetadata, type: () => PaginationMetaRestDto })
   meta: PaginationMetaRestDto;
 
   @ApiProperty({
-    type: () => [CidadeFindOneOutputRestDto],
     ...CidadeListQueryFields.data.swaggerMetadata,
+    type: () => [CidadeFindOneOutputRestDto],
   })
   data: CidadeFindOneOutputRestDto[];
 }

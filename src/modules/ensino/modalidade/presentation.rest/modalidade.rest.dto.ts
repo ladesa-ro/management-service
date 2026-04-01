@@ -48,14 +48,14 @@ export class ModalidadeListInputRestDto {
 @ApiSchema({ name: "ModalidadeListOutputDto" })
 export class ModalidadeListOutputRestDto {
   @ApiProperty({
-    type: () => PaginationMetaRestDto,
     ...ModalidadeListQueryFields.meta.swaggerMetadata,
+    type: () => PaginationMetaRestDto,
   })
   meta: PaginationMetaRestDto;
 
   @ApiProperty({
-    type: () => [ModalidadeFindOneOutputRestDto],
     ...ModalidadeListQueryFields.data.swaggerMetadata,
+    type: () => [ModalidadeFindOneOutputRestDto],
   })
   data: ModalidadeFindOneOutputRestDto[];
 }

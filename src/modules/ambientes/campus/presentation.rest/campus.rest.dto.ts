@@ -34,8 +34,8 @@ export class CampusFindOneOutputRestDto extends EntityBaseRestDto {
   cnpj: string;
 
   @ApiProperty({
-    type: () => EnderecoFindOneOutputRestDto,
     ...CampusFindOneQueryResultFields.endereco.swaggerMetadata,
+    type: () => EnderecoFindOneOutputRestDto,
   })
   endereco: EnderecoFindOneOutputRestDto;
 }
@@ -66,12 +66,12 @@ export class CampusListInputRestDto {
 
 @ApiSchema({ name: "CampusListOutputDto" })
 export class CampusListOutputRestDto {
-  @ApiProperty({ type: () => PaginationMetaRestDto, ...CampusListQueryFields.meta.swaggerMetadata })
+  @ApiProperty({ ...CampusListQueryFields.meta.swaggerMetadata, type: () => PaginationMetaRestDto })
   meta: PaginationMetaRestDto;
 
   @ApiProperty({
-    type: () => [CampusFindOneOutputRestDto],
     ...CampusListQueryFields.data.swaggerMetadata,
+    type: () => [CampusFindOneOutputRestDto],
   })
   data: CampusFindOneOutputRestDto[];
 }
@@ -97,8 +97,8 @@ export class CampusCreateInputRestDto {
   cnpj: string;
 
   @ApiProperty({
-    type: () => EnderecoInputRestDto,
     ...CampusCreateCommandFields.endereco.swaggerMetadata,
+    type: () => EnderecoInputRestDto,
   })
   endereco: EnderecoInputRestDto;
 }
@@ -120,8 +120,8 @@ export class CampusUpdateInputRestDto {
   cnpj?: string;
 
   @ApiPropertyOptional({
-    type: () => EnderecoInputRestDto,
     ...CampusUpdateCommandFields.endereco.swaggerMetadata,
+    type: () => EnderecoInputRestDto,
   })
   endereco?: EnderecoInputRestDto;
 }

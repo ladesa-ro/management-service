@@ -54,32 +54,32 @@ export class DiarioFindOneOutputRestDto extends EntityBaseRestDto {
   ativo: boolean;
 
   @ApiProperty({
-    type: () => CalendarioLetivoFindOneOutputRestDto,
     ...DiarioFindOneQueryResultFields.calendarioLetivo.swaggerMetadata,
+    type: () => CalendarioLetivoFindOneOutputRestDto,
   })
   calendarioLetivo: CalendarioLetivoFindOneOutputRestDto;
 
   @ApiProperty({
-    type: () => TurmaFindOneOutputRestDto,
     ...DiarioFindOneQueryResultFields.turma.swaggerMetadata,
+    type: () => TurmaFindOneOutputRestDto,
   })
   turma: TurmaFindOneOutputRestDto;
 
   @ApiProperty({
-    type: () => DisciplinaFindOneOutputRestDto,
     ...DiarioFindOneQueryResultFields.disciplina.swaggerMetadata,
+    type: () => DisciplinaFindOneOutputRestDto,
   })
   disciplina: DisciplinaFindOneOutputRestDto;
 
   @ApiPropertyOptional({
-    type: () => AmbienteFindOneOutputRestDto,
     ...DiarioFindOneQueryResultFields.ambientePadrao.swaggerMetadata,
+    type: () => AmbienteFindOneOutputRestDto,
   })
   ambientePadrao: AmbienteFindOneOutputRestDto | null;
 
   @ApiPropertyOptional({
-    type: () => ImagemFindOneOutputRestDto,
     ...DiarioFindOneQueryResultFields.imagemCapa.swaggerMetadata,
+    type: () => ImagemFindOneOutputRestDto,
   })
   imagemCapa: ImagemFindOneOutputRestDto | null;
 }
@@ -111,12 +111,12 @@ export class DiarioListInputRestDto extends PaginatedFilterByIdRestDto {
 
 @ApiSchema({ name: "DiarioListOutputDto" })
 export class DiarioListOutputRestDto {
-  @ApiProperty({ type: () => PaginationMetaRestDto, ...DiarioListQueryFields.meta.swaggerMetadata })
+  @ApiProperty({ ...DiarioListQueryFields.meta.swaggerMetadata, type: () => PaginationMetaRestDto })
   meta: PaginationMetaRestDto;
 
   @ApiProperty({
-    type: () => [DiarioFindOneOutputRestDto],
     ...DiarioListQueryFields.data.swaggerMetadata,
+    type: () => [DiarioFindOneOutputRestDto],
   })
   data: DiarioFindOneOutputRestDto[];
 }
@@ -133,27 +133,27 @@ export class DiarioCreateInputRestDto {
   ativo: boolean;
 
   @ApiProperty({
-    type: () => CalendarioLetivoFindOneInputRestDto,
     ...DiarioCreateCommandFields.calendarioLetivo.swaggerMetadata,
+    type: () => CalendarioLetivoFindOneInputRestDto,
   })
   calendarioLetivo: CalendarioLetivoFindOneInputRestDto;
 
   @ApiProperty({
-    type: () => TurmaFindOneInputRestDto,
     ...DiarioCreateCommandFields.turma.swaggerMetadata,
+    type: () => TurmaFindOneInputRestDto,
   })
   turma: TurmaFindOneInputRestDto;
 
   @ApiProperty({
-    type: () => DisciplinaFindOneInputRestDto,
     ...DiarioCreateCommandFields.disciplina.swaggerMetadata,
+    type: () => DisciplinaFindOneInputRestDto,
   })
   disciplina: DisciplinaFindOneInputRestDto;
 
   @ApiPropertyOptional({
-    type: () => AmbienteFindOneInputRestDto,
     ...DiarioCreateCommandFields.ambientePadrao.swaggerMetadata,
     nullable: true,
+    type: () => AmbienteFindOneInputRestDto,
   })
   ambientePadrao?: AmbienteFindOneInputRestDto | null;
 }

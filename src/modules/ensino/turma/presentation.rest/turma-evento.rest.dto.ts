@@ -89,8 +89,8 @@ export class TurmaEventoFindOneOutputRestDto {
 @ApiSchema({ name: "TurmaEventoListOutputDto" })
 export class TurmaEventoListOutputRestDto {
   @ApiProperty({
-    type: () => [TurmaEventoFindOneOutputRestDto],
     ...SharedFields.data.swaggerMetadata,
+    type: () => [TurmaEventoFindOneOutputRestDto],
   })
   data: TurmaEventoFindOneOutputRestDto[];
 }

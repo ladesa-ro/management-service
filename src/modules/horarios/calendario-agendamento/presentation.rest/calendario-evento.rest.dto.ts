@@ -220,8 +220,8 @@ export class CalendarioEventoFindOneOutputRestDto {
 @ApiSchema({ name: "CalendarioEventoListOutputDto" })
 export class CalendarioEventoListOutputRestDto {
   @ApiProperty({
-    type: () => [CalendarioEventoFindOneOutputRestDto],
     ...SharedFields.data.swaggerMetadata,
+    type: () => [CalendarioEventoFindOneOutputRestDto],
   })
   data: CalendarioEventoFindOneOutputRestDto[];
 }

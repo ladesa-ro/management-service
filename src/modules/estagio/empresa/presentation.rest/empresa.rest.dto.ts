@@ -44,8 +44,8 @@ export class EmpresaFindOneOutputRestDto extends EntityBaseRestDto {
   email: string;
 
   @ApiProperty({
-    type: () => EnderecoFindOneOutputRestDto,
     ...EmpresaFindOneQueryResultFields.endereco.swaggerMetadata,
+    type: () => EnderecoFindOneOutputRestDto,
   })
   endereco: EnderecoFindOneOutputRestDto;
 
@@ -77,14 +77,14 @@ export class EmpresaListInputRestDto extends PaginatedFilterByIdRestDto {
 @ApiSchema({ name: "EmpresaListOutputDto" })
 export class EmpresaListOutputRestDto {
   @ApiProperty({
-    type: () => PaginationMetaRestDto,
     ...EmpresaListQueryFields.meta.swaggerMetadata,
+    type: () => PaginationMetaRestDto,
   })
   meta: PaginationMetaRestDto;
 
   @ApiProperty({
-    type: () => [EmpresaFindOneOutputRestDto],
     ...EmpresaListQueryFields.data.swaggerMetadata,
+    type: () => [EmpresaFindOneOutputRestDto],
   })
   data: EmpresaFindOneOutputRestDto[];
 }

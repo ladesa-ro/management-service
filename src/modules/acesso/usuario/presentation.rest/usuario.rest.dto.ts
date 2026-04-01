@@ -42,8 +42,8 @@ export class UsuarioPerfilNestedOutputRestDto extends EntityBaseRestDto {
   cargo: string;
 
   @ApiProperty({
-    type: () => CampusFindOneOutputRestDto,
     ...PerfilFindOneQueryResultFields.campus.swaggerMetadata,
+    type: () => CampusFindOneOutputRestDto,
   })
   campus: CampusFindOneOutputRestDto;
 }
@@ -67,20 +67,20 @@ export class UsuarioFindOneOutputRestDto extends EntityBaseRestDto {
   isSuperUser: boolean;
 
   @ApiPropertyOptional({
-    type: () => ImagemFindOneOutputRestDto,
     ...UsuarioFindOneQueryResultFields.imagemCapa.swaggerMetadata,
+    type: () => ImagemFindOneOutputRestDto,
   })
   imagemCapa: ImagemFindOneOutputRestDto | null;
 
   @ApiPropertyOptional({
-    type: () => ImagemFindOneOutputRestDto,
     ...UsuarioFindOneQueryResultFields.imagemPerfil.swaggerMetadata,
+    type: () => ImagemFindOneOutputRestDto,
   })
   imagemPerfil: ImagemFindOneOutputRestDto | null;
 
   @ApiProperty({
-    type: () => [UsuarioPerfilNestedOutputRestDto],
     ...UsuarioFindOneQueryResultFields.vinculos.swaggerMetadata,
+    type: () => [UsuarioPerfilNestedOutputRestDto],
   })
   vinculos: UsuarioPerfilNestedOutputRestDto[];
 }
@@ -107,8 +107,8 @@ export class UsuarioEnsinoCursoRefRestDto {
   nome: string;
 
   @ApiProperty({
-    type: () => [UsuarioEnsinoTurmaRefRestDto],
     ...UsuarioEnsinoCursoRefFields.turmas.swaggerMetadata,
+    type: () => [UsuarioEnsinoTurmaRefRestDto],
   })
   turmas: UsuarioEnsinoTurmaRefRestDto[];
 }
@@ -122,8 +122,8 @@ export class UsuarioEnsinoDisciplinaRefRestDto {
   nome: string;
 
   @ApiProperty({
-    type: () => [UsuarioEnsinoCursoRefRestDto],
     ...UsuarioEnsinoDisciplinaRefFields.cursos.swaggerMetadata,
+    type: () => [UsuarioEnsinoCursoRefRestDto],
   })
   cursos: UsuarioEnsinoCursoRefRestDto[];
 }
@@ -131,14 +131,14 @@ export class UsuarioEnsinoDisciplinaRefRestDto {
 @ApiSchema({ name: "UsuarioEnsinoOutputDto" })
 export class UsuarioEnsinoOutputRestDto {
   @ApiProperty({
-    type: () => UsuarioFindOneOutputRestDto,
     ...UsuarioEnsinoOutputFields.usuario.swaggerMetadata,
+    type: () => UsuarioFindOneOutputRestDto,
   })
   usuario: UsuarioFindOneOutputRestDto;
 
   @ApiProperty({
-    type: () => [UsuarioEnsinoDisciplinaRefRestDto],
     ...UsuarioEnsinoOutputFields.disciplinas.swaggerMetadata,
+    type: () => [UsuarioEnsinoDisciplinaRefRestDto],
   })
   disciplinas: UsuarioEnsinoDisciplinaRefRestDto[];
 }
@@ -158,14 +158,14 @@ export class UsuarioListInputRestDto extends PaginatedFilterByIdRestDto {
 @ApiSchema({ name: "UsuarioListOutputDto" })
 export class UsuarioListOutputRestDto {
   @ApiProperty({
-    type: () => PaginationMetaRestDto,
     ...UsuarioListQueryFields.meta.swaggerMetadata,
+    type: () => PaginationMetaRestDto,
   })
   meta: PaginationMetaRestDto;
 
   @ApiProperty({
-    type: () => [UsuarioFindOneOutputRestDto],
     ...UsuarioListQueryFields.data.swaggerMetadata,
+    type: () => [UsuarioFindOneOutputRestDto],
   })
   data: UsuarioFindOneOutputRestDto[];
 }
@@ -197,8 +197,8 @@ export class UsuarioCreateInputRestDto {
   email?: string | null;
 
   @ApiPropertyOptional({
-    type: () => [VinculoInputRestDto],
     ...UsuarioCreateCommandFields.vinculos.swaggerMetadata,
+    type: () => [VinculoInputRestDto],
   })
   vinculos?: VinculoInput[];
 }
@@ -217,8 +217,8 @@ export class UsuarioUpdateInputRestDto {
   email?: string | null;
 
   @ApiPropertyOptional({
-    type: () => [VinculoInputRestDto],
     ...UsuarioUpdateCommandFields.vinculos.swaggerMetadata,
+    type: () => [VinculoInputRestDto],
   })
   vinculos?: VinculoInput[];
 }

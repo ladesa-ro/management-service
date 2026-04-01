@@ -65,14 +65,14 @@ export class ArquivoListInputRestDto extends PaginatedFilterByIdRestDto {
 @ApiSchema({ name: "ArquivoListOutputDto" })
 export class ArquivoListOutputRestDto {
   @ApiProperty({
-    type: () => PaginationMetaRestDto,
     ...ArquivoListQueryFields.meta.swaggerMetadata,
+    type: () => PaginationMetaRestDto,
   })
   meta: PaginationMetaRestDto;
 
   @ApiProperty({
-    type: () => [ArquivoFindOneOutputRestDto],
     ...ArquivoListQueryFields.data.swaggerMetadata,
+    type: () => [ArquivoFindOneOutputRestDto],
   })
   data: ArquivoFindOneOutputRestDto[];
 }
