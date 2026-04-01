@@ -27,18 +27,9 @@ export const findOneInputDtoToFindOneQuery = createMapper<string, EstagioFindOne
 const listInputMapper = createPaginatedInputMapper<EstagioListInputGraphQlDto, EstagioListQuery>(
   EstagioListQuery,
   (dto, query) => {
-    into(query as never)
-      .field("filter.id")
-      .from(dto, "filterId");
-    into(query as never)
-      .field("filter.empresa.id")
-      .from(dto, "filterEmpresaId");
-    into(query as never)
-      .field("filter.estagiario.id")
-      .from(dto, "filterEstagiarioId");
-    into(query as never)
-      .field("filter.status")
-      .from(dto, "filterStatus");
+    into(query).field("filterEmpresaId").from(dto, "filterEmpresaId");
+    into(query).field("filterEstagiarioId").from(dto, "filterEstagiarioId");
+    into(query).field("filterStatus").from(dto, "filterStatus");
   },
 );
 
@@ -98,14 +89,25 @@ export const listQueryResultToListOutputDto = createMapper<
   EstagioListQueryResult,
   EstagioListOutputGraphQlDto
 >((data) => {
+  const pagination = data as unknown as {
+    meta: {
+      itemsPerPage: number;
+      totalItems: number;
+      currentPage: number;
+      totalPages: number;
+      search?: string | null;
+      sortBy?: [string, string][] | null;
+    };
+  };
+
   const output = new EstagioListOutputGraphQlDto();
   output.meta = {
-    itemsPerPage: data.limit,
-    totalItems: data.total,
-    currentPage: data.page,
-    totalPages: data.limit > 0 ? Math.ceil(data.total / data.limit) : 0,
-    search: "",
-    sortBy: [],
+    itemsPerPage: pagination.meta.itemsPerPage,
+    totalItems: pagination.meta.totalItems,
+    currentPage: pagination.meta.currentPage,
+    totalPages: pagination.meta.totalPages,
+    search: pagination.meta.search ?? "",
+    sortBy: pagination.meta.sortBy ?? [],
   };
   output.data = findOneQueryResultToOutputDto.mapArray(data.data);
   return output;
