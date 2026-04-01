@@ -130,8 +130,6 @@ export const updateInputDtoToUpdateCommand = createMapper<
         ? { id: dto.ambientePadrao.id }
         : null
       : undefined,
-  imagemCapa:
-    dto.imagemCapa !== undefined ? (dto.imagemCapa ? { id: dto.imagemCapa.id } : null) : undefined,
 }));
 
 // ============================================================================

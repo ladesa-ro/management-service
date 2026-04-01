@@ -65,7 +65,6 @@ export class Curso {
     if (parsed.nomeAbreviado !== undefined) this.nomeAbreviado = parsed.nomeAbreviado;
     if (parsed.campus !== undefined) this.campus = parsed.campus;
     if (parsed.ofertaFormacao !== undefined) this.ofertaFormacao = parsed.ofertaFormacao;
-    if (parsed.imagemCapa !== undefined) this.imagemCapa = parsed.imagemCapa ?? null;
 
     this.dateUpdated = getNowISO();
 

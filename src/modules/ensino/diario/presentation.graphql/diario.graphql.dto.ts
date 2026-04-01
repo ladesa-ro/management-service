@@ -179,12 +179,6 @@ export class DiarioUpdateInputGraphQlDto {
     ...DiarioUpdateCommandFields.ambientePadrao.gqlMetadata,
   })
   ambientePadrao?: AmbienteRefInputForDiarioGraphQlDto | null;
-
-  @Field(() => ImagemRefInputForDiarioGraphQlDto, {
-    nullable: true,
-    ...DiarioUpdateCommandFields.imagemCapa.gqlMetadata,
-  })
-  imagemCapa?: ImagemRefInputForDiarioGraphQlDto | null;
 }
 
 // ============================================================================

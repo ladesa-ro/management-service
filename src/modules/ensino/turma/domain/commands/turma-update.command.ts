@@ -1,5 +1,4 @@
 import { AmbienteInputRef } from "@/modules/ambientes/ambiente";
-import { ImagemInputRef } from "@/modules/armazenamento/imagem";
 import { CursoInputRef } from "@/modules/ensino/curso";
 import { TurmaFields } from "../turma.fields";
 
@@ -8,7 +7,6 @@ export const TurmaUpdateCommandFields = {
   nome: TurmaFields.nome,
   curso: TurmaFields.curso,
   ambientePadraoAula: TurmaFields.ambientePadraoAula,
-  imagemCapa: TurmaFields.imagemCapa,
 };
 
 export class TurmaUpdateCommand {
@@ -16,5 +14,4 @@ export class TurmaUpdateCommand {
   nome?: string | null;
   curso?: CursoInputRef;
   ambientePadraoAula?: AmbienteInputRef | null;
-  imagemCapa?: ImagemInputRef | null;
 }

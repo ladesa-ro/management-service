@@ -97,11 +97,6 @@ export class TurmaUpdateInputGraphQlDto {
     ...TurmaUpdateCommandFields.ambientePadraoAula.gqlMetadata,
   })
   ambientePadraoAula?: TurmaAmbienteRefInputGraphQlDto | null;
-  @Field(() => TurmaImagemCapaRefInputGraphQlDto, {
-    nullable: true,
-    ...TurmaUpdateCommandFields.imagemCapa.gqlMetadata,
-  })
-  imagemCapa?: TurmaImagemCapaRefInputGraphQlDto | null;
 }
 
 // ============================================================================

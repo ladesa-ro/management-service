@@ -65,7 +65,6 @@ export class Disciplina {
     if (parsed.nome !== undefined) this.nome = parsed.nome;
     if (parsed.nomeAbreviado !== undefined) this.nomeAbreviado = parsed.nomeAbreviado;
     if (parsed.cargaHoraria !== undefined) this.cargaHoraria = parsed.cargaHoraria;
-    if (parsed.imagemCapa !== undefined) this.imagemCapa = parsed.imagemCapa ?? null;
 
     this.dateUpdated = getNowISO();
 
