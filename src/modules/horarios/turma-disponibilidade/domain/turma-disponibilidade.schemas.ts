@@ -53,6 +53,7 @@ export const TurmaDisponibilidadeConfiguracaoSchema = z.object({
   dataFim: z.string().min(1).nullable(),
   ativo: z.boolean(),
   horarios: turmaDisponibilidadeItemsArraySchema,
+  identificadorExternoGradeHoraria: uuidSchema.nullable().optional(),
   dateCreated: z.string().min(1),
   dateUpdated: z.string().min(1),
   dateDeleted: z.string().nullable(),
@@ -67,4 +68,5 @@ export const TurmaDisponibilidadeConfiguracaoCreateSchema = z.object({
   dataInicio: z.string().min(1),
   dataFim: z.string().min(1).nullable().optional(),
   horarios: turmaDisponibilidadeItemsArraySchema,
+  identificadorExternoGradeHoraria: uuidSchema.nullable().optional(),
 });

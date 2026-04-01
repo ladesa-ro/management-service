@@ -98,6 +98,7 @@ export class TurmaDisponibilidadeSaveCommandHandlerImpl
       dataInicio,
       dataFim,
       horarios,
+      identificadorExternoGradeHoraria: configInput.identificadorExternoGradeHoraria ?? null,
     });
     await this.repository.save(newConfig);
 

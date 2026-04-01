@@ -83,6 +83,14 @@ export class TurmaDisponibilidadeConfigOutputRestDto {
   @ApiPropertyOptional(TurmaDisponibilidadeConfigFields.data_fim.swaggerMetadata)
   data_fim: string | null;
 
+  @ApiPropertyOptional({
+    description: "Identificador externo da grade horaria utilizada (snapshot)",
+    type: "string",
+    format: "uuid",
+    nullable: true,
+  })
+  identificador_externo_grade_horaria: string | null;
+
   @ApiProperty({
     ...TurmaDisponibilidadeConfigFields.horarios.swaggerMetadata,
     type: () => [TurmaDisponibilidadeDiaRestDto],
@@ -110,6 +118,7 @@ export class TurmaDisponibilidadeWeekOutputRestDto {
 const TurmaDisponibilidadeConfigInputSchema = z.object({
   data_inicio: z.string().min(1),
   data_fim: z.string().min(1).nullable(),
+  identificador_externo_grade_horaria: z.string().uuid().nullable().optional(),
   horarios: z.array(
     z.object({
       dia_semana: z.number().int().min(1).max(6),
@@ -145,6 +154,14 @@ export class TurmaDisponibilidadeConfigInputRestDto {
 
   @ApiPropertyOptional(TurmaDisponibilidadeConfigFields.data_fim.swaggerMetadata)
   data_fim: string | null;
+
+  @ApiPropertyOptional({
+    description: "Identificador externo da grade horaria utilizada",
+    type: "string",
+    format: "uuid",
+    nullable: true,
+  })
+  identificador_externo_grade_horaria?: string | null;
 
   @ApiProperty({
     ...TurmaDisponibilidadeConfigFields.horarios.swaggerMetadata,
