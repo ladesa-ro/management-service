@@ -42,15 +42,18 @@ export class TurmaDisponibilidadeSaveCommandHandlerImpl
     turmaId: string,
     configInput: TurmaDisponibilidadeSaveCommand["configs"][number],
   ): Promise<TurmaDisponibilidadeConfiguracao | null> {
-    const domingo = this.normalizeToDomingo(configInput.dataInicio);
-    const sabado = this.addDays(domingo, 6);
+    const dataInicio = configInput.dataInicio;
 
-    // Guard: semana passada
+    // Guard: range inteiramente no passado
     const today = new Date().toISOString().split("T")[0];
-    if (sabado < today) {
+    if (
+      configInput.dataFim !== null &&
+      configInput.dataFim !== undefined &&
+      configInput.dataFim < today
+    ) {
       throw ValidationError.fromField(
         "data_inicio",
-        "Nao e possivel alterar disponibilidade de semanas passadas",
+        "Nao e possivel alterar disponibilidade de periodos passados",
       );
     }
 
@@ -62,8 +65,7 @@ export class TurmaDisponibilidadeSaveCommandHandlerImpl
       })),
     );
 
-    const dataInicio = domingo;
-    // data_fim null = aplicar para esta semana e futuras; com valor = apenas o range especificado
+    // data_fim null = aplicar a partir de dataInicio indefinidamente; com valor = apenas o range especificado
     const dataFim = configInput.dataFim;
 
     // Encontrar configs ativas que se sobrepoem ao novo range
@@ -103,14 +105,7 @@ export class TurmaDisponibilidadeSaveCommandHandlerImpl
     await this.repository.save(newConfig);
 
     // Retornar a config salva
-    return this.repository.findByWeek(turmaId, domingo);
-  }
-
-  private normalizeToDomingo(dateStr: string): string {
-    const date = new Date(dateStr);
-    const day = date.getUTCDay();
-    date.setUTCDate(date.getUTCDate() - day);
-    return date.toISOString().split("T")[0];
+    return newConfig;
   }
 
   private subtractOneDay(dateStr: string): string {
@@ -122,12 +117,6 @@ export class TurmaDisponibilidadeSaveCommandHandlerImpl
   private addOneDay(dateStr: string): string {
     const date = new Date(dateStr);
     date.setUTCDate(date.getUTCDate() + 1);
-    return date.toISOString().split("T")[0];
-  }
-
-  private addDays(dateStr: string, days: number): string {
-    const date = new Date(dateStr);
-    date.setUTCDate(date.getUTCDate() + days);
     return date.toISOString().split("T")[0];
   }
 }
