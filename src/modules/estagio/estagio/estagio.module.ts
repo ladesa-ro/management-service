@@ -20,6 +20,7 @@ import {
 } from "@/modules/estagio/estagio/domain/queries";
 import { IEstagioRepository } from "@/modules/estagio/estagio/domain/repositories";
 import { EstagioTypeOrmRepositoryAdapter } from "@/modules/estagio/estagio/infrastructure.database";
+import { EstagioGraphqlResolver } from "@/modules/estagio/estagio/presentation.graphql";
 import { EstagioRestController } from "@/modules/estagio/estagio/presentation.rest/estagio.rest.controller";
 
 @Module({
@@ -27,6 +28,7 @@ import { EstagioRestController } from "@/modules/estagio/estagio/presentation.re
   controllers: [EstagioRestController],
   providers: [
     NestJsPaginateAdapter,
+    EstagioGraphqlResolver,
     {
       provide: IEstagioRepository,
       useClass: EstagioTypeOrmRepositoryAdapter,
