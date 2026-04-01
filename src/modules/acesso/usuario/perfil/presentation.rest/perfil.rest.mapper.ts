@@ -1,8 +1,16 @@
-import { PerfilFindOneQuery, type PerfilFindOneQueryResult } from "@/modules/acesso/usuario/perfil";
+import {
+  PerfilFindOneQuery,
+  type PerfilFindOneQueryResult,
+  PerfilListQuery,
+} from "@/modules/acesso/usuario/perfil";
 import * as UsuarioRestMapper from "@/modules/acesso/usuario/presentation.rest/usuario.rest.mapper";
 import * as CampusRestMapper from "@/modules/ambientes/campus/presentation.rest/campus.rest.mapper";
-import { createMapper } from "@/shared/mapping";
-import { PerfilFindOneOutputRestDto } from "./perfil.rest.dto";
+import { createListMapper, createMapper, createPaginatedInputMapper, into } from "@/shared/mapping";
+import {
+  PerfilFindOneOutputRestDto,
+  type PerfilListInputRestDto,
+  PerfilListOutputRestDto,
+} from "./perfil.rest.dto";
 
 // ============================================================================
 // Externa -> Interna (Input: Presentation -> Core)
@@ -15,6 +23,16 @@ export const findOneInputDtoToFindOneQuery = createMapper<{ id: string }, Perfil
     return input;
   },
 );
+
+export const listInputDtoToListQuery = createPaginatedInputMapper<
+  PerfilListInputRestDto,
+  PerfilListQuery
+>(PerfilListQuery, (dto, query) => {
+  into(query).field("filter.id").from(dto);
+  into(query).field("filter.campus.id").from(dto);
+  into(query).field("filter.usuario.id").from(dto);
+  into(query).field("filter.cargo.nome").from(dto);
+});
 
 // ============================================================================
 // Interna -> Externa (Output: Core -> Presentation)
@@ -39,3 +57,8 @@ export const findOneQueryResultToOutputDto = createMapper<
   dto.dateDeleted = output.dateDeleted;
   return dto;
 });
+
+export const listQueryResultToListOutputDto = createListMapper(
+  PerfilListOutputRestDto,
+  findOneQueryResultToOutputDto,
+);

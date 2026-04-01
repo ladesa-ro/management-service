@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from "@nestjs/common";
+import { Controller, Get, Param, Query } from "@nestjs/common";
 import {
   ApiForbiddenResponse,
   ApiNotFoundResponse,
@@ -13,9 +13,56 @@ import {
   IPerfilFindOneQueryHandler,
   PerfilFindOneQueryMetadata,
 } from "@/modules/acesso/usuario/perfil/domain/queries/perfil-find-one.query.handler.interface";
+import {
+  IPerfilListQueryHandler,
+  PerfilListQueryMetadata,
+} from "@/modules/acesso/usuario/perfil/domain/queries/perfil-list.query.handler.interface";
 import { AccessContextHttp } from "@/server/nest/access-context";
-import { PerfilFindOneInputRestDto, PerfilFindOneOutputRestDto } from "./perfil.rest.dto";
+import {
+  PerfilFindOneInputRestDto,
+  PerfilFindOneOutputRestDto,
+  PerfilListInputRestDto,
+  PerfilListOutputRestDto,
+} from "./perfil.rest.dto";
 import * as PerfilRestMapper from "./perfil.rest.mapper";
+
+@ApiTags("perfis")
+@Controller("/perfis")
+export class PerfilListRestController {
+  constructor(
+    @DeclareDependency(IPerfilListQueryHandler)
+    private readonly listHandler: IPerfilListQueryHandler,
+    @DeclareDependency(IPerfilFindOneQueryHandler)
+    private readonly findOneHandler: IPerfilFindOneQueryHandler,
+  ) {}
+
+  @Get("/")
+  @ApiOperation(PerfilListQueryMetadata.swaggerMetadata)
+  @ApiOkResponse({ type: PerfilListOutputRestDto })
+  @ApiForbiddenResponse()
+  async findAll(
+    @AccessContextHttp() accessContext: IAccessContext,
+    @Query() dto: PerfilListInputRestDto,
+  ): Promise<PerfilListOutputRestDto> {
+    const query = PerfilRestMapper.listInputDtoToListQuery.map(dto);
+    const queryResult = await this.listHandler.execute(accessContext, query);
+    return PerfilRestMapper.listQueryResultToListOutputDto(queryResult);
+  }
+
+  @Get("/:id")
+  @ApiOperation(PerfilFindOneQueryMetadata.swaggerMetadata)
+  @ApiOkResponse({ type: PerfilFindOneOutputRestDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async findById(
+    @AccessContextHttp() accessContext: IAccessContext,
+    @Param() params: PerfilFindOneInputRestDto,
+  ): Promise<PerfilFindOneOutputRestDto | null> {
+    const query = PerfilRestMapper.findOneInputDtoToFindOneQuery.map(params);
+    const queryResult = await this.findOneHandler.execute(accessContext, query);
+    return queryResult ? PerfilRestMapper.findOneQueryResultToOutputDto.map(queryResult) : null;
+  }
+}
 
 @ApiTags("usuarios")
 @Controller("/usuarios/:usuarioId/perfis")
