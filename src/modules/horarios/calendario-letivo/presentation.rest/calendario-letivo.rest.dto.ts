@@ -34,34 +34,23 @@ import { CalendarioLetivoListQueryFields } from "../domain/queries/calendario-le
 
 @ApiSchema({ name: "CalendarioLetivoFindOneOutputDto" })
 export class CalendarioLetivoFindOneOutputRestDto extends EntityBaseRestDto {
-  @ApiProperty({
-    type: "string",
-    ...CalendarioLetivoFindOneQueryResultFields.nome.swaggerMetadata,
-    minLength: 1,
-  })
+  @ApiProperty(CalendarioLetivoFindOneQueryResultFields.nome.swaggerMetadata)
   nome: string;
 
-  @ApiProperty({
-    type: "integer",
-    ...CalendarioLetivoFindOneQueryResultFields.ano.swaggerMetadata,
-    minimum: 0,
-    maximum: 65535,
-  })
+  @ApiProperty(CalendarioLetivoFindOneQueryResultFields.ano.swaggerMetadata)
   ano: number;
 
   @ApiProperty({
     type: () => CampusFindOneOutputRestDto,
     ...CalendarioLetivoFindOneQueryResultFields.campus.swaggerMetadata,
-    nullable: true,
   })
-  campus: CampusFindOneOutputRestDto | null;
+  campus: CampusFindOneOutputRestDto;
 
   @ApiProperty({
     type: () => OfertaFormacaoFindOneOutputRestDto,
     ...CalendarioLetivoFindOneQueryResultFields.ofertaFormacao.swaggerMetadata,
-    nullable: true,
   })
-  ofertaFormacao: OfertaFormacaoFindOneOutputRestDto | null;
+  ofertaFormacao: OfertaFormacaoFindOneOutputRestDto;
 }
 
 // ============================================================================
@@ -72,27 +61,15 @@ export class CalendarioLetivoFindOneOutputRestDto extends EntityBaseRestDto {
 export class CalendarioLetivoListInputRestDto extends PaginatedFilterByIdRestDto {
   static schema = CalendarioLetivoPaginationInputSchema;
 
-  @ApiPropertyOptional({
-    type: "string",
-    isArray: true,
-    ...CalendarioLetivoListQueryFields.filterAno.swaggerMetadata,
-  })
+  @ApiPropertyOptional(CalendarioLetivoListQueryFields.filterAno.swaggerMetadata)
   @TransformToArray()
   "filter.ano"?: string[];
 
-  @ApiPropertyOptional({
-    type: "string",
-    isArray: true,
-    ...CalendarioLetivoListQueryFields.filterCampusId.swaggerMetadata,
-  })
+  @ApiPropertyOptional(CalendarioLetivoListQueryFields.filterCampusId.swaggerMetadata)
   @TransformToArray()
   "filter.campus.id"?: string[];
 
-  @ApiPropertyOptional({
-    type: "string",
-    isArray: true,
-    ...CalendarioLetivoListQueryFields.filterOfertaFormacaoId.swaggerMetadata,
-  })
+  @ApiPropertyOptional(CalendarioLetivoListQueryFields.filterOfertaFormacaoId.swaggerMetadata)
   @TransformToArray()
   "filter.ofertaFormacao.id"?: string[];
 }
@@ -120,19 +97,10 @@ export class CalendarioLetivoListOutputRestDto {
 export class CalendarioLetivoCreateInputRestDto {
   static schema = CalendarioLetivoCreateSchema.presentation;
 
-  @ApiProperty({
-    type: "string",
-    ...CalendarioLetivoCreateCommandFields.nome.swaggerMetadata,
-    minLength: 1,
-  })
+  @ApiProperty(CalendarioLetivoCreateCommandFields.nome.swaggerMetadata)
   nome: string;
 
-  @ApiProperty({
-    type: "integer",
-    ...CalendarioLetivoCreateCommandFields.ano.swaggerMetadata,
-    minimum: 0,
-    maximum: 65535,
-  })
+  @ApiProperty(CalendarioLetivoCreateCommandFields.ano.swaggerMetadata)
   ano: number;
 
   @ApiProperty({
@@ -163,10 +131,6 @@ export class CalendarioLetivoUpdateInputRestDto extends PartialType(
 export class CalendarioLetivoFindOneInputRestDto {
   static schema = CalendarioLetivoFindOneInputSchema;
 
-  @ApiProperty({
-    type: "string",
-    ...CalendarioLetivoFindOneQueryResultFields.id.swaggerMetadata,
-    format: "uuid",
-  })
+  @ApiProperty(CalendarioLetivoFindOneQueryResultFields.id.swaggerMetadata)
   id: string;
 }

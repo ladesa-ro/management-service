@@ -35,9 +35,8 @@ export class TurmaFindOneOutputRestDto extends EntityBaseRestDto {
   @ApiProperty({
     type: () => CursoFindOneOutputRestDto,
     ...TurmaFindOneQueryResultFields.curso.swaggerMetadata,
-    nullable: true,
   })
-  curso: CursoFindOneOutputRestDto | null;
+  curso: CursoFindOneOutputRestDto;
 
   @ApiPropertyOptional({
     type: () => AmbienteFindOneOutputRestDto,

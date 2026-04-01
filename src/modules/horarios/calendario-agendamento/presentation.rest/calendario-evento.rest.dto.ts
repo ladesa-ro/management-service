@@ -1,3 +1,5 @@
+import { SharedFields } from "@/domain/abstractions";
+import { CalendarioEventoFields } from "@/modules/horarios/calendario-agendamento/domain/calendario-evento.fields";
 import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@/shared/presentation/rest";
 
 // ============================================================================
@@ -6,84 +8,76 @@ import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@/shared/presentati
 
 @ApiSchema({ name: "CalendarioEventoCreateInputDto" })
 export class CalendarioEventoCreateInputRestDto {
-  @ApiProperty({ type: "string", description: "Nome do evento" })
+  @ApiProperty(CalendarioEventoFields.nome.swaggerMetadata)
   nome: string;
 
-  @ApiProperty({ type: "string", format: "date", description: "Data inicio" })
+  @ApiProperty(CalendarioEventoFields.dataInicio.swaggerMetadata)
   dataInicio: string;
 
-  @ApiPropertyOptional({ type: "string", format: "date", description: "Data fim", nullable: true })
+  @ApiPropertyOptional(CalendarioEventoFields.dataFim.swaggerMetadata)
   dataFim?: string;
 
-  @ApiProperty({ type: "boolean", description: "Evento ocupa o dia inteiro" })
+  @ApiProperty(CalendarioEventoFields.diaInteiro.swaggerMetadata)
   diaInteiro: boolean;
 
-  @ApiPropertyOptional({ type: "string", description: "Horario inicio (HH:MM)" })
+  @ApiPropertyOptional(CalendarioEventoFields.horarioInicio.swaggerMetadata)
   horarioInicio?: string;
 
-  @ApiPropertyOptional({ type: "string", description: "Horario fim (HH:MM)" })
+  @ApiPropertyOptional(CalendarioEventoFields.horarioFim.swaggerMetadata)
   horarioFim?: string;
 
-  @ApiPropertyOptional({
-    type: "string",
-    description: "Cor do evento para exibicao",
-    nullable: true,
-  })
+  @ApiPropertyOptional(CalendarioEventoFields.cor.swaggerMetadata)
   cor?: string;
 
-  @ApiPropertyOptional({
-    type: "string",
-    description: "Regra de repeticao (iCalendar RRULE)",
-    nullable: true,
-  })
+  @ApiPropertyOptional(CalendarioEventoFields.repeticao.swaggerMetadata)
   repeticao?: string;
 
   @ApiPropertyOptional({
     type: "string",
     isArray: true,
-    description: "IDs das turmas participantes",
+    ...CalendarioEventoFields.turmaIds.swaggerMetadata,
   })
   turmaIds?: string[];
 
   @ApiPropertyOptional({
     type: "string",
     isArray: true,
-    description: "IDs dos perfis (professores) participantes",
+    ...CalendarioEventoFields.perfilIds.swaggerMetadata,
   })
   perfilIds?: string[];
 
   @ApiPropertyOptional({
     type: "string",
     isArray: true,
-    description: "IDs dos calendarios letivos vinculados",
+    ...CalendarioEventoFields.calendarioLetivoIds.swaggerMetadata,
   })
   calendarioLetivoIds?: string[];
 
   @ApiPropertyOptional({
     type: "string",
     isArray: true,
-    description: "IDs das ofertas de formacao vinculadas",
+    ...CalendarioEventoFields.ofertaFormacaoIds.swaggerMetadata,
   })
   ofertaFormacaoIds?: string[];
 
   @ApiPropertyOptional({
     type: "string",
     isArray: true,
-    description: "IDs das modalidades vinculadas",
+    ...CalendarioEventoFields.modalidadeIds.swaggerMetadata,
   })
   modalidadeIds?: string[];
 
   @ApiPropertyOptional({
     type: "string",
     isArray: true,
-    description: "IDs dos ambientes vinculados",
+    ...CalendarioEventoFields.ambienteIds.swaggerMetadata,
   })
   ambienteIds?: string[];
 
   @ApiPropertyOptional({
     type: "string",
     isArray: true,
-    description: "IDs dos diarios vinculados",
+    ...CalendarioEventoFields.diarioIds.swaggerMetadata,
   })
   diarioIds?: string[];
 }
@@ -94,64 +88,61 @@ export class CalendarioEventoCreateInputRestDto {
 
 @ApiSchema({ name: "CalendarioEventoUpdateInputDto" })
 export class CalendarioEventoUpdateInputRestDto {
-  @ApiPropertyOptional({ type: "string" }) nome?: string;
-  @ApiPropertyOptional({ type: "string", format: "date" })
-  dataInicio?: string;
-  @ApiPropertyOptional({ type: "string", format: "date", nullable: true })
-  dataFim?: string;
-  @ApiPropertyOptional({ type: "boolean" }) diaInteiro?: boolean;
-  @ApiPropertyOptional({ type: "string" }) horarioInicio?: string;
-  @ApiPropertyOptional({ type: "string" }) horarioFim?: string;
-  @ApiPropertyOptional({ type: "string", nullable: true }) cor?: string;
-  @ApiPropertyOptional({ type: "string", nullable: true })
-  repeticao?: string;
+  @ApiPropertyOptional(CalendarioEventoFields.nome.swaggerMetadata) nome?: string;
+  @ApiPropertyOptional(CalendarioEventoFields.dataInicio.swaggerMetadata) dataInicio?: string;
+  @ApiPropertyOptional(CalendarioEventoFields.dataFim.swaggerMetadata) dataFim?: string;
+  @ApiPropertyOptional(CalendarioEventoFields.diaInteiro.swaggerMetadata) diaInteiro?: boolean;
+  @ApiPropertyOptional(CalendarioEventoFields.horarioInicio.swaggerMetadata) horarioInicio?: string;
+  @ApiPropertyOptional(CalendarioEventoFields.horarioFim.swaggerMetadata) horarioFim?: string;
+  @ApiPropertyOptional(CalendarioEventoFields.cor.swaggerMetadata) cor?: string;
+  @ApiPropertyOptional(CalendarioEventoFields.repeticao.swaggerMetadata) repeticao?: string;
 
   @ApiPropertyOptional({
     type: "string",
     isArray: true,
-    description: "IDs das turmas participantes",
+    ...CalendarioEventoFields.turmaIds.swaggerMetadata,
   })
   turmaIds?: string[];
 
   @ApiPropertyOptional({
     type: "string",
     isArray: true,
-    description: "IDs dos perfis (professores) participantes",
+    ...CalendarioEventoFields.perfilIds.swaggerMetadata,
   })
   perfilIds?: string[];
 
   @ApiPropertyOptional({
     type: "string",
     isArray: true,
-    description: "IDs dos calendarios letivos vinculados",
+    ...CalendarioEventoFields.calendarioLetivoIds.swaggerMetadata,
   })
   calendarioLetivoIds?: string[];
 
   @ApiPropertyOptional({
     type: "string",
     isArray: true,
-    description: "IDs das ofertas de formacao vinculadas",
+    ...CalendarioEventoFields.ofertaFormacaoIds.swaggerMetadata,
   })
   ofertaFormacaoIds?: string[];
 
   @ApiPropertyOptional({
     type: "string",
     isArray: true,
-    description: "IDs das modalidades vinculadas",
+    ...CalendarioEventoFields.modalidadeIds.swaggerMetadata,
   })
   modalidadeIds?: string[];
 
   @ApiPropertyOptional({
     type: "string",
     isArray: true,
-    description: "IDs dos ambientes vinculados",
+    ...CalendarioEventoFields.ambienteIds.swaggerMetadata,
   })
   ambienteIds?: string[];
 
   @ApiPropertyOptional({
     type: "string",
     isArray: true,
-    description: "IDs dos diarios vinculados",
+    ...CalendarioEventoFields.diarioIds.swaggerMetadata,
   })
   diarioIds?: string[];
 }
@@ -162,7 +153,7 @@ export class CalendarioEventoUpdateInputRestDto {
 
 @ApiSchema({ name: "CalendarioEventoFindOneParamsDto" })
 export class CalendarioEventoFindOneParamsRestDto {
-  @ApiProperty({ type: "string", format: "uuid" })
+  @ApiProperty(CalendarioEventoFields.id.swaggerMetadata)
   id: string;
 }
 
@@ -172,27 +163,65 @@ export class CalendarioEventoFindOneParamsRestDto {
 
 @ApiSchema({ name: "CalendarioEventoFindOneOutputDto" })
 export class CalendarioEventoFindOneOutputRestDto {
-  @ApiProperty({ type: "string" }) id: string;
-  @ApiPropertyOptional({ type: "string", nullable: true }) nome: string | null;
-  @ApiProperty({ type: "string", format: "date" }) dataInicio: string;
-  @ApiPropertyOptional({ type: "string", format: "date", nullable: true }) dataFim: string | null;
-  @ApiProperty({ type: "boolean" }) diaInteiro: boolean;
-  @ApiProperty({ type: "string" }) horarioInicio: string;
-  @ApiProperty({ type: "string" }) horarioFim: string;
-  @ApiPropertyOptional({ type: "string", nullable: true }) cor: string | null;
-  @ApiPropertyOptional({ type: "string", nullable: true }) repeticao: string | null;
-  @ApiPropertyOptional({ type: "string", nullable: true }) status: string | null;
-  @ApiPropertyOptional({ type: "string", isArray: true }) turmaIds?: string[];
-  @ApiPropertyOptional({ type: "string", isArray: true }) perfilIds?: string[];
-  @ApiPropertyOptional({ type: "string", isArray: true }) calendarioLetivoIds?: string[];
-  @ApiPropertyOptional({ type: "string", isArray: true }) ofertaFormacaoIds?: string[];
-  @ApiPropertyOptional({ type: "string", isArray: true }) modalidadeIds?: string[];
-  @ApiPropertyOptional({ type: "string", isArray: true }) ambienteIds?: string[];
-  @ApiPropertyOptional({ type: "string", isArray: true }) diarioIds?: string[];
+  @ApiProperty(CalendarioEventoFields.id.swaggerMetadata) id: string;
+  @ApiPropertyOptional(CalendarioEventoFields.nome.swaggerMetadata) nome: string | null;
+  @ApiProperty(CalendarioEventoFields.dataInicio.swaggerMetadata) dataInicio: string;
+  @ApiPropertyOptional(CalendarioEventoFields.dataFim.swaggerMetadata) dataFim: string | null;
+  @ApiProperty(CalendarioEventoFields.diaInteiro.swaggerMetadata) diaInteiro: boolean;
+  @ApiProperty(CalendarioEventoFields.horarioInicio.swaggerMetadata) horarioInicio: string;
+  @ApiProperty(CalendarioEventoFields.horarioFim.swaggerMetadata) horarioFim: string;
+  @ApiPropertyOptional(CalendarioEventoFields.cor.swaggerMetadata) cor: string | null;
+  @ApiPropertyOptional(CalendarioEventoFields.repeticao.swaggerMetadata) repeticao: string | null;
+  @ApiPropertyOptional(CalendarioEventoFields.status.swaggerMetadata) status: string | null;
+  @ApiPropertyOptional({
+    type: "string",
+    isArray: true,
+    ...CalendarioEventoFields.turmaIds.swaggerMetadata,
+  })
+  turmaIds?: string[];
+  @ApiPropertyOptional({
+    type: "string",
+    isArray: true,
+    ...CalendarioEventoFields.perfilIds.swaggerMetadata,
+  })
+  perfilIds?: string[];
+  @ApiPropertyOptional({
+    type: "string",
+    isArray: true,
+    ...CalendarioEventoFields.calendarioLetivoIds.swaggerMetadata,
+  })
+  calendarioLetivoIds?: string[];
+  @ApiPropertyOptional({
+    type: "string",
+    isArray: true,
+    ...CalendarioEventoFields.ofertaFormacaoIds.swaggerMetadata,
+  })
+  ofertaFormacaoIds?: string[];
+  @ApiPropertyOptional({
+    type: "string",
+    isArray: true,
+    ...CalendarioEventoFields.modalidadeIds.swaggerMetadata,
+  })
+  modalidadeIds?: string[];
+  @ApiPropertyOptional({
+    type: "string",
+    isArray: true,
+    ...CalendarioEventoFields.ambienteIds.swaggerMetadata,
+  })
+  ambienteIds?: string[];
+  @ApiPropertyOptional({
+    type: "string",
+    isArray: true,
+    ...CalendarioEventoFields.diarioIds.swaggerMetadata,
+  })
+  diarioIds?: string[];
 }
 
 @ApiSchema({ name: "CalendarioEventoListOutputDto" })
 export class CalendarioEventoListOutputRestDto {
-  @ApiProperty({ type: () => [CalendarioEventoFindOneOutputRestDto] })
+  @ApiProperty({
+    type: () => [CalendarioEventoFindOneOutputRestDto],
+    ...SharedFields.data.swaggerMetadata,
+  })
   data: CalendarioEventoFindOneOutputRestDto[];
 }

@@ -12,6 +12,13 @@ import {
   UsuarioCreateSchema,
   UsuarioUpdateSchema,
 } from "@/modules/acesso/usuario/domain/usuario.schemas";
+import {
+  UsuarioEnsinoCursoRefFields,
+  UsuarioEnsinoDisciplinaRefFields,
+  UsuarioEnsinoOutputFields,
+  UsuarioEnsinoTurmaRefFields,
+  VinculoInputFields,
+} from "@/modules/acesso/usuario/domain/usuario-ensino.fields";
 import { PerfilFindOneQueryResultFields } from "@/modules/acesso/usuario/perfil/domain/queries/perfil-find-one.query.result";
 import { ImagemFindOneOutputRestDto } from "@/modules/ambientes/bloco/presentation.rest";
 import { CampusFindOneOutputRestDto } from "@/modules/ambientes/campus/presentation.rest";
@@ -37,9 +44,8 @@ export class UsuarioPerfilNestedOutputRestDto extends EntityBaseRestDto {
   @ApiProperty({
     type: () => CampusFindOneOutputRestDto,
     ...PerfilFindOneQueryResultFields.campus.swaggerMetadata,
-    nullable: true,
   })
-  campus: CampusFindOneOutputRestDto | null;
+  campus: CampusFindOneOutputRestDto;
 }
 
 // ============================================================================
@@ -85,39 +91,39 @@ export class UsuarioFindOneOutputRestDto extends EntityBaseRestDto {
 
 @ApiSchema({ name: "UsuarioEnsinoTurmaRefDto" })
 export class UsuarioEnsinoTurmaRefRestDto {
-  @ApiProperty({ type: "string", description: "ID da turma", format: "uuid" })
+  @ApiProperty(UsuarioEnsinoTurmaRefFields.id.swaggerMetadata)
   id: string;
 
-  @ApiProperty({ type: "string", description: "Periodo da turma" })
+  @ApiProperty(UsuarioEnsinoTurmaRefFields.periodo.swaggerMetadata)
   periodo: string;
 }
 
 @ApiSchema({ name: "UsuarioEnsinoCursoRefDto" })
 export class UsuarioEnsinoCursoRefRestDto {
-  @ApiProperty({ type: "string", description: "ID do curso", format: "uuid" })
+  @ApiProperty(UsuarioEnsinoCursoRefFields.id.swaggerMetadata)
   id: string;
 
-  @ApiProperty({ type: "string", description: "Nome do curso" })
+  @ApiProperty(UsuarioEnsinoCursoRefFields.nome.swaggerMetadata)
   nome: string;
 
   @ApiProperty({
-    description: "Turmas do curso onde o usuario leciona",
     type: () => [UsuarioEnsinoTurmaRefRestDto],
+    ...UsuarioEnsinoCursoRefFields.turmas.swaggerMetadata,
   })
   turmas: UsuarioEnsinoTurmaRefRestDto[];
 }
 
 @ApiSchema({ name: "UsuarioEnsinoDisciplinaRefDto" })
 export class UsuarioEnsinoDisciplinaRefRestDto {
-  @ApiProperty({ type: "string", description: "ID da disciplina", format: "uuid" })
+  @ApiProperty(UsuarioEnsinoDisciplinaRefFields.id.swaggerMetadata)
   id: string;
 
-  @ApiProperty({ type: "string", description: "Nome da disciplina" })
+  @ApiProperty(UsuarioEnsinoDisciplinaRefFields.nome.swaggerMetadata)
   nome: string;
 
   @ApiProperty({
-    description: "Cursos onde o usuario leciona esta disciplina",
     type: () => [UsuarioEnsinoCursoRefRestDto],
+    ...UsuarioEnsinoDisciplinaRefFields.cursos.swaggerMetadata,
   })
   cursos: UsuarioEnsinoCursoRefRestDto[];
 }
@@ -125,15 +131,14 @@ export class UsuarioEnsinoDisciplinaRefRestDto {
 @ApiSchema({ name: "UsuarioEnsinoOutputDto" })
 export class UsuarioEnsinoOutputRestDto {
   @ApiProperty({
-    description: "Dados do usuario",
     type: () => UsuarioFindOneOutputRestDto,
-    nullable: true,
+    ...UsuarioEnsinoOutputFields.usuario.swaggerMetadata,
   })
   usuario: UsuarioFindOneOutputRestDto | null;
 
   @ApiProperty({
-    description: "Disciplinas onde o usuario leciona (com cursos e turmas)",
     type: () => [UsuarioEnsinoDisciplinaRefRestDto],
+    ...UsuarioEnsinoOutputFields.disciplinas.swaggerMetadata,
   })
   disciplinas: UsuarioEnsinoDisciplinaRefRestDto[];
 }
@@ -171,15 +176,10 @@ export class UsuarioListOutputRestDto {
 
 @ApiSchema({ name: "VinculoInputDto" })
 export class VinculoInputRestDto {
-  @ApiProperty({
-    type: "object",
-    properties: { id: { type: "string", format: "uuid" } },
-    required: ["id"],
-    description: "Campus associado ao vinculo",
-  })
+  @ApiProperty(VinculoInputFields.campus.swaggerMetadata)
   campus: { id: string };
 
-  @ApiProperty({ type: "string", description: "Cargo do usuario no vinculo" })
+  @ApiProperty(VinculoInputFields.cargo.swaggerMetadata)
   cargo: string;
 }
 

@@ -1,16 +1,12 @@
 import { Mixin } from "ts-mixer";
+import { SharedFields } from "@/domain/abstractions";
 import { ApiProperty, ApiPropertyOptional } from "@/shared/presentation/rest";
 /**
  * Base DTO for REST entities identified by UUID.
  */
 
 export class EntityIdUuidRestDto {
-  @ApiProperty({
-    type: "string",
-    description: "Identificador do registro (uuid)",
-    format: "uuid",
-    example: "123e4567-e89b-12d3-a456-426614174000",
-  })
+  @ApiProperty(SharedFields.idUuid.swaggerMetadata)
   id: string;
 }
 
@@ -22,26 +18,13 @@ export class EntityIdUuidRestDto {
  */
 
 export class EntityDatedRestDto {
-  @ApiProperty({
-    type: "string",
-    description: "Data e hora da criacao do registro",
-    format: "date-time",
-  })
+  @ApiProperty(SharedFields.dateCreated.swaggerMetadata)
   dateCreated: string;
 
-  @ApiProperty({
-    type: "string",
-    description: "Data e hora da alteracao do registro",
-    format: "date-time",
-  })
+  @ApiProperty(SharedFields.dateUpdated.swaggerMetadata)
   dateUpdated: string;
 
-  @ApiPropertyOptional({
-    type: "string",
-    description: "Data e hora da exclusao do registro",
-    format: "date-time",
-    nullable: true,
-  })
+  @ApiPropertyOptional(SharedFields.dateDeleted.swaggerMetadata)
   dateDeleted: string | null;
 }
 

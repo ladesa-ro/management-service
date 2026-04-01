@@ -23,5 +23,6 @@ export const BlocoFields = {
   }),
   imagemCapa: createFieldMetadata({
     description: "Imagem de capa do bloco",
+    nullable: true,
   }),
 };

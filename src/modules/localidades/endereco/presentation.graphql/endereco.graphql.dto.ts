@@ -3,6 +3,7 @@ import {
   CidadeFindOneInputGraphQlDto,
   CidadeFindOneOutputGraphQlDto,
 } from "@/modules/localidades/cidade/presentation.graphql/cidade.graphql.dto";
+import { EnderecoFields } from "@/modules/localidades/endereco/domain/endereco.fields";
 import { EnderecoInputSchema } from "@/modules/localidades/endereco/domain/endereco.schemas";
 import { Field, InputType, Int, ObjectType } from "@/shared/presentation/graphql";
 
@@ -12,13 +13,14 @@ import { Field, InputType, Int, ObjectType } from "@/shared/presentation/graphql
 
 @ObjectType("EnderecoFindOneOutputDto")
 export class EnderecoFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
-  @Field(() => String) cep: string;
-  @Field(() => String) logradouro: string;
-  @Field(() => Int) numero: number;
-  @Field(() => String) bairro: string;
-  @Field(() => String, { nullable: true }) complemento: string | null;
-  @Field(() => String, { nullable: true }) pontoReferencia: string | null;
-  @Field(() => CidadeFindOneOutputGraphQlDto) cidade: CidadeFindOneOutputGraphQlDto;
+  @Field(() => String, EnderecoFields.cep.gqlMetadata) cep: string;
+  @Field(() => String, EnderecoFields.logradouro.gqlMetadata) logradouro: string;
+  @Field(() => Int, EnderecoFields.numero.gqlMetadata) numero: number;
+  @Field(() => String, EnderecoFields.bairro.gqlMetadata) bairro: string;
+  @Field(() => String, EnderecoFields.complemento.gqlMetadata) complemento: string | null;
+  @Field(() => String, EnderecoFields.pontoReferencia.gqlMetadata) pontoReferencia: string | null;
+  @Field(() => CidadeFindOneOutputGraphQlDto, EnderecoFields.cidade.gqlMetadata)
+  cidade: CidadeFindOneOutputGraphQlDto;
 }
 
 // ============================================================================
@@ -29,12 +31,13 @@ export class EnderecoFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
 export class EnderecoInputGraphQlDto {
   static schema = EnderecoInputSchema.domain;
 
-  @Field(() => String) declare cep: string;
-  @Field(() => String) declare logradouro: string;
-  @Field(() => Int) declare numero: number;
-  @Field(() => String) declare bairro: string;
-  @Field(() => String, { nullable: true }) declare complemento: string | null;
-  @Field(() => String, { nullable: true }) declare pontoReferencia: string | null;
-  @Field(() => CidadeFindOneInputGraphQlDto)
+  @Field(() => String, EnderecoFields.cep.gqlMetadata) declare cep: string;
+  @Field(() => String, EnderecoFields.logradouro.gqlMetadata) declare logradouro: string;
+  @Field(() => Int, EnderecoFields.numero.gqlMetadata) declare numero: number;
+  @Field(() => String, EnderecoFields.bairro.gqlMetadata) declare bairro: string;
+  @Field(() => String, EnderecoFields.complemento.gqlMetadata) declare complemento: string | null;
+  @Field(() => String, EnderecoFields.pontoReferencia.gqlMetadata)
+  declare pontoReferencia: string | null;
+  @Field(() => CidadeFindOneInputGraphQlDto, EnderecoFields.cidade.gqlMetadata)
   cidade: CidadeFindOneInputGraphQlDto;
 }

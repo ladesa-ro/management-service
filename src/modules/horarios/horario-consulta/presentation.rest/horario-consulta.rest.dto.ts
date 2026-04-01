@@ -1,3 +1,15 @@
+import {
+  HorarioAulaItemAmbienteFields,
+  HorarioAulaItemDiarioFields,
+  HorarioAulaItemDisciplinaFields,
+  HorarioAulaItemFields,
+  HorarioAulaItemProfessorFields,
+  HorarioAulaItemProfessorPerfilFields,
+  HorarioAulaItemProfessorUsuarioFields,
+  HorarioAulaItemTurmaFields,
+  HorarioSemanalDiaFields,
+  HorarioSemanalOutputFields,
+} from "@/modules/horarios/horario-consulta/domain/horario-consulta.fields";
 import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@/shared/presentation/rest";
 import { HorarioSemanalQueryFields } from "../domain/queries/horario-semanal.query";
 
@@ -7,26 +19,16 @@ import { HorarioSemanalQueryFields } from "../domain/queries/horario-semanal.que
 
 @ApiSchema({ name: "HorarioSemanalQueryParamsDto" })
 export class HorarioSemanalQueryParamsRestDto {
-  @ApiProperty({
-    type: "string",
-    ...HorarioSemanalQueryFields.semana.swaggerMetadata,
-    format: "date",
-  })
+  @ApiProperty(HorarioSemanalQueryFields.semana.swaggerMetadata)
   semana: string;
 }
 
 @ApiSchema({ name: "HorarioMescladoQueryParamsDto" })
 export class HorarioMescladoQueryParamsRestDto extends HorarioSemanalQueryParamsRestDto {
-  @ApiProperty({
-    type: "string",
-    ...HorarioSemanalQueryFields.turmaIds.swaggerMetadata,
-  })
+  @ApiProperty(HorarioSemanalQueryFields.turmaIds.swaggerMetadata)
   ids: string;
 
-  @ApiPropertyOptional({
-    type: "string",
-    ...HorarioSemanalQueryFields.professorIds.swaggerMetadata,
-  })
+  @ApiPropertyOptional(HorarioSemanalQueryFields.professorIds.swaggerMetadata)
   professorIds?: string;
 }
 
@@ -36,80 +38,111 @@ export class HorarioMescladoQueryParamsRestDto extends HorarioSemanalQueryParams
 
 @ApiSchema({ name: "HorarioAulaItemDisciplinaDto" })
 export class HorarioAulaItemDisciplinaRestDto {
-  @ApiProperty({ type: "string" }) id: string;
-  @ApiProperty({ type: "string" }) nome: string;
-  @ApiProperty({ type: "string" }) nomeAbreviado: string;
+  @ApiProperty(HorarioAulaItemDisciplinaFields.id.swaggerMetadata) id: string;
+  @ApiProperty(HorarioAulaItemDisciplinaFields.nome.swaggerMetadata) nome: string;
+  @ApiProperty(HorarioAulaItemDisciplinaFields.nomeAbreviado.swaggerMetadata) nomeAbreviado: string;
 }
 
 @ApiSchema({ name: "HorarioAulaItemTurmaDto" })
 export class HorarioAulaItemTurmaRestDto {
-  @ApiProperty({ type: "string" }) id: string;
-  @ApiProperty({ type: "number" }) periodo: number;
+  @ApiProperty(HorarioAulaItemTurmaFields.id.swaggerMetadata) id: string;
+  @ApiProperty(HorarioAulaItemTurmaFields.periodo.swaggerMetadata) periodo: number;
 }
 
 @ApiSchema({ name: "HorarioAulaItemDiarioDto" })
 export class HorarioAulaItemDiarioRestDto {
-  @ApiProperty({ type: "string" }) id: string;
-  @ApiProperty({ type: () => HorarioAulaItemDisciplinaRestDto })
+  @ApiProperty(HorarioAulaItemDiarioFields.id.swaggerMetadata) id: string;
+  @ApiProperty({
+    type: () => HorarioAulaItemDisciplinaRestDto,
+    ...HorarioAulaItemDiarioFields.disciplina.swaggerMetadata,
+  })
   disciplina: HorarioAulaItemDisciplinaRestDto;
-  @ApiProperty({ type: () => HorarioAulaItemTurmaRestDto }) turma: HorarioAulaItemTurmaRestDto;
+  @ApiProperty({
+    type: () => HorarioAulaItemTurmaRestDto,
+    ...HorarioAulaItemDiarioFields.turma.swaggerMetadata,
+  })
+  turma: HorarioAulaItemTurmaRestDto;
 }
 
 @ApiSchema({ name: "HorarioAulaItemProfessorUsuarioDto" })
 export class HorarioAulaItemProfessorUsuarioRestDto {
-  @ApiProperty({ type: "string" }) id: string;
-  @ApiPropertyOptional({ type: "string", nullable: true }) nome: string | null;
+  @ApiProperty(HorarioAulaItemProfessorUsuarioFields.id.swaggerMetadata) id: string;
+  @ApiPropertyOptional(HorarioAulaItemProfessorUsuarioFields.nome.swaggerMetadata)
+  nome: string | null;
 }
 
 @ApiSchema({ name: "HorarioAulaItemProfessorPerfilDto" })
 export class HorarioAulaItemProfessorPerfilRestDto {
-  @ApiProperty({ type: "string" }) id: string;
-  @ApiProperty({ type: "string" }) cargo: string;
+  @ApiProperty(HorarioAulaItemProfessorPerfilFields.id.swaggerMetadata) id: string;
+  @ApiProperty(HorarioAulaItemProfessorPerfilFields.cargo.swaggerMetadata) cargo: string;
 }
 
 @ApiSchema({ name: "HorarioAulaItemProfessorDto" })
 export class HorarioAulaItemProfessorRestDto {
-  @ApiProperty({ type: "string" }) id: string;
-  @ApiProperty({ type: () => HorarioAulaItemProfessorPerfilRestDto })
+  @ApiProperty(HorarioAulaItemProfessorFields.id.swaggerMetadata) id: string;
+  @ApiProperty({
+    type: () => HorarioAulaItemProfessorPerfilRestDto,
+    ...HorarioAulaItemProfessorFields.perfil.swaggerMetadata,
+  })
   perfil: HorarioAulaItemProfessorPerfilRestDto;
-  @ApiProperty({ type: () => HorarioAulaItemProfessorUsuarioRestDto })
+  @ApiProperty({
+    type: () => HorarioAulaItemProfessorUsuarioRestDto,
+    ...HorarioAulaItemProfessorFields.usuario.swaggerMetadata,
+  })
   usuario: HorarioAulaItemProfessorUsuarioRestDto;
 }
 
 @ApiSchema({ name: "HorarioAulaItemAmbienteDto" })
 export class HorarioAulaItemAmbienteRestDto {
-  @ApiProperty({ type: "string" }) id: string;
-  @ApiProperty({ type: "string" }) nome: string;
-  @ApiProperty({ type: "string" }) codigo: string;
+  @ApiProperty(HorarioAulaItemAmbienteFields.id.swaggerMetadata) id: string;
+  @ApiProperty(HorarioAulaItemAmbienteFields.nome.swaggerMetadata) nome: string;
+  @ApiProperty(HorarioAulaItemAmbienteFields.codigo.swaggerMetadata) codigo: string;
 }
 
 @ApiSchema({ name: "HorarioAulaItemDto" })
 export class HorarioAulaItemRestDto {
-  @ApiProperty({ type: "string" }) id: string;
-  @ApiProperty({ type: "string", format: "date" }) dataInicio: string;
-  @ApiPropertyOptional({ type: "string", format: "date", nullable: true }) dataFim: string | null;
-  @ApiProperty({ type: "string" }) horarioInicio: string;
-  @ApiProperty({ type: "string" }) horarioFim: string;
-  @ApiPropertyOptional({ type: "string", nullable: true }) nome: string | null;
-  @ApiPropertyOptional({ type: "string", nullable: true }) cor: string | null;
-  @ApiPropertyOptional({ type: () => HorarioAulaItemDiarioRestDto, nullable: true })
+  @ApiProperty(HorarioAulaItemFields.id.swaggerMetadata) id: string;
+  @ApiProperty(HorarioAulaItemFields.dataInicio.swaggerMetadata) dataInicio: string;
+  @ApiPropertyOptional(HorarioAulaItemFields.dataFim.swaggerMetadata) dataFim: string | null;
+  @ApiProperty(HorarioAulaItemFields.horarioInicio.swaggerMetadata) horarioInicio: string;
+  @ApiProperty(HorarioAulaItemFields.horarioFim.swaggerMetadata) horarioFim: string;
+  @ApiPropertyOptional(HorarioAulaItemFields.nome.swaggerMetadata) nome: string | null;
+  @ApiPropertyOptional(HorarioAulaItemFields.cor.swaggerMetadata) cor: string | null;
+  @ApiPropertyOptional({
+    type: () => HorarioAulaItemDiarioRestDto,
+    ...HorarioAulaItemFields.diario.swaggerMetadata,
+  })
   diario: HorarioAulaItemDiarioRestDto | null;
-  @ApiProperty({ type: () => [HorarioAulaItemProfessorRestDto] })
+  @ApiProperty({
+    type: () => [HorarioAulaItemProfessorRestDto],
+    ...HorarioAulaItemFields.professores.swaggerMetadata,
+  })
   professores: HorarioAulaItemProfessorRestDto[];
-  @ApiPropertyOptional({ type: () => HorarioAulaItemAmbienteRestDto, nullable: true })
+  @ApiPropertyOptional({
+    type: () => HorarioAulaItemAmbienteRestDto,
+    ...HorarioAulaItemFields.ambiente.swaggerMetadata,
+  })
   ambiente: HorarioAulaItemAmbienteRestDto | null;
 }
 
 @ApiSchema({ name: "HorarioSemanalDiaDto" })
 export class HorarioSemanalDiaRestDto {
-  @ApiProperty({ type: "string", format: "date" }) data: string;
-  @ApiProperty({ type: "number", description: "0=dom, 1=seg, ..., 6=sab" }) diaSemana: number;
-  @ApiProperty({ type: () => [HorarioAulaItemRestDto] }) aulas: HorarioAulaItemRestDto[];
+  @ApiProperty(HorarioSemanalDiaFields.data.swaggerMetadata) data: string;
+  @ApiProperty(HorarioSemanalDiaFields.diaSemana.swaggerMetadata) diaSemana: number;
+  @ApiProperty({
+    type: () => [HorarioAulaItemRestDto],
+    ...HorarioSemanalDiaFields.aulas.swaggerMetadata,
+  })
+  aulas: HorarioAulaItemRestDto[];
 }
 
 @ApiSchema({ name: "HorarioSemanalOutputDto" })
 export class HorarioSemanalOutputRestDto {
-  @ApiProperty({ type: "string", format: "date" }) semanaInicio: string;
-  @ApiProperty({ type: "string", format: "date" }) semanaFim: string;
-  @ApiProperty({ type: () => [HorarioSemanalDiaRestDto] }) dias: HorarioSemanalDiaRestDto[];
+  @ApiProperty(HorarioSemanalOutputFields.semanaInicio.swaggerMetadata) semanaInicio: string;
+  @ApiProperty(HorarioSemanalOutputFields.semanaFim.swaggerMetadata) semanaFim: string;
+  @ApiProperty({
+    type: () => [HorarioSemanalDiaRestDto],
+    ...HorarioSemanalOutputFields.dias.swaggerMetadata,
+  })
+  dias: HorarioSemanalDiaRestDto[];
 }

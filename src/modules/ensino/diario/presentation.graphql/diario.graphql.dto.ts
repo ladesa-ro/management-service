@@ -3,6 +3,7 @@ import {
   PaginatedFilterByIdGraphQlDto,
   PaginationMetaGraphQlDto,
 } from "@/infrastructure.graphql/dtos";
+import { AmbienteFields } from "@/modules/ambientes/ambiente/domain/ambiente.fields";
 import { ImagemFindOneOutputGraphQlDto } from "@/modules/armazenamento/imagem-arquivo/presentation.graphql/imagem-arquivo.graphql.dto";
 import { DiarioCreateCommandFields } from "@/modules/ensino/diario/domain/commands/diario-create.command";
 import { DiarioUpdateCommandFields } from "@/modules/ensino/diario/domain/commands/diario-update.command";
@@ -13,6 +14,8 @@ import {
 import { DiarioFindOneQueryResultFields } from "@/modules/ensino/diario/domain/queries/diario-find-one.query.result";
 import { DiarioListQueryFields } from "@/modules/ensino/diario/domain/queries/diario-list.query";
 import { DiarioGraphqlListInputSchema } from "@/modules/ensino/diario/domain/queries/diario-list.query.schemas";
+import { DisciplinaFields } from "@/modules/ensino/disciplina/domain/disciplina.fields";
+import { TurmaFields } from "@/modules/ensino/turma/domain/turma.fields";
 import { CalendarioLetivoFindOneOutputGraphQlDto } from "@/modules/horarios/calendario-letivo/presentation.graphql/calendario-letivo.graphql.dto";
 import { ArgsType, Field, InputType, Int, ObjectType } from "@/shared/presentation/graphql";
 
@@ -22,23 +25,23 @@ import { ArgsType, Field, InputType, Int, ObjectType } from "@/shared/presentati
 
 @ObjectType("TurmaFindOneOutputForDiarioDto")
 export class TurmaFindOneOutputForDiarioGraphQlDto extends EntityBaseGraphQlDto {
-  @Field(() => String) periodo: string;
+  @Field(() => String, TurmaFields.periodo.gqlMetadata) periodo: string;
 }
 
 @ObjectType("DisciplinaFindOneOutputForDiarioDto")
 export class DisciplinaFindOneOutputForDiarioGraphQlDto extends EntityBaseGraphQlDto {
-  @Field(() => String) nome: string;
-  @Field(() => String) nomeAbreviado: string;
-  @Field(() => Int) cargaHoraria: number;
+  @Field(() => String, DisciplinaFields.nome.gqlMetadata) nome: string;
+  @Field(() => String, DisciplinaFields.nomeAbreviado.gqlMetadata) nomeAbreviado: string;
+  @Field(() => Int, DisciplinaFields.cargaHoraria.gqlMetadata) cargaHoraria: number;
 }
 
 @ObjectType("AmbienteFindOneOutputForDiarioDto")
 export class AmbienteFindOneOutputForDiarioGraphQlDto extends EntityBaseGraphQlDto {
-  @Field(() => String) nome: string;
-  @Field(() => String, { nullable: true }) descricao: string | null;
-  @Field(() => String) codigo: string;
-  @Field(() => Int, { nullable: true }) capacidade: number | null;
-  @Field(() => String, { nullable: true }) tipo: string | null;
+  @Field(() => String, AmbienteFields.nome.gqlMetadata) nome: string;
+  @Field(() => String, AmbienteFields.descricao.gqlMetadata) descricao: string | null;
+  @Field(() => String, AmbienteFields.codigo.gqlMetadata) codigo: string;
+  @Field(() => Int, AmbienteFields.capacidade.gqlMetadata) capacidade: number | null;
+  @Field(() => String, AmbienteFields.tipo.gqlMetadata) tipo: string | null;
 }
 
 // ============================================================================

@@ -1,3 +1,4 @@
+import { SharedFields } from "@/domain/abstractions";
 import { Field } from "@/shared/presentation/graphql";
 import { PaginationInputGraphQlDto } from "./pagination-graphql.dto";
 
@@ -7,6 +8,6 @@ import { PaginationInputGraphQlDto } from "./pagination-graphql.dto";
  */
 
 export class PaginatedFilterByIdGraphQlDto extends PaginationInputGraphQlDto {
-  @Field(() => [String], { nullable: true, description: "Filtro por ID" })
+  @Field(() => [String], SharedFields.filterId.gqlMetadata)
   filterId?: string[];
 }

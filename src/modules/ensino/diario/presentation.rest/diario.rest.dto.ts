@@ -56,35 +56,30 @@ export class DiarioFindOneOutputRestDto extends EntityBaseRestDto {
   @ApiProperty({
     type: () => CalendarioLetivoFindOneOutputRestDto,
     ...DiarioFindOneQueryResultFields.calendarioLetivo.swaggerMetadata,
-    nullable: true,
   })
-  calendarioLetivo: CalendarioLetivoFindOneOutputRestDto | null;
+  calendarioLetivo: CalendarioLetivoFindOneOutputRestDto;
 
   @ApiProperty({
     type: () => TurmaFindOneOutputRestDto,
     ...DiarioFindOneQueryResultFields.turma.swaggerMetadata,
-    nullable: true,
   })
-  turma: TurmaFindOneOutputRestDto | null;
+  turma: TurmaFindOneOutputRestDto;
 
   @ApiProperty({
     type: () => DisciplinaFindOneOutputRestDto,
     ...DiarioFindOneQueryResultFields.disciplina.swaggerMetadata,
-    nullable: true,
   })
-  disciplina: DisciplinaFindOneOutputRestDto | null;
+  disciplina: DisciplinaFindOneOutputRestDto;
 
   @ApiPropertyOptional({
     type: () => AmbienteFindOneOutputRestDto,
     ...DiarioFindOneQueryResultFields.ambientePadrao.swaggerMetadata,
-    nullable: true,
   })
   ambientePadrao: AmbienteFindOneOutputRestDto | null;
 
   @ApiPropertyOptional({
     type: () => ImagemFindOneOutputRestDto,
     ...DiarioFindOneQueryResultFields.imagemCapa.swaggerMetadata,
-    nullable: true,
   })
   imagemCapa: ImagemFindOneOutputRestDto | null;
 }

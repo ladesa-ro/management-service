@@ -1,3 +1,5 @@
+import { SharedFields } from "@/domain/abstractions";
+import { TurmaEventoFields } from "@/modules/ensino/turma/domain/turma-evento.fields";
 import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@/shared/presentation/rest";
 
 // ============================================================================
@@ -6,16 +8,16 @@ import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@/shared/presentati
 
 @ApiSchema({ name: "TurmaEventoParentParamsDto" })
 export class TurmaEventoParentParamsRestDto {
-  @ApiProperty({ type: "string", format: "uuid", description: "ID da turma" })
+  @ApiProperty({ ...SharedFields.idUuid.swaggerMetadata, description: "ID da turma" })
   turmaId: string;
 }
 
 @ApiSchema({ name: "TurmaEventoItemParamsDto" })
 export class TurmaEventoItemParamsRestDto {
-  @ApiProperty({ type: "string", format: "uuid", description: "ID da turma" })
+  @ApiProperty({ ...SharedFields.idUuid.swaggerMetadata, description: "ID da turma" })
   turmaId: string;
 
-  @ApiProperty({ type: "string", format: "uuid", description: "ID do evento" })
+  @ApiProperty({ ...SharedFields.idUuid.swaggerMetadata, description: "ID do evento" })
   eventoId: string;
 }
 
@@ -25,28 +27,28 @@ export class TurmaEventoItemParamsRestDto {
 
 @ApiSchema({ name: "TurmaEventoCreateInputDto" })
 export class TurmaEventoCreateInputRestDto {
-  @ApiProperty({ type: "string", description: "Nome do evento" })
+  @ApiProperty(TurmaEventoFields.nome.swaggerMetadata)
   nome: string;
 
-  @ApiProperty({ type: "string", format: "date", description: "Data inicio" })
+  @ApiProperty(TurmaEventoFields.dataInicio.swaggerMetadata)
   dataInicio: string;
 
-  @ApiPropertyOptional({ type: "string", format: "date", nullable: true })
+  @ApiPropertyOptional(TurmaEventoFields.dataFim.swaggerMetadata)
   dataFim?: string;
 
-  @ApiProperty({ type: "boolean", description: "Evento ocupa o dia inteiro" })
+  @ApiProperty(TurmaEventoFields.diaInteiro.swaggerMetadata)
   diaInteiro: boolean;
 
-  @ApiPropertyOptional({ type: "string" })
+  @ApiPropertyOptional(TurmaEventoFields.horarioInicio.swaggerMetadata)
   horarioInicio?: string;
 
-  @ApiPropertyOptional({ type: "string" })
+  @ApiPropertyOptional(TurmaEventoFields.horarioFim.swaggerMetadata)
   horarioFim?: string;
 
-  @ApiPropertyOptional({ type: "string", nullable: true })
+  @ApiPropertyOptional(TurmaEventoFields.cor.swaggerMetadata)
   cor?: string;
 
-  @ApiPropertyOptional({ type: "string", nullable: true })
+  @ApiPropertyOptional(TurmaEventoFields.repeticao.swaggerMetadata)
   repeticao?: string;
 }
 
@@ -56,17 +58,14 @@ export class TurmaEventoCreateInputRestDto {
 
 @ApiSchema({ name: "TurmaEventoUpdateInputDto" })
 export class TurmaEventoUpdateInputRestDto {
-  @ApiPropertyOptional({ type: "string" }) nome?: string;
-  @ApiPropertyOptional({ type: "string", format: "date" })
-  dataInicio?: string;
-  @ApiPropertyOptional({ type: "string", format: "date", nullable: true })
-  dataFim?: string;
-  @ApiPropertyOptional({ type: "boolean" }) diaInteiro?: boolean;
-  @ApiPropertyOptional({ type: "string" }) horarioInicio?: string;
-  @ApiPropertyOptional({ type: "string" }) horarioFim?: string;
-  @ApiPropertyOptional({ type: "string", nullable: true }) cor?: string;
-  @ApiPropertyOptional({ type: "string", nullable: true })
-  repeticao?: string;
+  @ApiPropertyOptional(TurmaEventoFields.nome.swaggerMetadata) nome?: string;
+  @ApiPropertyOptional(TurmaEventoFields.dataInicio.swaggerMetadata) dataInicio?: string;
+  @ApiPropertyOptional(TurmaEventoFields.dataFim.swaggerMetadata) dataFim?: string;
+  @ApiPropertyOptional(TurmaEventoFields.diaInteiro.swaggerMetadata) diaInteiro?: boolean;
+  @ApiPropertyOptional(TurmaEventoFields.horarioInicio.swaggerMetadata) horarioInicio?: string;
+  @ApiPropertyOptional(TurmaEventoFields.horarioFim.swaggerMetadata) horarioFim?: string;
+  @ApiPropertyOptional(TurmaEventoFields.cor.swaggerMetadata) cor?: string;
+  @ApiPropertyOptional(TurmaEventoFields.repeticao.swaggerMetadata) repeticao?: string;
 }
 
 // ============================================================================
@@ -75,20 +74,23 @@ export class TurmaEventoUpdateInputRestDto {
 
 @ApiSchema({ name: "TurmaEventoFindOneOutputDto" })
 export class TurmaEventoFindOneOutputRestDto {
-  @ApiProperty({ type: "string" }) id: string;
-  @ApiPropertyOptional({ type: "string", nullable: true }) nome: string | null;
-  @ApiProperty({ type: "string", format: "date" }) dataInicio: string;
-  @ApiPropertyOptional({ type: "string", format: "date", nullable: true }) dataFim: string | null;
-  @ApiProperty({ type: "boolean" }) diaInteiro: boolean;
-  @ApiProperty({ type: "string" }) horarioInicio: string;
-  @ApiProperty({ type: "string" }) horarioFim: string;
-  @ApiPropertyOptional({ type: "string", nullable: true }) cor: string | null;
-  @ApiPropertyOptional({ type: "string", nullable: true }) repeticao: string | null;
-  @ApiPropertyOptional({ type: "string", nullable: true }) status: string | null;
+  @ApiProperty(TurmaEventoFields.id.swaggerMetadata) id: string;
+  @ApiPropertyOptional(TurmaEventoFields.nome.swaggerMetadata) nome: string | null;
+  @ApiProperty(TurmaEventoFields.dataInicio.swaggerMetadata) dataInicio: string;
+  @ApiPropertyOptional(TurmaEventoFields.dataFim.swaggerMetadata) dataFim: string | null;
+  @ApiProperty(TurmaEventoFields.diaInteiro.swaggerMetadata) diaInteiro: boolean;
+  @ApiProperty(TurmaEventoFields.horarioInicio.swaggerMetadata) horarioInicio: string;
+  @ApiProperty(TurmaEventoFields.horarioFim.swaggerMetadata) horarioFim: string;
+  @ApiPropertyOptional(TurmaEventoFields.cor.swaggerMetadata) cor: string | null;
+  @ApiPropertyOptional(TurmaEventoFields.repeticao.swaggerMetadata) repeticao: string | null;
+  @ApiPropertyOptional(TurmaEventoFields.status.swaggerMetadata) status: string | null;
 }
 
 @ApiSchema({ name: "TurmaEventoListOutputDto" })
 export class TurmaEventoListOutputRestDto {
-  @ApiProperty({ type: () => [TurmaEventoFindOneOutputRestDto] })
+  @ApiProperty({
+    type: () => [TurmaEventoFindOneOutputRestDto],
+    ...SharedFields.data.swaggerMetadata,
+  })
   data: TurmaEventoFindOneOutputRestDto[];
 }

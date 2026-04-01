@@ -1,39 +1,23 @@
+import { SharedFields } from "@/domain/abstractions";
 import { ApiProperty, ApiPropertyOptional } from "@/shared/presentation/rest";
-/**
- * Representa uma entrada de ordenação [campo, direcao]
- */
-
-export class SortByEntryRestDto {
-  @ApiProperty({ type: "string", description: "Nome do campo", example: "nome" })
-  0: string;
-
-  @ApiProperty({
-    type: "string",
-    description: "Direcao da ordenacao (ASC ou DESC)",
-    example: "ASC",
-    enum: ["ASC", "DESC"],
-  })
-  1: string;
-}
-
 /**
  * Pagination metadata DTO for REST.
  */
 
 export class PaginationMetaRestDto {
-  @ApiProperty({ type: "integer", description: "Quantidade de itens por pagina" })
+  @ApiProperty(SharedFields.limit.swaggerMetadata)
   itemsPerPage: number;
 
   @ApiProperty({ type: "integer", description: "Total de itens" })
   totalItems: number;
 
-  @ApiProperty({ type: "integer", description: "Pagina atual" })
+  @ApiProperty(SharedFields.page.swaggerMetadata)
   currentPage: number;
 
   @ApiProperty({ type: "integer", description: "Quantidade total de paginas" })
   totalPages: number;
 
-  @ApiProperty({ type: "string", description: "Termo textual da busca" })
+  @ApiProperty(SharedFields.search.swaggerMetadata)
   search: string;
 
   @ApiProperty({

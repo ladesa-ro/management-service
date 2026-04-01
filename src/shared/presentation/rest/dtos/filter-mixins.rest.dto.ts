@@ -1,3 +1,4 @@
+import { SharedFields } from "@/domain/abstractions";
 import { ApiPropertyOptional, TransformToArray } from "@/shared/presentation/rest";
 import { PaginationInputRestDto } from "./pagination-input.dto";
 /**
@@ -6,7 +7,7 @@ import { PaginationInputRestDto } from "./pagination-input.dto";
  */
 
 export class PaginatedFilterByIdRestDto extends PaginationInputRestDto {
-  @ApiPropertyOptional({ description: "Filtro por ID", type: "string", isArray: true })
+  @ApiPropertyOptional(SharedFields.filterId.swaggerMetadata)
   @TransformToArray()
   "filter.id"?: string[];
 }
@@ -17,7 +18,7 @@ export class PaginatedFilterByIdRestDto extends PaginationInputRestDto {
  */
 
 export class PaginatedFilterByStringIdRestDto extends PaginationInputRestDto {
-  @ApiPropertyOptional({ description: "Filtro por ID", type: "string", isArray: true })
+  @ApiPropertyOptional(SharedFields.filterId.swaggerMetadata)
   @TransformToArray()
   "filter.id"?: string[];
 }

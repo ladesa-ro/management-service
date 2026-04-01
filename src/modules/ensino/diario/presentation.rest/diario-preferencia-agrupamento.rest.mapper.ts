@@ -59,7 +59,7 @@ export const findOneQueryResultToOutputDto = createMapper<
   dataFim: output.dataFim,
   diaSemanaIso: output.diaSemanaIso,
   aulasSeguidas: output.aulasSeguidas,
-  diario: DiarioRestMapper.findOneQueryResultToOutputDto.mapOptional(output.diario),
+  diario: DiarioRestMapper.findOneQueryResultToOutputDto.map(output.diario),
   dateCreated: output.dateCreated,
   dateUpdated: output.dateUpdated,
   dateDeleted: output.dateDeleted,

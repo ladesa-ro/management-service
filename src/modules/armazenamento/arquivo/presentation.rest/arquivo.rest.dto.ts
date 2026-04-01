@@ -28,7 +28,6 @@ export class ArquivoFindOneOutputRestDto extends EntityBaseRestDto {
   @ApiPropertyOptional({
     type: "string",
     ...ArquivoFindOneQueryResultFields.name.swaggerMetadata,
-    nullable: true,
     minLength: 1,
   })
   name: string | null;
@@ -36,7 +35,6 @@ export class ArquivoFindOneOutputRestDto extends EntityBaseRestDto {
   @ApiPropertyOptional({
     type: "string",
     ...ArquivoFindOneQueryResultFields.mimeType.swaggerMetadata,
-    nullable: true,
     minLength: 1,
   })
   mimeType: string | null;
@@ -44,7 +42,6 @@ export class ArquivoFindOneOutputRestDto extends EntityBaseRestDto {
   @ApiPropertyOptional({
     type: "integer",
     ...ArquivoFindOneQueryResultFields.sizeBytes.swaggerMetadata,
-    nullable: true,
   })
   sizeBytes: number | null;
 

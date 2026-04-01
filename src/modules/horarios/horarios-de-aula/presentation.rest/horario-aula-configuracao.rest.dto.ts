@@ -1,4 +1,10 @@
 import { z } from "zod";
+import { SharedFields } from "@/domain/abstractions";
+import {
+  HorarioAulaItemConfigFields,
+  HorarioDeAulaCampusParamsFields,
+  HorarioDeAulaReplaceFields,
+} from "@/modules/horarios/horarios-de-aula/domain/horario-aula-configuracao.fields";
 import { ApiProperty, ApiSchema } from "@/shared/presentation/rest";
 import { horariosAulaArraySchema } from "../domain/horario-aula-configuracao.schemas";
 
@@ -8,17 +14,17 @@ import { horariosAulaArraySchema } from "../domain/horario-aula-configuracao.sch
 
 @ApiSchema({ name: "HorarioAulaItemInputDto" })
 export class HorarioAulaItemInputRestDto {
-  @ApiProperty({ type: "string", description: "Horario inicio (HH:MM:SS)" })
+  @ApiProperty(HorarioAulaItemConfigFields.inicio.swaggerMetadata)
   inicio: string;
 
-  @ApiProperty({ type: "string", description: "Horario fim (HH:MM:SS)" })
+  @ApiProperty(HorarioAulaItemConfigFields.fim.swaggerMetadata)
   fim: string;
 }
 
 @ApiSchema({ name: "HorarioAulaItemOutputDto" })
 export class HorarioAulaItemOutputRestDto {
-  @ApiProperty({ type: "string" }) inicio: string;
-  @ApiProperty({ type: "string" }) fim: string;
+  @ApiProperty(HorarioAulaItemConfigFields.inicio.swaggerMetadata) inicio: string;
+  @ApiProperty(HorarioAulaItemConfigFields.fim.swaggerMetadata) fim: string;
 }
 
 // ============================================================================
@@ -27,7 +33,7 @@ export class HorarioAulaItemOutputRestDto {
 
 @ApiSchema({ name: "HorarioDeAulaCampusParamsDto" })
 export class HorarioDeAulaCampusParamsRestDto {
-  @ApiProperty({ type: "string", format: "uuid", description: "ID do campus" })
+  @ApiProperty(HorarioDeAulaCampusParamsFields.campusId.swaggerMetadata)
   campusId: string;
 }
 
@@ -41,7 +47,7 @@ export class HorarioDeAulaReplaceInputRestDto {
 
   @ApiProperty({
     type: () => [HorarioAulaItemInputRestDto],
-    description: "Horarios de aula (substituicao completa)",
+    ...HorarioDeAulaReplaceFields.horarios.swaggerMetadata,
   })
   horarios: HorarioAulaItemInputRestDto[];
 }
@@ -52,6 +58,9 @@ export class HorarioDeAulaReplaceInputRestDto {
 
 @ApiSchema({ name: "HorarioDeAulaListOutputDto" })
 export class HorarioDeAulaListOutputRestDto {
-  @ApiProperty({ type: () => [HorarioAulaItemOutputRestDto] })
+  @ApiProperty({
+    type: () => [HorarioAulaItemOutputRestDto],
+    ...SharedFields.data.swaggerMetadata,
+  })
   data: HorarioAulaItemOutputRestDto[];
 }

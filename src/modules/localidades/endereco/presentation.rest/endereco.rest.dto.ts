@@ -1,7 +1,9 @@
+import { SharedFields } from "@/domain/abstractions";
 import {
   CidadeFindOneInputRestDto,
   CidadeFindOneOutputRestDto,
 } from "@/modules/localidades/cidade/presentation.rest/cidade.rest.dto";
+import { EnderecoFields } from "@/modules/localidades/endereco/domain/endereco.fields";
 import { EnderecoInputSchema } from "@/modules/localidades/endereco/domain/endereco.schemas";
 import { EnderecoFindOneInputSchema } from "@/modules/localidades/endereco/domain/queries/endereco-find-one.query.schemas";
 import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@/shared/presentation/rest";
@@ -13,26 +15,29 @@ import { EntityBaseRestDto } from "@/shared/presentation/rest/dtos";
 
 @ApiSchema({ name: "EnderecoFindOneOutputDto" })
 export class EnderecoFindOneOutputRestDto extends EntityBaseRestDto {
-  @ApiProperty({ type: "string", description: "Codigo postal (CEP)" })
+  @ApiProperty(EnderecoFields.cep.swaggerMetadata)
   declare cep: string;
 
-  @ApiProperty({ type: "string", description: "Logradouro" })
+  @ApiProperty(EnderecoFields.logradouro.swaggerMetadata)
   declare logradouro: string;
 
-  @ApiProperty({ type: "integer", description: "Numero", minimum: 0, maximum: 99999 })
+  @ApiProperty(EnderecoFields.numero.swaggerMetadata)
   declare numero: number;
 
-  @ApiProperty({ type: "string", description: "Bairro" })
+  @ApiProperty(EnderecoFields.bairro.swaggerMetadata)
   declare bairro: string;
 
-  @ApiPropertyOptional({ type: "string", description: "Complemento", nullable: true })
+  @ApiPropertyOptional(EnderecoFields.complemento.swaggerMetadata)
   declare complemento: string | null;
 
-  @ApiPropertyOptional({ type: "string", description: "Ponto de referencia", nullable: true })
+  @ApiPropertyOptional(EnderecoFields.pontoReferencia.swaggerMetadata)
   declare pontoReferencia: string | null;
 
-  @ApiProperty({ type: () => CidadeFindOneOutputRestDto, description: "Cidade", nullable: true })
-  cidade: CidadeFindOneOutputRestDto | null;
+  @ApiProperty({
+    type: () => CidadeFindOneOutputRestDto,
+    ...EnderecoFields.cidade.swaggerMetadata,
+  })
+  cidade: CidadeFindOneOutputRestDto;
 }
 
 // ============================================================================
@@ -43,25 +48,28 @@ export class EnderecoFindOneOutputRestDto extends EntityBaseRestDto {
 export class EnderecoInputRestDto {
   static schema = EnderecoInputSchema.presentation;
 
-  @ApiProperty({ type: "string", description: "Codigo postal (CEP)" })
+  @ApiProperty(EnderecoFields.cep.swaggerMetadata)
   declare cep: string;
 
-  @ApiProperty({ type: "string", description: "Logradouro" })
+  @ApiProperty(EnderecoFields.logradouro.swaggerMetadata)
   declare logradouro: string;
 
-  @ApiProperty({ type: "integer", description: "Numero", minimum: 0, maximum: 99999 })
+  @ApiProperty(EnderecoFields.numero.swaggerMetadata)
   declare numero: number;
 
-  @ApiProperty({ type: "string", description: "Bairro" })
+  @ApiProperty(EnderecoFields.bairro.swaggerMetadata)
   declare bairro: string;
 
-  @ApiPropertyOptional({ type: "string", description: "Complemento", nullable: true })
+  @ApiPropertyOptional(EnderecoFields.complemento.swaggerMetadata)
   declare complemento: string | null;
 
-  @ApiPropertyOptional({ type: "string", description: "Ponto de referencia", nullable: true })
+  @ApiPropertyOptional(EnderecoFields.pontoReferencia.swaggerMetadata)
   declare pontoReferencia: string | null;
 
-  @ApiProperty({ type: () => CidadeFindOneInputRestDto, description: "Cidade" })
+  @ApiProperty({
+    type: () => CidadeFindOneInputRestDto,
+    ...EnderecoFields.cidade.swaggerMetadata,
+  })
   cidade: CidadeFindOneInputRestDto;
 }
 
@@ -73,10 +81,6 @@ export class EnderecoInputRestDto {
 export class EnderecoFindOneInputRestDto {
   static schema = EnderecoFindOneInputSchema;
 
-  @ApiProperty({
-    type: "string",
-    description: "Identificador do registro (uuid)",
-    format: "uuid",
-  })
+  @ApiProperty(SharedFields.idUuid.swaggerMetadata)
   id: string;
 }

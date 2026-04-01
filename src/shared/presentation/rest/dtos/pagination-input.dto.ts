@@ -1,40 +1,19 @@
+import { SharedFields } from "@/domain/abstractions";
 import { ApiPropertyOptional } from "@/shared/presentation/rest";
 /**
  * Base pagination input DTO for REST list queries.
  */
 
 export class PaginationInputRestDto {
-  // Index signature for filter properties (compatible with SearchOptions)
-
-  @ApiPropertyOptional({
-    type: "integer",
-    description: "Pagina de consulta",
-    minimum: 1,
-    default: 1,
-    example: 1,
-  })
+  @ApiPropertyOptional(SharedFields.page.swaggerMetadata)
   page?: number;
 
-  @ApiPropertyOptional({
-    type: "integer",
-    description: "Limite da quantidade de resultados por pagina",
-    minimum: 1,
-    example: 10,
-  })
+  @ApiPropertyOptional(SharedFields.limit.swaggerMetadata)
   limit?: number;
 
-  @ApiPropertyOptional({
-    type: "string",
-    description: "Busca textual",
-    example: "termo de busca",
-  })
+  @ApiPropertyOptional(SharedFields.search.swaggerMetadata)
   search?: string;
 
-  @ApiPropertyOptional({
-    description: "Ordenacao (ex: dateCreated:ASC)",
-    isArray: true,
-    type: "string",
-    example: ["dateCreated:ASC"],
-  })
+  @ApiPropertyOptional(SharedFields.sortBy.swaggerMetadata)
   sortBy?: string[];
 }

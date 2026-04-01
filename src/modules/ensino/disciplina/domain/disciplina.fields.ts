@@ -26,5 +26,6 @@ export const DisciplinaFields = {
   }),
   imagemCapa: createFieldMetadata({
     description: "Imagem de capa da disciplina",
+    nullable: true,
   }),
 };
