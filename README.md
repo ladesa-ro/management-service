@@ -2638,8 +2638,7 @@ erDiagram
     Diario ||--o{ DiarioPreferenciaAgrupamento : "configura"
 
     HorarioAulaConfiguracao ||--o{ HorarioAula : "define"
-    Turma ||--o{ TurmaHorarioAula : "associa"
-    HorarioAula ||--o{ TurmaHorarioAula : "associa"
+    Turma ||--o{ TurmaDisponibilidadeConfiguracao : "configura"
 
     Empresa ||--o{ ResponsavelEmpresa : "possui"
     Empresa ||--o{ Estagio : "oferece"
