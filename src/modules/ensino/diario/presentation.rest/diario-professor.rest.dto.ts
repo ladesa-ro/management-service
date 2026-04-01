@@ -44,16 +44,14 @@ export class DiarioProfessorFindOneOutputRestDto extends EntityBaseRestDto {
   @ApiProperty({
     type: () => PerfilFindOneOutputRestDto,
     ...DiarioProfessorFindOneQueryResultFields.perfil.swaggerMetadata,
-    nullable: true,
   })
-  perfil: PerfilFindOneOutputRestDto | null;
+  perfil: PerfilFindOneOutputRestDto;
 
   @ApiProperty({
     type: () => DiarioFindOneOutputRestDto,
     ...DiarioProfessorFindOneQueryResultFields.diario.swaggerMetadata,
-    nullable: true,
   })
-  diario: DiarioFindOneOutputRestDto | null;
+  diario: DiarioFindOneOutputRestDto;
 }
 
 // ============================================================================

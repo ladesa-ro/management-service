@@ -91,8 +91,8 @@ export const findOneQueryResultToOutputDto = createMapper<
   nome: output.nome,
   slug: output.slug,
   duracaoPeriodoEmMeses: output.duracaoPeriodoEmMeses,
-  modalidade: ModalidadeRestMapper.findOneQueryResultToOutputDto.mapOptional(output.modalidade),
-  campus: CampusRestMapper.findOneQueryResultToOutputDto.mapOptional(output.campus),
+  modalidade: ModalidadeRestMapper.findOneQueryResultToOutputDto.map(output.modalidade),
+  campus: CampusRestMapper.findOneQueryResultToOutputDto.map(output.campus),
   niveisFormacoes: (output.niveisFormacoes ?? []).map((nf) =>
     NivelFormacaoRestMapper.findOneQueryResultToOutputDto.map(nf),
   ),

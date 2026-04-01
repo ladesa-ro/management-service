@@ -1,5 +1,13 @@
 import { z } from "zod";
-import { ApiProperty, ApiSchema } from "@/shared/presentation/rest";
+import {
+  TurmaDisponibilidadeConfigFields,
+  TurmaDisponibilidadeDiaFields,
+  TurmaDisponibilidadeIntervaloFields,
+  TurmaDisponibilidadeParamsFields,
+  TurmaDisponibilidadeQueryFields,
+  TurmaDisponibilidadeSaveFields,
+} from "@/modules/ensino/turma/domain/turma-disponibilidade.fields";
+import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@/shared/presentation/rest";
 import { uuidSchema } from "@/shared/validation/schemas";
 
 // ============================================================================
@@ -14,7 +22,7 @@ const TurmaDisponibilidadeParentParamsSchema = z.object({
 export class TurmaDisponibilidadeParentParamsRestDto {
   static schema = TurmaDisponibilidadeParentParamsSchema;
 
-  @ApiProperty({ type: "string", format: "uuid", description: "ID da turma" })
+  @ApiProperty(TurmaDisponibilidadeParamsFields.turmaId.swaggerMetadata)
   turmaId: string;
 }
 
@@ -30,11 +38,7 @@ const TurmaDisponibilidadeFindByWeekQuerySchema = z.object({
 export class TurmaDisponibilidadeFindByWeekQueryRestDto {
   static schema = TurmaDisponibilidadeFindByWeekQuerySchema;
 
-  @ApiProperty({
-    type: "string",
-    format: "date",
-    description: "Data da semana (qualquer dia, normalizado para domingo)",
-  })
+  @ApiProperty(TurmaDisponibilidadeQueryFields.semana.swaggerMetadata)
   semana: string;
 }
 
@@ -44,10 +48,10 @@ export class TurmaDisponibilidadeFindByWeekQueryRestDto {
 
 @ApiSchema({ name: "TurmaDisponibilidadeIntervaloDto" })
 export class TurmaDisponibilidadeIntervaloRestDto {
-  @ApiProperty({ type: "string", description: "Horario inicio (HH:MM:SS)" })
+  @ApiProperty(TurmaDisponibilidadeIntervaloFields.inicio.swaggerMetadata)
   inicio: string;
 
-  @ApiProperty({ type: "string", description: "Horario fim (HH:MM:SS)" })
+  @ApiProperty(TurmaDisponibilidadeIntervaloFields.fim.swaggerMetadata)
   fim: string;
 }
 
@@ -57,10 +61,13 @@ export class TurmaDisponibilidadeIntervaloRestDto {
 
 @ApiSchema({ name: "TurmaDisponibilidadeDiaDto" })
 export class TurmaDisponibilidadeDiaRestDto {
-  @ApiProperty({ type: "number", description: "Dia da semana (1=seg..6=sab)" })
+  @ApiProperty(TurmaDisponibilidadeDiaFields.dia_semana.swaggerMetadata)
   dia_semana: number;
 
-  @ApiProperty({ type: () => [TurmaDisponibilidadeIntervaloRestDto] })
+  @ApiProperty({
+    type: () => [TurmaDisponibilidadeIntervaloRestDto],
+    ...TurmaDisponibilidadeDiaFields.intervalos.swaggerMetadata,
+  })
   intervalos: TurmaDisponibilidadeIntervaloRestDto[];
 }
 
@@ -70,13 +77,16 @@ export class TurmaDisponibilidadeDiaRestDto {
 
 @ApiSchema({ name: "TurmaDisponibilidadeConfigOutputDto" })
 export class TurmaDisponibilidadeConfigOutputRestDto {
-  @ApiProperty({ type: "string", format: "date" })
+  @ApiProperty(TurmaDisponibilidadeConfigFields.data_inicio.swaggerMetadata)
   data_inicio: string;
 
-  @ApiProperty({ type: "string", format: "date", nullable: true })
+  @ApiPropertyOptional(TurmaDisponibilidadeConfigFields.data_fim.swaggerMetadata)
   data_fim: string | null;
 
-  @ApiProperty({ type: () => [TurmaDisponibilidadeDiaRestDto] })
+  @ApiProperty({
+    type: () => [TurmaDisponibilidadeDiaRestDto],
+    ...TurmaDisponibilidadeConfigFields.horarios.swaggerMetadata,
+  })
   horarios: TurmaDisponibilidadeDiaRestDto[];
 }
 
@@ -86,7 +96,10 @@ export class TurmaDisponibilidadeConfigOutputRestDto {
 
 @ApiSchema({ name: "TurmaDisponibilidadeWeekOutputDto" })
 export class TurmaDisponibilidadeWeekOutputRestDto {
-  @ApiProperty({ type: () => [TurmaDisponibilidadeConfigOutputRestDto] })
+  @ApiProperty({
+    type: () => [TurmaDisponibilidadeConfigOutputRestDto],
+    ...TurmaDisponibilidadeSaveFields.configs.swaggerMetadata,
+  })
   configs: TurmaDisponibilidadeConfigOutputRestDto[];
 }
 
@@ -121,35 +134,37 @@ export class TurmaDisponibilidadeSaveInputRestDto {
 
   @ApiProperty({
     type: () => [TurmaDisponibilidadeConfigInputRestDto],
-    description: "Configuracoes de disponibilidade",
+    ...TurmaDisponibilidadeSaveFields.configs.swaggerMetadata,
   })
   configs: TurmaDisponibilidadeConfigInputRestDto[];
 
-  @ApiProperty({
-    type: "boolean",
-    required: false,
-    description: "Aplicar tambem para semanas futuras",
-  })
+  @ApiPropertyOptional(TurmaDisponibilidadeSaveFields.aplicar_futuras.swaggerMetadata)
   aplicar_futuras?: boolean;
 }
 
 @ApiSchema({ name: "TurmaDisponibilidadeConfigInputDto" })
 export class TurmaDisponibilidadeConfigInputRestDto {
-  @ApiProperty({ type: "string", format: "date" })
+  @ApiProperty(TurmaDisponibilidadeConfigFields.data_inicio.swaggerMetadata)
   data_inicio: string;
 
-  @ApiProperty({ type: "string", format: "date", nullable: true })
+  @ApiPropertyOptional(TurmaDisponibilidadeConfigFields.data_fim.swaggerMetadata)
   data_fim: string | null;
 
-  @ApiProperty({ type: () => [TurmaDisponibilidadeDiaInputRestDto] })
+  @ApiProperty({
+    type: () => [TurmaDisponibilidadeDiaInputRestDto],
+    ...TurmaDisponibilidadeConfigFields.horarios.swaggerMetadata,
+  })
   horarios: TurmaDisponibilidadeDiaInputRestDto[];
 }
 
 @ApiSchema({ name: "TurmaDisponibilidadeDiaInputDto" })
 export class TurmaDisponibilidadeDiaInputRestDto {
-  @ApiProperty({ type: "number", description: "Dia da semana (1=seg..6=sab)" })
+  @ApiProperty(TurmaDisponibilidadeDiaFields.dia_semana.swaggerMetadata)
   dia_semana: number;
 
-  @ApiProperty({ type: () => [TurmaDisponibilidadeIntervaloRestDto] })
+  @ApiProperty({
+    type: () => [TurmaDisponibilidadeIntervaloRestDto],
+    ...TurmaDisponibilidadeDiaFields.intervalos.swaggerMetadata,
+  })
   intervalos: TurmaDisponibilidadeIntervaloRestDto[];
 }

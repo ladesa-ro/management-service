@@ -6,6 +6,8 @@ import {
 import { BlocoFindOneInputSchema } from "@/modules/ambientes/bloco/domain/queries/bloco-find-one.query.schemas";
 import { BlocoPaginationInputSchema } from "@/modules/ambientes/bloco/domain/queries/bloco-list.query.schemas";
 import { CampusFindOneOutputRestDto } from "@/modules/ambientes/campus/presentation.rest";
+import { ImagemFields } from "@/modules/armazenamento/imagem/domain/imagem.fields";
+import { ImagemArquivoFromImagemFields } from "@/modules/armazenamento/imagem-arquivo/domain/imagem-arquivo-from-imagem.fields";
 import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@/shared/presentation/rest";
 import { EntityBaseRestDto, PaginationMetaRestDto } from "@/shared/presentation/rest/dtos";
 import { BlocoCreateCommandFields } from "../domain/commands/bloco-create.command";
@@ -28,30 +30,33 @@ export class ImagemArquivoFindOneFromImagemOutputRestDto {
   @ApiProperty(SharedFields.idUuid.swaggerMetadata)
   id: string;
 
-  @ApiProperty({ type: "integer", description: "Largura da imagem" })
+  @ApiPropertyOptional(ImagemArquivoFromImagemFields.largura.swaggerMetadata)
   largura: number | null;
 
-  @ApiProperty({ type: "integer", description: "Altura da imagem" })
+  @ApiPropertyOptional(ImagemArquivoFromImagemFields.altura.swaggerMetadata)
   altura: number | null;
 
-  @ApiProperty({ type: "string", description: "Formato da imagem" })
+  @ApiPropertyOptional(ImagemArquivoFromImagemFields.formato.swaggerMetadata)
   formato: string | null;
 
-  @ApiProperty({ type: "string", description: "Mime-type da imagem" })
+  @ApiPropertyOptional(ImagemArquivoFromImagemFields.mimeType.swaggerMetadata)
   mimeType: string | null;
 
-  @ApiProperty({ description: "Arquivo", type: () => ArquivoFindOneOutputFromBlocoRestDto })
+  @ApiProperty({
+    type: () => ArquivoFindOneOutputFromBlocoRestDto,
+    ...ImagemArquivoFromImagemFields.arquivo.swaggerMetadata,
+  })
   arquivo: ArquivoFindOneOutputFromBlocoRestDto;
 }
 
 @ApiSchema({ name: "ImagemFindOneOutputFromBlocoDto" })
 export class ImagemFindOneOutputRestDto extends EntityBaseRestDto {
-  @ApiPropertyOptional({ type: "string", description: "Descricao da imagem", nullable: true })
+  @ApiPropertyOptional(ImagemFields.descricao.swaggerMetadata)
   descricao: string | null;
 
   @ApiProperty({
-    description: "Versoes da imagem",
     type: () => [ImagemArquivoFindOneFromImagemOutputRestDto],
+    ...ImagemFields.versoes.swaggerMetadata,
   })
   versoes: ImagemArquivoFindOneFromImagemOutputRestDto[];
 }
@@ -71,14 +76,12 @@ export class BlocoFindOneOutputRestDto extends EntityBaseRestDto {
   @ApiProperty({
     type: () => CampusFindOneOutputRestDto,
     ...BlocoFindOneQueryResultFields.campus.swaggerMetadata,
-    nullable: true,
   })
-  campus: CampusFindOneOutputRestDto | null;
+  campus: CampusFindOneOutputRestDto;
 
   @ApiPropertyOptional({
     type: () => ImagemFindOneOutputRestDto,
     ...BlocoFindOneQueryResultFields.imagemCapa.swaggerMetadata,
-    nullable: true,
   })
   imagemCapa: ImagemFindOneOutputRestDto | null;
 }

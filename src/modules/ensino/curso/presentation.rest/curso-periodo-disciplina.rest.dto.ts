@@ -1,28 +1,34 @@
+import { SharedFields } from "@/domain/abstractions";
+import {
+  CursoPeriodoDisciplinaItemFields,
+  CursoPeriodoDisciplinaParamsFields,
+  CursoPeriodoDisciplinaPeriodoFields,
+} from "@/modules/ensino/curso/domain/curso-periodo-disciplina.fields";
 import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@/shared/presentation/rest";
 
 @ApiSchema({ name: "CursoPeriodoDisciplinaParentParamsDto" })
 export class CursoPeriodoDisciplinaParentParamsRestDto {
-  @ApiProperty({ type: "string", format: "uuid", description: "ID do curso" })
+  @ApiProperty(CursoPeriodoDisciplinaParamsFields.cursoId.swaggerMetadata)
   cursoId: string;
 }
 
 @ApiSchema({ name: "CursoPeriodoDisciplinaItemDto" })
 export class CursoPeriodoDisciplinaItemRestDto {
-  @ApiProperty({ type: "string", format: "uuid", description: "ID da disciplina" })
+  @ApiProperty(CursoPeriodoDisciplinaItemFields.disciplinaId.swaggerMetadata)
   disciplinaId: string;
 
-  @ApiPropertyOptional({ type: "integer", description: "Carga horaria", minimum: 0 })
+  @ApiPropertyOptional(CursoPeriodoDisciplinaItemFields.cargaHoraria.swaggerMetadata)
   cargaHoraria?: number;
 }
 
 @ApiSchema({ name: "CursoPeriodoDisciplinaPeriodoItemDto" })
 export class CursoPeriodoDisciplinaPeriodoItemRestDto {
-  @ApiProperty({ type: "integer", description: "Numero do periodo", minimum: 1 })
+  @ApiProperty(CursoPeriodoDisciplinaPeriodoFields.numeroPeriodo.swaggerMetadata)
   numeroPeriodo: number;
 
   @ApiProperty({
     type: () => [CursoPeriodoDisciplinaItemRestDto],
-    description: "Disciplinas do periodo",
+    ...CursoPeriodoDisciplinaPeriodoFields.disciplinas.swaggerMetadata,
   })
   disciplinas: CursoPeriodoDisciplinaItemRestDto[];
 }
@@ -35,21 +41,27 @@ export class CursoPeriodoDisciplinaBulkReplaceInputRestDto {
 
 @ApiSchema({ name: "CursoPeriodoDisciplinaOutputItemDto" })
 export class CursoPeriodoDisciplinaOutputItemRestDto {
-  @ApiProperty({ type: "string" }) id: string;
-  @ApiProperty({ type: "string" }) disciplinaId: string;
-  @ApiPropertyOptional({ type: "string", nullable: true }) disciplinaNome: string | null;
-  @ApiPropertyOptional({ type: "integer", nullable: true }) cargaHoraria: number | null;
+  @ApiProperty(CursoPeriodoDisciplinaItemFields.id.swaggerMetadata) id: string;
+  @ApiProperty(CursoPeriodoDisciplinaItemFields.disciplinaId.swaggerMetadata) disciplinaId: string;
+  @ApiPropertyOptional(CursoPeriodoDisciplinaItemFields.disciplinaNome.swaggerMetadata)
+  disciplinaNome: string | null;
+  @ApiPropertyOptional(CursoPeriodoDisciplinaItemFields.cargaHoraria.swaggerMetadata)
+  cargaHoraria: number | null;
 }
 
 @ApiSchema({ name: "CursoPeriodoDisciplinaOutputPeriodoDto" })
 export class CursoPeriodoDisciplinaOutputPeriodoRestDto {
-  @ApiProperty({ type: "integer" }) numeroPeriodo: number;
+  @ApiProperty(CursoPeriodoDisciplinaPeriodoFields.numeroPeriodo.swaggerMetadata)
+  numeroPeriodo: number;
   @ApiProperty({ type: () => [CursoPeriodoDisciplinaOutputItemRestDto] })
   disciplinas: CursoPeriodoDisciplinaOutputItemRestDto[];
 }
 
 @ApiSchema({ name: "CursoPeriodoDisciplinaListOutputDto" })
 export class CursoPeriodoDisciplinaListOutputRestDto {
-  @ApiProperty({ type: () => [CursoPeriodoDisciplinaOutputPeriodoRestDto] })
+  @ApiProperty({
+    type: () => [CursoPeriodoDisciplinaOutputPeriodoRestDto],
+    ...SharedFields.data.swaggerMetadata,
+  })
   data: CursoPeriodoDisciplinaOutputPeriodoRestDto[];
 }

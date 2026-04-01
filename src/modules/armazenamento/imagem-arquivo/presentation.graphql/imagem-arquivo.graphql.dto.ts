@@ -1,8 +1,12 @@
+import { SharedFields } from "@/domain/abstractions";
 import {
   EntityBaseGraphQlDto,
   PaginatedFilterByIdGraphQlDto,
   PaginationMetaGraphQlDto,
 } from "@/infrastructure.graphql/dtos";
+import { ArquivoFindOneQueryResultFields } from "@/modules/armazenamento/arquivo/domain/queries/arquivo-find-one.query.result";
+import { ImagemFields } from "@/modules/armazenamento/imagem/domain/imagem.fields";
+import { ImagemArquivoFromImagemFields } from "@/modules/armazenamento/imagem-arquivo/domain/imagem-arquivo-from-imagem.fields";
 import { ArgsType, Field, ID, Int, ObjectType } from "@/shared/presentation/graphql";
 import { createGraphqlListInputSchema } from "@/shared/validation/schemas";
 import { ImagemArquivoFindOneQueryResultFields } from "../domain/queries/imagem-arquivo-find-one.query.result";
@@ -14,10 +18,12 @@ import { ImagemArquivoListQueryFields } from "../domain/queries/imagem-arquivo-l
 
 @ObjectType("ArquivoFindOneOutputDto")
 export class ArquivoFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
-  @Field(() => String, { nullable: true }) name: string | null;
-  @Field(() => String, { nullable: true }) mimeType: string | null;
-  @Field(() => Int, { nullable: true }) sizeBytes: number | null;
-  @Field(() => String) storageType: string;
+  @Field(() => String, ArquivoFindOneQueryResultFields.name.gqlMetadata) name: string | null;
+  @Field(() => String, ArquivoFindOneQueryResultFields.mimeType.gqlMetadata) mimeType:
+    | string
+    | null;
+  @Field(() => Int, ArquivoFindOneQueryResultFields.sizeBytes.gqlMetadata) sizeBytes: number | null;
+  @Field(() => String, ArquivoFindOneQueryResultFields.storageType.gqlMetadata) storageType: string;
 }
 
 // ============================================================================
@@ -26,32 +32,16 @@ export class ArquivoFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
 
 @ObjectType("ImagemArquivoFindOneFromImagemOutputDto")
 export class ImagemArquivoFindOneFromImagemOutputGraphQlDto {
-  @Field(() => ID) id: string;
-  @Field(() => Int, {
-    nullable: true,
-    ...ImagemArquivoFindOneQueryResultFields.largura.gqlMetadata,
-  })
-  largura: number | null;
-  @Field(() => Int, { nullable: true, ...ImagemArquivoFindOneQueryResultFields.altura.gqlMetadata })
-  altura: number | null;
-  @Field(() => String, {
-    nullable: true,
-    ...ImagemArquivoFindOneQueryResultFields.formato.gqlMetadata,
-  })
-  formato: string | null;
-  @Field(() => String, {
-    nullable: true,
-    ...ImagemArquivoFindOneQueryResultFields.mimeType.gqlMetadata,
-  })
-  mimeType: string | null;
-  @Field(
-    () => ArquivoFindOneOutputGraphQlDto,
-    ImagemArquivoFindOneQueryResultFields.arquivo.gqlMetadata,
-  )
+  @Field(() => ID, ImagemArquivoFromImagemFields.id.gqlMetadata) id: string;
+  @Field(() => Int, ImagemArquivoFromImagemFields.largura.gqlMetadata) largura: number | null;
+  @Field(() => Int, ImagemArquivoFromImagemFields.altura.gqlMetadata) altura: number | null;
+  @Field(() => String, ImagemArquivoFromImagemFields.formato.gqlMetadata) formato: string | null;
+  @Field(() => String, ImagemArquivoFromImagemFields.mimeType.gqlMetadata) mimeType: string | null;
+  @Field(() => ArquivoFindOneOutputGraphQlDto, ImagemArquivoFromImagemFields.arquivo.gqlMetadata)
   arquivo: ArquivoFindOneOutputGraphQlDto;
-  @Field(() => Date) dateCreated: Date;
-  @Field(() => Date) dateUpdated: Date;
-  @Field(() => Date, { nullable: true }) dateDeleted: Date | null;
+  @Field(() => Date, SharedFields.dateCreated.gqlMetadata) dateCreated: Date;
+  @Field(() => Date, SharedFields.dateUpdated.gqlMetadata) dateUpdated: Date;
+  @Field(() => Date, SharedFields.dateDeleted.gqlMetadata) dateDeleted: Date | null;
 }
 
 // ============================================================================
@@ -60,8 +50,8 @@ export class ImagemArquivoFindOneFromImagemOutputGraphQlDto {
 
 @ObjectType("ImagemFindOneOutputDto")
 export class ImagemFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
-  @Field(() => String, { nullable: true }) descricao: string | null;
-  @Field(() => [ImagemArquivoFindOneFromImagemOutputGraphQlDto])
+  @Field(() => String, ImagemFields.descricao.gqlMetadata) descricao: string | null;
+  @Field(() => [ImagemArquivoFindOneFromImagemOutputGraphQlDto], ImagemFields.versoes.gqlMetadata)
   versoes: ImagemArquivoFindOneFromImagemOutputGraphQlDto[];
 }
 
@@ -71,7 +61,7 @@ export class ImagemFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
 
 @ObjectType("ImagemFindOneFromImagemArquivoOutputDto")
 export class ImagemFindOneFromImagemArquivoOutputGraphQlDto {
-  @Field(() => ID) id: string;
+  @Field(() => ID, SharedFields.idUuid.gqlMetadata) id: string;
 }
 
 // ============================================================================

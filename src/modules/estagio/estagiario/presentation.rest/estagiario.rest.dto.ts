@@ -33,31 +33,25 @@ export class EstagiarioFindOneOutputRestDto extends EntityBaseRestDto {
   @ApiProperty({
     type: () => PerfilFindOneOutputRestDto,
     ...EstagiarioFindOneQueryResultFields.perfil.swaggerMetadata,
-    nullable: true,
   })
   perfil: PerfilFindOneOutputRestDto | null;
 
   @ApiProperty({
     type: () => CursoFindOneOutputRestDto,
     ...EstagiarioFindOneQueryResultFields.curso.swaggerMetadata,
-    nullable: true,
   })
   curso: CursoFindOneOutputRestDto | null;
 
   @ApiProperty({
     type: () => TurmaFindOneOutputRestDto,
     ...EstagiarioFindOneQueryResultFields.turma.swaggerMetadata,
-    nullable: true,
   })
   turma: TurmaFindOneOutputRestDto | null;
 
   @ApiProperty(EstagiarioFindOneQueryResultFields.telefone.swaggerMetadata)
   telefone: string;
 
-  @ApiPropertyOptional({
-    ...EstagiarioFindOneQueryResultFields.emailInstitucional.swaggerMetadata,
-    nullable: true,
-  })
+  @ApiPropertyOptional(EstagiarioFindOneQueryResultFields.emailInstitucional.swaggerMetadata)
   emailInstitucional: string | null = null;
 
   @ApiProperty(EstagiarioFindOneQueryResultFields.dataNascimento.swaggerMetadata)

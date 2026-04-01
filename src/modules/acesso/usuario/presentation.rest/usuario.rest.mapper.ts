@@ -83,7 +83,7 @@ export function toPerfilNestedOutputDto(
   dto.id = output.id;
   dto.ativo = output.ativo;
   dto.cargo = getCargoNome(output);
-  dto.campus = CampusRestMapper.findOneQueryResultToOutputDto.mapOptional(output.campus);
+  dto.campus = CampusRestMapper.findOneQueryResultToOutputDto.map(output.campus);
   dto.dateCreated = output.dateCreated;
   dto.dateUpdated = output.dateUpdated;
   dto.dateDeleted = output.dateDeleted;

@@ -1,3 +1,4 @@
+import { ImagemFields } from "@/modules/armazenamento/imagem/domain/imagem.fields";
 import {
   ImagemCreateSchema,
   ImagemUpdateSchema,
@@ -23,12 +24,7 @@ import {
 
 @ApiSchema({ name: "ImagemFindOneOutputDto" })
 export class ImagemFindOneOutputRestDto extends EntityBaseRestDto {
-  @ApiPropertyOptional({
-    type: "string",
-    description: "Descrição da imagem",
-    nullable: true,
-    minLength: 1,
-  })
+  @ApiPropertyOptional(ImagemFields.descricao.swaggerMetadata)
   descricao: string | null;
 
   @ApiProperty({
@@ -64,12 +60,7 @@ export class ImagemListOutputRestDto {
 export class ImagemCreateInputRestDto {
   static schema = ImagemCreateSchema.presentation;
 
-  @ApiPropertyOptional({
-    type: "string",
-    description: "Descrição da imagem",
-    nullable: true,
-    minLength: 1,
-  })
+  @ApiPropertyOptional(ImagemFields.descricao.swaggerMetadata)
   descricao?: string | null;
 }
 

@@ -26,5 +26,6 @@ export const CursoFields = {
   }),
   imagemCapa: createFieldMetadata({
     description: "Imagem de capa do curso",
+    nullable: true,
   }),
 };

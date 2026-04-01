@@ -86,11 +86,11 @@ export const findOneQueryResultToOutputDto = createMapper<
 >((output) => ({
   id: output.id,
   ativo: output.ativo,
-  calendarioLetivo: CalendarioLetivoRestMapper.findOneQueryResultToOutputDto.mapOptional(
+  calendarioLetivo: CalendarioLetivoRestMapper.findOneQueryResultToOutputDto.map(
     output.calendarioLetivo,
   ),
-  turma: TurmaRestMapper.findOneQueryResultToOutputDto.mapOptional(output.turma),
-  disciplina: DisciplinaRestMapper.findOneQueryResultToOutputDto.mapOptional(output.disciplina),
+  turma: TurmaRestMapper.findOneQueryResultToOutputDto.map(output.turma),
+  disciplina: DisciplinaRestMapper.findOneQueryResultToOutputDto.map(output.disciplina),
   ambientePadrao: AmbienteRestMapper.findOneQueryResultToOutputDto.mapOptional(
     output.ambientePadrao,
   ),

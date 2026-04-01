@@ -1,86 +1,84 @@
+import { SharedFields } from "@/domain/abstractions";
+import { UsuarioEventoFields } from "@/modules/acesso/usuario/domain/usuario-evento.fields";
 import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@/shared/presentation/rest";
 
 @ApiSchema({ name: "UsuarioEventoParentParamsDto" })
 export class UsuarioEventoParentParamsRestDto {
-  @ApiProperty({ type: "string", format: "uuid", description: "ID do usuario" })
+  @ApiProperty(SharedFields.idUuid.swaggerMetadata)
   id: string;
 }
 
 @ApiSchema({ name: "UsuarioEventoItemParamsDto" })
 export class UsuarioEventoItemParamsRestDto {
-  @ApiProperty({ type: "string", format: "uuid", description: "ID do usuario" })
+  @ApiProperty(SharedFields.idUuid.swaggerMetadata)
   id: string;
 
-  @ApiProperty({ type: "string", format: "uuid", description: "ID do evento" })
+  @ApiProperty({ ...SharedFields.idUuid.swaggerMetadata, description: "ID do evento" })
   eventoId: string;
 }
 
 @ApiSchema({ name: "UsuarioEventoCreateInputDto" })
 export class UsuarioEventoCreateInputRestDto {
-  @ApiProperty({ type: "string", description: "Nome do evento/atividade" })
+  @ApiProperty(UsuarioEventoFields.nome.swaggerMetadata)
   nome: string;
 
-  @ApiProperty({ type: "string", format: "date" })
+  @ApiProperty(UsuarioEventoFields.dataInicio.swaggerMetadata)
   dataInicio: string;
 
-  @ApiPropertyOptional({ type: "string", format: "date", nullable: true })
+  @ApiPropertyOptional(UsuarioEventoFields.dataFim.swaggerMetadata)
   dataFim?: string;
 
-  @ApiProperty({ type: "boolean" })
+  @ApiProperty(UsuarioEventoFields.diaInteiro.swaggerMetadata)
   diaInteiro: boolean;
 
-  @ApiPropertyOptional({ type: "string" })
+  @ApiPropertyOptional(UsuarioEventoFields.horarioInicio.swaggerMetadata)
   horarioInicio?: string;
 
-  @ApiPropertyOptional({ type: "string" })
+  @ApiPropertyOptional(UsuarioEventoFields.horarioFim.swaggerMetadata)
   horarioFim?: string;
 
-  @ApiPropertyOptional({ type: "string", nullable: true })
+  @ApiPropertyOptional(UsuarioEventoFields.cor.swaggerMetadata)
   cor?: string;
 
-  @ApiPropertyOptional({ type: "string", nullable: true })
+  @ApiPropertyOptional(UsuarioEventoFields.repeticao.swaggerMetadata)
   repeticao?: string;
 
-  @ApiPropertyOptional({
-    type: "string",
-    enum: ["EVENTO", "INDISPONIBILIDADE"],
-    description: "Tipo: EVENTO (atividade) ou INDISPONIBILIDADE",
-  })
+  @ApiPropertyOptional(UsuarioEventoFields.tipo.swaggerMetadata)
   tipo?: string;
 }
 
 @ApiSchema({ name: "UsuarioEventoUpdateInputDto" })
 export class UsuarioEventoUpdateInputRestDto {
-  @ApiPropertyOptional({ type: "string" }) nome?: string;
-  @ApiPropertyOptional({ type: "string", format: "date" })
-  dataInicio?: string;
-  @ApiPropertyOptional({ type: "string", format: "date", nullable: true })
-  dataFim?: string;
-  @ApiPropertyOptional({ type: "boolean" }) diaInteiro?: boolean;
-  @ApiPropertyOptional({ type: "string" }) horarioInicio?: string;
-  @ApiPropertyOptional({ type: "string" }) horarioFim?: string;
-  @ApiPropertyOptional({ type: "string", nullable: true }) cor?: string;
-  @ApiPropertyOptional({ type: "string", nullable: true })
-  repeticao?: string;
+  @ApiPropertyOptional(UsuarioEventoFields.nome.swaggerMetadata) nome?: string;
+  @ApiPropertyOptional(UsuarioEventoFields.dataInicio.swaggerMetadata) dataInicio?: string;
+  @ApiPropertyOptional(UsuarioEventoFields.dataFim.swaggerMetadata) dataFim?: string;
+  @ApiPropertyOptional(UsuarioEventoFields.diaInteiro.swaggerMetadata) diaInteiro?: boolean;
+  @ApiPropertyOptional(UsuarioEventoFields.horarioInicio.swaggerMetadata) horarioInicio?: string;
+  @ApiPropertyOptional(UsuarioEventoFields.horarioFim.swaggerMetadata) horarioFim?: string;
+  @ApiPropertyOptional(UsuarioEventoFields.cor.swaggerMetadata) cor?: string;
+  @ApiPropertyOptional(UsuarioEventoFields.repeticao.swaggerMetadata) repeticao?: string;
 }
 
 @ApiSchema({ name: "UsuarioEventoFindOneOutputDto" })
 export class UsuarioEventoFindOneOutputRestDto {
-  @ApiProperty({ type: "string" }) id: string;
-  @ApiPropertyOptional({ type: "string", nullable: true }) nome: string | null;
-  @ApiProperty({ type: "string" }) tipo: string;
-  @ApiProperty({ type: "string", format: "date" }) dataInicio: string;
-  @ApiPropertyOptional({ type: "string", format: "date", nullable: true }) dataFim: string | null;
-  @ApiProperty({ type: "boolean" }) diaInteiro: boolean;
-  @ApiProperty({ type: "string" }) horarioInicio: string;
-  @ApiProperty({ type: "string" }) horarioFim: string;
-  @ApiPropertyOptional({ type: "string", nullable: true }) cor: string | null;
-  @ApiPropertyOptional({ type: "string", nullable: true }) repeticao: string | null;
-  @ApiPropertyOptional({ type: "string", nullable: true }) status: string | null;
+  @ApiProperty(UsuarioEventoFields.id.swaggerMetadata) id: string;
+  @ApiPropertyOptional(UsuarioEventoFields.nome.swaggerMetadata) nome: string | null;
+  @ApiProperty(UsuarioEventoFields.tipo.swaggerMetadata) tipo: string;
+  @ApiProperty(UsuarioEventoFields.dataInicio.swaggerMetadata) dataInicio: string;
+  @ApiPropertyOptional(UsuarioEventoFields.dataFim.swaggerMetadata) dataFim: string | null;
+  @ApiProperty(UsuarioEventoFields.diaInteiro.swaggerMetadata) diaInteiro: boolean;
+  @ApiProperty(UsuarioEventoFields.horarioInicio.swaggerMetadata) horarioInicio: string;
+  @ApiProperty(UsuarioEventoFields.horarioFim.swaggerMetadata) horarioFim: string;
+  @ApiPropertyOptional(UsuarioEventoFields.cor.swaggerMetadata) cor: string | null;
+  @ApiPropertyOptional(UsuarioEventoFields.repeticao.swaggerMetadata) repeticao: string | null;
+  @ApiPropertyOptional(UsuarioEventoFields.status.swaggerMetadata) status: string | null;
 }
 
 @ApiSchema({ name: "UsuarioEventoListOutputDto" })
 export class UsuarioEventoListOutputRestDto {
-  @ApiProperty({ type: () => [UsuarioEventoFindOneOutputRestDto] })
+  @ApiProperty({
+    type: () => [UsuarioEventoFindOneOutputRestDto],
+    ...SharedFields.data.swaggerMetadata,
+  })
   data: UsuarioEventoFindOneOutputRestDto[];
 }

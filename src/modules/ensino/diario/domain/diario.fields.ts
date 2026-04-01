@@ -25,8 +25,10 @@ export const DiarioFields = {
   }),
   ambientePadrao: createFieldMetadata({
     description: "Ambiente padrao",
+    nullable: true,
   }),
   imagemCapa: createFieldMetadata({
     description: "Imagem de capa do diario",
+    nullable: true,
   }),
 };

@@ -1,19 +1,20 @@
+import { SharedFields } from "@/domain/abstractions";
 import { Field, InputType, Int, ObjectType } from "@/shared/presentation/graphql";
 /**
  * Base pagination input DTO for GraphQL queries.
  */
 @InputType("PaginationInput")
 export class PaginationInputGraphQlDto {
-  @Field(() => Int, { nullable: true, defaultValue: 1 })
+  @Field(() => Int, SharedFields.page.gqlMetadata)
   page?: number = 1;
 
-  @Field(() => Int, { nullable: true })
+  @Field(() => Int, SharedFields.limit.gqlMetadata)
   limit?: number;
 
-  @Field(() => String, { nullable: true })
+  @Field(() => String, SharedFields.search.gqlMetadata)
   search?: string;
 
-  @Field(() => [String], { nullable: true })
+  @Field(() => [String], SharedFields.sortBy.gqlMetadata)
   sortBy?: string[];
 }
 
@@ -22,21 +23,21 @@ export class PaginationInputGraphQlDto {
  */
 @ObjectType()
 export class PaginationMetaGraphQlDto {
-  @Field(() => Int)
+  @Field(() => Int, SharedFields.limit.gqlMetadata)
   itemsPerPage: number;
 
-  @Field(() => Int)
+  @Field(() => Int, { description: "Total de itens" })
   totalItems: number;
 
-  @Field(() => Int)
+  @Field(() => Int, SharedFields.page.gqlMetadata)
   currentPage: number;
 
-  @Field(() => Int)
+  @Field(() => Int, { description: "Quantidade total de paginas" })
   totalPages: number;
 
-  @Field(() => String)
+  @Field(() => String, SharedFields.search.gqlMetadata)
   search: string;
 
-  @Field(() => [[String]])
+  @Field(() => [[String]], SharedFields.sortBy.gqlMetadata)
   sortBy: [string, string][];
 }

@@ -77,7 +77,7 @@ export const findOneQueryResultToOutputDto = createMapper<
   codigo: output.codigo,
   capacidade: output.capacidade,
   tipo: output.tipo,
-  bloco: BlocoRestMapper.findOneQueryResultToOutputDto.mapOptional(output.bloco),
+  bloco: BlocoRestMapper.findOneQueryResultToOutputDto.map(output.bloco),
   imagemCapa: output.imagemCapa ? BlocoRestMapper.toImagemOutput(output.imagemCapa) : null,
   dateCreated: output.dateCreated,
   dateUpdated: output.dateUpdated,

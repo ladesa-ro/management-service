@@ -46,7 +46,6 @@ export class EmpresaFindOneOutputRestDto extends EntityBaseRestDto {
   @ApiProperty({
     type: () => EnderecoFindOneOutputRestDto,
     ...EmpresaFindOneQueryResultFields.endereco.swaggerMetadata,
-    nullable: true,
   })
   endereco: EnderecoFindOneOutputRestDto | null;
 

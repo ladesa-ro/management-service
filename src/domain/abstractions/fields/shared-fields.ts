@@ -9,6 +9,8 @@
 import { z } from "zod";
 import { createFieldMetadata } from "./field-metadata";
 
+const uuidSchema = z.string().uuid();
+const dateTimeSchema = z.string().datetime();
 const pageSchema = z.number().int().min(1).optional().default(1);
 const limitSchema = z.number().int().min(1).optional();
 const searchSchema = z.string().optional();
@@ -16,15 +18,32 @@ const sortBySchema = z.array(z.string()).optional();
 const filterIdSchema = z.array(z.string()).optional();
 
 export const SharedFields = {
-  idUuid: createFieldMetadata({ description: "Identificador do registro (uuid)" }),
-  idNumeric: createFieldMetadata({ description: "Identificador do registro (numerico)" }),
-  dateCreated: createFieldMetadata({ description: "Data de criação do registro" }),
-  dateUpdated: createFieldMetadata({ description: "Data da última atualização do registro" }),
-  dateDeleted: createFieldMetadata({ description: "Data de exclusão do registro" }),
+  idUuid: createFieldMetadata({
+    description: "Identificador do registro (uuid)",
+    schema: uuidSchema,
+  }),
+  idNumeric: createFieldMetadata({
+    description: "Identificador do registro (numerico)",
+    schema: z.number().int(),
+  }),
+  dateCreated: createFieldMetadata({
+    description: "Data e hora da criacao do registro",
+    schema: dateTimeSchema,
+  }),
+  dateUpdated: createFieldMetadata({
+    description: "Data e hora da alteracao do registro",
+    schema: dateTimeSchema,
+  }),
+  dateDeleted: createFieldMetadata({
+    description: "Data e hora da exclusao do registro",
+    schema: dateTimeSchema.nullable(),
+    nullable: true,
+  }),
   page: createFieldMetadata({
     description: "Pagina de consulta",
     schema: pageSchema,
     nullable: true,
+    defaultValue: 1,
   }),
   limit: createFieldMetadata({
     description: "Limite da quantidade de resultados por pagina",

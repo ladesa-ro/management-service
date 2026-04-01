@@ -1,11 +1,12 @@
 import { Mixin } from "ts-mixer";
+import { SharedFields } from "@/domain/abstractions";
 import { Field, ID, Int, ObjectType } from "@/shared/presentation/graphql";
 /**
  * Base GraphQL DTO for entities identified by UUID.
  */
 @ObjectType({ isAbstract: true })
 export class EntityIdUuidGraphQlDto {
-  @Field(() => ID)
+  @Field(() => ID, SharedFields.idUuid.gqlMetadata)
   id: string;
 }
 
@@ -14,7 +15,7 @@ export class EntityIdUuidGraphQlDto {
  */
 @ObjectType({ isAbstract: true })
 export class EntityIdIntGraphQlDto {
-  @Field(() => Int)
+  @Field(() => Int, SharedFields.idNumeric.gqlMetadata)
   id: number;
 }
 
@@ -23,13 +24,13 @@ export class EntityIdIntGraphQlDto {
  */
 @ObjectType({ isAbstract: true })
 export class EntityDatedGraphQlDto {
-  @Field(() => Date)
+  @Field(() => Date, SharedFields.dateCreated.gqlMetadata)
   dateCreated: Date;
 
-  @Field(() => Date)
+  @Field(() => Date, SharedFields.dateUpdated.gqlMetadata)
   dateUpdated: Date;
 
-  @Field(() => Date, { nullable: true })
+  @Field(() => Date, SharedFields.dateDeleted.gqlMetadata)
   dateDeleted: Date | null;
 }
 

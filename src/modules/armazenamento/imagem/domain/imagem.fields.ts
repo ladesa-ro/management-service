@@ -13,6 +13,7 @@ export const ImagemFields = {
   descricao: createFieldMetadata({
     description: "Descricao da imagem",
     schema: createSchema(() => z.string().nullable().optional()),
+    nullable: true,
   }),
   versoes: createFieldMetadata({
     description: "Versoes da imagem (arquivos associados)",

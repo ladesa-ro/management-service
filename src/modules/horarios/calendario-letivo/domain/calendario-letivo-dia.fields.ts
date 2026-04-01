@@ -12,15 +12,16 @@ import { createFieldMetadata, createSchema } from "@/domain/abstractions";
 export const CalendarioLetivoDiaFields = {
   data: createFieldMetadata({
     description: "Data do dia no calendario",
-    schema: createSchema(() => z.string().min(1, "data é obrigatória")),
+    schema: createSchema(() => z.string().date()),
   }),
   diaLetivo: createFieldMetadata({
     description: "Indica se o dia e letivo",
     schema: createSchema(() => z.boolean()),
   }),
   feriado: createFieldMetadata({
-    description: "Nome do feriado (ou null se nao for)",
+    description: "Nome do feriado (vazio se nao for)",
     schema: createSchema(() => z.string()),
+    nullable: true,
   }),
   diaPresencial: createFieldMetadata({
     description: "Indica se o dia e presencial",

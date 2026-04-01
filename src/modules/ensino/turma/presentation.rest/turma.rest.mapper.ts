@@ -95,7 +95,7 @@ export const findOneQueryResultToOutputDto = createMapper<
   id: output.id,
   periodo: output.periodo,
   nome: output.nome ?? null,
-  curso: CursoRestMapper.findOneQueryResultToOutputDto.mapOptional(output.curso),
+  curso: CursoRestMapper.findOneQueryResultToOutputDto.map(output.curso),
   ambientePadraoAula: AmbienteRestMapper.findOneQueryResultToOutputDto.mapOptional(
     output.ambientePadraoAula,
   ),

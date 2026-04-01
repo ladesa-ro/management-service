@@ -1,3 +1,4 @@
+import { SharedFields } from "@/domain/abstractions";
 import { EstagioCreateCommandFields } from "@/modules/estagio/estagio/domain/commands/estagio-create.command";
 import { EstagioUpdateCommandFields } from "@/modules/estagio/estagio/domain/commands/estagio-update.command";
 import { EstagioStatusValues } from "@/modules/estagio/estagio/domain/estagio.fields";
@@ -5,6 +6,7 @@ import {
   EstagioCreateSchema,
   EstagioUpdateSchema,
 } from "@/modules/estagio/estagio/domain/estagio.schemas";
+import { HorarioEstagioFields } from "@/modules/estagio/estagio/domain/horario-estagio.fields";
 import { EstagioFindOneQueryResultFields } from "@/modules/estagio/estagio/domain/queries/estagio-find-one.query.result";
 import { EstagioFindOneInputSchema } from "@/modules/estagio/estagio/domain/queries/estagio-find-one.query.schemas";
 import { EstagioListQueryFields } from "@/modules/estagio/estagio/domain/queries/estagio-list.query";
@@ -14,19 +16,19 @@ import { PaginationInputRestDto, UuidParamRestDto } from "@/shared/presentation/
 
 @ApiSchema({ name: "HorarioEstagioInputDto" })
 export class HorarioEstagioInputRestDto {
-  @ApiProperty({ type: "number", minimum: 0, maximum: 6 })
+  @ApiProperty(HorarioEstagioFields.diaSemana.swaggerMetadata)
   diaSemana!: number;
 
-  @ApiProperty({ type: "string", example: "08:00" })
+  @ApiProperty(HorarioEstagioFields.horaInicio.swaggerMetadata)
   horaInicio!: string;
 
-  @ApiProperty({ type: "string", example: "12:00" })
+  @ApiProperty(HorarioEstagioFields.horaFim.swaggerMetadata)
   horaFim!: string;
 }
 
 @ApiSchema({ name: "HorarioEstagioOutputDto" })
 export class HorarioEstagioOutputRestDto extends HorarioEstagioInputRestDto {
-  @ApiProperty({ type: "string", format: "uuid" })
+  @ApiProperty(HorarioEstagioFields.id.swaggerMetadata)
   id!: string;
 }
 
@@ -151,15 +153,18 @@ export class EstagioFindOneOutputRestDto {
 
 @ApiSchema({ name: "EstagioListOutputDto" })
 export class EstagioListOutputRestDto {
-  @ApiProperty({ type: () => [EstagioFindOneOutputRestDto] })
+  @ApiProperty({
+    type: () => [EstagioFindOneOutputRestDto],
+    ...SharedFields.data.swaggerMetadata,
+  })
   data!: EstagioFindOneOutputRestDto[];
 
-  @ApiProperty({ type: "number" })
+  @ApiProperty({ type: "number", description: "Total de itens" })
   total!: number;
 
-  @ApiProperty({ type: "number" })
+  @ApiProperty(SharedFields.page.swaggerMetadata)
   page!: number;
 
-  @ApiProperty({ type: "number" })
+  @ApiProperty(SharedFields.limit.swaggerMetadata)
   limit!: number;
 }

@@ -45,7 +45,7 @@ export const findOneQueryResultToOutputDto = createMapper<
 >((output) => ({
   id: output.id,
   nome: output.nome,
-  estado: EstadoRestMapper.findOneQueryResultToOutputDto.mapOptional(output.estado),
+  estado: EstadoRestMapper.findOneQueryResultToOutputDto.map(output.estado),
 }));
 
 export const listQueryResultToListOutputDto = createListMapper(
