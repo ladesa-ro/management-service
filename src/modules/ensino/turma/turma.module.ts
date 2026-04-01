@@ -45,10 +45,22 @@ import { TurmaDisponibilidadeRestController } from "@/modules/ensino/turma/prese
 import { TurmaEventoRestController } from "@/modules/ensino/turma/presentation.rest/turma-evento.rest.controller";
 import { CalendarioAgendamentoModule } from "@/modules/horarios/calendario-agendamento/calendario-agendamento.module";
 import { HorarioConsultaModule } from "@/modules/horarios/horario-consulta/horario-consulta.module";
-import { TurmaDisponibilidadeSaveCommandHandlerImpl } from "@/modules/horarios/turma-disponibilidade/application/commands";
-import { TurmaDisponibilidadeFindByWeekQueryHandlerImpl } from "@/modules/horarios/turma-disponibilidade/application/queries";
-import { ITurmaDisponibilidadeSaveCommandHandler } from "@/modules/horarios/turma-disponibilidade/domain/commands";
-import { ITurmaDisponibilidadeFindByWeekQueryHandler } from "@/modules/horarios/turma-disponibilidade/domain/queries";
+import {
+  TurmaDisponibilidadeDeactivateCommandHandlerImpl,
+  TurmaDisponibilidadeSaveCommandHandlerImpl,
+} from "@/modules/horarios/turma-disponibilidade/application/commands";
+import {
+  TurmaDisponibilidadeFindAllActiveQueryHandlerImpl,
+  TurmaDisponibilidadeFindByWeekQueryHandlerImpl,
+} from "@/modules/horarios/turma-disponibilidade/application/queries";
+import {
+  ITurmaDisponibilidadeDeactivateCommandHandler,
+  ITurmaDisponibilidadeSaveCommandHandler,
+} from "@/modules/horarios/turma-disponibilidade/domain/commands";
+import {
+  ITurmaDisponibilidadeFindAllActiveQueryHandler,
+  ITurmaDisponibilidadeFindByWeekQueryHandler,
+} from "@/modules/horarios/turma-disponibilidade/domain/queries";
 import { ITurmaDisponibilidadeRepository } from "@/modules/horarios/turma-disponibilidade/domain/repositories";
 import { TurmaDisponibilidadeTypeOrmRepositoryAdapter } from "@/modules/horarios/turma-disponibilidade/infrastructure.database";
 
@@ -106,10 +118,18 @@ import { TurmaDisponibilidadeTypeOrmRepositoryAdapter } from "@/modules/horarios
       provide: ITurmaDisponibilidadeSaveCommandHandler,
       useClass: TurmaDisponibilidadeSaveCommandHandlerImpl,
     },
+    {
+      provide: ITurmaDisponibilidadeDeactivateCommandHandler,
+      useClass: TurmaDisponibilidadeDeactivateCommandHandlerImpl,
+    },
     // TurmaDisponibilidade - Queries
     {
       provide: ITurmaDisponibilidadeFindByWeekQueryHandler,
       useClass: TurmaDisponibilidadeFindByWeekQueryHandlerImpl,
+    },
+    {
+      provide: ITurmaDisponibilidadeFindAllActiveQueryHandler,
+      useClass: TurmaDisponibilidadeFindAllActiveQueryHandlerImpl,
     },
   ],
   exports: [ITurmaFindOneQueryHandler],

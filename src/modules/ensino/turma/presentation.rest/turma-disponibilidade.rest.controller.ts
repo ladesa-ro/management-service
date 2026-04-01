@@ -1,19 +1,44 @@
-import { Body, Controller, Get, Param, Put, Query } from "@nestjs/common";
-import { ApiForbiddenResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Put,
+  Query,
+} from "@nestjs/common";
+import {
+  ApiForbiddenResponse,
+  ApiNoContentResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from "@nestjs/swagger";
 import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import {
+  ITurmaDisponibilidadeDeactivateCommandHandler,
   ITurmaDisponibilidadeSaveCommandHandler,
+  TurmaDisponibilidadeDeactivateCommandMetadata,
   TurmaDisponibilidadeSaveCommandMetadata,
 } from "@/modules/horarios/turma-disponibilidade/domain/commands";
 import {
+  ITurmaDisponibilidadeFindAllActiveQueryHandler,
   ITurmaDisponibilidadeFindByWeekQueryHandler,
+  TurmaDisponibilidadeFindAllActiveQueryMetadata,
   TurmaDisponibilidadeFindByWeekQueryMetadata,
 } from "@/modules/horarios/turma-disponibilidade/domain/queries";
 import type { TurmaDisponibilidadeConfiguracao } from "@/modules/horarios/turma-disponibilidade/domain/turma-disponibilidade";
 import { AccessContextHttp } from "@/server/nest/access-context";
-import type { TurmaDisponibilidadeConfigOutputRestDto } from "./turma-disponibilidade.rest.dto";
+import type {
+  TurmaDisponibilidadeConfigOutputRestDto,
+  TurmaDisponibilidadeConfigWithIdOutputRestDto,
+} from "./turma-disponibilidade.rest.dto";
 import {
+  TurmaDisponibilidadeAllOutputRestDto,
+  TurmaDisponibilidadeConfigIdParamsRestDto,
   TurmaDisponibilidadeFindByWeekQueryRestDto,
   TurmaDisponibilidadeParentParamsRestDto,
   TurmaDisponibilidadeSaveInputRestDto,
@@ -24,11 +49,30 @@ import {
 @Controller("/turmas/:turmaId/disponibilidade")
 export class TurmaDisponibilidadeRestController {
   constructor(
+    @DeclareDependency(ITurmaDisponibilidadeFindAllActiveQueryHandler)
+    private readonly findAllActiveHandler: ITurmaDisponibilidadeFindAllActiveQueryHandler,
     @DeclareDependency(ITurmaDisponibilidadeFindByWeekQueryHandler)
     private readonly findByWeekHandler: ITurmaDisponibilidadeFindByWeekQueryHandler,
     @DeclareDependency(ITurmaDisponibilidadeSaveCommandHandler)
     private readonly saveHandler: ITurmaDisponibilidadeSaveCommandHandler,
+    @DeclareDependency(ITurmaDisponibilidadeDeactivateCommandHandler)
+    private readonly deactivateHandler: ITurmaDisponibilidadeDeactivateCommandHandler,
   ) {}
+
+  @Get("/all")
+  @ApiOperation(TurmaDisponibilidadeFindAllActiveQueryMetadata.swaggerMetadata)
+  @ApiOkResponse({ type: TurmaDisponibilidadeAllOutputRestDto })
+  @ApiForbiddenResponse()
+  async findAllActive(
+    @AccessContextHttp() accessContext: IAccessContext,
+    @Param() parentParams: TurmaDisponibilidadeParentParamsRestDto,
+  ): Promise<TurmaDisponibilidadeAllOutputRestDto> {
+    const configs = await this.findAllActiveHandler.execute(accessContext, {
+      turmaId: parentParams.turmaId,
+    });
+
+    return { configs: configs.map((c) => this.mapConfigToOutputWithId(c)) };
+  }
 
   @Get("/")
   @ApiOperation(TurmaDisponibilidadeFindByWeekQueryMetadata.swaggerMetadata)
@@ -74,6 +118,30 @@ export class TurmaDisponibilidadeRestController {
     });
 
     return { configs: savedConfigs.map((c) => this.mapConfigToOutput(c)) };
+  }
+
+  @Delete("/:configId")
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation(TurmaDisponibilidadeDeactivateCommandMetadata.swaggerMetadata)
+  @ApiNoContentResponse({ description: "Configuracao desativada com sucesso" })
+  @ApiForbiddenResponse()
+  async deactivate(
+    @AccessContextHttp() accessContext: IAccessContext,
+    @Param() params: TurmaDisponibilidadeConfigIdParamsRestDto,
+  ): Promise<void> {
+    await this.deactivateHandler.execute(accessContext, {
+      turmaId: params.turmaId,
+      configId: params.configId,
+    });
+  }
+
+  private mapConfigToOutputWithId(
+    config: TurmaDisponibilidadeConfiguracao,
+  ): TurmaDisponibilidadeConfigWithIdOutputRestDto {
+    return {
+      id: config.id,
+      ...this.mapConfigToOutput(config),
+    };
   }
 
   private mapConfigToOutput(

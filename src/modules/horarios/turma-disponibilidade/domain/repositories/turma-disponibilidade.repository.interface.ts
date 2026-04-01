@@ -7,6 +7,7 @@ export interface ITurmaDisponibilidadeRepository {
     turmaId: string,
     domingoSemana: string,
   ): Promise<TurmaDisponibilidadeConfiguracao | null>;
+  findAllActiveByTurmaId(turmaId: string): Promise<TurmaDisponibilidadeConfiguracao[]>;
   save(config: TurmaDisponibilidadeConfiguracao): Promise<void>;
   encerrarVigente(turmaId: string, dataFim: string): Promise<void>;
   findActiveOverlapping(

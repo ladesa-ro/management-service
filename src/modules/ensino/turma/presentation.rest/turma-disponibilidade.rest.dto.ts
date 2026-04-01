@@ -112,6 +112,73 @@ export class TurmaDisponibilidadeWeekOutputRestDto {
 }
 
 // ============================================================================
+// Config Output with ID (for findAllActive)
+// ============================================================================
+
+@ApiSchema({ name: "TurmaDisponibilidadeConfigWithIdOutputDto" })
+export class TurmaDisponibilidadeConfigWithIdOutputRestDto {
+  @ApiProperty({ description: "ID da configuracao", type: "string", format: "uuid" })
+  id: string;
+
+  @ApiProperty(TurmaDisponibilidadeConfigFields.data_inicio.swaggerMetadata)
+  data_inicio: string;
+
+  @ApiPropertyOptional(TurmaDisponibilidadeConfigFields.data_fim.swaggerMetadata)
+  data_fim: string | null;
+
+  @ApiPropertyOptional({
+    description: "Identificador externo da grade horaria utilizada (snapshot)",
+    type: "string",
+    format: "uuid",
+    nullable: true,
+  })
+  identificador_externo_grade_horaria: string | null;
+
+  @ApiProperty({
+    ...TurmaDisponibilidadeConfigFields.horarios.swaggerMetadata,
+    type: () => [TurmaDisponibilidadeDiaRestDto],
+  })
+  horarios: TurmaDisponibilidadeDiaRestDto[];
+}
+
+// ============================================================================
+// All Active Output
+// ============================================================================
+
+@ApiSchema({ name: "TurmaDisponibilidadeAllOutputDto" })
+export class TurmaDisponibilidadeAllOutputRestDto {
+  @ApiProperty({
+    ...TurmaDisponibilidadeSaveFields.configs.swaggerMetadata,
+    type: () => [TurmaDisponibilidadeConfigWithIdOutputRestDto],
+  })
+  configs: TurmaDisponibilidadeConfigWithIdOutputRestDto[];
+}
+
+// ============================================================================
+// Config ID Params (for deactivate)
+// ============================================================================
+
+const TurmaDisponibilidadeConfigIdParamsSchema = z.object({
+  turmaId: uuidSchema,
+  configId: uuidSchema,
+});
+
+@ApiSchema({ name: "TurmaDisponibilidadeConfigIdParamsDto" })
+export class TurmaDisponibilidadeConfigIdParamsRestDto {
+  static schema = TurmaDisponibilidadeConfigIdParamsSchema;
+
+  @ApiProperty(TurmaDisponibilidadeParamsFields.turmaId.swaggerMetadata)
+  turmaId: string;
+
+  @ApiProperty({
+    description: "ID da configuracao de disponibilidade",
+    type: "string",
+    format: "uuid",
+  })
+  configId: string;
+}
+
+// ============================================================================
 // Save Input
 // ============================================================================
 
