@@ -28,6 +28,14 @@ import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import {
+  IHorarioConsultaQueryHandler,
+  TurmaHorarioSemanalQueryMetadata,
+} from "@/modules/calendario/horario-consulta";
+import {
+  HorarioSemanalOutputRestDto,
+  HorarioSemanalQueryParamsRestDto,
+} from "@/modules/calendario/horario-consulta/presentation.rest";
+import {
   ITurmaCreateCommandHandler,
   TurmaCreateCommandMetadata,
 } from "@/modules/ensino/turma/domain/commands/turma-create.command.handler.interface";
@@ -56,14 +64,6 @@ import {
   TurmaListQueryMetadata,
 } from "@/modules/ensino/turma/domain/queries/turma-list.query.handler.interface";
 import { Turma } from "@/modules/ensino/turma/domain/turma";
-import {
-  IHorarioConsultaQueryHandler,
-  TurmaHorarioSemanalQueryMetadata,
-} from "@/modules/horarios/horario-consulta";
-import {
-  HorarioSemanalOutputRestDto,
-  HorarioSemanalQueryParamsRestDto,
-} from "@/modules/horarios/horario-consulta/presentation.rest";
 import { AccessContextHttp } from "@/server/nest/access-context";
 import {
   TurmaCreateInputRestDto,

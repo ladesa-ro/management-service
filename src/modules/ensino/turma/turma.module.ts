@@ -3,6 +3,8 @@ import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adap
 import { AmbienteModule } from "@/modules/ambientes/ambiente/ambiente.module";
 import { ArquivoModule } from "@/modules/armazenamento/arquivo/arquivo.module";
 import { ImagemModule } from "@/modules/armazenamento/imagem/imagem.module";
+import { CalendarioAgendamentoModule } from "@/modules/calendario/agendamento/calendario-agendamento.module";
+import { HorarioConsultaModule } from "@/modules/calendario/horario-consulta/horario-consulta.module";
 import { CursoModule } from "@/modules/ensino/curso/curso.module";
 import { TurmaPermissionCheckerImpl } from "@/modules/ensino/turma/application/authorization";
 import {
@@ -42,8 +44,6 @@ import { TurmaGraphqlResolver } from "@/modules/ensino/turma/presentation.graphq
 import { TurmaRestController } from "@/modules/ensino/turma/presentation.rest/turma.rest.controller";
 import { TurmaDiarioConfigurarRestController } from "@/modules/ensino/turma/presentation.rest/turma-diario-configurar.rest.controller";
 import { TurmaEventoRestController } from "@/modules/ensino/turma/presentation.rest/turma-evento.rest.controller";
-import { CalendarioAgendamentoModule } from "@/modules/horarios/calendario-agendamento/calendario-agendamento.module";
-import { HorarioConsultaModule } from "@/modules/horarios/horario-consulta/horario-consulta.module";
 
 @Module({
   imports: [

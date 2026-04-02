@@ -73,11 +73,11 @@ import {
 } from "@/modules/acesso/usuario/domain/queries/usuario-list.query.handler.interface";
 import { IUsuarioDisponibilidadeRepository } from "@/modules/acesso/usuario/domain/repositories/usuario-disponibilidade.repository.interface";
 import { Usuario } from "@/modules/acesso/usuario/domain/usuario";
-import { IHorarioConsultaQueryHandler } from "@/modules/horarios/horario-consulta";
+import { IHorarioConsultaQueryHandler } from "@/modules/calendario/horario-consulta";
 import {
   HorarioSemanalOutputRestDto,
   HorarioSemanalQueryParamsRestDto,
-} from "@/modules/horarios/horario-consulta/presentation.rest";
+} from "@/modules/calendario/horario-consulta/presentation.rest";
 import { AccessContextHttp } from "@/server/nest/access-context";
 import {
   UsuarioCreateInputRestDto,

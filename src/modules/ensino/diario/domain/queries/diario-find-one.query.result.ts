@@ -1,9 +1,9 @@
 import { EntityQueryResult, SharedFields } from "@/domain/abstractions";
 import { AmbienteFindOneQueryResult } from "@/modules/ambientes/ambiente";
 import { ImagemFindOneQueryResult } from "@/modules/armazenamento/imagem";
+import { CalendarioLetivoFindOneQueryResult } from "@/modules/calendario/letivo";
 import { DisciplinaFindOneQueryResult } from "@/modules/ensino/disciplina";
 import { TurmaFindOneQueryResult } from "@/modules/ensino/turma";
-import { CalendarioLetivoFindOneQueryResult } from "@/modules/horarios/calendario-letivo";
 import { DiarioFields } from "../diario.fields";
 
 export const DiarioFindOneQueryResultFields = {

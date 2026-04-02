@@ -1,4 +1,5 @@
 import type { AmbienteFindOneQueryResult } from "@/modules/ambientes/ambiente";
+import * as CalendarioLetivoGraphqlMapper from "@/modules/calendario/letivo/presentation.graphql/calendario-letivo.graphql.mapper";
 import {
   DiarioCreateCommand,
   DiarioFindOneQuery,
@@ -8,7 +9,6 @@ import {
 } from "@/modules/ensino/diario";
 import type { DisciplinaFindOneQueryResult } from "@/modules/ensino/disciplina";
 import type { TurmaFindOneQueryResult } from "@/modules/ensino/turma";
-import * as CalendarioLetivoGraphqlMapper from "@/modules/horarios/calendario-letivo/presentation.graphql/calendario-letivo.graphql.mapper";
 import {
   createListMapper,
   createMapper,

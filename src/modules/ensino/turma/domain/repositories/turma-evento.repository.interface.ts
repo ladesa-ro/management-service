@@ -1,4 +1,4 @@
-import type { CalendarioAgendamentoEntity } from "@/modules/horarios/calendario-agendamento/infrastructure.database/typeorm/calendario-agendamento.typeorm.entity";
+import type { CalendarioAgendamentoEntity } from "@/modules/calendario/agendamento/infrastructure.database/typeorm/calendario-agendamento.typeorm.entity";
 
 export const ITurmaEventoRepository = Symbol("ITurmaEventoRepository");
 

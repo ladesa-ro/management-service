@@ -1,5 +1,6 @@
 import * as AmbienteRestMapper from "@/modules/ambientes/ambiente/presentation.rest/ambiente.rest.mapper";
 import * as BlocoRestMapper from "@/modules/ambientes/bloco/presentation.rest/bloco.rest.mapper";
+import * as CalendarioLetivoRestMapper from "@/modules/calendario/letivo/presentation.rest/calendario-letivo.rest.mapper";
 import {
   DiarioCreateCommand,
   DiarioFindOneQuery,
@@ -9,7 +10,6 @@ import {
 } from "@/modules/ensino/diario";
 import * as DisciplinaRestMapper from "@/modules/ensino/disciplina/presentation.rest/disciplina.rest.mapper";
 import * as TurmaRestMapper from "@/modules/ensino/turma/presentation.rest/turma.rest.mapper";
-import * as CalendarioLetivoRestMapper from "@/modules/horarios/calendario-letivo/presentation.rest/calendario-letivo.rest.mapper";
 import { createListMapper, createMapper, createPaginatedInputMapper, into } from "@/shared/mapping";
 import {
   type DiarioCreateInputRestDto,

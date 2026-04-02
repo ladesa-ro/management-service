@@ -1,8 +1,8 @@
 import { AmbienteInputRef } from "@/modules/ambientes/ambiente";
 import { ImagemInputRef } from "@/modules/armazenamento/imagem";
+import { CalendarioLetivoInputRef } from "@/modules/calendario/letivo";
 import { DisciplinaInputRef } from "@/modules/ensino/disciplina";
 import { TurmaInputRef } from "@/modules/ensino/turma";
-import { CalendarioLetivoInputRef } from "@/modules/horarios/calendario-letivo";
 import { DiarioFields } from "../diario.fields";
 
 export const DiarioCreateCommandFields = {

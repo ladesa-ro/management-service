@@ -13,8 +13,8 @@ import {
   CalendarioAgendamentoEntity,
   CalendarioAgendamentoStatus,
   CalendarioAgendamentoTipo,
-} from "@/modules/horarios/calendario-agendamento/infrastructure.database/typeorm/calendario-agendamento.typeorm.entity";
-import { CalendarioAgendamentoProfessorEntity } from "@/modules/horarios/calendario-agendamento/infrastructure.database/typeorm/calendario-agendamento-professor.typeorm.entity";
+} from "@/modules/calendario/agendamento/infrastructure.database/typeorm/calendario-agendamento.typeorm.entity";
+import { CalendarioAgendamentoProfessorEntity } from "@/modules/calendario/agendamento/infrastructure.database/typeorm/calendario-agendamento-professor.typeorm.entity";
 
 @DeclareImplementation()
 export class UsuarioEventoTypeOrmRepositoryAdapter implements IUsuarioEventoRepository {
