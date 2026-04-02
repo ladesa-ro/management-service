@@ -9,7 +9,7 @@ import {
 } from "@nestjs/swagger";
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { Dep } from "@/domain/dependency-injection";
 import {
   EstagiarioCreateCommandMetadata,
   IEstagiarioCreateCommandHandler,
@@ -46,15 +46,15 @@ import * as EstagiarioRestMapper from "./estagiario.rest.mapper";
 @Controller("/estagiarios")
 export class EstagiarioRestController {
   constructor(
-    @DeclareDependency(IEstagiarioListQueryHandler)
+    @Dep(IEstagiarioListQueryHandler)
     private readonly listHandler: IEstagiarioListQueryHandler,
-    @DeclareDependency(IEstagiarioFindOneQueryHandler)
+    @Dep(IEstagiarioFindOneQueryHandler)
     private readonly findOneHandler: IEstagiarioFindOneQueryHandler,
-    @DeclareDependency(IEstagiarioCreateCommandHandler)
+    @Dep(IEstagiarioCreateCommandHandler)
     private readonly createHandler: IEstagiarioCreateCommandHandler,
-    @DeclareDependency(IEstagiarioUpdateCommandHandler)
+    @Dep(IEstagiarioUpdateCommandHandler)
     private readonly updateHandler: IEstagiarioUpdateCommandHandler,
-    @DeclareDependency(IEstagiarioDeleteCommandHandler)
+    @Dep(IEstagiarioDeleteCommandHandler)
     private readonly deleteHandler: IEstagiarioDeleteCommandHandler,
   ) {}
 

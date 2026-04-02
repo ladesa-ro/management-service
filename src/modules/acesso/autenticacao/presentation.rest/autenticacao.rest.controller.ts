@@ -8,7 +8,7 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { Dep } from "@/domain/dependency-injection";
 import {
   AutenticacaoDefinirSenhaCommandMetadata,
   IAutenticacaoDefinirSenhaCommandHandler,
@@ -49,17 +49,17 @@ import {
 @Controller("/autenticacao")
 export class AutenticacaoRestController {
   constructor(
-    @DeclareDependency(IUsuarioEnsinoQueryHandler)
+    @Dep(IUsuarioEnsinoQueryHandler)
     private readonly usuarioEnsinoHandler: IUsuarioEnsinoQueryHandler,
-    @DeclareDependency(IAutenticacaoWhoAmIQueryHandler)
+    @Dep(IAutenticacaoWhoAmIQueryHandler)
     private readonly whoAmIHandler: IAutenticacaoWhoAmIQueryHandler,
-    @DeclareDependency(IAutenticacaoLoginCommandHandler)
+    @Dep(IAutenticacaoLoginCommandHandler)
     private readonly loginHandler: IAutenticacaoLoginCommandHandler,
-    @DeclareDependency(IAutenticacaoRefreshCommandHandler)
+    @Dep(IAutenticacaoRefreshCommandHandler)
     private readonly refreshHandler: IAutenticacaoRefreshCommandHandler,
-    @DeclareDependency(IAutenticacaoDefinirSenhaCommandHandler)
+    @Dep(IAutenticacaoDefinirSenhaCommandHandler)
     private readonly definirSenhaHandler: IAutenticacaoDefinirSenhaCommandHandler,
-    @DeclareDependency(IAutenticacaoRecoverPasswordCommandHandler)
+    @Dep(IAutenticacaoRecoverPasswordCommandHandler)
     private readonly recoverPasswordHandler: IAutenticacaoRecoverPasswordCommandHandler,
   ) {}
 

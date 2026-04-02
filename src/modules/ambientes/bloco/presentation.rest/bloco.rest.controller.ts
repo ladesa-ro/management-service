@@ -25,7 +25,7 @@ import {
 } from "@nestjs/swagger";
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { Dep } from "@/domain/dependency-injection";
 import { Bloco } from "@/modules/ambientes/bloco/domain/bloco";
 import {
   BlocoCreateCommandMetadata,
@@ -70,19 +70,19 @@ import * as BlocoRestMapper from "./bloco.rest.mapper";
 @Controller("/blocos")
 export class BlocoRestController {
   constructor(
-    @DeclareDependency(IBlocoListQueryHandler)
+    @Dep(IBlocoListQueryHandler)
     private readonly listHandler: IBlocoListQueryHandler,
-    @DeclareDependency(IBlocoFindOneQueryHandler)
+    @Dep(IBlocoFindOneQueryHandler)
     private readonly findOneHandler: IBlocoFindOneQueryHandler,
-    @DeclareDependency(IBlocoCreateCommandHandler)
+    @Dep(IBlocoCreateCommandHandler)
     private readonly createHandler: IBlocoCreateCommandHandler,
-    @DeclareDependency(IBlocoUpdateCommandHandler)
+    @Dep(IBlocoUpdateCommandHandler)
     private readonly updateHandler: IBlocoUpdateCommandHandler,
-    @DeclareDependency(IBlocoGetImagemCapaQueryHandler)
+    @Dep(IBlocoGetImagemCapaQueryHandler)
     private readonly getImagemCapaHandler: IBlocoGetImagemCapaQueryHandler,
-    @DeclareDependency(IBlocoUpdateImagemCapaCommandHandler)
+    @Dep(IBlocoUpdateImagemCapaCommandHandler)
     private readonly updateImagemCapaHandler: IBlocoUpdateImagemCapaCommandHandler,
-    @DeclareDependency(IBlocoDeleteCommandHandler)
+    @Dep(IBlocoDeleteCommandHandler)
     private readonly deleteHandler: IBlocoDeleteCommandHandler,
   ) {}
 

@@ -4,7 +4,7 @@ import { LRUCache } from "lru-cache";
 import type { IntrospectionResponse } from "openid-client";
 import { tokenIntrospection } from "openid-client";
 import type { IIdentityProvider, IIdentityResponse } from "@/domain/abstractions/identity-provider";
-import { DeclareImplementation } from "@/domain/dependency-injection";
+import { Impl } from "@/domain/dependency-injection";
 import { getNowTime } from "@/utils/date";
 import { JwksRsaClientService } from "./jwks/jwks-rsa-client.service";
 import { OpenidConnectService } from "./openid-connect/openid-connect.service";
@@ -15,7 +15,7 @@ interface IntrospectionResponseWithUser extends IntrospectionResponse {
   };
 }
 
-@DeclareImplementation()
+@Impl()
 export class IdentityProviderService implements IIdentityProvider {
   #cache = new LRUCache<string, IntrospectionResponseWithUser>({
     max: 500,

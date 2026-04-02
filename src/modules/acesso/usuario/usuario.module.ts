@@ -72,7 +72,7 @@ import { UsuarioEventoRestController } from "@/modules/acesso/usuario/presentati
 import { CampusModule } from "@/modules/ambientes/campus/campus.module";
 import { ArquivoModule } from "@/modules/armazenamento/arquivo/arquivo.module";
 import { ImagemModule } from "@/modules/armazenamento/imagem/imagem.module";
-import { HorarioConsultaModule } from "@/modules/horarios/horario-consulta/horario-consulta.module";
+import { HorarioConsultaModule } from "@/modules/calendario/horario-consulta/horario-consulta.module";
 
 @Module({
   imports: [

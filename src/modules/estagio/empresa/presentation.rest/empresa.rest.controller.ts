@@ -9,7 +9,7 @@ import {
 } from "@nestjs/swagger";
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { Dep } from "@/domain/dependency-injection";
 import {
   EmpresaCreateCommandMetadata,
   IEmpresaCreateCommandHandler,
@@ -46,15 +46,15 @@ import * as EmpresaRestMapper from "./empresa.rest.mapper";
 @Controller("/empresas")
 export class EmpresaRestController {
   constructor(
-    @DeclareDependency(IEmpresaListQueryHandler)
+    @Dep(IEmpresaListQueryHandler)
     private readonly listHandler: IEmpresaListQueryHandler,
-    @DeclareDependency(IEmpresaFindOneQueryHandler)
+    @Dep(IEmpresaFindOneQueryHandler)
     private readonly findOneHandler: IEmpresaFindOneQueryHandler,
-    @DeclareDependency(IEmpresaCreateCommandHandler)
+    @Dep(IEmpresaCreateCommandHandler)
     private readonly createHandler: IEmpresaCreateCommandHandler,
-    @DeclareDependency(IEmpresaUpdateCommandHandler)
+    @Dep(IEmpresaUpdateCommandHandler)
     private readonly updateHandler: IEmpresaUpdateCommandHandler,
-    @DeclareDependency(IEmpresaDeleteCommandHandler)
+    @Dep(IEmpresaDeleteCommandHandler)
     private readonly deleteHandler: IEmpresaDeleteCommandHandler,
   ) {}
 

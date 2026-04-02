@@ -2,7 +2,7 @@ import { type OnModuleInit } from "@nestjs/common";
 import { BrokerAsPromised as Broker, BrokerConfig } from "rascal";
 import { ServiceUnavailableError } from "@/application/errors";
 import { ILoggerPort, ILoggerPort as ILoggerPortToken } from "@/domain/abstractions/logging";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import type { IMessageBrokerOptions } from "@/infrastructure.config/options/message-broker/message-broker-options.interface";
 import { IMessageBrokerOptions as IMessageBrokerOptionsToken } from "@/infrastructure.config/options/message-broker/message-broker-options.interface";
 import { IConnectionHealthRegistry } from "@/shared/resilience/connection-health-registry.interface";
@@ -10,17 +10,17 @@ import { retryWithBackoff } from "@/shared/resilience/retry-with-backoff";
 
 const DEPENDENCY_NAME = "message-broker";
 
-@DeclareImplementation()
+@Impl()
 export class MessageBrokerContainerService implements OnModuleInit {
   #broker: Broker | null = null;
   #connecting = false;
 
   constructor(
-    @DeclareDependency(IMessageBrokerOptionsToken)
+    @Dep(IMessageBrokerOptionsToken)
     private readonly messageBrokerOptions: IMessageBrokerOptions | null,
-    @DeclareDependency(ILoggerPortToken)
+    @Dep(ILoggerPortToken)
     private readonly logger: ILoggerPort,
-    @DeclareDependency(IConnectionHealthRegistry)
+    @Dep(IConnectionHealthRegistry)
     private readonly healthRegistry: IConnectionHealthRegistry,
   ) {}
 

@@ -1,7 +1,7 @@
 import { ensureExists } from "@/application/errors";
 import { saveEntityImagemField } from "@/application/helpers";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import {
   IImagemSaveImagemCapaCommandHandler,
   type IImagemSaveImagemCapaCommandHandler as IImagemSaveImagemCapaCommandHandlerType,
@@ -14,16 +14,16 @@ import { Turma } from "@/modules/ensino/turma/domain/turma";
 import { ITurmaPermissionChecker } from "../../domain/authorization";
 import { ITurmaRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class TurmaUpdateImagemCapaCommandHandlerImpl
   implements ITurmaUpdateImagemCapaCommandHandler
 {
   constructor(
-    @DeclareDependency(ITurmaRepository)
+    @Dep(ITurmaRepository)
     private readonly repository: ITurmaRepository,
-    @DeclareDependency(ITurmaPermissionChecker)
+    @Dep(ITurmaPermissionChecker)
     private readonly permissionChecker: ITurmaPermissionChecker,
-    @DeclareDependency(IImagemSaveImagemCapaCommandHandler)
+    @Dep(IImagemSaveImagemCapaCommandHandler)
     private readonly saveImagemCapaHandler: IImagemSaveImagemCapaCommandHandlerType,
   ) {}
 

@@ -2,6 +2,7 @@ import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
 import { UsuarioModule } from "@/modules/acesso/usuario/usuario.module";
 import { AmbienteModule } from "@/modules/ambientes/ambiente/ambiente.module";
+import { CalendarioLetivoModule } from "@/modules/calendario/letivo/calendario-letivo.module";
 import { DiarioPermissionCheckerImpl } from "@/modules/ensino/diario/application/authorization";
 import {
   DiarioCreateCommandHandlerImpl,
@@ -50,7 +51,6 @@ import { DiarioPreferenciaAgrupamentoRestController } from "@/modules/ensino/dia
 import { DiarioProfessorRestController } from "@/modules/ensino/diario/presentation.rest/diario-professor.rest.controller";
 import { DisciplinaModule } from "@/modules/ensino/disciplina/disciplina.module";
 import { TurmaModule } from "@/modules/ensino/turma/turma.module";
-import { CalendarioLetivoModule } from "@/modules/horarios/calendario-letivo/calendario-letivo.module";
 
 /**
  * Modulo NestJS para Diario

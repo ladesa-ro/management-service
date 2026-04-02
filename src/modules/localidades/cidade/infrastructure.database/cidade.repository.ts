@@ -1,5 +1,5 @@
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
 import { buildTypeOrmPaginateConfig } from "@/infrastructure.database/pagination/adapters/pagination-spec.adapter";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
@@ -31,10 +31,10 @@ const cidadePaginateConfig = buildTypeOrmPaginateConfig<CidadeEntity>(
   cidadeRelations,
 );
 
-@DeclareImplementation()
+@Impl()
 export class CidadeTypeOrmRepositoryAdapter implements ICidadeRepository {
   constructor(
-    @DeclareDependency(IAppTypeormConnection)
+    @Dep(IAppTypeormConnection)
     private readonly appTypeormConnection: IAppTypeormConnection,
     private readonly paginationAdapter: NestJsPaginateAdapter,
   ) {}

@@ -2,7 +2,7 @@ import { type OnModuleInit } from "@nestjs/common";
 import * as client from "openid-client";
 import { ServiceUnavailableError } from "@/application/errors";
 import { ILoggerPort, ILoggerPort as ILoggerPortToken } from "@/domain/abstractions/logging";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { DeclareImplementation, Dep } from "@/domain/dependency-injection";
 import { IConnectionHealthRegistry } from "@/shared/resilience/connection-health-registry.interface";
 import { retryWithBackoff } from "@/shared/resilience/retry-with-backoff";
 import type { IAuthOptions } from "../options/auth-options.interface";
@@ -16,11 +16,11 @@ export class OpenidConnectService implements OnModuleInit {
   #initialized = false;
 
   constructor(
-    @DeclareDependency(IAuthOptionsToken)
+    @Dep(IAuthOptionsToken)
     readonly authOptions: IAuthOptions | null,
-    @DeclareDependency(ILoggerPortToken)
+    @Dep(ILoggerPortToken)
     private readonly logger: ILoggerPort,
-    @DeclareDependency(IConnectionHealthRegistry)
+    @Dep(IConnectionHealthRegistry)
     private readonly healthRegistry: IConnectionHealthRegistry,
   ) {}
 

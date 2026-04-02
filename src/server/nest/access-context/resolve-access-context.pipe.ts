@@ -1,6 +1,6 @@
 import type { PipeTransform } from "@nestjs/common";
 import type { IRequestActor } from "@/domain/abstractions/request-actor";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import { AccessContext } from "./access-context";
 
@@ -9,10 +9,10 @@ import { AccessContext } from "./access-context";
  * Usado pelos decorators AccessContextHttp e AccessContextGraphQL.
  */
 
-@DeclareImplementation()
+@Impl()
 export class ResolveAccessContextPipe implements PipeTransform {
   constructor(
-    @DeclareDependency(IAppTypeormConnection)
+    @Dep(IAppTypeormConnection)
     private readonly appTypeormConnection: IAppTypeormConnection,
   ) {}
 

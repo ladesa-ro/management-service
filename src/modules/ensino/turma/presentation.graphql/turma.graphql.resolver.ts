@@ -1,7 +1,7 @@
 import { Args, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { Dep } from "@/domain/dependency-injection";
 import {
   ITurmaCreateCommandHandler,
   TurmaCreateCommandMetadata,
@@ -36,15 +36,15 @@ import * as TurmaGraphqlMapper from "./turma.graphql.mapper";
 @Resolver(() => TurmaFindOneOutputGraphQlDto)
 export class TurmaGraphqlResolver {
   constructor(
-    @DeclareDependency(ITurmaListQueryHandler)
+    @Dep(ITurmaListQueryHandler)
     private readonly listHandler: ITurmaListQueryHandler,
-    @DeclareDependency(ITurmaFindOneQueryHandler)
+    @Dep(ITurmaFindOneQueryHandler)
     private readonly findOneHandler: ITurmaFindOneQueryHandler,
-    @DeclareDependency(ITurmaCreateCommandHandler)
+    @Dep(ITurmaCreateCommandHandler)
     private readonly createHandler: ITurmaCreateCommandHandler,
-    @DeclareDependency(ITurmaUpdateCommandHandler)
+    @Dep(ITurmaUpdateCommandHandler)
     private readonly updateHandler: ITurmaUpdateCommandHandler,
-    @DeclareDependency(ITurmaDeleteCommandHandler)
+    @Dep(ITurmaDeleteCommandHandler)
     private readonly deleteHandler: ITurmaDeleteCommandHandler,
   ) {}
 

@@ -1,6 +1,6 @@
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente";
 import type { AmbienteUpdateCommand } from "@/modules/ambientes/ambiente/domain/commands/ambiente-update.command";
 import { IAmbienteUpdateCommandHandler } from "@/modules/ambientes/ambiente/domain/commands/ambiente-update.command.handler.interface";
@@ -9,12 +9,12 @@ import { IAmbientePermissionChecker } from "../../domain/authorization";
 import type { AmbienteFindOneQueryResult } from "../../domain/queries";
 import { IAmbienteRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class AmbienteUpdateCommandHandlerImpl implements IAmbienteUpdateCommandHandler {
   constructor(
-    @DeclareDependency(IAmbienteRepository)
+    @Dep(IAmbienteRepository)
     private readonly repository: IAmbienteRepository,
-    @DeclareDependency(IAmbientePermissionChecker)
+    @Dep(IAmbientePermissionChecker)
     private readonly permissionChecker: IAmbientePermissionChecker,
   ) {}
 

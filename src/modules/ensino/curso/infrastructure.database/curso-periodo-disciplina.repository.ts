@@ -1,15 +1,15 @@
 import type { FindOptionsWhere } from "typeorm";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import type { ICursoPeriodoDisciplinaRepository } from "../domain/repositories";
 import { CursoPeriodoDisciplinaEntity } from "./typeorm/curso-periodo-disciplina.typeorm.entity";
 
-@DeclareImplementation()
+@Impl()
 export class CursoPeriodoDisciplinaTypeOrmRepositoryAdapter
   implements ICursoPeriodoDisciplinaRepository
 {
   constructor(
-    @DeclareDependency(IAppTypeormConnection)
+    @Dep(IAppTypeormConnection)
     private readonly appTypeormConnection: IAppTypeormConnection,
   ) {}
 

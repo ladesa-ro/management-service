@@ -2,7 +2,7 @@ import type { DeepPartial } from "typeorm";
 import { IsNull } from "typeorm";
 import type { IPaginationCriteria, IPaginationResult } from "@/application/pagination";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
 import { buildTypeOrmPaginateConfig } from "@/infrastructure.database/pagination/adapters/pagination-spec.adapter";
 import type { ITypeOrmPaginationConfig } from "@/infrastructure.database/pagination/interfaces/pagination-config.types";
@@ -46,10 +46,10 @@ const perfilPaginateConfig = buildTypeOrmPaginateConfig<PerfilEntity>(
   perfilRelations,
 );
 
-@DeclareImplementation()
+@Impl()
 export class PerfilTypeOrmRepositoryAdapter implements IPerfilRepository {
   constructor(
-    @DeclareDependency(IAppTypeormConnection)
+    @Dep(IAppTypeormConnection)
     private readonly appTypeormConnection: IAppTypeormConnection,
     private readonly paginationAdapter: NestJsPaginateAdapter,
   ) {}

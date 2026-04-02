@@ -1,7 +1,7 @@
 import { Args, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { Dep } from "@/domain/dependency-injection";
 import {
   EstagioCreateCommandMetadata,
   IEstagioCreateCommandHandler,
@@ -36,15 +36,15 @@ import * as EstagioGraphqlMapper from "./estagio.graphql.mapper";
 @Resolver(() => EstagioFindOneOutputGraphQlDto)
 export class EstagioGraphqlResolver {
   constructor(
-    @DeclareDependency(IEstagioListQueryHandler)
+    @Dep(IEstagioListQueryHandler)
     private readonly listHandler: IEstagioListQueryHandler,
-    @DeclareDependency(IEstagioFindOneQueryHandler)
+    @Dep(IEstagioFindOneQueryHandler)
     private readonly findOneHandler: IEstagioFindOneQueryHandler,
-    @DeclareDependency(IEstagioCreateCommandHandler)
+    @Dep(IEstagioCreateCommandHandler)
     private readonly createHandler: IEstagioCreateCommandHandler,
-    @DeclareDependency(IEstagioUpdateCommandHandler)
+    @Dep(IEstagioUpdateCommandHandler)
     private readonly updateHandler: IEstagioUpdateCommandHandler,
-    @DeclareDependency(IEstagioDeleteCommandHandler)
+    @Dep(IEstagioDeleteCommandHandler)
     private readonly deleteHandler: IEstagioDeleteCommandHandler,
   ) {}
 

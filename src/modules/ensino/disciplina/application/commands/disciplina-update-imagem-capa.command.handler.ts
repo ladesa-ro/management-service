@@ -1,6 +1,6 @@
 import { ensureActiveEntity, ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import {
   IImagemSaveImagemCapaCommandHandler,
   type IImagemSaveImagemCapaCommandHandler as IImagemSaveImagemCapaCommandHandlerType,
@@ -13,16 +13,16 @@ import { Disciplina } from "@/modules/ensino/disciplina/domain/disciplina";
 import { IDisciplinaPermissionChecker } from "../../domain/authorization";
 import { IDisciplinaRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class DisciplinaUpdateImagemCapaCommandHandlerImpl
   implements IDisciplinaUpdateImagemCapaCommandHandler
 {
   constructor(
-    @DeclareDependency(IDisciplinaRepository)
+    @Dep(IDisciplinaRepository)
     private readonly repository: IDisciplinaRepository,
-    @DeclareDependency(IDisciplinaPermissionChecker)
+    @Dep(IDisciplinaPermissionChecker)
     private readonly permissionChecker: IDisciplinaPermissionChecker,
-    @DeclareDependency(IImagemSaveImagemCapaCommandHandler)
+    @Dep(IImagemSaveImagemCapaCommandHandler)
     private readonly saveImagemCapaHandler: IImagemSaveImagemCapaCommandHandlerType,
   ) {}
 

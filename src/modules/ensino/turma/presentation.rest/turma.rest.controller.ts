@@ -23,10 +23,17 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
-import type { Express } from "express";
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { Dep } from "@/domain/dependency-injection";
+import {
+  IHorarioConsultaQueryHandler,
+  TurmaHorarioSemanalQueryMetadata,
+} from "@/modules/calendario/horario-consulta";
+import {
+  HorarioSemanalOutputRestDto,
+  HorarioSemanalQueryParamsRestDto,
+} from "@/modules/calendario/horario-consulta/presentation.rest";
 import {
   ITurmaCreateCommandHandler,
   TurmaCreateCommandMetadata,
@@ -56,14 +63,6 @@ import {
   TurmaListQueryMetadata,
 } from "@/modules/ensino/turma/domain/queries/turma-list.query.handler.interface";
 import { Turma } from "@/modules/ensino/turma/domain/turma";
-import {
-  IHorarioConsultaQueryHandler,
-  TurmaHorarioSemanalQueryMetadata,
-} from "@/modules/horarios/horario-consulta";
-import {
-  HorarioSemanalOutputRestDto,
-  HorarioSemanalQueryParamsRestDto,
-} from "@/modules/horarios/horario-consulta/presentation.rest";
 import { AccessContextHttp } from "@/server/nest/access-context";
 import {
   TurmaCreateInputRestDto,
@@ -79,21 +78,21 @@ import * as TurmaRestMapper from "./turma.rest.mapper";
 @Controller("/turmas")
 export class TurmaRestController {
   constructor(
-    @DeclareDependency(ITurmaListQueryHandler)
+    @Dep(ITurmaListQueryHandler)
     private readonly listHandler: ITurmaListQueryHandler,
-    @DeclareDependency(ITurmaFindOneQueryHandler)
+    @Dep(ITurmaFindOneQueryHandler)
     private readonly findOneHandler: ITurmaFindOneQueryHandler,
-    @DeclareDependency(ITurmaCreateCommandHandler)
+    @Dep(ITurmaCreateCommandHandler)
     private readonly createHandler: ITurmaCreateCommandHandler,
-    @DeclareDependency(ITurmaUpdateCommandHandler)
+    @Dep(ITurmaUpdateCommandHandler)
     private readonly updateHandler: ITurmaUpdateCommandHandler,
-    @DeclareDependency(ITurmaGetImagemCapaQueryHandler)
+    @Dep(ITurmaGetImagemCapaQueryHandler)
     private readonly getImagemCapaHandler: ITurmaGetImagemCapaQueryHandler,
-    @DeclareDependency(ITurmaUpdateImagemCapaCommandHandler)
+    @Dep(ITurmaUpdateImagemCapaCommandHandler)
     private readonly updateImagemCapaHandler: ITurmaUpdateImagemCapaCommandHandler,
-    @DeclareDependency(ITurmaDeleteCommandHandler)
+    @Dep(ITurmaDeleteCommandHandler)
     private readonly deleteHandler: ITurmaDeleteCommandHandler,
-    @DeclareDependency(IHorarioConsultaQueryHandler)
+    @Dep(IHorarioConsultaQueryHandler)
     private readonly horarioConsultaHandler: IHorarioConsultaQueryHandler,
   ) {}
 

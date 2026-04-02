@@ -1,6 +1,6 @@
 import { ensureActiveEntity, ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import type { DisciplinaUpdateCommand } from "@/modules/ensino/disciplina/domain/commands/disciplina-update.command";
 import { IDisciplinaUpdateCommandHandler } from "@/modules/ensino/disciplina/domain/commands/disciplina-update.command.handler.interface";
 import { Disciplina } from "@/modules/ensino/disciplina/domain/disciplina";
@@ -9,12 +9,12 @@ import { IDisciplinaPermissionChecker } from "../../domain/authorization";
 import type { DisciplinaFindOneQueryResult } from "../../domain/queries";
 import { IDisciplinaRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class DisciplinaUpdateCommandHandlerImpl implements IDisciplinaUpdateCommandHandler {
   constructor(
-    @DeclareDependency(IDisciplinaRepository)
+    @Dep(IDisciplinaRepository)
     private readonly repository: IDisciplinaRepository,
-    @DeclareDependency(IDisciplinaPermissionChecker)
+    @Dep(IDisciplinaPermissionChecker)
     private readonly permissionChecker: IDisciplinaPermissionChecker,
   ) {}
 

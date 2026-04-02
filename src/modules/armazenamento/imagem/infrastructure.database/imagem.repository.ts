@@ -1,14 +1,14 @@
 import type { PartialEntity } from "@/domain/abstractions/entities";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import type { Imagem } from "@/modules/armazenamento/imagem/domain/imagem";
 import type { IImagemRepository } from "@/modules/armazenamento/imagem/domain/repositories";
 import { ImagemEntity } from "./typeorm/imagem.typeorm.entity";
 
-@DeclareImplementation()
+@Impl()
 export class ImagemTypeOrmRepositoryAdapter implements IImagemRepository {
   constructor(
-    @DeclareDependency(IAppTypeormConnection)
+    @Dep(IAppTypeormConnection)
     private readonly appTypeormConnection: IAppTypeormConnection,
   ) {}
 

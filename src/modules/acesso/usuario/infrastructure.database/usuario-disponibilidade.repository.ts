@@ -1,5 +1,5 @@
 import type { FindOptionsWhere } from "typeorm";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import type {
@@ -12,15 +12,15 @@ import {
   CalendarioAgendamentoEntity,
   CalendarioAgendamentoStatus,
   CalendarioAgendamentoTipo,
-} from "@/modules/horarios/calendario-agendamento/infrastructure.database/typeorm/calendario-agendamento.typeorm.entity";
-import { CalendarioAgendamentoProfessorEntity } from "@/modules/horarios/calendario-agendamento/infrastructure.database/typeorm/calendario-agendamento-professor.typeorm.entity";
+} from "@/modules/calendario/agendamento/infrastructure.database/typeorm/calendario-agendamento.typeorm.entity";
+import { CalendarioAgendamentoProfessorEntity } from "@/modules/calendario/agendamento/infrastructure.database/typeorm/calendario-agendamento-professor.typeorm.entity";
 
-@DeclareImplementation()
+@Impl()
 export class UsuarioDisponibilidadeTypeOrmRepositoryAdapter
   implements IUsuarioDisponibilidadeRepository
 {
   constructor(
-    @DeclareDependency(IAppTypeormConnection)
+    @Dep(IAppTypeormConnection)
     private readonly appTypeormConnection: IAppTypeormConnection,
   ) {}
 

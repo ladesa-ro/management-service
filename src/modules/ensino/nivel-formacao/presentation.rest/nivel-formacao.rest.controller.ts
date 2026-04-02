@@ -25,7 +25,7 @@ import {
 } from "@nestjs/swagger";
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { Dep } from "@/domain/dependency-injection";
 import {
   INivelFormacaoCreateCommandHandler,
   NivelFormacaoCreateCommandMetadata,
@@ -70,19 +70,19 @@ import * as NivelFormacaoRestMapper from "./nivel-formacao.rest.mapper";
 @Controller("/niveis-formacoes")
 export class NivelFormacaoRestController {
   constructor(
-    @DeclareDependency(INivelFormacaoListQueryHandler)
+    @Dep(INivelFormacaoListQueryHandler)
     private readonly listHandler: INivelFormacaoListQueryHandler,
-    @DeclareDependency(INivelFormacaoFindOneQueryHandler)
+    @Dep(INivelFormacaoFindOneQueryHandler)
     private readonly findOneHandler: INivelFormacaoFindOneQueryHandler,
-    @DeclareDependency(INivelFormacaoCreateCommandHandler)
+    @Dep(INivelFormacaoCreateCommandHandler)
     private readonly createHandler: INivelFormacaoCreateCommandHandler,
-    @DeclareDependency(INivelFormacaoUpdateCommandHandler)
+    @Dep(INivelFormacaoUpdateCommandHandler)
     private readonly updateHandler: INivelFormacaoUpdateCommandHandler,
-    @DeclareDependency(INivelFormacaoGetImagemCapaQueryHandler)
+    @Dep(INivelFormacaoGetImagemCapaQueryHandler)
     private readonly getImagemCapaHandler: INivelFormacaoGetImagemCapaQueryHandler,
-    @DeclareDependency(INivelFormacaoUpdateImagemCapaCommandHandler)
+    @Dep(INivelFormacaoUpdateImagemCapaCommandHandler)
     private readonly updateImagemCapaHandler: INivelFormacaoUpdateImagemCapaCommandHandler,
-    @DeclareDependency(INivelFormacaoDeleteCommandHandler)
+    @Dep(INivelFormacaoDeleteCommandHandler)
     private readonly deleteHandler: INivelFormacaoDeleteCommandHandler,
   ) {}
 

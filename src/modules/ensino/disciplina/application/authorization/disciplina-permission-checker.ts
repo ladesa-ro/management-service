@@ -1,9 +1,9 @@
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareImplementation } from "@/domain/dependency-injection";
+import { Impl } from "@/domain/dependency-injection";
 import { noop } from "@/utils/noop";
 import type { IDisciplinaPermissionChecker } from "../../domain/authorization";
 
-@DeclareImplementation()
+@Impl()
 export class DisciplinaPermissionCheckerImpl implements IDisciplinaPermissionChecker {
   async ensureCanCreate(
     accessContext: IAccessContext | null,

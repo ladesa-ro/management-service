@@ -1,13 +1,13 @@
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { ICampusListQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-list.query.handler.interface";
 import type { CampusListQuery, CampusListQueryResult } from "../../domain/queries";
 import { ICampusRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class CampusListQueryHandlerImpl implements ICampusListQueryHandler {
   constructor(
-    @DeclareDependency(ICampusRepository)
+    @Dep(ICampusRepository)
     private readonly repository: ICampusRepository,
   ) {}
 

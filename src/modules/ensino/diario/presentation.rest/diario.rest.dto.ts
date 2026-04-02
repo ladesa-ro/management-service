@@ -3,6 +3,7 @@ import {
   AmbienteFindOneOutputRestDto,
 } from "@/modules/ambientes/ambiente/presentation.rest";
 import { ImagemFindOneOutputRestDto } from "@/modules/ambientes/bloco/presentation.rest";
+import { CalendarioLetivoFindOneOutputRestDto } from "@/modules/calendario/letivo/presentation.rest";
 import { DiarioCreateCommandFields } from "@/modules/ensino/diario/domain/commands/diario-create.command";
 import {
   DiarioCreateSchema,
@@ -20,7 +21,6 @@ import {
   TurmaFindOneInputRestDto,
   TurmaFindOneOutputRestDto,
 } from "@/modules/ensino/turma/presentation.rest";
-import { CalendarioLetivoFindOneOutputRestDto } from "@/modules/horarios/calendario-letivo/presentation.rest";
 import {
   ApiProperty,
   ApiPropertyOptional,

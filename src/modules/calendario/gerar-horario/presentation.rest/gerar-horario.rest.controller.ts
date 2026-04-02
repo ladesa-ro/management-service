@@ -1,0 +1,103 @@
+import { Body, Controller, Get, HttpCode, Param, Post } from "@nestjs/common";
+import {
+  ApiAcceptedResponse,
+  ApiForbiddenResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from "@nestjs/swagger";
+import { ensureExists } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
+import { Dep } from "@/domain/dependency-injection";
+import { AccessContextHttp } from "@/server/nest/access-context";
+import {
+  GerarHorarioAceitarCommandMetadata,
+  IGerarHorarioAceitarCommandHandler,
+} from "../domain/commands/gerar-horario-aceitar.command.handler.interface";
+import {
+  GerarHorarioCreateCommandMetadata,
+  IGerarHorarioCreateCommandHandler,
+} from "../domain/commands/gerar-horario-create.command.handler.interface";
+import {
+  GerarHorarioRejeitarCommandMetadata,
+  IGerarHorarioRejeitarCommandHandler,
+} from "../domain/commands/gerar-horario-rejeitar.command.handler.interface";
+import {
+  GerarHorarioFindOneQueryMetadata,
+  IGerarHorarioFindOneQueryHandler,
+} from "../domain/queries/gerar-horario-find-one.query.handler.interface";
+import {
+  GerarHorarioCreateInputRestDto,
+  GerarHorarioFindOneOutputRestDto,
+  GerarHorarioFindOneParamsRestDto,
+} from "./gerar-horario.rest.dto";
+import * as GerarHorarioRestMapper from "./gerar-horario.rest.mapper";
+
+@ApiTags("gerar-horario")
+@Controller("/gerar-horario")
+export class GerarHorarioRestController {
+  constructor(
+    @Dep(IGerarHorarioCreateCommandHandler)
+    private readonly createHandler: IGerarHorarioCreateCommandHandler,
+    @Dep(IGerarHorarioFindOneQueryHandler)
+    private readonly findOneHandler: IGerarHorarioFindOneQueryHandler,
+    @Dep(IGerarHorarioAceitarCommandHandler)
+    private readonly aceitarHandler: IGerarHorarioAceitarCommandHandler,
+    @Dep(IGerarHorarioRejeitarCommandHandler)
+    private readonly rejeitarHandler: IGerarHorarioRejeitarCommandHandler,
+  ) {}
+
+  @Post("/")
+  @HttpCode(202)
+  @ApiOperation(GerarHorarioCreateCommandMetadata.swaggerMetadata)
+  @ApiAcceptedResponse({ type: GerarHorarioFindOneOutputRestDto })
+  @ApiForbiddenResponse()
+  async create(
+    @AccessContextHttp() accessContext: IAccessContext,
+    @Body() dto: GerarHorarioCreateInputRestDto,
+  ): Promise<GerarHorarioFindOneOutputRestDto> {
+    const queryResult = await this.createHandler.execute(accessContext, dto);
+    return GerarHorarioRestMapper.findOneQueryResultToOutputDto.map(queryResult);
+  }
+
+  @Get("/:id")
+  @ApiOperation(GerarHorarioFindOneQueryMetadata.swaggerMetadata)
+  @ApiOkResponse({ type: GerarHorarioFindOneOutputRestDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async findById(
+    @AccessContextHttp() accessContext: IAccessContext,
+    @Param() params: GerarHorarioFindOneParamsRestDto,
+  ): Promise<GerarHorarioFindOneOutputRestDto> {
+    const queryResult = await this.findOneHandler.execute(accessContext, { id: params.id });
+    ensureExists(queryResult, "GerarHorario", params.id);
+    return GerarHorarioRestMapper.findOneQueryResultToOutputDto.map(queryResult!);
+  }
+
+  @Post("/:id/aceitar")
+  @ApiOperation(GerarHorarioAceitarCommandMetadata.swaggerMetadata)
+  @ApiOkResponse({ type: GerarHorarioFindOneOutputRestDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async aceitar(
+    @AccessContextHttp() accessContext: IAccessContext,
+    @Param() params: GerarHorarioFindOneParamsRestDto,
+  ): Promise<GerarHorarioFindOneOutputRestDto> {
+    const queryResult = await this.aceitarHandler.execute(accessContext, { id: params.id });
+    return GerarHorarioRestMapper.findOneQueryResultToOutputDto.map(queryResult);
+  }
+
+  @Post("/:id/rejeitar")
+  @ApiOperation(GerarHorarioRejeitarCommandMetadata.swaggerMetadata)
+  @ApiOkResponse({ type: GerarHorarioFindOneOutputRestDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async rejeitar(
+    @AccessContextHttp() accessContext: IAccessContext,
+    @Param() params: GerarHorarioFindOneParamsRestDto,
+  ): Promise<GerarHorarioFindOneOutputRestDto> {
+    const queryResult = await this.rejeitarHandler.execute(accessContext, { id: params.id });
+    return GerarHorarioRestMapper.findOneQueryResultToOutputDto.map(queryResult);
+  }
+}

@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Put, Query } from "@nestjs/common";
 import { ApiForbiddenResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { Dep } from "@/domain/dependency-injection";
 import { AccessContextHttp } from "@/server/nest/access-context";
 import {
   DiarioPreferenciaAgrupamentoBulkReplaceCommandMetadata,
@@ -23,9 +23,9 @@ import * as DiarioPreferenciaAgrupamentoRestMapper from "./diario-preferencia-ag
 @Controller("/diarios/:diarioId/preferencias-agrupamento")
 export class DiarioPreferenciaAgrupamentoRestController {
   constructor(
-    @DeclareDependency(IDiarioPreferenciaAgrupamentoListQueryHandler)
+    @Dep(IDiarioPreferenciaAgrupamentoListQueryHandler)
     private readonly listHandler: IDiarioPreferenciaAgrupamentoListQueryHandler,
-    @DeclareDependency(IDiarioPreferenciaAgrupamentoBulkReplaceCommandHandler)
+    @Dep(IDiarioPreferenciaAgrupamentoBulkReplaceCommandHandler)
     private readonly bulkReplaceHandler: IDiarioPreferenciaAgrupamentoBulkReplaceCommandHandler,
   ) {}
 

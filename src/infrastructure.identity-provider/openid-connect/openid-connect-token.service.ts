@@ -1,10 +1,10 @@
 import * as client from "openid-client";
 import type { IIdpTokenService, ITokenSet } from "@/domain/abstractions/identity-provider";
-import { DeclareImplementation } from "@/domain/dependency-injection";
+import { Impl } from "@/domain/dependency-injection";
 import { getNowTime } from "@/utils/date";
 import { OpenidConnectService } from "./openid-connect.service";
 
-@DeclareImplementation()
+@Impl()
 export class OpenidConnectTokenService implements IIdpTokenService {
   constructor(private readonly openidConnectService: OpenidConnectService) {}
 

@@ -1,10 +1,10 @@
 import type { DeepPartial } from "typeorm";
 import { AmbienteTypeormMapper } from "@/modules/ambientes/ambiente/infrastructure.database/typeorm";
+import { CalendarioLetivoTypeormMapper } from "@/modules/calendario/letivo/infrastructure.database/typeorm";
 import type { IDiario } from "@/modules/ensino/diario/domain/diario";
 import type { DiarioFindOneQueryResult } from "@/modules/ensino/diario/domain/queries";
 import { DisciplinaTypeormMapper } from "@/modules/ensino/disciplina/infrastructure.database/typeorm";
 import { TurmaTypeormMapper } from "@/modules/ensino/turma/infrastructure.database/typeorm";
-import { CalendarioLetivoTypeormMapper } from "@/modules/horarios/calendario-letivo/infrastructure.database/typeorm";
 import { createMapper, pickId } from "@/shared/mapping";
 import type { DiarioEntity } from "./diario.typeorm.entity";
 

@@ -9,6 +9,13 @@ import { CampusModule } from "@/modules/ambientes/campus/campus.module";
 import { ArquivoModule } from "@/modules/armazenamento/arquivo/arquivo.module";
 import { ImagemModule } from "@/modules/armazenamento/imagem/imagem.module";
 import { ImagemArquivoModule } from "@/modules/armazenamento/imagem-arquivo/imagem-arquivo.module";
+import { CalendarioAgendamentoModule } from "@/modules/calendario/agendamento/calendario-agendamento.module";
+import { GerarHorarioModule } from "@/modules/calendario/gerar-horario/gerar-horario.module";
+import { GradeHorariaModule } from "@/modules/calendario/grade-horaria/grade-horaria.module";
+import { HorarioConsultaModule } from "@/modules/calendario/horario-consulta/horario-consulta.module";
+import { HorarioEdicaoModule } from "@/modules/calendario/horario-edicao/horario-edicao.module";
+import { CalendarioLetivoModule } from "@/modules/calendario/letivo/calendario-letivo.module";
+import { TurmaDisponibilidadeModule } from "@/modules/calendario/turmas/disponibilidade/turma-disponibilidade.module";
 import { CursoModule } from "@/modules/ensino/curso/curso.module";
 import { DiarioModule } from "@/modules/ensino/diario/diario.module";
 import { DisciplinaModule } from "@/modules/ensino/disciplina/disciplina.module";
@@ -19,17 +26,10 @@ import { TurmaModule } from "@/modules/ensino/turma/turma.module";
 import { EmpresaModule } from "@/modules/estagio/empresa/empresa.module";
 import { EstagiarioModule } from "@/modules/estagio/estagiario/estagiario.module";
 import { EstagioModule } from "@/modules/estagio/estagio/estagio.module";
-import { CalendarioAgendamentoModule } from "@/modules/horarios/calendario-agendamento/calendario-agendamento.module";
-import { CalendarioLetivoModule } from "@/modules/horarios/calendario-letivo/calendario-letivo.module";
-import { GerarHorarioModule } from "@/modules/horarios/gerar-horario/gerar-horario.module";
-import { GradeHorariaModule } from "@/modules/horarios/grade-horaria/grade-horaria.module";
-import { HorarioConsultaModule } from "@/modules/horarios/horario-consulta/horario-consulta.module";
-import { HorarioEdicaoModule } from "@/modules/horarios/horario-edicao/horario-edicao.module";
-import { RelatorioModule } from "@/modules/horarios/relatorio/relatorio.module";
-import { TurmaDisponibilidadeModule } from "@/modules/horarios/turmas/disponibilidade/turma-disponibilidade.module";
 import { CidadeModule } from "@/modules/localidades/cidade/cidade.module";
 import { EnderecoModule } from "@/modules/localidades/endereco/endereco.module";
 import { EstadoModule } from "@/modules/localidades/estado/estado.module";
+import { RelatorioModule } from "@/modules/relatorios/relatorio/relatorio.module";
 
 @Module({
   imports: [

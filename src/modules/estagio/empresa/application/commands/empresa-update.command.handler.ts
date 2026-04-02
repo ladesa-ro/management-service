@@ -1,16 +1,16 @@
 import { ensureActiveEntity, ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import type { EmpresaUpdateCommand } from "@/modules/estagio/empresa/domain/commands/empresa-update.command";
 import { IEmpresaUpdateCommandHandler } from "@/modules/estagio/empresa/domain/commands/empresa-update.command.handler.interface";
 import { Empresa } from "@/modules/estagio/empresa/domain/empresa";
 import type { EmpresaFindOneQuery, EmpresaFindOneQueryResult } from "../../domain/queries";
 import { IEmpresaRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class EmpresaUpdateCommandHandlerImpl implements IEmpresaUpdateCommandHandler {
   constructor(
-    @DeclareDependency(IEmpresaRepository)
+    @Dep(IEmpresaRepository)
     private readonly repository: IEmpresaRepository,
   ) {}
 

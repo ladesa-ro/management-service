@@ -1,13 +1,13 @@
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { ICursoFindOneQueryHandler } from "@/modules/ensino/curso/domain/queries/curso-find-one.query.handler.interface";
 import type { CursoFindOneQuery, CursoFindOneQueryResult } from "../../domain/queries";
 import { ICursoRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class CursoFindOneQueryHandlerImpl implements ICursoFindOneQueryHandler {
   constructor(
-    @DeclareDependency(ICursoRepository)
+    @Dep(ICursoRepository)
     private readonly repository: ICursoRepository,
   ) {}
 

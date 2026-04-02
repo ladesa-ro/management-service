@@ -2,7 +2,7 @@ import { has } from "lodash";
 import { ensureExists, ServiceUnavailableError } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { IIdpUserService } from "@/domain/abstractions/identity-provider";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import type { UsuarioUpdateCommand } from "@/modules/acesso/usuario/domain/commands/usuario-update.command";
 import { IUsuarioUpdateCommandHandler } from "@/modules/acesso/usuario/domain/commands/usuario-update.command.handler.interface";
 import type { UsuarioFindOneQuery } from "@/modules/acesso/usuario/domain/queries";
@@ -13,18 +13,18 @@ import type { UsuarioFindOneQueryResult } from "../../domain/queries";
 import { IUsuarioRepository } from "../../domain/repositories";
 import { IUsuarioAvailabilityChecker } from "../../domain/services";
 
-@DeclareImplementation()
+@Impl()
 export class UsuarioUpdateCommandHandlerImpl implements IUsuarioUpdateCommandHandler {
   constructor(
-    @DeclareDependency(IUsuarioRepository)
+    @Dep(IUsuarioRepository)
     private readonly repository: IUsuarioRepository,
-    @DeclareDependency(IIdpUserService)
+    @Dep(IIdpUserService)
     private readonly idpUserService: IIdpUserService,
-    @DeclareDependency(IUsuarioPermissionChecker)
+    @Dep(IUsuarioPermissionChecker)
     private readonly permissionChecker: IUsuarioPermissionChecker,
-    @DeclareDependency(IPerfilDefinirPerfisAtivosCommandHandler)
+    @Dep(IPerfilDefinirPerfisAtivosCommandHandler)
     private readonly definirPerfisAtivosHandler: IPerfilDefinirPerfisAtivosCommandHandler,
-    @DeclareDependency(IUsuarioAvailabilityChecker)
+    @Dep(IUsuarioAvailabilityChecker)
     private readonly availabilityChecker: IUsuarioAvailabilityChecker,
   ) {}
 

@@ -2,7 +2,7 @@ import { ensureExists } from "@/application/errors";
 import { getEntityImagemStreamableFile } from "@/application/helpers";
 import type { IAccessContext } from "@/domain/abstractions";
 import type { IStreamableFileResult } from "@/domain/abstractions/storage";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import {
   IArquivoGetStreamableFileQueryHandler,
   type IArquivoGetStreamableFileQueryHandler as IArquivoGetStreamableFileQueryHandlerType,
@@ -16,14 +16,14 @@ import { Turma } from "@/modules/ensino/turma/domain/turma";
 import type { TurmaFindOneQuery } from "../../domain/queries";
 import { ITurmaRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class TurmaGetImagemCapaQueryHandlerImpl implements ITurmaGetImagemCapaQueryHandler {
   constructor(
-    @DeclareDependency(ITurmaRepository)
+    @Dep(ITurmaRepository)
     private readonly repository: ITurmaRepository,
-    @DeclareDependency(IImagemGetLatestArquivoIdQueryHandler)
+    @Dep(IImagemGetLatestArquivoIdQueryHandler)
     private readonly getLatestArquivoIdHandler: IImagemGetLatestArquivoIdQueryHandlerType,
-    @DeclareDependency(IArquivoGetStreamableFileQueryHandler)
+    @Dep(IArquivoGetStreamableFileQueryHandler)
     private readonly getStreamableFileHandler: IArquivoGetStreamableFileQueryHandlerType,
   ) {}
 

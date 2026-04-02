@@ -1,7 +1,7 @@
 import { Args, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { Dep } from "@/domain/dependency-injection";
 import {
   IModalidadeCreateCommandHandler,
   ModalidadeCreateCommandMetadata,
@@ -36,15 +36,15 @@ import * as ModalidadeGraphqlMapper from "./modalidade.graphql.mapper";
 @Resolver(() => ModalidadeFindOneOutputGraphQlDto)
 export class ModalidadeGraphqlResolver {
   constructor(
-    @DeclareDependency(IModalidadeListQueryHandler)
+    @Dep(IModalidadeListQueryHandler)
     private readonly listHandler: IModalidadeListQueryHandler,
-    @DeclareDependency(IModalidadeFindOneQueryHandler)
+    @Dep(IModalidadeFindOneQueryHandler)
     private readonly findOneHandler: IModalidadeFindOneQueryHandler,
-    @DeclareDependency(IModalidadeCreateCommandHandler)
+    @Dep(IModalidadeCreateCommandHandler)
     private readonly createHandler: IModalidadeCreateCommandHandler,
-    @DeclareDependency(IModalidadeUpdateCommandHandler)
+    @Dep(IModalidadeUpdateCommandHandler)
     private readonly updateHandler: IModalidadeUpdateCommandHandler,
-    @DeclareDependency(IModalidadeDeleteCommandHandler)
+    @Dep(IModalidadeDeleteCommandHandler)
     private readonly deleteHandler: IModalidadeDeleteCommandHandler,
   ) {}
 

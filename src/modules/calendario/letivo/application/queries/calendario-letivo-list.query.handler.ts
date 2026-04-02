@@ -1,0 +1,23 @@
+import type { IAccessContext } from "@/domain/abstractions";
+import { Dep, Impl } from "@/domain/dependency-injection";
+import { ICalendarioLetivoListQueryHandler } from "@/modules/calendario/letivo/domain/queries/calendario-letivo-list.query.handler.interface";
+import type {
+  CalendarioLetivoListQuery,
+  CalendarioLetivoListQueryResult,
+} from "../../domain/queries";
+import { ICalendarioLetivoRepository } from "../../domain/repositories";
+
+@Impl()
+export class CalendarioLetivoListQueryHandlerImpl implements ICalendarioLetivoListQueryHandler {
+  constructor(
+    @Dep(ICalendarioLetivoRepository)
+    private readonly repository: ICalendarioLetivoRepository,
+  ) {}
+
+  async execute(
+    accessContext: IAccessContext | null,
+    dto: CalendarioLetivoListQuery | null,
+  ): Promise<CalendarioLetivoListQueryResult> {
+    return this.repository.getFindAllQueryResult(accessContext, dto);
+  }
+}

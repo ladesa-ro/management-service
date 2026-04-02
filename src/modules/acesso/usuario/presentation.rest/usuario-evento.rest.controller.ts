@@ -9,7 +9,7 @@ import {
 } from "@nestjs/swagger";
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { Dep } from "@/domain/dependency-injection";
 import { IUsuarioEventoRepository } from "@/modules/acesso/usuario/domain/repositories/usuario-evento.repository.interface";
 import { AccessContextHttp } from "@/server/nest/access-context";
 import {
@@ -25,7 +25,7 @@ import {
 @Controller("/usuarios/:id/eventos")
 export class UsuarioEventoRestController {
   constructor(
-    @DeclareDependency(IUsuarioEventoRepository)
+    @Dep(IUsuarioEventoRepository)
     private readonly eventoRepository: IUsuarioEventoRepository,
   ) {}
 

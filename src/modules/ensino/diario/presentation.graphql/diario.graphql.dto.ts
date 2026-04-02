@@ -5,6 +5,7 @@ import {
 } from "@/infrastructure.graphql/dtos";
 import { AmbienteFields } from "@/modules/ambientes/ambiente/domain/ambiente.fields";
 import { ImagemFindOneOutputGraphQlDto } from "@/modules/armazenamento/imagem-arquivo/presentation.graphql/imagem-arquivo.graphql.dto";
+import { CalendarioLetivoFindOneOutputGraphQlDto } from "@/modules/calendario/letivo/presentation.graphql/calendario-letivo.graphql.dto";
 import { DiarioCreateCommandFields } from "@/modules/ensino/diario/domain/commands/diario-create.command";
 import { DiarioUpdateCommandFields } from "@/modules/ensino/diario/domain/commands/diario-update.command";
 import {
@@ -16,7 +17,6 @@ import { DiarioListQueryFields } from "@/modules/ensino/diario/domain/queries/di
 import { DiarioGraphqlListInputSchema } from "@/modules/ensino/diario/domain/queries/diario-list.query.schemas";
 import { DisciplinaFields } from "@/modules/ensino/disciplina/domain/disciplina.fields";
 import { TurmaFields } from "@/modules/ensino/turma/domain/turma.fields";
-import { CalendarioLetivoFindOneOutputGraphQlDto } from "@/modules/horarios/calendario-letivo/presentation.graphql/calendario-letivo.graphql.dto";
 import { ArgsType, Field, InputType, Int, ObjectType } from "@/shared/presentation/graphql";
 
 // ============================================================================

@@ -2,16 +2,16 @@ import { UnauthorizedException } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
 import { Strategy } from "passport-http-bearer";
 import { IRequestActorResolver } from "@/domain/abstractions/request-actor";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { AuthStrategy } from "./auth-strategy.types";
 
-@DeclareImplementation()
+@Impl()
 export class AccessTokenStrategyAdapter extends PassportStrategy(
   Strategy,
   AuthStrategy.ACCESS_TOKEN,
 ) {
   constructor(
-    @DeclareDependency(IRequestActorResolver)
+    @Dep(IRequestActorResolver)
     private readonly requestActorResolver: IRequestActorResolver,
   ) {
     super();

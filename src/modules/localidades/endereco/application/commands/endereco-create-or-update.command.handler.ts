@@ -1,5 +1,5 @@
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import {
   type IEnderecoCreateOrUpdateCommand,
   IEnderecoCreateOrUpdateCommandHandler,
@@ -7,12 +7,12 @@ import {
 import { Endereco } from "../../domain/endereco";
 import { IEnderecoRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class EnderecoCreateOrUpdateCommandHandlerImpl
   implements IEnderecoCreateOrUpdateCommandHandler
 {
   constructor(
-    @DeclareDependency(IEnderecoRepository)
+    @Dep(IEnderecoRepository)
     private readonly repository: IEnderecoRepository,
   ) {}
 

@@ -1,15 +1,15 @@
 import { ForbiddenError } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { IIdpTokenService } from "@/domain/abstractions/identity-provider";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { IAutenticacaoRefreshCommandHandler } from "@/modules/acesso/autenticacao/domain/commands/autenticacao-refresh.command.handler.interface";
 import type { AuthRefreshCommand } from "@/modules/acesso/autenticacao/domain/commands/auth-refresh.command";
 import type { AuthSessionCredentials } from "../../domain/shared";
 
-@DeclareImplementation()
+@Impl()
 export class AutenticacaoRefreshCommandHandlerImpl implements IAutenticacaoRefreshCommandHandler {
   constructor(
-    @DeclareDependency(IIdpTokenService)
+    @Dep(IIdpTokenService)
     private readonly idpTokenService: IIdpTokenService,
   ) {}
 

@@ -1,7 +1,7 @@
 import { ensureExists } from "@/application/errors";
 import { saveEntityImagemField } from "@/application/helpers";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import {
   IImagemSaveImagemCapaCommandHandler,
   type IImagemSaveImagemCapaCommandHandler as IImagemSaveImagemCapaCommandHandlerType,
@@ -14,16 +14,16 @@ import { Curso } from "@/modules/ensino/curso/domain/curso";
 import { ICursoPermissionChecker } from "../../domain/authorization";
 import { ICursoRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class CursoUpdateImagemCapaCommandHandlerImpl
   implements ICursoUpdateImagemCapaCommandHandler
 {
   constructor(
-    @DeclareDependency(ICursoRepository)
+    @Dep(ICursoRepository)
     private readonly repository: ICursoRepository,
-    @DeclareDependency(ICursoPermissionChecker)
+    @Dep(ICursoPermissionChecker)
     private readonly permissionChecker: ICursoPermissionChecker,
-    @DeclareDependency(IImagemSaveImagemCapaCommandHandler)
+    @Dep(IImagemSaveImagemCapaCommandHandler)
     private readonly saveImagemCapaHandler: IImagemSaveImagemCapaCommandHandlerType,
   ) {}
 

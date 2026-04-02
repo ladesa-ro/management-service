@@ -1,20 +1,20 @@
 import { ForbiddenError, ValidationError } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { IIdpTokenService, IIdpUserService } from "@/domain/abstractions/identity-provider";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { IAutenticacaoLoginCommandHandler } from "@/modules/acesso/autenticacao/domain/commands/autenticacao-login.command.handler.interface";
 import type { AuthLoginCommand } from "@/modules/acesso/autenticacao/domain/commands/auth-login.command";
 import { IUsuarioFindByMatriculaQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-find-by-matricula.query.handler.interface";
 import type { AuthSessionCredentials } from "../../domain/shared";
 
-@DeclareImplementation()
+@Impl()
 export class AutenticacaoLoginCommandHandlerImpl implements IAutenticacaoLoginCommandHandler {
   constructor(
-    @DeclareDependency(IUsuarioFindByMatriculaQueryHandler)
+    @Dep(IUsuarioFindByMatriculaQueryHandler)
     private readonly usuarioFindByMatriculaHandler: IUsuarioFindByMatriculaQueryHandler,
-    @DeclareDependency(IIdpUserService)
+    @Dep(IIdpUserService)
     private readonly idpUserService: IIdpUserService,
-    @DeclareDependency(IIdpTokenService)
+    @Dep(IIdpTokenService)
     private readonly idpTokenService: IIdpTokenService,
   ) {}
 

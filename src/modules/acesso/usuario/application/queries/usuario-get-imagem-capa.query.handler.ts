@@ -2,7 +2,7 @@ import { ensureExists } from "@/application/errors";
 import { getEntityImagemStreamableFile } from "@/application/helpers";
 import type { IAccessContext } from "@/domain/abstractions";
 import type { IStreamableFileResult } from "@/domain/abstractions/storage";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { IUsuarioGetImagemCapaQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-get-imagem-capa.query.handler.interface";
 import { Usuario } from "@/modules/acesso/usuario/domain/usuario";
 import {
@@ -16,14 +16,14 @@ import {
 import type { UsuarioFindOneQuery } from "../../domain/queries";
 import { IUsuarioRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class UsuarioGetImagemCapaQueryHandlerImpl implements IUsuarioGetImagemCapaQueryHandler {
   constructor(
-    @DeclareDependency(IUsuarioRepository)
+    @Dep(IUsuarioRepository)
     private readonly repository: IUsuarioRepository,
-    @DeclareDependency(IImagemGetLatestArquivoIdQueryHandler)
+    @Dep(IImagemGetLatestArquivoIdQueryHandler)
     private readonly getLatestArquivoIdHandler: IImagemGetLatestArquivoIdQueryHandlerType,
-    @DeclareDependency(IArquivoGetStreamableFileQueryHandler)
+    @Dep(IArquivoGetStreamableFileQueryHandler)
     private readonly getStreamableFileHandler: IArquivoGetStreamableFileQueryHandlerType,
   ) {}
 

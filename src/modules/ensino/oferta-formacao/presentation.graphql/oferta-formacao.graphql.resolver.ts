@@ -1,7 +1,7 @@
 import { Args, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { Dep } from "@/domain/dependency-injection";
 import {
   IOfertaFormacaoCreateCommandHandler,
   OfertaFormacaoCreateCommandMetadata,
@@ -36,15 +36,15 @@ import * as OfertaFormacaoGraphqlMapper from "./oferta-formacao.graphql.mapper";
 @Resolver(() => OfertaFormacaoFindOneOutputGraphQlDto)
 export class OfertaFormacaoGraphqlResolver {
   constructor(
-    @DeclareDependency(IOfertaFormacaoListQueryHandler)
+    @Dep(IOfertaFormacaoListQueryHandler)
     private readonly listHandler: IOfertaFormacaoListQueryHandler,
-    @DeclareDependency(IOfertaFormacaoFindOneQueryHandler)
+    @Dep(IOfertaFormacaoFindOneQueryHandler)
     private readonly findOneHandler: IOfertaFormacaoFindOneQueryHandler,
-    @DeclareDependency(IOfertaFormacaoCreateCommandHandler)
+    @Dep(IOfertaFormacaoCreateCommandHandler)
     private readonly createHandler: IOfertaFormacaoCreateCommandHandler,
-    @DeclareDependency(IOfertaFormacaoUpdateCommandHandler)
+    @Dep(IOfertaFormacaoUpdateCommandHandler)
     private readonly updateHandler: IOfertaFormacaoUpdateCommandHandler,
-    @DeclareDependency(IOfertaFormacaoDeleteCommandHandler)
+    @Dep(IOfertaFormacaoDeleteCommandHandler)
     private readonly deleteHandler: IOfertaFormacaoDeleteCommandHandler,
   ) {}
 

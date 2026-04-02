@@ -1,13 +1,13 @@
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { IAmbienteListQueryHandler } from "@/modules/ambientes/ambiente/domain/queries/ambiente-list.query.handler.interface";
 import type { AmbienteListQuery, AmbienteListQueryResult } from "../../domain/queries";
 import { IAmbienteRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class AmbienteListQueryHandlerImpl implements IAmbienteListQueryHandler {
   constructor(
-    @DeclareDependency(IAmbienteRepository)
+    @Dep(IAmbienteRepository)
     private readonly repository: IAmbienteRepository,
   ) {}
 

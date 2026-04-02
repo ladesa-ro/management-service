@@ -1,9 +1,9 @@
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareImplementation } from "@/domain/dependency-injection";
+import { Impl } from "@/domain/dependency-injection";
 import { noop } from "@/utils/noop";
 import type { IOfertaFormacaoPermissionChecker } from "../../domain/authorization";
 
-@DeclareImplementation()
+@Impl()
 export class OfertaFormacaoPermissionCheckerImpl implements IOfertaFormacaoPermissionChecker {
   async ensureCanCreate(
     accessContext: IAccessContext | null,

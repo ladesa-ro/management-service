@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Put } from "@nestjs/common";
 import { ApiForbiddenResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { Dep } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import {
   CursoDisciplinasPorPeriodoBulkReplaceCommandMetadata,
@@ -20,7 +20,7 @@ import {
 @Controller("/cursos/:cursoId/disciplinas-por-periodo")
 export class CursoPeriodoDisciplinaRestController {
   constructor(
-    @DeclareDependency(ICursoPeriodoDisciplinaRepository)
+    @Dep(ICursoPeriodoDisciplinaRepository)
     private readonly cursoPeriodoDisciplinaRepository: ICursoPeriodoDisciplinaRepository,
   ) {}
 

@@ -1,7 +1,7 @@
 import { Args, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { Dep } from "@/domain/dependency-injection";
 import {
   DisciplinaCreateCommandMetadata,
   IDisciplinaCreateCommandHandler,
@@ -36,15 +36,15 @@ import * as DisciplinaGraphqlMapper from "./disciplina.graphql.mapper";
 @Resolver(() => DisciplinaFindOneOutputGraphQlDto)
 export class DisciplinaGraphqlResolver {
   constructor(
-    @DeclareDependency(IDisciplinaListQueryHandler)
+    @Dep(IDisciplinaListQueryHandler)
     private readonly listHandler: IDisciplinaListQueryHandler,
-    @DeclareDependency(IDisciplinaFindOneQueryHandler)
+    @Dep(IDisciplinaFindOneQueryHandler)
     private readonly findOneHandler: IDisciplinaFindOneQueryHandler,
-    @DeclareDependency(IDisciplinaCreateCommandHandler)
+    @Dep(IDisciplinaCreateCommandHandler)
     private readonly createHandler: IDisciplinaCreateCommandHandler,
-    @DeclareDependency(IDisciplinaUpdateCommandHandler)
+    @Dep(IDisciplinaUpdateCommandHandler)
     private readonly updateHandler: IDisciplinaUpdateCommandHandler,
-    @DeclareDependency(IDisciplinaDeleteCommandHandler)
+    @Dep(IDisciplinaDeleteCommandHandler)
     private readonly deleteHandler: IDisciplinaDeleteCommandHandler,
   ) {}
 

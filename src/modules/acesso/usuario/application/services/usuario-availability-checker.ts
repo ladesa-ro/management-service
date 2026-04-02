@@ -1,12 +1,12 @@
 import { ValidationError } from "@/application/errors";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { IUsuarioRepository } from "../../domain/repositories";
 import { IUsuarioAvailabilityChecker } from "../../domain/services";
 
-@DeclareImplementation()
+@Impl()
 export class UsuarioAvailabilityCheckerImpl implements IUsuarioAvailabilityChecker {
   constructor(
-    @DeclareDependency(IUsuarioRepository)
+    @Dep(IUsuarioRepository)
     private readonly repository: IUsuarioRepository,
   ) {}
 

@@ -1,7 +1,7 @@
 import { Args, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { Dep } from "@/domain/dependency-injection";
 import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente";
 import {
   AmbienteCreateCommandMetadata,
@@ -36,15 +36,15 @@ import * as AmbienteGraphqlMapper from "./ambiente.graphql.mapper";
 @Resolver(() => AmbienteFindOneOutputGraphQlDto)
 export class AmbienteGraphqlResolver {
   constructor(
-    @DeclareDependency(IAmbienteListQueryHandler)
+    @Dep(IAmbienteListQueryHandler)
     private readonly listHandler: IAmbienteListQueryHandler,
-    @DeclareDependency(IAmbienteFindOneQueryHandler)
+    @Dep(IAmbienteFindOneQueryHandler)
     private readonly findOneHandler: IAmbienteFindOneQueryHandler,
-    @DeclareDependency(IAmbienteCreateCommandHandler)
+    @Dep(IAmbienteCreateCommandHandler)
     private readonly createHandler: IAmbienteCreateCommandHandler,
-    @DeclareDependency(IAmbienteUpdateCommandHandler)
+    @Dep(IAmbienteUpdateCommandHandler)
     private readonly updateHandler: IAmbienteUpdateCommandHandler,
-    @DeclareDependency(IAmbienteDeleteCommandHandler)
+    @Dep(IAmbienteDeleteCommandHandler)
     private readonly deleteHandler: IAmbienteDeleteCommandHandler,
   ) {}
 

@@ -1,13 +1,13 @@
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { IEnderecoFindOneQueryHandler } from "@/modules/localidades/endereco/domain/queries/endereco-find-one.query.handler.interface";
 import type { EnderecoFindOneQuery, EnderecoFindOneQueryResult } from "../../domain/queries";
 import { IEnderecoRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class EnderecoFindOneQueryHandlerImpl implements IEnderecoFindOneQueryHandler {
   constructor(
-    @DeclareDependency(IEnderecoRepository)
+    @Dep(IEnderecoRepository)
     private readonly repository: IEnderecoRepository,
   ) {}
 

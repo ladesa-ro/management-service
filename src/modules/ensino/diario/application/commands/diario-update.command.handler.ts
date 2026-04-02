@@ -1,9 +1,11 @@
 import { has } from "lodash";
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente";
 import { IAmbienteFindOneQueryHandler } from "@/modules/ambientes/ambiente/domain/queries/ambiente-find-one.query.handler.interface";
+import { CalendarioLetivo } from "@/modules/calendario/letivo/domain/calendario-letivo";
+import { ICalendarioLetivoFindOneQueryHandler } from "@/modules/calendario/letivo/domain/queries/calendario-letivo-find-one.query.handler.interface";
 import type { DiarioUpdateCommand } from "@/modules/ensino/diario/domain/commands/diario-update.command";
 import { IDiarioUpdateCommandHandler } from "@/modules/ensino/diario/domain/commands/diario-update.command.handler.interface";
 import { Diario } from "@/modules/ensino/diario/domain/diario";
@@ -12,26 +14,24 @@ import { Disciplina } from "@/modules/ensino/disciplina/domain/disciplina";
 import { IDisciplinaFindOneQueryHandler } from "@/modules/ensino/disciplina/domain/queries/disciplina-find-one.query.handler.interface";
 import { ITurmaFindOneQueryHandler } from "@/modules/ensino/turma/domain/queries/turma-find-one.query.handler.interface";
 import { Turma } from "@/modules/ensino/turma/domain/turma";
-import { CalendarioLetivo } from "@/modules/horarios/calendario-letivo/domain/calendario-letivo";
-import { ICalendarioLetivoFindOneQueryHandler } from "@/modules/horarios/calendario-letivo/domain/queries/calendario-letivo-find-one.query.handler.interface";
 import { IDiarioPermissionChecker } from "../../domain/authorization";
 import type { DiarioFindOneQueryResult } from "../../domain/queries";
 import { IDiarioRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class DiarioUpdateCommandHandlerImpl implements IDiarioUpdateCommandHandler {
   constructor(
-    @DeclareDependency(IDiarioRepository)
+    @Dep(IDiarioRepository)
     private readonly repository: IDiarioRepository,
-    @DeclareDependency(IDiarioPermissionChecker)
+    @Dep(IDiarioPermissionChecker)
     private readonly permissionChecker: IDiarioPermissionChecker,
-    @DeclareDependency(ICalendarioLetivoFindOneQueryHandler)
+    @Dep(ICalendarioLetivoFindOneQueryHandler)
     private readonly calendarioLetivoFindOneHandler: ICalendarioLetivoFindOneQueryHandler,
-    @DeclareDependency(ITurmaFindOneQueryHandler)
+    @Dep(ITurmaFindOneQueryHandler)
     private readonly turmaFindOneHandler: ITurmaFindOneQueryHandler,
-    @DeclareDependency(IDisciplinaFindOneQueryHandler)
+    @Dep(IDisciplinaFindOneQueryHandler)
     private readonly disciplinaFindOneHandler: IDisciplinaFindOneQueryHandler,
-    @DeclareDependency(IAmbienteFindOneQueryHandler)
+    @Dep(IAmbienteFindOneQueryHandler)
     private readonly ambienteFindOneHandler: IAmbienteFindOneQueryHandler,
   ) {}
 

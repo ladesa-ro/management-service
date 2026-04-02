@@ -1,6 +1,6 @@
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { Campus } from "@/modules/ambientes/campus/domain/campus";
 import { ICampusFindOneQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-find-one.query.handler.interface";
 import type { CursoCreateCommand } from "@/modules/ensino/curso/domain/commands/curso-create.command";
@@ -12,16 +12,16 @@ import { ICursoPermissionChecker } from "../../domain/authorization";
 import type { CursoFindOneQueryResult } from "../../domain/queries";
 import { ICursoRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class CursoCreateCommandHandlerImpl implements ICursoCreateCommandHandler {
   constructor(
-    @DeclareDependency(ICursoRepository)
+    @Dep(ICursoRepository)
     private readonly repository: ICursoRepository,
-    @DeclareDependency(ICursoPermissionChecker)
+    @Dep(ICursoPermissionChecker)
     private readonly permissionChecker: ICursoPermissionChecker,
-    @DeclareDependency(ICampusFindOneQueryHandler)
+    @Dep(ICampusFindOneQueryHandler)
     private readonly campusFindOneHandler: ICampusFindOneQueryHandler,
-    @DeclareDependency(IOfertaFormacaoFindOneQueryHandler)
+    @Dep(IOfertaFormacaoFindOneQueryHandler)
     private readonly ofertaFormacaoFindOneHandler: IOfertaFormacaoFindOneQueryHandler,
   ) {}
 

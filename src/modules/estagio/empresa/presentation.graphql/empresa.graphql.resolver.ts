@@ -1,7 +1,7 @@
 import { Args, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { Dep } from "@/domain/dependency-injection";
 import {
   EmpresaCreateCommandMetadata,
   IEmpresaCreateCommandHandler,
@@ -36,15 +36,15 @@ import * as EmpresaGraphqlMapper from "./empresa.graphql.mapper";
 @Resolver(() => EmpresaFindOneOutputGraphQlDto)
 export class EmpresaGraphqlResolver {
   constructor(
-    @DeclareDependency(IEmpresaListQueryHandler)
+    @Dep(IEmpresaListQueryHandler)
     private readonly listHandler: IEmpresaListQueryHandler,
-    @DeclareDependency(IEmpresaFindOneQueryHandler)
+    @Dep(IEmpresaFindOneQueryHandler)
     private readonly findOneHandler: IEmpresaFindOneQueryHandler,
-    @DeclareDependency(IEmpresaCreateCommandHandler)
+    @Dep(IEmpresaCreateCommandHandler)
     private readonly createHandler: IEmpresaCreateCommandHandler,
-    @DeclareDependency(IEmpresaUpdateCommandHandler)
+    @Dep(IEmpresaUpdateCommandHandler)
     private readonly updateHandler: IEmpresaUpdateCommandHandler,
-    @DeclareDependency(IEmpresaDeleteCommandHandler)
+    @Dep(IEmpresaDeleteCommandHandler)
     private readonly deleteHandler: IEmpresaDeleteCommandHandler,
   ) {}
 

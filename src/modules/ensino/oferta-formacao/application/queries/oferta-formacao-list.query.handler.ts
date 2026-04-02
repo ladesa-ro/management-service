@@ -1,13 +1,13 @@
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { IOfertaFormacaoListQueryHandler } from "@/modules/ensino/oferta-formacao/domain/queries/oferta-formacao-list.query.handler.interface";
 import type { OfertaFormacaoListQuery, OfertaFormacaoListQueryResult } from "../../domain/queries";
 import { IOfertaFormacaoRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class OfertaFormacaoListQueryHandlerImpl implements IOfertaFormacaoListQueryHandler {
   constructor(
-    @DeclareDependency(IOfertaFormacaoRepository)
+    @Dep(IOfertaFormacaoRepository)
     private readonly repository: IOfertaFormacaoRepository,
   ) {}
 

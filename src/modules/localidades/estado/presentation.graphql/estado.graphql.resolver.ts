@@ -1,7 +1,7 @@
 import { Args, Int, Query, Resolver } from "@nestjs/graphql";
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { Dep } from "@/domain/dependency-injection";
 import { Estado } from "@/modules/localidades/estado/domain/estado";
 import {
   EstadoFindOneQueryMetadata,
@@ -22,9 +22,9 @@ import * as EstadoGraphqlMapper from "./estado.graphql.mapper";
 @Resolver(() => EstadoFindOneOutputGraphQlDto)
 export class EstadoGraphqlResolver {
   constructor(
-    @DeclareDependency(IEstadoListQueryHandler)
+    @Dep(IEstadoListQueryHandler)
     private readonly listHandler: IEstadoListQueryHandler,
-    @DeclareDependency(IEstadoFindOneQueryHandler)
+    @Dep(IEstadoFindOneQueryHandler)
     private readonly findOneHandler: IEstadoFindOneQueryHandler,
   ) {}
 

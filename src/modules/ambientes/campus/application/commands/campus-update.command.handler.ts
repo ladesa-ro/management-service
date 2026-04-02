@@ -1,7 +1,7 @@
 import { get } from "lodash";
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { Campus, type ICampus } from "@/modules/ambientes/campus/domain/campus";
 import type { CampusUpdateCommand } from "@/modules/ambientes/campus/domain/commands/campus-update.command";
 import { ICampusUpdateCommandHandler } from "@/modules/ambientes/campus/domain/commands/campus-update.command.handler.interface";
@@ -12,14 +12,14 @@ import { ICampusPermissionChecker } from "../../domain/authorization";
 import type { CampusFindOneQueryResult } from "../../domain/queries";
 import { ICampusRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class CampusUpdateCommandHandlerImpl implements ICampusUpdateCommandHandler {
   constructor(
-    @DeclareDependency(ICampusRepository)
+    @Dep(ICampusRepository)
     private readonly repository: ICampusRepository,
-    @DeclareDependency(ICampusPermissionChecker)
+    @Dep(ICampusPermissionChecker)
     private readonly permissionChecker: ICampusPermissionChecker,
-    @DeclareDependency(IEnderecoCreateOrUpdateCommandHandler)
+    @Dep(IEnderecoCreateOrUpdateCommandHandler)
     private readonly enderecoCreateOrUpdateHandler: IEnderecoCreateOrUpdateCommandHandler,
   ) {}
 

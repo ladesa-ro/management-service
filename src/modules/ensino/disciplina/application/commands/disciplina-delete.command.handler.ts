@@ -1,18 +1,18 @@
 import { ensureActiveEntity, ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { IDisciplinaDeleteCommandHandler } from "@/modules/ensino/disciplina/domain/commands/disciplina-delete.command.handler.interface";
 import { Disciplina } from "@/modules/ensino/disciplina/domain/disciplina";
 import type { DisciplinaFindOneQuery } from "@/modules/ensino/disciplina/domain/queries";
 import { IDisciplinaPermissionChecker } from "../../domain/authorization";
 import { IDisciplinaRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class DisciplinaDeleteCommandHandlerImpl implements IDisciplinaDeleteCommandHandler {
   constructor(
-    @DeclareDependency(IDisciplinaRepository)
+    @Dep(IDisciplinaRepository)
     private readonly repository: IDisciplinaRepository,
-    @DeclareDependency(IDisciplinaPermissionChecker)
+    @Dep(IDisciplinaPermissionChecker)
     private readonly permissionChecker: IDisciplinaPermissionChecker,
   ) {}
 

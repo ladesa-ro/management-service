@@ -1,6 +1,6 @@
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { Campus } from "@/modules/ambientes/campus/domain/campus";
 import { ICampusFindOneQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-find-one.query.handler.interface";
 import { Modalidade } from "@/modules/ensino/modalidade/domain/modalidade";
@@ -14,18 +14,18 @@ import { IOfertaFormacaoPermissionChecker } from "../../domain/authorization";
 import type { OfertaFormacaoFindOneQueryResult } from "../../domain/queries";
 import { IOfertaFormacaoRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class OfertaFormacaoCreateCommandHandlerImpl implements IOfertaFormacaoCreateCommandHandler {
   constructor(
-    @DeclareDependency(IOfertaFormacaoRepository)
+    @Dep(IOfertaFormacaoRepository)
     private readonly repository: IOfertaFormacaoRepository,
-    @DeclareDependency(IOfertaFormacaoPermissionChecker)
+    @Dep(IOfertaFormacaoPermissionChecker)
     private readonly permissionChecker: IOfertaFormacaoPermissionChecker,
-    @DeclareDependency(IModalidadeFindOneQueryHandler)
+    @Dep(IModalidadeFindOneQueryHandler)
     private readonly modalidadeFindOneHandler: IModalidadeFindOneQueryHandler,
-    @DeclareDependency(ICampusFindOneQueryHandler)
+    @Dep(ICampusFindOneQueryHandler)
     private readonly campusFindOneHandler: ICampusFindOneQueryHandler,
-    @DeclareDependency(INivelFormacaoFindOneQueryHandler)
+    @Dep(INivelFormacaoFindOneQueryHandler)
     private readonly nivelFormacaoFindOneHandler: INivelFormacaoFindOneQueryHandler,
   ) {}
 

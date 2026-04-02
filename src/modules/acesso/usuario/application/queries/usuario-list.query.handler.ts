@@ -1,13 +1,13 @@
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { IUsuarioListQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-list.query.handler.interface";
 import type { UsuarioListQuery, UsuarioListQueryResult } from "../../domain/queries";
 import { IUsuarioRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class UsuarioListQueryHandlerImpl implements IUsuarioListQueryHandler {
   constructor(
-    @DeclareDependency(IUsuarioRepository)
+    @Dep(IUsuarioRepository)
     private readonly repository: IUsuarioRepository,
   ) {}
 

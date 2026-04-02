@@ -1,6 +1,6 @@
 import { ensureActiveEntity, ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import type { EstagiarioUpdateCommand } from "@/modules/estagio/estagiario/domain/commands/estagiario-update.command";
 import { IEstagiarioUpdateCommandHandler } from "@/modules/estagio/estagiario/domain/commands/estagiario-update.command.handler.interface";
 import { Estagiario } from "@/modules/estagio/estagiario/domain/estagiario";
@@ -8,10 +8,10 @@ import type { EstagiarioFindOneQuery } from "@/modules/estagio/estagiario/domain
 import type { EstagiarioFindOneQueryResult } from "../../domain/queries";
 import { IEstagiarioRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class EstagiarioUpdateCommandHandlerImpl implements IEstagiarioUpdateCommandHandler {
   constructor(
-    @DeclareDependency(IEstagiarioRepository)
+    @Dep(IEstagiarioRepository)
     private readonly repository: IEstagiarioRepository,
   ) {}
 

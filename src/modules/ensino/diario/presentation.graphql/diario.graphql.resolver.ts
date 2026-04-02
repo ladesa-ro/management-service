@@ -1,7 +1,7 @@
 import { Args, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { Dep } from "@/domain/dependency-injection";
 import {
   DiarioCreateCommandMetadata,
   IDiarioCreateCommandHandler,
@@ -36,15 +36,15 @@ import * as DiarioGraphqlMapper from "./diario.graphql.mapper";
 @Resolver(() => DiarioFindOneOutputGraphQlDto)
 export class DiarioGraphqlResolver {
   constructor(
-    @DeclareDependency(IDiarioListQueryHandler)
+    @Dep(IDiarioListQueryHandler)
     private readonly listHandler: IDiarioListQueryHandler,
-    @DeclareDependency(IDiarioFindOneQueryHandler)
+    @Dep(IDiarioFindOneQueryHandler)
     private readonly findOneHandler: IDiarioFindOneQueryHandler,
-    @DeclareDependency(IDiarioCreateCommandHandler)
+    @Dep(IDiarioCreateCommandHandler)
     private readonly createHandler: IDiarioCreateCommandHandler,
-    @DeclareDependency(IDiarioUpdateCommandHandler)
+    @Dep(IDiarioUpdateCommandHandler)
     private readonly updateHandler: IDiarioUpdateCommandHandler,
-    @DeclareDependency(IDiarioDeleteCommandHandler)
+    @Dep(IDiarioDeleteCommandHandler)
     private readonly deleteHandler: IDiarioDeleteCommandHandler,
   ) {}
 

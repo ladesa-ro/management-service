@@ -1,18 +1,18 @@
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { IDiarioDeleteCommandHandler } from "@/modules/ensino/diario/domain/commands/diario-delete.command.handler.interface";
 import { Diario } from "@/modules/ensino/diario/domain/diario";
 import type { DiarioFindOneQuery } from "@/modules/ensino/diario/domain/queries";
 import { IDiarioPermissionChecker } from "../../domain/authorization";
 import { IDiarioRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class DiarioDeleteCommandHandlerImpl implements IDiarioDeleteCommandHandler {
   constructor(
-    @DeclareDependency(IDiarioRepository)
+    @Dep(IDiarioRepository)
     private readonly repository: IDiarioRepository,
-    @DeclareDependency(IDiarioPermissionChecker)
+    @Dep(IDiarioPermissionChecker)
     private readonly permissionChecker: IDiarioPermissionChecker,
   ) {}
 

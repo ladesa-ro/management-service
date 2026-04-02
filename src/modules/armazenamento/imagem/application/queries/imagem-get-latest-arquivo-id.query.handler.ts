@@ -1,17 +1,17 @@
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import type {
   IImagemGetLatestArquivoIdQuery,
   IImagemGetLatestArquivoIdQueryHandler,
 } from "@/modules/armazenamento/imagem/domain/queries";
 import { IImagemArquivoRepository } from "@/modules/armazenamento/imagem/domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class ImagemGetLatestArquivoIdQueryHandlerImpl
   implements IImagemGetLatestArquivoIdQueryHandler
 {
   constructor(
-    @DeclareDependency(IImagemArquivoRepository)
+    @Dep(IImagemArquivoRepository)
     private readonly imagemArquivoRepository: IImagemArquivoRepository,
   ) {}
 

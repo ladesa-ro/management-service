@@ -2,20 +2,20 @@ import { ForbiddenException } from "@nestjs/common";
 import { pick } from "lodash";
 import { IIdentityProvider } from "@/domain/abstractions/identity-provider";
 import type { IRequestActor, IRequestActorResolver } from "@/domain/abstractions/request-actor";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import type { IRuntimeOptions } from "@/infrastructure.config/options/runtime/runtime-options.interface";
 import { IRuntimeOptions as IRuntimeOptionsToken } from "@/infrastructure.config/options/runtime/runtime-options.interface";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import { UsuarioEntity } from "@/modules/acesso/usuario/infrastructure.database/typeorm/usuario.typeorm.entity";
 
-@DeclareImplementation()
+@Impl()
 export class RequestActorResolverAdapter implements IRequestActorResolver {
   constructor(
-    @DeclareDependency(IIdentityProvider)
+    @Dep(IIdentityProvider)
     private readonly identityProvider: IIdentityProvider,
-    @DeclareDependency(IAppTypeormConnection)
+    @Dep(IAppTypeormConnection)
     private readonly appTypeormConnection: IAppTypeormConnection,
-    @DeclareDependency(IRuntimeOptionsToken)
+    @Dep(IRuntimeOptionsToken)
     private readonly runtimeOptions: IRuntimeOptions,
   ) {}
 

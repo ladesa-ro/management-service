@@ -2,18 +2,18 @@ import { Logger } from "@nestjs/common";
 import type { SubscriberSessionAsPromised } from "rascal";
 import { ServiceUnavailableError } from "@/application/errors";
 import { IMessageBrokerService } from "@/domain/abstractions/message-broker";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import type { IMessageBrokerOptions } from "@/infrastructure.config/options/message-broker/message-broker-options.interface";
 import { IMessageBrokerOptions as IMessageBrokerOptionsToken } from "@/infrastructure.config/options/message-broker/message-broker-options.interface";
 import { MessageBrokerContainerService } from "./message-broker-container.service";
 
-@DeclareImplementation()
+@Impl()
 export class MessageBrokerService implements IMessageBrokerService {
   private readonly logger = new Logger(MessageBrokerService.name);
 
   constructor(
     private messageBrokerContainerService: MessageBrokerContainerService,
-    @DeclareDependency(IMessageBrokerOptionsToken)
+    @Dep(IMessageBrokerOptionsToken)
     private readonly messageBrokerOptions: IMessageBrokerOptions | null,
   ) {}
 

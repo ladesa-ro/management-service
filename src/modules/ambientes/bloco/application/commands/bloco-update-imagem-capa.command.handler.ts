@@ -1,6 +1,6 @@
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { Bloco } from "@/modules/ambientes/bloco/domain/bloco";
 import {
   type BlocoUpdateImagemCapaCommand,
@@ -13,16 +13,16 @@ import {
 import { IBlocoPermissionChecker } from "../../domain/authorization";
 import { IBlocoRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class BlocoUpdateImagemCapaCommandHandlerImpl
   implements IBlocoUpdateImagemCapaCommandHandler
 {
   constructor(
-    @DeclareDependency(IBlocoRepository)
+    @Dep(IBlocoRepository)
     private readonly repository: IBlocoRepository,
-    @DeclareDependency(IBlocoPermissionChecker)
+    @Dep(IBlocoPermissionChecker)
     private readonly permissionChecker: IBlocoPermissionChecker,
-    @DeclareDependency(IImagemSaveImagemCapaCommandHandler)
+    @Dep(IImagemSaveImagemCapaCommandHandler)
     private readonly saveImagemCapaHandler: IImagemSaveImagemCapaCommandHandlerType,
   ) {}
 

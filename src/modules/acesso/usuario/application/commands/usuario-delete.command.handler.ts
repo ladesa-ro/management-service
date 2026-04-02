@@ -1,18 +1,18 @@
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { IUsuarioDeleteCommandHandler } from "@/modules/acesso/usuario/domain/commands/usuario-delete.command.handler.interface";
 import type { UsuarioFindOneQuery } from "@/modules/acesso/usuario/domain/queries";
 import { Usuario } from "@/modules/acesso/usuario/domain/usuario";
 import { IUsuarioPermissionChecker } from "../../domain/authorization";
 import { IUsuarioRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class UsuarioDeleteCommandHandlerImpl implements IUsuarioDeleteCommandHandler {
   constructor(
-    @DeclareDependency(IUsuarioRepository)
+    @Dep(IUsuarioRepository)
     private readonly repository: IUsuarioRepository,
-    @DeclareDependency(IUsuarioPermissionChecker)
+    @Dep(IUsuarioPermissionChecker)
     private readonly permissionChecker: IUsuarioPermissionChecker,
   ) {}
 

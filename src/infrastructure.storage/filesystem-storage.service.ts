@@ -2,16 +2,16 @@ import { writeFile } from "node:fs/promises";
 import type { Readable } from "node:stream";
 import jetpack, { createReadStream } from "fs-jetpack";
 import type { IStorageService } from "@/domain/abstractions/storage";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import {
   IRuntimeOptions,
   IRuntimeOptions as IRuntimeOptionsToken,
 } from "@/infrastructure.config/options/runtime/runtime-options.interface";
 
-@DeclareImplementation()
+@Impl()
 export class FilesystemStorageService implements IStorageService {
   constructor(
-    @DeclareDependency(IRuntimeOptionsToken)
+    @Dep(IRuntimeOptionsToken)
     private runtimeOptions: IRuntimeOptions,
   ) {}
 
