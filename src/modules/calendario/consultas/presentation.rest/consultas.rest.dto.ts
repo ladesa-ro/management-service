@@ -1,9 +1,6 @@
-import type {
-  CalendarioAgendamentoStatus,
-  CalendarioAgendamentoTipo,
-} from "@/modules/calendario/agendamento/domain/calendario-agendamento.types";
-import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@/shared/presentation/rest";
 import { z } from "zod";
+import { CalendarioEventoFindOneOutputRestDto } from "@/modules/calendario/agendamento/presentation.rest/calendario-evento.rest.dto";
+import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@/shared/presentation/rest";
 
 // ============================================================================
 // Query Input
@@ -15,6 +12,7 @@ const ConsultaAgendamentosQuerySchema = z.object({
   campus: z.uuid().optional(),
   turma: z.uuid().optional(),
   professor: z.uuid().optional(),
+  tipo: z.string().optional(),
 });
 
 @ApiSchema({ name: "ConsultaAgendamentosQueryDto" })
@@ -39,62 +37,23 @@ export class ConsultaAgendamentosQueryRestDto {
     format: "uuid",
   })
   professor?: string;
+
+  @ApiPropertyOptional({
+    description: "Filtro por tipo de agendamento (AULA, EVENTO, INDISPONIBILIDADE, RESERVA)",
+    type: "string",
+  })
+  tipo?: string;
 }
 
 // ============================================================================
 // Output
 // ============================================================================
 
-@ApiSchema({ name: "AgendamentoConsultaItemDto" })
-export class AgendamentoConsultaItemRestDto {
-  @ApiProperty({ description: "ID do agendamento", type: "string", format: "uuid" })
-  id: string;
-
-  @ApiProperty({ description: "Tipo do agendamento", type: "string" })
-  tipo: CalendarioAgendamentoTipo;
-
-  @ApiPropertyOptional({ description: "Nome do agendamento", type: "string", nullable: true })
-  nome: string | null;
-
-  @ApiProperty({ description: "Data início", type: "string" })
-  dataInicio: string;
-
-  @ApiPropertyOptional({ description: "Data fim", type: "string", nullable: true })
-  dataFim: string | null;
-
-  @ApiProperty({ description: "Dia inteiro", type: "boolean" })
-  diaInteiro: boolean;
-
-  @ApiProperty({ description: "Horário início", type: "string" })
-  horarioInicio: string;
-
-  @ApiProperty({ description: "Horário fim", type: "string" })
-  horarioFim: string;
-
-  @ApiPropertyOptional({ description: "Cor", type: "string", nullable: true })
-  cor: string | null;
-
-  @ApiPropertyOptional({ description: "Status", type: "string", nullable: true })
-  status: CalendarioAgendamentoStatus | null;
-
-  @ApiProperty({ description: "IDs das turmas", type: [String] })
-  turmaIds: string[];
-
-  @ApiProperty({ description: "IDs dos perfis (professores)", type: [String] })
-  perfilIds: string[];
-
-  @ApiProperty({ description: "IDs dos ambientes", type: [String] })
-  ambienteIds: string[];
-
-  @ApiProperty({ description: "IDs dos diários", type: [String] })
-  diarioIds: string[];
-}
-
 @ApiSchema({ name: "ConsultaAgendamentosOutputDto" })
 export class ConsultaAgendamentosOutputRestDto {
   @ApiProperty({
     description: "Agendamentos encontrados",
-    type: () => [AgendamentoConsultaItemRestDto],
+    type: () => [CalendarioEventoFindOneOutputRestDto],
   })
-  agendamentos: AgendamentoConsultaItemRestDto[];
+  agendamentos: CalendarioEventoFindOneOutputRestDto[];
 }

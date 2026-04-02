@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { ObjectIdUuidFactory } from "@/domain/abstractions";
-import { datedSchema, uuidSchema } from "@/shared/validation/schemas";
+import { datedSchema, uuidSchema, versionedSchema } from "@/shared/validation/schemas";
 
 // ============================================================================
 // Intervalo (value object)
@@ -45,6 +45,7 @@ export const GradeHorariaSchema = z
     campus: ObjectIdUuidFactory.domain.loose(),
     intervalos: gradeHorariaIntervalosArraySchema,
   })
+  .extend(versionedSchema.shape)
   .extend(datedSchema.shape);
 
 // ============================================================================

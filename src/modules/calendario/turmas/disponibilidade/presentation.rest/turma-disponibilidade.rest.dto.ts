@@ -77,6 +77,13 @@ export class TurmaDisponibilidadeDiaRestDto {
 
 @ApiSchema({ name: "TurmaDisponibilidadeConfigOutputDto" })
 export class TurmaDisponibilidadeConfigOutputRestDto {
+  @ApiProperty({
+    description: "Identificador externo da configuracao",
+    type: "string",
+    format: "uuid",
+  })
+  identificador_externo: string;
+
   @ApiProperty(TurmaDisponibilidadeConfigFields.data_inicio.swaggerMetadata)
   data_inicio: string;
 
@@ -119,6 +126,13 @@ export class TurmaDisponibilidadeWeekOutputRestDto {
 export class TurmaDisponibilidadeConfigWithIdOutputRestDto {
   @ApiProperty({ description: "ID da configuracao", type: "string", format: "uuid" })
   id: string;
+
+  @ApiProperty({
+    description: "Identificador externo da configuracao",
+    type: "string",
+    format: "uuid",
+  })
+  identificador_externo: string;
 
   @ApiProperty(TurmaDisponibilidadeConfigFields.data_inicio.swaggerMetadata)
   data_inicio: string;

@@ -1,3 +1,10 @@
+import * as PerfilRestMapper from "@/modules/acesso/usuario/perfil/presentation.rest/perfil.rest.mapper";
+import * as AmbienteRestMapper from "@/modules/ambientes/ambiente/presentation.rest/ambiente.rest.mapper";
+import * as CalendarioLetivoRestMapper from "@/modules/calendario/letivo/presentation.rest/calendario-letivo.rest.mapper";
+import * as DiarioRestMapper from "@/modules/ensino/diario/presentation.rest/diario.rest.mapper";
+import * as ModalidadeRestMapper from "@/modules/ensino/modalidade/presentation.rest/modalidade.rest.mapper";
+import * as OfertaFormacaoRestMapper from "@/modules/ensino/oferta-formacao/presentation.rest/oferta-formacao.rest.mapper";
+import * as TurmaRestMapper from "@/modules/ensino/turma/presentation.rest/turma.rest.mapper";
 import { createMapper } from "@/shared/mapping";
 import { CalendarioAgendamentoTipo } from "../domain/calendario-agendamento.types";
 import { CalendarioAgendamentoCreateCommand } from "../domain/commands/calendario-agendamento-create.command";
@@ -29,13 +36,13 @@ export const createInputDtoToCreateCommand = createMapper<
   input.horarioFim = dto.horarioFim;
   input.cor = dto.cor ?? null;
   input.repeticao = dto.repeticao ?? null;
-  input.turmaIds = dto.turmaIds;
-  input.perfilIds = dto.perfilIds;
-  input.calendarioLetivoIds = dto.calendarioLetivoIds;
-  input.ofertaFormacaoIds = dto.ofertaFormacaoIds;
-  input.modalidadeIds = dto.modalidadeIds;
-  input.ambienteIds = dto.ambienteIds;
-  input.diarioIds = dto.diarioIds;
+  input.turmas = dto.turmas;
+  input.perfis = dto.perfis;
+  input.calendariosLetivos = dto.calendariosLetivos;
+  input.ofertasFormacao = dto.ofertasFormacao;
+  input.modalidades = dto.modalidades;
+  input.ambientes = dto.ambientes;
+  input.diarios = dto.diarios;
   return input;
 });
 
@@ -52,13 +59,13 @@ export const updateInputDtoToUpdateCommand = createMapper<
   horarioFim: dto.horarioFim,
   cor: dto.cor !== undefined ? (dto.cor ?? null) : undefined,
   repeticao: dto.repeticao !== undefined ? (dto.repeticao ?? null) : undefined,
-  turmaIds: dto.turmaIds,
-  perfilIds: dto.perfilIds,
-  calendarioLetivoIds: dto.calendarioLetivoIds,
-  ofertaFormacaoIds: dto.ofertaFormacaoIds,
-  modalidadeIds: dto.modalidadeIds,
-  ambienteIds: dto.ambienteIds,
-  diarioIds: dto.diarioIds,
+  turmas: dto.turmas,
+  perfis: dto.perfis,
+  calendariosLetivos: dto.calendariosLetivos,
+  ofertasFormacao: dto.ofertasFormacao,
+  modalidades: dto.modalidades,
+  ambientes: dto.ambientes,
+  diarios: dto.diarios,
 }));
 
 // ============================================================================
@@ -70,6 +77,7 @@ export const findOneQueryResultToOutputDto = createMapper<
   CalendarioEventoFindOneOutputRestDto
 >((output) => ({
   id: output.id,
+  identificadorExterno: output.identificadorExterno,
   nome: output.nome,
   dataInicio: output.dataInicio,
   dataFim: output.dataFim,
@@ -79,11 +87,16 @@ export const findOneQueryResultToOutputDto = createMapper<
   cor: output.cor,
   repeticao: output.repeticao,
   status: output.status,
-  turmaIds: output.turmaIds,
-  perfilIds: output.perfilIds,
-  calendarioLetivoIds: output.calendarioLetivoIds,
-  ofertaFormacaoIds: output.ofertaFormacaoIds,
-  modalidadeIds: output.modalidadeIds,
-  ambienteIds: output.ambienteIds,
-  diarioIds: output.diarioIds,
+  version: output.version,
+  turmas: TurmaRestMapper.findOneQueryResultToOutputDto.mapArray(output.turmas),
+  perfis: PerfilRestMapper.findOneQueryResultToOutputDto.mapArray(output.perfis),
+  calendariosLetivos: CalendarioLetivoRestMapper.findOneQueryResultToOutputDto.mapArray(
+    output.calendariosLetivos,
+  ),
+  ofertasFormacao: OfertaFormacaoRestMapper.findOneQueryResultToOutputDto.mapArray(
+    output.ofertasFormacao,
+  ),
+  modalidades: ModalidadeRestMapper.findOneQueryResultToOutputDto.mapArray(output.modalidades),
+  ambientes: AmbienteRestMapper.findOneQueryResultToOutputDto.mapArray(output.ambientes),
+  diarios: DiarioRestMapper.findOneQueryResultToOutputDto.mapArray(output.diarios),
 }));

@@ -18,6 +18,7 @@ export class TurmaDisponibilidadeConfiguracao {
   static readonly entityName = "TurmaDisponibilidadeConfiguracao";
 
   id!: IdUuid;
+  identificadorExterno!: IdUuid;
   turma!: { id: IdUuid };
   dataInicio!: string;
   dataFim!: string | null;
@@ -40,6 +41,7 @@ export class TurmaDisponibilidadeConfiguracao {
     const instance = new TurmaDisponibilidadeConfiguracao();
 
     instance.id = generateUuidV7();
+    instance.identificadorExterno = generateUuidV7();
     instance.turma = parsed.turma;
     instance.dataInicio = parsed.dataInicio;
     instance.dataFim = parsed.dataFim ?? null;
@@ -63,6 +65,7 @@ export class TurmaDisponibilidadeConfiguracao {
     const instance = new TurmaDisponibilidadeConfiguracao();
 
     instance.id = parsed.id;
+    instance.identificadorExterno = parsed.identificadorExterno;
     instance.turma = parsed.turma;
     instance.dataInicio = parsed.dataInicio;
     instance.dataFim = parsed.dataFim;
@@ -81,6 +84,10 @@ export class TurmaDisponibilidadeConfiguracao {
     this.dateUpdated = getNowISO();
   }
 
+  /**
+   * Clona para criar um fragmento temporal independente.
+   * Cada fragmento recebe novo id e novo identificadorExterno.
+   */
   static clone(
     source: TurmaDisponibilidadeConfiguracao,
     overrides: { dataInicio: string; dataFim: string | null },

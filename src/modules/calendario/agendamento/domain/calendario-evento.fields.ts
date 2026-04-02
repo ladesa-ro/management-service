@@ -2,7 +2,7 @@
  * CalendarioEvento — definicao dos campos (FieldMetadata).
  *
  * Campos de evento identicos a UsuarioEvento/TurmaEvento,
- * com campos adicionais para vinculos (turmaIds, perfilIds, etc.).
+ * com campos adicionais para vinculos (turmas, perfis, etc.).
  */
 import { z } from "zod";
 import { createFieldMetadata, SharedFields } from "@/domain/abstractions";
@@ -54,25 +54,25 @@ export const CalendarioEventoFields = {
     schema: z.string().nullable(),
     nullable: true,
   }),
-  turmaIds: createFieldMetadata({
-    description: "IDs das turmas participantes",
+  turmas: createFieldMetadata({
+    description: "Turmas participantes",
   }),
-  perfilIds: createFieldMetadata({
-    description: "IDs dos perfis (professores) participantes",
+  perfis: createFieldMetadata({
+    description: "Perfis (professores) participantes",
   }),
-  calendarioLetivoIds: createFieldMetadata({
-    description: "IDs dos calendarios letivos vinculados",
+  calendariosLetivos: createFieldMetadata({
+    description: "Calendarios letivos vinculados",
   }),
-  ofertaFormacaoIds: createFieldMetadata({
-    description: "IDs das ofertas de formacao vinculadas",
+  ofertasFormacao: createFieldMetadata({
+    description: "Ofertas de formacao vinculadas",
   }),
-  modalidadeIds: createFieldMetadata({
-    description: "IDs das modalidades vinculadas",
+  modalidades: createFieldMetadata({
+    description: "Modalidades vinculadas",
   }),
-  ambienteIds: createFieldMetadata({
-    description: "IDs dos ambientes vinculados",
+  ambientes: createFieldMetadata({
+    description: "Ambientes vinculados",
   }),
-  diarioIds: createFieldMetadata({
-    description: "IDs dos diarios vinculados",
+  diarios: createFieldMetadata({
+    description: "Diarios vinculados",
   }),
 };

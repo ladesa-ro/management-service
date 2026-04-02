@@ -23,7 +23,9 @@ export class CalendarioAgendamentoDeleteCommandHandlerImpl
     ensureExists(domain, CalendarioAgendamento.entityName, dto.id);
     ensureActiveEntity(domain, CalendarioAgendamento.entityName, dto.id);
 
-    await this.repository.inactivateById(dto.id);
+    // Encerrar versao via close (seta valid_to) em vez de inactivateById
+    domain.close();
+    await this.repository.closeVersion(domain);
 
     return true;
   }

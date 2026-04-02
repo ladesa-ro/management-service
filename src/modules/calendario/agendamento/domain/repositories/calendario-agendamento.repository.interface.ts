@@ -1,7 +1,7 @@
 import type { IAccessContext } from "@/domain/abstractions";
 import type { CalendarioAgendamento } from "../calendario-agendamento";
 import type { CalendarioAgendamentoTipo } from "../calendario-agendamento.types";
-import type { CalendarioAgendamentoFindEventosQuery } from "../queries/calendario-agendamento-find-eventos.query.handler.interface";
+import type { CalendarioAgendamentoMetadata } from "../calendario-agendamento-metadata";
 import type { CalendarioAgendamentoFindOneQueryResult } from "../queries/calendario-agendamento-find-one.query.result";
 
 /**
@@ -29,11 +29,36 @@ export interface ICalendarioAgendamentoRepository {
     tipo?: CalendarioAgendamentoTipo,
   ): Promise<CalendarioAgendamento | null>;
 
-  /** Persiste o aggregate (create ou update), incluindo junções. */
+  /** Persiste o aggregate (create), incluindo junções. */
   save(aggregate: CalendarioAgendamento): Promise<void>;
 
-  /** Inativa o agendamento por ID. */
-  inactivateById(id: string): Promise<void>;
+  /**
+   * Persiste uma nova versao: encerra a versao anterior e cria a nova com junctions.
+   * Junctions da versao anterior NAO sao removidas (historico imutavel).
+   */
+  saveNewVersion(
+    closedVersion: CalendarioAgendamento,
+    newVersion: CalendarioAgendamento,
+  ): Promise<void>;
+
+  /** Encerra a versao atual (seta valid_to). */
+  closeVersion(aggregate: CalendarioAgendamento): Promise<void>;
+
+  // ==========================================
+  // Metadata — campos nao-versionados
+  // ==========================================
+
+  /** Persiste metadata para um novo agendamento. */
+  saveMetadata(metadata: CalendarioAgendamentoMetadata): Promise<void>;
+
+  /** Atualiza metadata (nome/cor) de um agendamento existente. */
+  updateMetadata(
+    identificadorExterno: string,
+    fields: { nome?: string | null; cor?: string | null },
+  ): Promise<void>;
+
+  /** Carrega metadata por identificador externo. */
+  loadMetadata(identificadorExterno: string): Promise<CalendarioAgendamentoMetadata | null>;
 
   // ==========================================
   // Read side — usado por query handlers
@@ -46,12 +71,6 @@ export interface ICalendarioAgendamentoRepository {
     tipo?: CalendarioAgendamentoTipo,
   ): Promise<CalendarioAgendamentoFindOneQueryResult | null>;
 
-  /** Lista eventos com filtros. */
-  getFindEventosQueryResult(
-    accessContext: IAccessContext | null,
-    query: CalendarioAgendamentoFindEventosQuery,
-  ): Promise<CalendarioAgendamentoFindOneQueryResult[]>;
-
   /** Busca agendamentos que se sobrepõem a um período, com filtros opcionais. */
   findByDateRange(query: {
     dateStart: string;
@@ -59,5 +78,6 @@ export interface ICalendarioAgendamentoRepository {
     campus?: string;
     turma?: string;
     professor?: string;
+    tipo?: CalendarioAgendamentoTipo;
   }): Promise<CalendarioAgendamentoFindOneQueryResult[]>;
 }

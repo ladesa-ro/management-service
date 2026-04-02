@@ -27,6 +27,7 @@ export function mapConfigToOutput(
     }));
 
   return {
+    identificador_externo: config.identificadorExterno,
     data_inicio: config.dataInicio,
     data_fim: config.dataFim,
     identificador_externo_grade_horaria: config.identificadorExternoGradeHoraria ?? null,

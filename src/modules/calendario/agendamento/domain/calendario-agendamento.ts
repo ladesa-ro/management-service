@@ -1,12 +1,13 @@
 import type { z } from "zod";
+import type { IVersioned, ObjectUuidRef } from "@/domain/abstractions";
 import type { IdUuid, ScalarDateTimeString } from "@/domain/abstractions/scalars";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { zodValidate } from "@/shared/validation/index";
 import { getNowISO } from "@/utils/date";
 import {
   CalendarioAgendamentoCreateSchema,
+  CalendarioAgendamentoReviseSchema,
   CalendarioAgendamentoSchema,
-  CalendarioAgendamentoUpdateSchema,
 } from "./calendario-agendamento.schemas";
 import type {
   CalendarioAgendamentoStatus,
@@ -15,10 +16,11 @@ import type {
 
 export type ICalendarioAgendamento = z.infer<typeof CalendarioAgendamentoSchema>;
 
-export class CalendarioAgendamento {
+export class CalendarioAgendamento implements IVersioned {
   static readonly entityName = "CalendarioAgendamento";
 
   id!: IdUuid;
+  identificadorExterno!: IdUuid;
   tipo!: CalendarioAgendamentoTipo;
   dataInicio!: string;
   dataFim!: string | null;
@@ -26,17 +28,20 @@ export class CalendarioAgendamento {
   horarioInicio!: string;
   horarioFim!: string;
   repeticao!: string | null;
-  nome!: string | null;
-  cor!: string | null;
   status!: CalendarioAgendamentoStatus | null;
 
-  turmaIds!: string[];
-  perfilIds!: string[];
-  calendarioLetivoIds!: string[];
-  ofertaFormacaoIds!: string[];
-  modalidadeIds!: string[];
-  ambienteIds!: string[];
-  diarioIds!: string[];
+  turmas!: ObjectUuidRef[];
+  perfis!: ObjectUuidRef[];
+  calendariosLetivos!: ObjectUuidRef[];
+  ofertasFormacao!: ObjectUuidRef[];
+  modalidades!: ObjectUuidRef[];
+  ambientes!: ObjectUuidRef[];
+  diarios!: ObjectUuidRef[];
+
+  version!: number;
+  previousVersionId!: IdUuid | null;
+  validFrom!: ScalarDateTimeString;
+  validTo!: ScalarDateTimeString | null;
 
   dateCreated!: ScalarDateTimeString;
   dateUpdated!: ScalarDateTimeString;
@@ -54,24 +59,28 @@ export class CalendarioAgendamento {
     const instance = new CalendarioAgendamento();
 
     instance.id = generateUuidV7();
+    instance.identificadorExterno = generateUuidV7();
     instance.tipo = parsed.tipo;
-    instance.nome = parsed.nome ?? null;
     instance.dataInicio = parsed.dataInicio;
     instance.dataFim = parsed.dataFim ?? null;
     instance.diaInteiro = parsed.diaInteiro;
     instance.horarioInicio = parsed.horarioInicio ?? "00:00:00";
     instance.horarioFim = parsed.horarioFim ?? "23:59:59";
-    instance.cor = parsed.cor ?? null;
     instance.repeticao = parsed.repeticao ?? null;
     instance.status = parsed.status ?? null;
 
-    instance.turmaIds = parsed.turmaIds ?? [];
-    instance.perfilIds = parsed.perfilIds ?? [];
-    instance.calendarioLetivoIds = parsed.calendarioLetivoIds ?? [];
-    instance.ofertaFormacaoIds = parsed.ofertaFormacaoIds ?? [];
-    instance.modalidadeIds = parsed.modalidadeIds ?? [];
-    instance.ambienteIds = parsed.ambienteIds ?? [];
-    instance.diarioIds = parsed.diarioIds ?? [];
+    instance.turmas = parsed.turmas ?? [];
+    instance.perfis = parsed.perfis ?? [];
+    instance.calendariosLetivos = parsed.calendariosLetivos ?? [];
+    instance.ofertasFormacao = parsed.ofertasFormacao ?? [];
+    instance.modalidades = parsed.modalidades ?? [];
+    instance.ambientes = parsed.ambientes ?? [];
+    instance.diarios = parsed.diarios ?? [];
+
+    instance.version = 1;
+    instance.previousVersionId = null;
+    instance.validFrom = getNowISO();
+    instance.validTo = null;
 
     instance.dateCreated = getNowISO();
     instance.dateUpdated = getNowISO();
@@ -90,24 +99,28 @@ export class CalendarioAgendamento {
     const instance = new CalendarioAgendamento();
 
     instance.id = parsed.id;
+    instance.identificadorExterno = parsed.identificadorExterno;
     instance.tipo = parsed.tipo;
-    instance.nome = parsed.nome;
     instance.dataInicio = parsed.dataInicio;
     instance.dataFim = parsed.dataFim;
     instance.diaInteiro = parsed.diaInteiro;
     instance.horarioInicio = parsed.horarioInicio;
     instance.horarioFim = parsed.horarioFim;
-    instance.cor = parsed.cor;
     instance.repeticao = parsed.repeticao;
     instance.status = parsed.status;
 
-    instance.turmaIds = parsed.turmaIds;
-    instance.perfilIds = parsed.perfilIds;
-    instance.calendarioLetivoIds = parsed.calendarioLetivoIds;
-    instance.ofertaFormacaoIds = parsed.ofertaFormacaoIds;
-    instance.modalidadeIds = parsed.modalidadeIds;
-    instance.ambienteIds = parsed.ambienteIds;
-    instance.diarioIds = parsed.diarioIds;
+    instance.turmas = parsed.turmas;
+    instance.perfis = parsed.perfis;
+    instance.calendariosLetivos = parsed.calendariosLetivos;
+    instance.ofertasFormacao = parsed.ofertasFormacao;
+    instance.modalidades = parsed.modalidades;
+    instance.ambientes = parsed.ambientes;
+    instance.diarios = parsed.diarios;
+
+    instance.version = parsed.version;
+    instance.previousVersionId = parsed.previousVersionId;
+    instance.validFrom = parsed.validFrom;
+    instance.validTo = parsed.validTo;
 
     instance.dateCreated = parsed.dateCreated;
     instance.dateUpdated = parsed.dateUpdated;
@@ -116,37 +129,60 @@ export class CalendarioAgendamento {
     return instance;
   }
 
-  update(dados: unknown): void {
+  /**
+   * Cria nova versao a partir de uma versao anterior.
+   * A versao anterior deve ser encerrada via `close()` antes.
+   */
+  static createNewVersion(previous: CalendarioAgendamento, dados: unknown): CalendarioAgendamento {
     const parsed = zodValidate(
       CalendarioAgendamento.entityName,
-      CalendarioAgendamentoUpdateSchema.domain,
+      CalendarioAgendamentoReviseSchema,
       dados,
     );
 
-    if (parsed.nome !== undefined) this.nome = parsed.nome;
-    if (parsed.dataInicio !== undefined) this.dataInicio = parsed.dataInicio;
-    if (parsed.dataFim !== undefined) this.dataFim = parsed.dataFim;
-    if (parsed.diaInteiro !== undefined) this.diaInteiro = parsed.diaInteiro;
-    if (parsed.horarioInicio !== undefined) this.horarioInicio = parsed.horarioInicio;
-    if (parsed.horarioFim !== undefined) this.horarioFim = parsed.horarioFim;
-    if (parsed.cor !== undefined) this.cor = parsed.cor;
-    if (parsed.repeticao !== undefined) this.repeticao = parsed.repeticao;
+    const instance = new CalendarioAgendamento();
 
-    if (parsed.turmaIds !== undefined) this.turmaIds = parsed.turmaIds;
-    if (parsed.perfilIds !== undefined) this.perfilIds = parsed.perfilIds;
-    if (parsed.calendarioLetivoIds !== undefined)
-      this.calendarioLetivoIds = parsed.calendarioLetivoIds;
-    if (parsed.ofertaFormacaoIds !== undefined) this.ofertaFormacaoIds = parsed.ofertaFormacaoIds;
-    if (parsed.modalidadeIds !== undefined) this.modalidadeIds = parsed.modalidadeIds;
-    if (parsed.ambienteIds !== undefined) this.ambienteIds = parsed.ambienteIds;
-    if (parsed.diarioIds !== undefined) this.diarioIds = parsed.diarioIds;
+    instance.id = generateUuidV7();
+    instance.identificadorExterno = previous.identificadorExterno;
+    instance.tipo = previous.tipo;
 
+    instance.dataInicio = parsed.dataInicio ?? previous.dataInicio;
+    instance.dataFim = parsed.dataFim !== undefined ? parsed.dataFim : previous.dataFim;
+    instance.diaInteiro = parsed.diaInteiro ?? previous.diaInteiro;
+    instance.horarioInicio = parsed.horarioInicio ?? previous.horarioInicio;
+    instance.horarioFim = parsed.horarioFim ?? previous.horarioFim;
+    instance.repeticao = parsed.repeticao !== undefined ? parsed.repeticao : previous.repeticao;
+    instance.status = parsed.status !== undefined ? parsed.status : previous.status;
+
+    instance.turmas = parsed.turmas ?? previous.turmas;
+    instance.perfis = parsed.perfis ?? previous.perfis;
+    instance.calendariosLetivos = parsed.calendariosLetivos ?? previous.calendariosLetivos;
+    instance.ofertasFormacao = parsed.ofertasFormacao ?? previous.ofertasFormacao;
+    instance.modalidades = parsed.modalidades ?? previous.modalidades;
+    instance.ambientes = parsed.ambientes ?? previous.ambientes;
+    instance.diarios = parsed.diarios ?? previous.diarios;
+
+    instance.version = previous.version + 1;
+    instance.previousVersionId = previous.id;
+    instance.validFrom = getNowISO();
+    instance.validTo = null;
+
+    instance.dateCreated = getNowISO();
+    instance.dateUpdated = getNowISO();
+    instance.dateDeleted = null;
+
+    return instance;
+  }
+
+  /**
+   * Encerra esta versao (seta valid_to e ativo implicitamente via status).
+   */
+  close(): void {
+    this.validTo = getNowISO();
     this.dateUpdated = getNowISO();
-
-    zodValidate(CalendarioAgendamento.entityName, CalendarioAgendamentoSchema, this);
   }
 
   isActive(): boolean {
-    return this.dateDeleted === null;
+    return this.dateDeleted === null && this.validTo === null;
   }
 }

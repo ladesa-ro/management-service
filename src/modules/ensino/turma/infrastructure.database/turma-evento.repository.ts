@@ -4,6 +4,7 @@ import { Dep, Impl } from "@/domain/dependency-injection";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import { CalendarioAgendamento } from "@/modules/calendario/agendamento/domain/calendario-agendamento";
 import { CalendarioAgendamentoTipo } from "@/modules/calendario/agendamento/domain/calendario-agendamento.types";
+import { CalendarioAgendamentoMetadata } from "@/modules/calendario/agendamento/domain/calendario-agendamento-metadata";
 import { ICalendarioAgendamentoRepository } from "@/modules/calendario/agendamento/domain/repositories/calendario-agendamento.repository.interface";
 import {
   CalendarioAgendamentoEntity,
@@ -50,18 +51,24 @@ export class TurmaEventoTypeOrmRepositoryAdapter implements ITurmaEventoReposito
   ): Promise<CalendarioAgendamentoEntity> {
     const domain = CalendarioAgendamento.create({
       tipo: CalendarioAgendamentoTipo.EVENTO,
-      nome: data.nome,
       dataInicio: data.dataInicio,
       dataFim: data.dataFim,
       diaInteiro: data.diaInteiro,
       horarioInicio: data.horarioInicio,
       horarioFim: data.horarioFim,
-      cor: data.cor,
       repeticao: data.repeticao,
-      turmaIds: [turmaId],
+      turmas: [{ id: turmaId }],
     });
 
     await this.calendarioAgendamentoRepository.save(domain);
+
+    // Metadata (nome/cor) na tabela separada
+    const metadata = CalendarioAgendamentoMetadata.create({
+      identificadorExternoCalendarioAgendamento: domain.identificadorExterno,
+      nome: data.nome,
+      cor: data.cor,
+    });
+    await this.calendarioAgendamentoRepository.saveMetadata(metadata);
 
     // Retorna entity para compatibilidade com callers existentes
     const repo = this.appTypeormConnection.getRepository(CalendarioAgendamentoEntity);
@@ -86,13 +93,42 @@ export class TurmaEventoTypeOrmRepositoryAdapter implements ITurmaEventoReposito
     const domain = await this.calendarioAgendamentoRepository.loadById(null, eventoId);
     ensureExists(domain, "TurmaEvento", eventoId);
 
-    domain.update(data);
+    // Metadata (nome/cor) — atualizar sem gerar nova versao
+    if (data.nome !== undefined || data.cor !== undefined) {
+      await this.calendarioAgendamentoRepository.updateMetadata(domain.identificadorExterno, {
+        nome: data.nome,
+        cor: data.cor,
+      });
+    }
 
-    await this.calendarioAgendamentoRepository.save(domain);
+    // Campos versionados — gerar nova versao
+    const hasVersioned =
+      data.dataInicio !== undefined ||
+      data.dataFim !== undefined ||
+      data.diaInteiro !== undefined ||
+      data.horarioInicio !== undefined ||
+      data.horarioFim !== undefined ||
+      data.repeticao !== undefined;
+
+    let resultId = eventoId;
+
+    if (hasVersioned) {
+      domain.close();
+      const newVersion = CalendarioAgendamento.createNewVersion(domain, {
+        dataInicio: data.dataInicio,
+        dataFim: data.dataFim,
+        diaInteiro: data.diaInteiro,
+        horarioInicio: data.horarioInicio,
+        horarioFim: data.horarioFim,
+        repeticao: data.repeticao,
+      });
+      await this.calendarioAgendamentoRepository.saveNewVersion(domain, newVersion);
+      resultId = newVersion.id;
+    }
 
     const repo = this.appTypeormConnection.getRepository(CalendarioAgendamentoEntity);
-    const entity = await repo.findOneBy({ id: eventoId });
-    ensureExists(entity, CalendarioAgendamento.entityName, eventoId);
+    const entity = await repo.findOneBy({ id: resultId });
+    ensureExists(entity, CalendarioAgendamento.entityName, resultId);
     return entity;
   }
 

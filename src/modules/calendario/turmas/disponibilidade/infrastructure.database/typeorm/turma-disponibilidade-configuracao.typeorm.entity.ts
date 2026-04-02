@@ -6,6 +6,9 @@ export class TurmaDisponibilidadeConfiguracaoEntity {
   @PrimaryColumn("uuid")
   id!: string;
 
+  @Column({ name: "identificador_externo", type: "uuid", nullable: false })
+  identificadorExterno!: string;
+
   @ManyToOne(() => TurmaEntity, {})
   @JoinColumn({ name: "id_turma_fk" })
   turma!: Relation<TurmaEntity>;

@@ -79,6 +79,7 @@ export class TurmaDisponibilidadeTypeOrmRepositoryAdapter
 
     const configEntity = configRepo.create({
       id: config.id,
+      identificadorExterno: config.identificadorExterno,
       dataInicio: config.dataInicio,
       dataFim: config.dataFim,
       ativo: config.ativo,
@@ -200,6 +201,7 @@ export class TurmaDisponibilidadeTypeOrmRepositoryAdapter
 
     return TurmaDisponibilidadeConfiguracao.load({
       id: config.id,
+      identificadorExterno: config.identificadorExterno,
       turma: { id: turmaId },
       dataInicio: config.dataInicio,
       dataFim: config.dataFim,

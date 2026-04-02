@@ -1,3 +1,4 @@
+import type { ObjectUuidRef } from "@/domain/abstractions";
 import { CalendarioAgendamentoFields } from "../calendario-agendamento.fields";
 import type { CalendarioAgendamentoTipo } from "../calendario-agendamento.types";
 
@@ -10,13 +11,13 @@ export const CalendarioAgendamentoCreateCommandFields = {
   horarioFim: CalendarioAgendamentoFields.horarioFim,
   cor: CalendarioAgendamentoFields.cor,
   repeticao: CalendarioAgendamentoFields.repeticao,
-  turmaIds: CalendarioAgendamentoFields.turmaIds,
-  perfilIds: CalendarioAgendamentoFields.perfilIds,
-  calendarioLetivoIds: CalendarioAgendamentoFields.calendarioLetivoIds,
-  ofertaFormacaoIds: CalendarioAgendamentoFields.ofertaFormacaoIds,
-  modalidadeIds: CalendarioAgendamentoFields.modalidadeIds,
-  ambienteIds: CalendarioAgendamentoFields.ambienteIds,
-  diarioIds: CalendarioAgendamentoFields.diarioIds,
+  turmas: CalendarioAgendamentoFields.turmas,
+  perfis: CalendarioAgendamentoFields.perfis,
+  calendariosLetivos: CalendarioAgendamentoFields.calendariosLetivos,
+  ofertasFormacao: CalendarioAgendamentoFields.ofertasFormacao,
+  modalidades: CalendarioAgendamentoFields.modalidades,
+  ambientes: CalendarioAgendamentoFields.ambientes,
+  diarios: CalendarioAgendamentoFields.diarios,
 };
 
 export class CalendarioAgendamentoCreateCommand {
@@ -30,11 +31,11 @@ export class CalendarioAgendamentoCreateCommand {
   cor?: string | null;
   repeticao?: string | null;
 
-  turmaIds?: string[];
-  perfilIds?: string[];
-  calendarioLetivoIds?: string[];
-  ofertaFormacaoIds?: string[];
-  modalidadeIds?: string[];
-  ambienteIds?: string[];
-  diarioIds?: string[];
+  turmas?: ObjectUuidRef[];
+  perfis?: ObjectUuidRef[];
+  calendariosLetivos?: ObjectUuidRef[];
+  ofertasFormacao?: ObjectUuidRef[];
+  modalidades?: ObjectUuidRef[];
+  ambientes?: ObjectUuidRef[];
+  diarios?: ObjectUuidRef[];
 }

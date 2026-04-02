@@ -105,3 +105,14 @@ export const datedSchema = z.object({
   dateUpdated: dateTimeStringSchema,
   dateDeleted: dateTimeStringNullableSchema,
 });
+
+// ============================================================================
+// Versioned entity fields (temporal model)
+// ============================================================================
+
+export const versionedSchema = z.object({
+  version: z.number().int().min(1),
+  previousVersionId: uuidSchema.nullable(),
+  validFrom: dateTimeStringSchema,
+  validTo: dateTimeStringNullableSchema,
+});
