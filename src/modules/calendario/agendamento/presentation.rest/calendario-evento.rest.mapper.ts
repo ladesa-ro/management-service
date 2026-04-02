@@ -78,6 +78,7 @@ export const findOneQueryResultToOutputDto = createMapper<
 >((output) => ({
   id: output.id,
   identificadorExterno: output.identificadorExterno,
+  tipo: output.tipo,
   nome: output.nome,
   dataInicio: output.dataInicio,
   dataFim: output.dataFim,

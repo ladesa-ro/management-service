@@ -181,6 +181,7 @@ export class CalendarioEventoFindOneOutputRestDto {
   @ApiProperty({ type: "string", format: "uuid", description: "Identificador externo estavel" })
   identificadorExterno: string;
 
+  @ApiProperty(CalendarioEventoFields.tipo.swaggerMetadata) tipo: string;
   @ApiPropertyOptional(CalendarioEventoFields.nome.swaggerMetadata) nome: string | null;
   @ApiProperty(CalendarioEventoFields.dataInicio.swaggerMetadata) dataInicio: string;
   @ApiPropertyOptional(CalendarioEventoFields.dataFim.swaggerMetadata) dataFim: string | null;
