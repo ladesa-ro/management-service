@@ -2,20 +2,16 @@ import { has } from "lodash";
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import type { IAmbiente } from "@/modules/ambientes/ambiente";
 import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente";
 import { IAmbienteFindOneQueryHandler } from "@/modules/ambientes/ambiente/domain/queries/ambiente-find-one.query.handler.interface";
 import type { DiarioUpdateCommand } from "@/modules/ensino/diario/domain/commands/diario-update.command";
 import { IDiarioUpdateCommandHandler } from "@/modules/ensino/diario/domain/commands/diario-update.command.handler.interface";
 import { Diario } from "@/modules/ensino/diario/domain/diario";
 import type { DiarioFindOneQuery } from "@/modules/ensino/diario/domain/queries";
-import type { IDisciplina } from "@/modules/ensino/disciplina/domain/disciplina";
 import { Disciplina } from "@/modules/ensino/disciplina/domain/disciplina";
 import { IDisciplinaFindOneQueryHandler } from "@/modules/ensino/disciplina/domain/queries/disciplina-find-one.query.handler.interface";
 import { ITurmaFindOneQueryHandler } from "@/modules/ensino/turma/domain/queries/turma-find-one.query.handler.interface";
-import type { ITurma } from "@/modules/ensino/turma/domain/turma";
 import { Turma } from "@/modules/ensino/turma/domain/turma";
-import type { ICalendarioLetivo } from "@/modules/horarios/calendario-letivo";
 import { CalendarioLetivo } from "@/modules/horarios/calendario-letivo/domain/calendario-letivo";
 import { ICalendarioLetivoFindOneQueryHandler } from "@/modules/horarios/calendario-letivo/domain/queries/calendario-letivo-find-one.query.handler.interface";
 import { IDiarioPermissionChecker } from "../../domain/authorization";
@@ -56,7 +52,7 @@ export class DiarioUpdateCommandHandlerImpl implements IDiarioUpdateCommandHandl
           id: dto.ambientePadrao.id,
         });
         ensureExists(ambientePadrao, Ambiente.entityName, dto.ambientePadrao.id);
-        domain.ambientePadrao = { id: ambientePadrao.id } as unknown as IAmbiente;
+        domain.ambientePadrao = { id: ambientePadrao.id };
       } else {
         domain.ambientePadrao = null;
       }
@@ -66,19 +62,19 @@ export class DiarioUpdateCommandHandlerImpl implements IDiarioUpdateCommandHandl
         id: dto.disciplina.id,
       });
       ensureExists(disciplina, Disciplina.entityName, dto.disciplina.id);
-      domain.disciplina = { id: disciplina.id } as unknown as IDisciplina;
+      domain.disciplina = { id: disciplina.id };
     }
     if (has(dto, "turma") && dto.turma !== undefined) {
       const turma = await this.turmaFindOneHandler.execute(accessContext, { id: dto.turma.id });
       ensureExists(turma, Turma.entityName, dto.turma.id);
-      domain.turma = { id: turma.id } as unknown as ITurma;
+      domain.turma = { id: turma.id };
     }
     if (has(dto, "calendarioLetivo") && dto.calendarioLetivo !== undefined) {
       const calendarioLetivo = await this.calendarioLetivoFindOneHandler.execute(accessContext, {
         id: dto.calendarioLetivo.id,
       });
       ensureExists(calendarioLetivo, CalendarioLetivo.entityName, dto.calendarioLetivo.id);
-      domain.calendarioLetivo = { id: calendarioLetivo.id } as unknown as ICalendarioLetivo;
+      domain.calendarioLetivo = { id: calendarioLetivo.id };
     }
 
     domain.update({ ativo: dto.ativo });

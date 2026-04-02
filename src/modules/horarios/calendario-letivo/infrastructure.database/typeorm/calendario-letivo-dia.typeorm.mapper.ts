@@ -4,8 +4,8 @@ import type {
   TipoCalendarioLetivoDia,
 } from "@/modules/horarios/calendario-letivo/domain/calendario-letivo-dia";
 import type { CalendarioLetivoDiaFindOneQueryResult } from "@/modules/horarios/calendario-letivo/domain/queries/calendario-letivo-dia-find-one.query.result";
-import type { CalendarioLetivoFindOneQueryResult } from "@/modules/horarios/calendario-letivo/domain/queries/calendario-letivo-find-one.query.result";
 import { createMapper, pickId } from "@/shared/mapping";
+import { entityToFindOneQueryResult as calendarioLetivoEntityToFindOneQueryResult } from "./calendario-letivo.typeorm.mapper";
 import type { CalendarioLetivoDiaEntity } from "./calendario-letivo-dia.typeorm.entity";
 
 // ============================================================================
@@ -33,13 +33,13 @@ export const entityToFindOneQueryResult = createMapper<
   CalendarioLetivoDiaFindOneQueryResult
 >((e) => ({
   id: e.id,
-  data: e.data as unknown as CalendarioLetivoDiaFindOneQueryResult["data"],
+  data: e.data,
   diaLetivo: e.diaLetivo,
   feriado: e.feriado,
   diaPresencial: e.diaPresencial,
   tipo: e.tipo,
   extraCurricular: e.extraCurricular,
-  calendario: e.calendario as unknown as CalendarioLetivoFindOneQueryResult,
+  calendario: calendarioLetivoEntityToFindOneQueryResult.map(e.calendario),
   dateCreated: e.dateCreated,
   dateUpdated: e.dateUpdated,
   dateDeleted: e.dateDeleted,

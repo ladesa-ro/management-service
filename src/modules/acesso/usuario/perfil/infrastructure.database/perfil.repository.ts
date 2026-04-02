@@ -86,7 +86,7 @@ export class PerfilTypeOrmRepositoryAdapter implements IPerfilRepository {
       where: { usuario: { id: usuarioId }, ativo: true, dateDeleted: IsNull() },
       relations: perfilRelations,
     });
-    return entities as unknown as PerfilFindOneQueryResult[];
+    return PerfilTypeormMapper.entityToFindOneQueryResult.mapArray(entities);
   }
 
   async findPaginated(
@@ -102,11 +102,11 @@ export class PerfilTypeOrmRepositoryAdapter implements IPerfilRepository {
     qb.leftJoinAndSelect(`${config.alias}.cargo`, "cargo");
     qb.andWhere(`${config.alias}.dateDeleted IS NULL`);
 
-    return this.paginationAdapter.paginate(
+    return this.paginationAdapter.paginate<PerfilFindOneQueryResult>(
       qb,
       criteria,
       paginateConfigOverride,
-    ) as unknown as Promise<IPaginationResult<PerfilFindOneQueryResult>>;
+    );
   }
 
   async saveMany(perfis: DeepPartial<PerfilEntity>[]): Promise<void> {
@@ -131,7 +131,7 @@ export class PerfilTypeOrmRepositoryAdapter implements IPerfilRepository {
       .select([config.alias, "campus", "usuario", "cargo"])
       .getMany();
 
-    return vinculos as unknown as PerfilFindOneQueryResult[];
+    return PerfilTypeormMapper.entityToFindOneQueryResult.mapArray(vinculos);
   }
 
   async deactivateByIds(ids: string[]): Promise<void> {

@@ -31,7 +31,9 @@ import {
 } from "@/modules/acesso/autenticacao/domain/queries/autenticacao-who-am-i.query.handler.interface";
 import { AutenticacaoWhoAmIEnsinoQueryMetadata } from "@/modules/acesso/autenticacao/domain/queries/autenticacao-who-am-i-ensino.query.metadata";
 import { IUsuarioEnsinoQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-ensino.query.handler.interface";
+import * as PerfilRestMapper from "@/modules/acesso/usuario/perfil/presentation.rest/perfil.rest.mapper";
 import { UsuarioEnsinoOutputRestDto } from "@/modules/acesso/usuario/presentation.rest";
+import * as UsuarioRestMapper from "@/modules/acesso/usuario/presentation.rest/usuario.rest.mapper";
 import { AccessContextHttp } from "@/server/nest/access-context";
 import { Public } from "@/server/nest/auth";
 import {
@@ -73,9 +75,10 @@ export class AutenticacaoRestController {
     if (!idUsuario) {
       throw new BadRequestException();
     }
-    return this.usuarioEnsinoHandler.execute(accessContext, {
+    const result = await this.usuarioEnsinoHandler.execute(accessContext, {
       id: idUsuario,
-    }) as unknown as Promise<UsuarioEnsinoOutputRestDto>;
+    });
+    return UsuarioRestMapper.toEnsinoOutputDto(result);
   }
 
   @Get("/quem-sou-eu")
@@ -85,10 +88,16 @@ export class AutenticacaoRestController {
   async whoAmI(
     @AccessContextHttp() accessContext: IAccessContext,
   ): Promise<AuthWhoAmIOutputRestDto> {
-    return this.whoAmIHandler.execute(
-      accessContext,
-      undefined,
-    ) as unknown as Promise<AuthWhoAmIOutputRestDto>;
+    const result = await this.whoAmIHandler.execute(accessContext, undefined);
+
+    const dto = new AuthWhoAmIOutputRestDto();
+    dto.usuario = result.usuario
+      ? UsuarioRestMapper.findOneQueryResultToOutputDto.map(result.usuario)
+      : null;
+    dto.perfisAtivos = (result.perfisAtivos ?? []).map((p) =>
+      PerfilRestMapper.findOneQueryResultToOutputDto.map(p),
+    );
+    return dto;
   }
 
   @Post("/login")

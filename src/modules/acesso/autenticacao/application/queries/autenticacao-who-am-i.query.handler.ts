@@ -3,7 +3,7 @@ import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-in
 import { IAutenticacaoWhoAmIQueryHandler } from "@/modules/acesso/autenticacao/domain/queries/autenticacao-who-am-i.query.handler.interface";
 import { IUsuarioFindOneQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-find-one.query.handler.interface";
 import { IPerfilFindAllActiveQueryHandler } from "@/modules/acesso/usuario/perfil/domain/queries/perfil-find-all-active.query.handler.interface";
-import type { AuthWhoAmIQueryResult } from "../../domain/queries";
+import { AuthWhoAmIQueryResult } from "../../domain/queries";
 
 @DeclareImplementation()
 export class AutenticacaoWhoAmIQueryHandlerImpl implements IAutenticacaoWhoAmIQueryHandler {
@@ -29,15 +29,15 @@ export class AutenticacaoWhoAmIQueryHandlerImpl implements IAutenticacaoWhoAmIQu
         usuarioId: usuario.id,
       });
 
-      return {
-        usuario,
-        perfisAtivos: perfisAtivos,
-      } as unknown as AuthWhoAmIQueryResult;
+      const result = new AuthWhoAmIQueryResult();
+      result.usuario = usuario;
+      result.perfisAtivos = perfisAtivos;
+      return result;
     }
 
-    return {
-      usuario: null,
-      perfisAtivos: [],
-    };
+    const result = new AuthWhoAmIQueryResult();
+    result.usuario = null;
+    result.perfisAtivos = [];
+    return result;
   }
 }

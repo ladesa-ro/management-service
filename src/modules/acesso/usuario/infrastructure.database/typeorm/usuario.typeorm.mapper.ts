@@ -1,4 +1,5 @@
 import type { DeepPartial } from "typeorm";
+import type { UsuarioFindOneQueryResult } from "@/modules/acesso/usuario/domain/queries";
 import type { IUsuario } from "@/modules/acesso/usuario/domain/usuario";
 import { createMapper, pickId } from "@/shared/mapping";
 import type { UsuarioEntity } from "./usuario.typeorm.entity";
@@ -19,6 +20,22 @@ export const entityToDomain = createMapper<UsuarioEntity, IUsuario>((e) => ({
   dateUpdated: e.dateUpdated,
   dateDeleted: e.dateDeleted,
 }));
+
+export const entityToFindOneQueryResult = createMapper<UsuarioEntity, UsuarioFindOneQueryResult>(
+  (e) => ({
+    id: e.id,
+    nome: e.nome,
+    matricula: e.matricula,
+    email: e.email,
+    isSuperUser: e.isSuperUser,
+    imagemCapa: e.imagemCapa,
+    imagemPerfil: e.imagemPerfil,
+    vinculos: e.vinculos,
+    dateCreated: e.dateCreated,
+    dateUpdated: e.dateUpdated,
+    dateDeleted: e.dateDeleted,
+  }),
+);
 
 // ============================================================================
 // Domínio → Persistência (Domain → TypeORM Entity)

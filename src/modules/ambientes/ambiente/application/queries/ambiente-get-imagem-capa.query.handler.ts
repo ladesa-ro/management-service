@@ -36,8 +36,7 @@ export class AmbienteGetImagemCapaQueryHandlerImpl implements IAmbienteGetImagem
     ensureExists(entity, Ambiente.entityName, id);
 
     return getEntityImagemStreamableFile(
-      entity as unknown as Record<string, unknown>,
-      "imagemCapa",
+      entity.imagemCapa,
       "Imagem de capa do Ambiente",
       id,
       this.getLatestArquivoIdHandler,

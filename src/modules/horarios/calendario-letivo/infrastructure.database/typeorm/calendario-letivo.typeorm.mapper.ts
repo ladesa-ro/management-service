@@ -1,4 +1,6 @@
 import type { DeepPartial } from "typeorm";
+import { CampusTypeormMapper } from "@/modules/ambientes/campus/infrastructure.database/typeorm";
+import { OfertaFormacaoTypeormMapper } from "@/modules/ensino/oferta-formacao/infrastructure.database/typeorm";
 import type { ICalendarioLetivo } from "@/modules/horarios/calendario-letivo/domain/calendario-letivo";
 import type { CalendarioLetivoFindOneQueryResult } from "@/modules/horarios/calendario-letivo/domain/queries/calendario-letivo-find-one.query.result";
 import { createMapper, pickId } from "@/shared/mapping";
@@ -12,8 +14,8 @@ export const entityToDomain = createMapper<CalendarioLetivoEntity, ICalendarioLe
   id: e.id,
   nome: e.nome,
   ano: e.ano,
-  campus: e.campus as unknown as ICalendarioLetivo["campus"],
-  ofertaFormacao: e.ofertaFormacao as unknown as ICalendarioLetivo["ofertaFormacao"],
+  campus: pickId(e.campus),
+  ofertaFormacao: e.ofertaFormacao ? pickId(e.ofertaFormacao) : null,
   dateCreated: e.dateCreated,
   dateUpdated: e.dateUpdated,
   dateDeleted: e.dateDeleted,
@@ -26,9 +28,8 @@ export const entityToFindOneQueryResult = createMapper<
   id: e.id,
   nome: e.nome,
   ano: e.ano,
-  campus: e.campus as unknown as CalendarioLetivoFindOneQueryResult["campus"],
-  ofertaFormacao:
-    e.ofertaFormacao as unknown as CalendarioLetivoFindOneQueryResult["ofertaFormacao"],
+  campus: CampusTypeormMapper.entityToFindOneQueryResult.map(e.campus),
+  ofertaFormacao: OfertaFormacaoTypeormMapper.entityToFindOneQueryResult.map(e.ofertaFormacao),
   dateCreated: e.dateCreated,
   dateUpdated: e.dateUpdated,
   dateDeleted: e.dateDeleted,
