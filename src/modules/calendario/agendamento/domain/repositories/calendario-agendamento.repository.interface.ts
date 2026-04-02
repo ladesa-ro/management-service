@@ -51,4 +51,13 @@ export interface ICalendarioAgendamentoRepository {
     accessContext: IAccessContext | null,
     query: CalendarioAgendamentoFindEventosQuery,
   ): Promise<CalendarioAgendamentoFindOneQueryResult[]>;
+
+  /** Busca agendamentos que se sobrepõem a um período, com filtros opcionais. */
+  findByDateRange(query: {
+    dateStart: string;
+    dateEnd: string;
+    campus?: string;
+    turma?: string;
+    professor?: string;
+  }): Promise<CalendarioAgendamentoFindOneQueryResult[]>;
 }
