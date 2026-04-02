@@ -340,6 +340,64 @@ export class CalendarioAgendamentoTypeOrmRepositoryAdapter
       await repo.save(entity);
     }
   }
+
+  async findByDateRange(query: {
+    dateStart: string;
+    dateEnd: string;
+    campus?: string;
+    turma?: string;
+    professor?: string;
+  }): Promise<CalendarioAgendamentoFindOneQueryResult[]> {
+    const repo = this.appTypeormConnection.getRepository(CalendarioAgendamentoEntity);
+
+    const qb = repo
+      .createQueryBuilder("ca")
+      .where("ca.data_inicio <= :dateEnd", { dateEnd: query.dateEnd })
+      .andWhere("(ca.data_fim IS NULL OR ca.data_fim >= :dateStart)", {
+        dateStart: query.dateStart,
+      })
+      .andWhere("ca.status = :status", { status: CalendarioAgendamentoStatus.ATIVO })
+      .andWhere("ca.date_deleted IS NULL");
+
+    if (query.turma) {
+      qb.innerJoin(
+        CalendarioAgendamentoTurmaEntity,
+        "cat",
+        "cat.id_calendario_agendamento_fk = ca.id",
+      ).andWhere("cat.id_turma_fk = :turmaId", { turmaId: query.turma });
+    }
+
+    if (query.professor) {
+      qb.innerJoin(
+        CalendarioAgendamentoProfessorEntity,
+        "cap",
+        "cap.id_calendario_agendamento_fk = ca.id",
+      ).andWhere("cap.id_perfil_fk = :professorId", { professorId: query.professor });
+    }
+
+    if (query.campus) {
+      qb.innerJoin(
+        CalendarioAgendamentoTurmaEntity,
+        query.turma ? "cat2" : "cat",
+        `${query.turma ? "cat2" : "cat"}.id_calendario_agendamento_fk = ca.id`,
+      )
+        .innerJoin("turma", "t", `t.id = ${query.turma ? "cat2" : "cat"}.id_turma_fk`)
+        .innerJoin("curso", "c", "c.id = t.id_curso_fk")
+        .andWhere("c.id_campus_fk = :campusId", { campusId: query.campus });
+    }
+
+    qb.orderBy("ca.data_inicio", "ASC").addOrderBy("ca.horario_inicio", "ASC");
+
+    const entities = await qb.getMany();
+    const results: CalendarioAgendamentoFindOneQueryResult[] = [];
+
+    for (const entity of entities) {
+      const junctions = await this.findJunctions(entity.id);
+      results.push(this.toQueryResult(entity, junctions));
+    }
+
+    return results;
+  }
 }
 
 interface IJunctionData {

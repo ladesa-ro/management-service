@@ -10,6 +10,7 @@ import { ArquivoModule } from "@/modules/armazenamento/arquivo/arquivo.module";
 import { ImagemModule } from "@/modules/armazenamento/imagem/imagem.module";
 import { ImagemArquivoModule } from "@/modules/armazenamento/imagem-arquivo/imagem-arquivo.module";
 import { CalendarioAgendamentoModule } from "@/modules/calendario/agendamento/calendario-agendamento.module";
+import { ConsultasModule } from "@/modules/calendario/consultas/consultas.module";
 import { GerarHorarioModule } from "@/modules/calendario/gerar-horario/gerar-horario.module";
 import { GradeHorariaModule } from "@/modules/calendario/grade-horaria/grade-horaria.module";
 import { HorarioConsultaModule } from "@/modules/calendario/horario-consulta/horario-consulta.module";
@@ -41,6 +42,7 @@ import { RelatorioModule } from "@/modules/relatorios/relatorio/relatorio.module
     CampusModule,
     ArquivoModule,
     CalendarioAgendamentoModule,
+    ConsultasModule,
     CalendarioLetivoModule,
     ImagemArquivoModule,
     CidadeModule,
