@@ -104,8 +104,9 @@ describe("OfertaFormacao (domain entity)", () => {
       expect(() => OfertaFormacao.create({ ...validCreateInput, nome: "" })).toThrow();
     });
 
-    it("should reject invalid slug format", () => {
-      expect(() => OfertaFormacao.create({ ...validCreateInput, slug: "INVALID SLUG" })).toThrow();
+    it("should accept arbitrary slug text", () => {
+      const entity = OfertaFormacao.create({ ...validCreateInput, slug: "Qualquer Texto!" });
+      expect(entity.slug).toBe("Qualquer Texto!");
     });
 
     it("should reject missing fields", () => {
@@ -237,10 +238,11 @@ describe("OfertaFormacao (domain entity)", () => {
       expect(() => entity.update({ periodos: [{ numeroPeriodo: 1, etapas: [] }] })).toThrow();
     });
 
-    it("should reject invalid slug on update", () => {
+    it("should accept arbitrary slug on update", () => {
       const entity = OfertaFormacao.create(validCreateInput);
 
-      expect(() => entity.update({ slug: "INVALID SLUG" })).toThrow();
+      entity.update({ slug: "Novo Slug Livre" });
+      expect(entity.slug).toBe("Novo Slug Livre");
     });
   });
 });

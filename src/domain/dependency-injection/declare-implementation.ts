@@ -1,5 +1,8 @@
 import { Injectable } from "@nestjs/common";
 
-export const DeclareImplementation = (): ClassDecorator => {
+const decorator = (): ClassDecorator => {
   return Injectable();
 };
+
+export const DeclareImplementation = decorator;
+export const Impl = DeclareImplementation;

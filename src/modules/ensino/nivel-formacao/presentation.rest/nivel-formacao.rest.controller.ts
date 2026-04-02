@@ -1,5 +1,21 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
 import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Put,
+  Query,
+  StreamableFile,
+  UploadedFile,
+  UseInterceptors,
+} from "@nestjs/common";
+import { FileInterceptor } from "@nestjs/platform-express";
+import {
+  ApiBody,
+  ApiConsumes,
   ApiCreatedResponse,
   ApiForbiddenResponse,
   ApiNotFoundResponse,
@@ -22,11 +38,19 @@ import {
   INivelFormacaoUpdateCommandHandler,
   NivelFormacaoUpdateCommandMetadata,
 } from "@/modules/ensino/nivel-formacao/domain/commands/nivel-formacao-update.command.handler.interface";
+import {
+  INivelFormacaoUpdateImagemCapaCommandHandler,
+  NivelFormacaoUpdateImagemCapaCommandMetadata,
+} from "@/modules/ensino/nivel-formacao/domain/commands/nivel-formacao-update-imagem-capa.command.handler.interface";
 import { NivelFormacao } from "@/modules/ensino/nivel-formacao/domain/nivel-formacao";
 import {
   INivelFormacaoFindOneQueryHandler,
   NivelFormacaoFindOneQueryMetadata,
 } from "@/modules/ensino/nivel-formacao/domain/queries/nivel-formacao-find-one.query.handler.interface";
+import {
+  INivelFormacaoGetImagemCapaQueryHandler,
+  NivelFormacaoGetImagemCapaQueryMetadata,
+} from "@/modules/ensino/nivel-formacao/domain/queries/nivel-formacao-get-imagem-capa.query.handler.interface";
 import {
   INivelFormacaoListQueryHandler,
   NivelFormacaoListQueryMetadata,
@@ -54,6 +78,10 @@ export class NivelFormacaoRestController {
     private readonly createHandler: INivelFormacaoCreateCommandHandler,
     @DeclareDependency(INivelFormacaoUpdateCommandHandler)
     private readonly updateHandler: INivelFormacaoUpdateCommandHandler,
+    @DeclareDependency(INivelFormacaoGetImagemCapaQueryHandler)
+    private readonly getImagemCapaHandler: INivelFormacaoGetImagemCapaQueryHandler,
+    @DeclareDependency(INivelFormacaoUpdateImagemCapaCommandHandler)
+    private readonly updateImagemCapaHandler: INivelFormacaoUpdateImagemCapaCommandHandler,
     @DeclareDependency(INivelFormacaoDeleteCommandHandler)
     private readonly deleteHandler: INivelFormacaoDeleteCommandHandler,
   ) {}
@@ -112,6 +140,46 @@ export class NivelFormacaoRestController {
     const command = NivelFormacaoRestMapper.updateInputDtoToUpdateCommand.map({ params, dto });
     const queryResult = await this.updateHandler.execute(accessContext, command);
     return NivelFormacaoRestMapper.findOneQueryResultToOutputDto.map(queryResult);
+  }
+
+  @Get("/:id/imagem/capa")
+  @ApiOperation(NivelFormacaoGetImagemCapaQueryMetadata.swaggerMetadata)
+  @ApiOkResponse()
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async getImagemCapa(
+    @AccessContextHttp() accessContext: IAccessContext,
+    @Param() params: NivelFormacaoFindOneInputRestDto,
+  ) {
+    const queryResult = await this.getImagemCapaHandler.execute(accessContext, { id: params.id });
+    return new StreamableFile(queryResult.stream, {
+      type: queryResult.mimeType,
+      disposition: queryResult.disposition,
+    });
+  }
+
+  @Put("/:id/imagem/capa")
+  @ApiOperation(NivelFormacaoUpdateImagemCapaCommandMetadata.swaggerMetadata)
+  @ApiConsumes("multipart/form-data")
+  @ApiBody({
+    schema: {
+      type: "object",
+      properties: {
+        file: { type: "string", format: "binary" },
+      },
+      required: ["file"],
+    },
+  })
+  @ApiOkResponse({ type: Boolean })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  @UseInterceptors(FileInterceptor("file"))
+  async updateImagemCapa(
+    @AccessContextHttp() accessContext: IAccessContext,
+    @Param() params: NivelFormacaoFindOneInputRestDto,
+    @UploadedFile() file: Express.Multer.File,
+  ): Promise<boolean> {
+    return this.updateImagemCapaHandler.execute(accessContext, { dto: params, file });
   }
 
   @Delete("/:id")

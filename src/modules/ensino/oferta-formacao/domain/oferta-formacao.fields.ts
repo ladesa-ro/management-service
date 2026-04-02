@@ -21,15 +21,7 @@ export const OfertaFormacaoFields = {
   }),
   slug: createFieldMetadata({
     description: "Apelido da oferta de formacao",
-    schema: createSchema(() =>
-      z
-        .string()
-        .min(1, "slug é obrigatório")
-        .regex(
-          /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
-          "slug deve conter apenas letras minúsculas, números e hífens",
-        ),
-    ),
+    schema: createSchema(() => z.string().min(1, "slug é obrigatório")),
   }),
   duracaoPeriodoEmMeses: createFieldMetadata({
     description: "Duracao de cada periodo em meses",

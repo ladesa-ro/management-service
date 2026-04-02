@@ -1,3 +1,6 @@
+import { SharedFields } from "@/domain/abstractions";
+import { ImagemFields } from "@/modules/armazenamento/imagem/domain/imagem.fields";
+import { ImagemArquivoFromImagemFields } from "@/modules/armazenamento/imagem-arquivo/domain/imagem-arquivo-from-imagem.fields";
 import { ModalidadeFindOneInputSchema } from "@/modules/ensino/modalidade/domain/queries/modalidade-find-one.query.schemas";
 import { ModalidadePaginationInputSchema } from "@/modules/ensino/modalidade/domain/queries/modalidade-list.query.schemas";
 import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@/shared/presentation/rest";
@@ -7,6 +10,52 @@ import { ModalidadeUpdateCommandFields } from "../domain/commands/modalidade-upd
 import { ModalidadeCreateSchema, ModalidadeUpdateSchema } from "../domain/modalidade.schemas";
 import { ModalidadeFindOneQueryResultFields } from "../domain/queries/modalidade-find-one.query.result";
 import { ModalidadeListQueryFields } from "../domain/queries/modalidade-list.query";
+
+// ============================================================================
+// Imagem Stub DTOs (forward reference until imagem module has DTOs)
+// ============================================================================
+
+@ApiSchema({ name: "ArquivoFindOneOutputFromModalidadeDto" })
+export class ArquivoFindOneOutputFromModalidadeRestDto {
+  @ApiProperty(SharedFields.idUuid.swaggerMetadata)
+  id: string;
+}
+
+@ApiSchema({ name: "ImagemArquivoFindOneFromImagemOutputFromModalidadeDto" })
+export class ImagemArquivoFindOneFromImagemOutputFromModalidadeRestDto {
+  @ApiProperty(SharedFields.idUuid.swaggerMetadata)
+  id: string;
+
+  @ApiPropertyOptional(ImagemArquivoFromImagemFields.largura.swaggerMetadata)
+  largura: number | null;
+
+  @ApiPropertyOptional(ImagemArquivoFromImagemFields.altura.swaggerMetadata)
+  altura: number | null;
+
+  @ApiPropertyOptional(ImagemArquivoFromImagemFields.formato.swaggerMetadata)
+  formato: string | null;
+
+  @ApiPropertyOptional(ImagemArquivoFromImagemFields.mimeType.swaggerMetadata)
+  mimeType: string | null;
+
+  @ApiProperty({
+    ...ImagemArquivoFromImagemFields.arquivo.swaggerMetadata,
+    type: () => ArquivoFindOneOutputFromModalidadeRestDto,
+  })
+  arquivo: ArquivoFindOneOutputFromModalidadeRestDto;
+}
+
+@ApiSchema({ name: "ImagemFindOneOutputFromModalidadeDto" })
+export class ImagemFindOneOutputFromModalidadeRestDto extends EntityBaseRestDto {
+  @ApiPropertyOptional(ImagemFields.descricao.swaggerMetadata)
+  descricao: string | null;
+
+  @ApiProperty({
+    ...ImagemFields.versoes.swaggerMetadata,
+    type: () => [ImagemArquivoFindOneFromImagemOutputFromModalidadeRestDto],
+  })
+  versoes: ImagemArquivoFindOneFromImagemOutputFromModalidadeRestDto[];
+}
 
 // ============================================================================
 // FindOne Output
@@ -19,6 +68,12 @@ export class ModalidadeFindOneOutputRestDto extends EntityBaseRestDto {
 
   @ApiProperty(ModalidadeFindOneQueryResultFields.slug.swaggerMetadata)
   slug: string;
+
+  @ApiPropertyOptional({
+    ...ModalidadeFindOneQueryResultFields.imagemCapa.swaggerMetadata,
+    type: () => ImagemFindOneOutputFromModalidadeRestDto,
+  })
+  imagemCapa: ImagemFindOneOutputFromModalidadeRestDto | null;
 }
 
 // ============================================================================

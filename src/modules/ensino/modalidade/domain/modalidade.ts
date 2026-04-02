@@ -17,6 +17,7 @@ export class Modalidade {
   id!: IdUuid;
   nome!: string;
   slug!: string;
+  imagemCapa!: { id: string } | null;
   dateCreated!: ScalarDateTimeString;
   dateUpdated!: ScalarDateTimeString;
   dateDeleted!: ScalarDateTimeString | null;
@@ -31,6 +32,7 @@ export class Modalidade {
     instance.id = generateUuidV7();
     instance.nome = parsed.nome;
     instance.slug = parsed.slug;
+    instance.imagemCapa = null;
     instance.dateCreated = getNowISO();
     instance.dateUpdated = getNowISO();
     instance.dateDeleted = null;
@@ -46,6 +48,7 @@ export class Modalidade {
     instance.id = parsed.id;
     instance.nome = parsed.nome;
     instance.slug = parsed.slug;
+    instance.imagemCapa = parsed.imagemCapa;
     instance.dateCreated = parsed.dateCreated;
     instance.dateUpdated = parsed.dateUpdated;
     instance.dateDeleted = parsed.dateDeleted;

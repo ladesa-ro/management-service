@@ -6,7 +6,7 @@
  * os contratos de dados da entidade.
  */
 import { z } from "zod";
-import { createSchema } from "@/domain/abstractions";
+import { createSchema, ObjectIdUuidFactory } from "@/domain/abstractions";
 import { datedSchema, uuidSchema } from "@/shared/validation/schemas";
 import { ModalidadeFields } from "./modalidade.fields";
 
@@ -19,6 +19,7 @@ export const ModalidadeSchema = z
     id: uuidSchema,
     nome: ModalidadeFields.nome.domainSchema,
     slug: ModalidadeFields.slug.domainSchema,
+    imagemCapa: ObjectIdUuidFactory.domain.loose().nullable(),
   })
   .extend(datedSchema.shape);
 

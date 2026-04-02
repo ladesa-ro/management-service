@@ -21,8 +21,13 @@ describe("Modalidade (domain entity)", () => {
       expect(() => Modalidade.create({ nome: "", slug: "presencial" })).toThrow();
     });
 
-    it("should reject invalid slug format", () => {
-      expect(() => Modalidade.create({ nome: "Test", slug: "INVALID SLUG" })).toThrow();
+    it("should reject empty slug", () => {
+      expect(() => Modalidade.create({ nome: "Test", slug: "" })).toThrow();
+    });
+
+    it("should accept arbitrary slug text", () => {
+      const entity = Modalidade.create({ nome: "Test", slug: "Qualquer Texto Aqui!" });
+      expect(entity.slug).toBe("Qualquer Texto Aqui!");
     });
 
     it("should reject missing fields", () => {
@@ -40,6 +45,7 @@ describe("Modalidade (domain entity)", () => {
         id,
         nome: "EaD",
         slug: "ead",
+        imagemCapa: null,
         ...dated,
       });
 
@@ -55,6 +61,7 @@ describe("Modalidade (domain entity)", () => {
           id: "not-a-uuid",
           nome: "Test",
           slug: "test",
+          imagemCapa: null,
           ...createTestDatedFields(),
         }),
       ).toThrow();
@@ -67,6 +74,7 @@ describe("Modalidade (domain entity)", () => {
         id: createTestId(),
         nome: "Presencial",
         slug: "presencial",
+        imagemCapa: null,
         dateCreated: "2025-01-01T00:00:00.000Z",
         dateUpdated: "2025-01-01T00:00:00.000Z",
         dateDeleted: null,
@@ -96,10 +104,11 @@ describe("Modalidade (domain entity)", () => {
       expect(entity.slug).toBe(originalSlug);
     });
 
-    it("should reject invalid slug on update", () => {
+    it("should accept arbitrary slug on update", () => {
       const entity = Modalidade.create(validCreateInput);
 
-      expect(() => entity.update({ slug: "INVALID SLUG" })).toThrow();
+      entity.update({ slug: "Novo Slug Com Espaços" });
+      expect(entity.slug).toBe("Novo Slug Com Espaços");
     });
   });
 });
