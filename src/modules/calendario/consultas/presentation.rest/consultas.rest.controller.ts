@@ -2,6 +2,8 @@ import { Controller, Get, Query } from "@nestjs/common";
 import { ApiForbiddenResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
+import { CalendarioAgendamentoTipo } from "@/modules/calendario/agendamento/domain/calendario-agendamento.types";
+import * as CalendarioEventoRestMapper from "@/modules/calendario/agendamento/presentation.rest/calendario-evento.rest.mapper";
 import { AccessContextHttp } from "@/server/nest/access-context";
 import {
   ConsultaAgendamentosPorDataQueryMetadata,
@@ -28,31 +30,19 @@ export class ConsultasRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Query() queryParams: ConsultaAgendamentosQueryRestDto,
   ): Promise<ConsultaAgendamentosOutputRestDto> {
+    const tipo = queryParams.tipo ? (queryParams.tipo as CalendarioAgendamentoTipo) : undefined;
+
     const results = await this.queryHandler.execute(accessContext, {
       dateStart: queryParams.dateStart,
       dateEnd: queryParams.dateEnd,
       campus: queryParams.campus,
       turma: queryParams.turma,
       professor: queryParams.professor,
+      tipo,
     });
 
     return {
-      agendamentos: results.map((r) => ({
-        id: r.id,
-        tipo: r.tipo,
-        nome: r.nome,
-        dataInicio: r.dataInicio,
-        dataFim: r.dataFim,
-        diaInteiro: r.diaInteiro,
-        horarioInicio: r.horarioInicio,
-        horarioFim: r.horarioFim,
-        cor: r.cor,
-        status: r.status,
-        turmaIds: r.turmaIds,
-        perfilIds: r.perfilIds,
-        ambienteIds: r.ambienteIds,
-        diarioIds: r.diarioIds,
-      })),
+      agendamentos: CalendarioEventoRestMapper.findOneQueryResultToOutputDto.mapArray(results),
     };
   }
 }

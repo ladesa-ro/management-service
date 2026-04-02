@@ -48,6 +48,7 @@ export const turmaDisponibilidadeItemsArraySchema = z.array(turmaDisponibilidade
 
 export const TurmaDisponibilidadeConfiguracaoSchema = z.object({
   id: uuidSchema,
+  identificadorExterno: uuidSchema,
   turma: ObjectIdUuidFactory.domain.loose(),
   dataInicio: z.string().min(1),
   dataFim: z.string().min(1).nullable(),

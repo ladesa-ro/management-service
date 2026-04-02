@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post } from "@nestjs/common";
 import {
   ApiCreatedResponse,
   ApiForbiddenResponse,
@@ -25,10 +25,6 @@ import {
   ICalendarioAgendamentoUpdateCommandHandler,
 } from "../domain/commands/calendario-agendamento-update.command.handler.interface";
 import {
-  CalendarioAgendamentoFindEventosQueryMetadata,
-  ICalendarioAgendamentoFindEventosQueryHandler,
-} from "../domain/queries/calendario-agendamento-find-eventos.query.handler.interface";
-import {
   CalendarioAgendamentoFindOneQueryMetadata,
   ICalendarioAgendamentoFindOneQueryHandler,
 } from "../domain/queries/calendario-agendamento-find-one.query.handler.interface";
@@ -36,7 +32,6 @@ import {
   CalendarioEventoCreateInputRestDto,
   CalendarioEventoFindOneOutputRestDto,
   CalendarioEventoFindOneParamsRestDto,
-  CalendarioEventoListOutputRestDto,
   CalendarioEventoUpdateInputRestDto,
 } from "./calendario-evento.rest.dto";
 import * as CalendarioEventoRestMapper from "./calendario-evento.rest.mapper";
@@ -45,8 +40,6 @@ import * as CalendarioEventoRestMapper from "./calendario-evento.rest.mapper";
 @Controller("/calendario/eventos")
 export class CalendarioEventoRestController {
   constructor(
-    @Dep(ICalendarioAgendamentoFindEventosQueryHandler)
-    private readonly findEventosHandler: ICalendarioAgendamentoFindEventosQueryHandler,
     @Dep(ICalendarioAgendamentoFindOneQueryHandler)
     private readonly findOneHandler: ICalendarioAgendamentoFindOneQueryHandler,
     @Dep(ICalendarioAgendamentoCreateCommandHandler)
@@ -56,27 +49,6 @@ export class CalendarioEventoRestController {
     @Dep(ICalendarioAgendamentoDeleteCommandHandler)
     private readonly deleteHandler: ICalendarioAgendamentoDeleteCommandHandler,
   ) {}
-
-  @Get("/")
-  @ApiOperation(CalendarioAgendamentoFindEventosQueryMetadata.swaggerMetadata)
-  @ApiOkResponse({ type: CalendarioEventoListOutputRestDto })
-  @ApiForbiddenResponse()
-  async findAll(
-    @AccessContextHttp() accessContext: IAccessContext,
-    @Query("search") search?: string,
-    @Query("filter.turma.id") filterTurmaId?: string,
-    @Query("filter.ofertaFormacao.id") filterOfertaFormacaoId?: string,
-  ): Promise<CalendarioEventoListOutputRestDto> {
-    const results = await this.findEventosHandler.execute(accessContext, {
-      search,
-      filterTurmaId,
-      filterOfertaFormacaoId,
-    });
-
-    return {
-      data: CalendarioEventoRestMapper.findOneQueryResultToOutputDto.mapArray(results),
-    };
-  }
 
   @Get("/:id")
   @ApiOperation(CalendarioAgendamentoFindOneQueryMetadata.swaggerMetadata)

@@ -25,12 +25,60 @@ export class CalendarioAgendamentoUpdateCommandHandlerImpl
     ensureExists(domain, CalendarioAgendamento.entityName, dto.id);
     ensureActiveEntity(domain, CalendarioAgendamento.entityName, dto.id);
 
-    domain.update(dto);
+    // Detectar se ha campos de metadata (nome/cor)
+    const hasMetadataChanges = dto.nome !== undefined || dto.cor !== undefined;
 
-    await this.repository.save(domain);
+    // Detectar se ha campos versionados
+    const hasVersionedChanges =
+      dto.dataInicio !== undefined ||
+      dto.dataFim !== undefined ||
+      dto.diaInteiro !== undefined ||
+      dto.horarioInicio !== undefined ||
+      dto.horarioFim !== undefined ||
+      dto.repeticao !== undefined ||
+      dto.turmas !== undefined ||
+      dto.perfis !== undefined ||
+      dto.calendariosLetivos !== undefined ||
+      dto.ofertasFormacao !== undefined ||
+      dto.modalidades !== undefined ||
+      dto.ambientes !== undefined ||
+      dto.diarios !== undefined;
 
-    const result = await this.repository.getFindOneQueryResult(accessContext, dto.id);
-    ensureExists(result, CalendarioAgendamento.entityName, dto.id);
+    // Atualizar metadata (nome/cor) sem gerar nova versao
+    if (hasMetadataChanges) {
+      await this.repository.updateMetadata(domain.identificadorExterno, {
+        nome: dto.nome,
+        cor: dto.cor,
+      });
+    }
+
+    // Criar nova versao se campos versionados foram alterados
+    let resultId = dto.id;
+
+    if (hasVersionedChanges) {
+      domain.close();
+      const newVersion = CalendarioAgendamento.createNewVersion(domain, {
+        dataInicio: dto.dataInicio,
+        dataFim: dto.dataFim,
+        diaInteiro: dto.diaInteiro,
+        horarioInicio: dto.horarioInicio,
+        horarioFim: dto.horarioFim,
+        repeticao: dto.repeticao,
+        turmas: dto.turmas,
+        perfis: dto.perfis,
+        calendariosLetivos: dto.calendariosLetivos,
+        ofertasFormacao: dto.ofertasFormacao,
+        modalidades: dto.modalidades,
+        ambientes: dto.ambientes,
+        diarios: dto.diarios,
+      });
+
+      await this.repository.saveNewVersion(domain, newVersion);
+      resultId = newVersion.id;
+    }
+
+    const result = await this.repository.getFindOneQueryResult(accessContext, resultId);
+    ensureExists(result, CalendarioAgendamento.entityName, resultId);
 
     return result;
   }

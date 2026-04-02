@@ -23,25 +23,53 @@ export class GradeHorariaReplaceCommandHandlerImpl implements IGradeHorariaRepla
   ): Promise<GradeHorariaFindByCampusQueryResult> {
     await this.permissionChecker.ensureCanUpdate(accessContext, { dto: command }, command.campusId);
 
-    // Desativar TODAS as grades ativas do campus (preserva historico)
     const currentGrades = await this.repository.findAllActiveByCampusId(command.campusId);
+    const today = getNowISO().split("T")[0];
+
+    // Mapear grades atuais por identificadorExterno para deteccao de versao
+    const currentByExtId = new Map<string, GradeHoraria>();
     for (const grade of currentGrades) {
-      grade.deactivate();
-      await this.repository.saveConfig(grade);
+      currentByExtId.set(grade.identificadorExterno, grade);
     }
 
-    // Criar novas grades ativas com os intervalos
-    const today = getNowISO().split("T")[0];
+    // Conjunto de identificadoresExternos presentes no input
+    const inputExtIds = new Set<string>();
+
     for (const gradeInput of command.gradesHorarias) {
-      const newGrade = GradeHoraria.create({
-        identificadorExterno: gradeInput.identificadorExterno,
-        nome: gradeInput.nome,
-        dataInicio: today,
-        ativo: true,
-        campus: { id: command.campusId },
-        intervalos: gradeInput.intervalos,
-      });
-      await this.repository.saveNew(newGrade);
+      inputExtIds.add(gradeInput.identificadorExterno);
+      const existing = currentByExtId.get(gradeInput.identificadorExterno);
+
+      if (existing) {
+        // Grade existente — encerrar versao anterior e criar nova versao
+        existing.deactivate();
+        await this.repository.saveConfig(existing);
+
+        const newVersion = GradeHoraria.createNewVersion(existing, {
+          nome: gradeInput.nome,
+          dataInicio: today,
+          intervalos: gradeInput.intervalos,
+        });
+        await this.repository.saveNew(newVersion);
+      } else {
+        // Nova grade — criar versao 1
+        const newGrade = GradeHoraria.create({
+          identificadorExterno: gradeInput.identificadorExterno,
+          nome: gradeInput.nome,
+          dataInicio: today,
+          ativo: true,
+          campus: { id: command.campusId },
+          intervalos: gradeInput.intervalos,
+        });
+        await this.repository.saveNew(newGrade);
+      }
+    }
+
+    // Grades que nao estao no input — encerrar sem nova versao
+    for (const [extId, grade] of currentByExtId) {
+      if (!inputExtIds.has(extId)) {
+        grade.deactivate();
+        await this.repository.saveConfig(grade);
+      }
     }
 
     return this.repository.getFindByCampusQueryResult(accessContext, {

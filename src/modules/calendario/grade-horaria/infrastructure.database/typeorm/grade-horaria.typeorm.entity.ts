@@ -25,6 +25,18 @@ export class GradeHorariaEntity {
   @JoinColumn({ name: "id_campus_fk" })
   campus!: Relation<CampusEntity>;
 
+  @Column({ name: "version", type: "integer", nullable: false })
+  version!: number;
+
+  @Column({ name: "previous_version_id", type: "uuid", nullable: true })
+  previousVersionId!: string | null;
+
+  @Column({ name: "valid_from", type: "timestamptz", nullable: false })
+  validFrom!: string;
+
+  @Column({ name: "valid_to", type: "timestamptz", nullable: true })
+  validTo!: string | null;
+
   @Column({ name: "date_created", type: "timestamptz", nullable: false })
   dateCreated!: string;
 

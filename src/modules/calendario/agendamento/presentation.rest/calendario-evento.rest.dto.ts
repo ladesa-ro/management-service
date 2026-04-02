@@ -1,5 +1,32 @@
-import { SharedFields } from "@/domain/abstractions";
+import {
+  PerfilFindOneInputRestDto,
+  PerfilFindOneOutputRestDto,
+} from "@/modules/acesso/usuario/perfil/presentation.rest/perfil.rest.dto";
+import {
+  AmbienteFindOneInputRestDto,
+  AmbienteFindOneOutputRestDto,
+} from "@/modules/ambientes/ambiente/presentation.rest/ambiente.rest.dto";
 import { CalendarioEventoFields } from "@/modules/calendario/agendamento/domain/calendario-evento.fields";
+import {
+  CalendarioLetivoFindOneInputRestDto,
+  CalendarioLetivoFindOneOutputRestDto,
+} from "@/modules/calendario/letivo/presentation.rest/calendario-letivo.rest.dto";
+import {
+  DiarioFindOneInputRestDto,
+  DiarioFindOneOutputRestDto,
+} from "@/modules/ensino/diario/presentation.rest/diario.rest.dto";
+import {
+  ModalidadeFindOneInputRestDto,
+  ModalidadeFindOneOutputRestDto,
+} from "@/modules/ensino/modalidade/presentation.rest/modalidade.rest.dto";
+import {
+  OfertaFormacaoFindOneInputRestDto,
+  OfertaFormacaoFindOneOutputRestDto,
+} from "@/modules/ensino/oferta-formacao/presentation.rest/oferta-formacao.rest.dto";
+import {
+  TurmaFindOneInputRestDto,
+  TurmaFindOneOutputRestDto,
+} from "@/modules/ensino/turma/presentation.rest/turma.rest.dto";
 import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@/shared/presentation/rest";
 
 // ============================================================================
@@ -33,53 +60,46 @@ export class CalendarioEventoCreateInputRestDto {
   repeticao?: string;
 
   @ApiPropertyOptional({
-    type: "string",
-    isArray: true,
-    ...CalendarioEventoFields.turmaIds.swaggerMetadata,
+    ...CalendarioEventoFields.turmas.swaggerMetadata,
+    type: () => [TurmaFindOneInputRestDto],
   })
-  turmaIds?: string[];
+  turmas?: TurmaFindOneInputRestDto[];
 
   @ApiPropertyOptional({
-    type: "string",
-    isArray: true,
-    ...CalendarioEventoFields.perfilIds.swaggerMetadata,
+    ...CalendarioEventoFields.perfis.swaggerMetadata,
+    type: () => [PerfilFindOneInputRestDto],
   })
-  perfilIds?: string[];
+  perfis?: PerfilFindOneInputRestDto[];
 
   @ApiPropertyOptional({
-    type: "string",
-    isArray: true,
-    ...CalendarioEventoFields.calendarioLetivoIds.swaggerMetadata,
+    ...CalendarioEventoFields.calendariosLetivos.swaggerMetadata,
+    type: () => [CalendarioLetivoFindOneInputRestDto],
   })
-  calendarioLetivoIds?: string[];
+  calendariosLetivos?: CalendarioLetivoFindOneInputRestDto[];
 
   @ApiPropertyOptional({
-    type: "string",
-    isArray: true,
-    ...CalendarioEventoFields.ofertaFormacaoIds.swaggerMetadata,
+    ...CalendarioEventoFields.ofertasFormacao.swaggerMetadata,
+    type: () => [OfertaFormacaoFindOneInputRestDto],
   })
-  ofertaFormacaoIds?: string[];
+  ofertasFormacao?: OfertaFormacaoFindOneInputRestDto[];
 
   @ApiPropertyOptional({
-    type: "string",
-    isArray: true,
-    ...CalendarioEventoFields.modalidadeIds.swaggerMetadata,
+    ...CalendarioEventoFields.modalidades.swaggerMetadata,
+    type: () => [ModalidadeFindOneInputRestDto],
   })
-  modalidadeIds?: string[];
+  modalidades?: ModalidadeFindOneInputRestDto[];
 
   @ApiPropertyOptional({
-    type: "string",
-    isArray: true,
-    ...CalendarioEventoFields.ambienteIds.swaggerMetadata,
+    ...CalendarioEventoFields.ambientes.swaggerMetadata,
+    type: () => [AmbienteFindOneInputRestDto],
   })
-  ambienteIds?: string[];
+  ambientes?: AmbienteFindOneInputRestDto[];
 
   @ApiPropertyOptional({
-    type: "string",
-    isArray: true,
-    ...CalendarioEventoFields.diarioIds.swaggerMetadata,
+    ...CalendarioEventoFields.diarios.swaggerMetadata,
+    type: () => [DiarioFindOneInputRestDto],
   })
-  diarioIds?: string[];
+  diarios?: DiarioFindOneInputRestDto[];
 }
 
 // ============================================================================
@@ -98,53 +118,46 @@ export class CalendarioEventoUpdateInputRestDto {
   @ApiPropertyOptional(CalendarioEventoFields.repeticao.swaggerMetadata) repeticao?: string;
 
   @ApiPropertyOptional({
-    type: "string",
-    isArray: true,
-    ...CalendarioEventoFields.turmaIds.swaggerMetadata,
+    ...CalendarioEventoFields.turmas.swaggerMetadata,
+    type: () => [TurmaFindOneInputRestDto],
   })
-  turmaIds?: string[];
+  turmas?: TurmaFindOneInputRestDto[];
 
   @ApiPropertyOptional({
-    type: "string",
-    isArray: true,
-    ...CalendarioEventoFields.perfilIds.swaggerMetadata,
+    ...CalendarioEventoFields.perfis.swaggerMetadata,
+    type: () => [PerfilFindOneInputRestDto],
   })
-  perfilIds?: string[];
+  perfis?: PerfilFindOneInputRestDto[];
 
   @ApiPropertyOptional({
-    type: "string",
-    isArray: true,
-    ...CalendarioEventoFields.calendarioLetivoIds.swaggerMetadata,
+    ...CalendarioEventoFields.calendariosLetivos.swaggerMetadata,
+    type: () => [CalendarioLetivoFindOneInputRestDto],
   })
-  calendarioLetivoIds?: string[];
+  calendariosLetivos?: CalendarioLetivoFindOneInputRestDto[];
 
   @ApiPropertyOptional({
-    type: "string",
-    isArray: true,
-    ...CalendarioEventoFields.ofertaFormacaoIds.swaggerMetadata,
+    ...CalendarioEventoFields.ofertasFormacao.swaggerMetadata,
+    type: () => [OfertaFormacaoFindOneInputRestDto],
   })
-  ofertaFormacaoIds?: string[];
+  ofertasFormacao?: OfertaFormacaoFindOneInputRestDto[];
 
   @ApiPropertyOptional({
-    type: "string",
-    isArray: true,
-    ...CalendarioEventoFields.modalidadeIds.swaggerMetadata,
+    ...CalendarioEventoFields.modalidades.swaggerMetadata,
+    type: () => [ModalidadeFindOneInputRestDto],
   })
-  modalidadeIds?: string[];
+  modalidades?: ModalidadeFindOneInputRestDto[];
 
   @ApiPropertyOptional({
-    type: "string",
-    isArray: true,
-    ...CalendarioEventoFields.ambienteIds.swaggerMetadata,
+    ...CalendarioEventoFields.ambientes.swaggerMetadata,
+    type: () => [AmbienteFindOneInputRestDto],
   })
-  ambienteIds?: string[];
+  ambientes?: AmbienteFindOneInputRestDto[];
 
   @ApiPropertyOptional({
-    type: "string",
-    isArray: true,
-    ...CalendarioEventoFields.diarioIds.swaggerMetadata,
+    ...CalendarioEventoFields.diarios.swaggerMetadata,
+    type: () => [DiarioFindOneInputRestDto],
   })
-  diarioIds?: string[];
+  diarios?: DiarioFindOneInputRestDto[];
 }
 
 // ============================================================================
@@ -164,6 +177,10 @@ export class CalendarioEventoFindOneParamsRestDto {
 @ApiSchema({ name: "CalendarioEventoFindOneOutputDto" })
 export class CalendarioEventoFindOneOutputRestDto {
   @ApiProperty(CalendarioEventoFields.id.swaggerMetadata) id: string;
+
+  @ApiProperty({ type: "string", format: "uuid", description: "Identificador externo estavel" })
+  identificadorExterno: string;
+
   @ApiPropertyOptional(CalendarioEventoFields.nome.swaggerMetadata) nome: string | null;
   @ApiProperty(CalendarioEventoFields.dataInicio.swaggerMetadata) dataInicio: string;
   @ApiPropertyOptional(CalendarioEventoFields.dataFim.swaggerMetadata) dataFim: string | null;
@@ -173,55 +190,47 @@ export class CalendarioEventoFindOneOutputRestDto {
   @ApiPropertyOptional(CalendarioEventoFields.cor.swaggerMetadata) cor: string | null;
   @ApiPropertyOptional(CalendarioEventoFields.repeticao.swaggerMetadata) repeticao: string | null;
   @ApiPropertyOptional(CalendarioEventoFields.status.swaggerMetadata) status: string | null;
-  @ApiPropertyOptional({
-    type: "string",
-    isArray: true,
-    ...CalendarioEventoFields.turmaIds.swaggerMetadata,
-  })
-  turmaIds?: string[];
-  @ApiPropertyOptional({
-    type: "string",
-    isArray: true,
-    ...CalendarioEventoFields.perfilIds.swaggerMetadata,
-  })
-  perfilIds?: string[];
-  @ApiPropertyOptional({
-    type: "string",
-    isArray: true,
-    ...CalendarioEventoFields.calendarioLetivoIds.swaggerMetadata,
-  })
-  calendarioLetivoIds?: string[];
-  @ApiPropertyOptional({
-    type: "string",
-    isArray: true,
-    ...CalendarioEventoFields.ofertaFormacaoIds.swaggerMetadata,
-  })
-  ofertaFormacaoIds?: string[];
-  @ApiPropertyOptional({
-    type: "string",
-    isArray: true,
-    ...CalendarioEventoFields.modalidadeIds.swaggerMetadata,
-  })
-  modalidadeIds?: string[];
-  @ApiPropertyOptional({
-    type: "string",
-    isArray: true,
-    ...CalendarioEventoFields.ambienteIds.swaggerMetadata,
-  })
-  ambienteIds?: string[];
-  @ApiPropertyOptional({
-    type: "string",
-    isArray: true,
-    ...CalendarioEventoFields.diarioIds.swaggerMetadata,
-  })
-  diarioIds?: string[];
-}
+  @ApiProperty({ type: "integer", description: "Numero da versao" }) version: number;
 
-@ApiSchema({ name: "CalendarioEventoListOutputDto" })
-export class CalendarioEventoListOutputRestDto {
-  @ApiProperty({
-    ...SharedFields.data.swaggerMetadata,
-    type: () => [CalendarioEventoFindOneOutputRestDto],
+  @ApiPropertyOptional({
+    ...CalendarioEventoFields.turmas.swaggerMetadata,
+    type: () => [TurmaFindOneOutputRestDto],
   })
-  data: CalendarioEventoFindOneOutputRestDto[];
+  turmas: TurmaFindOneOutputRestDto[];
+
+  @ApiPropertyOptional({
+    ...CalendarioEventoFields.perfis.swaggerMetadata,
+    type: () => [PerfilFindOneOutputRestDto],
+  })
+  perfis: PerfilFindOneOutputRestDto[];
+
+  @ApiPropertyOptional({
+    ...CalendarioEventoFields.calendariosLetivos.swaggerMetadata,
+    type: () => [CalendarioLetivoFindOneOutputRestDto],
+  })
+  calendariosLetivos: CalendarioLetivoFindOneOutputRestDto[];
+
+  @ApiPropertyOptional({
+    ...CalendarioEventoFields.ofertasFormacao.swaggerMetadata,
+    type: () => [OfertaFormacaoFindOneOutputRestDto],
+  })
+  ofertasFormacao: OfertaFormacaoFindOneOutputRestDto[];
+
+  @ApiPropertyOptional({
+    ...CalendarioEventoFields.modalidades.swaggerMetadata,
+    type: () => [ModalidadeFindOneOutputRestDto],
+  })
+  modalidades: ModalidadeFindOneOutputRestDto[];
+
+  @ApiPropertyOptional({
+    ...CalendarioEventoFields.ambientes.swaggerMetadata,
+    type: () => [AmbienteFindOneOutputRestDto],
+  })
+  ambientes: AmbienteFindOneOutputRestDto[];
+
+  @ApiPropertyOptional({
+    ...CalendarioEventoFields.diarios.swaggerMetadata,
+    type: () => [DiarioFindOneOutputRestDto],
+  })
+  diarios: DiarioFindOneOutputRestDto[];
 }

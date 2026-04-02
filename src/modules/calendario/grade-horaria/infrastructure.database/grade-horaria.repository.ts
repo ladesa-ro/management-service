@@ -46,6 +46,10 @@ export class GradeHorariaTypeOrmRepositoryAdapter implements IGradeHorariaReposi
       dataInicio: aggregate.dataInicio,
       dataFim: aggregate.dataFim,
       ativo: aggregate.ativo,
+      version: aggregate.version,
+      previousVersionId: aggregate.previousVersionId,
+      validFrom: aggregate.validFrom,
+      validTo: aggregate.validTo,
       dateCreated: aggregate.dateCreated,
       dateUpdated: aggregate.dateUpdated,
       dateDeleted: aggregate.dateDeleted,
@@ -103,6 +107,10 @@ export class GradeHorariaTypeOrmRepositoryAdapter implements IGradeHorariaReposi
       order: { inicio: "ASC" },
     });
 
+    const toISO = (v: string | Date): string => (v instanceof Date ? v.toISOString() : v);
+    const toISONullable = (v: string | Date | null): string | null =>
+      v instanceof Date ? v.toISOString() : v;
+
     return {
       id: entity.id,
       identificadorExterno: entity.identificadorExterno,
@@ -112,9 +120,13 @@ export class GradeHorariaTypeOrmRepositoryAdapter implements IGradeHorariaReposi
       ativo: entity.ativo,
       campus: { id: entity.campus?.id },
       intervalos: items.map((h) => ({ inicio: h.inicio, fim: h.fim })),
-      dateCreated: entity.dateCreated,
-      dateUpdated: entity.dateUpdated,
-      dateDeleted: entity.dateDeleted,
+      version: entity.version,
+      previousVersionId: entity.previousVersionId,
+      validFrom: toISO(entity.validFrom),
+      validTo: toISONullable(entity.validTo),
+      dateCreated: toISO(entity.dateCreated),
+      dateUpdated: toISO(entity.dateUpdated),
+      dateDeleted: toISONullable(entity.dateDeleted),
     };
   }
 

@@ -4,14 +4,10 @@ import {
   CalendarioAgendamentoDeleteCommandHandlerImpl,
   CalendarioAgendamentoUpdateCommandHandlerImpl,
 } from "./application/commands";
-import {
-  CalendarioAgendamentoFindEventosQueryHandlerImpl,
-  CalendarioAgendamentoFindOneQueryHandlerImpl,
-} from "./application/queries";
+import { CalendarioAgendamentoFindOneQueryHandlerImpl } from "./application/queries";
 import { ICalendarioAgendamentoCreateCommandHandler } from "./domain/commands/calendario-agendamento-create.command.handler.interface";
 import { ICalendarioAgendamentoDeleteCommandHandler } from "./domain/commands/calendario-agendamento-delete.command.handler.interface";
 import { ICalendarioAgendamentoUpdateCommandHandler } from "./domain/commands/calendario-agendamento-update.command.handler.interface";
-import { ICalendarioAgendamentoFindEventosQueryHandler } from "./domain/queries/calendario-agendamento-find-eventos.query.handler.interface";
 import { ICalendarioAgendamentoFindOneQueryHandler } from "./domain/queries/calendario-agendamento-find-one.query.handler.interface";
 import { ICalendarioAgendamentoRepository } from "./domain/repositories/calendario-agendamento.repository.interface";
 import { CalendarioAgendamentoTypeOrmRepositoryAdapter } from "./infrastructure.database/calendario-agendamento.repository";
@@ -39,10 +35,6 @@ import { CalendarioEventoRestController } from "./presentation.rest/calendario-e
     {
       provide: ICalendarioAgendamentoFindOneQueryHandler,
       useClass: CalendarioAgendamentoFindOneQueryHandlerImpl,
-    },
-    {
-      provide: ICalendarioAgendamentoFindEventosQueryHandler,
-      useClass: CalendarioAgendamentoFindEventosQueryHandlerImpl,
     },
   ],
   exports: [ICalendarioAgendamentoRepository],
