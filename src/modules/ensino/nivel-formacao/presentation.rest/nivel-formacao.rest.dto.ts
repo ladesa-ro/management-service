@@ -1,3 +1,6 @@
+import { SharedFields } from "@/domain/abstractions";
+import { ImagemFields } from "@/modules/armazenamento/imagem/domain/imagem.fields";
+import { ImagemArquivoFromImagemFields } from "@/modules/armazenamento/imagem-arquivo/domain/imagem-arquivo-from-imagem.fields";
 import { NivelFormacaoFindOneInputSchema } from "@/modules/ensino/nivel-formacao/domain/queries/nivel-formacao-find-one.query.schemas";
 import { NivelFormacaoPaginationInputSchema } from "@/modules/ensino/nivel-formacao/domain/queries/nivel-formacao-list.query.schemas";
 import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@/shared/presentation/rest";
@@ -12,13 +15,68 @@ import { NivelFormacaoFindOneQueryResultFields } from "../domain/queries/nivel-f
 import { NivelFormacaoListQueryFields } from "../domain/queries/nivel-formacao-list.query";
 
 // ============================================================================
+// Imagem Stub DTOs (forward reference until imagem module has DTOs)
+// ============================================================================
+
+@ApiSchema({ name: "ArquivoFindOneOutputFromNivelFormacaoDto" })
+export class ArquivoFindOneOutputFromNivelFormacaoRestDto {
+  @ApiProperty(SharedFields.idUuid.swaggerMetadata)
+  id: string;
+}
+
+@ApiSchema({ name: "ImagemArquivoFindOneFromImagemOutputFromNivelFormacaoDto" })
+export class ImagemArquivoFindOneFromImagemOutputFromNivelFormacaoRestDto {
+  @ApiProperty(SharedFields.idUuid.swaggerMetadata)
+  id: string;
+
+  @ApiPropertyOptional(ImagemArquivoFromImagemFields.largura.swaggerMetadata)
+  largura: number | null;
+
+  @ApiPropertyOptional(ImagemArquivoFromImagemFields.altura.swaggerMetadata)
+  altura: number | null;
+
+  @ApiPropertyOptional(ImagemArquivoFromImagemFields.formato.swaggerMetadata)
+  formato: string | null;
+
+  @ApiPropertyOptional(ImagemArquivoFromImagemFields.mimeType.swaggerMetadata)
+  mimeType: string | null;
+
+  @ApiProperty({
+    ...ImagemArquivoFromImagemFields.arquivo.swaggerMetadata,
+    type: () => ArquivoFindOneOutputFromNivelFormacaoRestDto,
+  })
+  arquivo: ArquivoFindOneOutputFromNivelFormacaoRestDto;
+}
+
+@ApiSchema({ name: "ImagemFindOneOutputFromNivelFormacaoDto" })
+export class ImagemFindOneOutputFromNivelFormacaoRestDto extends EntityBaseRestDto {
+  @ApiPropertyOptional(ImagemFields.descricao.swaggerMetadata)
+  descricao: string | null;
+
+  @ApiProperty({
+    ...ImagemFields.versoes.swaggerMetadata,
+    type: () => [ImagemArquivoFindOneFromImagemOutputFromNivelFormacaoRestDto],
+  })
+  versoes: ImagemArquivoFindOneFromImagemOutputFromNivelFormacaoRestDto[];
+}
+
+// ============================================================================
 // FindOne Output
 // ============================================================================
 
 @ApiSchema({ name: "NivelFormacaoFindOneOutputDto" })
 export class NivelFormacaoFindOneOutputRestDto extends EntityBaseRestDto {
+  @ApiProperty(NivelFormacaoFindOneQueryResultFields.nome.swaggerMetadata)
+  nome: string;
+
   @ApiProperty(NivelFormacaoFindOneQueryResultFields.slug.swaggerMetadata)
   slug: string;
+
+  @ApiPropertyOptional({
+    ...NivelFormacaoFindOneQueryResultFields.imagemCapa.swaggerMetadata,
+    type: () => ImagemFindOneOutputFromNivelFormacaoRestDto,
+  })
+  imagemCapa: ImagemFindOneOutputFromNivelFormacaoRestDto | null;
 }
 
 // ============================================================================
@@ -68,6 +126,9 @@ export class NivelFormacaoListOutputRestDto {
 export class NivelFormacaoCreateInputRestDto {
   static readonly schema = NivelFormacaoCreateSchema.presentation;
 
+  @ApiProperty(NivelFormacaoCreateCommandFields.nome.swaggerMetadata)
+  nome: string;
+
   @ApiProperty(NivelFormacaoCreateCommandFields.slug.swaggerMetadata)
   slug: string;
 }
@@ -75,6 +136,9 @@ export class NivelFormacaoCreateInputRestDto {
 @ApiSchema({ name: "NivelFormacaoUpdateInputDto" })
 export class NivelFormacaoUpdateInputRestDto {
   static readonly schema = NivelFormacaoUpdateSchema.presentation;
+
+  @ApiPropertyOptional(NivelFormacaoUpdateCommandFields.nome.swaggerMetadata)
+  nome?: string;
 
   @ApiPropertyOptional(NivelFormacaoUpdateCommandFields.slug.swaggerMetadata)
   slug?: string;

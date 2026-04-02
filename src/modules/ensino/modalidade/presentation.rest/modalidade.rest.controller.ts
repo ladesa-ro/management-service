@@ -1,5 +1,21 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
 import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Put,
+  Query,
+  StreamableFile,
+  UploadedFile,
+  UseInterceptors,
+} from "@nestjs/common";
+import { FileInterceptor } from "@nestjs/platform-express";
+import {
+  ApiBody,
+  ApiConsumes,
   ApiCreatedResponse,
   ApiForbiddenResponse,
   ApiNotFoundResponse,
@@ -22,11 +38,19 @@ import {
   IModalidadeUpdateCommandHandler,
   ModalidadeUpdateCommandMetadata,
 } from "@/modules/ensino/modalidade/domain/commands/modalidade-update.command.handler.interface";
+import {
+  IModalidadeUpdateImagemCapaCommandHandler,
+  ModalidadeUpdateImagemCapaCommandMetadata,
+} from "@/modules/ensino/modalidade/domain/commands/modalidade-update-imagem-capa.command.handler.interface";
 import { Modalidade } from "@/modules/ensino/modalidade/domain/modalidade";
 import {
   IModalidadeFindOneQueryHandler,
   ModalidadeFindOneQueryMetadata,
 } from "@/modules/ensino/modalidade/domain/queries/modalidade-find-one.query.handler.interface";
+import {
+  IModalidadeGetImagemCapaQueryHandler,
+  ModalidadeGetImagemCapaQueryMetadata,
+} from "@/modules/ensino/modalidade/domain/queries/modalidade-get-imagem-capa.query.handler.interface";
 import {
   IModalidadeListQueryHandler,
   ModalidadeListQueryMetadata,
@@ -54,6 +78,10 @@ export class ModalidadeRestController {
     private readonly createHandler: IModalidadeCreateCommandHandler,
     @DeclareDependency(IModalidadeUpdateCommandHandler)
     private readonly updateHandler: IModalidadeUpdateCommandHandler,
+    @DeclareDependency(IModalidadeGetImagemCapaQueryHandler)
+    private readonly getImagemCapaHandler: IModalidadeGetImagemCapaQueryHandler,
+    @DeclareDependency(IModalidadeUpdateImagemCapaCommandHandler)
+    private readonly updateImagemCapaHandler: IModalidadeUpdateImagemCapaCommandHandler,
     @DeclareDependency(IModalidadeDeleteCommandHandler)
     private readonly deleteHandler: IModalidadeDeleteCommandHandler,
   ) {}
@@ -112,6 +140,46 @@ export class ModalidadeRestController {
     const command = ModalidadeRestMapper.updateInputDtoToUpdateCommand.map({ params, dto });
     const queryResult = await this.updateHandler.execute(accessContext, command);
     return ModalidadeRestMapper.findOneQueryResultToOutputDto.map(queryResult);
+  }
+
+  @Get("/:id/imagem/capa")
+  @ApiOperation(ModalidadeGetImagemCapaQueryMetadata.swaggerMetadata)
+  @ApiOkResponse()
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async getImagemCapa(
+    @AccessContextHttp() accessContext: IAccessContext,
+    @Param() params: ModalidadeFindOneInputRestDto,
+  ) {
+    const queryResult = await this.getImagemCapaHandler.execute(accessContext, { id: params.id });
+    return new StreamableFile(queryResult.stream, {
+      type: queryResult.mimeType,
+      disposition: queryResult.disposition,
+    });
+  }
+
+  @Put("/:id/imagem/capa")
+  @ApiOperation(ModalidadeUpdateImagemCapaCommandMetadata.swaggerMetadata)
+  @ApiConsumes("multipart/form-data")
+  @ApiBody({
+    schema: {
+      type: "object",
+      properties: {
+        file: { type: "string", format: "binary" },
+      },
+      required: ["file"],
+    },
+  })
+  @ApiOkResponse({ type: Boolean })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  @UseInterceptors(FileInterceptor("file"))
+  async updateImagemCapa(
+    @AccessContextHttp() accessContext: IAccessContext,
+    @Param() params: ModalidadeFindOneInputRestDto,
+    @UploadedFile() file: Express.Multer.File,
+  ): Promise<boolean> {
+    return this.updateImagemCapaHandler.execute(accessContext, { dto: params, file });
   }
 
   @Delete("/:id")

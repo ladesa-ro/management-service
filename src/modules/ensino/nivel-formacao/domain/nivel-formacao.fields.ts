@@ -10,16 +10,16 @@ import { z } from "zod";
 import { createFieldMetadata, createSchema } from "@/domain/abstractions";
 
 export const NivelFormacaoFields = {
+  nome: createFieldMetadata({
+    description: "Nome do nivel de formacao",
+    schema: createSchema(() => z.string().min(1, "nome é obrigatório")),
+  }),
   slug: createFieldMetadata({
     description: "Apelido do nivel de formacao",
-    schema: createSchema(() =>
-      z
-        .string()
-        .min(1, "slug é obrigatório")
-        .regex(
-          /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
-          "slug deve conter apenas letras minúsculas, números e hífens",
-        ),
-    ),
+    schema: createSchema(() => z.string().min(1, "slug é obrigatório")),
+  }),
+  imagemCapa: createFieldMetadata({
+    description: "Imagem de capa do nivel de formacao",
+    nullable: true,
   }),
 };

@@ -1,4 +1,5 @@
 import { EntityQueryResult, SharedFields } from "@/domain/abstractions";
+import { ImagemFindOneQueryResult } from "@/modules/armazenamento/imagem";
 import { ModalidadeFields } from "../modalidade.fields";
 
 export const ModalidadeFindOneQueryResultFields = {
@@ -9,4 +10,5 @@ export const ModalidadeFindOneQueryResultFields = {
 export class ModalidadeFindOneQueryResult extends EntityQueryResult {
   nome!: string;
   slug!: string;
+  imagemCapa!: ImagemFindOneQueryResult | null;
 }

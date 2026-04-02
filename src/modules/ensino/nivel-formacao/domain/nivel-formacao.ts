@@ -15,7 +15,9 @@ export class NivelFormacao {
   static readonly entityName = "NivelFormacao";
 
   id!: IdUuid;
+  nome!: string;
   slug!: string;
+  imagemCapa!: { id: string } | null;
   dateCreated!: ScalarDateTimeString;
   dateUpdated!: ScalarDateTimeString;
   dateDeleted!: ScalarDateTimeString | null;
@@ -28,7 +30,9 @@ export class NivelFormacao {
     const instance = new NivelFormacao();
 
     instance.id = generateUuidV7();
+    instance.nome = parsed.nome;
     instance.slug = parsed.slug;
+    instance.imagemCapa = null;
     instance.dateCreated = getNowISO();
     instance.dateUpdated = getNowISO();
     instance.dateDeleted = null;
@@ -42,7 +46,9 @@ export class NivelFormacao {
     const instance = new NivelFormacao();
 
     instance.id = parsed.id;
+    instance.nome = parsed.nome;
     instance.slug = parsed.slug;
+    instance.imagemCapa = parsed.imagemCapa;
     instance.dateCreated = parsed.dateCreated;
     instance.dateUpdated = parsed.dateUpdated;
     instance.dateDeleted = parsed.dateDeleted;
@@ -53,6 +59,7 @@ export class NivelFormacao {
   update(dados: unknown): void {
     const parsed = zodValidate(NivelFormacao.entityName, NivelFormacaoUpdateSchema.domain, dados);
 
+    if (parsed.nome !== undefined) this.nome = parsed.nome;
     if (parsed.slug !== undefined) this.slug = parsed.slug;
 
     this.dateUpdated = getNowISO();

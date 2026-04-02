@@ -16,14 +16,10 @@ export const ModalidadeFields = {
   }),
   slug: createFieldMetadata({
     description: "Apelido da modalidade",
-    schema: createSchema(() =>
-      z
-        .string()
-        .min(1, "slug é obrigatório")
-        .regex(
-          /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
-          "slug deve conter apenas letras minúsculas, números e hífens",
-        ),
-    ),
+    schema: createSchema(() => z.string().min(1, "slug é obrigatório")),
+  }),
+  imagemCapa: createFieldMetadata({
+    description: "Imagem de capa da modalidade",
+    nullable: true,
   }),
 };
