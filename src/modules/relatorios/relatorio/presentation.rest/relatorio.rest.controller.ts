@@ -2,7 +2,7 @@ import { Controller, Get, HttpCode, HttpStatus, Query, Res } from "@nestjs/commo
 import { ApiForbiddenResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import type { Response } from "express";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { Dep } from "@/domain/dependency-injection";
 import { AccessContextHttp } from "@/server/nest/access-context";
 import { IRelatorioRepository } from "../domain/repositories";
 
@@ -10,7 +10,7 @@ import { IRelatorioRepository } from "../domain/repositories";
 @Controller("/relatorios")
 export class RelatorioRestController {
   constructor(
-    @DeclareDependency(IRelatorioRepository)
+    @Dep(IRelatorioRepository)
     private readonly relatorioRepository: IRelatorioRepository,
   ) {}
 

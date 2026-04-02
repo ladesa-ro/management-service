@@ -2,11 +2,11 @@ import { ExecutionContext, UnauthorizedException } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { GqlExecutionContext } from "@nestjs/graphql";
 import { AuthGuard } from "@nestjs/passport";
-import { DeclareImplementation } from "@/domain/dependency-injection";
+import { Impl } from "@/domain/dependency-injection";
 import { NEEDS_AUTH_KEY } from "./auth-decorators";
 import { AuthStrategy } from "./auth-strategy.types";
 
-@DeclareImplementation()
+@Impl()
 export class AuthGuardAdapter extends AuthGuard(AuthStrategy.ACCESS_TOKEN) {
   constructor(private reflector: Reflector) {
     super();

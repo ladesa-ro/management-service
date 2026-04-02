@@ -1,15 +1,15 @@
 import type { IAccessContext } from "@/domain/abstractions";
 import { IIdpUserService } from "@/domain/abstractions/identity-provider";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { IAutenticacaoRecoverPasswordCommandHandler } from "@/modules/acesso/autenticacao/domain/commands/autenticacao-recover-password.command.handler.interface";
 import type { AuthRecoverPasswordCommand } from "@/modules/acesso/autenticacao/domain/commands/auth-recover-password.command";
 
-@DeclareImplementation()
+@Impl()
 export class AutenticacaoRecoverPasswordCommandHandlerImpl
   implements IAutenticacaoRecoverPasswordCommandHandler
 {
   constructor(
-    @DeclareDependency(IIdpUserService)
+    @Dep(IIdpUserService)
     private readonly idpUserService: IIdpUserService,
   ) {}
 

@@ -1,9 +1,9 @@
 import { OnModuleInit } from "@nestjs/common";
 import { SubscriberSessionAsPromised } from "rascal";
-import { DeclareImplementation } from "@/domain/dependency-injection";
+import { Impl } from "@/domain/dependency-injection";
 import { MessageBrokerContainerService } from "./message-broker-container.service";
 
-@DeclareImplementation()
+@Impl()
 export class MessageBrokerSubscribeService implements OnModuleInit {
   #subscription: SubscriberSessionAsPromised | null = null;
 

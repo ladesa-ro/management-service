@@ -8,7 +8,7 @@ import {
 } from "@nestjs/swagger";
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { Dep } from "@/domain/dependency-injection";
 import { AccessContextHttp } from "@/server/nest/access-context";
 import { CalendarioLetivoDia } from "../domain/calendario-letivo-dia";
 import {
@@ -37,11 +37,11 @@ import * as CalendarioLetivoDiaRestMapper from "./calendario-letivo-dia.rest.map
 @Controller("/calendarios-letivos/:calendarioLetivoId/dias")
 export class CalendarioLetivoDiaRestController {
   constructor(
-    @DeclareDependency(ICalendarioLetivoDiaListQueryHandler)
+    @Dep(ICalendarioLetivoDiaListQueryHandler)
     private readonly listHandler: ICalendarioLetivoDiaListQueryHandler,
-    @DeclareDependency(ICalendarioLetivoDiaFindOneQueryHandler)
+    @Dep(ICalendarioLetivoDiaFindOneQueryHandler)
     private readonly findOneHandler: ICalendarioLetivoDiaFindOneQueryHandler,
-    @DeclareDependency(ICalendarioLetivoDiaUpdateCommandHandler)
+    @Dep(ICalendarioLetivoDiaUpdateCommandHandler)
     private readonly updateHandler: ICalendarioLetivoDiaUpdateCommandHandler,
   ) {}
 

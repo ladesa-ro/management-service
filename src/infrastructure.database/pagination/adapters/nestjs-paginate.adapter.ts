@@ -7,9 +7,9 @@ import type {
   IPaginationPort,
   IPaginationResult,
 } from "@/application/pagination";
-import { DeclareImplementation } from "@/domain/dependency-injection";
+import { Impl } from "@/domain/dependency-injection";
 
-@DeclareImplementation()
+@Impl()
 export class NestJsPaginateAdapter implements IPaginationPort<SelectQueryBuilder<ObjectLiteral>> {
   async paginate<T>(
     queryBuilder: SelectQueryBuilder<ObjectLiteral>,

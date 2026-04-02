@@ -1,12 +1,12 @@
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import type { IHorarioEdicaoSessaoRepository } from "@/modules/calendario/horario-edicao/domain/repositories";
 import { HorarioEdicaoSessaoEntity } from "./typeorm/horario-edicao-sessao.typeorm.entity";
 
-@DeclareImplementation()
+@Impl()
 export class HorarioEdicaoSessaoTypeOrmRepositoryAdapter implements IHorarioEdicaoSessaoRepository {
   constructor(
-    @DeclareDependency(IAppTypeormConnection)
+    @Dep(IAppTypeormConnection)
     private readonly appTypeormConnection: IAppTypeormConnection,
   ) {}
 

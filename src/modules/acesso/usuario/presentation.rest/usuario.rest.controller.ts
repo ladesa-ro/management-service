@@ -25,7 +25,7 @@ import {
 } from "@nestjs/swagger";
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { Dep } from "@/domain/dependency-injection";
 import {
   IUsuarioCreateCommandHandler,
   UsuarioCreateCommandMetadata,
@@ -94,29 +94,29 @@ import * as UsuarioRestMapper from "./usuario.rest.mapper";
 @Controller("/usuarios")
 export class UsuarioRestController {
   constructor(
-    @DeclareDependency(IUsuarioListQueryHandler)
+    @Dep(IUsuarioListQueryHandler)
     private readonly listHandler: IUsuarioListQueryHandler,
-    @DeclareDependency(IUsuarioFindOneQueryHandler)
+    @Dep(IUsuarioFindOneQueryHandler)
     private readonly findOneHandler: IUsuarioFindOneQueryHandler,
-    @DeclareDependency(IUsuarioEnsinoQueryHandler)
+    @Dep(IUsuarioEnsinoQueryHandler)
     private readonly ensinoHandler: IUsuarioEnsinoQueryHandler,
-    @DeclareDependency(IUsuarioCreateCommandHandler)
+    @Dep(IUsuarioCreateCommandHandler)
     private readonly createHandler: IUsuarioCreateCommandHandler,
-    @DeclareDependency(IUsuarioUpdateCommandHandler)
+    @Dep(IUsuarioUpdateCommandHandler)
     private readonly updateHandler: IUsuarioUpdateCommandHandler,
-    @DeclareDependency(IUsuarioGetImagemCapaQueryHandler)
+    @Dep(IUsuarioGetImagemCapaQueryHandler)
     private readonly getImagemCapaHandler: IUsuarioGetImagemCapaQueryHandler,
-    @DeclareDependency(IUsuarioUpdateImagemCapaCommandHandler)
+    @Dep(IUsuarioUpdateImagemCapaCommandHandler)
     private readonly updateImagemCapaHandler: IUsuarioUpdateImagemCapaCommandHandler,
-    @DeclareDependency(IUsuarioGetImagemPerfilQueryHandler)
+    @Dep(IUsuarioGetImagemPerfilQueryHandler)
     private readonly getImagemPerfilHandler: IUsuarioGetImagemPerfilQueryHandler,
-    @DeclareDependency(IUsuarioUpdateImagemPerfilCommandHandler)
+    @Dep(IUsuarioUpdateImagemPerfilCommandHandler)
     private readonly updateImagemPerfilHandler: IUsuarioUpdateImagemPerfilCommandHandler,
-    @DeclareDependency(IUsuarioDeleteCommandHandler)
+    @Dep(IUsuarioDeleteCommandHandler)
     private readonly deleteHandler: IUsuarioDeleteCommandHandler,
-    @DeclareDependency(IHorarioConsultaQueryHandler)
+    @Dep(IHorarioConsultaQueryHandler)
     private readonly horarioConsultaHandler: IHorarioConsultaQueryHandler,
-    @DeclareDependency(IUsuarioDisponibilidadeRepository)
+    @Dep(IUsuarioDisponibilidadeRepository)
     private readonly disponibilidadeRepository: IUsuarioDisponibilidadeRepository,
   ) {}
 

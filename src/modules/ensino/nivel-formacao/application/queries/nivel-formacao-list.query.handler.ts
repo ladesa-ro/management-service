@@ -1,13 +1,13 @@
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { INivelFormacaoListQueryHandler } from "@/modules/ensino/nivel-formacao/domain/queries/nivel-formacao-list.query.handler.interface";
 import type { NivelFormacaoListQuery, NivelFormacaoListQueryResult } from "../../domain/queries";
 import { INivelFormacaoRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class NivelFormacaoListQueryHandlerImpl implements INivelFormacaoListQueryHandler {
   constructor(
-    @DeclareDependency(INivelFormacaoRepository)
+    @Dep(INivelFormacaoRepository)
     private readonly repository: INivelFormacaoRepository,
   ) {}
 

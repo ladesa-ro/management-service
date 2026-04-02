@@ -1,5 +1,5 @@
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { getNowISO } from "@/utils/date";
 import { IGradeHorariaPermissionChecker } from "../../domain/authorization";
 import type { GradeHorariaReplaceCommand } from "../../domain/commands";
@@ -8,12 +8,12 @@ import { GradeHoraria } from "../../domain/grade-horaria";
 import type { GradeHorariaFindByCampusQueryResult } from "../../domain/queries";
 import { IGradeHorariaRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class GradeHorariaReplaceCommandHandlerImpl implements IGradeHorariaReplaceCommandHandler {
   constructor(
-    @DeclareDependency(IGradeHorariaRepository)
+    @Dep(IGradeHorariaRepository)
     private readonly repository: IGradeHorariaRepository,
-    @DeclareDependency(IGradeHorariaPermissionChecker)
+    @Dep(IGradeHorariaPermissionChecker)
     private readonly permissionChecker: IGradeHorariaPermissionChecker,
   ) {}
 

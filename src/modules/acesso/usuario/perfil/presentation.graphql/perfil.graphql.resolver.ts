@@ -1,6 +1,6 @@
 import { Args, ID, Query, Resolver } from "@nestjs/graphql";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { Dep } from "@/domain/dependency-injection";
 import {
   IPerfilFindOneQueryHandler,
   PerfilFindOneQueryMetadata,
@@ -12,7 +12,7 @@ import * as PerfilGraphqlMapper from "./perfil.graphql.mapper";
 @Resolver(() => PerfilFindOneOutputGraphQlDto)
 export class PerfilGraphqlResolver {
   constructor(
-    @DeclareDependency(IPerfilFindOneQueryHandler)
+    @Dep(IPerfilFindOneQueryHandler)
     private readonly findOneHandler: IPerfilFindOneQueryHandler,
   ) {}
 

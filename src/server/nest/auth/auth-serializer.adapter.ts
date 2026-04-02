@@ -1,7 +1,7 @@
 import { PassportSerializer } from "@nestjs/passport";
-import { DeclareImplementation } from "@/domain/dependency-injection";
+import { Impl } from "@/domain/dependency-injection";
 
-@DeclareImplementation()
+@Impl()
 export class AuthSerializerAdapter extends PassportSerializer {
   serializeUser(
     user: Record<string, unknown>,

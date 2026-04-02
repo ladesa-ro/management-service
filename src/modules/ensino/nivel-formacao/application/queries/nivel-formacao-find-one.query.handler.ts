@@ -1,5 +1,5 @@
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { INivelFormacaoFindOneQueryHandler } from "@/modules/ensino/nivel-formacao/domain/queries/nivel-formacao-find-one.query.handler.interface";
 import type {
   NivelFormacaoFindOneQuery,
@@ -7,10 +7,10 @@ import type {
 } from "../../domain/queries";
 import { INivelFormacaoRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class NivelFormacaoFindOneQueryHandlerImpl implements INivelFormacaoFindOneQueryHandler {
   constructor(
-    @DeclareDependency(INivelFormacaoRepository)
+    @Dep(INivelFormacaoRepository)
     private readonly repository: INivelFormacaoRepository,
   ) {}
 

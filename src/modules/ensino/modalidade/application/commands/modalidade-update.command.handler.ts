@@ -1,6 +1,6 @@
 import { ensureActiveEntity, ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import type { ModalidadeUpdateCommand } from "@/modules/ensino/modalidade/domain/commands/modalidade-update.command";
 import { IModalidadeUpdateCommandHandler } from "@/modules/ensino/modalidade/domain/commands/modalidade-update.command.handler.interface";
 import { Modalidade } from "@/modules/ensino/modalidade/domain/modalidade";
@@ -9,12 +9,12 @@ import { IModalidadePermissionChecker } from "../../domain/authorization";
 import type { ModalidadeFindOneQueryResult } from "../../domain/queries";
 import { IModalidadeRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class ModalidadeUpdateCommandHandlerImpl implements IModalidadeUpdateCommandHandler {
   constructor(
-    @DeclareDependency(IModalidadeRepository)
+    @Dep(IModalidadeRepository)
     private readonly repository: IModalidadeRepository,
-    @DeclareDependency(IModalidadePermissionChecker)
+    @Dep(IModalidadePermissionChecker)
     private readonly permissionChecker: IModalidadePermissionChecker,
   ) {}
 

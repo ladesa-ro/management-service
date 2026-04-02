@@ -1,16 +1,16 @@
 import { IsNull } from "typeorm";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import type { ICalendarioLetivoEtapaRepository } from "@/modules/calendario/letivo/domain/repositories";
 import { getNowISO } from "@/utils/date";
 import { CalendarioLetivoEtapaEntity } from "./typeorm/calendario-letivo-etapa.typeorm.entity";
 
-@DeclareImplementation()
+@Impl()
 export class CalendarioLetivoEtapaTypeOrmRepositoryAdapter
   implements ICalendarioLetivoEtapaRepository
 {
   constructor(
-    @DeclareDependency(IAppTypeormConnection)
+    @Dep(IAppTypeormConnection)
     private readonly appTypeormConnection: IAppTypeormConnection,
   ) {}
 

@@ -1,5 +1,5 @@
 import type { FindManyOptions, FindOptionsWhere } from "typeorm";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import type {
   INotificacaoFindOptions,
@@ -7,10 +7,10 @@ import type {
 } from "../domain/repositories/notificacao.repository.interface";
 import { NotificacaoEntity } from "./typeorm/notificacao.typeorm.entity";
 
-@DeclareImplementation()
+@Impl()
 export class NotificacaoTypeOrmRepositoryAdapter implements INotificacaoRepository {
   constructor(
-    @DeclareDependency(IAppTypeormConnection)
+    @Dep(IAppTypeormConnection)
     private readonly appTypeormConnection: IAppTypeormConnection,
   ) {}
 

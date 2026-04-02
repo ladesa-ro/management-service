@@ -1,7 +1,7 @@
 import { Args, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { Dep } from "@/domain/dependency-injection";
 import {
   CursoCreateCommandMetadata,
   ICursoCreateCommandHandler,
@@ -36,15 +36,15 @@ import * as CursoGraphqlMapper from "./curso.graphql.mapper";
 @Resolver(() => CursoFindOneOutputGraphQlDto)
 export class CursoGraphqlResolver {
   constructor(
-    @DeclareDependency(ICursoListQueryHandler)
+    @Dep(ICursoListQueryHandler)
     private readonly listHandler: ICursoListQueryHandler,
-    @DeclareDependency(ICursoFindOneQueryHandler)
+    @Dep(ICursoFindOneQueryHandler)
     private readonly findOneHandler: ICursoFindOneQueryHandler,
-    @DeclareDependency(ICursoCreateCommandHandler)
+    @Dep(ICursoCreateCommandHandler)
     private readonly createHandler: ICursoCreateCommandHandler,
-    @DeclareDependency(ICursoUpdateCommandHandler)
+    @Dep(ICursoUpdateCommandHandler)
     private readonly updateHandler: ICursoUpdateCommandHandler,
-    @DeclareDependency(ICursoDeleteCommandHandler)
+    @Dep(ICursoDeleteCommandHandler)
     private readonly deleteHandler: ICursoDeleteCommandHandler,
   ) {}
 

@@ -1,15 +1,15 @@
 import { ensureActiveEntity, ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { IEstagioDeleteCommandHandler } from "@/modules/estagio/estagio/domain/commands/estagio-delete.command.handler.interface";
 import { Estagio } from "@/modules/estagio/estagio/domain/estagio";
 import type { EstagioFindOneQuery } from "@/modules/estagio/estagio/domain/queries";
 import { IEstagioRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class EstagioDeleteCommandHandlerImpl implements IEstagioDeleteCommandHandler {
   constructor(
-    @DeclareDependency(IEstagioRepository)
+    @Dep(IEstagioRepository)
     private readonly repository: IEstagioRepository,
   ) {}
 

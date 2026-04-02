@@ -8,7 +8,7 @@ import {
 } from "@nestjs/swagger";
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { Dep } from "@/domain/dependency-injection";
 import { Estado } from "@/modules/localidades/estado/domain/estado";
 import {
   EstadoFindOneQueryMetadata,
@@ -31,9 +31,9 @@ import * as EstadoRestMapper from "./estado.rest.mapper";
 @Controller("/base/estados")
 export class EstadoRestController {
   constructor(
-    @DeclareDependency(IEstadoListQueryHandler)
+    @Dep(IEstadoListQueryHandler)
     private readonly listHandler: IEstadoListQueryHandler,
-    @DeclareDependency(IEstadoFindOneQueryHandler)
+    @Dep(IEstadoFindOneQueryHandler)
     private readonly findOneHandler: IEstadoFindOneQueryHandler,
   ) {}
 

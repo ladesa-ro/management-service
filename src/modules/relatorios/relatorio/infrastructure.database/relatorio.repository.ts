@@ -1,4 +1,4 @@
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import { DiarioProfessorEntity } from "@/modules/ensino/diario/infrastructure.database/typeorm/diario-professor.typeorm.entity";
 import type {
@@ -29,10 +29,10 @@ interface HydratedDiarioProfessor {
 }
 
 // cross-module: uses TypeORM directly for join query (DiarioProfessorEntity - diario module has no repository to inject)
-@DeclareImplementation()
+@Impl()
 export class RelatorioTypeOrmRepositoryAdapter implements IRelatorioRepository {
   constructor(
-    @DeclareDependency(IAppTypeormConnection)
+    @Dep(IAppTypeormConnection)
     private readonly appTypeormConnection: IAppTypeormConnection,
   ) {}
 

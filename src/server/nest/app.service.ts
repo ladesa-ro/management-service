@@ -1,4 +1,4 @@
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import {
   IRuntimeOptions,
   IRuntimeOptions as IRuntimeOptionsToken,
@@ -23,12 +23,12 @@ export interface HealthCheckResponse {
   >;
 }
 
-@DeclareImplementation()
+@Impl()
 export class AppService {
   constructor(
-    @DeclareDependency(IRuntimeOptionsToken)
+    @Dep(IRuntimeOptionsToken)
     private readonly runtimeOptions: IRuntimeOptions,
-    @DeclareDependency(IConnectionHealthRegistry)
+    @Dep(IConnectionHealthRegistry)
     private readonly healthRegistry: IConnectionHealthRegistry,
   ) {}
 

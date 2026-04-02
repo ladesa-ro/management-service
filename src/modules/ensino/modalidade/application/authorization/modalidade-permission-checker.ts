@@ -1,9 +1,9 @@
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareImplementation } from "@/domain/dependency-injection";
+import { Impl } from "@/domain/dependency-injection";
 import { noop } from "@/utils/noop";
 import type { IModalidadePermissionChecker } from "../../domain/authorization";
 
-@DeclareImplementation()
+@Impl()
 export class ModalidadePermissionCheckerImpl implements IModalidadePermissionChecker {
   async ensureCanCreate(
     accessContext: IAccessContext | null,

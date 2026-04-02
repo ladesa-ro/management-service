@@ -1,16 +1,16 @@
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import type { TurmaDisponibilidadeFindAllActiveQuery } from "../../domain/queries/turma-disponibilidade-find-all-active.query";
 import { ITurmaDisponibilidadeFindAllActiveQueryHandler } from "../../domain/queries/turma-disponibilidade-find-all-active.query-handler.interface";
 import { ITurmaDisponibilidadeRepository } from "../../domain/repositories";
 import type { TurmaDisponibilidadeConfiguracao } from "../../domain/turma-disponibilidade";
 
-@DeclareImplementation()
+@Impl()
 export class TurmaDisponibilidadeFindAllActiveQueryHandlerImpl
   implements ITurmaDisponibilidadeFindAllActiveQueryHandler
 {
   constructor(
-    @DeclareDependency(ITurmaDisponibilidadeRepository)
+    @Dep(ITurmaDisponibilidadeRepository)
     private readonly repository: ITurmaDisponibilidadeRepository,
   ) {}
 

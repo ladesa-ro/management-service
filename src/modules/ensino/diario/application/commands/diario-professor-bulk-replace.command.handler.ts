@@ -1,5 +1,5 @@
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import type { DiarioProfessorBulkReplaceCommand } from "../../domain/commands/diario-professor-bulk-replace.command";
 import { IDiarioProfessorBulkReplaceCommandHandler } from "../../domain/commands/diario-professor-bulk-replace.command.handler.interface";
 import type {
@@ -8,12 +8,12 @@ import type {
 } from "../../domain/queries";
 import { IDiarioProfessorRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class DiarioProfessorBulkReplaceCommandHandlerImpl
   implements IDiarioProfessorBulkReplaceCommandHandler
 {
   constructor(
-    @DeclareDependency(IDiarioProfessorRepository)
+    @Dep(IDiarioProfessorRepository)
     private readonly repository: IDiarioProfessorRepository,
   ) {}
 

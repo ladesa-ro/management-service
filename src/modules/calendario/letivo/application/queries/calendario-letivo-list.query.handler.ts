@@ -1,5 +1,5 @@
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { ICalendarioLetivoListQueryHandler } from "@/modules/calendario/letivo/domain/queries/calendario-letivo-list.query.handler.interface";
 import type {
   CalendarioLetivoListQuery,
@@ -7,10 +7,10 @@ import type {
 } from "../../domain/queries";
 import { ICalendarioLetivoRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class CalendarioLetivoListQueryHandlerImpl implements ICalendarioLetivoListQueryHandler {
   constructor(
-    @DeclareDependency(ICalendarioLetivoRepository)
+    @Dep(ICalendarioLetivoRepository)
     private readonly repository: ICalendarioLetivoRepository,
   ) {}
 

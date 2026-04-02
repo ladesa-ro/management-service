@@ -18,7 +18,7 @@ import {
 } from "@nestjs/swagger";
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { Dep } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { AccessContextHttp } from "@/server/nest/access-context";
 import { getNowISO } from "@/utils/date";
@@ -47,11 +47,11 @@ import {
 @Controller("/horarios/edicao")
 export class HorarioEdicaoRestController {
   constructor(
-    @DeclareDependency(IHorarioEdicaoSessaoRepository)
+    @Dep(IHorarioEdicaoSessaoRepository)
     private readonly sessaoRepository: IHorarioEdicaoSessaoRepository,
-    @DeclareDependency(IHorarioEdicaoMudancaRepository)
+    @Dep(IHorarioEdicaoMudancaRepository)
     private readonly mudancaRepository: IHorarioEdicaoMudancaRepository,
-    @DeclareDependency(IHorarioEdicaoApplicator)
+    @Dep(IHorarioEdicaoApplicator)
     private readonly horarioEdicaoApplicator: IHorarioEdicaoApplicator,
   ) {}
 

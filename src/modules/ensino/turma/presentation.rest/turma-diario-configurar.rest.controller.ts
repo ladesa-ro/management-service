@@ -1,7 +1,7 @@
 import { Body, Controller, Param, Post } from "@nestjs/common";
 import { ApiCreatedResponse, ApiForbiddenResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { Dep } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { IDiarioConfigurarRepository } from "@/modules/ensino/turma/domain/repositories";
 import { AccessContextHttp } from "@/server/nest/access-context";
@@ -15,7 +15,7 @@ import {
 @Controller("/turmas/:turmaId/diarios")
 export class TurmaDiarioConfigurarRestController {
   constructor(
-    @DeclareDependency(IDiarioConfigurarRepository)
+    @Dep(IDiarioConfigurarRepository)
     private readonly diarioConfigurarRepository: IDiarioConfigurarRepository,
   ) {}
 

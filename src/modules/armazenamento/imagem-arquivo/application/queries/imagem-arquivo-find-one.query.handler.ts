@@ -1,5 +1,5 @@
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { IImagemArquivoFindOneQueryHandler } from "@/modules/armazenamento/imagem-arquivo/domain/queries/imagem-arquivo-find-one.query.handler.interface";
 import type {
   ImagemArquivoFindOneQuery,
@@ -7,10 +7,10 @@ import type {
 } from "../../domain/queries";
 import { IImagemArquivoQueryRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class ImagemArquivoFindOneQueryHandlerImpl implements IImagemArquivoFindOneQueryHandler {
   constructor(
-    @DeclareDependency(IImagemArquivoQueryRepository)
+    @Dep(IImagemArquivoQueryRepository)
     private readonly repository: IImagemArquivoQueryRepository,
   ) {}
 

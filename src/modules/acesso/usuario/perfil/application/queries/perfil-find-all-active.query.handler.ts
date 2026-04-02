@@ -1,5 +1,5 @@
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import {
   type IPerfilFindAllActiveQuery,
   IPerfilFindAllActiveQueryHandler,
@@ -7,10 +7,10 @@ import {
 import type { PerfilFindOneQueryResult } from "../../domain/queries";
 import { IPerfilRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class PerfilFindAllActiveQueryHandlerImpl implements IPerfilFindAllActiveQueryHandler {
   constructor(
-    @DeclareDependency(IPerfilRepository)
+    @Dep(IPerfilRepository)
     private readonly repository: IPerfilRepository,
   ) {}
 

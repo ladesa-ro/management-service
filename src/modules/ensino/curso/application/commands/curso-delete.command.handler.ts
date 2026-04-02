@@ -1,18 +1,18 @@
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { ICursoDeleteCommandHandler } from "@/modules/ensino/curso/domain/commands/curso-delete.command.handler.interface";
 import { Curso } from "@/modules/ensino/curso/domain/curso";
 import type { CursoFindOneQuery } from "@/modules/ensino/curso/domain/queries";
 import { ICursoPermissionChecker } from "../../domain/authorization";
 import { ICursoRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class CursoDeleteCommandHandlerImpl implements ICursoDeleteCommandHandler {
   constructor(
-    @DeclareDependency(ICursoRepository)
+    @Dep(ICursoRepository)
     private readonly repository: ICursoRepository,
-    @DeclareDependency(ICursoPermissionChecker)
+    @Dep(ICursoPermissionChecker)
     private readonly permissionChecker: ICursoPermissionChecker,
   ) {}
 

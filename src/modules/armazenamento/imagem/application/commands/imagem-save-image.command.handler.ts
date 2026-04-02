@@ -2,7 +2,7 @@ import sharp from "sharp";
 import { ServiceUnavailableError, ValidationError } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { ILoggerPort, ILoggerPort as ILoggerPortToken } from "@/domain/abstractions/logging";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { IArquivoCreateCommandHandler } from "@/modules/armazenamento/arquivo/domain/commands";
 import type {
@@ -14,16 +14,16 @@ import {
   IImagemRepository,
 } from "@/modules/armazenamento/imagem/domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class ImagemSaveImageCommandHandlerImpl implements IImagemSaveImageCommandHandler {
   constructor(
-    @DeclareDependency(IArquivoCreateCommandHandler)
+    @Dep(IArquivoCreateCommandHandler)
     private readonly arquivoCreateHandler: IArquivoCreateCommandHandler,
-    @DeclareDependency(IImagemRepository)
+    @Dep(IImagemRepository)
     private readonly imagemRepository: IImagemRepository,
-    @DeclareDependency(IImagemArquivoRepository)
+    @Dep(IImagemArquivoRepository)
     private readonly imagemArquivoRepository: IImagemArquivoRepository,
-    @DeclareDependency(ILoggerPortToken)
+    @Dep(ILoggerPortToken)
     private readonly logger: ILoggerPort,
   ) {}
 

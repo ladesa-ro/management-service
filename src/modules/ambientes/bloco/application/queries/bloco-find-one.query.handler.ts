@@ -1,13 +1,13 @@
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { IBlocoFindOneQueryHandler } from "@/modules/ambientes/bloco/domain/queries/bloco-find-one.query.handler.interface";
 import type { BlocoFindOneQuery, BlocoFindOneQueryResult } from "../../domain/queries";
 import { IBlocoRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class BlocoFindOneQueryHandlerImpl implements IBlocoFindOneQueryHandler {
   constructor(
-    @DeclareDependency(IBlocoRepository)
+    @Dep(IBlocoRepository)
     private readonly repository: IBlocoRepository,
   ) {}
 

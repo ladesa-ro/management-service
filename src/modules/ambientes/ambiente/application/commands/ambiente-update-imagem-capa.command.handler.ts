@@ -1,6 +1,6 @@
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente";
 import {
   type AmbienteUpdateImagemCapaCommand,
@@ -13,16 +13,16 @@ import {
 import { IAmbientePermissionChecker } from "../../domain/authorization";
 import { IAmbienteRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class AmbienteUpdateImagemCapaCommandHandlerImpl
   implements IAmbienteUpdateImagemCapaCommandHandler
 {
   constructor(
-    @DeclareDependency(IAmbienteRepository)
+    @Dep(IAmbienteRepository)
     private readonly repository: IAmbienteRepository,
-    @DeclareDependency(IAmbientePermissionChecker)
+    @Dep(IAmbientePermissionChecker)
     private readonly permissionChecker: IAmbientePermissionChecker,
-    @DeclareDependency(IImagemSaveImagemCapaCommandHandler)
+    @Dep(IImagemSaveImagemCapaCommandHandler)
     private readonly saveImagemCapaHandler: IImagemSaveImagemCapaCommandHandlerType,
   ) {}
 

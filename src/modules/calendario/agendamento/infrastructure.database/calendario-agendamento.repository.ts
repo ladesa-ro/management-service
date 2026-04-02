@@ -1,6 +1,6 @@
 import type { FindOptionsWhere } from "typeorm";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import { dateToISO, dateToISONullable } from "@/infrastructure.database/typeorm/mapping";
@@ -24,12 +24,12 @@ import { CalendarioAgendamentoOfertaFormacaoEntity } from "./typeorm/calendario-
 import { CalendarioAgendamentoProfessorEntity } from "./typeorm/calendario-agendamento-professor.typeorm.entity";
 import { CalendarioAgendamentoTurmaEntity } from "./typeorm/calendario-agendamento-turma.typeorm.entity";
 
-@DeclareImplementation()
+@Impl()
 export class CalendarioAgendamentoTypeOrmRepositoryAdapter
   implements ICalendarioAgendamentoRepository
 {
   constructor(
-    @DeclareDependency(IAppTypeormConnection)
+    @Dep(IAppTypeormConnection)
     private readonly appTypeormConnection: IAppTypeormConnection,
   ) {}
 

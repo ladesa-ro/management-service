@@ -1,7 +1,7 @@
 import { ensureExists } from "@/application/errors";
 import { saveEntityImagemField } from "@/application/helpers";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import {
   IUsuarioUpdateImagemCapaCommandHandler,
   type UsuarioUpdateImagemCapaCommand,
@@ -14,16 +14,16 @@ import {
 import { IUsuarioPermissionChecker } from "../../domain/authorization";
 import { IUsuarioRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class UsuarioUpdateImagemCapaCommandHandlerImpl
   implements IUsuarioUpdateImagemCapaCommandHandler
 {
   constructor(
-    @DeclareDependency(IUsuarioRepository)
+    @Dep(IUsuarioRepository)
     private readonly repository: IUsuarioRepository,
-    @DeclareDependency(IImagemSaveImagemCapaCommandHandler)
+    @Dep(IImagemSaveImagemCapaCommandHandler)
     private readonly saveImagemCapaHandler: IImagemSaveImagemCapaCommandHandlerType,
-    @DeclareDependency(IUsuarioPermissionChecker)
+    @Dep(IUsuarioPermissionChecker)
     private readonly permissionChecker: IUsuarioPermissionChecker,
   ) {}
 

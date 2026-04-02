@@ -1,9 +1,9 @@
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareImplementation } from "@/domain/dependency-injection";
+import { Impl } from "@/domain/dependency-injection";
 import { noop } from "@/utils/noop";
 import type { ICalendarioLetivoPermissionChecker } from "../../domain/authorization";
 
-@DeclareImplementation()
+@Impl()
 export class CalendarioLetivoPermissionCheckerImpl implements ICalendarioLetivoPermissionChecker {
   async ensureCanCreate(
     accessContext: IAccessContext | null,

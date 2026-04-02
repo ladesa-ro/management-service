@@ -1,6 +1,6 @@
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente";
 import { IAmbienteFindOneQueryHandler } from "@/modules/ambientes/ambiente/domain/queries/ambiente-find-one.query.handler.interface";
 import { CalendarioLetivo } from "@/modules/calendario/letivo/domain/calendario-letivo";
@@ -16,20 +16,20 @@ import { IDiarioPermissionChecker } from "../../domain/authorization";
 import type { DiarioFindOneQueryResult } from "../../domain/queries";
 import { IDiarioRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class DiarioCreateCommandHandlerImpl implements IDiarioCreateCommandHandler {
   constructor(
-    @DeclareDependency(IDiarioRepository)
+    @Dep(IDiarioRepository)
     private readonly repository: IDiarioRepository,
-    @DeclareDependency(IDiarioPermissionChecker)
+    @Dep(IDiarioPermissionChecker)
     private readonly permissionChecker: IDiarioPermissionChecker,
-    @DeclareDependency(ICalendarioLetivoFindOneQueryHandler)
+    @Dep(ICalendarioLetivoFindOneQueryHandler)
     private readonly calendarioLetivoFindOneHandler: ICalendarioLetivoFindOneQueryHandler,
-    @DeclareDependency(ITurmaFindOneQueryHandler)
+    @Dep(ITurmaFindOneQueryHandler)
     private readonly turmaFindOneHandler: ITurmaFindOneQueryHandler,
-    @DeclareDependency(IDisciplinaFindOneQueryHandler)
+    @Dep(IDisciplinaFindOneQueryHandler)
     private readonly disciplinaFindOneHandler: IDisciplinaFindOneQueryHandler,
-    @DeclareDependency(IAmbienteFindOneQueryHandler)
+    @Dep(IAmbienteFindOneQueryHandler)
     private readonly ambienteFindOneHandler: IAmbienteFindOneQueryHandler,
   ) {}
 

@@ -1,13 +1,13 @@
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { ITurmaFindOneQueryHandler } from "@/modules/ensino/turma/domain/queries/turma-find-one.query.handler.interface";
 import type { TurmaFindOneQuery, TurmaFindOneQueryResult } from "../../domain/queries";
 import { ITurmaRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class TurmaFindOneQueryHandlerImpl implements ITurmaFindOneQueryHandler {
   constructor(
-    @DeclareDependency(ITurmaRepository)
+    @Dep(ITurmaRepository)
     private readonly repository: ITurmaRepository,
   ) {}
 

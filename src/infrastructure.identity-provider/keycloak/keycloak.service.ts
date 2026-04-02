@@ -3,7 +3,7 @@ import type { Credentials } from "@keycloak/keycloak-admin-client/lib/utils/auth
 import { type OnModuleInit } from "@nestjs/common";
 import { ServiceUnavailableError } from "@/application/errors";
 import { ILoggerPort, ILoggerPort as ILoggerPortToken } from "@/domain/abstractions/logging";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { IConnectionHealthRegistry } from "@/shared/resilience/connection-health-registry.interface";
 import { retryWithBackoff } from "@/shared/resilience/retry-with-backoff";
 import type { IAuthOptions } from "../options/auth-options.interface";
@@ -12,18 +12,18 @@ import { IAuthOptions as IAuthOptionsToken } from "../options/auth-options.inter
 const INTERVAL_AUTH = 58 * 1000;
 const DEPENDENCY_NAME = "keycloak";
 
-@DeclareImplementation()
+@Impl()
 export class KeycloakService implements OnModuleInit {
   #kcAdminClient: KeycloakAdminClient | null = null;
   #initialized = false;
   #authInterval: NodeJS.Timeout | null = null;
 
   constructor(
-    @DeclareDependency(IAuthOptionsToken)
+    @Dep(IAuthOptionsToken)
     readonly authOptions: IAuthOptions | null,
-    @DeclareDependency(ILoggerPortToken)
+    @Dep(ILoggerPortToken)
     private readonly logger: ILoggerPort,
-    @DeclareDependency(IConnectionHealthRegistry)
+    @Dep(IConnectionHealthRegistry)
     private readonly healthRegistry: IConnectionHealthRegistry,
   ) {}
 

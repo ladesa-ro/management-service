@@ -1,6 +1,6 @@
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import { IUsuarioFindByIdSimpleQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-find-by-id-simple.query.handler.interface";
@@ -15,20 +15,20 @@ import { IPerfilRepository } from "../../domain/repositories";
 
 type CargoResult = { id: string; nome: string };
 
-@DeclareImplementation()
+@Impl()
 export class PerfilDefinirPerfisAtivosCommandHandlerImpl
   implements IPerfilDefinirPerfisAtivosCommandHandler
 {
   constructor(
-    @DeclareDependency(IAppTypeormConnection)
+    @Dep(IAppTypeormConnection)
     private readonly appTypeormConnection: IAppTypeormConnection,
-    @DeclareDependency(IPerfilRepository)
+    @Dep(IPerfilRepository)
     private readonly perfilRepository: IPerfilRepository,
-    @DeclareDependency(ICampusFindOneQueryHandler)
+    @Dep(ICampusFindOneQueryHandler)
     private readonly campusFindOneHandler: ICampusFindOneQueryHandler,
-    @DeclareDependency(IPerfilListQueryHandler)
+    @Dep(IPerfilListQueryHandler)
     private readonly perfilListHandler: IPerfilListQueryHandler,
-    @DeclareDependency(IUsuarioFindByIdSimpleQueryHandler)
+    @Dep(IUsuarioFindByIdSimpleQueryHandler)
     private readonly usuarioFindByIdSimpleHandler: IUsuarioFindByIdSimpleQueryHandler,
   ) {}
 

@@ -1,5 +1,5 @@
 import type { FindOptionsWhere } from "typeorm";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import { GerarHorario, type IGerarHorarioDomain } from "../domain/gerar-horario";
@@ -9,10 +9,10 @@ import { GerarHorarioEntity } from "./typeorm/gerar-horario.typeorm.entity";
 import { GerarHorarioCalendarioLetivoEntity } from "./typeorm/gerar-horario-calendario-letivo.typeorm.entity";
 import { GerarHorarioOfertaFormacaoEntity } from "./typeorm/gerar-horario-oferta-formacao.typeorm.entity";
 
-@DeclareImplementation()
+@Impl()
 export class GerarHorarioTypeOrmRepositoryAdapter implements IGerarHorarioRepository {
   constructor(
-    @DeclareDependency(IAppTypeormConnection)
+    @Dep(IAppTypeormConnection)
     private readonly appTypeormConnection: IAppTypeormConnection,
   ) {}
 

@@ -9,7 +9,7 @@ import {
 } from "@nestjs/swagger";
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { Dep } from "@/domain/dependency-injection";
 import { AccessContextHttp } from "@/server/nest/access-context";
 import { CalendarioAgendamento } from "../domain/calendario-agendamento";
 import {
@@ -45,15 +45,15 @@ import * as CalendarioEventoRestMapper from "./calendario-evento.rest.mapper";
 @Controller("/calendario/eventos")
 export class CalendarioEventoRestController {
   constructor(
-    @DeclareDependency(ICalendarioAgendamentoFindEventosQueryHandler)
+    @Dep(ICalendarioAgendamentoFindEventosQueryHandler)
     private readonly findEventosHandler: ICalendarioAgendamentoFindEventosQueryHandler,
-    @DeclareDependency(ICalendarioAgendamentoFindOneQueryHandler)
+    @Dep(ICalendarioAgendamentoFindOneQueryHandler)
     private readonly findOneHandler: ICalendarioAgendamentoFindOneQueryHandler,
-    @DeclareDependency(ICalendarioAgendamentoCreateCommandHandler)
+    @Dep(ICalendarioAgendamentoCreateCommandHandler)
     private readonly createHandler: ICalendarioAgendamentoCreateCommandHandler,
-    @DeclareDependency(ICalendarioAgendamentoUpdateCommandHandler)
+    @Dep(ICalendarioAgendamentoUpdateCommandHandler)
     private readonly updateHandler: ICalendarioAgendamentoUpdateCommandHandler,
-    @DeclareDependency(ICalendarioAgendamentoDeleteCommandHandler)
+    @Dep(ICalendarioAgendamentoDeleteCommandHandler)
     private readonly deleteHandler: ICalendarioAgendamentoDeleteCommandHandler,
   ) {}
 

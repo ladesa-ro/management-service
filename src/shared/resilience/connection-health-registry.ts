@@ -1,4 +1,4 @@
-import { DeclareImplementation } from "@/domain/dependency-injection";
+import { Impl } from "@/domain/dependency-injection";
 import type { IConnectionHealthRegistry } from "./connection-health-registry.interface";
 
 export enum ConnectionStatus {
@@ -14,7 +14,7 @@ export interface IConnectionHealthEntry {
   lastError?: string;
 }
 
-@DeclareImplementation()
+@Impl()
 export class ConnectionHealthRegistry implements IConnectionHealthRegistry {
   readonly #entries = new Map<
     string,

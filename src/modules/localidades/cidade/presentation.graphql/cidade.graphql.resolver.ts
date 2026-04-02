@@ -1,7 +1,7 @@
 import { Args, Int, Query, Resolver } from "@nestjs/graphql";
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { Dep } from "@/domain/dependency-injection";
 import { Cidade } from "@/modules/localidades/cidade/domain/cidade";
 import {
   CidadeFindOneQueryMetadata,
@@ -22,9 +22,9 @@ import * as CidadeGraphqlMapper from "./cidade.graphql.mapper";
 @Resolver(() => CidadeFindOneOutputGraphQlDto)
 export class CidadeGraphqlResolver {
   constructor(
-    @DeclareDependency(ICidadeListQueryHandler)
+    @Dep(ICidadeListQueryHandler)
     private readonly listHandler: ICidadeListQueryHandler,
-    @DeclareDependency(ICidadeFindOneQueryHandler)
+    @Dep(ICidadeFindOneQueryHandler)
     private readonly findOneHandler: ICidadeFindOneQueryHandler,
   ) {}
 

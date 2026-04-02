@@ -1,4 +1,4 @@
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { CalendarioAgendamento } from "@/modules/calendario/agendamento/domain/calendario-agendamento";
 import { CalendarioAgendamentoTipo } from "@/modules/calendario/agendamento/domain/calendario-agendamento.types";
 import { ICalendarioAgendamentoRepository } from "@/modules/calendario/agendamento/domain/repositories/calendario-agendamento.repository.interface";
@@ -8,10 +8,10 @@ import {
   HorarioEdicaoMudancaTipoOperacao,
 } from "./typeorm/horario-edicao-mudanca.typeorm.entity";
 
-@DeclareImplementation()
+@Impl()
 export class HorarioEdicaoApplicatorTypeOrmAdapter implements IHorarioEdicaoApplicator {
   constructor(
-    @DeclareDependency(ICalendarioAgendamentoRepository)
+    @Dep(ICalendarioAgendamentoRepository)
     private readonly calendarioAgendamentoRepository: ICalendarioAgendamentoRepository,
   ) {}
 

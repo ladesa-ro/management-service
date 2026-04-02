@@ -25,7 +25,7 @@ import {
 } from "@nestjs/swagger";
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { Dep } from "@/domain/dependency-injection";
 import {
   DisciplinaCreateCommandMetadata,
   IDisciplinaCreateCommandHandler,
@@ -70,19 +70,19 @@ import * as DisciplinaRestMapper from "./disciplina.rest.mapper";
 @Controller("/disciplinas")
 export class DisciplinaRestController {
   constructor(
-    @DeclareDependency(IDisciplinaListQueryHandler)
+    @Dep(IDisciplinaListQueryHandler)
     private readonly listHandler: IDisciplinaListQueryHandler,
-    @DeclareDependency(IDisciplinaFindOneQueryHandler)
+    @Dep(IDisciplinaFindOneQueryHandler)
     private readonly findOneHandler: IDisciplinaFindOneQueryHandler,
-    @DeclareDependency(IDisciplinaCreateCommandHandler)
+    @Dep(IDisciplinaCreateCommandHandler)
     private readonly createHandler: IDisciplinaCreateCommandHandler,
-    @DeclareDependency(IDisciplinaUpdateCommandHandler)
+    @Dep(IDisciplinaUpdateCommandHandler)
     private readonly updateHandler: IDisciplinaUpdateCommandHandler,
-    @DeclareDependency(IDisciplinaGetImagemCapaQueryHandler)
+    @Dep(IDisciplinaGetImagemCapaQueryHandler)
     private readonly getImagemCapaHandler: IDisciplinaGetImagemCapaQueryHandler,
-    @DeclareDependency(IDisciplinaUpdateImagemCapaCommandHandler)
+    @Dep(IDisciplinaUpdateImagemCapaCommandHandler)
     private readonly updateImagemCapaHandler: IDisciplinaUpdateImagemCapaCommandHandler,
-    @DeclareDependency(IDisciplinaDeleteCommandHandler)
+    @Dep(IDisciplinaDeleteCommandHandler)
     private readonly deleteHandler: IDisciplinaDeleteCommandHandler,
   ) {}
 

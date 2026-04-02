@@ -107,7 +107,7 @@ confidence_scope: Versões das tecnologias principais (NestJS ^11.1.17, TypeORM 
   - [Mappers (mapeamento entre camadas)](#mappers-mapeamento-entre-camadas)
   - [Command e Query Handlers](#command-e-query-handlers)
   - [Permission Checker](#permission-checker)
-  - [DeclareDependency e DeclareImplementation](#declaredependency-e-declareimplementation)
+  - [Dep e Impl](#Dep-e-Impl)
   - [Scalars semânticos](#scalars-semânticos)
   - [TransactionInterceptor e ConnectionProxy](#transactioninterceptor-e-connectionproxy)
   - [ZodGlobalValidationPipe](#zodglobalvalidationpipe)
@@ -1928,7 +1928,7 @@ graph LR
     style IMPL3 fill:#e8a838,stroke:#b07c1e,color:#fff,text-align:left
 ```
 
-> **Para ir mais fundo:** a diferença entre **inversão de dependência** e **injeção de dependência** é sutil mas importante. Inversão de dependência é um **princípio de design** — o domínio define interfaces, e a infraestrutura implementa. Injeção de dependência é um **mecanismo técnico** — o container (NestJS) resolve e injeta as implementações via constructor. Neste projeto, os Symbols do TypeScript funcionam como tokens de injeção porque TypeScript não emite interfaces em runtime — o Symbol é a referência concreta que o container usa para resolver a dependência. Essa abordagem é um **pragmatismo aceito**: tecnicamente, `DeclareDependency` (que internamente usa `@Inject` do NestJS) cria um acoplamento do domínio com o NestJS, mas na prática é um decorator fino que não afeta a testabilidade.
+> **Para ir mais fundo:** a diferença entre **inversão de dependência** e **injeção de dependência** é sutil mas importante. Inversão de dependência é um **princípio de design** — o domínio define interfaces, e a infraestrutura implementa. Injeção de dependência é um **mecanismo técnico** — o container (NestJS) resolve e injeta as implementações via constructor. Neste projeto, os Symbols do TypeScript funcionam como tokens de injeção porque TypeScript não emite interfaces em runtime — o Symbol é a referência concreta que o container usa para resolver a dependência. Essa abordagem é um **pragmatismo aceito**: tecnicamente, `Dep` (que internamente usa `@Inject` do NestJS) cria um acoplamento do domínio com o NestJS, mas na prática é um decorator fino que não afeta a testabilidade.
 
 ### CQRS (Command Query Responsibility Segregation)
 
@@ -2106,8 +2106,8 @@ constructor(
 Neste projeto, usamos **Symbols** como tokens de injeção. Um **Symbol** no TypeScript é um identificador único e imutável — como um número de CPF, que garante que nunca haverá confusão entre duas coisas com o mesmo nome. Usamos Symbols em vez de classes porque TypeScript não emite interfaces em tempo de execução — o Symbol é a referência concreta que o container usa para saber qual implementação entregar:
 
 - `Symbol("ICampusRepository")` — token de injeção (definido no domínio)
-- `@DeclareDependency(token)` — solicita a injeção de uma dependência (wrapper para `@Inject`)
-- `@DeclareImplementation()` — registra uma classe como provider injetável (wrapper para `@Injectable`)
+- `@Dep(token)` — solicita a injeção de uma dependência (wrapper para `@Inject`)
+- `@Impl()` — registra uma classe como provider injetável (wrapper para `@Injectable`)
 - `@Inject(token)` — solicita a injeção da implementação registrada
 
 ### As camadas em detalhe
@@ -2124,7 +2124,7 @@ graph TD
         ABS["Abstrações\nIRepositoryCreate, IRepositoryFindAll\nIPermissionChecker, IAccessContext"]
         SCA["Scalars\nIdUuid, IdNumeric\nScalarDateTimeString"]
         ERR["Erros\nEntityValidationError\nBusinessRuleViolationError"]
-        DI["Dependency Injection\nDeclareDependency\nDeclareImplementation"]
+        DI["Dependency Injection\nDep\nImpl"]
     end
 
     ENT --> SCH
@@ -2141,7 +2141,7 @@ graph TD
 - **Abstrações** — interfaces que definem contratos: `IRepositoryCreate<T>`, `IRepositoryFindAll<T>`, `IPermissionChecker`, `IAccessContext`.
 - **Scalars** — type aliases semânticos: `IdUuid` em vez de `string`, `ScalarDateTimeString` em vez de `string`.
 - **Erros de domínio** — `EntityValidationError`, `BusinessRuleViolationError`, `InvalidStateError`, `InvariantViolationError` (em `src/domain/errors/`).
-- **DI decorators** — `DeclareDependency`, `DeclareImplementation` para registrar no container.
+- **DI decorators** — `Dep`, `Impl` para registrar no container.
 
 **Regra de ouro:** o domínio **nunca** importa de `infrastructure.*`, `server/`, ou qualquer framework. Ele define _o que_ precisa, não _como_ é feito.
 
@@ -3126,13 +3126,13 @@ export interface ICommandHandler<TCommand, TResult = void> {
 }
 
 // Implementação real — src/modules/ambientes/campus/application/commands/campus-create.command.handler.ts
-@DeclareImplementation()
+@Impl()
 
 export class CampusCreateCommandHandlerImpl implements ICampusCreateCommandHandler {
   constructor(
-    @DeclareDependency(ICampusRepository) private readonly repository: ICampusRepository,
-    @DeclareDependency(ICampusPermissionChecker) private readonly permissionChecker: ICampusPermissionChecker,
-    @DeclareDependency(IEnderecoCreateOrUpdateCommandHandler) private readonly enderecoCreateOrUpdateHandler: IEnderecoCreateOrUpdateCommandHandler,
+    @Dep(ICampusRepository) private readonly repository: ICampusRepository,
+    @Dep(ICampusPermissionChecker) private readonly permissionChecker: ICampusPermissionChecker,
+    @Dep(IEnderecoCreateOrUpdateCommandHandler) private readonly enderecoCreateOrUpdateHandler: IEnderecoCreateOrUpdateCommandHandler,
   ) {}
 
   async execute(accessContext: IAccessContext | null, dto: CampusCreateCommand): Promise<CampusFindOneQueryResult> {
@@ -3185,7 +3185,7 @@ export interface IPermissionChecker {
 
 > As implementações atuais são **no-ops** (não verificam nada) — isso é intencional e não deve ser sinalizado como anti-pattern. Quando implementadas, lançam `ForbiddenError`.
 
-### DeclareDependency e DeclareImplementation
+### Dep e Impl
 
 Decorators customizados em `src/domain/dependency-injection/` que abstraem o NestJS:
 
@@ -3197,11 +3197,11 @@ graph LR
     end
 
     subgraph "Infraestrutura (implementa)"
-        IMPL["@DeclareImplementation()\nclass CampusTypeormRepository"]
+        IMPL["@Impl()\nclass CampusTypeormRepository"]
     end
 
     subgraph "Aplicação (consome)"
-        HANDLER["constructor(\n  @DeclareDependency(\n    ICampusRepository\n  )\n  private repo:\n    ICampusRepository\n)"]
+        HANDLER["constructor(\n  @Dep(\n    ICampusRepository\n  )\n  private repo:\n    ICampusRepository\n)"]
     end
 
     subgraph "NestJS (resolve em runtime)"
@@ -3222,7 +3222,7 @@ graph LR
 ```typescript
 // src/domain/dependency-injection/declare-dependency.ts
 
-export const DeclareDependency = (token: any): ParameterDecorator => {
+export const Dep = (token: any): ParameterDecorator => {
   const injectDecorator = NestjsInject(token);
   return (target, propertyKey, parameterIndex) => {
     return injectDecorator(target, propertyKey!, parameterIndex);
@@ -3231,12 +3231,12 @@ export const DeclareDependency = (token: any): ParameterDecorator => {
 
 // src/domain/dependency-injection/declare-implementation.ts
 
-export const DeclareImplementation = (): ClassDecorator => {
+export const Impl = (): ClassDecorator => {
   return Injectable();
 };
 ```
 
-`DeclareDependency` é um wrapper para `@Inject()` do NestJS. `DeclareImplementation` é um wrapper para `@Injectable()`. O acoplamento domínio ↔ NestJS é aceito pragmaticamente.
+`Dep` é um wrapper para `@Inject()` do NestJS. `Impl` é um wrapper para `@Injectable()`. O acoplamento domínio ↔ NestJS é aceito pragmaticamente.
 
 ### Scalars semânticos
 
@@ -3516,7 +3516,7 @@ source_patterns:
   - src/shared/validation/**/*.ts
   - src/server/nest/filters/**/*.ts
   - src/infrastructure.database/pagination/**/*.ts
-confidence_scope: Padrões de entidades (private constructor, create/load/update), schemas Zod (EntitySchema/CreateSchema/UpdateSchema), FieldMetadata, interfaces de repositório compostas, command/query handlers, permission checkers, DeclareDependency/DeclareImplementation, scalars semânticos, TransactionInterceptor, ZodGlobalValidationPipe, ApplicationErrorFilter, paginação (nestjs-paginate)
+confidence_scope: Padrões de entidades (private constructor, create/load/update), schemas Zod (EntitySchema/CreateSchema/UpdateSchema), FieldMetadata, interfaces de repositório compostas, command/query handlers, permission checkers, Dep/Impl, scalars semânticos, TransactionInterceptor, ZodGlobalValidationPipe, ApplicationErrorFilter, paginação (nestjs-paginate)
 -->
 
 ---
@@ -4014,11 +4014,11 @@ graph LR
     end
 
     subgraph "Infraestrutura (implementação/adapter)"
-        IMPL["CampusTypeormRepository\n@DeclareImplementation()"]
+        IMPL["CampusTypeormRepository\n@Impl()"]
     end
 
     subgraph "Aplicação (consumidor)"
-        HANDLER["CampusCreateCommandHandlerImpl\n@DeclareDependency(\n  ICampusRepository\n)"]
+        HANDLER["CampusCreateCommandHandlerImpl\n@Dep(\n  ICampusRepository\n)"]
     end
 
     SYMBOL -- "token de injeção" --> HANDLER
@@ -4054,11 +4054,11 @@ export type ICampusRepository =                                // Contrato
 
 ```typescript
 // src/modules/ambientes/campus/infrastructure.database/campus.repository.ts
-@DeclareImplementation()
+@Impl()
 
 export class CampusTypeormRepository implements ICampusRepository {
   constructor(
-    @DeclareDependency(IAppTypeormConnection) private readonly conn: IAppTypeormConnection,
+    @Dep(IAppTypeormConnection) private readonly conn: IAppTypeormConnection,
   ) {}
 
   async create(entity: ICampus): Promise<{ id: string | number }> { /* ... usa TypeORM */ }
@@ -4070,11 +4070,11 @@ export class CampusTypeormRepository implements ICampusRepository {
 
 ```typescript
 // src/modules/ambientes/campus/application/commands/campus-create.command.handler.ts
-@DeclareImplementation()
+@Impl()
 
 export class CampusCreateCommandHandlerImpl {
   constructor(
-    @DeclareDependency(ICampusRepository) private readonly repo: ICampusRepository,
+    @Dep(ICampusRepository) private readonly repo: ICampusRepository,
   ) {}
 
   async execute(ac: IAccessContext | null, dto: CampusCreateCommand) {

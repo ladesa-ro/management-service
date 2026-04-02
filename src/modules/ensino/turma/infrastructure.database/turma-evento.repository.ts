@@ -1,6 +1,6 @@
 import type { FindOptionsWhere } from "typeorm";
 import { ensureExists } from "@/application/errors";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import { CalendarioAgendamento } from "@/modules/calendario/agendamento/domain/calendario-agendamento";
 import { CalendarioAgendamentoTipo } from "@/modules/calendario/agendamento/domain/calendario-agendamento.types";
@@ -12,12 +12,12 @@ import {
 import { CalendarioAgendamentoTurmaEntity } from "@/modules/calendario/agendamento/infrastructure.database/typeorm/calendario-agendamento-turma.typeorm.entity";
 import type { ITurmaEventoRepository } from "../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class TurmaEventoTypeOrmRepositoryAdapter implements ITurmaEventoRepository {
   constructor(
-    @DeclareDependency(IAppTypeormConnection)
+    @Dep(IAppTypeormConnection)
     private readonly appTypeormConnection: IAppTypeormConnection,
-    @DeclareDependency(ICalendarioAgendamentoRepository)
+    @Dep(ICalendarioAgendamentoRepository)
     private readonly calendarioAgendamentoRepository: ICalendarioAgendamentoRepository,
   ) {}
 

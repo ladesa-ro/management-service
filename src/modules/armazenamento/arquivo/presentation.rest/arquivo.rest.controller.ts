@@ -7,7 +7,7 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { Dep } from "@/domain/dependency-injection";
 import {
   ArquivoGetStreamableFileQueryMetadata,
   IArquivoGetStreamableFileQueryHandler,
@@ -21,7 +21,7 @@ import * as ArquivoRestMapper from "./arquivo.rest.mapper";
 @Controller("/arquivos")
 export class ArquivoRestController {
   constructor(
-    @DeclareDependency(IArquivoGetStreamableFileQueryHandler)
+    @Dep(IArquivoGetStreamableFileQueryHandler)
     private readonly getStreamableFileHandler: IArquivoGetStreamableFileQueryHandlerType,
   ) {}
 

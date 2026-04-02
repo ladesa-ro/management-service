@@ -1,16 +1,16 @@
 import { JwksClient, SigningKey } from "jwks-rsa";
 import { ServiceUnavailableError } from "@/application/errors";
 import { ILoggerPort, ILoggerPort as ILoggerPortToken } from "@/domain/abstractions/logging";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { OpenidConnectService } from "../openid-connect/openid-connect.service";
 
-@DeclareImplementation()
+@Impl()
 export class JwksRsaClientService {
   #jwksClient: JwksClient | null = null;
 
   constructor(
     private openidConnectService: OpenidConnectService,
-    @DeclareDependency(ILoggerPortToken)
+    @Dep(ILoggerPortToken)
     private readonly logger: ILoggerPort,
   ) {}
 

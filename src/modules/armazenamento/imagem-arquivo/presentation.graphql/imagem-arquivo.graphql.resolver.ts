@@ -1,7 +1,7 @@
 import { Args, ID, Query, Resolver } from "@nestjs/graphql";
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { Dep } from "@/domain/dependency-injection";
 import { ImagemArquivo } from "@/modules/armazenamento/imagem-arquivo/domain/imagem-arquivo";
 import {
   IImagemArquivoFindOneQueryHandler,
@@ -22,9 +22,9 @@ import * as ImagemArquivoGraphqlMapper from "./imagem-arquivo.graphql.mapper";
 @Resolver(() => ImagemArquivoFindOneOutputGraphQlDto)
 export class ImagemArquivoGraphqlResolver {
   constructor(
-    @DeclareDependency(IImagemArquivoListQueryHandler)
+    @Dep(IImagemArquivoListQueryHandler)
     private readonly listHandler: IImagemArquivoListQueryHandler,
-    @DeclareDependency(IImagemArquivoFindOneQueryHandler)
+    @Dep(IImagemArquivoFindOneQueryHandler)
     private readonly findOneHandler: IImagemArquivoFindOneQueryHandler,
   ) {}
 

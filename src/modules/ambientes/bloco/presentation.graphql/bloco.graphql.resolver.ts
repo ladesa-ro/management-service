@@ -1,7 +1,7 @@
 import { Args, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { Dep } from "@/domain/dependency-injection";
 import { Bloco } from "@/modules/ambientes/bloco/domain/bloco";
 import {
   BlocoCreateCommandMetadata,
@@ -36,15 +36,15 @@ import * as BlocoGraphqlMapper from "./bloco.graphql.mapper";
 @Resolver(() => BlocoFindOneOutputGraphQlDto)
 export class BlocoGraphqlResolver {
   constructor(
-    @DeclareDependency(IBlocoListQueryHandler)
+    @Dep(IBlocoListQueryHandler)
     private readonly listHandler: IBlocoListQueryHandler,
-    @DeclareDependency(IBlocoFindOneQueryHandler)
+    @Dep(IBlocoFindOneQueryHandler)
     private readonly findOneHandler: IBlocoFindOneQueryHandler,
-    @DeclareDependency(IBlocoCreateCommandHandler)
+    @Dep(IBlocoCreateCommandHandler)
     private readonly createHandler: IBlocoCreateCommandHandler,
-    @DeclareDependency(IBlocoUpdateCommandHandler)
+    @Dep(IBlocoUpdateCommandHandler)
     private readonly updateHandler: IBlocoUpdateCommandHandler,
-    @DeclareDependency(IBlocoDeleteCommandHandler)
+    @Dep(IBlocoDeleteCommandHandler)
     private readonly deleteHandler: IBlocoDeleteCommandHandler,
   ) {}
 

@@ -2,21 +2,21 @@ import { ApplicationError, ForbiddenError, ServiceUnavailableError } from "@/app
 import type { IAccessContext } from "@/domain/abstractions";
 import { IIdpUserService } from "@/domain/abstractions/identity-provider";
 import { ILoggerPort, ILoggerPort as ILoggerPortToken } from "@/domain/abstractions/logging";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { IAutenticacaoDefinirSenhaCommandHandler } from "@/modules/acesso/autenticacao/domain/commands/autenticacao-definir-senha.command.handler.interface";
 import type { AuthCredentialsSetInitialPasswordCommand } from "@/modules/acesso/autenticacao/domain/commands/auth-credentials-set-initial-password.command";
 import { IUsuarioFindByMatriculaQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-find-by-matricula.query.handler.interface";
 
-@DeclareImplementation()
+@Impl()
 export class AutenticacaoDefinirSenhaCommandHandlerImpl
   implements IAutenticacaoDefinirSenhaCommandHandler
 {
   constructor(
-    @DeclareDependency(IUsuarioFindByMatriculaQueryHandler)
+    @Dep(IUsuarioFindByMatriculaQueryHandler)
     private readonly usuarioFindByMatriculaHandler: IUsuarioFindByMatriculaQueryHandler,
-    @DeclareDependency(IIdpUserService)
+    @Dep(IIdpUserService)
     private readonly idpUserService: IIdpUserService,
-    @DeclareDependency(ILoggerPortToken)
+    @Dep(ILoggerPortToken)
     private readonly logger: ILoggerPort,
   ) {}
 

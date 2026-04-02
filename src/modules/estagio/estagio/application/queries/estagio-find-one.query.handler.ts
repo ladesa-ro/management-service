@@ -1,13 +1,13 @@
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { IEstagioFindOneQueryHandler } from "@/modules/estagio/estagio/domain/queries/estagio-find-one.query.handler.interface";
 import type { EstagioFindOneQuery, EstagioFindOneQueryResult } from "../../domain/queries";
 import { IEstagioRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class EstagioFindOneQueryHandlerImpl implements IEstagioFindOneQueryHandler {
   constructor(
-    @DeclareDependency(IEstagioRepository)
+    @Dep(IEstagioRepository)
     private readonly repository: IEstagioRepository,
   ) {}
 

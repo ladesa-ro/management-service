@@ -9,7 +9,7 @@ import {
 } from "@nestjs/swagger";
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { Dep } from "@/domain/dependency-injection";
 import { AccessContextHttp } from "@/server/nest/access-context";
 import {
   GerarHorarioAceitarCommandMetadata,
@@ -38,13 +38,13 @@ import * as GerarHorarioRestMapper from "./gerar-horario.rest.mapper";
 @Controller("/gerar-horario")
 export class GerarHorarioRestController {
   constructor(
-    @DeclareDependency(IGerarHorarioCreateCommandHandler)
+    @Dep(IGerarHorarioCreateCommandHandler)
     private readonly createHandler: IGerarHorarioCreateCommandHandler,
-    @DeclareDependency(IGerarHorarioFindOneQueryHandler)
+    @Dep(IGerarHorarioFindOneQueryHandler)
     private readonly findOneHandler: IGerarHorarioFindOneQueryHandler,
-    @DeclareDependency(IGerarHorarioAceitarCommandHandler)
+    @Dep(IGerarHorarioAceitarCommandHandler)
     private readonly aceitarHandler: IGerarHorarioAceitarCommandHandler,
-    @DeclareDependency(IGerarHorarioRejeitarCommandHandler)
+    @Dep(IGerarHorarioRejeitarCommandHandler)
     private readonly rejeitarHandler: IGerarHorarioRejeitarCommandHandler,
   ) {}
 

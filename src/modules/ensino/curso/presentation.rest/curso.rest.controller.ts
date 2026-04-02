@@ -25,7 +25,7 @@ import {
 } from "@nestjs/swagger";
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { Dep } from "@/domain/dependency-injection";
 import {
   CursoCreateCommandMetadata,
   ICursoCreateCommandHandler,
@@ -70,19 +70,19 @@ import * as CursoRestMapper from "./curso.rest.mapper";
 @Controller("/cursos")
 export class CursoRestController {
   constructor(
-    @DeclareDependency(ICursoListQueryHandler)
+    @Dep(ICursoListQueryHandler)
     private readonly listHandler: ICursoListQueryHandler,
-    @DeclareDependency(ICursoFindOneQueryHandler)
+    @Dep(ICursoFindOneQueryHandler)
     private readonly findOneHandler: ICursoFindOneQueryHandler,
-    @DeclareDependency(ICursoCreateCommandHandler)
+    @Dep(ICursoCreateCommandHandler)
     private readonly createHandler: ICursoCreateCommandHandler,
-    @DeclareDependency(ICursoUpdateCommandHandler)
+    @Dep(ICursoUpdateCommandHandler)
     private readonly updateHandler: ICursoUpdateCommandHandler,
-    @DeclareDependency(ICursoGetImagemCapaQueryHandler)
+    @Dep(ICursoGetImagemCapaQueryHandler)
     private readonly getImagemCapaHandler: ICursoGetImagemCapaQueryHandler,
-    @DeclareDependency(ICursoUpdateImagemCapaCommandHandler)
+    @Dep(ICursoUpdateImagemCapaCommandHandler)
     private readonly updateImagemCapaHandler: ICursoUpdateImagemCapaCommandHandler,
-    @DeclareDependency(ICursoDeleteCommandHandler)
+    @Dep(ICursoDeleteCommandHandler)
     private readonly deleteHandler: ICursoDeleteCommandHandler,
   ) {}
 

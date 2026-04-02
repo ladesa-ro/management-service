@@ -1,15 +1,15 @@
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import {
   IImagemSaveImageCommandHandler,
   type IImagemSaveImagemCapaCommand,
   type IImagemSaveImagemCapaCommandHandler,
 } from "@/modules/armazenamento/imagem/domain/commands";
 
-@DeclareImplementation()
+@Impl()
 export class ImagemSaveImagemCapaCommandHandlerImpl implements IImagemSaveImagemCapaCommandHandler {
   constructor(
-    @DeclareDependency(IImagemSaveImageCommandHandler)
+    @Dep(IImagemSaveImageCommandHandler)
     private readonly saveImageHandler: IImagemSaveImageCommandHandler,
   ) {}
 

@@ -1,7 +1,7 @@
 import { Args, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { Dep } from "@/domain/dependency-injection";
 import { Campus } from "@/modules/ambientes/campus/domain/campus";
 import {
   CampusCreateCommandMetadata,
@@ -36,15 +36,15 @@ import * as CampusGraphqlMapper from "./campus.graphql.mapper";
 @Resolver(() => CampusFindOneOutputGraphQlDto)
 export class CampusGraphqlResolver {
   constructor(
-    @DeclareDependency(ICampusListQueryHandler)
+    @Dep(ICampusListQueryHandler)
     private readonly listHandler: ICampusListQueryHandler,
-    @DeclareDependency(ICampusFindOneQueryHandler)
+    @Dep(ICampusFindOneQueryHandler)
     private readonly findOneHandler: ICampusFindOneQueryHandler,
-    @DeclareDependency(ICampusCreateCommandHandler)
+    @Dep(ICampusCreateCommandHandler)
     private readonly createHandler: ICampusCreateCommandHandler,
-    @DeclareDependency(ICampusUpdateCommandHandler)
+    @Dep(ICampusUpdateCommandHandler)
     private readonly updateHandler: ICampusUpdateCommandHandler,
-    @DeclareDependency(ICampusDeleteCommandHandler)
+    @Dep(ICampusDeleteCommandHandler)
     private readonly deleteHandler: ICampusDeleteCommandHandler,
   ) {}
 

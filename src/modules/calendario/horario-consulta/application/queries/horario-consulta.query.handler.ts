@@ -1,5 +1,5 @@
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import {
   type HorarioAulaItem,
@@ -11,10 +11,10 @@ import {
   type UsuarioHorarioSemanalQuery,
 } from "../../domain/queries";
 
-@DeclareImplementation()
+@Impl()
 export class HorarioConsultaQueryHandlerImpl implements IHorarioConsultaQueryHandler {
   constructor(
-    @DeclareDependency(IAppTypeormConnection)
+    @Dep(IAppTypeormConnection)
     private readonly appTypeormConnection: IAppTypeormConnection,
   ) {}
 

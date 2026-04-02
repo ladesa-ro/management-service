@@ -1,5 +1,5 @@
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import { GradeHoraria, type IGradeHorariaDomain } from "../domain/grade-horaria";
@@ -11,10 +11,10 @@ import type { IGradeHorariaRepository } from "../domain/repositories/grade-horar
 import { GradeHorariaEntity } from "./typeorm/grade-horaria.typeorm.entity";
 import { GradeHorariaIntervaloEntity } from "./typeorm/grade-horaria-intervalo.typeorm.entity";
 
-@DeclareImplementation()
+@Impl()
 export class GradeHorariaTypeOrmRepositoryAdapter implements IGradeHorariaRepository {
   constructor(
-    @DeclareDependency(IAppTypeormConnection)
+    @Dep(IAppTypeormConnection)
     private readonly appTypeormConnection: IAppTypeormConnection,
   ) {}
 

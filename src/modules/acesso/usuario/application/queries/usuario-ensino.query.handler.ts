@@ -1,15 +1,15 @@
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { IUsuarioEnsinoQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-ensino.query.handler.interface";
 import { Usuario } from "@/modules/acesso/usuario/domain/usuario";
 import type { UsuarioEnsinoQueryResult, UsuarioFindOneQuery } from "../../domain/queries";
 import { IUsuarioRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class UsuarioEnsinoQueryHandlerImpl implements IUsuarioEnsinoQueryHandler {
   constructor(
-    @DeclareDependency(IUsuarioRepository)
+    @Dep(IUsuarioRepository)
     private readonly repository: IUsuarioRepository,
   ) {}
 

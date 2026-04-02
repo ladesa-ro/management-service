@@ -1,5 +1,5 @@
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import type { GerarHorario } from "../../domain/gerar-horario";
 import type {
   IGerarHorarioFindOneQuery,
@@ -10,10 +10,10 @@ import {
   type IGerarHorarioRepository as IGerarHorarioRepositoryType,
 } from "../../domain/repositories/gerar-horario.repository.interface";
 
-@DeclareImplementation()
+@Impl()
 export class GerarHorarioFindOneQueryHandlerImpl implements IGerarHorarioFindOneQueryHandler {
   constructor(
-    @DeclareDependency(IGerarHorarioRepository)
+    @Dep(IGerarHorarioRepository)
     private readonly gerarHorarioRepository: IGerarHorarioRepositoryType,
   ) {}
 

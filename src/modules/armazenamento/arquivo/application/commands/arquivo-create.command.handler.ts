@@ -1,6 +1,6 @@
 import type { IAccessContext } from "@/domain/abstractions";
 import { IStorageService } from "@/domain/abstractions/storage";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import type {
   IArquivoCreateCommand,
@@ -8,12 +8,12 @@ import type {
 } from "@/modules/armazenamento/arquivo/domain/commands";
 import { IArquivoRepository } from "@/modules/armazenamento/arquivo/domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class ArquivoCreateCommandHandlerImpl implements IArquivoCreateCommandHandler {
   constructor(
-    @DeclareDependency(IArquivoRepository)
+    @Dep(IArquivoRepository)
     private arquivoRepository: IArquivoRepository,
-    @DeclareDependency(IStorageService)
+    @Dep(IStorageService)
     private storageService: IStorageService,
   ) {}
 

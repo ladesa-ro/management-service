@@ -1,5 +1,5 @@
 import type { Repository } from "typeorm";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import { getNowISO } from "@/utils/date";
@@ -8,12 +8,12 @@ import { TurmaDisponibilidadeConfiguracao } from "../domain/turma-disponibilidad
 import { TurmaDisponibilidadeConfiguracaoEntity } from "./typeorm/turma-disponibilidade-configuracao.typeorm.entity";
 import { TurmaDisponibilidadeConfiguracaoItemEntity } from "./typeorm/turma-disponibilidade-configuracao-item.typeorm.entity";
 
-@DeclareImplementation()
+@Impl()
 export class TurmaDisponibilidadeTypeOrmRepositoryAdapter
   implements ITurmaDisponibilidadeRepository
 {
   constructor(
-    @DeclareDependency(IAppTypeormConnection)
+    @Dep(IAppTypeormConnection)
     private readonly appTypeormConnection: IAppTypeormConnection,
   ) {}
 

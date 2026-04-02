@@ -1,18 +1,18 @@
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente";
 import { IAmbienteDeleteCommandHandler } from "@/modules/ambientes/ambiente/domain/commands/ambiente-delete.command.handler.interface";
 import type { AmbienteFindOneQuery } from "@/modules/ambientes/ambiente/domain/queries";
 import { IAmbientePermissionChecker } from "../../domain/authorization";
 import { IAmbienteRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class AmbienteDeleteCommandHandlerImpl implements IAmbienteDeleteCommandHandler {
   constructor(
-    @DeclareDependency(IAmbienteRepository)
+    @Dep(IAmbienteRepository)
     private readonly repository: IAmbienteRepository,
-    @DeclareDependency(IAmbientePermissionChecker)
+    @Dep(IAmbientePermissionChecker)
     private readonly permissionChecker: IAmbientePermissionChecker,
   ) {}
 

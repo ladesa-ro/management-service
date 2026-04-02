@@ -17,7 +17,7 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { Dep } from "@/domain/dependency-injection";
 import { AccessContextHttp } from "@/server/nest/access-context";
 import {
   ITurmaDisponibilidadeDeactivateCommandHandler,
@@ -45,13 +45,13 @@ import * as TurmaDisponibilidadeRestMapper from "./turma-disponibilidade.rest.ma
 @Controller("/horarios/turmas/:id/disponibilidade")
 export class TurmaDisponibilidadeRestController {
   constructor(
-    @DeclareDependency(ITurmaDisponibilidadeFindAllActiveQueryHandler)
+    @Dep(ITurmaDisponibilidadeFindAllActiveQueryHandler)
     private readonly findAllActiveHandler: ITurmaDisponibilidadeFindAllActiveQueryHandler,
-    @DeclareDependency(ITurmaDisponibilidadeFindByWeekQueryHandler)
+    @Dep(ITurmaDisponibilidadeFindByWeekQueryHandler)
     private readonly findByWeekHandler: ITurmaDisponibilidadeFindByWeekQueryHandler,
-    @DeclareDependency(ITurmaDisponibilidadeSaveCommandHandler)
+    @Dep(ITurmaDisponibilidadeSaveCommandHandler)
     private readonly saveHandler: ITurmaDisponibilidadeSaveCommandHandler,
-    @DeclareDependency(ITurmaDisponibilidadeDeactivateCommandHandler)
+    @Dep(ITurmaDisponibilidadeDeactivateCommandHandler)
     private readonly deactivateHandler: ITurmaDisponibilidadeDeactivateCommandHandler,
   ) {}
 

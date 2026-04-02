@@ -7,7 +7,7 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { Dep } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { AccessContextHttp } from "@/server/nest/access-context";
 import { getNowISO } from "@/utils/date";
@@ -29,7 +29,7 @@ import {
 @Controller("/calendarios-letivos/:calendarioLetivoId/etapas")
 export class CalendarioLetivoEtapaRestController {
   constructor(
-    @DeclareDependency(ICalendarioLetivoEtapaRepository)
+    @Dep(ICalendarioLetivoEtapaRepository)
     private readonly etapaRepository: ICalendarioLetivoEtapaRepository,
   ) {}
 
@@ -94,7 +94,7 @@ export class CalendarioLetivoEtapaRestController {
 @Controller("/calendarios-letivos")
 export class CalendarioLetivoDesativarRestController {
   constructor(
-    @DeclareDependency(ICalendarioLetivoRepository)
+    @Dep(ICalendarioLetivoRepository)
     private readonly calendarioLetivoRepository: ICalendarioLetivoRepository,
   ) {}
 

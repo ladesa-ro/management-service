@@ -1,6 +1,6 @@
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { Bloco } from "@/modules/ambientes/bloco/domain/bloco";
 import type { BlocoUpdateCommand } from "@/modules/ambientes/bloco/domain/commands/bloco-update.command";
 import { IBlocoUpdateCommandHandler } from "@/modules/ambientes/bloco/domain/commands/bloco-update.command.handler.interface";
@@ -9,12 +9,12 @@ import { IBlocoPermissionChecker } from "../../domain/authorization";
 import type { BlocoFindOneQueryResult } from "../../domain/queries";
 import { IBlocoRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class BlocoUpdateCommandHandlerImpl implements IBlocoUpdateCommandHandler {
   constructor(
-    @DeclareDependency(IBlocoRepository)
+    @Dep(IBlocoRepository)
     private readonly repository: IBlocoRepository,
-    @DeclareDependency(IBlocoPermissionChecker)
+    @Dep(IBlocoPermissionChecker)
     private readonly permissionChecker: IBlocoPermissionChecker,
   ) {}
 

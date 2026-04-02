@@ -1,18 +1,18 @@
 import { ValidationError } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import type { TurmaDisponibilidadeSaveCommand } from "../../domain/commands/turma-disponibilidade-save.command";
 import { ITurmaDisponibilidadeSaveCommandHandler } from "../../domain/commands/turma-disponibilidade-save.command-handler.interface";
 import { ITurmaDisponibilidadeRepository } from "../../domain/repositories";
 import { TurmaDisponibilidadeConfiguracao } from "../../domain/turma-disponibilidade";
 import type { ITurmaDisponibilidadeItem } from "../../domain/turma-disponibilidade.types";
 
-@DeclareImplementation()
+@Impl()
 export class TurmaDisponibilidadeSaveCommandHandlerImpl
   implements ITurmaDisponibilidadeSaveCommandHandler
 {
   constructor(
-    @DeclareDependency(ITurmaDisponibilidadeRepository)
+    @Dep(ITurmaDisponibilidadeRepository)
     private readonly repository: ITurmaDisponibilidadeRepository,
   ) {}
 

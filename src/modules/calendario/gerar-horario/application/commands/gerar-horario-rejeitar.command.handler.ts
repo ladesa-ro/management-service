@@ -1,6 +1,6 @@
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import type {
   IGerarHorarioRejeitarCommand,
   IGerarHorarioRejeitarCommandHandler,
@@ -11,10 +11,10 @@ import {
   type IGerarHorarioRepository as IGerarHorarioRepositoryType,
 } from "../../domain/repositories/gerar-horario.repository.interface";
 
-@DeclareImplementation()
+@Impl()
 export class GerarHorarioRejeitarCommandHandlerImpl implements IGerarHorarioRejeitarCommandHandler {
   constructor(
-    @DeclareDependency(IGerarHorarioRepository)
+    @Dep(IGerarHorarioRepository)
     private readonly gerarHorarioRepository: IGerarHorarioRepositoryType,
   ) {}
 

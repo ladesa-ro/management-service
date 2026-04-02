@@ -1,7 +1,7 @@
 import { Args, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { Dep } from "@/domain/dependency-injection";
 import {
   INivelFormacaoCreateCommandHandler,
   NivelFormacaoCreateCommandMetadata,
@@ -36,15 +36,15 @@ import * as NivelFormacaoGraphqlMapper from "./nivel-formacao.graphql.mapper";
 @Resolver(() => NivelFormacaoFindOneOutputGraphQlDto)
 export class NivelFormacaoGraphqlResolver {
   constructor(
-    @DeclareDependency(INivelFormacaoListQueryHandler)
+    @Dep(INivelFormacaoListQueryHandler)
     private readonly listHandler: INivelFormacaoListQueryHandler,
-    @DeclareDependency(INivelFormacaoFindOneQueryHandler)
+    @Dep(INivelFormacaoFindOneQueryHandler)
     private readonly findOneHandler: INivelFormacaoFindOneQueryHandler,
-    @DeclareDependency(INivelFormacaoCreateCommandHandler)
+    @Dep(INivelFormacaoCreateCommandHandler)
     private readonly createHandler: INivelFormacaoCreateCommandHandler,
-    @DeclareDependency(INivelFormacaoUpdateCommandHandler)
+    @Dep(INivelFormacaoUpdateCommandHandler)
     private readonly updateHandler: INivelFormacaoUpdateCommandHandler,
-    @DeclareDependency(INivelFormacaoDeleteCommandHandler)
+    @Dep(INivelFormacaoDeleteCommandHandler)
     private readonly deleteHandler: INivelFormacaoDeleteCommandHandler,
   ) {}
 

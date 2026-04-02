@@ -8,7 +8,7 @@ import {
 } from "@nestjs/swagger";
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { Dep } from "@/domain/dependency-injection";
 import { Cidade } from "@/modules/localidades/cidade/domain/cidade";
 import {
   CidadeFindOneQueryMetadata,
@@ -31,9 +31,9 @@ import * as CidadeRestMapper from "./cidade.rest.mapper";
 @Controller("/base/cidades")
 export class CidadeRestController {
   constructor(
-    @DeclareDependency(ICidadeListQueryHandler)
+    @Dep(ICidadeListQueryHandler)
     private readonly listHandler: ICidadeListQueryHandler,
-    @DeclareDependency(ICidadeFindOneQueryHandler)
+    @Dep(ICidadeFindOneQueryHandler)
     private readonly findOneHandler: ICidadeFindOneQueryHandler,
   ) {}
 

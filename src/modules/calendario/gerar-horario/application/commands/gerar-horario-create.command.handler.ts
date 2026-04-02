@@ -3,7 +3,7 @@ import {
   type IMessageBrokerService,
   IMessageBrokerService as IMessageBrokerServiceToken,
 } from "@/domain/abstractions/message-broker";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import type {
   IGerarHorarioCreateCommand,
   IGerarHorarioCreateCommandHandler,
@@ -14,12 +14,12 @@ import {
   type IGerarHorarioRepository as IGerarHorarioRepositoryType,
 } from "../../domain/repositories/gerar-horario.repository.interface";
 
-@DeclareImplementation()
+@Impl()
 export class GerarHorarioCreateCommandHandlerImpl implements IGerarHorarioCreateCommandHandler {
   constructor(
-    @DeclareDependency(IGerarHorarioRepository)
+    @Dep(IGerarHorarioRepository)
     private readonly gerarHorarioRepository: IGerarHorarioRepositoryType,
-    @DeclareDependency(IMessageBrokerServiceToken)
+    @Dep(IMessageBrokerServiceToken)
     private readonly messageBrokerService: IMessageBrokerService,
   ) {}
 

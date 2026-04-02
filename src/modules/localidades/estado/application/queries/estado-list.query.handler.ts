@@ -1,13 +1,13 @@
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { IEstadoListQueryHandler } from "@/modules/localidades/estado/domain/queries/estado-list.query.handler.interface";
 import type { EstadoListQuery, EstadoListQueryResult } from "../../domain/queries";
 import { IEstadoRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class EstadoListQueryHandlerImpl implements IEstadoListQueryHandler {
   constructor(
-    @DeclareDependency(IEstadoRepository)
+    @Dep(IEstadoRepository)
     private readonly repository: IEstadoRepository,
   ) {}
 

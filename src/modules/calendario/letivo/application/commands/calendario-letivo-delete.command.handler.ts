@@ -1,20 +1,20 @@
 import { ensureActiveEntity, ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { CalendarioLetivo } from "@/modules/calendario/letivo/domain/calendario-letivo";
 import { ICalendarioLetivoDeleteCommandHandler } from "@/modules/calendario/letivo/domain/commands/calendario-letivo-delete.command.handler.interface";
 import type { CalendarioLetivoFindOneQuery } from "@/modules/calendario/letivo/domain/queries";
 import { ICalendarioLetivoPermissionChecker } from "../../domain/authorization";
 import { ICalendarioLetivoRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class CalendarioLetivoDeleteCommandHandlerImpl
   implements ICalendarioLetivoDeleteCommandHandler
 {
   constructor(
-    @DeclareDependency(ICalendarioLetivoRepository)
+    @Dep(ICalendarioLetivoRepository)
     private readonly repository: ICalendarioLetivoRepository,
-    @DeclareDependency(ICalendarioLetivoPermissionChecker)
+    @Dep(ICalendarioLetivoPermissionChecker)
     private readonly permissionChecker: ICalendarioLetivoPermissionChecker,
   ) {}
 

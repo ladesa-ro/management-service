@@ -2,7 +2,7 @@
 
 Estas decisões são intencionais e **não devem ser questionadas ou alteradas**:
 
-1. **`DeclareDependency` / `DeclareImplementation`** — acoplamento domínio ↔ NestJS aceito pragmaticamente.
+1. **`Dep` / `Impl`** — acoplamento domínio ↔ NestJS aceito pragmaticamente.
 2. **Boilerplate por módulo é aceitável** — consistência sobre abstração. Não propor code generation.
 3. **Módulos sem GraphQL permanecem REST-only** — `autenticacao`, `arquivo`, `estagio`, `gerar-horario`.
 4. **`Estado` e `Cidade`** aceitam `id` no create (códigos IBGE). Todos os outros geram UUID v7.

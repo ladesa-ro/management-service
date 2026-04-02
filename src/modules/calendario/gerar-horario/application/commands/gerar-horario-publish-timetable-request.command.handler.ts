@@ -3,18 +3,18 @@ import {
   type IMessageBrokerService,
   IMessageBrokerService as IMessageBrokerServiceToken,
 } from "@/domain/abstractions/message-broker";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import {
   type IGerarHorarioPublishTimetableRequestCommand,
   IGerarHorarioPublishTimetableRequestCommandHandler,
 } from "@/modules/calendario/gerar-horario/domain/commands/gerar-horario-publish-timetable-request.command.handler.interface";
 
-@DeclareImplementation()
+@Impl()
 export class GerarHorarioPublishTimetableRequestCommandHandlerImpl
   implements IGerarHorarioPublishTimetableRequestCommandHandler
 {
   constructor(
-    @DeclareDependency(IMessageBrokerServiceToken)
+    @Dep(IMessageBrokerServiceToken)
     private readonly messageBrokerService: IMessageBrokerService,
   ) {}
 

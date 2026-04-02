@@ -1,18 +1,18 @@
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { Campus } from "@/modules/ambientes/campus/domain/campus";
 import { ICampusDeleteCommandHandler } from "@/modules/ambientes/campus/domain/commands/campus-delete.command.handler.interface";
 import type { CampusFindOneQuery } from "@/modules/ambientes/campus/domain/queries";
 import { ICampusPermissionChecker } from "../../domain/authorization";
 import { ICampusRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class CampusDeleteCommandHandlerImpl implements ICampusDeleteCommandHandler {
   constructor(
-    @DeclareDependency(ICampusRepository)
+    @Dep(ICampusRepository)
     private readonly repository: ICampusRepository,
-    @DeclareDependency(ICampusPermissionChecker)
+    @Dep(ICampusPermissionChecker)
     private readonly permissionChecker: ICampusPermissionChecker,
   ) {}
 

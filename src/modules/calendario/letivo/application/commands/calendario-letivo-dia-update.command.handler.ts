@@ -1,6 +1,6 @@
 import { ensureActiveEntity, ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { ICalendarioLetivoPermissionChecker } from "../../domain/authorization";
 import { CalendarioLetivoDia } from "../../domain/calendario-letivo-dia";
 import type { CalendarioLetivoDiaUpdateCommand } from "../../domain/commands/calendario-letivo-dia-update.command";
@@ -11,14 +11,14 @@ import type {
 } from "../../domain/queries";
 import { ICalendarioLetivoDiaRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class CalendarioLetivoDiaUpdateCommandHandlerImpl
   implements ICalendarioLetivoDiaUpdateCommandHandler
 {
   constructor(
-    @DeclareDependency(ICalendarioLetivoDiaRepository)
+    @Dep(ICalendarioLetivoDiaRepository)
     private readonly repository: ICalendarioLetivoDiaRepository,
-    @DeclareDependency(ICalendarioLetivoPermissionChecker)
+    @Dep(ICalendarioLetivoPermissionChecker)
     private readonly permissionChecker: ICalendarioLetivoPermissionChecker,
   ) {}
 

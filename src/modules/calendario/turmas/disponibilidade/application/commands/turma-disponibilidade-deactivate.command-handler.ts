@@ -1,15 +1,15 @@
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import type { TurmaDisponibilidadeDeactivateCommand } from "../../domain/commands/turma-disponibilidade-deactivate.command";
 import { ITurmaDisponibilidadeDeactivateCommandHandler } from "../../domain/commands/turma-disponibilidade-deactivate.command-handler.interface";
 import { ITurmaDisponibilidadeRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class TurmaDisponibilidadeDeactivateCommandHandlerImpl
   implements ITurmaDisponibilidadeDeactivateCommandHandler
 {
   constructor(
-    @DeclareDependency(ITurmaDisponibilidadeRepository)
+    @Dep(ITurmaDisponibilidadeRepository)
     private readonly repository: ITurmaDisponibilidadeRepository,
   ) {}
 

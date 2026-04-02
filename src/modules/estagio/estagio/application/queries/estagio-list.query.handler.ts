@@ -1,13 +1,13 @@
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { IEstagioListQueryHandler } from "@/modules/estagio/estagio/domain/queries/estagio-list.query.handler.interface";
 import type { EstagioListQuery, EstagioListQueryResult } from "../../domain/queries";
 import { IEstagioRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class EstagioListQueryHandlerImpl implements IEstagioListQueryHandler {
   constructor(
-    @DeclareDependency(IEstagioRepository)
+    @Dep(IEstagioRepository)
     private readonly repository: IEstagioRepository,
   ) {}
 

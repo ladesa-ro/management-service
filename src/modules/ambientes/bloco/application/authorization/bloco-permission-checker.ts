@@ -1,9 +1,9 @@
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareImplementation } from "@/domain/dependency-injection";
+import { Impl } from "@/domain/dependency-injection";
 import { noop } from "@/utils/noop";
 import type { IBlocoPermissionChecker } from "../../domain/authorization";
 
-@DeclareImplementation()
+@Impl()
 export class BlocoPermissionCheckerImpl implements IBlocoPermissionChecker {
   async ensureCanCreate(
     accessContext: IAccessContext | null,

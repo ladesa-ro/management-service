@@ -9,7 +9,7 @@ import {
 } from "@nestjs/swagger";
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { Dep } from "@/domain/dependency-injection";
 import {
   DiarioCreateCommandMetadata,
   IDiarioCreateCommandHandler,
@@ -46,15 +46,15 @@ import * as DiarioRestMapper from "./diario.rest.mapper";
 @Controller("/diarios")
 export class DiarioRestController {
   constructor(
-    @DeclareDependency(IDiarioListQueryHandler)
+    @Dep(IDiarioListQueryHandler)
     private readonly listHandler: IDiarioListQueryHandler,
-    @DeclareDependency(IDiarioFindOneQueryHandler)
+    @Dep(IDiarioFindOneQueryHandler)
     private readonly findOneHandler: IDiarioFindOneQueryHandler,
-    @DeclareDependency(IDiarioCreateCommandHandler)
+    @Dep(IDiarioCreateCommandHandler)
     private readonly createHandler: IDiarioCreateCommandHandler,
-    @DeclareDependency(IDiarioUpdateCommandHandler)
+    @Dep(IDiarioUpdateCommandHandler)
     private readonly updateHandler: IDiarioUpdateCommandHandler,
-    @DeclareDependency(IDiarioDeleteCommandHandler)
+    @Dep(IDiarioDeleteCommandHandler)
     private readonly deleteHandler: IDiarioDeleteCommandHandler,
   ) {}
 

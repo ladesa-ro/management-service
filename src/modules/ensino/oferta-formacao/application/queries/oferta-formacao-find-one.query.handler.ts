@@ -1,5 +1,5 @@
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { IOfertaFormacaoFindOneQueryHandler } from "@/modules/ensino/oferta-formacao/domain/queries/oferta-formacao-find-one.query.handler.interface";
 import type {
   OfertaFormacaoFindOneQuery,
@@ -7,10 +7,10 @@ import type {
 } from "../../domain/queries";
 import { IOfertaFormacaoRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class OfertaFormacaoFindOneQueryHandlerImpl implements IOfertaFormacaoFindOneQueryHandler {
   constructor(
-    @DeclareDependency(IOfertaFormacaoRepository)
+    @Dep(IOfertaFormacaoRepository)
     private readonly repository: IOfertaFormacaoRepository,
   ) {}
 

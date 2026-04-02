@@ -1,13 +1,13 @@
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { IEmpresaFindOneQueryHandler } from "@/modules/estagio/empresa/domain/queries/empresa-find-one.query.handler.interface";
 import type { EmpresaFindOneQuery, EmpresaFindOneQueryResult } from "../../domain/queries";
 import { IEmpresaRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class EmpresaFindOneQueryHandlerImpl implements IEmpresaFindOneQueryHandler {
   constructor(
-    @DeclareDependency(IEmpresaRepository)
+    @Dep(IEmpresaRepository)
     private readonly repository: IEmpresaRepository,
   ) {}
 

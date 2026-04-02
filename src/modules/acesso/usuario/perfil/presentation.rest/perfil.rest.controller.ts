@@ -7,7 +7,7 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { Dep } from "@/domain/dependency-injection";
 import { PerfilEnsinoByIdQueryMetadata } from "@/modules/acesso/usuario/perfil/domain/queries/perfil-ensino-by-id.query.metadata";
 import {
   IPerfilFindOneQueryHandler,
@@ -30,9 +30,9 @@ import * as PerfilRestMapper from "./perfil.rest.mapper";
 @Controller("/perfis")
 export class PerfilListRestController {
   constructor(
-    @DeclareDependency(IPerfilListQueryHandler)
+    @Dep(IPerfilListQueryHandler)
     private readonly listHandler: IPerfilListQueryHandler,
-    @DeclareDependency(IPerfilFindOneQueryHandler)
+    @Dep(IPerfilFindOneQueryHandler)
     private readonly findOneHandler: IPerfilFindOneQueryHandler,
   ) {}
 
@@ -68,7 +68,7 @@ export class PerfilListRestController {
 @Controller("/usuarios/:usuarioId/perfis")
 export class PerfilRestController {
   constructor(
-    @DeclareDependency(IPerfilFindOneQueryHandler)
+    @Dep(IPerfilFindOneQueryHandler)
     private readonly findOneHandler: IPerfilFindOneQueryHandler,
   ) {}
 

@@ -1,6 +1,6 @@
 import { IsNull } from "typeorm";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
 import { paginateConfig } from "@/infrastructure.database/pagination/config/paginate-config";
 import type { ITypeOrmPaginationConfig } from "@/infrastructure.database/pagination/interfaces/pagination-config.types";
@@ -36,10 +36,10 @@ const modalidadePaginateConfig: ITypeOrmPaginationConfig<ModalidadeEntity> = {
   filterableColumns: {},
 };
 
-@DeclareImplementation()
+@Impl()
 export class ModalidadeTypeOrmRepositoryAdapter implements IModalidadeRepository {
   constructor(
-    @DeclareDependency(IAppTypeormConnection)
+    @Dep(IAppTypeormConnection)
     private readonly appTypeormConnection: IAppTypeormConnection,
     private readonly paginationAdapter: NestJsPaginateAdapter,
   ) {}

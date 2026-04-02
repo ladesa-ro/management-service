@@ -1,5 +1,5 @@
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import type {
   GradeHorariaFindByCampusQuery,
   GradeHorariaFindByCampusQueryResult,
@@ -7,12 +7,12 @@ import type {
 import { IGradeHorariaFindByCampusQueryHandler } from "../../domain/queries";
 import { IGradeHorariaRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class GradeHorariaFindByCampusQueryHandlerImpl
   implements IGradeHorariaFindByCampusQueryHandler
 {
   constructor(
-    @DeclareDependency(IGradeHorariaRepository)
+    @Dep(IGradeHorariaRepository)
     private readonly repository: IGradeHorariaRepository,
   ) {}
 

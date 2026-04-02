@@ -108,7 +108,7 @@ export const CampusUpdateSchema = CampusCreateSchema.partial();
 // src/modules/ambientes/campus/application/commands/create/campus-create.command-handler.ts
 import { Inject } from "@nestjs/common";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { Dep } from "@/domain/dependency-injection";
 import type { ICampusRepository } from "../../../domain/repositories/campus.repository";
 import type { ICampusPermissionChecker } from "../../../domain/authorization/campus.permission-checker";
 import { Campus } from "../../../domain/campus";
@@ -121,7 +121,7 @@ export type ICampusCreateCommandHandler = {
   execute(accessContext: IAccessContext, input: unknown): Promise<{ id: string }>;
 };
 
-@DeclareDependency(ICampusCreateCommandHandler)
+@Dep(ICampusCreateCommandHandler)
 
 export class CampusCreateCommandHandler implements ICampusCreateCommandHandler {
   constructor(
@@ -147,7 +147,7 @@ export class CampusCreateCommandHandler implements ICampusCreateCommandHandler {
 
 ```typescript
 // src/modules/ambientes/campus/application/queries/find-one/campus-find-one.query-handler.ts
-@DeclareDependency(ICampusFindOneQueryHandler)
+@Dep(ICampusFindOneQueryHandler)
 
 export class CampusFindOneQueryHandler implements ICampusFindOneQueryHandler {
   constructor(
@@ -203,7 +203,7 @@ export interface ICampusRepository {
 
 ```typescript
 // src/modules/ambientes/campus/infrastructure.database/campus.repository.ts
-@DeclareImplementation(ICampusRepository)
+@Impl(ICampusRepository)
 
 export class CampusTypeormRepository implements ICampusRepository {
   constructor(
@@ -224,7 +224,7 @@ export class CampusTypeormRepository implements ICampusRepository {
 ```
 
 **Regras:**
-- Usa `@DeclareImplementation` para registrar como provider do Symbol.
+- Usa `@Impl` para registrar como provider do Symbol.
 - Acessa o banco via `IAppTypeormConnection` (proxy que participa da transação global).
 - Paginação via `NestJsPaginateAdapter` com `nestjs-paginate`.
 
@@ -238,7 +238,7 @@ export const ICampusPermissionChecker = Symbol("ICampusPermissionChecker");
 export type ICampusPermissionChecker = IPermissionChecker;
 
 // Implementação (aplicação)
-@DeclareDependency(ICampusPermissionChecker)
+@Dep(ICampusPermissionChecker)
 
 export class CampusPermissionChecker implements ICampusPermissionChecker {
   async ensureCanCreate(_accessContext: IAccessContext): Promise<void> {}
@@ -350,16 +350,16 @@ export const CampusQueryFields = {
 - `gqlMetadata` deve retornar `{ description, nullable, defaultValue }` direto — DTO não especifica manualmente.
 - Nunca fazer spread `...SharedFields`. Sempre pick explícito: `{ page: SharedFields.page, limit: SharedFields.limit }`.
 
-## Dependency Injection (`DeclareDependency` / `DeclareImplementation`)
+## Dependency Injection (`Dep` / `Impl`)
 
 ```typescript
 // Declarando que um handler PRECISA ser injetado
-@DeclareDependency(ICampusCreateCommandHandler)
+@Dep(ICampusCreateCommandHandler)
 
 export class CampusCreateCommandHandler { ... }
 
 // Declarando que uma classe IMPLEMENTA um contrato
-@DeclareImplementation(ICampusRepository)
+@Impl(ICampusRepository)
 
 export class CampusTypeormRepository { ... }
 ```

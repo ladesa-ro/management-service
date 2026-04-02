@@ -1,4 +1,4 @@
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import { DiarioEntity } from "@/modules/ensino/diario/infrastructure.database/typeorm/diario.typeorm.entity";
 import { DiarioProfessorEntity } from "@/modules/ensino/diario/infrastructure.database/typeorm/diario-professor.typeorm.entity";
@@ -6,10 +6,10 @@ import { getNowISO } from "@/utils/date";
 import type { IDiarioConfigurarRepository } from "../domain/repositories";
 
 // cross-module: uses TypeORM directly for DiarioEntity and DiarioProfessorEntity (diario module has no repository to inject)
-@DeclareImplementation()
+@Impl()
 export class DiarioConfigurarTypeOrmRepositoryAdapter implements IDiarioConfigurarRepository {
   constructor(
-    @DeclareDependency(IAppTypeormConnection)
+    @Dep(IAppTypeormConnection)
     private readonly appTypeormConnection: IAppTypeormConnection,
   ) {}
 

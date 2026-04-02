@@ -9,7 +9,7 @@ import {
 } from "@nestjs/swagger";
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { Dep } from "@/domain/dependency-injection";
 import { CalendarioLetivo } from "@/modules/calendario/letivo/domain/calendario-letivo";
 import {
   CalendarioLetivoCreateCommandMetadata,
@@ -46,15 +46,15 @@ import * as CalendarioLetivoRestMapper from "./calendario-letivo.rest.mapper";
 @Controller("/calendarios-letivos")
 export class CalendarioLetivoRestController {
   constructor(
-    @DeclareDependency(ICalendarioLetivoListQueryHandler)
+    @Dep(ICalendarioLetivoListQueryHandler)
     private readonly listHandler: ICalendarioLetivoListQueryHandler,
-    @DeclareDependency(ICalendarioLetivoFindOneQueryHandler)
+    @Dep(ICalendarioLetivoFindOneQueryHandler)
     private readonly findOneHandler: ICalendarioLetivoFindOneQueryHandler,
-    @DeclareDependency(ICalendarioLetivoCreateCommandHandler)
+    @Dep(ICalendarioLetivoCreateCommandHandler)
     private readonly createHandler: ICalendarioLetivoCreateCommandHandler,
-    @DeclareDependency(ICalendarioLetivoUpdateCommandHandler)
+    @Dep(ICalendarioLetivoUpdateCommandHandler)
     private readonly updateHandler: ICalendarioLetivoUpdateCommandHandler,
-    @DeclareDependency(ICalendarioLetivoDeleteCommandHandler)
+    @Dep(ICalendarioLetivoDeleteCommandHandler)
     private readonly deleteHandler: ICalendarioLetivoDeleteCommandHandler,
   ) {}
 

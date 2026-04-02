@@ -25,7 +25,7 @@ import {
 } from "@nestjs/swagger";
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { Dep } from "@/domain/dependency-injection";
 import {
   IModalidadeCreateCommandHandler,
   ModalidadeCreateCommandMetadata,
@@ -70,19 +70,19 @@ import * as ModalidadeRestMapper from "./modalidade.rest.mapper";
 @Controller("/modalidades")
 export class ModalidadeRestController {
   constructor(
-    @DeclareDependency(IModalidadeListQueryHandler)
+    @Dep(IModalidadeListQueryHandler)
     private readonly listHandler: IModalidadeListQueryHandler,
-    @DeclareDependency(IModalidadeFindOneQueryHandler)
+    @Dep(IModalidadeFindOneQueryHandler)
     private readonly findOneHandler: IModalidadeFindOneQueryHandler,
-    @DeclareDependency(IModalidadeCreateCommandHandler)
+    @Dep(IModalidadeCreateCommandHandler)
     private readonly createHandler: IModalidadeCreateCommandHandler,
-    @DeclareDependency(IModalidadeUpdateCommandHandler)
+    @Dep(IModalidadeUpdateCommandHandler)
     private readonly updateHandler: IModalidadeUpdateCommandHandler,
-    @DeclareDependency(IModalidadeGetImagemCapaQueryHandler)
+    @Dep(IModalidadeGetImagemCapaQueryHandler)
     private readonly getImagemCapaHandler: IModalidadeGetImagemCapaQueryHandler,
-    @DeclareDependency(IModalidadeUpdateImagemCapaCommandHandler)
+    @Dep(IModalidadeUpdateImagemCapaCommandHandler)
     private readonly updateImagemCapaHandler: IModalidadeUpdateImagemCapaCommandHandler,
-    @DeclareDependency(IModalidadeDeleteCommandHandler)
+    @Dep(IModalidadeDeleteCommandHandler)
     private readonly deleteHandler: IModalidadeDeleteCommandHandler,
   ) {}
 

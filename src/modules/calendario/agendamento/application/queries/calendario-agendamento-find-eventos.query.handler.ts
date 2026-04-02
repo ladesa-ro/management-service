@@ -1,5 +1,5 @@
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import {
   type CalendarioAgendamentoFindEventosQuery,
   ICalendarioAgendamentoFindEventosQueryHandler,
@@ -7,12 +7,12 @@ import {
 import type { CalendarioAgendamentoFindOneQueryResult } from "../../domain/queries/calendario-agendamento-find-one.query.result";
 import { ICalendarioAgendamentoRepository } from "../../domain/repositories/calendario-agendamento.repository.interface";
 
-@DeclareImplementation()
+@Impl()
 export class CalendarioAgendamentoFindEventosQueryHandlerImpl
   implements ICalendarioAgendamentoFindEventosQueryHandler
 {
   constructor(
-    @DeclareDependency(ICalendarioAgendamentoRepository)
+    @Dep(ICalendarioAgendamentoRepository)
     private readonly repository: ICalendarioAgendamentoRepository,
   ) {}
 

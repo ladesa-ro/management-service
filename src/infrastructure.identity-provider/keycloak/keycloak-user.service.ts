@@ -1,16 +1,16 @@
 import type UserRepresentation from "@keycloak/keycloak-admin-client/lib/defs/userRepresentation";
 import { ServiceUnavailableError } from "@/application/errors";
 import type { IIdpUserService } from "@/domain/abstractions/identity-provider";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import type { IAuthOptions } from "../options/auth-options.interface";
 import { IAuthOptions as IAuthOptionsToken } from "../options/auth-options.interface";
 import { KeycloakService } from "./keycloak.service";
 
-@DeclareImplementation()
+@Impl()
 export class KeycloakUserService implements IIdpUserService {
   constructor(
     private readonly keycloakService: KeycloakService,
-    @DeclareDependency(IAuthOptionsToken)
+    @Dep(IAuthOptionsToken)
     private readonly authOptions: IAuthOptions | null,
   ) {}
 

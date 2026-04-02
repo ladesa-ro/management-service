@@ -2,7 +2,7 @@ import { ensureExists } from "@/application/errors";
 import { getEntityImagemStreamableFile } from "@/application/helpers";
 import type { IAccessContext } from "@/domain/abstractions";
 import type { IStreamableFileResult } from "@/domain/abstractions/storage";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import {
   IArquivoGetStreamableFileQueryHandler,
   type IArquivoGetStreamableFileQueryHandler as IArquivoGetStreamableFileQueryHandlerType,
@@ -16,16 +16,16 @@ import { IDisciplinaGetImagemCapaQueryHandler } from "@/modules/ensino/disciplin
 import type { DisciplinaFindOneQuery } from "../../domain/queries";
 import { IDisciplinaRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class DisciplinaGetImagemCapaQueryHandlerImpl
   implements IDisciplinaGetImagemCapaQueryHandler
 {
   constructor(
-    @DeclareDependency(IDisciplinaRepository)
+    @Dep(IDisciplinaRepository)
     private readonly repository: IDisciplinaRepository,
-    @DeclareDependency(IImagemGetLatestArquivoIdQueryHandler)
+    @Dep(IImagemGetLatestArquivoIdQueryHandler)
     private readonly getLatestArquivoIdHandler: IImagemGetLatestArquivoIdQueryHandlerType,
-    @DeclareDependency(IArquivoGetStreamableFileQueryHandler)
+    @Dep(IArquivoGetStreamableFileQueryHandler)
     private readonly getStreamableFileHandler: IArquivoGetStreamableFileQueryHandlerType,
   ) {}
 

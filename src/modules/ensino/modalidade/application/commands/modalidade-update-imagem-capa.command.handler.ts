@@ -1,6 +1,6 @@
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import {
   IImagemSaveImagemCapaCommandHandler,
   type IImagemSaveImagemCapaCommandHandler as IImagemSaveImagemCapaCommandHandlerType,
@@ -13,16 +13,16 @@ import { Modalidade } from "@/modules/ensino/modalidade/domain/modalidade";
 import { IModalidadePermissionChecker } from "../../domain/authorization";
 import { IModalidadeRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class ModalidadeUpdateImagemCapaCommandHandlerImpl
   implements IModalidadeUpdateImagemCapaCommandHandler
 {
   constructor(
-    @DeclareDependency(IModalidadeRepository)
+    @Dep(IModalidadeRepository)
     private readonly repository: IModalidadeRepository,
-    @DeclareDependency(IModalidadePermissionChecker)
+    @Dep(IModalidadePermissionChecker)
     private readonly permissionChecker: IModalidadePermissionChecker,
-    @DeclareDependency(IImagemSaveImagemCapaCommandHandler)
+    @Dep(IImagemSaveImagemCapaCommandHandler)
     private readonly saveImagemCapaHandler: IImagemSaveImagemCapaCommandHandlerType,
   ) {}
 

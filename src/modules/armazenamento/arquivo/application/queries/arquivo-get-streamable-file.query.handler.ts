@@ -3,7 +3,7 @@ import { ensureExists, ForbiddenError, ServiceUnavailableError } from "@/applica
 import type { IAccessContext } from "@/domain/abstractions";
 import type { IStreamableFileResult } from "@/domain/abstractions/storage";
 import { IStorageService } from "@/domain/abstractions/storage";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { isValidUuid } from "@/domain/validation";
 import { UsuarioEntity } from "@/modules/acesso/usuario/infrastructure.database";
 import { Arquivo } from "@/modules/armazenamento/arquivo/domain/arquivo";
@@ -13,14 +13,14 @@ import type {
 } from "@/modules/armazenamento/arquivo/domain/queries";
 import { IArquivoRepository } from "@/modules/armazenamento/arquivo/domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class ArquivoGetStreamableFileQueryHandlerImpl
   implements IArquivoGetStreamableFileQueryHandler
 {
   constructor(
-    @DeclareDependency(IArquivoRepository)
+    @Dep(IArquivoRepository)
     private arquivoRepository: IArquivoRepository,
-    @DeclareDependency(IStorageService)
+    @Dep(IStorageService)
     private storageService: IStorageService,
   ) {}
 

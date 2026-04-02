@@ -1,5 +1,5 @@
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
 import { buildTypeOrmPaginateConfig } from "@/infrastructure.database/pagination/adapters/pagination-spec.adapter";
@@ -89,10 +89,10 @@ const diarioProfessorPaginateConfig = buildTypeOrmPaginateConfig<DiarioProfessor
   diarioProfessorRelations,
 );
 
-@DeclareImplementation()
+@Impl()
 export class DiarioProfessorTypeOrmRepositoryAdapter implements IDiarioProfessorRepository {
   constructor(
-    @DeclareDependency(IAppTypeormConnection)
+    @Dep(IAppTypeormConnection)
     private readonly appTypeormConnection: IAppTypeormConnection,
     private readonly paginationAdapter: NestJsPaginateAdapter,
   ) {}

@@ -1,13 +1,13 @@
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { IDiarioListQueryHandler } from "@/modules/ensino/diario/domain/queries/diario-list.query.handler.interface";
 import type { DiarioListQuery, DiarioListQueryResult } from "../../domain/queries";
 import { IDiarioRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class DiarioListQueryHandlerImpl implements IDiarioListQueryHandler {
   constructor(
-    @DeclareDependency(IDiarioRepository)
+    @Dep(IDiarioRepository)
     private readonly repository: IDiarioRepository,
   ) {}
 

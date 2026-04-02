@@ -1,13 +1,13 @@
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { IModalidadeFindOneQueryHandler } from "@/modules/ensino/modalidade/domain/queries/modalidade-find-one.query.handler.interface";
 import type { ModalidadeFindOneQuery, ModalidadeFindOneQueryResult } from "../../domain/queries";
 import { IModalidadeRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class ModalidadeFindOneQueryHandlerImpl implements IModalidadeFindOneQueryHandler {
   constructor(
-    @DeclareDependency(IModalidadeRepository)
+    @Dep(IModalidadeRepository)
     private readonly repository: IModalidadeRepository,
   ) {}
 

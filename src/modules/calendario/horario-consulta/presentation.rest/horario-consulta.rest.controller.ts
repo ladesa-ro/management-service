@@ -1,7 +1,7 @@
 import { Controller, Get, Query } from "@nestjs/common";
 import { ApiForbiddenResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { Dep } from "@/domain/dependency-injection";
 import { AccessContextHttp } from "@/server/nest/access-context";
 import { HorarioMescladoQueryMetadata, IHorarioConsultaQueryHandler } from "../domain/queries";
 import {
@@ -13,7 +13,7 @@ import {
 @Controller("/horarios")
 export class HorarioConsultaRestController {
   constructor(
-    @DeclareDependency(IHorarioConsultaQueryHandler)
+    @Dep(IHorarioConsultaQueryHandler)
     private readonly queryHandler: IHorarioConsultaQueryHandler,
   ) {}
 

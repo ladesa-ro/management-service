@@ -8,7 +8,7 @@ import {
 } from "@nestjs/swagger";
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { Dep } from "@/domain/dependency-injection";
 import { AccessContextHttp } from "@/server/nest/access-context";
 import {
   NotificacaoContagemNaoLidasQueryMetadata,
@@ -24,7 +24,7 @@ import {
 @Controller("/notificacoes")
 export class NotificacaoRestController {
   constructor(
-    @DeclareDependency(INotificacaoRepository)
+    @Dep(INotificacaoRepository)
     private readonly notificacaoRepository: INotificacaoRepositoryType,
   ) {}
 

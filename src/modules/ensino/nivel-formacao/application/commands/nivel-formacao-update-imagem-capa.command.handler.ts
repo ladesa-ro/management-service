@@ -1,6 +1,6 @@
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import {
   IImagemSaveImagemCapaCommandHandler,
   type IImagemSaveImagemCapaCommandHandler as IImagemSaveImagemCapaCommandHandlerType,
@@ -13,16 +13,16 @@ import { NivelFormacao } from "@/modules/ensino/nivel-formacao/domain/nivel-form
 import { INivelFormacaoPermissionChecker } from "../../domain/authorization";
 import { INivelFormacaoRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class NivelFormacaoUpdateImagemCapaCommandHandlerImpl
   implements INivelFormacaoUpdateImagemCapaCommandHandler
 {
   constructor(
-    @DeclareDependency(INivelFormacaoRepository)
+    @Dep(INivelFormacaoRepository)
     private readonly repository: INivelFormacaoRepository,
-    @DeclareDependency(INivelFormacaoPermissionChecker)
+    @Dep(INivelFormacaoPermissionChecker)
     private readonly permissionChecker: INivelFormacaoPermissionChecker,
-    @DeclareDependency(IImagemSaveImagemCapaCommandHandler)
+    @Dep(IImagemSaveImagemCapaCommandHandler)
     private readonly saveImagemCapaHandler: IImagemSaveImagemCapaCommandHandlerType,
   ) {}
 

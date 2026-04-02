@@ -6,7 +6,7 @@ import {
 } from "@nestjs/common";
 import { type GqlContextType, GqlExecutionContext } from "@nestjs/graphql";
 import { from, type Observable } from "rxjs";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { Dep } from "@/domain/dependency-injection";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import { transactionStorage } from "@/infrastructure.database/typeorm/connection/transaction-storage";
 
@@ -22,7 +22,7 @@ import { transactionStorage } from "@/infrastructure.database/typeorm/connection
 @Injectable()
 export class TransactionInterceptor implements NestInterceptor {
   constructor(
-    @DeclareDependency(IAppTypeormConnection)
+    @Dep(IAppTypeormConnection)
     private readonly appTypeormConnection: IAppTypeormConnection,
   ) {}
 

@@ -1,18 +1,18 @@
 import { ensureActiveEntity, ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { IModalidadeDeleteCommandHandler } from "@/modules/ensino/modalidade/domain/commands/modalidade-delete.command.handler.interface";
 import { Modalidade } from "@/modules/ensino/modalidade/domain/modalidade";
 import type { ModalidadeFindOneQuery } from "@/modules/ensino/modalidade/domain/queries";
 import { IModalidadePermissionChecker } from "../../domain/authorization";
 import { IModalidadeRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class ModalidadeDeleteCommandHandlerImpl implements IModalidadeDeleteCommandHandler {
   constructor(
-    @DeclareDependency(IModalidadeRepository)
+    @Dep(IModalidadeRepository)
     private readonly repository: IModalidadeRepository,
-    @DeclareDependency(IModalidadePermissionChecker)
+    @Dep(IModalidadePermissionChecker)
     private readonly permissionChecker: IModalidadePermissionChecker,
   ) {}
 

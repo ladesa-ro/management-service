@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Put } from "@nestjs/common";
 import { ApiForbiddenResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { Dep } from "@/domain/dependency-injection";
 import {
   GradeHorariaReplaceCommandMetadata,
   IGradeHorariaReplaceCommandHandler,
@@ -22,9 +22,9 @@ import * as GradeHorariaRestMapper from "./grade-horaria.rest.mapper";
 @Controller("/grades-horarias")
 export class GradeHorariaRestController {
   constructor(
-    @DeclareDependency(IGradeHorariaFindByCampusQueryHandler)
+    @Dep(IGradeHorariaFindByCampusQueryHandler)
     private readonly findByCampusHandler: IGradeHorariaFindByCampusQueryHandler,
-    @DeclareDependency(IGradeHorariaReplaceCommandHandler)
+    @Dep(IGradeHorariaReplaceCommandHandler)
     private readonly replaceHandler: IGradeHorariaReplaceCommandHandler,
   ) {}
 

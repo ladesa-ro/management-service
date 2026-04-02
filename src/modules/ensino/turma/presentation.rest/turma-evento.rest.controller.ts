@@ -8,7 +8,7 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { Dep } from "@/domain/dependency-injection";
 import { CalendarioAgendamentoEntity } from "@/modules/calendario/agendamento/infrastructure.database/typeorm/calendario-agendamento.typeorm.entity";
 import { AccessContextHttp } from "@/server/nest/access-context";
 import { ITurmaEventoRepository } from "../domain/repositories";
@@ -25,7 +25,7 @@ import {
 @Controller("/turmas/:turmaId/eventos")
 export class TurmaEventoRestController {
   constructor(
-    @DeclareDependency(ITurmaEventoRepository)
+    @Dep(ITurmaEventoRepository)
     private readonly turmaEventoRepository: ITurmaEventoRepository,
   ) {}
 

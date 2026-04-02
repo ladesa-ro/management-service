@@ -10,7 +10,7 @@ import {
 } from "@nestjs/swagger";
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, IContainer } from "@/domain/dependency-injection";
+import { Dep, IContainer } from "@/domain/dependency-injection";
 import {
   EstagioCreateCommandMetadata,
   IEstagioCreateCommandHandler,
@@ -46,7 +46,7 @@ import * as EstagioRestMapper from "./estagio.rest.mapper";
 @ApiTags("estagios")
 @Controller("/estagios")
 export class EstagioRestController {
-  constructor(@DeclareDependency(IContainer) private readonly container: IContainer) {}
+  constructor(@Dep(IContainer) private readonly container: IContainer) {}
 
   @Get("/")
   @ApiOperation(EstagioListQueryMetadata.swaggerMetadata)

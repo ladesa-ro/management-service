@@ -1,7 +1,7 @@
 import { has } from "lodash";
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente";
 import { IAmbienteFindOneQueryHandler } from "@/modules/ambientes/ambiente/domain/queries/ambiente-find-one.query.handler.interface";
 import { Curso } from "@/modules/ensino/curso/domain/curso";
@@ -14,16 +14,16 @@ import { ITurmaPermissionChecker } from "../../domain/authorization";
 import type { TurmaFindOneQueryResult } from "../../domain/queries";
 import { ITurmaRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class TurmaUpdateCommandHandlerImpl implements ITurmaUpdateCommandHandler {
   constructor(
-    @DeclareDependency(ITurmaRepository)
+    @Dep(ITurmaRepository)
     private readonly repository: ITurmaRepository,
-    @DeclareDependency(ITurmaPermissionChecker)
+    @Dep(ITurmaPermissionChecker)
     private readonly permissionChecker: ITurmaPermissionChecker,
-    @DeclareDependency(IAmbienteFindOneQueryHandler)
+    @Dep(IAmbienteFindOneQueryHandler)
     private readonly ambienteFindOneHandler: IAmbienteFindOneQueryHandler,
-    @DeclareDependency(ICursoFindOneQueryHandler)
+    @Dep(ICursoFindOneQueryHandler)
     private readonly cursoFindOneHandler: ICursoFindOneQueryHandler,
   ) {}
 

@@ -1,13 +1,13 @@
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { IPerfilListQueryHandler } from "@/modules/acesso/usuario/perfil/domain/queries/perfil-list.query.handler.interface";
 import type { PerfilListQuery, PerfilListQueryResult } from "../../domain/queries";
 import { IPerfilRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class PerfilListQueryHandlerImpl implements IPerfilListQueryHandler {
   constructor(
-    @DeclareDependency(IPerfilRepository)
+    @Dep(IPerfilRepository)
     private readonly repository: IPerfilRepository,
   ) {}
 

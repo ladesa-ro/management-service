@@ -1,6 +1,6 @@
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { Campus } from "@/modules/ambientes/campus/domain/campus";
 import { ICampusFindOneQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-find-one.query.handler.interface";
 import { CalendarioLetivo } from "@/modules/calendario/letivo/domain/calendario-letivo";
@@ -12,18 +12,18 @@ import { ICalendarioLetivoPermissionChecker } from "../../domain/authorization";
 import type { CalendarioLetivoFindOneQueryResult } from "../../domain/queries";
 import { ICalendarioLetivoRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class CalendarioLetivoCreateCommandHandlerImpl
   implements ICalendarioLetivoCreateCommandHandler
 {
   constructor(
-    @DeclareDependency(ICalendarioLetivoRepository)
+    @Dep(ICalendarioLetivoRepository)
     private readonly repository: ICalendarioLetivoRepository,
-    @DeclareDependency(ICalendarioLetivoPermissionChecker)
+    @Dep(ICalendarioLetivoPermissionChecker)
     private readonly permissionChecker: ICalendarioLetivoPermissionChecker,
-    @DeclareDependency(ICampusFindOneQueryHandler)
+    @Dep(ICampusFindOneQueryHandler)
     private readonly campusFindOneHandler: ICampusFindOneQueryHandler,
-    @DeclareDependency(IOfertaFormacaoFindOneQueryHandler)
+    @Dep(IOfertaFormacaoFindOneQueryHandler)
     private readonly ofertaFormacaoFindOneHandler: IOfertaFormacaoFindOneQueryHandler,
   ) {}
 

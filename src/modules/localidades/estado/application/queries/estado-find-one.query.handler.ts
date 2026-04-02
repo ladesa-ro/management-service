@@ -1,13 +1,13 @@
 import type { IAccessContext } from "@/domain/abstractions";
-import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { Dep, Impl } from "@/domain/dependency-injection";
 import { IEstadoFindOneQueryHandler } from "@/modules/localidades/estado/domain/queries/estado-find-one.query.handler.interface";
 import type { EstadoFindOneQuery, EstadoFindOneQueryResult } from "../../domain/queries";
 import { IEstadoRepository } from "../../domain/repositories";
 
-@DeclareImplementation()
+@Impl()
 export class EstadoFindOneQueryHandlerImpl implements IEstadoFindOneQueryHandler {
   constructor(
-    @DeclareDependency(IEstadoRepository)
+    @Dep(IEstadoRepository)
     private readonly repository: IEstadoRepository,
   ) {}
 
