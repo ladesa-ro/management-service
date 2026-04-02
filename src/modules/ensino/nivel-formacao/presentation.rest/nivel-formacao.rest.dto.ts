@@ -4,7 +4,10 @@ import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@/shared/presentati
 import { EntityBaseRestDto, PaginationMetaRestDto } from "@/shared/presentation/rest/dtos";
 import { NivelFormacaoCreateCommandFields } from "../domain/commands/nivel-formacao-create.command";
 import { NivelFormacaoUpdateCommandFields } from "../domain/commands/nivel-formacao-update.command";
-import { NivelFormacaoCreateSchema } from "../domain/nivel-formacao.schemas";
+import {
+  NivelFormacaoCreateSchema,
+  NivelFormacaoUpdateSchema,
+} from "../domain/nivel-formacao.schemas";
 import { NivelFormacaoFindOneQueryResultFields } from "../domain/queries/nivel-formacao-find-one.query.result";
 import { NivelFormacaoListQueryFields } from "../domain/queries/nivel-formacao-list.query";
 
@@ -71,7 +74,7 @@ export class NivelFormacaoCreateInputRestDto {
 
 @ApiSchema({ name: "NivelFormacaoUpdateInputDto" })
 export class NivelFormacaoUpdateInputRestDto {
-  static readonly schema = NivelFormacaoCreateSchema.presentation;
+  static readonly schema = NivelFormacaoUpdateSchema.presentation;
 
   @ApiPropertyOptional(NivelFormacaoUpdateCommandFields.slug.swaggerMetadata)
   slug?: string;

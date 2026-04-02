@@ -23,11 +23,10 @@ describe("Curso (domain entity)", () => {
       expect(entity.dateDeleted).toBeNull();
     });
 
-    it("should create with imagemCapa reference", () => {
-      const imgRef = createTestRef();
-      const entity = Curso.create({ ...validCreateInput, imagemCapa: imgRef });
+    it("should create with imagemCapa as null (managed via separate endpoint)", () => {
+      const entity = Curso.create(validCreateInput);
 
-      expect(entity.imagemCapa).toEqual(imgRef);
+      expect(entity.imagemCapa).toBeNull();
     });
 
     it("should reject missing campus reference", () => {
@@ -101,8 +100,16 @@ describe("Curso (domain entity)", () => {
       expect(entity.temImagemCapa()).toBe(false);
     });
 
-    it("should return true when imagemCapa is set", () => {
-      const entity = Curso.create({ ...validCreateInput, imagemCapa: createTestRef() });
+    it("should return true when imagemCapa is set via load", () => {
+      const entity = Curso.load({
+        id: "019d0000-0000-7000-8000-000000000001",
+        nome: "Test",
+        nomeAbreviado: "T",
+        campus: createTestRef(),
+        ofertaFormacao: createTestRef(),
+        imagemCapa: createTestRef(),
+        ...createTestDatedFields(),
+      });
       expect(entity.temImagemCapa()).toBe(true);
     });
   });

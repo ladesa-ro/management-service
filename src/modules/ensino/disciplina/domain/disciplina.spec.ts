@@ -23,11 +23,10 @@ describe("Disciplina (domain entity)", () => {
       expect(entity.dateDeleted).toBeNull();
     });
 
-    it("should create with imagemCapa reference", () => {
-      const imgRef = createTestRef();
-      const entity = Disciplina.create({ ...validCreateInput, imagemCapa: imgRef });
+    it("should create with imagemCapa as null (managed via separate endpoint)", () => {
+      const entity = Disciplina.create(validCreateInput);
 
-      expect(entity.imagemCapa).toEqual(imgRef);
+      expect(entity.imagemCapa).toBeNull();
     });
 
     it("should reject empty nome", () => {
@@ -149,8 +148,15 @@ describe("Disciplina (domain entity)", () => {
       expect(entity.temImagemCapa()).toBe(false);
     });
 
-    it("should return true when imagemCapa is set", () => {
-      const entity = Disciplina.create({ ...validCreateInput, imagemCapa: createTestRef() });
+    it("should return true when imagemCapa is set via load", () => {
+      const entity = Disciplina.load({
+        id: createTestId(),
+        nome: "Test",
+        nomeAbreviado: "T",
+        cargaHoraria: 60,
+        imagemCapa: createTestRef(),
+        ...createTestDatedFields(),
+      });
       expect(entity.temImagemCapa()).toBe(true);
     });
   });

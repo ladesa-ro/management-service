@@ -30,7 +30,7 @@ export class Turma {
     instance.periodo = parsed.periodo;
     instance.curso = parsed.curso;
     instance.ambientePadraoAula = parsed.ambientePadraoAula ?? null;
-    instance.imagemCapa = parsed.imagemCapa ?? null;
+    instance.imagemCapa = null;
     instance.dateCreated = getNowISO();
     instance.dateUpdated = getNowISO();
     instance.dateDeleted = null;

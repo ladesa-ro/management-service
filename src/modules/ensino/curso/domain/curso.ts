@@ -32,7 +32,7 @@ export class Curso {
     instance.nomeAbreviado = parsed.nomeAbreviado;
     instance.campus = parsed.campus;
     instance.ofertaFormacao = parsed.ofertaFormacao;
-    instance.imagemCapa = parsed.imagemCapa ?? null;
+    instance.imagemCapa = null;
     instance.dateCreated = getNowISO();
     instance.dateUpdated = getNowISO();
     instance.dateDeleted = null;

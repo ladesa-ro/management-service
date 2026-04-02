@@ -37,7 +37,6 @@ export const DisciplinaCreateSchema = createSchema((standard) =>
     nome: DisciplinaFields.nome.create(standard),
     nomeAbreviado: DisciplinaFields.nomeAbreviado.create(standard),
     cargaHoraria: DisciplinaFields.cargaHoraria.create(standard),
-    imagemCapa: DisciplinaImagemCapaRefSchema.create(standard),
   }),
 );
 

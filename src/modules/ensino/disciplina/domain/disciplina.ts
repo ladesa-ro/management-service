@@ -34,7 +34,7 @@ export class Disciplina {
     instance.nome = parsed.nome;
     instance.nomeAbreviado = parsed.nomeAbreviado;
     instance.cargaHoraria = parsed.cargaHoraria;
-    instance.imagemCapa = parsed.imagemCapa ?? null;
+    instance.imagemCapa = null;
     instance.dateCreated = getNowISO();
     instance.dateUpdated = getNowISO();
     instance.dateDeleted = null;
