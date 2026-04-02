@@ -23,7 +23,7 @@ export class NivelFormacaoCreateCommandHandlerImpl implements INivelFormacaoCrea
   ): Promise<NivelFormacaoFindOneQueryResult> {
     await this.permissionChecker.ensureCanCreate(accessContext, { dto });
 
-    const domain = NivelFormacao.create({ slug: dto.slug });
+    const domain = NivelFormacao.create({ nome: dto.nome, slug: dto.slug });
     await this.repository.save(domain);
 
     const result = await this.repository.getFindOneQueryResult(accessContext, { id: domain.id });

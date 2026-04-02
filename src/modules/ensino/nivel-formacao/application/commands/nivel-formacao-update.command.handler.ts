@@ -28,7 +28,7 @@ export class NivelFormacaoUpdateCommandHandlerImpl implements INivelFormacaoUpda
 
     await this.permissionChecker.ensureCanUpdate(accessContext, { dto }, dto.id);
 
-    domain.update({ slug: dto.slug });
+    domain.update({ nome: dto.nome, slug: dto.slug });
     await this.repository.save(domain);
 
     const result = await this.repository.getFindOneQueryResult(accessContext, { id: dto.id });
