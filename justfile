@@ -97,6 +97,22 @@ exec *ARGS:
     {{COMMAND_COMPOSE_SERVICE}} exec -u {{COMPOSE_SERVICE_USER}} -w {{SHELL_WORKING_DIR}} {{COMPOSE_SERVICE_APP}} \
         bash -c "{{ARGS}}"
 
+# Sobe containers e inicia a API em modo dev (background)
+dev:
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    just start
+
+    if {{COMMAND_COMPOSE_SERVICE}} exec -u {{COMPOSE_SERVICE_USER}} {{COMPOSE_SERVICE_APP}} \
+        bash -c "pgrep -f 'bun run dev' > /dev/null 2>&1"; then
+        echo "[DEV] Servidor dev já está rodando"
+    else
+        {{COMMAND_COMPOSE_SERVICE}} exec -d -u {{COMPOSE_SERVICE_USER}} -w {{SHELL_WORKING_DIR}} {{COMPOSE_SERVICE_APP}} \
+            bash -c "bun run dev"
+        echo "[DEV] API iniciada em background"
+    fi
+
 # Receita interna para abrir shell
 [private]
 _shell user:
