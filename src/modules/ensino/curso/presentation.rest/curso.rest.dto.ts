@@ -12,7 +12,7 @@ import {
 import { EntityBaseRestDto, PaginationMetaRestDto } from "@/shared/presentation/rest/dtos";
 import { CursoCreateCommandFields } from "../domain/commands/curso-create.command";
 import { CursoUpdateCommandFields } from "../domain/commands/curso-update.command";
-import { CursoCreateSchema } from "../domain/curso.schemas";
+import { CursoCreateSchema, CursoUpdateSchema } from "../domain/curso.schemas";
 import { CursoFindOneQueryResultFields } from "../domain/queries/curso-find-one.query.result";
 import { CursoListQueryFields } from "../domain/queries/curso-list.query";
 
@@ -114,7 +114,7 @@ export class CursoCreateInputRestDto {
 
 @ApiSchema({ name: "CursoUpdateInputDto" })
 export class CursoUpdateInputRestDto {
-  static readonly schema = CursoCreateSchema.presentation;
+  static readonly schema = CursoUpdateSchema.presentation;
 
   @ApiPropertyOptional(CursoUpdateCommandFields.nome.swaggerMetadata)
   nome?: string;

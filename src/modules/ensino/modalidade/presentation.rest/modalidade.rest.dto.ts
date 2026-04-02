@@ -4,7 +4,7 @@ import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@/shared/presentati
 import { EntityBaseRestDto, PaginationMetaRestDto } from "@/shared/presentation/rest/dtos";
 import { ModalidadeCreateCommandFields } from "../domain/commands/modalidade-create.command";
 import { ModalidadeUpdateCommandFields } from "../domain/commands/modalidade-update.command";
-import { ModalidadeCreateSchema } from "../domain/modalidade.schemas";
+import { ModalidadeCreateSchema, ModalidadeUpdateSchema } from "../domain/modalidade.schemas";
 import { ModalidadeFindOneQueryResultFields } from "../domain/queries/modalidade-find-one.query.result";
 import { ModalidadeListQueryFields } from "../domain/queries/modalidade-list.query";
 
@@ -77,7 +77,7 @@ export class ModalidadeCreateInputRestDto {
 
 @ApiSchema({ name: "ModalidadeUpdateInputDto" })
 export class ModalidadeUpdateInputRestDto {
-  static readonly schema = ModalidadeCreateSchema.presentation;
+  static readonly schema = ModalidadeUpdateSchema.presentation;
 
   @ApiPropertyOptional(ModalidadeUpdateCommandFields.nome.swaggerMetadata)
   nome?: string;

@@ -47,7 +47,6 @@ export const CursoCreateSchema = createSchema((standard) =>
     nomeAbreviado: CursoFields.nomeAbreviado.create(standard),
     campus: CursoCampusRefSchema.create(standard),
     ofertaFormacao: CursoOfertaFormacaoRefSchema.create(standard),
-    imagemCapa: CursoImagemCapaRefSchema.create(standard),
   }),
 );
 

@@ -48,7 +48,6 @@ export const TurmaCreateSchema = createSchema((standard) =>
     nome: TurmaFields.nome.create(standard),
     curso: TurmaCursoRefSchema.create(standard),
     ambientePadraoAula: TurmaAmbientePadraoAulaRefSchema.create(standard),
-    imagemCapa: TurmaImagemCapaRefSchema.create(standard),
   }),
 );
 
