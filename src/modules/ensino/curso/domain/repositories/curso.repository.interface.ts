@@ -1,6 +1,7 @@
 import type {
   IRepositoryGetFindAllQueryResult,
   IRepositoryGetFindOneQueryResult,
+  IRepositoryLoadById,
   IRepositorySoftDeleteById,
   PersistInput,
 } from "@/domain/abstractions";
@@ -38,6 +39,9 @@ export interface ICursoRepository {
 
   /** Soft-delete por ID. */
   softDeleteById: IRepositorySoftDeleteById;
+
+  /** Carrega a entidade domain (apenas IDs para relações) para uso em command handlers. */
+  loadById: IRepositoryLoadById<ICurso>;
 
   // ==========================================
   // Read side — usado por query handlers

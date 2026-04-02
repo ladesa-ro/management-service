@@ -35,6 +35,9 @@ export interface IEnderecoRepository {
   /** Busca um endereço por ID sem contexto de acesso (uso interno em command handlers). */
   findOneById(id: string): Promise<EnderecoFindOneQueryResult | null>;
 
+  /** Carrega a entidade domain (apenas IDs para relações) para uso em command handlers. */
+  loadById(id: string): Promise<IEndereco | null>;
+
   /** Verifica se um endereço existe. */
   exists(id: string): Promise<boolean>;
 

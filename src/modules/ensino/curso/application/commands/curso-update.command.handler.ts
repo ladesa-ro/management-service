@@ -32,13 +32,13 @@ export class CursoUpdateCommandHandlerImpl implements ICursoUpdateCommandHandler
     accessContext: IAccessContext | null,
     dto: CursoFindOneQuery & CursoUpdateCommand,
   ): Promise<CursoFindOneQueryResult> {
-    const current = await this.repository.getFindOneQueryResult(accessContext, { id: dto.id });
+    const currentDomain = await this.repository.loadById(accessContext, dto.id);
 
-    ensureExists(current, Curso.entityName, dto.id);
+    ensureExists(currentDomain, Curso.entityName, dto.id);
 
     await this.permissionChecker.ensureCanUpdate(accessContext, { dto }, dto.id);
 
-    const domain = Curso.load(current);
+    const domain = Curso.load(currentDomain);
     domain.update({ nome: dto.nome, nomeAbreviado: dto.nomeAbreviado });
     const updateData: Partial<PersistInput<ICurso>> = { ...domain };
     if (has(dto, "campus") && dto.campus !== undefined) {
@@ -53,7 +53,7 @@ export class CursoUpdateCommandHandlerImpl implements ICursoUpdateCommandHandler
       ensureExists(ofertaFormacao, OfertaFormacao.entityName, dto.ofertaFormacao.id);
       updateData.ofertaFormacao = { id: ofertaFormacao.id };
     }
-    await this.repository.update(current.id, updateData);
+    await this.repository.update(currentDomain.id, updateData);
 
     const result = await this.repository.getFindOneQueryResult(accessContext, { id: dto.id });
 
