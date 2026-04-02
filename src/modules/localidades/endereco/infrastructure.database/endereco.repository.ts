@@ -90,6 +90,17 @@ export class EnderecoTypeOrmRepositoryAdapter implements IEnderecoRepository {
     return EnderecoTypeormMapper.entityToFindOneQueryResult.map(endereco);
   }
 
+  async loadById(id: string) {
+    const repo = this.appTypeormConnection.getRepository(EnderecoEntity);
+    const endereco = await repo.findOne({
+      where: { id },
+      relations: ["cidade", "cidade.estado"],
+    });
+
+    if (!endereco) return null;
+    return EnderecoTypeormMapper.entityToDomain.map(endereco);
+  }
+
   async exists(id: string): Promise<boolean> {
     const repo = this.appTypeormConnection.getRepository(EnderecoEntity);
     return repo.exists({ where: { id } });

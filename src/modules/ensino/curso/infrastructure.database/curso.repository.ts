@@ -78,6 +78,16 @@ export class CursoTypeOrmRepositoryAdapter implements ICursoRepository {
     return typeormSoftDeleteById(this.appTypeormConnection, CursoEntity, config.alias, id);
   }
 
+  async loadById(_accessContext: IAccessContext | null, id: string) {
+    const repo = this.appTypeormConnection.getRepository(CursoEntity);
+    const entity = await repo.findOne({
+      where: { id },
+      relations: cursoRelations,
+    });
+    if (!entity) return null;
+    return CursoTypeormMapper.entityToDomain.map(entity);
+  }
+
   // ============================================================================
   // Read (Query handlers)
   // ============================================================================

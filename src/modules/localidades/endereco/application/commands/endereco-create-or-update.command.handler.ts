@@ -21,7 +21,7 @@ export class EnderecoCreateOrUpdateCommandHandlerImpl
     { id, dto }: IEnderecoCreateOrUpdateCommand,
   ): Promise<{ id: string | number }> {
     if (id) {
-      const current = await this.repository.findOneById(id);
+      const current = await this.repository.loadById(id);
 
       if (current) {
         const domain = Endereco.load(current);
