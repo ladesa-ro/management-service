@@ -83,7 +83,7 @@ export class UsuarioTypeOrmRepositoryAdapter implements IUsuarioRepository {
       where: { matricula, dateDeleted: IsNull() },
       relations: usuarioRelations,
     });
-    return (entity as unknown as UsuarioFindOneQueryResult) ?? null;
+    return entity ? UsuarioTypeormMapper.entityToFindOneQueryResult.map(entity) : null;
   }
 
   async isMatriculaAvailable(

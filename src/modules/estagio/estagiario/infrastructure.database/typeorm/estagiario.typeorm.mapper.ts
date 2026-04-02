@@ -1,5 +1,5 @@
 import type { DeepPartial } from "typeorm";
-import type { PerfilFindOneQueryResult } from "@/modules/acesso/usuario/perfil/domain/queries/perfil-find-one.query.result";
+import { PerfilTypeormMapper } from "@/modules/acesso/usuario/perfil/infrastructure.database/typeorm";
 import { CursoTypeormMapper } from "@/modules/ensino/curso/infrastructure.database/typeorm";
 import { TurmaTypeormMapper } from "@/modules/ensino/turma/infrastructure.database/typeorm";
 import type { IEstagiario } from "@/modules/estagio/estagiario/domain/estagiario";
@@ -36,7 +36,7 @@ export const entityToFindOneQueryResult = createMapper<
   EstagiarioFindOneQueryResult
 >((e) => ({
   id: e.id,
-  perfil: e.perfil satisfies { id: string } as unknown as PerfilFindOneQueryResult,
+  perfil: PerfilTypeormMapper.entityToFindOneQueryResult.map(e.perfil),
   curso: CursoTypeormMapper.entityToFindOneQueryResult.map(e.curso),
   turma: TurmaTypeormMapper.entityToFindOneQueryResult.map(e.turma),
   telefone: e.telefone,

@@ -1,6 +1,7 @@
 import type { DeepPartial } from "typeorm";
 import type { ICurso } from "@/modules/ensino/curso/domain/curso";
 import type { CursoFindOneQueryResult } from "@/modules/ensino/curso/domain/queries/curso-find-one.query.result";
+import { OfertaFormacaoTypeormMapper } from "@/modules/ensino/oferta-formacao/infrastructure.database/typeorm";
 import { createMapper } from "@/shared/mapping";
 import { pickId } from "@/shared/mapping/transforms";
 import type { CursoEntity } from "./curso.typeorm.entity";
@@ -27,7 +28,7 @@ export const entityToFindOneQueryResult = createMapper<CursoEntity, CursoFindOne
     nome: e.nome,
     nomeAbreviado: e.nomeAbreviado,
     campus: e.campus,
-    ofertaFormacao: e.ofertaFormacao as unknown as CursoFindOneQueryResult["ofertaFormacao"],
+    ofertaFormacao: OfertaFormacaoTypeormMapper.entityToFindOneQueryResult.map(e.ofertaFormacao),
     imagemCapa: e.imagemCapa,
     dateCreated: e.dateCreated,
     dateUpdated: e.dateUpdated,

@@ -9,8 +9,7 @@ import type { IStreamableFileResult } from "@/domain/abstractions/storage";
  */
 
 export async function getEntityImagemStreamableFile(
-  entity: Record<string, unknown>,
-  fieldName: string,
+  imagem: { id: string } | null | undefined,
   resourceLabel: string,
   entityId: string | number,
   getLatestArquivoIdHandler: {
@@ -26,8 +25,6 @@ export async function getEntityImagemStreamableFile(
     ): Promise<IStreamableFileResult>;
   },
 ): Promise<IStreamableFileResult> {
-  const imagem = entity[fieldName] as { id: string } | null | undefined;
-
   if (imagem?.id) {
     const arquivoId = await getLatestArquivoIdHandler.execute(null, { imagemId: imagem.id });
 

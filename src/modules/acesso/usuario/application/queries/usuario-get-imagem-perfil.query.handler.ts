@@ -36,8 +36,7 @@ export class UsuarioGetImagemPerfilQueryHandlerImpl implements IUsuarioGetImagem
     ensureExists(usuario, Usuario.entityName, id);
 
     return getEntityImagemStreamableFile(
-      usuario as unknown as Record<string, unknown>,
-      "imagemPerfil",
+      usuario.imagemPerfil,
       "Imagem de perfil do Usuario",
       id,
       this.getLatestArquivoIdHandler,

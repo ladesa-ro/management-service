@@ -1,21 +1,11 @@
+import type { z } from "zod";
 import type { IdUuid, ScalarDateTimeString } from "@/domain/abstractions/scalars";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
-import type { IUsuario } from "@/modules/acesso/usuario";
-import type { ICampus } from "@/modules/ambientes/campus";
 import { zodValidate } from "@/shared/validation/index";
 import { getNowISO } from "@/utils/date";
 import { PerfilCreateSchema, PerfilSchema, PerfilUpdateSchema } from "./perfil.schemas";
 
-export interface IPerfil {
-  id: string;
-  ativo: boolean;
-  cargo: string;
-  campus: ICampus;
-  usuario: IUsuario;
-  dateCreated: string;
-  dateUpdated: string;
-  dateDeleted: string | null;
-}
+export type IPerfil = z.infer<typeof PerfilSchema>;
 
 export class Perfil {
   static readonly entityName = "Perfil";
@@ -23,8 +13,8 @@ export class Perfil {
   id!: IdUuid;
   ativo!: boolean;
   cargo!: string;
-  campus!: ICampus;
-  usuario!: IUsuario;
+  campus!: { id: string };
+  usuario!: { id: string };
   dateCreated!: ScalarDateTimeString;
   dateUpdated!: ScalarDateTimeString;
   dateDeleted!: ScalarDateTimeString | null;
@@ -54,8 +44,8 @@ export class Perfil {
     instance.id = parsed.id;
     instance.ativo = parsed.ativo;
     instance.cargo = parsed.cargo;
-    instance.campus = parsed.campus as ICampus;
-    instance.usuario = parsed.usuario as IUsuario;
+    instance.campus = parsed.campus;
+    instance.usuario = parsed.usuario;
     instance.dateCreated = parsed.dateCreated;
     instance.dateUpdated = parsed.dateUpdated;
     instance.dateDeleted = parsed.dateDeleted;

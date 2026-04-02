@@ -1,7 +1,6 @@
-import type { IEntityBaseUuid } from "@/domain/abstractions/entities";
+import type { z } from "zod";
 import type { IdUuid, ScalarDateTimeString } from "@/domain/abstractions/scalars";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
-import type { IDiario } from "@/modules/ensino/diario/domain/diario";
 import { zodValidate } from "@/shared/validation/index";
 import { getNowISO } from "@/utils/date";
 import {
@@ -10,13 +9,7 @@ import {
   DiarioPreferenciaAgrupamentoUpdateSchema,
 } from "./diario-preferencia-agrupamento.schemas";
 
-export interface IDiarioPreferenciaAgrupamento extends IEntityBaseUuid {
-  dataInicio: ScalarDateTimeString;
-  dataFim: ScalarDateTimeString | null;
-  diaSemanaIso: number;
-  aulasSeguidas: number;
-  diario: IDiario;
-}
+export type IDiarioPreferenciaAgrupamento = z.infer<typeof DiarioPreferenciaAgrupamentoSchema>;
 
 export interface IDiarioPreferenciaAgrupamentoCreate {
   dataInicio: ScalarDateTimeString;
@@ -34,7 +27,7 @@ export interface IDiarioPreferenciaAgrupamentoUpdate {
   diario?: { id: IdUuid };
 }
 
-export class DiarioPreferenciaAgrupamento implements IEntityBaseUuid {
+export class DiarioPreferenciaAgrupamento {
   static readonly entityName = "DiarioPreferenciaAgrupamento";
 
   id!: IdUuid;
@@ -42,7 +35,7 @@ export class DiarioPreferenciaAgrupamento implements IEntityBaseUuid {
   dataFim!: ScalarDateTimeString | null;
   diaSemanaIso!: number;
   aulasSeguidas!: number;
-  diario!: IDiario;
+  diario!: { id: string };
   dateCreated!: ScalarDateTimeString;
   dateUpdated!: ScalarDateTimeString;
   dateDeleted!: ScalarDateTimeString | null;
@@ -63,7 +56,7 @@ export class DiarioPreferenciaAgrupamento implements IEntityBaseUuid {
     instance.dataFim = parsed.dataFim ?? null;
     instance.diaSemanaIso = parsed.diaSemanaIso;
     instance.aulasSeguidas = parsed.aulasSeguidas;
-    instance.diario = parsed.diario as unknown as IDiario;
+    instance.diario = parsed.diario;
     instance.dateCreated = getNowISO();
     instance.dateUpdated = getNowISO();
     instance.dateDeleted = null;
@@ -85,7 +78,7 @@ export class DiarioPreferenciaAgrupamento implements IEntityBaseUuid {
     instance.dataFim = parsed.dataFim;
     instance.diaSemanaIso = parsed.diaSemanaIso;
     instance.aulasSeguidas = parsed.aulasSeguidas;
-    instance.diario = parsed.diario as unknown as IDiario;
+    instance.diario = parsed.diario;
     instance.dateCreated = parsed.dateCreated;
     instance.dateUpdated = parsed.dateUpdated;
     instance.dateDeleted = parsed.dateDeleted;

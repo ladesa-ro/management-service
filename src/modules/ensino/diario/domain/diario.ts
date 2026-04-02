@@ -1,23 +1,11 @@
-import type { IEntityBaseUuid } from "@/domain/abstractions/entities";
+import type { z } from "zod";
 import type { IdUuid, ScalarDateTimeString } from "@/domain/abstractions/scalars";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
-import type { IAmbiente } from "@/modules/ambientes/ambiente";
-import type { IImagem } from "@/modules/armazenamento/imagem/domain/imagem";
-import type { IDisciplina } from "@/modules/ensino/disciplina/domain/disciplina";
-import type { ITurma } from "@/modules/ensino/turma/domain/turma";
-import type { ICalendarioLetivo } from "@/modules/horarios/calendario-letivo";
 import { zodValidate } from "@/shared/validation/index";
 import { getNowISO } from "@/utils/date";
 import { DiarioCreateSchema, DiarioSchema, DiarioUpdateSchema } from "./diario.schemas";
 
-export interface IDiario extends IEntityBaseUuid {
-  ativo: boolean;
-  calendarioLetivo: ICalendarioLetivo;
-  turma: ITurma;
-  disciplina: IDisciplina;
-  ambientePadrao: IAmbiente | null;
-  imagemCapa: IImagem | null;
-}
+export type IDiario = z.infer<typeof DiarioSchema>;
 
 export interface IDiarioCreate {
   ativo?: boolean;
@@ -35,16 +23,16 @@ export interface IDiarioUpdate {
   ambientePadrao?: { id: IdUuid } | null;
 }
 
-export class Diario implements IEntityBaseUuid {
+export class Diario {
   static readonly entityName = "Diario";
 
   id!: IdUuid;
   ativo!: boolean;
-  calendarioLetivo!: ICalendarioLetivo;
-  turma!: ITurma;
-  disciplina!: IDisciplina;
-  ambientePadrao!: IAmbiente | null;
-  imagemCapa!: IImagem | null;
+  calendarioLetivo!: { id: string };
+  turma!: { id: string };
+  disciplina!: { id: string };
+  ambientePadrao!: { id: string } | null;
+  imagemCapa!: { id: string } | null;
   dateCreated!: ScalarDateTimeString;
   dateUpdated!: ScalarDateTimeString;
   dateDeleted!: ScalarDateTimeString | null;
@@ -58,12 +46,10 @@ export class Diario implements IEntityBaseUuid {
 
     instance.id = generateUuidV7();
     instance.ativo = parsed.ativo;
-    instance.calendarioLetivo = parsed.calendarioLetivo as unknown as ICalendarioLetivo;
-    instance.turma = parsed.turma as unknown as ITurma;
-    instance.disciplina = parsed.disciplina as unknown as IDisciplina;
-    instance.ambientePadrao = parsed.ambientePadrao
-      ? (parsed.ambientePadrao as unknown as IAmbiente)
-      : null;
+    instance.calendarioLetivo = parsed.calendarioLetivo;
+    instance.turma = parsed.turma;
+    instance.disciplina = parsed.disciplina;
+    instance.ambientePadrao = parsed.ambientePadrao ?? null;
     instance.imagemCapa = null;
     instance.dateCreated = getNowISO();
     instance.dateUpdated = getNowISO();
@@ -79,11 +65,11 @@ export class Diario implements IEntityBaseUuid {
 
     instance.id = parsed.id;
     instance.ativo = parsed.ativo;
-    instance.calendarioLetivo = parsed.calendarioLetivo as unknown as ICalendarioLetivo;
-    instance.turma = parsed.turma as unknown as ITurma;
-    instance.disciplina = parsed.disciplina as unknown as IDisciplina;
-    instance.ambientePadrao = parsed.ambientePadrao as unknown as IAmbiente | null;
-    instance.imagemCapa = parsed.imagemCapa as unknown as IImagem | null;
+    instance.calendarioLetivo = parsed.calendarioLetivo;
+    instance.turma = parsed.turma;
+    instance.disciplina = parsed.disciplina;
+    instance.ambientePadrao = parsed.ambientePadrao;
+    instance.imagemCapa = parsed.imagemCapa;
     instance.dateCreated = parsed.dateCreated;
     instance.dateUpdated = parsed.dateUpdated;
     instance.dateDeleted = parsed.dateDeleted;

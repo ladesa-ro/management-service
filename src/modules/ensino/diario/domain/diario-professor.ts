@@ -1,8 +1,6 @@
-import type { IEntityBaseUuid } from "@/domain/abstractions/entities";
+import type { z } from "zod";
 import type { IdUuid, ScalarDateTimeString } from "@/domain/abstractions/scalars";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
-import type { IPerfil } from "@/modules/acesso/usuario/perfil";
-import type { IDiario } from "@/modules/ensino/diario/domain/diario";
 import { zodValidate } from "@/shared/validation/index";
 import { getNowISO } from "@/utils/date";
 import {
@@ -11,11 +9,7 @@ import {
   DiarioProfessorUpdateSchema,
 } from "./diario-professor.schemas";
 
-export interface IDiarioProfessor extends IEntityBaseUuid {
-  situacao: boolean;
-  diario: IDiario;
-  perfil: IPerfil;
-}
+export type IDiarioProfessor = z.infer<typeof DiarioProfessorSchema>;
 
 export interface IDiarioProfessorCreate {
   situacao: boolean;
@@ -29,13 +23,13 @@ export interface IDiarioProfessorUpdate {
   perfil?: { id: IdUuid };
 }
 
-export class DiarioProfessor implements IEntityBaseUuid {
+export class DiarioProfessor {
   static readonly entityName = "DiarioProfessor";
 
   id!: IdUuid;
   situacao!: boolean;
-  diario!: IDiario;
-  perfil!: IPerfil;
+  diario!: { id: string };
+  perfil!: { id: string };
   dateCreated!: ScalarDateTimeString;
   dateUpdated!: ScalarDateTimeString;
   dateDeleted!: ScalarDateTimeString | null;
@@ -53,8 +47,8 @@ export class DiarioProfessor implements IEntityBaseUuid {
 
     instance.id = generateUuidV7();
     instance.situacao = parsed.situacao;
-    instance.diario = parsed.diario as unknown as IDiario;
-    instance.perfil = parsed.perfil as unknown as IPerfil;
+    instance.diario = parsed.diario;
+    instance.perfil = parsed.perfil;
     instance.dateCreated = getNowISO();
     instance.dateUpdated = getNowISO();
     instance.dateDeleted = null;
@@ -69,8 +63,8 @@ export class DiarioProfessor implements IEntityBaseUuid {
 
     instance.id = parsed.id;
     instance.situacao = parsed.situacao;
-    instance.diario = parsed.diario as unknown as IDiario;
-    instance.perfil = parsed.perfil as unknown as IPerfil;
+    instance.diario = parsed.diario;
+    instance.perfil = parsed.perfil;
     instance.dateCreated = parsed.dateCreated;
     instance.dateUpdated = parsed.dateUpdated;
     instance.dateDeleted = parsed.dateDeleted;

@@ -36,8 +36,7 @@ export class CursoGetImagemCapaQueryHandlerImpl implements ICursoGetImagemCapaQu
     ensureExists(entity, Curso.entityName, id);
 
     return getEntityImagemStreamableFile(
-      entity as unknown as Record<string, unknown>,
-      "imagemCapa",
+      entity.imagemCapa,
       "Imagem de capa do Curso",
       id,
       this.getLatestArquivoIdHandler,

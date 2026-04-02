@@ -1,8 +1,6 @@
-import type { IEntityBaseUuid } from "@/domain/abstractions/entities";
+import type { z } from "zod";
 import type { IdUuid, ScalarDateTimeString } from "@/domain/abstractions/scalars";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
-import type { ICampus } from "@/modules/ambientes/campus";
-import type { IOfertaFormacao } from "@/modules/ensino/oferta-formacao";
 import { zodValidate } from "@/shared/validation/index";
 import { getNowISO } from "@/utils/date";
 import {
@@ -11,12 +9,7 @@ import {
   CalendarioLetivoUpdateSchema,
 } from "./calendario-letivo.schemas";
 
-export interface ICalendarioLetivo extends IEntityBaseUuid {
-  nome: string;
-  ano: number;
-  campus: ICampus;
-  ofertaFormacao: IOfertaFormacao | null;
-}
+export type ICalendarioLetivo = z.infer<typeof CalendarioLetivoSchema>;
 
 export interface ICalendarioLetivoCreate {
   nome: string;
@@ -32,14 +25,14 @@ export interface ICalendarioLetivoUpdate {
   ofertaFormacao?: { id: IdUuid } | null;
 }
 
-export class CalendarioLetivo implements IEntityBaseUuid {
+export class CalendarioLetivo {
   static readonly entityName = "CalendarioLetivo";
 
   id!: IdUuid;
   nome!: string;
   ano!: number;
-  campus!: ICampus;
-  ofertaFormacao!: IOfertaFormacao | null;
+  campus!: { id: string };
+  ofertaFormacao!: { id: string } | null;
   dateCreated!: ScalarDateTimeString;
   dateUpdated!: ScalarDateTimeString;
   dateDeleted!: ScalarDateTimeString | null;
@@ -58,10 +51,8 @@ export class CalendarioLetivo implements IEntityBaseUuid {
     instance.id = generateUuidV7();
     instance.nome = parsed.nome;
     instance.ano = parsed.ano;
-    instance.campus = parsed.campus as unknown as ICampus;
-    instance.ofertaFormacao = parsed.ofertaFormacao
-      ? (parsed.ofertaFormacao as unknown as IOfertaFormacao)
-      : null;
+    instance.campus = parsed.campus;
+    instance.ofertaFormacao = parsed.ofertaFormacao ?? null;
     instance.dateCreated = getNowISO();
     instance.dateUpdated = getNowISO();
     instance.dateDeleted = null;
@@ -77,8 +68,8 @@ export class CalendarioLetivo implements IEntityBaseUuid {
     instance.id = parsed.id;
     instance.nome = parsed.nome;
     instance.ano = parsed.ano;
-    instance.campus = parsed.campus as unknown as ICampus;
-    instance.ofertaFormacao = parsed.ofertaFormacao as unknown as IOfertaFormacao | null;
+    instance.campus = parsed.campus;
+    instance.ofertaFormacao = parsed.ofertaFormacao;
     instance.dateCreated = parsed.dateCreated;
     instance.dateUpdated = parsed.dateUpdated;
     instance.dateDeleted = parsed.dateDeleted;
