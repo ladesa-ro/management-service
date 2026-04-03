@@ -6,14 +6,20 @@ export class DiarioPreferenciaAgrupamentoEntity {
   @PrimaryColumn("uuid")
   id!: string;
 
+  @Column({ name: "modo", type: "varchar", length: 20, nullable: false, default: "'DEFINIDO'" })
+  modo!: string;
+
+  @Column({ name: "ordem", type: "int", nullable: false, default: 1 })
+  ordem!: number;
+
   @Column({ name: "data_inicio", type: "timestamptz", nullable: false })
   dataInicio!: string;
 
   @Column({ name: "data_fim", type: "timestamptz", nullable: true })
   dataFim!: string | null;
 
-  @Column({ name: "dia_semana_iso", type: "int", nullable: false })
-  diaSemanaIso!: number;
+  @Column({ name: "dia_semana_iso", type: "int", nullable: true })
+  diaSemanaIso!: number | null;
 
   @Column({ name: "aulas_seguidas", type: "int", nullable: false })
   aulasSeguidas!: number;

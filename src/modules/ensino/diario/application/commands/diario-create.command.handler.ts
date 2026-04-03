@@ -1,3 +1,4 @@
+import { ConflictException } from "@nestjs/common";
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { Dep, Impl } from "@/domain/dependency-injection";
@@ -60,6 +61,20 @@ export class DiarioCreateCommandHandlerImpl implements IDiarioCreateCommandHandl
 
     const turma = await this.turmaFindOneHandler.execute(accessContext, { id: dto.turma.id });
     ensureExists(turma, Turma.entityName, dto.turma.id);
+
+    // Validar unicidade: nao pode existir diario ativo com mesma turma + disciplina + calendario
+    const existing = await this.repository.getFindAllQueryResult(accessContext, {
+      "filter.turma.id": [turma.id],
+      "filter.disciplina.id": [disciplina.id],
+      "filter.calendarioLetivo.id": [calendarioLetivo.id],
+      limit: 1,
+    });
+
+    if (existing.data.length > 0) {
+      throw new ConflictException(
+        `Já existe um diário para a turma, disciplina e calendário letivo informados.`,
+      );
+    }
 
     const domain = Diario.create({
       ativo: dto.ativo,

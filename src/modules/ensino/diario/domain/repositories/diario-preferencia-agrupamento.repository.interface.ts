@@ -42,9 +42,11 @@ export interface IDiarioPreferenciaAgrupamentoRepository {
   bulkCreate(
     entries: Array<{
       diarioId: string;
+      modo: string;
+      ordem: number;
       dataInicio: string;
       dataFim?: string | null;
-      diaSemanaIso: number;
+      diaSemanaIso: number | null;
       aulasSeguidas: number;
     }>,
   ): Promise<void>;

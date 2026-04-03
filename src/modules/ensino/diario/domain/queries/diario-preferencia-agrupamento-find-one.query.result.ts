@@ -9,9 +9,11 @@ export const DiarioPreferenciaAgrupamentoFindOneQueryResultFields = {
 };
 
 export class DiarioPreferenciaAgrupamentoFindOneQueryResult extends EntityQueryResult {
+  modo!: string;
+  ordem!: number;
   dataInicio!: ScalarDate;
   dataFim!: ScalarDate | null;
-  diaSemanaIso!: number;
+  diaSemanaIso!: number | null;
   aulasSeguidas!: number;
   diario!: DiarioFindOneQueryResult;
 }

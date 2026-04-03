@@ -169,9 +169,11 @@ export class DiarioPreferenciaAgrupamentoTypeOrmRepositoryAdapter
   async bulkCreate(
     entries: Array<{
       diarioId: string;
+      modo: string;
+      ordem: number;
       dataInicio: string;
       dataFim?: string | null;
-      diaSemanaIso: number;
+      diaSemanaIso: number | null;
       aulasSeguidas: number;
     }>,
   ): Promise<void> {
@@ -182,6 +184,8 @@ export class DiarioPreferenciaAgrupamentoTypeOrmRepositoryAdapter
     const entities = entries.map((p) => {
       const entity = new DiarioPreferenciaAgrupamentoEntity();
       entity.id = generateUuidV7();
+      entity.modo = p.modo;
+      entity.ordem = p.ordem;
       entity.dataInicio = p.dataInicio;
       entity.dataFim = p.dataFim ?? null;
       entity.diaSemanaIso = p.diaSemanaIso;

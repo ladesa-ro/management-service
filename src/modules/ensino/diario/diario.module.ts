@@ -5,6 +5,7 @@ import { AmbienteModule } from "@/modules/ambientes/ambiente/ambiente.module";
 import { CalendarioLetivoModule } from "@/modules/calendario/letivo/calendario-letivo.module";
 import { DiarioPermissionCheckerImpl } from "@/modules/ensino/diario/application/authorization";
 import {
+  DiarioBatchCreateCommandHandlerImpl,
   DiarioCreateCommandHandlerImpl,
   DiarioDeleteCommandHandlerImpl,
   DiarioPreferenciaAgrupamentoBulkReplaceCommandHandlerImpl,
@@ -21,6 +22,7 @@ import {
 } from "@/modules/ensino/diario/application/queries";
 import { IDiarioPermissionChecker } from "@/modules/ensino/diario/domain/authorization";
 import {
+  IDiarioBatchCreateCommandHandler,
   IDiarioCreateCommandHandler,
   IDiarioDeleteCommandHandler,
   IDiarioPreferenciaAgrupamentoBulkReplaceCommandHandler,
@@ -80,6 +82,7 @@ import { TurmaModule } from "@/modules/ensino/turma/turma.module";
     },
 
     // Diario Commands
+    { provide: IDiarioBatchCreateCommandHandler, useClass: DiarioBatchCreateCommandHandlerImpl },
     { provide: IDiarioCreateCommandHandler, useClass: DiarioCreateCommandHandlerImpl },
     { provide: IDiarioUpdateCommandHandler, useClass: DiarioUpdateCommandHandlerImpl },
     { provide: IDiarioDeleteCommandHandler, useClass: DiarioDeleteCommandHandlerImpl },

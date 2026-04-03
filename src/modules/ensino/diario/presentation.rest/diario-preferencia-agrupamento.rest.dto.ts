@@ -36,6 +36,20 @@ export class DiarioPreferenciaAgrupamentoParentParamsRestDto {
 export class DiarioPreferenciaAgrupamentoFindOneOutputRestDto extends EntityBaseRestDto {
   @ApiProperty({
     type: "string",
+    ...DiarioPreferenciaAgrupamentoFindOneQueryResultFields.modo.swaggerMetadata,
+    enum: ["DEFINIDO", "POR_DIA_SEMANA"],
+  })
+  modo: string;
+
+  @ApiProperty({
+    type: "integer",
+    ...DiarioPreferenciaAgrupamentoFindOneQueryResultFields.ordem.swaggerMetadata,
+    minimum: 1,
+  })
+  ordem: number;
+
+  @ApiProperty({
+    type: "string",
     ...DiarioPreferenciaAgrupamentoFindOneQueryResultFields.dataInicio.swaggerMetadata,
   })
   dataInicio: string;
@@ -47,13 +61,14 @@ export class DiarioPreferenciaAgrupamentoFindOneOutputRestDto extends EntityBase
   })
   dataFim: string | null;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     type: "integer",
     ...DiarioPreferenciaAgrupamentoFindOneQueryResultFields.diaSemanaIso.swaggerMetadata,
     minimum: 1,
     maximum: 7,
+    nullable: true,
   })
-  diaSemanaIso: number;
+  diaSemanaIso: number | null;
 
   @ApiProperty({
     type: "integer",
@@ -107,6 +122,20 @@ export class DiarioPreferenciaAgrupamentoListOutputRestDto {
 export class DiarioPreferenciaAgrupamentoBulkReplaceItemRestDto {
   @ApiProperty({
     type: "string",
+    ...DiarioPreferenciaAgrupamentoBulkReplaceCommandFields.modo.swaggerMetadata,
+    enum: ["DEFINIDO", "POR_DIA_SEMANA"],
+  })
+  modo: string;
+
+  @ApiProperty({
+    type: "integer",
+    ...DiarioPreferenciaAgrupamentoBulkReplaceCommandFields.ordem.swaggerMetadata,
+    minimum: 1,
+  })
+  ordem: number;
+
+  @ApiProperty({
+    type: "string",
     ...DiarioPreferenciaAgrupamentoBulkReplaceCommandFields.dataInicio.swaggerMetadata,
   })
   dataInicio: string;
@@ -118,13 +147,14 @@ export class DiarioPreferenciaAgrupamentoBulkReplaceItemRestDto {
   })
   dataFim?: string | null;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     type: "integer",
     ...DiarioPreferenciaAgrupamentoBulkReplaceCommandFields.diaSemanaIso.swaggerMetadata,
     minimum: 1,
     maximum: 7,
+    nullable: true,
   })
-  diaSemanaIso: number;
+  diaSemanaIso?: number | null;
 
   @ApiProperty({
     type: "integer",

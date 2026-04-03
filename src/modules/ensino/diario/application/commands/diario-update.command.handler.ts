@@ -10,10 +10,6 @@ import type { DiarioUpdateCommand } from "@/modules/ensino/diario/domain/command
 import { IDiarioUpdateCommandHandler } from "@/modules/ensino/diario/domain/commands/diario-update.command.handler.interface";
 import { Diario } from "@/modules/ensino/diario/domain/diario";
 import type { DiarioFindOneQuery } from "@/modules/ensino/diario/domain/queries";
-import { Disciplina } from "@/modules/ensino/disciplina/domain/disciplina";
-import { IDisciplinaFindOneQueryHandler } from "@/modules/ensino/disciplina/domain/queries/disciplina-find-one.query.handler.interface";
-import { ITurmaFindOneQueryHandler } from "@/modules/ensino/turma/domain/queries/turma-find-one.query.handler.interface";
-import { Turma } from "@/modules/ensino/turma/domain/turma";
 import { IDiarioPermissionChecker } from "../../domain/authorization";
 import type { DiarioFindOneQueryResult } from "../../domain/queries";
 import { IDiarioRepository } from "../../domain/repositories";
@@ -27,10 +23,6 @@ export class DiarioUpdateCommandHandlerImpl implements IDiarioUpdateCommandHandl
     private readonly permissionChecker: IDiarioPermissionChecker,
     @Dep(ICalendarioLetivoFindOneQueryHandler)
     private readonly calendarioLetivoFindOneHandler: ICalendarioLetivoFindOneQueryHandler,
-    @Dep(ITurmaFindOneQueryHandler)
-    private readonly turmaFindOneHandler: ITurmaFindOneQueryHandler,
-    @Dep(IDisciplinaFindOneQueryHandler)
-    private readonly disciplinaFindOneHandler: IDisciplinaFindOneQueryHandler,
     @Dep(IAmbienteFindOneQueryHandler)
     private readonly ambienteFindOneHandler: IAmbienteFindOneQueryHandler,
   ) {}
@@ -46,6 +38,7 @@ export class DiarioUpdateCommandHandlerImpl implements IDiarioUpdateCommandHandl
     await this.permissionChecker.ensureCanUpdate(accessContext, { dto }, dto.id);
 
     // Validar existência das referências antes de atualizar o domain
+    // Nota: turma e disciplina sao imutaveis apos criacao — ignorados no update
     if (has(dto, "ambientePadrao") && dto.ambientePadrao !== undefined) {
       if (dto.ambientePadrao !== null) {
         const ambientePadrao = await this.ambienteFindOneHandler.execute(accessContext, {
@@ -56,18 +49,6 @@ export class DiarioUpdateCommandHandlerImpl implements IDiarioUpdateCommandHandl
       } else {
         domain.ambientePadrao = null;
       }
-    }
-    if (has(dto, "disciplina") && dto.disciplina !== undefined) {
-      const disciplina = await this.disciplinaFindOneHandler.execute(accessContext, {
-        id: dto.disciplina.id,
-      });
-      ensureExists(disciplina, Disciplina.entityName, dto.disciplina.id);
-      domain.disciplina = { id: disciplina.id };
-    }
-    if (has(dto, "turma") && dto.turma !== undefined) {
-      const turma = await this.turmaFindOneHandler.execute(accessContext, { id: dto.turma.id });
-      ensureExists(turma, Turma.entityName, dto.turma.id);
-      domain.turma = { id: turma.id };
     }
     if (has(dto, "calendarioLetivo") && dto.calendarioLetivo !== undefined) {
       const calendarioLetivo = await this.calendarioLetivoFindOneHandler.execute(accessContext, {
