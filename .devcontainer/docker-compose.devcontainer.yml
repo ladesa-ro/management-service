@@ -9,8 +9,8 @@ services:
       dockerfile: ../.docker/Containerfile
       target: devcontainer
     volumes:
-      # Adicionar cache de bun para melhor performance
-      - bun-cache:/home/happy/.bun:z
+      # Cache do Bun alinhado ao caminho usado no Containerfile
+      - bun-cache:/tmp/bun-cache:z
       # Cache do Git para melhor performance
       - git-cache:/home/happy/.gitconfig:z
       # Configurações do VS Code
