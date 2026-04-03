@@ -7,6 +7,8 @@ export const DiarioPreferenciaAgrupamentoBulkReplaceCommandFields = {
   preferenciasAgrupamento: createFieldMetadata({
     description: "Lista de preferencias de agrupamento para vincular ao diario",
   }),
+  modo: DiarioPreferenciaAgrupamentoFields.modo,
+  ordem: DiarioPreferenciaAgrupamentoFields.ordem,
   dataInicio: DiarioPreferenciaAgrupamentoFields.dataInicio,
   dataFim: DiarioPreferenciaAgrupamentoFields.dataFim,
   diaSemanaIso: DiarioPreferenciaAgrupamentoFields.diaSemanaIso,
@@ -14,9 +16,11 @@ export const DiarioPreferenciaAgrupamentoBulkReplaceCommandFields = {
 };
 
 export class DiarioPreferenciaAgrupamentoBulkReplaceItem {
+  modo!: string;
+  ordem!: number;
   dataInicio!: ScalarDate;
   dataFim!: ScalarDate | null;
-  diaSemanaIso!: number;
+  diaSemanaIso!: number | null;
   aulasSeguidas!: number;
 }
 

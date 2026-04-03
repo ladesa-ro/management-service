@@ -3,6 +3,7 @@ import type { IdUuid, ScalarDateTimeString } from "@/domain/abstractions/scalars
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { zodValidate } from "@/shared/validation/index";
 import { getNowISO } from "@/utils/date";
+import type { DiarioPreferenciaAgrupamentoModo } from "./diario-preferencia-agrupamento.fields";
 import {
   DiarioPreferenciaAgrupamentoCreateSchema,
   DiarioPreferenciaAgrupamentoSchema,
@@ -12,17 +13,21 @@ import {
 export type IDiarioPreferenciaAgrupamento = z.infer<typeof DiarioPreferenciaAgrupamentoSchema>;
 
 export interface IDiarioPreferenciaAgrupamentoCreate {
+  modo: DiarioPreferenciaAgrupamentoModo;
+  ordem: number;
   dataInicio: ScalarDateTimeString;
   dataFim?: ScalarDateTimeString | null;
-  diaSemanaIso: number;
+  diaSemanaIso?: number | null;
   aulasSeguidas: number;
   diario: { id: IdUuid };
 }
 
 export interface IDiarioPreferenciaAgrupamentoUpdate {
+  modo?: DiarioPreferenciaAgrupamentoModo;
+  ordem?: number;
   dataInicio?: ScalarDateTimeString;
   dataFim?: ScalarDateTimeString | null;
-  diaSemanaIso?: number;
+  diaSemanaIso?: number | null;
   aulasSeguidas?: number;
   diario?: { id: IdUuid };
 }
@@ -31,9 +36,11 @@ export class DiarioPreferenciaAgrupamento {
   static readonly entityName = "DiarioPreferenciaAgrupamento";
 
   id!: IdUuid;
+  modo!: DiarioPreferenciaAgrupamentoModo;
+  ordem!: number;
   dataInicio!: ScalarDateTimeString;
   dataFim!: ScalarDateTimeString | null;
-  diaSemanaIso!: number;
+  diaSemanaIso!: number | null;
   aulasSeguidas!: number;
   diario!: { id: string };
   dateCreated!: ScalarDateTimeString;
@@ -52,9 +59,11 @@ export class DiarioPreferenciaAgrupamento {
     const instance = new DiarioPreferenciaAgrupamento();
 
     instance.id = generateUuidV7();
+    instance.modo = parsed.modo;
+    instance.ordem = parsed.ordem;
     instance.dataInicio = parsed.dataInicio;
     instance.dataFim = parsed.dataFim ?? null;
-    instance.diaSemanaIso = parsed.diaSemanaIso;
+    instance.diaSemanaIso = parsed.diaSemanaIso ?? null;
     instance.aulasSeguidas = parsed.aulasSeguidas;
     instance.diario = parsed.diario;
     instance.dateCreated = getNowISO();
@@ -74,6 +83,8 @@ export class DiarioPreferenciaAgrupamento {
     const instance = new DiarioPreferenciaAgrupamento();
 
     instance.id = parsed.id;
+    instance.modo = parsed.modo;
+    instance.ordem = parsed.ordem;
     instance.dataInicio = parsed.dataInicio;
     instance.dataFim = parsed.dataFim;
     instance.diaSemanaIso = parsed.diaSemanaIso;
@@ -92,9 +103,11 @@ export class DiarioPreferenciaAgrupamento {
       dados,
     );
 
+    if (parsed.modo !== undefined) this.modo = parsed.modo;
+    if (parsed.ordem !== undefined) this.ordem = parsed.ordem;
     if (parsed.dataInicio !== undefined) this.dataInicio = parsed.dataInicio;
     if (parsed.dataFim !== undefined) this.dataFim = parsed.dataFim ?? null;
-    if (parsed.diaSemanaIso !== undefined) this.diaSemanaIso = parsed.diaSemanaIso;
+    if (parsed.diaSemanaIso !== undefined) this.diaSemanaIso = parsed.diaSemanaIso ?? null;
     if (parsed.aulasSeguidas !== undefined) this.aulasSeguidas = parsed.aulasSeguidas;
 
     this.dateUpdated = getNowISO();

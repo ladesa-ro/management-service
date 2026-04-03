@@ -1,3 +1,5 @@
+export * from "./diario-batch-create.command.handler";
+
 export * from "./diario-create.command.handler";
 
 export * from "./diario-delete.command.handler";

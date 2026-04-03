@@ -23,6 +23,8 @@ export const DiarioPreferenciaAgrupamentoDiarioRefSchema = ObjectIdUuidFactory;
 export const DiarioPreferenciaAgrupamentoSchema = z
   .object({
     id: uuidSchema,
+    modo: DiarioPreferenciaAgrupamentoFields.modo.domainSchema,
+    ordem: DiarioPreferenciaAgrupamentoFields.ordem.domainSchema,
     dataInicio: DiarioPreferenciaAgrupamentoFields.dataInicio.domainSchema,
     dataFim: z.string().nullable(),
     diaSemanaIso: DiarioPreferenciaAgrupamentoFields.diaSemanaIso.domainSchema,
@@ -33,6 +35,8 @@ export const DiarioPreferenciaAgrupamentoSchema = z
 
 export const DiarioPreferenciaAgrupamentoCreateSchema = createSchema((standard) =>
   z.object({
+    modo: DiarioPreferenciaAgrupamentoFields.modo.create(standard),
+    ordem: DiarioPreferenciaAgrupamentoFields.ordem.create(standard),
     dataInicio: DiarioPreferenciaAgrupamentoFields.dataInicio.create(standard),
     dataFim: DiarioPreferenciaAgrupamentoFields.dataFim.create(standard),
     diaSemanaIso: DiarioPreferenciaAgrupamentoFields.diaSemanaIso.create(standard),
@@ -43,6 +47,8 @@ export const DiarioPreferenciaAgrupamentoCreateSchema = createSchema((standard) 
 
 export const DiarioPreferenciaAgrupamentoUpdateSchema = createSchema((standard) =>
   z.object({
+    modo: DiarioPreferenciaAgrupamentoFields.modo.create(standard).optional(),
+    ordem: DiarioPreferenciaAgrupamentoFields.ordem.create(standard).optional(),
     dataInicio: DiarioPreferenciaAgrupamentoFields.dataInicio.create(standard).optional(),
     dataFim: DiarioPreferenciaAgrupamentoFields.dataFim.create(standard),
     diaSemanaIso: DiarioPreferenciaAgrupamentoFields.diaSemanaIso.create(standard).optional(),

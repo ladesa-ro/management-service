@@ -38,9 +38,11 @@ export function toBulkReplaceInput(
   const input = new DiarioPreferenciaAgrupamentoBulkReplaceCommand();
   input.diarioId = parentParams.diarioId;
   input.preferenciasAgrupamento = dto.preferenciasAgrupamento.map((p) => ({
+    modo: p.modo,
+    ordem: p.ordem,
     dataInicio: p.dataInicio,
     dataFim: p.dataFim ?? null,
-    diaSemanaIso: p.diaSemanaIso,
+    diaSemanaIso: p.diaSemanaIso ?? null,
     aulasSeguidas: p.aulasSeguidas,
   }));
   return input;
@@ -55,6 +57,8 @@ export const findOneQueryResultToOutputDto = createMapper<
   DiarioPreferenciaAgrupamentoFindOneOutputRestDto
 >((output) => ({
   id: output.id,
+  modo: output.modo,
+  ordem: output.ordem,
   dataInicio: output.dataInicio,
   dataFim: output.dataFim,
   diaSemanaIso: output.diaSemanaIso,

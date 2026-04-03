@@ -8,10 +8,12 @@ import {
   DiarioListQuery,
   DiarioUpdateCommand,
 } from "@/modules/ensino/diario";
+import { DiarioBatchCreateCommand } from "@/modules/ensino/diario/domain/commands/diario-batch-create.command";
 import * as DisciplinaRestMapper from "@/modules/ensino/disciplina/presentation.rest/disciplina.rest.mapper";
 import * as TurmaRestMapper from "@/modules/ensino/turma/presentation.rest/turma.rest.mapper";
 import { createListMapper, createMapper, createPaginatedInputMapper, into } from "@/shared/mapping";
 import {
+  type DiarioBatchCreateInputRestDto,
   type DiarioCreateInputRestDto,
   type DiarioFindOneInputRestDto,
   DiarioFindOneOutputRestDto,
@@ -104,3 +106,31 @@ export const listQueryResultToListOutputDto = createListMapper(
   DiarioListOutputRestDto,
   findOneQueryResultToOutputDto,
 );
+
+// ============================================================================
+// Batch Create
+// ============================================================================
+
+export const batchCreateInputDtoToCommand = createMapper<
+  DiarioBatchCreateInputRestDto,
+  DiarioBatchCreateCommand
+>((dto) => ({
+  turma: { id: dto.turma.id },
+  calendarioLetivo: { id: dto.calendarioLetivo.id },
+  diarios: dto.diarios.map((item) => ({
+    disciplina: { id: item.disciplina.id },
+    ativo: item.ativo,
+    professores: item.professores.map((p) => ({
+      perfilId: p.perfilId,
+      situacao: p.situacao,
+    })),
+    preferenciasAgrupamento: item.preferenciasAgrupamento.map((p) => ({
+      modo: p.modo,
+      ordem: p.ordem,
+      dataInicio: p.dataInicio,
+      dataFim: p.dataFim ?? null,
+      diaSemanaIso: p.diaSemanaIso ?? null,
+      aulasSeguidas: p.aulasSeguidas,
+    })),
+  })),
+}));

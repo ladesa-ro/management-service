@@ -4,6 +4,8 @@ import { DiarioPreferenciaAgrupamento } from "./diario-preferencia-agrupamento";
 
 describe("DiarioPreferenciaAgrupamento (domain entity)", () => {
   const validCreateInput = {
+    modo: "POR_DIA_SEMANA" as const,
+    ordem: 1,
     dataInicio: "2026-03-01",
     dataFim: "2026-06-30",
     diaSemanaIso: 1,
@@ -13,6 +15,8 @@ describe("DiarioPreferenciaAgrupamento (domain entity)", () => {
 
   const validLoadInput = () => ({
     id: createTestId(),
+    modo: "POR_DIA_SEMANA" as const,
+    ordem: 1,
     dataInicio: "2026-03-01",
     dataFim: null,
     diaSemanaIso: 1,
@@ -26,6 +30,8 @@ describe("DiarioPreferenciaAgrupamento (domain entity)", () => {
       const entity = DiarioPreferenciaAgrupamento.create(validCreateInput);
 
       expect(entity.id).toBeDefined();
+      expect(entity.modo).toBe("POR_DIA_SEMANA");
+      expect(entity.ordem).toBe(1);
       expect(entity.dataInicio).toBe("2026-03-01");
       expect(entity.dataFim).toBe("2026-06-30");
       expect(entity.diaSemanaIso).toBe(1);
@@ -35,7 +41,7 @@ describe("DiarioPreferenciaAgrupamento (domain entity)", () => {
     });
 
     it("should set dataFim to null when not provided", () => {
-      const { dataFim: _, ...input } = validCreateInput;
+      const { dataFim: _dataFim, ...input } = validCreateInput;
       const entity = DiarioPreferenciaAgrupamento.create(input);
       expect(entity.dataFim).toBeNull();
     });

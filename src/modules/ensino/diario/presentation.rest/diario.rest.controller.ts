@@ -11,6 +11,10 @@ import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { Dep } from "@/domain/dependency-injection";
 import {
+  DiarioBatchCreateCommandMetadata,
+  IDiarioBatchCreateCommandHandler,
+} from "@/modules/ensino/diario/domain/commands/diario-batch-create.command.handler.interface";
+import {
   DiarioCreateCommandMetadata,
   IDiarioCreateCommandHandler,
 } from "@/modules/ensino/diario/domain/commands/diario-create.command.handler.interface";
@@ -33,6 +37,7 @@ import {
 } from "@/modules/ensino/diario/domain/queries/diario-list.query.handler.interface";
 import { AccessContextHttp } from "@/server/nest/access-context";
 import {
+  DiarioBatchCreateInputRestDto,
   DiarioCreateInputRestDto,
   DiarioFindOneInputRestDto,
   DiarioFindOneOutputRestDto,
@@ -52,6 +57,8 @@ export class DiarioRestController {
     private readonly findOneHandler: IDiarioFindOneQueryHandler,
     @Dep(IDiarioCreateCommandHandler)
     private readonly createHandler: IDiarioCreateCommandHandler,
+    @Dep(IDiarioBatchCreateCommandHandler)
+    private readonly batchCreateHandler: IDiarioBatchCreateCommandHandler,
     @Dep(IDiarioUpdateCommandHandler)
     private readonly updateHandler: IDiarioUpdateCommandHandler,
     @Dep(IDiarioDeleteCommandHandler)
@@ -84,6 +91,19 @@ export class DiarioRestController {
     const queryResult = await this.findOneHandler.execute(accessContext, query);
     ensureExists(queryResult, Diario.entityName, query.id);
     return DiarioRestMapper.findOneQueryResultToOutputDto.map(queryResult);
+  }
+
+  @Post("/batch")
+  @ApiOperation(DiarioBatchCreateCommandMetadata.swaggerMetadata)
+  @ApiCreatedResponse({ type: [DiarioFindOneOutputRestDto] })
+  @ApiForbiddenResponse()
+  async batchCreate(
+    @AccessContextHttp() accessContext: IAccessContext,
+    @Body() dto: DiarioBatchCreateInputRestDto,
+  ): Promise<DiarioFindOneOutputRestDto[]> {
+    const command = DiarioRestMapper.batchCreateInputDtoToCommand.map(dto);
+    const results = await this.batchCreateHandler.execute(accessContext, command);
+    return results.map((r) => DiarioRestMapper.findOneQueryResultToOutputDto.map(r));
   }
 
   @Post("/")

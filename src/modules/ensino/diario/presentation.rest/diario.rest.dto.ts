@@ -164,6 +164,95 @@ export class DiarioUpdateInputRestDto extends PartialType(DiarioCreateInputRestD
 }
 
 // ============================================================================
+// Batch Create Input
+// ============================================================================
+
+@ApiSchema({ name: "DiarioBatchCreatePreferenciaAgrupamentoItemDto" })
+export class DiarioBatchCreatePreferenciaAgrupamentoItemRestDto {
+  @ApiProperty({
+    type: "string",
+    description: "Modo da preferencia: DEFINIDO ou POR_DIA_SEMANA",
+    enum: ["DEFINIDO", "POR_DIA_SEMANA"],
+  })
+  modo: string;
+
+  @ApiProperty({ type: "integer", description: "Ordem sequencial", minimum: 1 })
+  ordem: number;
+
+  @ApiProperty({ type: "string", description: "Inicio da vigencia" })
+  dataInicio: string;
+
+  @ApiPropertyOptional({ type: "string", description: "Fim da vigencia", nullable: true })
+  dataFim?: string | null;
+
+  @ApiPropertyOptional({
+    type: "integer",
+    description: "Dia da semana ISO (1=Seg, 7=Dom). Obrigatorio no modo POR_DIA_SEMANA.",
+    minimum: 1,
+    maximum: 7,
+    nullable: true,
+  })
+  diaSemanaIso?: number | null;
+
+  @ApiProperty({ type: "integer", description: "Quantidade de aulas seguidas", minimum: 1 })
+  aulasSeguidas: number;
+}
+
+@ApiSchema({ name: "DiarioBatchCreateProfessorItemDto" })
+export class DiarioBatchCreateProfessorItemRestDto {
+  @ApiProperty({ type: "string", description: "ID do perfil (uuid)", format: "uuid" })
+  perfilId: string;
+
+  @ApiProperty({ type: "boolean", description: "Situacao do vinculo" })
+  situacao: boolean;
+}
+
+@ApiSchema({ name: "DiarioBatchCreateDiarioItemDto" })
+export class DiarioBatchCreateDiarioItemRestDto {
+  @ApiProperty({
+    ...DiarioCreateCommandFields.disciplina.swaggerMetadata,
+    type: () => DisciplinaFindOneInputRestDto,
+  })
+  disciplina: DisciplinaFindOneInputRestDto;
+
+  @ApiProperty(DiarioCreateCommandFields.ativo.swaggerMetadata)
+  ativo: boolean;
+
+  @ApiProperty({
+    type: () => [DiarioBatchCreateProfessorItemRestDto],
+    description: "Professores a vincular ao diario",
+  })
+  professores: DiarioBatchCreateProfessorItemRestDto[];
+
+  @ApiProperty({
+    type: () => [DiarioBatchCreatePreferenciaAgrupamentoItemRestDto],
+    description: "Preferencias de agrupamento do diario",
+  })
+  preferenciasAgrupamento: DiarioBatchCreatePreferenciaAgrupamentoItemRestDto[];
+}
+
+@ApiSchema({ name: "DiarioBatchCreateInputDto" })
+export class DiarioBatchCreateInputRestDto {
+  @ApiProperty({
+    ...DiarioCreateCommandFields.turma.swaggerMetadata,
+    type: () => TurmaFindOneInputRestDto,
+  })
+  turma: TurmaFindOneInputRestDto;
+
+  @ApiProperty({
+    ...DiarioCreateCommandFields.calendarioLetivo.swaggerMetadata,
+    type: () => CalendarioLetivoFindOneInputRestDto,
+  })
+  calendarioLetivo: CalendarioLetivoFindOneInputRestDto;
+
+  @ApiProperty({
+    type: () => [DiarioBatchCreateDiarioItemRestDto],
+    description: "Lista de diarios a criar",
+  })
+  diarios: DiarioBatchCreateDiarioItemRestDto[];
+}
+
+// ============================================================================
 // FindOne Input (for path params)
 // ============================================================================
 

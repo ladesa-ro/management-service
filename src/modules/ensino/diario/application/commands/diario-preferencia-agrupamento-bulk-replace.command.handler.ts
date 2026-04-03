@@ -26,6 +26,8 @@ export class DiarioPreferenciaAgrupamentoBulkReplaceCommandHandlerImpl
     await this.repository.bulkCreate(
       dto.preferenciasAgrupamento.map((p) => ({
         diarioId: dto.diarioId,
+        modo: p.modo,
+        ordem: p.ordem,
         dataInicio: p.dataInicio,
         dataFim: p.dataFim,
         diaSemanaIso: p.diaSemanaIso,
