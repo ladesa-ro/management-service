@@ -1,8 +1,9 @@
-import type { z } from "zod";
 import type { IdUuid, ScalarDateTimeString } from "@/domain/abstractions/scalars";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { zodValidate } from "@/shared/validation/index";
 import { getNowISO } from "@/utils/date";
+import { type z } from "zod";
+import { BusinessRuleViolationError } from "../../../../domain";
 import { CursoCreateSchema, CursoSchema, CursoUpdateSchema } from "./curso.schemas";
 
 export type ICurso = z.infer<typeof CursoSchema>;
@@ -21,7 +22,7 @@ export class Curso {
   dateUpdated!: ScalarDateTimeString;
   dateDeleted!: ScalarDateTimeString | null;
 
-  private constructor() {}
+  private constructor() { }
 
   static create(dados: unknown): Curso {
     const parsed = zodValidate(Curso.entityName, CursoCreateSchema.domain, dados);
@@ -68,8 +69,20 @@ export class Curso {
     if (parsed.nomeAbreviado !== undefined) this.nomeAbreviado = parsed.nomeAbreviado;
     if (parsed.quantidadePeriodos !== undefined)
       this.quantidadePeriodos = parsed.quantidadePeriodos;
-    if (parsed.campus !== undefined) this.campus = parsed.campus;
-    if (parsed.ofertaFormacao !== undefined) this.ofertaFormacao = parsed.ofertaFormacao;
+
+    if (parsed.campus !== undefined && parsed.campus.id !== this.campus.id) {
+      throw new BusinessRuleViolationError(
+        "CURSO_CAMPUS_IMMUTABLE",
+        "O campus do curso não pode ser alterado após a criação.",
+      );
+    }
+
+    if (parsed.ofertaFormacao !== undefined && parsed.ofertaFormacao.id !== this.ofertaFormacao.id) {
+      throw new BusinessRuleViolationError(
+        "CURSO_OFERTA_FORMACAO_IMMUTABLE",
+        "A formação do curso não pode ser alterada após a criação.",
+      );
+    }
 
     this.dateUpdated = getNowISO();
 
