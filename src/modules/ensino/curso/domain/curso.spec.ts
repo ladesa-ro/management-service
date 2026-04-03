@@ -76,13 +76,18 @@ describe("Curso (domain entity)", () => {
       expect(entity.nome).toBe("Novo Nome");
     });
 
-    it("should update campus reference", () => {
+    it("should accept update with same campus reference", () => {
+      const entity = Curso.create(validCreateInput);
+
+      expect(() => entity.update({ campus: { id: entity.campus.id } })).not.toThrow();
+      expect(entity.campus.id).toBe(validCreateInput.campus.id);
+    });
+
+    it("should reject update with different campus reference", () => {
       const entity = Curso.create(validCreateInput);
       const newCampus = createTestRef();
 
-      entity.update({ campus: newCampus });
-
-      expect(entity.campus.id).toBe(newCampus.id);
+      expect(() => entity.update({ campus: newCampus })).toThrow("CURSO_CAMPUS_IMMUTABLE");
     });
 
     it("should allow partial update (only nomeAbreviado)", () => {

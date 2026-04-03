@@ -1,6 +1,7 @@
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { Dep, Impl } from "@/domain/dependency-injection";
+import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { BusinessRuleViolationError } from "@/domain/errors";
 import { Campus } from "@/modules/ambientes/campus/domain/campus";
 import { ICampusFindOneQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-find-one.query.handler.interface";
@@ -11,13 +12,15 @@ import { OfertaFormacao } from "@/modules/ensino/oferta-formacao/domain/oferta-f
 import { IOfertaFormacaoFindOneQueryHandler } from "@/modules/ensino/oferta-formacao/domain/queries/oferta-formacao-find-one.query.handler.interface";
 import { ICursoPermissionChecker } from "../../domain/authorization";
 import type { CursoFindOneQueryResult } from "../../domain/queries";
-import { ICursoRepository } from "../../domain/repositories";
+import { ICursoPeriodoDisciplinaRepository, ICursoRepository } from "../../domain/repositories";
 
 @Impl()
 export class CursoCreateCommandHandlerImpl implements ICursoCreateCommandHandler {
   constructor(
     @Dep(ICursoRepository)
     private readonly repository: ICursoRepository,
+    @Dep(ICursoPeriodoDisciplinaRepository)
+    private readonly periodoDisciplinaRepository: ICursoPeriodoDisciplinaRepository,
     @Dep(ICursoPermissionChecker)
     private readonly permissionChecker: ICursoPermissionChecker,
     @Dep(ICampusFindOneQueryHandler)
@@ -60,6 +63,20 @@ export class CursoCreateCommandHandlerImpl implements ICursoCreateCommandHandler
       ofertaFormacao: { id: ofertaFormacao.id },
       imagemCapa: domain.imagemCapa ? { id: domain.imagemCapa.id } : null,
     });
+
+    if (dto.periodos) {
+      for (const periodoItem of dto.periodos) {
+        for (const discItem of periodoItem.disciplinas) {
+          await this.periodoDisciplinaRepository.save({
+            id: generateUuidV7(),
+            curso: { id },
+            numeroPeriodo: periodoItem.numeroPeriodo,
+            disciplina: { id: discItem.disciplinaId },
+            cargaHoraria: discItem.cargaHoraria ?? null,
+          });
+        }
+      }
+    }
 
     const result = await this.repository.getFindOneQueryResult(accessContext, { id });
 

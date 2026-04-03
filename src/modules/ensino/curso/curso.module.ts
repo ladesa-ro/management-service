@@ -37,12 +37,11 @@ import {
 } from "@/modules/ensino/curso/infrastructure.database";
 import { CursoGraphqlResolver } from "@/modules/ensino/curso/presentation.graphql/curso.graphql.resolver";
 import { CursoRestController } from "@/modules/ensino/curso/presentation.rest/curso.rest.controller";
-import { CursoPeriodoDisciplinaRestController } from "@/modules/ensino/curso/presentation.rest/curso-periodo-disciplina.rest.controller";
 import { OfertaFormacaoModule } from "@/modules/ensino/oferta-formacao/oferta-formacao.module";
 
 @Module({
   imports: [CampusModule, ImagemModule, ArquivoModule, OfertaFormacaoModule],
-  controllers: [CursoRestController, CursoPeriodoDisciplinaRestController],
+  controllers: [CursoRestController],
   providers: [
     NestJsPaginateAdapter,
     CursoGraphqlResolver,

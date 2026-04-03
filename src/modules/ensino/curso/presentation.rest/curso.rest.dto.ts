@@ -15,6 +15,10 @@ import { CursoUpdateCommandFields } from "../domain/commands/curso-update.comman
 import { CursoCreateSchema, CursoUpdateSchema } from "../domain/curso.schemas";
 import { CursoFindOneQueryResultFields } from "../domain/queries/curso-find-one.query.result";
 import { CursoListQueryFields } from "../domain/queries/curso-list.query";
+import {
+  CursoPeriodoDisciplinaOutputPeriodoRestDto,
+  CursoPeriodoDisciplinaPeriodoItemRestDto,
+} from "./curso-periodo-disciplina.rest.dto";
 
 // ============================================================================
 // FindOne Output
@@ -48,6 +52,9 @@ export class CursoFindOneOutputRestDto extends EntityBaseRestDto {
     type: () => ImagemFindOneOutputRestDto,
   })
   imagemCapa: ImagemFindOneOutputRestDto | null;
+
+  @ApiProperty({ type: () => [CursoPeriodoDisciplinaOutputPeriodoRestDto] })
+  periodos: CursoPeriodoDisciplinaOutputPeriodoRestDto[];
 }
 
 // ============================================================================
@@ -116,6 +123,9 @@ export class CursoCreateInputRestDto {
 
   @ApiProperty(CursoCreateCommandFields.ofertaFormacao.swaggerMetadata)
   ofertaFormacao: { id: string };
+
+  @ApiPropertyOptional({ type: () => [CursoPeriodoDisciplinaPeriodoItemRestDto] })
+  periodos?: CursoPeriodoDisciplinaPeriodoItemRestDto[];
 }
 
 @ApiSchema({ name: "CursoUpdateInputDto" })
@@ -136,6 +146,9 @@ export class CursoUpdateInputRestDto {
 
   @ApiPropertyOptional(CursoUpdateCommandFields.ofertaFormacao.swaggerMetadata)
   ofertaFormacao?: { id: string };
+
+  @ApiPropertyOptional({ type: () => [CursoPeriodoDisciplinaPeriodoItemRestDto] })
+  periodos?: CursoPeriodoDisciplinaPeriodoItemRestDto[];
 }
 
 // ============================================================================

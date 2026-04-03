@@ -7,7 +7,10 @@ export class CursoPeriodoDisciplinaEntity {
   @PrimaryColumn("uuid")
   id!: string;
 
-  @ManyToOne(() => CursoEntity, {})
+  @ManyToOne(
+    () => CursoEntity,
+    (curso) => curso.periodoDisciplinas,
+  )
   @JoinColumn({ name: "id_curso_fk" })
   curso!: Relation<CursoEntity>;
 

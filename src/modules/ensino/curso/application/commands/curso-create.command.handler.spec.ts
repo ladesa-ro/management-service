@@ -15,15 +15,26 @@ function createMockFindOneHandler(result?: object) {
 }
 
 describe("CursoCreateCommandHandler", () => {
+  function createMockPeriodoDisciplinaRepository() {
+    return {
+      findByCursoId: vi.fn().mockResolvedValue([]),
+      deleteByCursoId: vi.fn().mockResolvedValue(undefined),
+      save: vi.fn().mockResolvedValue({}),
+    };
+  }
+
   function createHandler(
     overrides: {
       repository?: object;
+      periodoDisciplinaRepository?: object;
       permissionChecker?: object;
       campusFindOneHandler?: object;
       ofertaFormacaoFindOneHandler?: object;
     } = {},
   ) {
     const repository = overrides.repository ?? createMockCrudRepository();
+    const periodoDisciplinaRepository =
+      overrides.periodoDisciplinaRepository ?? createMockPeriodoDisciplinaRepository();
     const permissionChecker = overrides.permissionChecker ?? createMockPermissionChecker();
     const campusFindOneHandler =
       overrides.campusFindOneHandler ?? createMockFindOneHandler({ id: campusId });
@@ -33,6 +44,7 @@ describe("CursoCreateCommandHandler", () => {
 
     const handler = new CursoCreateCommandHandlerImpl(
       repository as any,
+      periodoDisciplinaRepository as any,
       permissionChecker as any,
       campusFindOneHandler as any,
       ofertaFormacaoFindOneHandler as any,
