@@ -6,6 +6,7 @@ describe("Curso (domain entity)", () => {
   const validCreateInput = {
     nome: "Engenharia de Software",
     nomeAbreviado: "ESW",
+    quantidadePeriodos: 3,
     campus: createTestRef(),
     ofertaFormacao: createTestRef(),
   };
@@ -53,6 +54,7 @@ describe("Curso (domain entity)", () => {
         id,
         nome: "Ciência da Computação",
         nomeAbreviado: "CC",
+        quantidadePeriodos: 3,
         campus: createTestRef(),
         ofertaFormacao: createTestRef(),
         imagemCapa: null,
@@ -105,6 +107,7 @@ describe("Curso (domain entity)", () => {
         id: "019d0000-0000-7000-8000-000000000001",
         nome: "Test",
         nomeAbreviado: "T",
+        quantidadePeriodos: 3,
         campus: createTestRef(),
         ofertaFormacao: createTestRef(),
         imagemCapa: createTestRef(),

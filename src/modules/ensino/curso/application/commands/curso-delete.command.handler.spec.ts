@@ -20,7 +20,7 @@ describe("CursoDeleteCommandHandler", () => {
 
   it("should delete an existing entity and return true", async () => {
     const id = createTestId();
-    const entity = { id, nome: "Engenharia de Software" };
+    const entity = { id, nome: "Engenharia de Software", quantidadePeriodos: 3 };
 
     const repository = createMockCrudRepository();
     repository.getFindOneQueryResult.mockResolvedValue(entity);

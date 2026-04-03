@@ -47,6 +47,7 @@ export const createInputDtoToCreateCommand = createMapper<
   const input = new CursoCreateCommand();
   input.nome = dto.nome;
   input.nomeAbreviado = dto.nomeAbreviado;
+  input.quantidadePeriodos = dto.quantidadePeriodos;
   input.campus = { id: dto.campus.id };
   input.ofertaFormacao = { id: dto.ofertaFormacao.id };
   return input;
@@ -59,6 +60,7 @@ export const updateInputDtoToUpdateCommand = createMapper<
   id: params.id,
   nome: dto.nome,
   nomeAbreviado: dto.nomeAbreviado,
+  quantidadePeriodos: dto.quantidadePeriodos,
   campus: dto.campus ? { id: dto.campus.id } : undefined,
   ofertaFormacao: dto.ofertaFormacao ? { id: dto.ofertaFormacao.id } : undefined,
 }));
@@ -74,6 +76,7 @@ export const findOneQueryResultToOutputDto = createMapper<
   id: output.id,
   nome: output.nome,
   nomeAbreviado: output.nomeAbreviado,
+  quantidadePeriodos: output.quantidadePeriodos,
   campus: CampusRestMapper.findOneQueryResultToOutputDto.map(output.campus),
   ofertaFormacao: OfertaFormacaoRestMapper.findOneQueryResultToOutputDto.map(output.ofertaFormacao),
   imagemCapa: output.imagemCapa ? BlocoRestMapper.toImagemOutput(output.imagemCapa) : null,

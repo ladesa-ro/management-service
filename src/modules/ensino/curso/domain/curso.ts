@@ -13,6 +13,7 @@ export class Curso {
   id!: IdUuid;
   nome!: string;
   nomeAbreviado!: string;
+  quantidadePeriodos!: number;
   campus!: { id: string };
   ofertaFormacao!: { id: string };
   imagemCapa!: { id: string } | null;
@@ -30,6 +31,7 @@ export class Curso {
     instance.id = generateUuidV7();
     instance.nome = parsed.nome;
     instance.nomeAbreviado = parsed.nomeAbreviado;
+    instance.quantidadePeriodos = parsed.quantidadePeriodos;
     instance.campus = parsed.campus;
     instance.ofertaFormacao = parsed.ofertaFormacao;
     instance.imagemCapa = null;
@@ -48,6 +50,7 @@ export class Curso {
     instance.id = parsed.id;
     instance.nome = parsed.nome;
     instance.nomeAbreviado = parsed.nomeAbreviado;
+    instance.quantidadePeriodos = parsed.quantidadePeriodos;
     instance.campus = parsed.campus;
     instance.ofertaFormacao = parsed.ofertaFormacao;
     instance.imagemCapa = parsed.imagemCapa;
@@ -63,6 +66,8 @@ export class Curso {
 
     if (parsed.nome !== undefined) this.nome = parsed.nome;
     if (parsed.nomeAbreviado !== undefined) this.nomeAbreviado = parsed.nomeAbreviado;
+    if (parsed.quantidadePeriodos !== undefined)
+      this.quantidadePeriodos = parsed.quantidadePeriodos;
     if (parsed.campus !== undefined) this.campus = parsed.campus;
     if (parsed.ofertaFormacao !== undefined) this.ofertaFormacao = parsed.ofertaFormacao;
 

@@ -7,7 +7,7 @@ import {
 import { CampusFindOneOutputGraphQlDto } from "@/modules/ambientes/campus/presentation.graphql/campus.graphql.dto";
 import { ImagemFindOneOutputGraphQlDto } from "@/modules/armazenamento/imagem-arquivo/presentation.graphql/imagem-arquivo.graphql.dto";
 import { OfertaFormacaoFindOneOutputGraphQlDto } from "@/modules/ensino/oferta-formacao/presentation.graphql/oferta-formacao.graphql.dto";
-import { ArgsType, Field, InputType, ObjectType } from "@/shared/presentation/graphql";
+import { ArgsType, Field, InputType, Int, ObjectType } from "@/shared/presentation/graphql";
 import { createGraphqlListInputSchema } from "@/shared/validation/schemas";
 import { CursoCreateCommandFields } from "../domain/commands/curso-create.command";
 import { CursoUpdateCommandFields } from "../domain/commands/curso-update.command";
@@ -24,6 +24,8 @@ export class CursoFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
   @Field(() => String, CursoFindOneQueryResultFields.nome.gqlMetadata) nome: string;
   @Field(() => String, CursoFindOneQueryResultFields.nomeAbreviado.gqlMetadata)
   nomeAbreviado: string;
+  @Field(() => Int, CursoFindOneQueryResultFields.quantidadePeriodos.gqlMetadata)
+  quantidadePeriodos: number;
   @Field(() => CampusFindOneOutputGraphQlDto, CursoFindOneQueryResultFields.campus.gqlMetadata)
   campus: CampusFindOneOutputGraphQlDto;
   @Field(
@@ -63,6 +65,8 @@ export class CursoCreateInputGraphQlDto {
 
   @Field(() => String, CursoCreateCommandFields.nome.gqlMetadata) nome: string;
   @Field(() => String, CursoCreateCommandFields.nomeAbreviado.gqlMetadata) nomeAbreviado: string;
+  @Field(() => Int, CursoCreateCommandFields.quantidadePeriodos.gqlMetadata)
+  quantidadePeriodos: number;
   @Field(() => CursoCampusRefInputGraphQlDto, CursoCreateCommandFields.campus.gqlMetadata)
   campus: CursoCampusRefInputGraphQlDto;
   @Field(
@@ -89,6 +93,8 @@ export class CursoUpdateInputGraphQlDto {
   nome?: string;
   @Field(() => String, { nullable: true, ...CursoUpdateCommandFields.nomeAbreviado.gqlMetadata })
   nomeAbreviado?: string;
+  @Field(() => Int, { nullable: true, ...CursoUpdateCommandFields.quantidadePeriodos.gqlMetadata })
+  quantidadePeriodos?: number;
   @Field(() => CursoCampusRefInputGraphQlDto, {
     nullable: true,
     ...CursoUpdateCommandFields.campus.gqlMetadata,
