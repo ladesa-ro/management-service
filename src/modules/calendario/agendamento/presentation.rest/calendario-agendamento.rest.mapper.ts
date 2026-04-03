@@ -6,51 +6,55 @@ import * as ModalidadeRestMapper from "@/modules/ensino/modalidade/presentation.
 import * as OfertaFormacaoRestMapper from "@/modules/ensino/oferta-formacao/presentation.rest/oferta-formacao.rest.mapper";
 import * as TurmaRestMapper from "@/modules/ensino/turma/presentation.rest/turma.rest.mapper";
 import { createMapper } from "@/shared/mapping";
-import { CalendarioAgendamentoTipo } from "../domain/calendario-agendamento.types";
+import type { CalendarioAgendamentoTipo } from "../domain/calendario-agendamento.types";
 import { CalendarioAgendamentoCreateCommand } from "../domain/commands/calendario-agendamento-create.command";
 import type { CalendarioAgendamentoUpdateCommand } from "../domain/commands/calendario-agendamento-update.command";
 import type { CalendarioAgendamentoFindOneQuery } from "../domain/queries/calendario-agendamento-find-one.query";
 import type { CalendarioAgendamentoFindOneQueryResult } from "../domain/queries/calendario-agendamento-find-one.query.result";
 import type {
-  CalendarioEventoCreateInputRestDto,
-  CalendarioEventoFindOneOutputRestDto,
-  CalendarioEventoFindOneParamsRestDto,
-  CalendarioEventoUpdateInputRestDto,
-} from "./calendario-evento.rest.dto";
+  CalendarioAgendamentoCreateInputRestDto,
+  CalendarioAgendamentoFindOneOutputRestDto,
+  CalendarioAgendamentoFindOneParamsRestDto,
+  CalendarioAgendamentoUpdateInputRestDto,
+} from "./calendario-agendamento.rest.dto";
 
 // ============================================================================
 // Externa → Interna (Input: Presentation → Core)
 // ============================================================================
 
 export const createInputDtoToCreateCommand = createMapper<
-  CalendarioEventoCreateInputRestDto,
+  CalendarioAgendamentoCreateInputRestDto,
   CalendarioAgendamentoCreateCommand
 >((dto) => {
-  const input = new CalendarioAgendamentoCreateCommand();
-  input.tipo = CalendarioAgendamentoTipo.EVENTO;
-  input.nome = dto.nome;
-  input.dataInicio = dto.dataInicio;
-  input.dataFim = dto.dataFim ?? null;
-  input.diaInteiro = dto.diaInteiro;
-  input.horarioInicio = dto.horarioInicio;
-  input.horarioFim = dto.horarioFim;
-  input.cor = dto.cor ?? null;
-  input.repeticao = dto.repeticao ?? null;
-  input.turmas = dto.turmas;
-  input.perfis = dto.perfis;
-  input.calendariosLetivos = dto.calendariosLetivos;
-  input.ofertasFormacao = dto.ofertasFormacao;
-  input.modalidades = dto.modalidades;
-  input.ambientes = dto.ambientes;
-  input.diarios = dto.diarios;
-  return input;
+  const command = new CalendarioAgendamentoCreateCommand();
+  command.tipo = dto.tipo as CalendarioAgendamentoTipo;
+  command.nome = dto.nome;
+  command.dataInicio = dto.dataInicio;
+  command.dataFim = dto.dataFim ?? null;
+  command.diaInteiro = dto.diaInteiro;
+  command.horarioInicio = dto.horarioInicio;
+  command.horarioFim = dto.horarioFim;
+  command.cor = dto.cor ?? null;
+  command.repeticao = dto.repeticao ?? null;
+  command.turmas = dto.turmas;
+  command.perfis = dto.perfis;
+  command.calendariosLetivos = dto.calendariosLetivos;
+  command.ofertasFormacao = dto.ofertasFormacao;
+  command.modalidades = dto.modalidades;
+  command.ambientes = dto.ambientes;
+  command.diarios = dto.diarios;
+  return command;
 });
 
 export const updateInputDtoToUpdateCommand = createMapper<
-  { params: CalendarioEventoFindOneParamsRestDto; dto: CalendarioEventoUpdateInputRestDto },
+  {
+    params: CalendarioAgendamentoFindOneParamsRestDto;
+    dto: CalendarioAgendamentoUpdateInputRestDto;
+  },
   CalendarioAgendamentoFindOneQuery & CalendarioAgendamentoUpdateCommand
 >(({ params, dto }) => ({
   id: params.id,
+  tipo: dto.tipo as CalendarioAgendamentoTipo | undefined,
   nome: dto.nome,
   dataInicio: dto.dataInicio,
   dataFim: dto.dataFim !== undefined ? (dto.dataFim ?? null) : undefined,
@@ -74,7 +78,7 @@ export const updateInputDtoToUpdateCommand = createMapper<
 
 export const findOneQueryResultToOutputDto = createMapper<
   CalendarioAgendamentoFindOneQueryResult,
-  CalendarioEventoFindOneOutputRestDto
+  CalendarioAgendamentoFindOneOutputRestDto
 >((output) => ({
   id: output.id,
   identificadorExterno: output.identificadorExterno,

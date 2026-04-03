@@ -1,5 +1,6 @@
 import type { ObjectUuidRef } from "@/domain/abstractions";
 import { CalendarioAgendamentoFields } from "../calendario-agendamento.fields";
+import type { CalendarioAgendamentoTipo } from "../calendario-agendamento.types";
 
 export const CalendarioAgendamentoUpdateCommandFields = {
   nome: CalendarioAgendamentoFields.nome,
@@ -20,6 +21,7 @@ export const CalendarioAgendamentoUpdateCommandFields = {
 };
 
 export class CalendarioAgendamentoUpdateCommand {
+  tipo?: CalendarioAgendamentoTipo;
   nome?: string | null;
   dataInicio?: string;
   dataFim?: string | null;

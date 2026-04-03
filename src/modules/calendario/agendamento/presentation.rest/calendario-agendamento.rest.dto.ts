@@ -33,8 +33,15 @@ import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@/shared/presentati
 // Create Input
 // ============================================================================
 
-@ApiSchema({ name: "CalendarioEventoCreateInputDto" })
-export class CalendarioEventoCreateInputRestDto {
+@ApiSchema({ name: "CalendarioAgendamentoCreateInputDto" })
+export class CalendarioAgendamentoCreateInputRestDto {
+  @ApiProperty({
+    ...CalendarioEventoFields.tipo.swaggerMetadata,
+    enum: ["INDISPONIBILIDADE", "AULA", "EVENTO", "RESERVA"],
+    description: "Tipo de agendamento (AULA, EVENTO, INDISPONIBILIDADE, RESERVA)",
+  })
+  tipo: string;
+
   @ApiProperty(CalendarioEventoFields.nome.swaggerMetadata)
   nome: string;
 
@@ -106,8 +113,15 @@ export class CalendarioEventoCreateInputRestDto {
 // Update Input
 // ============================================================================
 
-@ApiSchema({ name: "CalendarioEventoUpdateInputDto" })
-export class CalendarioEventoUpdateInputRestDto {
+@ApiSchema({ name: "CalendarioAgendamentoUpdateInputDto" })
+export class CalendarioAgendamentoUpdateInputRestDto {
+  @ApiPropertyOptional({
+    ...CalendarioEventoFields.tipo.swaggerMetadata,
+    enum: ["INDISPONIBILIDADE", "AULA", "EVENTO", "RESERVA"],
+    description: "Tipo de agendamento (AULA, EVENTO, INDISPONIBILIDADE, RESERVA)",
+  })
+  tipo?: string;
+
   @ApiPropertyOptional(CalendarioEventoFields.nome.swaggerMetadata) nome?: string;
   @ApiPropertyOptional(CalendarioEventoFields.dataInicio.swaggerMetadata) dataInicio?: string;
   @ApiPropertyOptional(CalendarioEventoFields.dataFim.swaggerMetadata) dataFim?: string;
@@ -164,18 +178,18 @@ export class CalendarioEventoUpdateInputRestDto {
 // Params
 // ============================================================================
 
-@ApiSchema({ name: "CalendarioEventoFindOneParamsDto" })
-export class CalendarioEventoFindOneParamsRestDto {
+@ApiSchema({ name: "CalendarioAgendamentoFindOneParamsDto" })
+export class CalendarioAgendamentoFindOneParamsRestDto {
   @ApiProperty(CalendarioEventoFields.id.swaggerMetadata)
   id: string;
 }
 
 // ============================================================================
-// Output
+// Output (reutiliza o mesmo output — tipo já existe nele)
 // ============================================================================
 
-@ApiSchema({ name: "CalendarioEventoFindOneOutputDto" })
-export class CalendarioEventoFindOneOutputRestDto {
+@ApiSchema({ name: "CalendarioAgendamentoFindOneOutputDto" })
+export class CalendarioAgendamentoFindOneOutputRestDto {
   @ApiProperty(CalendarioEventoFields.id.swaggerMetadata) id: string;
 
   @ApiProperty({ type: "string", format: "uuid", description: "Identificador externo estavel" })
