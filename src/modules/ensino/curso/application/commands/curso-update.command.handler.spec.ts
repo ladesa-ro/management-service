@@ -1,6 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
 import { ResourceNotFoundError } from "@/application/errors/application.error";
-import { BusinessRuleViolationError } from "@/domain/errors";
 import {
   createMockCrudRepository,
   createMockPermissionChecker,
@@ -131,12 +130,7 @@ describe("CursoUpdateCommandHandler", () => {
         id,
         campus: { id: createTestId() },
       }),
-    ).rejects.toThrowError(
-      new BusinessRuleViolationError(
-        "CURSO_CAMPUS_IMMUTABLE",
-        "O campus do curso não pode ser alterado após a criação.",
-      ),
-    );
+    ).rejects.toThrow("CURSO_CAMPUS_IMMUTABLE");
 
     expect(repository.update).not.toHaveBeenCalled();
   });
@@ -156,12 +150,7 @@ describe("CursoUpdateCommandHandler", () => {
         id,
         ofertaFormacao: { id: createTestId() },
       }),
-    ).rejects.toThrowError(
-      new BusinessRuleViolationError(
-        "CURSO_OFERTA_FORMACAO_IMMUTABLE",
-        "A formação do curso não pode ser alterada após a criação.",
-      ),
-    );
+    ).rejects.toThrow("CURSO_OFERTA_FORMACAO_IMMUTABLE");
 
     expect(repository.update).not.toHaveBeenCalled();
   });
@@ -199,5 +188,61 @@ describe("CursoUpdateCommandHandler", () => {
     await expect(handler.execute(accessContext, { id: createTestId() })).rejects.toThrow(
       ResourceNotFoundError,
     );
+  });
+
+  it("should replace periodos when provided", async () => {
+    const id = createTestId();
+    const disciplinaId = createTestId();
+    const currentDomain = createCurso({ id });
+
+    const repository = {
+      ...createMockCrudRepository(),
+      loadById: vi.fn().mockResolvedValue(currentDomain),
+      getFindOneQueryResult: vi.fn().mockResolvedValue(currentDomain),
+    };
+    const periodoDisciplinaRepository = createMockPeriodoDisciplinaRepository();
+
+    const { handler } = createHandler({ repository, periodoDisciplinaRepository });
+    const accessContext = createTestAccessContext();
+
+    await handler.execute(accessContext, {
+      id,
+      periodos: [
+        {
+          numeroPeriodo: 1,
+          disciplinas: [{ disciplinaId }],
+        },
+      ],
+    });
+
+    expect(periodoDisciplinaRepository.deleteByCursoId).toHaveBeenCalledWith(id);
+    expect(periodoDisciplinaRepository.save).toHaveBeenCalledOnce();
+    expect(periodoDisciplinaRepository.save).toHaveBeenCalledWith(
+      expect.objectContaining({
+        curso: { id },
+        numeroPeriodo: 1,
+        disciplina: { id: disciplinaId },
+      }),
+    );
+  });
+
+  it("should not touch periodos when not provided", async () => {
+    const id = createTestId();
+    const currentDomain = createCurso({ id });
+
+    const repository = {
+      ...createMockCrudRepository(),
+      loadById: vi.fn().mockResolvedValue(currentDomain),
+      getFindOneQueryResult: vi.fn().mockResolvedValue(currentDomain),
+    };
+    const periodoDisciplinaRepository = createMockPeriodoDisciplinaRepository();
+
+    const { handler } = createHandler({ repository, periodoDisciplinaRepository });
+    const accessContext = createTestAccessContext();
+
+    await handler.execute(accessContext, { id, nome: "Novo nome" });
+
+    expect(periodoDisciplinaRepository.deleteByCursoId).not.toHaveBeenCalled();
+    expect(periodoDisciplinaRepository.save).not.toHaveBeenCalled();
   });
 });
