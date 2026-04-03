@@ -25,7 +25,7 @@ build:
     #!/usr/bin/env bash
     set -euo pipefail
 
-    HASH=$(cat .docker/Containerfile src/.bun-version src/.dockerignore 2>/dev/null | sha256sum | cut -d' ' -f1)
+    HASH=$(cat .docker/Containerfile src/.bun-version src/.dockerignore src/package.json src/bun.lock src/bunfig.toml 2>/dev/null | sha256sum | cut -d' ' -f1)
     HASH_FILE=".docker/.build-hash"
 
     if [ -f "$HASH_FILE" ] && [ "$(cat "$HASH_FILE")" = "$HASH" ]; then

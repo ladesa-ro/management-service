@@ -302,7 +302,7 @@ bun run dev
 | `just logs` | Mostra logs dos containers em tempo real |
 | `just shell-1000` | Abre shell como usuário `happy` (uid 1000) |
 | `just shell-root` | Abre shell como `root` |
-| `just build` | Faz o build da imagem (apenas se inputs mudaram — verifica hash) |
+| `just build` | Faz o build da imagem (apenas se mudaram `Containerfile`, `.dockerignore` ou manifestos do Bun) |
 | `just rebuild` | Força rebuild da imagem |
 | `just exec <args>` | Executa comando dentro do container |
 | `just compose <args>` | Passa argumentos direto para o `docker compose` |
@@ -3894,7 +3894,7 @@ graph LR
    - Build da imagem Docker a partir de `.docker/Containerfile` (target `service-runtime`).
    - Push para `ghcr.io/<owner>/management-service:development`.
    - Build args: `BUILD_TIME`, `GIT_COMMIT_HASH` (para rastreabilidade).
-   - Cache: registry-based (max mode) para builds incrementais rápidos.
+   - Cache: GitHub Actions cache (`type=gha`) + registry cache no GHCR (`mode=max`) para builds incrementais rápidos.
 
 2. **CD — Deploy** (roda em runner dedicado `dev-deploy`):
    - Depende do CI completar com sucesso.
