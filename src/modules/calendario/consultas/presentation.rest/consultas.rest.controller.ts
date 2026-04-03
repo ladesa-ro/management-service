@@ -3,7 +3,7 @@ import { ApiForbiddenResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nes
 import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency } from "@/domain/dependency-injection";
 import { CalendarioAgendamentoTipo } from "@/modules/calendario/agendamento/domain/calendario-agendamento.types";
-import * as CalendarioEventoRestMapper from "@/modules/calendario/agendamento/presentation.rest/calendario-evento.rest.mapper";
+import * as CalendarioAgendamentoRestMapper from "@/modules/calendario/agendamento/presentation.rest/calendario-agendamento.rest.mapper";
 import { AccessContextHttp } from "@/server/nest/access-context";
 import {
   ConsultaAgendamentosPorDataQueryMetadata,
@@ -42,7 +42,7 @@ export class ConsultasRestController {
     });
 
     return {
-      agendamentos: CalendarioEventoRestMapper.findOneQueryResultToOutputDto.mapArray(results),
+      agendamentos: CalendarioAgendamentoRestMapper.findOneQueryResultToOutputDto.mapArray(results),
     };
   }
 }

@@ -11,10 +11,10 @@ import { ICalendarioAgendamentoUpdateCommandHandler } from "./domain/commands/ca
 import { ICalendarioAgendamentoFindOneQueryHandler } from "./domain/queries/calendario-agendamento-find-one.query.handler.interface";
 import { ICalendarioAgendamentoRepository } from "./domain/repositories/calendario-agendamento.repository.interface";
 import { CalendarioAgendamentoTypeOrmRepositoryAdapter } from "./infrastructure.database/calendario-agendamento.repository";
-import { CalendarioEventoRestController } from "./presentation.rest/calendario-evento.rest.controller";
+import { CalendarioAgendamentoRestController } from "./presentation.rest/calendario-agendamento.rest.controller";
 
 @Module({
-  controllers: [CalendarioEventoRestController],
+  controllers: [CalendarioAgendamentoRestController],
   providers: [
     {
       provide: ICalendarioAgendamentoRepository,

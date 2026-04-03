@@ -29,16 +29,16 @@ import {
   ICalendarioAgendamentoFindOneQueryHandler,
 } from "../domain/queries/calendario-agendamento-find-one.query.handler.interface";
 import {
-  CalendarioEventoCreateInputRestDto,
-  CalendarioEventoFindOneOutputRestDto,
-  CalendarioEventoFindOneParamsRestDto,
-  CalendarioEventoUpdateInputRestDto,
-} from "./calendario-evento.rest.dto";
-import * as CalendarioEventoRestMapper from "./calendario-evento.rest.mapper";
+  CalendarioAgendamentoCreateInputRestDto,
+  CalendarioAgendamentoFindOneOutputRestDto,
+  CalendarioAgendamentoFindOneParamsRestDto,
+  CalendarioAgendamentoUpdateInputRestDto,
+} from "./calendario-agendamento.rest.dto";
+import * as CalendarioAgendamentoRestMapper from "./calendario-agendamento.rest.mapper";
 
 @ApiTags("calendario")
-@Controller("/calendario/eventos")
-export class CalendarioEventoRestController {
+@Controller("/calendario/agendamentos")
+export class CalendarioAgendamentoRestController {
   constructor(
     @Dep(ICalendarioAgendamentoFindOneQueryHandler)
     private readonly findOneHandler: ICalendarioAgendamentoFindOneQueryHandler,
@@ -52,44 +52,47 @@ export class CalendarioEventoRestController {
 
   @Get("/:id")
   @ApiOperation(CalendarioAgendamentoFindOneQueryMetadata.swaggerMetadata)
-  @ApiOkResponse({ type: CalendarioEventoFindOneOutputRestDto })
+  @ApiOkResponse({ type: CalendarioAgendamentoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async findById(
     @AccessContextHttp() accessContext: IAccessContext,
-    @Param() params: CalendarioEventoFindOneParamsRestDto,
-  ): Promise<CalendarioEventoFindOneOutputRestDto> {
+    @Param() params: CalendarioAgendamentoFindOneParamsRestDto,
+  ): Promise<CalendarioAgendamentoFindOneOutputRestDto> {
     const queryResult = await this.findOneHandler.execute(accessContext, { id: params.id });
     ensureExists(queryResult, CalendarioAgendamento.entityName, params.id);
-    return CalendarioEventoRestMapper.findOneQueryResultToOutputDto.map(queryResult);
+    return CalendarioAgendamentoRestMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Post("/")
   @ApiOperation(CalendarioAgendamentoCreateCommandMetadata.swaggerMetadata)
-  @ApiCreatedResponse({ type: CalendarioEventoFindOneOutputRestDto })
+  @ApiCreatedResponse({ type: CalendarioAgendamentoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   async create(
     @AccessContextHttp() accessContext: IAccessContext,
-    @Body() dto: CalendarioEventoCreateInputRestDto,
-  ): Promise<CalendarioEventoFindOneOutputRestDto> {
-    const command = CalendarioEventoRestMapper.createInputDtoToCreateCommand.map(dto);
+    @Body() dto: CalendarioAgendamentoCreateInputRestDto,
+  ): Promise<CalendarioAgendamentoFindOneOutputRestDto> {
+    const command = CalendarioAgendamentoRestMapper.createInputDtoToCreateCommand.map(dto);
     const queryResult = await this.createHandler.execute(accessContext, command);
-    return CalendarioEventoRestMapper.findOneQueryResultToOutputDto.map(queryResult);
+    return CalendarioAgendamentoRestMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Patch("/:id")
   @ApiOperation(CalendarioAgendamentoUpdateCommandMetadata.swaggerMetadata)
-  @ApiOkResponse({ type: CalendarioEventoFindOneOutputRestDto })
+  @ApiOkResponse({ type: CalendarioAgendamentoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async update(
     @AccessContextHttp() accessContext: IAccessContext,
-    @Param() params: CalendarioEventoFindOneParamsRestDto,
-    @Body() dto: CalendarioEventoUpdateInputRestDto,
-  ): Promise<CalendarioEventoFindOneOutputRestDto> {
-    const command = CalendarioEventoRestMapper.updateInputDtoToUpdateCommand.map({ params, dto });
+    @Param() params: CalendarioAgendamentoFindOneParamsRestDto,
+    @Body() dto: CalendarioAgendamentoUpdateInputRestDto,
+  ): Promise<CalendarioAgendamentoFindOneOutputRestDto> {
+    const command = CalendarioAgendamentoRestMapper.updateInputDtoToUpdateCommand.map({
+      params,
+      dto,
+    });
     const queryResult = await this.updateHandler.execute(accessContext, command);
-    return CalendarioEventoRestMapper.findOneQueryResultToOutputDto.map(queryResult);
+    return CalendarioAgendamentoRestMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
   @Delete("/:id")
@@ -99,7 +102,7 @@ export class CalendarioEventoRestController {
   @ApiNotFoundResponse()
   async deleteOneById(
     @AccessContextHttp() accessContext: IAccessContext,
-    @Param() params: CalendarioEventoFindOneParamsRestDto,
+    @Param() params: CalendarioAgendamentoFindOneParamsRestDto,
   ): Promise<boolean> {
     return this.deleteHandler.execute(accessContext, { id: params.id });
   }

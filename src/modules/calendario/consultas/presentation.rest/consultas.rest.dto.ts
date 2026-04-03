@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { CalendarioEventoFindOneOutputRestDto } from "@/modules/calendario/agendamento/presentation.rest/calendario-evento.rest.dto";
+import { CalendarioAgendamentoFindOneOutputRestDto } from "@/modules/calendario/agendamento/presentation.rest/calendario-agendamento.rest.dto";
 import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@/shared/presentation/rest";
 
 // ============================================================================
@@ -53,7 +53,7 @@ export class ConsultaAgendamentosQueryRestDto {
 export class ConsultaAgendamentosOutputRestDto {
   @ApiProperty({
     description: "Agendamentos encontrados",
-    type: () => [CalendarioEventoFindOneOutputRestDto],
+    type: () => [CalendarioAgendamentoFindOneOutputRestDto],
   })
-  agendamentos: CalendarioEventoFindOneOutputRestDto[];
+  agendamentos: CalendarioAgendamentoFindOneOutputRestDto[];
 }
