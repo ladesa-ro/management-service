@@ -27,6 +27,20 @@ export const CursoImagemCapaRefSchema = createSchema((standard) =>
 );
 
 // ============================================================================
+// Schemas de período-disciplina (para input de create/update)
+// ============================================================================
+
+const CursoPeriodoDisciplinaItemSchema = z.object({
+  disciplinaId: z.string().uuid(),
+  cargaHoraria: z.number().int().min(0).optional(),
+});
+
+const CursoPeriodoItemSchema = z.object({
+  numeroPeriodo: z.number().int().min(1),
+  disciplinas: z.array(CursoPeriodoDisciplinaItemSchema),
+});
+
+// ============================================================================
 // Schemas compostos
 // ============================================================================
 
@@ -49,6 +63,7 @@ export const CursoCreateSchema = createSchema((standard) =>
     quantidadePeriodos: CursoFields.quantidadePeriodos.create(standard),
     campus: CursoCampusRefSchema.create(standard),
     ofertaFormacao: CursoOfertaFormacaoRefSchema.create(standard),
+    periodos: z.array(CursoPeriodoItemSchema).optional(),
   }),
 );
 
@@ -59,5 +74,6 @@ export const CursoUpdateSchema = createSchema((standard) =>
     quantidadePeriodos: CursoFields.quantidadePeriodos.create(standard).optional(),
     campus: CursoCampusRefSchema.create(standard).optional(),
     ofertaFormacao: CursoOfertaFormacaoRefSchema.create(standard).optional(),
+    periodos: z.array(CursoPeriodoItemSchema).optional(),
   }),
 );
