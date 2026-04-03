@@ -28,6 +28,9 @@ export class CursoFindOneOutputRestDto extends EntityBaseRestDto {
   @ApiProperty(CursoFindOneQueryResultFields.nomeAbreviado.swaggerMetadata)
   nomeAbreviado: string;
 
+  @ApiProperty(CursoFindOneQueryResultFields.quantidadePeriodos.swaggerMetadata)
+  quantidadePeriodos: number;
+
   @ApiProperty({
     ...CursoFindOneQueryResultFields.campus.swaggerMetadata,
     type: () => CampusFindOneOutputRestDto,
@@ -105,6 +108,9 @@ export class CursoCreateInputRestDto {
   @ApiProperty(CursoCreateCommandFields.nomeAbreviado.swaggerMetadata)
   nomeAbreviado: string;
 
+  @ApiProperty(CursoCreateCommandFields.quantidadePeriodos.swaggerMetadata)
+  quantidadePeriodos: number;
+
   @ApiProperty(CursoCreateCommandFields.campus.swaggerMetadata)
   campus: { id: string };
 
@@ -121,6 +127,9 @@ export class CursoUpdateInputRestDto {
 
   @ApiPropertyOptional(CursoUpdateCommandFields.nomeAbreviado.swaggerMetadata)
   nomeAbreviado?: string;
+
+  @ApiPropertyOptional(CursoUpdateCommandFields.quantidadePeriodos.swaggerMetadata)
+  quantidadePeriodos?: number;
 
   @ApiPropertyOptional(CursoUpdateCommandFields.campus.swaggerMetadata)
   campus?: { id: string };

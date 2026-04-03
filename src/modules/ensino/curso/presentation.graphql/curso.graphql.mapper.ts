@@ -57,6 +57,7 @@ export const createInputDtoToCreateCommand = createMapper<
   const input = new CursoCreateCommand();
   input.nome = dto.nome;
   input.nomeAbreviado = dto.nomeAbreviado;
+  input.quantidadePeriodos = dto.quantidadePeriodos;
   input.campus = { id: dto.campus.id };
   input.ofertaFormacao = { id: dto.ofertaFormacao.id };
   input.imagemCapa = dto.imagemCapa ? { id: dto.imagemCapa.id } : null;
@@ -70,6 +71,7 @@ export const updateInputDtoToUpdateCommand = createMapper<
   id,
   nome: dto.nome,
   nomeAbreviado: dto.nomeAbreviado,
+  quantidadePeriodos: dto.quantidadePeriodos,
   campus: dto.campus ? { id: dto.campus.id } : undefined,
   ofertaFormacao: dto.ofertaFormacao ? { id: dto.ofertaFormacao.id } : undefined,
   imagemCapa:
@@ -87,6 +89,7 @@ export const findOneQueryResultToOutputDto = createMapper<
   id: output.id,
   nome: output.nome,
   nomeAbreviado: output.nomeAbreviado,
+  quantidadePeriodos: output.quantidadePeriodos,
   campus: CampusGraphqlMapper.findOneQueryResultToOutputDto.map(output.campus),
   ofertaFormacao: OfertaFormacaoGraphqlMapper.findOneQueryResultToOutputDto.map(
     output.ofertaFormacao,

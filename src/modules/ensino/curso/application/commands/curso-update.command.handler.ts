@@ -39,7 +39,11 @@ export class CursoUpdateCommandHandlerImpl implements ICursoUpdateCommandHandler
     await this.permissionChecker.ensureCanUpdate(accessContext, { dto }, dto.id);
 
     const domain = Curso.load(currentDomain);
-    domain.update({ nome: dto.nome, nomeAbreviado: dto.nomeAbreviado });
+    domain.update({
+      nome: dto.nome,
+      nomeAbreviado: dto.nomeAbreviado,
+      quantidadePeriodos: dto.quantidadePeriodos,
+    });
     const updateData: Partial<PersistInput<ICurso>> = { ...domain };
     if (has(dto, "campus") && dto.campus !== undefined) {
       const campus = await this.campusFindOneHandler.execute(accessContext, { id: dto.campus.id });

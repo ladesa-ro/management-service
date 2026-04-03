@@ -12,6 +12,7 @@ export const CursoFindOneQueryResultFields = {
 export class CursoFindOneQueryResult extends EntityQueryResult {
   nome!: string;
   nomeAbreviado!: string;
+  quantidadePeriodos!: number;
   campus!: CampusFindOneQueryResult;
   ofertaFormacao!: OfertaFormacaoFindOneQueryResult;
   imagemCapa!: ImagemFindOneQueryResult | null;

@@ -6,7 +6,7 @@ import { CursoListQueryHandlerImpl } from "./curso-list.query.handler";
 describe("CursoFindOneQueryHandler", () => {
   it("should delegate to repository.getFindOneQueryResult", async () => {
     const id = createTestId();
-    const entity = { id, nome: "Engenharia de Software" };
+    const entity = { id, nome: "Engenharia de Software", quantidadePeriodos: 3 };
 
     const repository = createMockCrudRepository();
     repository.getFindOneQueryResult.mockResolvedValue(entity);

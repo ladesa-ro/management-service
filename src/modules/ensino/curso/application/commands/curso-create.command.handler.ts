@@ -40,6 +40,7 @@ export class CursoCreateCommandHandlerImpl implements ICursoCreateCommandHandler
     const domain = Curso.create({
       nome: dto.nome,
       nomeAbreviado: dto.nomeAbreviado,
+      quantidadePeriodos: dto.quantidadePeriodos,
       campus: { id: campus.id },
       ofertaFormacao: { id: ofertaFormacao.id },
     });

@@ -51,6 +51,7 @@ describe("CursoCreateCommandHandler", () => {
   const dto = {
     nome: "Engenharia de Software",
     nomeAbreviado: "ESW",
+    quantidadePeriodos: 3,
     campus: { id: campusId },
     ofertaFormacao: { id: ofertaFormacaoId },
   };

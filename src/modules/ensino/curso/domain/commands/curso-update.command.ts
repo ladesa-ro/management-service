@@ -6,6 +6,7 @@ import { CursoFields } from "../curso.fields";
 export const CursoUpdateCommandFields = {
   nome: CursoFields.nome,
   nomeAbreviado: CursoFields.nomeAbreviado,
+  quantidadePeriodos: CursoFields.quantidadePeriodos,
   campus: CursoFields.campus,
   ofertaFormacao: CursoFields.ofertaFormacao,
 };
@@ -13,6 +14,7 @@ export const CursoUpdateCommandFields = {
 export class CursoUpdateCommand {
   nome?: string;
   nomeAbreviado?: string;
+  quantidadePeriodos?: number;
   campus?: CampusInputRef;
   ofertaFormacao?: OfertaFormacaoInputRef;
   imagemCapa?: ImagemInputRef | null;

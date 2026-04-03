@@ -24,6 +24,10 @@ export const CursoFields = {
   ofertaFormacao: createFieldMetadata({
     description: "Oferta de formacao do curso",
   }),
+  quantidadePeriodos: createFieldMetadata({
+    description: "Quantidade de períodos do curso",
+    schema: createSchema(() => z.number().int().min(1).max(12)),
+  }),
   imagemCapa: createFieldMetadata({
     description: "Imagem de capa do curso",
     nullable: true,

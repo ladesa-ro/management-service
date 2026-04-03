@@ -35,6 +35,7 @@ export const CursoSchema = z
     id: uuidSchema,
     nome: CursoFields.nome.domainSchema,
     nomeAbreviado: CursoFields.nomeAbreviado.domainSchema,
+    quantidadePeriodos: CursoFields.quantidadePeriodos.domainSchema,
     campus: ObjectIdUuidFactory.domain,
     ofertaFormacao: ObjectIdUuidFactory.domain,
     imagemCapa: ObjectIdUuidFactoryNullable.domain,
@@ -45,6 +46,7 @@ export const CursoCreateSchema = createSchema((standard) =>
   z.object({
     nome: CursoFields.nome.create(standard),
     nomeAbreviado: CursoFields.nomeAbreviado.create(standard),
+    quantidadePeriodos: CursoFields.quantidadePeriodos.create(standard),
     campus: CursoCampusRefSchema.create(standard),
     ofertaFormacao: CursoOfertaFormacaoRefSchema.create(standard),
   }),
@@ -54,6 +56,7 @@ export const CursoUpdateSchema = createSchema((standard) =>
   z.object({
     nome: CursoFields.nome.create(standard).optional(),
     nomeAbreviado: CursoFields.nomeAbreviado.create(standard).optional(),
+    quantidadePeriodos: CursoFields.quantidadePeriodos.create(standard).optional(),
     campus: CursoCampusRefSchema.create(standard).optional(),
     ofertaFormacao: CursoOfertaFormacaoRefSchema.create(standard).optional(),
   }),

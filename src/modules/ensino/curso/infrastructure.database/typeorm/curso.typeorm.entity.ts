@@ -23,6 +23,9 @@ export class CursoEntity {
   @Column({ name: "nome_abreviado", type: "text", nullable: false })
   nomeAbreviado!: string;
 
+  @Column({ name: "quantidade_periodos", type: "integer", nullable: false, default: 1 })
+  quantidadePeriodos!: number;
+
   @ManyToOne(() => CampusEntity)
   @JoinColumn({ name: "id_campus_fk" })
   campus!: CampusEntity;
