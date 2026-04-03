@@ -10,9 +10,9 @@ Aumentar a qualidade do código, reduzir débito técnico e evitar overengineeri
 - **Menos código é mais.** Se dá pra resolver com menos linhas sem perder clareza, resolva.
 - **Não invente problema.** Só corrija o que está errado ou fora do padrão. Não refatore código funcional e limpo só por preferência estética.
 
-## 1. Reler e aplicar CLAUDE.md
+## 1. Reler e aplicar AGENTS.md
 
-Releia o arquivo CLAUDE.md na raiz do projeto **por completo**. Internalize todas as diretrizes, convenções, padrões e regras descritas. Você **não pode ignorar** nenhuma instrução contida nele. Tudo que seguir neste comando deve estar em conformidade com o CLAUDE.md.
+Releia o arquivo AGENTS.md na raiz do projeto **por completo**. Internalize todas as diretrizes, convenções, padrões e regras descritas. Você **não pode ignorar** nenhuma instrução contida nele. Tudo que seguir neste comando deve estar em conformidade com o AGENTS.md.
 
 ## 2. Pré-validação de lógica
 
@@ -27,7 +27,7 @@ Se o problema for pontual e seguro de corrigir (ex: null não tratado, condiçã
 
 ## 3. Refinar arquivos pendentes
 
-Para cada arquivo modificado ou pendente, aplique as práticas do CLAUDE.md:
+Para cada arquivo modificado ou pendente, aplique as práticas do AGENTS.md:
 
 - **DRY** — elimine duplicações reais (não force DRY em coisas que só parecem iguais)
 - **Clean Code** — clareza, legibilidade, responsabilidade única
@@ -60,9 +60,9 @@ Testes devem ser diretos e objetivos. Não crie helpers, fixtures ou abstraçõe
 
 Atualize o README.md se as mudanças exigirem. Se estiver correto, não mexa.
 
-## 8. Verificar CLAUDE.md
+## 8. Verificar AGENTS.md
 
-Atualize o CLAUDE.md se alguma convenção nova surgiu ou algo ficou desatualizado. Proponha alterações se necessário.
+Atualize o AGENTS.md se alguma convenção nova surgiu ou algo ficou desatualizado. Proponha alterações se necessário.
 
 ## 9. Relatório de auditoria
 

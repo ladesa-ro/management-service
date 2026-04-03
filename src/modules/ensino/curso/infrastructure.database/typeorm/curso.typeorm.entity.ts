@@ -11,6 +11,7 @@ import { CampusEntity } from "@/modules/ambientes/campus/infrastructure.database
 import { ImagemEntity } from "@/modules/armazenamento/imagem/infrastructure.database/typeorm/imagem.typeorm.entity";
 import { OfertaFormacaoEntity } from "@/modules/ensino/oferta-formacao/infrastructure.database/typeorm/oferta-formacao.typeorm.entity";
 import { TurmaEntity } from "@/modules/ensino/turma/infrastructure.database/typeorm/turma.typeorm.entity";
+import { CursoPeriodoDisciplinaEntity } from "./curso-periodo-disciplina.typeorm.entity";
 
 @Entity("curso")
 export class CursoEntity {
@@ -43,6 +44,12 @@ export class CursoEntity {
     (turma) => turma.curso,
   )
   turmas!: Relation<TurmaEntity>[];
+
+  @OneToMany(
+    () => CursoPeriodoDisciplinaEntity,
+    (cpd) => cpd.curso,
+  )
+  periodoDisciplinas!: Relation<CursoPeriodoDisciplinaEntity>[];
 
   @Column({ name: "date_created", type: "timestamptz", nullable: false })
   dateCreated!: string;

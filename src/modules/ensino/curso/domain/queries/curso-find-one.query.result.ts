@@ -9,6 +9,18 @@ export const CursoFindOneQueryResultFields = {
   ...CursoFields,
 };
 
+export interface CursoPeriodoDisciplinaQueryResult {
+  id: string;
+  disciplinaId: string;
+  disciplinaNome: string | null;
+  cargaHoraria: number | null;
+}
+
+export interface CursoPeriodoQueryResult {
+  numeroPeriodo: number;
+  disciplinas: CursoPeriodoDisciplinaQueryResult[];
+}
+
 export class CursoFindOneQueryResult extends EntityQueryResult {
   nome!: string;
   nomeAbreviado!: string;
@@ -16,4 +28,5 @@ export class CursoFindOneQueryResult extends EntityQueryResult {
   campus!: CampusFindOneQueryResult;
   ofertaFormacao!: OfertaFormacaoFindOneQueryResult;
   imagemCapa!: ImagemFindOneQueryResult | null;
+  periodos!: CursoPeriodoQueryResult[];
 }

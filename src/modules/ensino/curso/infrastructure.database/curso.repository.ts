@@ -44,6 +44,9 @@ const cursoRelations = {
       },
     },
   },
+  periodoDisciplinas: {
+    disciplina: true,
+  },
 };
 
 const cursoPaginateConfig = buildTypeOrmPaginateConfig<CursoEntity>(

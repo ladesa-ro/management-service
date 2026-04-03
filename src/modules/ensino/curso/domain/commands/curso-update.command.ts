@@ -2,6 +2,8 @@ import { CampusInputRef } from "@/modules/ambientes/campus";
 import { ImagemInputRef } from "@/modules/armazenamento/imagem";
 import { OfertaFormacaoInputRef } from "@/modules/ensino/oferta-formacao";
 import { CursoFields } from "../curso.fields";
+import { CursoPeriodoDisciplinaPeriodoFields } from "../curso-periodo-disciplina.fields";
+import type { CursoPeriodoInput } from "./curso-create.command";
 
 export const CursoUpdateCommandFields = {
   nome: CursoFields.nome,
@@ -9,6 +11,7 @@ export const CursoUpdateCommandFields = {
   quantidadePeriodos: CursoFields.quantidadePeriodos,
   campus: CursoFields.campus,
   ofertaFormacao: CursoFields.ofertaFormacao,
+  periodos: CursoPeriodoDisciplinaPeriodoFields.disciplinas,
 };
 
 export class CursoUpdateCommand {
@@ -18,4 +21,5 @@ export class CursoUpdateCommand {
   campus?: CampusInputRef;
   ofertaFormacao?: OfertaFormacaoInputRef;
   imagemCapa?: ImagemInputRef | null;
+  periodos?: CursoPeriodoInput[];
 }

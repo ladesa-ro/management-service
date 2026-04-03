@@ -15,5 +15,3 @@ export * from "./curso-list.query.handler.interface";
 export * from "./curso-list.query.result";
 
 export * from "./curso-list.query.schemas";
-
-export * from "./curso-periodo-disciplina.query.metadata";

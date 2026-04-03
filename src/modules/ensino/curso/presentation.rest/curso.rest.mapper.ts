@@ -50,6 +50,7 @@ export const createInputDtoToCreateCommand = createMapper<
   input.quantidadePeriodos = dto.quantidadePeriodos;
   input.campus = { id: dto.campus.id };
   input.ofertaFormacao = { id: dto.ofertaFormacao.id };
+  input.periodos = dto.periodos;
   return input;
 });
 
@@ -63,6 +64,7 @@ export const updateInputDtoToUpdateCommand = createMapper<
   quantidadePeriodos: dto.quantidadePeriodos,
   campus: dto.campus ? { id: dto.campus.id } : undefined,
   ofertaFormacao: dto.ofertaFormacao ? { id: dto.ofertaFormacao.id } : undefined,
+  periodos: dto.periodos,
 }));
 
 // ============================================================================
@@ -80,6 +82,7 @@ export const findOneQueryResultToOutputDto = createMapper<
   campus: CampusRestMapper.findOneQueryResultToOutputDto.map(output.campus),
   ofertaFormacao: OfertaFormacaoRestMapper.findOneQueryResultToOutputDto.map(output.ofertaFormacao),
   imagemCapa: output.imagemCapa ? BlocoRestMapper.toImagemOutput(output.imagemCapa) : null,
+  periodos: output.periodos ?? [],
   dateCreated: output.dateCreated,
   dateUpdated: output.dateUpdated,
   dateDeleted: output.dateDeleted,
