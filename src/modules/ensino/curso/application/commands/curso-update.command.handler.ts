@@ -1,9 +1,7 @@
-import { has } from "lodash";
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext, PersistInput } from "@/domain/abstractions";
 import { Dep, Impl } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
-import { BusinessRuleViolationError } from "@/domain/errors";
 import type { CursoUpdateCommand } from "@/modules/ensino/curso/domain/commands/curso-update.command";
 import { ICursoUpdateCommandHandler } from "@/modules/ensino/curso/domain/commands/curso-update.command.handler.interface";
 import type { ICurso } from "@/modules/ensino/curso/domain/curso";
@@ -42,19 +40,6 @@ export class CursoUpdateCommandHandlerImpl implements ICursoUpdateCommandHandler
     });
     const updateData: Partial<PersistInput<ICurso>> = { ...domain };
 
-    if (has(dto, "campus") && dto.campus !== undefined) {
-      throw new BusinessRuleViolationError(
-        "CURSO_CAMPUS_IMMUTABLE",
-        "O campus do curso não pode ser alterado após a criação.",
-      );
-    }
-
-    if (has(dto, "ofertaFormacao") && dto.ofertaFormacao !== undefined) {
-      throw new BusinessRuleViolationError(
-        "CURSO_OFERTA_FORMACAO_IMMUTABLE",
-        "A formação do curso não pode ser alterada após a criação.",
-      );
-    }
     await this.repository.update(currentDomain.id, updateData);
 
     if (dto.periodos) {
