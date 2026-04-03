@@ -2,14 +2,13 @@ import { has } from "lodash";
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext, PersistInput } from "@/domain/abstractions";
 import { Dep, Impl } from "@/domain/dependency-injection";
-import { Campus } from "@/modules/ambientes/campus/domain/campus";
+import { BusinessRuleViolationError } from "@/domain/errors";
 import { ICampusFindOneQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-find-one.query.handler.interface";
 import type { CursoUpdateCommand } from "@/modules/ensino/curso/domain/commands/curso-update.command";
 import { ICursoUpdateCommandHandler } from "@/modules/ensino/curso/domain/commands/curso-update.command.handler.interface";
 import type { ICurso } from "@/modules/ensino/curso/domain/curso";
 import { Curso } from "@/modules/ensino/curso/domain/curso";
 import type { CursoFindOneQuery } from "@/modules/ensino/curso/domain/queries";
-import { OfertaFormacao } from "@/modules/ensino/oferta-formacao/domain/oferta-formacao";
 import { IOfertaFormacaoFindOneQueryHandler } from "@/modules/ensino/oferta-formacao/domain/queries/oferta-formacao-find-one.query.handler.interface";
 import { ICursoPermissionChecker } from "../../domain/authorization";
 import type { CursoFindOneQueryResult } from "../../domain/queries";
@@ -22,10 +21,9 @@ export class CursoUpdateCommandHandlerImpl implements ICursoUpdateCommandHandler
     private readonly repository: ICursoRepository,
     @Dep(ICursoPermissionChecker)
     private readonly permissionChecker: ICursoPermissionChecker,
-    @Dep(ICampusFindOneQueryHandler)
-    private readonly campusFindOneHandler: ICampusFindOneQueryHandler,
+    @Dep(ICampusFindOneQueryHandler) readonly _campusFindOneHandler: ICampusFindOneQueryHandler,
     @Dep(IOfertaFormacaoFindOneQueryHandler)
-    private readonly ofertaFormacaoFindOneHandler: IOfertaFormacaoFindOneQueryHandler,
+    readonly _ofertaFormacaoFindOneHandler: IOfertaFormacaoFindOneQueryHandler,
   ) {}
 
   async execute(
@@ -45,17 +43,19 @@ export class CursoUpdateCommandHandlerImpl implements ICursoUpdateCommandHandler
       quantidadePeriodos: dto.quantidadePeriodos,
     });
     const updateData: Partial<PersistInput<ICurso>> = { ...domain };
+
     if (has(dto, "campus") && dto.campus !== undefined) {
-      const campus = await this.campusFindOneHandler.execute(accessContext, { id: dto.campus.id });
-      ensureExists(campus, Campus.entityName, dto.campus.id);
-      updateData.campus = { id: campus.id };
+      throw new BusinessRuleViolationError(
+        "CURSO_CAMPUS_IMMUTABLE",
+        "O campus do curso não pode ser alterado após a criação.",
+      );
     }
+
     if (has(dto, "ofertaFormacao") && dto.ofertaFormacao !== undefined) {
-      const ofertaFormacao = await this.ofertaFormacaoFindOneHandler.execute(accessContext, {
-        id: dto.ofertaFormacao.id,
-      });
-      ensureExists(ofertaFormacao, OfertaFormacao.entityName, dto.ofertaFormacao.id);
-      updateData.ofertaFormacao = { id: ofertaFormacao.id };
+      throw new BusinessRuleViolationError(
+        "CURSO_OFERTA_FORMACAO_IMMUTABLE",
+        "A formação do curso não pode ser alterada após a criação.",
+      );
     }
     await this.repository.update(currentDomain.id, updateData);
 

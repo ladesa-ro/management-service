@@ -25,9 +25,11 @@ describe("CursoCreateCommandHandler", () => {
   ) {
     const repository = overrides.repository ?? createMockCrudRepository();
     const permissionChecker = overrides.permissionChecker ?? createMockPermissionChecker();
-    const campusFindOneHandler = overrides.campusFindOneHandler ?? createMockFindOneHandler();
+    const campusFindOneHandler =
+      overrides.campusFindOneHandler ?? createMockFindOneHandler({ id: campusId });
     const ofertaFormacaoFindOneHandler =
-      overrides.ofertaFormacaoFindOneHandler ?? createMockFindOneHandler();
+      overrides.ofertaFormacaoFindOneHandler ??
+      createMockFindOneHandler({ id: ofertaFormacaoId, campus: { id: campusId } });
 
     const handler = new CursoCreateCommandHandlerImpl(
       repository as any,

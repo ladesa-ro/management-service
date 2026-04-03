@@ -1,6 +1,7 @@
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { Dep, Impl } from "@/domain/dependency-injection";
+import { BusinessRuleViolationError } from "@/domain/errors";
 import { Campus } from "@/modules/ambientes/campus/domain/campus";
 import { ICampusFindOneQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-find-one.query.handler.interface";
 import type { CursoCreateCommand } from "@/modules/ensino/curso/domain/commands/curso-create.command";
@@ -37,6 +38,14 @@ export class CursoCreateCommandHandlerImpl implements ICursoCreateCommandHandler
       id: dto.ofertaFormacao.id,
     });
     ensureExists(ofertaFormacao, OfertaFormacao.entityName, dto.ofertaFormacao.id);
+
+    if (ofertaFormacao.campus.id !== campus.id) {
+      throw new BusinessRuleViolationError(
+        "OFERTA_FORMACAO_CAMPUS_MATCH",
+        "A formação selecionada não pertence ao campus informado.",
+      );
+    }
+
     const domain = Curso.create({
       nome: dto.nome,
       nomeAbreviado: dto.nomeAbreviado,
