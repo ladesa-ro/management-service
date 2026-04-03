@@ -53,6 +53,7 @@ describe("CursoCreateCommandHandler", () => {
     return {
       handler,
       repository,
+      periodoDisciplinaRepository,
       permissionChecker,
       campusFindOneHandler,
       ofertaFormacaoFindOneHandler,
@@ -121,5 +122,56 @@ describe("CursoCreateCommandHandler", () => {
     const accessContext = createTestAccessContext();
 
     await expect(handler.execute(accessContext, dto)).rejects.toThrow(ResourceNotFoundError);
+  });
+
+  it("should save periodos when provided", async () => {
+    const id = createTestId();
+    const disciplinaId = createTestId();
+
+    const repository = createMockCrudRepository();
+    repository.create.mockResolvedValue({ id });
+    repository.getFindOneQueryResult.mockResolvedValue({ id });
+
+    const periodoDisciplinaRepository = createMockPeriodoDisciplinaRepository();
+
+    const { handler } = createHandler({ repository, periodoDisciplinaRepository });
+    const accessContext = createTestAccessContext();
+
+    await handler.execute(accessContext, {
+      ...dto,
+      periodos: [
+        {
+          numeroPeriodo: 1,
+          disciplinas: [{ disciplinaId, cargaHoraria: 60 }],
+        },
+      ],
+    });
+
+    expect(periodoDisciplinaRepository.save).toHaveBeenCalledOnce();
+    expect(periodoDisciplinaRepository.save).toHaveBeenCalledWith(
+      expect.objectContaining({
+        curso: { id },
+        numeroPeriodo: 1,
+        disciplina: { id: disciplinaId },
+        cargaHoraria: 60,
+      }),
+    );
+  });
+
+  it("should not save periodos when not provided", async () => {
+    const id = createTestId();
+
+    const repository = createMockCrudRepository();
+    repository.create.mockResolvedValue({ id });
+    repository.getFindOneQueryResult.mockResolvedValue({ id });
+
+    const periodoDisciplinaRepository = createMockPeriodoDisciplinaRepository();
+
+    const { handler } = createHandler({ repository, periodoDisciplinaRepository });
+    const accessContext = createTestAccessContext();
+
+    await handler.execute(accessContext, dto);
+
+    expect(periodoDisciplinaRepository.save).not.toHaveBeenCalled();
   });
 });
