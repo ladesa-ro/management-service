@@ -1,11 +1,12 @@
-import { describe, expect, it } from "vitest";
-import { ResourceNotFoundError } from "@/application/errors";
+import { describe, expect, it, vi } from "vitest";
+import { ResourceNotFoundError, ValidationError } from "@/application/errors/application.error";
 import {
   createMockCqrsRepository,
   createTestAccessContext,
   createTestDomainEntity,
   createTestId,
 } from "@/test/helpers";
+import { EstagiarioBatchCreateCommandHandlerImpl } from "./estagiario-batch-create.command.handler";
 import { EstagiarioCreateCommandHandlerImpl } from "./estagiario-create.command.handler";
 import { EstagiarioDeleteCommandHandlerImpl } from "./estagiario-delete.command.handler";
 import { EstagiarioUpdateCommandHandlerImpl } from "./estagiario-update.command.handler";
@@ -99,5 +100,65 @@ describe("EstagiarioDeleteCommandHandler", () => {
     await expect(
       handler.execute(createTestAccessContext(), { id: createTestId() } as any),
     ).rejects.toThrow(ResourceNotFoundError);
+  });
+});
+
+describe("EstagiarioBatchCreateCommandHandler", () => {
+  it("should create usuario and estagiario for each item", async () => {
+    const usuarioCreateHandler = {
+      execute: vi.fn().mockResolvedValue({ vinculos: [{ id: createTestId() }] }),
+    };
+    const estagiarioCreateHandler = {
+      execute: vi.fn().mockResolvedValue({ id: createTestId() }),
+    };
+
+    const handler = new EstagiarioBatchCreateCommandHandlerImpl(
+      usuarioCreateHandler as any,
+      estagiarioCreateHandler as any,
+    );
+
+    const result = await handler.execute(createTestAccessContext(), {
+      estagiarios: [
+        {
+          usuario: {
+            nome: "Aluno 1",
+            matricula: "20260001",
+            email: "aluno1@ifro.edu.br",
+            vinculos: [{ campus: { id: createTestId() }, cargo: "ESTAGIARIO" }],
+          },
+          curso: { id: createTestId() },
+          turma: { id: createTestId() },
+          telefone: "69999999999",
+          emailInstitucional: "aluno1@ifro.edu.br",
+          dataNascimento: "2001-01-01",
+        },
+      ],
+    } as any);
+
+    expect(result).toHaveLength(1);
+    expect(usuarioCreateHandler.execute).toHaveBeenCalledOnce();
+    expect(estagiarioCreateHandler.execute).toHaveBeenCalledOnce();
+  });
+
+  it("should throw validation error when usuario vinculos is empty", async () => {
+    const handler = new EstagiarioBatchCreateCommandHandlerImpl(
+      { execute: vi.fn() } as any,
+      { execute: vi.fn() } as any,
+    );
+
+    await expect(
+      handler.execute(createTestAccessContext(), {
+        estagiarios: [
+          {
+            usuario: { vinculos: [] },
+            curso: { id: createTestId() },
+            turma: { id: createTestId() },
+            telefone: "69999999999",
+            emailInstitucional: "aluno@ifro.edu.br",
+            dataNascimento: "2000-01-15",
+          },
+        ],
+      } as any),
+    ).rejects.toThrow(ValidationError);
   });
 });

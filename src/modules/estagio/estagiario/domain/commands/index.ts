@@ -1,3 +1,7 @@
+export * from "./estagiario-batch-create.command";
+
+export * from "./estagiario-batch-create.command.handler.interface";
+
 export * from "./estagiario-create.command";
 
 export * from "./estagiario-create.command.handler.interface";
