@@ -22,6 +22,9 @@ export interface IArquivoRepository {
       mimeType: string;
       sizeBytes: number;
       storageType: string;
+      dateCreated: string;
+      dateUpdated: string;
+      dateDeleted: string | null;
     }>,
   ): Promise<{
     id: string;
@@ -29,5 +32,8 @@ export interface IArquivoRepository {
     mimeType: string;
     sizeBytes: number;
     storageType: string;
+    dateCreated: string;
+    dateUpdated: string;
+    dateDeleted: string | null;
   }>;
 }

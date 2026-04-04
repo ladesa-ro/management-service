@@ -7,6 +7,7 @@ import type {
   IArquivoCreateCommandHandler,
 } from "@/modules/armazenamento/arquivo/domain/commands";
 import { IArquivoRepository } from "@/modules/armazenamento/arquivo/domain/repositories";
+import { getNowISO } from "@/utils/date";
 
 @Impl()
 export class ArquivoCreateCommandHandlerImpl implements IArquivoCreateCommandHandler {
@@ -29,15 +30,17 @@ export class ArquivoCreateCommandHandlerImpl implements IArquivoCreateCommandHan
 
     await this.storageService.save(id, data);
 
-    const sizeBytes = 0;
-    const mimeType = dto.mimeType;
+    const now = getNowISO();
 
     await this.arquivoRepository.save({
       id,
       name: dto.name ?? undefined,
-      mimeType: mimeType ?? undefined,
-      sizeBytes: sizeBytes,
+      mimeType: dto.mimeType ?? undefined,
+      sizeBytes: 0,
       storageType: "filesystem",
+      dateCreated: now,
+      dateUpdated: now,
+      dateDeleted: null,
     });
 
     return { id };
