@@ -190,6 +190,7 @@ export class DiarioPreferenciaAgrupamentoTypeOrmRepositoryAdapter
       entity.dataFim = p.dataFim ?? null;
       entity.diaSemanaIso = p.diaSemanaIso;
       entity.aulasSeguidas = p.aulasSeguidas;
+      entity.ativo = true;
       Object.assign(entity, { diario: { id: p.diarioId } });
       entity.dateCreated = now;
       entity.dateUpdated = now;

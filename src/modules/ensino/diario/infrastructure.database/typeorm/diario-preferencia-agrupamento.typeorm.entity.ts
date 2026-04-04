@@ -24,6 +24,9 @@ export class DiarioPreferenciaAgrupamentoEntity {
   @Column({ name: "aulas_seguidas", type: "int", nullable: false })
   aulasSeguidas!: number;
 
+  @Column({ name: "ativo", type: "boolean", nullable: false, default: true })
+  ativo!: boolean;
+
   @ManyToOne(() => DiarioEntity)
   @JoinColumn({ name: "id_diario_fk" })
   diario!: Relation<DiarioEntity>;
