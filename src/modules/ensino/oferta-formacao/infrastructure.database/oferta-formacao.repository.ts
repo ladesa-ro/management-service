@@ -218,12 +218,14 @@ export class OfertaFormacaoTypeOrmRepositoryAdapter implements IOfertaFormacaoRe
       periodoEntity.dateDeleted = null;
       await periodoRepo.save(periodoEntity);
 
-      for (const etapa of periodo.etapas) {
+      for (let etapaIndex = 0; etapaIndex < periodo.etapas.length; etapaIndex++) {
+        const etapa = periodo.etapas[etapaIndex];
         const etapaEntity = new OfertaFormacaoPeriodoEtapaEntity();
         etapaEntity.id = generateUuidV7();
         Object.assign(etapaEntity, { ofertaFormacaoPeriodo: { id: periodoEntity.id } });
         etapaEntity.nome = etapa.nome;
         etapaEntity.cor = etapa.cor;
+        etapaEntity.ordem = etapaIndex + 1;
         etapaEntity.dateCreated = now;
         etapaEntity.dateUpdated = now;
         etapaEntity.dateDeleted = null;

@@ -16,6 +16,9 @@ export class OfertaFormacaoPeriodoEtapaEntity {
   @Column({ name: "cor", type: "text", nullable: false })
   cor!: string;
 
+  @Column({ name: "ordem", type: "integer", nullable: false, default: 0 })
+  ordem!: number;
+
   @Column({ name: "date_created", type: "timestamptz", nullable: false })
   dateCreated!: string;
 
