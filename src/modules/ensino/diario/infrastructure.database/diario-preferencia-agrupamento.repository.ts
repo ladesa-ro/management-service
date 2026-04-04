@@ -58,6 +58,16 @@ const diarioPreferenciaAgrupamentoRelations = {
             },
           },
         },
+        ofertaFormacao: {
+          modalidade: true,
+          campus: {
+            endereco: {
+              cidade: {
+                estado: true,
+              },
+            },
+          },
+        },
       },
     },
     disciplina: true,
