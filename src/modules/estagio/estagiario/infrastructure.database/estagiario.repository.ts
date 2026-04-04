@@ -43,6 +43,16 @@ const estagiarioRelations = {
         },
       },
     },
+    ofertaFormacao: {
+      modalidade: true,
+      campus: {
+        endereco: {
+          cidade: {
+            estado: true,
+          },
+        },
+      },
+    },
   },
   turma: {
     curso: {
