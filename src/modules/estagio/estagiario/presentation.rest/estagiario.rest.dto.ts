@@ -1,6 +1,9 @@
+import { UsuarioCreateCommandFields } from "@/modules/acesso/usuario/domain/commands/usuario-create.command";
+import { VinculoInputFields } from "@/modules/acesso/usuario/domain/usuario-ensino.fields";
 import { PerfilFindOneOutputRestDto } from "@/modules/acesso/usuario/perfil/presentation.rest/perfil.rest.dto";
 import { CursoFindOneOutputRestDto } from "@/modules/ensino/curso/presentation.rest/curso.rest.dto";
 import { TurmaFindOneOutputRestDto } from "@/modules/ensino/turma/presentation.rest/turma.rest.dto";
+import { EstagiarioBatchCreateCommandFields } from "@/modules/estagio/estagiario/domain/commands/estagiario-batch-create.command";
 import { EstagiarioCreateCommandFields } from "@/modules/estagio/estagiario/domain/commands/estagiario-create.command";
 import { EstagiarioUpdateCommandFields } from "@/modules/estagio/estagiario/domain/commands/estagiario-update.command";
 import {
@@ -122,6 +125,123 @@ export class EstagiarioCreateInputRestDto {
 
   @ApiProperty(EstagiarioCreateCommandFields.dataNascimento.swaggerMetadata)
   dataNascimento: string;
+}
+
+@ApiSchema({ name: "EstagiarioBatchCreateUsuarioVinculoInputDto" })
+export class EstagiarioBatchCreateUsuarioVinculoInputRestDto {
+  @ApiProperty(VinculoInputFields.campus.swaggerMetadata)
+  campus: { id: string };
+
+  @ApiProperty(VinculoInputFields.cargo.swaggerMetadata)
+  cargo: string;
+}
+
+@ApiSchema({ name: "EstagiarioBatchCreateUsuarioInputDto" })
+export class EstagiarioBatchCreateUsuarioInputRestDto {
+  @ApiPropertyOptional(UsuarioCreateCommandFields.nome.swaggerMetadata)
+  nome?: string | null;
+
+  @ApiPropertyOptional(UsuarioCreateCommandFields.matricula.swaggerMetadata)
+  matricula?: string | null;
+
+  @ApiPropertyOptional(UsuarioCreateCommandFields.email.swaggerMetadata)
+  email?: string | null;
+
+  @ApiProperty({
+    ...UsuarioCreateCommandFields.vinculos.swaggerMetadata,
+    type: () => [EstagiarioBatchCreateUsuarioVinculoInputRestDto],
+  })
+  vinculos: EstagiarioBatchCreateUsuarioVinculoInputRestDto[];
+}
+
+@ApiSchema({ name: "EstagiarioBatchCreateItemInputDto" })
+export class EstagiarioBatchCreateItemInputRestDto {
+  @ApiProperty({
+    ...EstagiarioBatchCreateCommandFields.usuario.swaggerMetadata,
+    type: () => EstagiarioBatchCreateUsuarioInputRestDto,
+  })
+  usuario: EstagiarioBatchCreateUsuarioInputRestDto;
+
+  @ApiProperty(EstagiarioBatchCreateCommandFields.curso.swaggerMetadata)
+  curso: { id: string };
+
+  @ApiProperty(EstagiarioBatchCreateCommandFields.turma.swaggerMetadata)
+  turma: { id: string };
+
+  @ApiProperty(EstagiarioBatchCreateCommandFields.telefone.swaggerMetadata)
+  telefone: string;
+
+  @ApiProperty(EstagiarioBatchCreateCommandFields.emailInstitucional.swaggerMetadata)
+  emailInstitucional: string;
+
+  @ApiProperty(EstagiarioBatchCreateCommandFields.dataNascimento.swaggerMetadata)
+  dataNascimento: string;
+}
+
+@ApiSchema({ name: "EstagiarioBatchCreateInputDto" })
+export class EstagiarioBatchCreateInputRestDto {
+  @ApiProperty({
+    ...EstagiarioBatchCreateCommandFields.estagiarios.swaggerMetadata,
+    type: () => [EstagiarioBatchCreateItemInputRestDto],
+  })
+  estagiarios: EstagiarioBatchCreateItemInputRestDto[];
+}
+
+@ApiSchema({ name: "EstagiarioBatchJobOutputDto" })
+export class EstagiarioBatchJobOutputRestDto {
+  @ApiProperty({
+    type: "string",
+    description: "Identificador do job",
+    format: "uuid",
+  })
+  id: string;
+
+  @ApiProperty({
+    type: "string",
+    enum: ["PENDENTE", "PROCESSANDO", "CONCLUIDO", "FALHOU"],
+  })
+  status: "PENDENTE" | "PROCESSANDO" | "CONCLUIDO" | "FALHOU";
+
+  @ApiProperty({
+    type: "number",
+    description: "Quantidade total de itens lidos do arquivo",
+  })
+  totalItems: number;
+
+  @ApiProperty({
+    type: "number",
+    description: "Quantidade de itens processados com sucesso",
+  })
+  successCount: number;
+
+  @ApiProperty({
+    type: "number",
+    description: "Quantidade de itens com falha",
+  })
+  failCount: number;
+
+  @ApiPropertyOptional({
+    type: "string",
+    nullable: true,
+    description: "Mensagem de erro quando o job falha",
+  })
+  errorMessage: string | null;
+
+  @ApiProperty({ type: "string", format: "date-time" })
+  dateCreated: string;
+
+  @ApiProperty({ type: "string", format: "date-time" })
+  dateUpdated: string;
+}
+
+@ApiSchema({ name: "EstagiarioBatchJobFindOneInputDto" })
+export class EstagiarioBatchJobFindOneInputRestDto {
+  @ApiProperty({
+    type: "string",
+    description: "Identificador do job",
+    format: "uuid",
+  })
+  jobId: string;
 }
 
 @ApiSchema({ name: "EstagiarioUpdateInputDto" })

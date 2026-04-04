@@ -2,6 +2,7 @@ import * as PerfilRestMapper from "@/modules/acesso/usuario/perfil/presentation.
 import * as CursoRestMapper from "@/modules/ensino/curso/presentation.rest/curso.rest.mapper";
 import * as TurmaRestMapper from "@/modules/ensino/turma/presentation.rest/turma.rest.mapper";
 import {
+  EstagiarioBatchCreateCommand,
   EstagiarioCreateCommand,
   EstagiarioUpdateCommand,
 } from "@/modules/estagio/estagiario/domain/commands";
@@ -11,7 +12,10 @@ import {
   EstagiarioListQuery,
 } from "@/modules/estagio/estagiario/domain/queries";
 import { createListMapper, createMapper, createPaginatedInputMapper, into } from "@/shared/mapping";
+import type { EstagiarioBatchJob } from "../application/jobs/estagiario-batch-create-from-file.job.service";
 import {
+  type EstagiarioBatchCreateInputRestDto,
+  EstagiarioBatchJobOutputRestDto,
   type EstagiarioCreateInputRestDto,
   type EstagiarioFindOneInputRestDto,
   EstagiarioFindOneOutputRestDto,
@@ -55,6 +59,25 @@ export const createInputDtoToCreateCommand = createMapper<
   dataNascimento: dto.dataNascimento,
 }));
 
+export const batchCreateInputDtoToCommand = createMapper<
+  EstagiarioBatchCreateInputRestDto,
+  EstagiarioBatchCreateCommand
+>((dto) => ({
+  estagiarios: dto.estagiarios.map((item) => ({
+    usuario: {
+      nome: item.usuario.nome,
+      matricula: item.usuario.matricula,
+      email: item.usuario.email,
+      vinculos: item.usuario.vinculos,
+    },
+    curso: { id: item.curso.id },
+    turma: { id: item.turma.id },
+    telefone: item.telefone,
+    emailInstitucional: item.emailInstitucional,
+    dataNascimento: item.dataNascimento,
+  })),
+}));
+
 export const updateInputDtoToUpdateCommand = createMapper<
   { params: EstagiarioFindOneInputRestDto; dto: EstagiarioUpdateInputRestDto },
   EstagiarioFindOneQuery & EstagiarioUpdateCommand
@@ -93,3 +116,17 @@ export const listQueryResultToListOutputDto = createListMapper(
   EstagiarioListOutputRestDto,
   findOneQueryResultToOutputDto,
 );
+
+export const batchJobToOutputDto = createMapper<
+  EstagiarioBatchJob,
+  EstagiarioBatchJobOutputRestDto
+>((job) => ({
+  id: job.id,
+  status: job.status,
+  totalItems: job.totalItems,
+  successCount: job.successCount,
+  failCount: job.failCount,
+  errorMessage: job.errorMessage,
+  dateCreated: job.dateCreated,
+  dateUpdated: job.dateUpdated,
+}));

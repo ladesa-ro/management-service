@@ -1,5 +1,21 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
 import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  Param,
+  Patch,
+  Post,
+  Query,
+  UploadedFile,
+  UseInterceptors,
+} from "@nestjs/common";
+import { FileInterceptor } from "@nestjs/platform-express";
+import {
+  ApiAcceptedResponse,
+  ApiBody,
+  ApiConsumes,
   ApiCreatedResponse,
   ApiForbiddenResponse,
   ApiNotFoundResponse,
@@ -10,6 +26,10 @@ import {
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { Dep } from "@/domain/dependency-injection";
+import {
+  EstagiarioBatchCreateCommandMetadata,
+  IEstagiarioBatchCreateCommandHandler,
+} from "@/modules/estagio/estagiario/domain/commands/estagiario-batch-create.command.handler.interface";
 import {
   EstagiarioCreateCommandMetadata,
   IEstagiarioCreateCommandHandler,
@@ -32,7 +52,11 @@ import {
   IEstagiarioListQueryHandler,
 } from "@/modules/estagio/estagiario/domain/queries/estagiario-list.query.handler.interface";
 import { AccessContextHttp } from "@/server/nest/access-context";
+import { EstagiarioBatchCreateFromFileJobService } from "../application/jobs/estagiario-batch-create-from-file.job.service";
 import {
+  EstagiarioBatchCreateInputRestDto,
+  EstagiarioBatchJobFindOneInputRestDto,
+  EstagiarioBatchJobOutputRestDto,
   EstagiarioCreateInputRestDto,
   EstagiarioFindOneInputRestDto,
   EstagiarioFindOneOutputRestDto,
@@ -52,6 +76,9 @@ export class EstagiarioRestController {
     private readonly findOneHandler: IEstagiarioFindOneQueryHandler,
     @Dep(IEstagiarioCreateCommandHandler)
     private readonly createHandler: IEstagiarioCreateCommandHandler,
+    @Dep(IEstagiarioBatchCreateCommandHandler)
+    private readonly batchCreateHandler: IEstagiarioBatchCreateCommandHandler,
+    private readonly batchCreateFromFileJobService: EstagiarioBatchCreateFromFileJobService,
     @Dep(IEstagiarioUpdateCommandHandler)
     private readonly updateHandler: IEstagiarioUpdateCommandHandler,
     @Dep(IEstagiarioDeleteCommandHandler)
@@ -97,6 +124,64 @@ export class EstagiarioRestController {
     const command = EstagiarioRestMapper.createInputDtoToCreateCommand.map(dto);
     const queryResult = await this.createHandler.execute(accessContext, command);
     return EstagiarioRestMapper.findOneQueryResultToOutputDto.map(queryResult);
+  }
+
+  @Post("/batch")
+  @HttpCode(202)
+  @ApiOperation({
+    operationId: "estagiarioBatchJobCreate",
+    summary: "Inicia job de cadastro em massa de estagiários via arquivo JSON",
+  })
+  @ApiConsumes("multipart/form-data")
+  @ApiBody({
+    schema: {
+      type: "object",
+      properties: {
+        file: { type: "string", format: "binary" },
+      },
+      required: ["file"],
+    },
+  })
+  @ApiAcceptedResponse({ type: EstagiarioBatchJobOutputRestDto })
+  @ApiForbiddenResponse()
+  @UseInterceptors(FileInterceptor("file"))
+  async batchCreate(
+    @AccessContextHttp() accessContext: IAccessContext,
+    @UploadedFile() file: Express.Multer.File,
+  ): Promise<EstagiarioBatchJobOutputRestDto> {
+    const job = this.batchCreateFromFileJobService.start(accessContext, file);
+    return EstagiarioRestMapper.batchJobToOutputDto.map(job);
+  }
+
+  @Post("/batch/sync")
+  @ApiOperation(EstagiarioBatchCreateCommandMetadata.swaggerMetadata)
+  @ApiCreatedResponse({ type: [EstagiarioFindOneOutputRestDto] })
+  @ApiForbiddenResponse()
+  async batchCreateSync(
+    @AccessContextHttp() accessContext: IAccessContext,
+    @Body() dto: EstagiarioBatchCreateInputRestDto,
+  ): Promise<EstagiarioFindOneOutputRestDto[]> {
+    const command = EstagiarioRestMapper.batchCreateInputDtoToCommand.map(dto);
+    const queryResults = await this.batchCreateHandler.execute(accessContext, command);
+    return queryResults.map((queryResult) =>
+      EstagiarioRestMapper.findOneQueryResultToOutputDto.map(queryResult),
+    );
+  }
+
+  @Get("/batch/job/:jobId")
+  @ApiOperation({
+    operationId: "estagiarioBatchJobFindById",
+    summary: "Consulta status do job de cadastro em massa de estagiários",
+  })
+  @ApiOkResponse({ type: EstagiarioBatchJobOutputRestDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async findBatchJobById(
+    @Param() params: EstagiarioBatchJobFindOneInputRestDto,
+  ): Promise<EstagiarioBatchJobOutputRestDto> {
+    const job = this.batchCreateFromFileJobService.getById(params.jobId);
+    ensureExists(job, "EstagiarioBatchJob", params.jobId);
+    return EstagiarioRestMapper.batchJobToOutputDto.map(job);
   }
 
   @Patch("/:id")
