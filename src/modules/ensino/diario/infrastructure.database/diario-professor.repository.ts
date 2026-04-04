@@ -57,6 +57,16 @@ const diarioProfessorRelations = {
             },
           },
         },
+        ofertaFormacao: {
+          modalidade: true,
+          campus: {
+            endereco: {
+              cidade: {
+                estado: true,
+              },
+            },
+          },
+        },
       },
     },
     disciplina: true,
