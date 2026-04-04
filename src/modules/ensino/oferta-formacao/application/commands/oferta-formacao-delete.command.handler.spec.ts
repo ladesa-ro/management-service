@@ -30,6 +30,7 @@ function createTestAggregate() {
     campus: createTestRef(),
     niveisFormacoes: [createTestRef()],
     periodos: [{ numeroPeriodo: 1, etapas: [{ nome: "Bimestre", cor: "blue" }] }],
+    imagemCapa: null,
     ...createTestDatedFields(),
   });
 }

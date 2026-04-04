@@ -37,6 +37,9 @@ export interface IOfertaFormacaoRepository {
   /** Soft-delete por ID. */
   softDeleteById: IRepositorySoftDeleteById;
 
+  /** Atualiza um campo de imagem da entidade. */
+  updateImagemField(id: string, fieldName: string, imagemId: string | null): Promise<void>;
+
   // ==========================================
   // Read side — usado por query handlers
   // ==========================================

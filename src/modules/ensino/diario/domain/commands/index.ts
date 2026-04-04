@@ -19,3 +19,5 @@ export * from "./diario-professor-bulk-replace.command.handler.interface";
 export * from "./diario-update.command";
 
 export * from "./diario-update.command.handler.interface";
+
+export * from "./diario-update-imagem-capa.command.handler.interface";

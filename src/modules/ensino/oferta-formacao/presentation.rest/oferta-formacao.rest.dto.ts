@@ -1,3 +1,4 @@
+import { ImagemFindOneOutputRestDto } from "@/modules/ambientes/bloco/presentation.rest";
 import { CampusFindOneOutputRestDto } from "@/modules/ambientes/campus/presentation.rest/campus.rest.dto";
 import { ModalidadeFindOneOutputRestDto } from "@/modules/ensino/modalidade/presentation.rest/modalidade.rest.dto";
 import { NivelFormacaoFindOneOutputRestDto } from "@/modules/ensino/nivel-formacao/presentation.rest/nivel-formacao.rest.dto";
@@ -109,6 +110,12 @@ export class OfertaFormacaoFindOneOutputRestDto extends EntityBaseRestDto {
     type: () => [OfertaFormacaoPeriodoOutputRestDto],
   })
   periodos: OfertaFormacaoPeriodoOutputRestDto[];
+
+  @ApiPropertyOptional({
+    ...OfertaFormacaoFindOneQueryResultFields.imagemCapa.swaggerMetadata,
+    type: () => ImagemFindOneOutputRestDto,
+  })
+  imagemCapa: ImagemFindOneOutputRestDto | null;
 }
 
 // ============================================================================

@@ -1,3 +1,4 @@
+import * as BlocoRestMapper from "@/modules/ambientes/bloco/presentation.rest/bloco.rest.mapper";
 import * as CampusRestMapper from "@/modules/ambientes/campus/presentation.rest/campus.rest.mapper";
 import * as ModalidadeRestMapper from "@/modules/ensino/modalidade/presentation.rest/modalidade.rest.mapper";
 import * as NivelFormacaoRestMapper from "@/modules/ensino/nivel-formacao/presentation.rest/nivel-formacao.rest.mapper";
@@ -105,6 +106,7 @@ export const findOneQueryResultToOutputDto = createMapper<
       cor: e.cor,
     })),
   })),
+  imagemCapa: output.imagemCapa ? BlocoRestMapper.toImagemOutput(output.imagemCapa) : null,
   dateCreated: output.dateCreated,
   dateUpdated: output.dateUpdated,
   dateDeleted: output.dateDeleted,
