@@ -31,10 +31,12 @@ export const entityToDomain = createMapper<OfertaFormacaoEntity, IOfertaFormacao
     .sort((a, b) => a.numeroPeriodo - b.numeroPeriodo)
     .map((p) => ({
       numeroPeriodo: p.numeroPeriodo,
-      etapas: filterActive(p.etapas).map((et) => ({
-        nome: et.nome,
-        cor: et.cor,
-      })),
+      etapas: filterActive(p.etapas)
+        .sort((a, b) => a.ordem - b.ordem)
+        .map((et) => ({
+          nome: et.nome,
+          cor: et.cor,
+        })),
     })),
 
   dateCreated: e.dateCreated,
@@ -67,11 +69,13 @@ export const entityToFindOneQueryResult = createMapper<
     .map((p) => ({
       id: p.id,
       numeroPeriodo: p.numeroPeriodo,
-      etapas: filterActive(p.etapas).map((et) => ({
-        id: et.id,
-        nome: et.nome,
-        cor: et.cor,
-      })),
+      etapas: filterActive(p.etapas)
+        .sort((a, b) => a.ordem - b.ordem)
+        .map((et) => ({
+          id: et.id,
+          nome: et.nome,
+          cor: et.cor,
+        })),
     })),
 }));
 
