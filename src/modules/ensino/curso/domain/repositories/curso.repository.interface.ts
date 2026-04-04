@@ -37,6 +37,9 @@ export interface ICursoRepository {
   /** Atualiza campos do registro por ID. */
   update(id: string | number, data: Partial<PersistInput<ICurso>>): Promise<void>;
 
+  /** Atualiza a FK de um campo de imagem por ID. */
+  updateImagemField(id: string, fieldName: string, imagemId: string | null): Promise<void>;
+
   /** Soft-delete por ID. */
   softDeleteById: IRepositorySoftDeleteById;
 

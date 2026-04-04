@@ -111,6 +111,16 @@ export class TurmaTypeOrmRepositoryAdapter implements ITurmaRepository {
     return typeormUpdate(this.appTypeormConnection, TurmaEntity, id, data);
   }
 
+  async updateImagemField(id: string, fieldName: string, imagemId: string | null): Promise<void> {
+    const repo = this.appTypeormConnection.getRepository(TurmaEntity);
+    await repo
+      .createQueryBuilder()
+      .update()
+      .set({ [fieldName]: imagemId ? { id: imagemId } : null })
+      .where("id = :id", { id })
+      .execute();
+  }
+
   softDeleteById(id: string) {
     return typeormSoftDeleteById(this.appTypeormConnection, TurmaEntity, config.alias, id);
   }
