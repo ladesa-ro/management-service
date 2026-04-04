@@ -46,7 +46,7 @@ export const DiarioCreateSchema = createSchema((standard) =>
     calendarioLetivo: DiarioCalendarioLetivoRefSchema.create(standard),
     turma: DiarioTurmaRefSchema.create(standard),
     disciplina: DiarioDisciplinaRefSchema.create(standard),
-    ambientePadrao: DiarioAmbientePadraoRefSchema.create(standard).optional(),
+    ambientePadrao: DiarioAmbientePadraoRefSchema.create(standard).nullable().optional(),
   }),
 );
 
@@ -56,6 +56,6 @@ export const DiarioUpdateSchema = createSchema((standard) =>
     calendarioLetivo: DiarioCalendarioLetivoRefSchema.create(standard).optional(),
     turma: DiarioTurmaRefSchema.create(standard).optional(),
     disciplina: DiarioDisciplinaRefSchema.create(standard).optional(),
-    ambientePadrao: DiarioAmbientePadraoRefSchema.create(standard).optional(),
+    ambientePadrao: DiarioAmbientePadraoRefSchema.create(standard).nullable().optional(),
   }),
 );
