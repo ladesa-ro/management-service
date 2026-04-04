@@ -260,6 +260,16 @@ export class UsuarioTypeOrmRepositoryAdapter implements IUsuarioRepository {
     return typeormUpdate(this.appTypeormConnection, UsuarioEntity, id, entityData);
   }
 
+  async updateImagemField(id: string, fieldName: string, imagemId: string | null): Promise<void> {
+    const repo = this.appTypeormConnection.getRepository(UsuarioEntity);
+    await repo
+      .createQueryBuilder()
+      .update()
+      .set({ [fieldName]: imagemId ? { id: imagemId } : null })
+      .where("id = :id", { id })
+      .execute();
+  }
+
   softDeleteById(id: string) {
     return typeormSoftDeleteById(this.appTypeormConnection, UsuarioEntity, config.alias, id);
   }

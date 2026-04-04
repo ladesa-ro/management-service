@@ -44,6 +44,9 @@ export interface ITurmaRepository {
   /** Atualiza campos arbitrários por ID (usado para imagem). */
   update(id: string | number, data: Record<string, unknown>): Promise<void>;
 
+  /** Atualiza a FK de um campo de imagem por ID. */
+  updateImagemField(id: string, fieldName: string, imagemId: string | null): Promise<void>;
+
   // ==========================================
   // Read side — usado por query handlers
   // ==========================================

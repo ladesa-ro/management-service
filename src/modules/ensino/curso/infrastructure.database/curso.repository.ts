@@ -77,6 +77,16 @@ export class CursoTypeOrmRepositoryAdapter implements ICursoRepository {
     return typeormUpdate(this.appTypeormConnection, CursoEntity, id, entityData);
   }
 
+  async updateImagemField(id: string, fieldName: string, imagemId: string | null): Promise<void> {
+    const repo = this.appTypeormConnection.getRepository(CursoEntity);
+    await repo
+      .createQueryBuilder()
+      .update()
+      .set({ [fieldName]: imagemId ? { id: imagemId } : null })
+      .where("id = :id", { id })
+      .execute();
+  }
+
   softDeleteById(id: string) {
     return typeormSoftDeleteById(this.appTypeormConnection, CursoEntity, config.alias, id);
   }

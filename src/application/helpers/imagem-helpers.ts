@@ -43,7 +43,7 @@ export async function getEntityImagemStreamableFile(
  */
 
 export async function saveEntityImagemField(
-  currentId: string | number,
+  currentId: string,
   file: Express.Multer.File,
   fieldName: string,
   saveImagemCapaHandler: {
@@ -52,11 +52,13 @@ export async function saveEntityImagemField(
       command: { file: Express.Multer.File },
     ): Promise<{ imagem: { id: string } }>;
   },
-  repository: { update(id: string | number, data: Record<string, unknown>): Promise<void> },
+  repository: {
+    updateImagemField(id: string, fieldName: string, imagemId: string | null): Promise<void>;
+  },
 ): Promise<boolean> {
   const { imagem } = await saveImagemCapaHandler.execute(null, { file });
 
-  await repository.update(currentId, { [fieldName]: { id: imagem.id } });
+  await repository.updateImagemField(currentId, fieldName, imagem.id);
 
   return true;
 }
