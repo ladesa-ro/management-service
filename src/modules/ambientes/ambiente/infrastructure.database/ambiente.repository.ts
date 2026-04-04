@@ -24,7 +24,14 @@ const config = {
   hasSoftDelete: true,
 } as const;
 
+const imagemRelations = {
+  versoes: {
+    arquivo: true,
+  },
+};
+
 const ambienteRelations = {
+  imagemCapa: imagemRelations,
   bloco: {
     campus: {
       endereco: {
@@ -80,6 +87,16 @@ export class AmbienteTypeOrmRepositoryAdapter implements IAmbienteRepository {
     const entityData = AmbienteTypeormMapper.domainToPersistence.map({ ...aggregate });
     const repo = this.appTypeormConnection.getRepository(AmbienteEntity);
     await repo.save(repo.create(entityData));
+  }
+
+  async updateImagemField(id: string, fieldName: string, imagemId: string | null): Promise<void> {
+    const repo = this.appTypeormConnection.getRepository(AmbienteEntity);
+    await repo
+      .createQueryBuilder()
+      .update()
+      .set({ [fieldName]: imagemId ? { id: imagemId } : null })
+      .where("id = :id", { id })
+      .execute();
   }
 
   softDeleteById(id: string) {

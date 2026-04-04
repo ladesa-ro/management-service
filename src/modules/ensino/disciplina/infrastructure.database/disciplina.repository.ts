@@ -25,7 +25,16 @@ const config = {
   hasSoftDelete: true,
 } as const;
 
-const disciplinaRelations = { diarios: true };
+const imagemRelations = {
+  versoes: {
+    arquivo: true,
+  },
+};
+
+const disciplinaRelations = {
+  imagemCapa: imagemRelations,
+  diarios: true,
+};
 
 const disciplinaPaginateConfig = buildTypeOrmPaginateConfig<DisciplinaEntity>(
   disciplinaPaginationSpec,
@@ -59,6 +68,16 @@ export class DisciplinaTypeOrmRepositoryAdapter implements IDisciplinaRepository
 
   softDeleteById(id: string) {
     return typeormSoftDeleteById(this.appTypeormConnection, DisciplinaEntity, config.alias, id);
+  }
+
+  async updateImagemField(id: string, fieldName: string, imagemId: string | null): Promise<void> {
+    const repo = this.appTypeormConnection.getRepository(DisciplinaEntity);
+    await repo
+      .createQueryBuilder()
+      .update()
+      .set({ [fieldName]: imagemId ? { id: imagemId } : null })
+      .where("id = :id", { id })
+      .execute();
   }
 
   // ============================================================================

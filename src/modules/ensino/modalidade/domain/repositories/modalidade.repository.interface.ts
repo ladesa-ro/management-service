@@ -37,6 +37,9 @@ export interface IModalidadeRepository {
   /** Soft-delete por ID. */
   softDeleteById: IRepositorySoftDeleteById;
 
+  /** Atualiza a FK de um campo de imagem por ID. */
+  updateImagemField(id: string, fieldName: string, imagemId: string | null): Promise<void>;
+
   // ==========================================
   // Read side — usado por query handlers
   // ==========================================

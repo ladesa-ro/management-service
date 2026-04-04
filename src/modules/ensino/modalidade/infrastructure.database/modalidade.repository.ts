@@ -25,6 +25,12 @@ const config = {
   hasSoftDelete: true,
 } as const;
 
+const imagemRelations = {
+  versoes: {
+    arquivo: true,
+  },
+};
+
 const modalidadePaginateConfig: ITypeOrmPaginationConfig<ModalidadeEntity> = {
   ...paginateConfig,
   sortableColumns: ["nome", "slug", "dateCreated"],
@@ -34,6 +40,9 @@ const modalidadePaginateConfig: ITypeOrmPaginationConfig<ModalidadeEntity> = {
     ["dateCreated", "ASC"],
   ],
   filterableColumns: {},
+  relations: {
+    imagemCapa: imagemRelations,
+  },
 };
 
 @Impl()
@@ -63,6 +72,16 @@ export class ModalidadeTypeOrmRepositoryAdapter implements IModalidadeRepository
 
   softDeleteById(id: string) {
     return typeormSoftDeleteById(this.appTypeormConnection, ModalidadeEntity, config.alias, id);
+  }
+
+  async updateImagemField(id: string, fieldName: string, imagemId: string | null): Promise<void> {
+    const repo = this.appTypeormConnection.getRepository(ModalidadeEntity);
+    await repo
+      .createQueryBuilder()
+      .update()
+      .set({ [fieldName]: imagemId ? { id: imagemId } : null })
+      .where("id = :id", { id })
+      .execute();
   }
 
   // ============================================================================

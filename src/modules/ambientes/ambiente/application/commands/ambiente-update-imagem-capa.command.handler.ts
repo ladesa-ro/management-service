@@ -1,4 +1,5 @@
 import { ensureExists } from "@/application/errors";
+import { saveEntityImagemField } from "@/application/helpers";
 import type { IAccessContext } from "@/domain/abstractions";
 import { Dep, Impl } from "@/domain/dependency-injection";
 import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente";
@@ -30,20 +31,21 @@ export class AmbienteUpdateImagemCapaCommandHandlerImpl
     accessContext: IAccessContext | null,
     { dto, file }: AmbienteUpdateImagemCapaCommand,
   ): Promise<boolean> {
-    const domain = await this.repository.loadById(accessContext, dto.id);
-    ensureExists(domain, Ambiente.entityName, dto.id);
+    const current = await this.repository.loadById(accessContext, dto.id);
+    ensureExists(current, Ambiente.entityName, dto.id);
 
     await this.permissionChecker.ensureCanUpdate(
       accessContext,
-      { dto: { id: domain.id } },
-      domain.id,
+      { dto: { id: current.id } },
+      current.id,
     );
 
-    const { imagem } = await this.saveImagemCapaHandler.execute(null, { file });
-    domain.imagemCapa = { id: imagem.id };
-
-    await this.repository.save(domain);
-
-    return true;
+    return saveEntityImagemField(
+      current.id,
+      file,
+      "imagemCapa",
+      this.saveImagemCapaHandler,
+      this.repository,
+    );
   }
 }

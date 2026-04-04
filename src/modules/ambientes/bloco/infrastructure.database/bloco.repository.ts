@@ -24,7 +24,14 @@ const config = {
   hasSoftDelete: true,
 } as const;
 
+const imagemRelations = {
+  versoes: {
+    arquivo: true,
+  },
+};
+
 const blocoRelations = {
+  imagemCapa: imagemRelations,
   campus: {
     endereco: {
       cidade: {
@@ -82,6 +89,16 @@ export class BlocoTypeOrmRepositoryAdapter implements IBlocoRepository {
 
   softDeleteById(id: string) {
     return typeormSoftDeleteById(this.appTypeormConnection, BlocoEntity, config.alias, id);
+  }
+
+  async updateImagemField(id: string, fieldName: string, imagemId: string | null): Promise<void> {
+    const repo = this.appTypeormConnection.getRepository(BlocoEntity);
+    await repo
+      .createQueryBuilder()
+      .update()
+      .set({ [fieldName]: imagemId ? { id: imagemId } : null })
+      .where("id = :id", { id })
+      .execute();
   }
 
   // ==========================================

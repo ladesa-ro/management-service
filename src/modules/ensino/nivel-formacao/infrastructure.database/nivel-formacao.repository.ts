@@ -25,6 +25,12 @@ const config = {
   hasSoftDelete: true,
 } as const;
 
+const imagemRelations = {
+  versoes: {
+    arquivo: true,
+  },
+};
+
 const nivelFormacaoPaginateConfig: ITypeOrmPaginationConfig<NivelFormacaoEntity> = {
   ...paginateConfig,
   sortableColumns: ["slug", "dateCreated"],
@@ -34,6 +40,9 @@ const nivelFormacaoPaginateConfig: ITypeOrmPaginationConfig<NivelFormacaoEntity>
     ["dateCreated", "ASC"],
   ],
   filterableColumns: {},
+  relations: {
+    imagemCapa: imagemRelations,
+  },
 };
 
 @Impl()
@@ -63,6 +72,16 @@ export class NivelFormacaoTypeOrmRepositoryAdapter implements INivelFormacaoRepo
 
   softDeleteById(id: string) {
     return typeormSoftDeleteById(this.appTypeormConnection, NivelFormacaoEntity, config.alias, id);
+  }
+
+  async updateImagemField(id: string, fieldName: string, imagemId: string | null): Promise<void> {
+    const repo = this.appTypeormConnection.getRepository(NivelFormacaoEntity);
+    await repo
+      .createQueryBuilder()
+      .update()
+      .set({ [fieldName]: imagemId ? { id: imagemId } : null })
+      .where("id = :id", { id })
+      .execute();
   }
 
   // ============================================================================

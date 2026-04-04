@@ -28,7 +28,15 @@ const config = {
   alias: "usuario",
 } as const;
 
+const imagemRelations = {
+  versoes: {
+    arquivo: true,
+  },
+};
+
 const usuarioRelations = {
+  imagemCapa: imagemRelations,
+  imagemPerfil: imagemRelations,
   vinculos: {
     cargo: true,
     campus: {
