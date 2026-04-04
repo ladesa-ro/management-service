@@ -36,6 +36,7 @@ describe("OfertaFormacao (domain entity)", () => {
     campus: createTestRef(),
     niveisFormacoes: [createTestRef()],
     periodos: validPeriodos,
+    imagemCapa: null,
     ...createTestDatedFields(),
   });
 

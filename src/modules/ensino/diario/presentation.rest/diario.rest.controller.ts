@@ -1,5 +1,21 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
 import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Put,
+  Query,
+  StreamableFile,
+  UploadedFile,
+  UseInterceptors,
+} from "@nestjs/common";
+import { FileInterceptor } from "@nestjs/platform-express";
+import {
+  ApiBody,
+  ApiConsumes,
   ApiCreatedResponse,
   ApiForbiddenResponse,
   ApiNotFoundResponse,
@@ -26,11 +42,19 @@ import {
   DiarioUpdateCommandMetadata,
   IDiarioUpdateCommandHandler,
 } from "@/modules/ensino/diario/domain/commands/diario-update.command.handler.interface";
+import {
+  DiarioUpdateImagemCapaCommandMetadata,
+  IDiarioUpdateImagemCapaCommandHandler,
+} from "@/modules/ensino/diario/domain/commands/diario-update-imagem-capa.command.handler.interface";
 import { Diario } from "@/modules/ensino/diario/domain/diario";
 import {
   DiarioFindOneQueryMetadata,
   IDiarioFindOneQueryHandler,
 } from "@/modules/ensino/diario/domain/queries/diario-find-one.query.handler.interface";
+import {
+  DiarioGetImagemCapaQueryMetadata,
+  IDiarioGetImagemCapaQueryHandler,
+} from "@/modules/ensino/diario/domain/queries/diario-get-imagem-capa.query.handler.interface";
 import {
   DiarioListQueryMetadata,
   IDiarioListQueryHandler,
@@ -63,6 +87,10 @@ export class DiarioRestController {
     private readonly updateHandler: IDiarioUpdateCommandHandler,
     @Dep(IDiarioDeleteCommandHandler)
     private readonly deleteHandler: IDiarioDeleteCommandHandler,
+    @Dep(IDiarioGetImagemCapaQueryHandler)
+    private readonly getImagemCapaHandler: IDiarioGetImagemCapaQueryHandler,
+    @Dep(IDiarioUpdateImagemCapaCommandHandler)
+    private readonly updateImagemCapaHandler: IDiarioUpdateImagemCapaCommandHandler,
   ) {}
 
   @Get("/")
@@ -132,6 +160,46 @@ export class DiarioRestController {
     const command = DiarioRestMapper.updateInputDtoToUpdateCommand.map({ params, dto });
     const queryResult = await this.updateHandler.execute(accessContext, command);
     return DiarioRestMapper.findOneQueryResultToOutputDto.map(queryResult);
+  }
+
+  @Get("/:id/imagem/capa")
+  @ApiOperation(DiarioGetImagemCapaQueryMetadata.swaggerMetadata)
+  @ApiOkResponse()
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async getImagemCapa(
+    @AccessContextHttp() accessContext: IAccessContext,
+    @Param() params: DiarioFindOneInputRestDto,
+  ) {
+    const queryResult = await this.getImagemCapaHandler.execute(accessContext, { id: params.id });
+    return new StreamableFile(queryResult.stream, {
+      type: queryResult.mimeType,
+      disposition: queryResult.disposition,
+    });
+  }
+
+  @Put("/:id/imagem/capa")
+  @ApiOperation(DiarioUpdateImagemCapaCommandMetadata.swaggerMetadata)
+  @ApiConsumes("multipart/form-data")
+  @ApiBody({
+    schema: {
+      type: "object",
+      properties: {
+        file: { type: "string", format: "binary" },
+      },
+      required: ["file"],
+    },
+  })
+  @ApiOkResponse({ type: Boolean })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  @UseInterceptors(FileInterceptor("file"))
+  async updateImagemCapa(
+    @AccessContextHttp() accessContext: IAccessContext,
+    @Param() params: DiarioFindOneInputRestDto,
+    @UploadedFile() file: Express.Multer.File,
+  ): Promise<boolean> {
+    return this.updateImagemCapaHandler.execute(accessContext, { dto: params, file });
   }
 
   @Delete("/:id")

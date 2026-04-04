@@ -47,6 +47,11 @@ const ofertaFormacaoRelations = {
   periodosEntities: {
     etapas: true,
   },
+  imagemCapa: {
+    versoes: {
+      arquivo: true,
+    },
+  },
 };
 
 const ofertaFormacaoPaginateConfig = buildTypeOrmPaginateConfig<OfertaFormacaoEntity>(
@@ -64,6 +69,7 @@ const ofertaFormacaoPaginateConfig = buildTypeOrmPaginateConfig<OfertaFormacaoEn
 const writeRelations = {
   modalidade: true,
   campus: true,
+  imagemCapa: true,
   ofertaFormacaoNiveisFormacoes: {
     nivelFormacao: true,
   },
@@ -111,6 +117,16 @@ export class OfertaFormacaoTypeOrmRepositoryAdapter implements IOfertaFormacaoRe
 
   softDeleteById(id: string) {
     return typeormSoftDeleteById(this.appTypeormConnection, OfertaFormacaoEntity, config.alias, id);
+  }
+
+  async updateImagemField(id: string, fieldName: string, imagemId: string | null): Promise<void> {
+    const repo = this.appTypeormConnection.getRepository(OfertaFormacaoEntity);
+    await repo
+      .createQueryBuilder()
+      .update()
+      .set({ [fieldName]: imagemId ? { id: imagemId } : null })
+      .where("id = :id", { id })
+      .execute();
   }
 
   // ==========================================

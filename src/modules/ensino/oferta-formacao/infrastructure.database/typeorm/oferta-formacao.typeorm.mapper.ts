@@ -39,6 +39,8 @@ export const entityToDomain = createMapper<OfertaFormacaoEntity, IOfertaFormacao
         })),
     })),
 
+  imagemCapa: e.imagemCapa ? pickId(e.imagemCapa) : null,
+
   dateCreated: e.dateCreated,
   dateUpdated: e.dateUpdated,
   dateDeleted: e.dateDeleted,
@@ -77,6 +79,8 @@ export const entityToFindOneQueryResult = createMapper<
           cor: et.cor,
         })),
     })),
+
+  imagemCapa: e.imagemCapa ?? null,
 }));
 
 // ============================================================================
@@ -91,6 +95,7 @@ export const domainToPersistence = createMapper<IOfertaFormacao, DeepPartial<Ofe
     duracaoPeriodoEmMeses: d.duracaoPeriodoEmMeses,
     modalidade: pickId(d.modalidade),
     campus: pickId(d.campus),
+    imagemCapa: d.imagemCapa ? pickId(d.imagemCapa) : null,
     dateCreated: d.dateCreated,
     dateUpdated: d.dateUpdated,
     dateDeleted: d.dateDeleted,

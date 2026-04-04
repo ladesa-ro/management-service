@@ -41,6 +41,9 @@ export interface IDiarioRepository {
   /** Soft-delete por ID. */
   softDeleteById: IRepositorySoftDeleteById;
 
+  /** Atualiza um campo de imagem do aggregate. */
+  updateImagemField(id: string, fieldName: string, imagemId: string | null): Promise<void>;
+
   // ==========================================
   // Read side — usado por query handlers
   // ==========================================

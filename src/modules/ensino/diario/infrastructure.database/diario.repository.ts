@@ -24,7 +24,14 @@ const config = {
   hasSoftDelete: true,
 } as const;
 
+const imagemRelations = {
+  versoes: {
+    arquivo: true,
+  },
+};
+
 const diarioRelations = {
+  imagemCapa: imagemRelations,
   calendarioLetivo: {
     campus: {
       endereco: {
@@ -131,6 +138,16 @@ export class DiarioTypeOrmRepositoryAdapter implements IDiarioRepository {
 
   softDeleteById(id: string) {
     return typeormSoftDeleteById(this.appTypeormConnection, DiarioEntity, config.alias, id);
+  }
+
+  async updateImagemField(id: string, fieldName: string, imagemId: string | null): Promise<void> {
+    const repo = this.appTypeormConnection.getRepository(DiarioEntity);
+    await repo
+      .createQueryBuilder()
+      .update()
+      .set({ [fieldName]: imagemId ? { id: imagemId } : null })
+      .where("id = :id", { id })
+      .execute();
   }
 
   // ==========================================

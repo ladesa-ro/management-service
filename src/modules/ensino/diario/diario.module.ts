@@ -2,6 +2,7 @@ import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
 import { UsuarioModule } from "@/modules/acesso/usuario/usuario.module";
 import { AmbienteModule } from "@/modules/ambientes/ambiente/ambiente.module";
+import { ImagemModule } from "@/modules/armazenamento/imagem/imagem.module";
 import { CalendarioLetivoModule } from "@/modules/calendario/letivo/calendario-letivo.module";
 import { DiarioPermissionCheckerImpl } from "@/modules/ensino/diario/application/authorization";
 import {
@@ -11,9 +12,11 @@ import {
   DiarioPreferenciaAgrupamentoBulkReplaceCommandHandlerImpl,
   DiarioProfessorBulkReplaceCommandHandlerImpl,
   DiarioUpdateCommandHandlerImpl,
+  DiarioUpdateImagemCapaCommandHandlerImpl,
 } from "@/modules/ensino/diario/application/commands";
 import {
   DiarioFindOneQueryHandlerImpl,
+  DiarioGetImagemCapaQueryHandlerImpl,
   DiarioListQueryHandlerImpl,
   DiarioPreferenciaAgrupamentoFindOneQueryHandlerImpl,
   DiarioPreferenciaAgrupamentoListQueryHandlerImpl,
@@ -28,9 +31,11 @@ import {
   IDiarioPreferenciaAgrupamentoBulkReplaceCommandHandler,
   IDiarioProfessorBulkReplaceCommandHandler,
   IDiarioUpdateCommandHandler,
+  IDiarioUpdateImagemCapaCommandHandler,
 } from "@/modules/ensino/diario/domain/commands";
 import {
   IDiarioFindOneQueryHandler,
+  IDiarioGetImagemCapaQueryHandler,
   IDiarioListQueryHandler,
   IDiarioPreferenciaAgrupamentoFindOneQueryHandler,
   IDiarioPreferenciaAgrupamentoListQueryHandler,
@@ -58,7 +63,14 @@ import { TurmaModule } from "@/modules/ensino/turma/turma.module";
  * Modulo NestJS para Diario
  */
 @Module({
-  imports: [CalendarioLetivoModule, TurmaModule, AmbienteModule, DisciplinaModule, UsuarioModule],
+  imports: [
+    CalendarioLetivoModule,
+    TurmaModule,
+    AmbienteModule,
+    DisciplinaModule,
+    UsuarioModule,
+    ImagemModule,
+  ],
   controllers: [
     DiarioRestController,
     DiarioProfessorRestController,
@@ -86,9 +98,17 @@ import { TurmaModule } from "@/modules/ensino/turma/turma.module";
     { provide: IDiarioCreateCommandHandler, useClass: DiarioCreateCommandHandlerImpl },
     { provide: IDiarioUpdateCommandHandler, useClass: DiarioUpdateCommandHandlerImpl },
     { provide: IDiarioDeleteCommandHandler, useClass: DiarioDeleteCommandHandlerImpl },
+    {
+      provide: IDiarioUpdateImagemCapaCommandHandler,
+      useClass: DiarioUpdateImagemCapaCommandHandlerImpl,
+    },
     // Diario Queries
     { provide: IDiarioListQueryHandler, useClass: DiarioListQueryHandlerImpl },
     { provide: IDiarioFindOneQueryHandler, useClass: DiarioFindOneQueryHandlerImpl },
+    {
+      provide: IDiarioGetImagemCapaQueryHandler,
+      useClass: DiarioGetImagemCapaQueryHandlerImpl,
+    },
 
     // DiarioProfessor Commands
     {

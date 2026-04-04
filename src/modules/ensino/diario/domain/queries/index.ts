@@ -3,8 +3,8 @@ export * from "./diario-find-one.query";
 export * from "./diario-find-one.query.handler.interface";
 
 export * from "./diario-find-one.query.result";
-
 export * from "./diario-find-one.query.schemas";
+export * from "./diario-get-imagem-capa.query.handler.interface";
 
 export * from "./diario-list.query";
 

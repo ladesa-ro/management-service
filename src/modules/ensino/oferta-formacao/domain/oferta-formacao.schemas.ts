@@ -62,6 +62,7 @@ export const OfertaFormacaoSchema = z
         message: "niveisFormacoes não pode conter IDs duplicados",
       }),
     periodos: z.array(ofertaFormacaoPeriodoSchema.loose()),
+    imagemCapa: ObjectIdUuidFactory.domain.loose().nullable(),
   })
   .extend(datedSchema.shape);
 

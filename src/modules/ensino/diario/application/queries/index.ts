@@ -1,5 +1,7 @@
 export * from "./diario-find-one.query.handler";
 
+export * from "./diario-get-imagem-capa.query.handler";
+
 export * from "./diario-list.query.handler";
 
 export * from "./diario-preferencia-agrupamento-find-one.query.handler";

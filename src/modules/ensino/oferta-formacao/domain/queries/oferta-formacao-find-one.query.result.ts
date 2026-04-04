@@ -1,5 +1,6 @@
 import { EntityQueryResult, SharedFields } from "@/domain/abstractions";
 import { CampusFindOneQueryResult } from "@/modules/ambientes/campus";
+import { ImagemFindOneQueryResult } from "@/modules/armazenamento/imagem";
 import { ModalidadeFindOneQueryResult } from "@/modules/ensino/modalidade";
 import { NivelFormacaoFindOneQueryResult } from "@/modules/ensino/nivel-formacao";
 import { OfertaFormacaoFields } from "../oferta-formacao.fields";
@@ -29,4 +30,5 @@ export class OfertaFormacaoFindOneQueryResult extends EntityQueryResult {
   campus!: CampusFindOneQueryResult;
   niveisFormacoes!: NivelFormacaoFindOneQueryResult[];
   periodos!: IOfertaFormacaoPeriodoQueryResult[];
+  imagemCapa!: ImagemFindOneQueryResult | null;
 }

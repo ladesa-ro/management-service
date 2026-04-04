@@ -33,6 +33,7 @@ export class OfertaFormacao {
   campus!: { id: string };
   niveisFormacoes!: Array<{ id: string }>;
   periodos!: IOfertaFormacaoPeriodo[];
+  imagemCapa!: { id: string } | null;
 
   dateCreated!: ScalarDateTimeString;
   dateUpdated!: ScalarDateTimeString;
@@ -53,6 +54,7 @@ export class OfertaFormacao {
     instance.campus = parsed.campus;
     instance.niveisFormacoes = parsed.niveisFormacoes;
     instance.periodos = parsed.periodos;
+    instance.imagemCapa = null;
     instance.dateCreated = getNowISO();
     instance.dateUpdated = getNowISO();
     instance.dateDeleted = null;
@@ -73,6 +75,7 @@ export class OfertaFormacao {
     instance.campus = parsed.campus;
     instance.niveisFormacoes = parsed.niveisFormacoes;
     instance.periodos = parsed.periodos;
+    instance.imagemCapa = parsed.imagemCapa;
     instance.dateCreated = parsed.dateCreated;
     instance.dateUpdated = parsed.dateUpdated;
     instance.dateDeleted = parsed.dateDeleted;

@@ -42,4 +42,8 @@ export const OfertaFormacaoFields = {
   periodos: createFieldMetadata({
     description: "Periodos com suas etapas do ano letivo",
   }),
+  imagemCapa: createFieldMetadata({
+    description: "Imagem de capa da oferta de formacao",
+    nullable: true,
+  }),
 };
