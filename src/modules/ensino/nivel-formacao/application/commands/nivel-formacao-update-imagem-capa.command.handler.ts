@@ -1,4 +1,5 @@
 import { ensureExists } from "@/application/errors";
+import { saveEntityImagemField } from "@/application/helpers";
 import type { IAccessContext } from "@/domain/abstractions";
 import { Dep, Impl } from "@/domain/dependency-injection";
 import {
@@ -30,20 +31,21 @@ export class NivelFormacaoUpdateImagemCapaCommandHandlerImpl
     accessContext: IAccessContext | null,
     { dto, file }: NivelFormacaoUpdateImagemCapaCommand,
   ): Promise<boolean> {
-    const domain = await this.repository.loadById(accessContext, dto.id);
-    ensureExists(domain, NivelFormacao.entityName, dto.id);
+    const current = await this.repository.loadById(accessContext, dto.id);
+    ensureExists(current, NivelFormacao.entityName, dto.id);
 
     await this.permissionChecker.ensureCanUpdate(
       accessContext,
-      { dto: { id: domain.id } },
-      domain.id,
+      { dto: { id: current.id } },
+      current.id,
     );
 
-    const { imagem } = await this.saveImagemCapaHandler.execute(null, { file });
-    domain.imagemCapa = { id: imagem.id };
-
-    await this.repository.save(domain);
-
-    return true;
+    return saveEntityImagemField(
+      current.id,
+      file,
+      "imagemCapa",
+      this.saveImagemCapaHandler,
+      this.repository,
+    );
   }
 }

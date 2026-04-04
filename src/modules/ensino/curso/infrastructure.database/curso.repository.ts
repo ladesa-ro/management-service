@@ -26,7 +26,14 @@ const config = {
   hasSoftDelete: true,
 } as const;
 
+const imagemRelations = {
+  versoes: {
+    arquivo: true,
+  },
+};
+
 const cursoRelations = {
+  imagemCapa: imagemRelations,
   campus: {
     endereco: {
       cidade: {
