@@ -1,6 +1,6 @@
 import type { CalendarioAgendamentoTipo } from "@/modules/calendario/agendamento/domain/calendario-agendamento.types";
 
-export class ConsultaAgendamentosPorDataQuery {
+export class ConsultaOcorrenciasPorDataQuery {
   dateStart!: string;
   dateEnd!: string;
   campus?: string;

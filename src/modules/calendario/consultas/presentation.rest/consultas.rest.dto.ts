@@ -6,7 +6,7 @@ import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@/shared/presentati
 // Query Input
 // ============================================================================
 
-const ConsultaAgendamentosQuerySchema = z.object({
+const ConsultaOcorrenciasQuerySchema = z.object({
   dateStart: z.string().min(1),
   dateEnd: z.string().min(1),
   campus: z.uuid().optional(),
@@ -15,9 +15,9 @@ const ConsultaAgendamentosQuerySchema = z.object({
   tipo: z.string().optional(),
 });
 
-@ApiSchema({ name: "ConsultaAgendamentosQueryDto" })
-export class ConsultaAgendamentosQueryRestDto {
-  static schema = ConsultaAgendamentosQuerySchema;
+@ApiSchema({ name: "ConsultaOcorrenciasQueryDto" })
+export class ConsultaOcorrenciasQueryRestDto {
+  static schema = ConsultaOcorrenciasQuerySchema;
 
   @ApiProperty({ description: "Data início do período (YYYY-MM-DD)", type: "string" })
   dateStart: string;
@@ -39,7 +39,7 @@ export class ConsultaAgendamentosQueryRestDto {
   professor?: string;
 
   @ApiPropertyOptional({
-    description: "Filtro por tipo de agendamento (AULA, EVENTO, INDISPONIBILIDADE, RESERVA)",
+    description: "Filtro por tipo de ocorrência (AULA, EVENTO, INDISPONIBILIDADE, RESERVA)",
     type: "string",
   })
   tipo?: string;
@@ -49,11 +49,11 @@ export class ConsultaAgendamentosQueryRestDto {
 // Output
 // ============================================================================
 
-@ApiSchema({ name: "ConsultaAgendamentosOutputDto" })
-export class ConsultaAgendamentosOutputRestDto {
+@ApiSchema({ name: "ConsultaOcorrenciasOutputDto" })
+export class ConsultaOcorrenciasOutputRestDto {
   @ApiProperty({
-    description: "Agendamentos encontrados",
+    description: "Ocorrências encontradas",
     type: () => [CalendarioAgendamentoFindOneOutputRestDto],
   })
-  agendamentos: CalendarioAgendamentoFindOneOutputRestDto[];
+  ocorrencias: CalendarioAgendamentoFindOneOutputRestDto[];
 }

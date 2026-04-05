@@ -6,30 +6,30 @@ import { CalendarioAgendamentoTipo } from "@/modules/calendario/agendamento/doma
 import * as CalendarioAgendamentoRestMapper from "@/modules/calendario/agendamento/presentation.rest/calendario-agendamento.rest.mapper";
 import { AccessContextHttp } from "@/server/nest/access-context";
 import {
-  ConsultaAgendamentosPorDataQueryMetadata,
-  IConsultaAgendamentosPorDataQueryHandler,
+  ConsultaOcorrenciasPorDataQueryMetadata,
+  IConsultaOcorrenciasPorDataQueryHandler,
 } from "../domain/queries";
 import {
-  ConsultaAgendamentosOutputRestDto,
-  ConsultaAgendamentosQueryRestDto,
+  ConsultaOcorrenciasOutputRestDto,
+  ConsultaOcorrenciasQueryRestDto,
 } from "./consultas.rest.dto";
 
 @ApiTags("calendario-consultas")
 @Controller("/calendario/consultas")
 export class ConsultasRestController {
   constructor(
-    @DeclareDependency(IConsultaAgendamentosPorDataQueryHandler)
-    private readonly queryHandler: IConsultaAgendamentosPorDataQueryHandler,
+    @DeclareDependency(IConsultaOcorrenciasPorDataQueryHandler)
+    private readonly queryHandler: IConsultaOcorrenciasPorDataQueryHandler,
   ) {}
 
-  @Get("/agendamentos")
-  @ApiOperation(ConsultaAgendamentosPorDataQueryMetadata.swaggerMetadata)
-  @ApiOkResponse({ type: ConsultaAgendamentosOutputRestDto })
+  @Get("/ocorrencias")
+  @ApiOperation(ConsultaOcorrenciasPorDataQueryMetadata.swaggerMetadata)
+  @ApiOkResponse({ type: ConsultaOcorrenciasOutputRestDto })
   @ApiForbiddenResponse()
-  async findAgendamentos(
+  async findOcorrencias(
     @AccessContextHttp() accessContext: IAccessContext,
-    @Query() queryParams: ConsultaAgendamentosQueryRestDto,
-  ): Promise<ConsultaAgendamentosOutputRestDto> {
+    @Query() queryParams: ConsultaOcorrenciasQueryRestDto,
+  ): Promise<ConsultaOcorrenciasOutputRestDto> {
     const tipo = queryParams.tipo ? (queryParams.tipo as CalendarioAgendamentoTipo) : undefined;
 
     const results = await this.queryHandler.execute(accessContext, {
@@ -42,7 +42,18 @@ export class ConsultasRestController {
     });
 
     return {
-      agendamentos: CalendarioAgendamentoRestMapper.findOneQueryResultToOutputDto.mapArray(results),
+      ocorrencias: CalendarioAgendamentoRestMapper.findOneQueryResultToOutputDto.mapArray(results),
     };
+  }
+
+  @Get("/agendamentos")
+  @ApiOperation({ ...ConsultaOcorrenciasPorDataQueryMetadata.swaggerMetadata, deprecated: true })
+  @ApiOkResponse({ type: ConsultaOcorrenciasOutputRestDto })
+  @ApiForbiddenResponse()
+  async findAgendamentos(
+    @AccessContextHttp() accessContext: IAccessContext,
+    @Query() queryParams: ConsultaOcorrenciasQueryRestDto,
+  ): Promise<ConsultaOcorrenciasOutputRestDto> {
+    return this.findOcorrencias(accessContext, queryParams);
   }
 }

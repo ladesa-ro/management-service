@@ -126,17 +126,29 @@ export class CalendarioAgendamentoTypeOrmRepositoryAdapter
     closedVersion: CalendarioAgendamento,
     newVersion: CalendarioAgendamento,
   ): Promise<void> {
-    const repo = this.appTypeormConnection.getRepository(CalendarioAgendamentoEntity);
+    await this.appTypeormConnection.transaction(async (manager) => {
+      const repo = manager.getRepository(CalendarioAgendamentoEntity);
 
-    await repo.update(closedVersion.id, {
-      validTo: closedVersion.validTo,
-      dateUpdated: closedVersion.dateUpdated,
+      // Lock the old version row to prevent concurrent updates
+      await repo
+        .createQueryBuilder()
+        .setLock("pessimistic_write")
+        .where("id = :id", { id: closedVersion.id })
+        .getOne();
+
+      // Close old version
+      await repo.update(closedVersion.id, {
+        validTo: closedVersion.validTo,
+        dateUpdated: closedVersion.dateUpdated,
+      });
+
+      // Insert new version
+      const entity = repo.create(this.toPersistence(newVersion));
+      await repo.save(entity);
+
+      // Create junctions for the new version within the same transaction
+      await this.createJunctionsWithManager(manager, newVersion);
     });
-
-    const entity = repo.create(this.toPersistence(newVersion));
-    await repo.save(entity);
-
-    await this.createJunctions(newVersion);
   }
 
   async closeVersion(aggregate: CalendarioAgendamento): Promise<void> {
@@ -558,53 +570,6 @@ export class CalendarioAgendamentoTypeOrmRepositoryAdapter
     ]);
   }
 
-  private async createJunctions(aggregate: CalendarioAgendamento): Promise<void> {
-    await Promise.all([
-      this.createJunctionSet(
-        CalendarioAgendamentoTurmaEntity,
-        aggregate.id,
-        aggregate.turmas,
-        "turma",
-      ),
-      this.createJunctionSet(
-        CalendarioAgendamentoProfessorEntity,
-        aggregate.id,
-        aggregate.perfis,
-        "perfil",
-      ),
-      this.createJunctionSet(
-        CalendarioAgendamentoCalendarioLetivoEntity,
-        aggregate.id,
-        aggregate.calendariosLetivos,
-        "calendarioLetivo",
-      ),
-      this.createJunctionSet(
-        CalendarioAgendamentoOfertaFormacaoEntity,
-        aggregate.id,
-        aggregate.ofertasFormacao,
-        "ofertaFormacao",
-      ),
-      this.createJunctionSet(
-        CalendarioAgendamentoModalidadeEntity,
-        aggregate.id,
-        aggregate.modalidades,
-        "modalidade",
-      ),
-      this.createJunctionSet(
-        CalendarioAgendamentoAmbienteEntity,
-        aggregate.id,
-        aggregate.ambientes,
-        "ambiente",
-      ),
-      this.createJunctionSet(
-        CalendarioAgendamentoDiarioEntity,
-        aggregate.id,
-        aggregate.diarios,
-        "diario",
-      ),
-    ]);
-  }
-
   private async replaceJunctionSet<T extends { id: string }>(
     entityClass: new () => T,
     agendamentoId: string,
@@ -630,23 +595,44 @@ export class CalendarioAgendamentoTypeOrmRepositoryAdapter
     }
   }
 
-  private async createJunctionSet<T extends { id: string }>(
-    entityClass: new () => T,
-    agendamentoId: string,
-    refs: Array<{ id: string }>,
-    relationKey: string,
+  private async createJunctionsWithManager(
+    manager: import("typeorm").EntityManager,
+    aggregate: CalendarioAgendamento,
   ): Promise<void> {
-    const repo = this.appTypeormConnection.getRepository(entityClass);
+    const createSet = async <T extends { id: string }>(
+      entityClass: new () => T,
+      refs: Array<{ id: string }>,
+      relationKey: string,
+    ) => {
+      const repo = manager.getRepository(entityClass);
+      for (const ref of refs) {
+        const entity = new entityClass();
+        entity.id = generateUuidV7();
+        Object.assign(entity, {
+          [relationKey]: { id: ref.id },
+          calendarioAgendamento: { id: aggregate.id },
+        });
+        await repo.save(entity);
+      }
+    };
 
-    for (const ref of refs) {
-      const entity = new entityClass();
-      entity.id = generateUuidV7();
-      Object.assign(entity, {
-        [relationKey]: { id: ref.id },
-        calendarioAgendamento: { id: agendamentoId },
-      });
-      await repo.save(entity);
-    }
+    await Promise.all([
+      createSet(CalendarioAgendamentoTurmaEntity, aggregate.turmas, "turma"),
+      createSet(CalendarioAgendamentoProfessorEntity, aggregate.perfis, "perfil"),
+      createSet(
+        CalendarioAgendamentoCalendarioLetivoEntity,
+        aggregate.calendariosLetivos,
+        "calendarioLetivo",
+      ),
+      createSet(
+        CalendarioAgendamentoOfertaFormacaoEntity,
+        aggregate.ofertasFormacao,
+        "ofertaFormacao",
+      ),
+      createSet(CalendarioAgendamentoModalidadeEntity, aggregate.modalidades, "modalidade"),
+      createSet(CalendarioAgendamentoAmbienteEntity, aggregate.ambientes, "ambiente"),
+      createSet(CalendarioAgendamentoDiarioEntity, aggregate.diarios, "diario"),
+    ]);
   }
 }
 
