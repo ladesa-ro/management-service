@@ -2,4 +2,8 @@ export { CalendarioAgendamentoCreateCommandHandlerImpl } from "./calendario-agen
 
 export { CalendarioAgendamentoDeleteCommandHandlerImpl } from "./calendario-agendamento-delete.command.handler";
 
+export { CalendarioAgendamentoDesvincularTurmaCommandHandlerImpl } from "./calendario-agendamento-desvincular-turma.command.handler";
+
 export { CalendarioAgendamentoUpdateCommandHandlerImpl } from "./calendario-agendamento-update.command.handler";
+
+export { CalendarioAgendamentoUpdateStatusCommandHandlerImpl } from "./calendario-agendamento-update-status.command.handler";

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
 import {
   ApiCreatedResponse,
   ApiForbiddenResponse,
@@ -12,6 +12,7 @@ import type { IAccessContext } from "@/domain/abstractions";
 import { Dep } from "@/domain/dependency-injection";
 import { AccessContextHttp } from "@/server/nest/access-context";
 import { CalendarioAgendamento } from "../domain/calendario-agendamento";
+import type { CalendarioAgendamentoStatus } from "../domain/calendario-agendamento.types";
 import {
   CalendarioAgendamentoCreateCommandMetadata,
   ICalendarioAgendamentoCreateCommandHandler,
@@ -21,18 +22,34 @@ import {
   ICalendarioAgendamentoDeleteCommandHandler,
 } from "../domain/commands/calendario-agendamento-delete.command.handler.interface";
 import {
+  CalendarioAgendamentoDesvincularTurmaCommandMetadata,
+  ICalendarioAgendamentoDesvincularTurmaCommandHandler,
+} from "../domain/commands/calendario-agendamento-desvincular-turma.command.handler.interface";
+import {
   CalendarioAgendamentoUpdateCommandMetadata,
   ICalendarioAgendamentoUpdateCommandHandler,
 } from "../domain/commands/calendario-agendamento-update.command.handler.interface";
+import {
+  CalendarioAgendamentoUpdateStatusCommandMetadata,
+  ICalendarioAgendamentoUpdateStatusCommandHandler,
+} from "../domain/commands/calendario-agendamento-update-status.command.handler.interface";
 import {
   CalendarioAgendamentoFindOneQueryMetadata,
   ICalendarioAgendamentoFindOneQueryHandler,
 } from "../domain/queries/calendario-agendamento-find-one.query.handler.interface";
 import {
+  CalendarioAgendamentoListQueryMetadata,
+  ICalendarioAgendamentoListQueryHandler,
+} from "../domain/queries/calendario-agendamento-list.query.handler.interface";
+import {
   CalendarioAgendamentoCreateInputRestDto,
+  CalendarioAgendamentoDesvincularTurmaParamsRestDto,
   CalendarioAgendamentoFindOneOutputRestDto,
   CalendarioAgendamentoFindOneParamsRestDto,
+  CalendarioAgendamentoListInputRestDto,
+  CalendarioAgendamentoListOutputRestDto,
   CalendarioAgendamentoUpdateInputRestDto,
+  CalendarioAgendamentoUpdateStatusInputRestDto,
 } from "./calendario-agendamento.rest.dto";
 import * as CalendarioAgendamentoRestMapper from "./calendario-agendamento.rest.mapper";
 
@@ -40,6 +57,8 @@ import * as CalendarioAgendamentoRestMapper from "./calendario-agendamento.rest.
 @Controller("/calendario/agendamentos")
 export class CalendarioAgendamentoRestController {
   constructor(
+    @Dep(ICalendarioAgendamentoListQueryHandler)
+    private readonly listHandler: ICalendarioAgendamentoListQueryHandler,
     @Dep(ICalendarioAgendamentoFindOneQueryHandler)
     private readonly findOneHandler: ICalendarioAgendamentoFindOneQueryHandler,
     @Dep(ICalendarioAgendamentoCreateCommandHandler)
@@ -48,7 +67,24 @@ export class CalendarioAgendamentoRestController {
     private readonly updateHandler: ICalendarioAgendamentoUpdateCommandHandler,
     @Dep(ICalendarioAgendamentoDeleteCommandHandler)
     private readonly deleteHandler: ICalendarioAgendamentoDeleteCommandHandler,
+    @Dep(ICalendarioAgendamentoDesvincularTurmaCommandHandler)
+    private readonly desvincularTurmaHandler: ICalendarioAgendamentoDesvincularTurmaCommandHandler,
+    @Dep(ICalendarioAgendamentoUpdateStatusCommandHandler)
+    private readonly updateStatusHandler: ICalendarioAgendamentoUpdateStatusCommandHandler,
   ) {}
+
+  @Get("/")
+  @ApiOperation(CalendarioAgendamentoListQueryMetadata.swaggerMetadata)
+  @ApiOkResponse({ type: CalendarioAgendamentoListOutputRestDto })
+  @ApiForbiddenResponse()
+  async findAll(
+    @AccessContextHttp() accessContext: IAccessContext,
+    @Query() dto: CalendarioAgendamentoListInputRestDto,
+  ): Promise<CalendarioAgendamentoListOutputRestDto> {
+    const query = CalendarioAgendamentoRestMapper.listInputDtoToListQuery.map(dto);
+    const queryResult = await this.listHandler.execute(accessContext, query);
+    return CalendarioAgendamentoRestMapper.listQueryResultToListOutputDto(queryResult);
+  }
 
   @Get("/:id")
   @ApiOperation(CalendarioAgendamentoFindOneQueryMetadata.swaggerMetadata)
@@ -105,5 +141,37 @@ export class CalendarioAgendamentoRestController {
     @Param() params: CalendarioAgendamentoFindOneParamsRestDto,
   ): Promise<boolean> {
     return this.deleteHandler.execute(accessContext, { id: params.id });
+  }
+
+  @Delete("/:id/turmas/:turmaId")
+  @ApiOperation(CalendarioAgendamentoDesvincularTurmaCommandMetadata.swaggerMetadata)
+  @ApiOkResponse({ type: Boolean })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async desvincularTurma(
+    @AccessContextHttp() accessContext: IAccessContext,
+    @Param() params: CalendarioAgendamentoDesvincularTurmaParamsRestDto,
+  ): Promise<boolean> {
+    return this.desvincularTurmaHandler.execute(accessContext, {
+      id: params.id,
+      turmaId: params.turmaId,
+    });
+  }
+
+  @Patch("/:id/status")
+  @ApiOperation(CalendarioAgendamentoUpdateStatusCommandMetadata.swaggerMetadata)
+  @ApiOkResponse({ type: CalendarioAgendamentoFindOneOutputRestDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async updateStatus(
+    @AccessContextHttp() accessContext: IAccessContext,
+    @Param() params: CalendarioAgendamentoFindOneParamsRestDto,
+    @Body() dto: CalendarioAgendamentoUpdateStatusInputRestDto,
+  ): Promise<CalendarioAgendamentoFindOneOutputRestDto> {
+    const queryResult = await this.updateStatusHandler.execute(accessContext, {
+      id: params.id,
+      status: dto.status as CalendarioAgendamentoStatus,
+    });
+    return CalendarioAgendamentoRestMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 }

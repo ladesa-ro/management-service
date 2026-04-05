@@ -5,18 +5,21 @@ import * as DiarioRestMapper from "@/modules/ensino/diario/presentation.rest/dia
 import * as ModalidadeRestMapper from "@/modules/ensino/modalidade/presentation.rest/modalidade.rest.mapper";
 import * as OfertaFormacaoRestMapper from "@/modules/ensino/oferta-formacao/presentation.rest/oferta-formacao.rest.mapper";
 import * as TurmaRestMapper from "@/modules/ensino/turma/presentation.rest/turma.rest.mapper";
-import { createMapper } from "@/shared/mapping";
+import { createListMapper, createMapper, createPaginatedInputMapper, into } from "@/shared/mapping";
 import type { CalendarioAgendamentoTipo } from "../domain/calendario-agendamento.types";
 import { CalendarioAgendamentoCreateCommand } from "../domain/commands/calendario-agendamento-create.command";
 import type { CalendarioAgendamentoUpdateCommand } from "../domain/commands/calendario-agendamento-update.command";
 import type { CalendarioAgendamentoFindOneQuery } from "../domain/queries/calendario-agendamento-find-one.query";
 import type { CalendarioAgendamentoFindOneQueryResult } from "../domain/queries/calendario-agendamento-find-one.query.result";
+import { CalendarioAgendamentoListQuery } from "../domain/queries/calendario-agendamento-list.query";
 import type {
   CalendarioAgendamentoCreateInputRestDto,
   CalendarioAgendamentoFindOneOutputRestDto,
   CalendarioAgendamentoFindOneParamsRestDto,
+  CalendarioAgendamentoListInputRestDto,
   CalendarioAgendamentoUpdateInputRestDto,
 } from "./calendario-agendamento.rest.dto";
+import { CalendarioAgendamentoListOutputRestDto } from "./calendario-agendamento.rest.dto";
 
 // ============================================================================
 // Externa → Interna (Input: Presentation → Core)
@@ -105,3 +108,24 @@ export const findOneQueryResultToOutputDto = createMapper<
   ambientes: AmbienteRestMapper.findOneQueryResultToOutputDto.mapArray(output.ambientes),
   diarios: DiarioRestMapper.findOneQueryResultToOutputDto.mapArray(output.diarios),
 }));
+
+export const listInputDtoToListQuery = createPaginatedInputMapper<
+  CalendarioAgendamentoListInputRestDto,
+  CalendarioAgendamentoListQuery
+>(CalendarioAgendamentoListQuery, (dto, query) => {
+  into(query).field("filter.id").from(dto);
+  into(query).field("filter.tipo").from(dto);
+  into(query).field("filter.status").from(dto);
+  into(query).field("filter.turma.id").from(dto);
+  into(query).field("filter.perfil.id").from(dto);
+  into(query).field("filter.calendarioLetivo.id").from(dto);
+  into(query).field("filter.ofertaFormacao.id").from(dto);
+  into(query).field("filter.modalidade.id").from(dto);
+  into(query).field("filter.ambiente.id").from(dto);
+  into(query).field("filter.diario.id").from(dto);
+});
+
+export const listQueryResultToListOutputDto = createListMapper(
+  CalendarioAgendamentoListOutputRestDto,
+  findOneQueryResultToOutputDto,
+);

@@ -14,7 +14,7 @@ import {
   ConsultaOcorrenciasQueryRestDto,
 } from "./consultas.rest.dto";
 
-@ApiTags("calendario-consultas")
+@ApiTags("calendario")
 @Controller("/calendario/consultas")
 export class ConsultasRestController {
   constructor(

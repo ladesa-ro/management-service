@@ -3,6 +3,8 @@ import type { CalendarioAgendamento } from "../calendario-agendamento";
 import type { CalendarioAgendamentoTipo } from "../calendario-agendamento.types";
 import type { CalendarioAgendamentoMetadata } from "../calendario-agendamento-metadata";
 import type { CalendarioAgendamentoFindOneQueryResult } from "../queries/calendario-agendamento-find-one.query.result";
+import type { CalendarioAgendamentoListQuery } from "../queries/calendario-agendamento-list.query";
+import type { CalendarioAgendamentoListQueryResult } from "../queries/calendario-agendamento-list.query.result";
 
 /**
  * Token de injecao para o repositorio de CalendarioAgendamento
@@ -61,6 +63,20 @@ export interface ICalendarioAgendamentoRepository {
   loadMetadata(identificadorExterno: string): Promise<CalendarioAgendamentoMetadata | null>;
 
   // ==========================================
+  // Junction operations
+  // ==========================================
+
+  /** Remove a juncao entre um agendamento e uma turma. */
+  deleteTurmaJunction(agendamentoId: string, turmaId: string): Promise<void>;
+
+  // ==========================================
+  // Direct field updates
+  // ==========================================
+
+  /** Atualiza o status de um agendamento diretamente. */
+  updateStatus(id: string, status: string): Promise<void>;
+
+  // ==========================================
   // Read side — usado por query handlers
   // ==========================================
 
@@ -70,6 +86,12 @@ export interface ICalendarioAgendamentoRepository {
     id: string,
     tipo?: CalendarioAgendamentoTipo,
   ): Promise<CalendarioAgendamentoFindOneQueryResult | null>;
+
+  /** Retorna lista paginada com dados hidratados para exibicao. */
+  getFindAllQueryResult(
+    accessContext: IAccessContext | null,
+    dto: CalendarioAgendamentoListQuery | null,
+  ): Promise<CalendarioAgendamentoListQueryResult>;
 
   /** Busca agendamentos que se sobrepõem a um período, com filtros opcionais. */
   findByDateRange(query: {
