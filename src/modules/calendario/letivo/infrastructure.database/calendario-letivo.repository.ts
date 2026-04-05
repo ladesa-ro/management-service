@@ -42,6 +42,9 @@ const calendarioLetivoRelations = {
       },
     },
   },
+  etapas: {
+    ofertaFormacaoPeriodoEtapa: true,
+  },
 };
 
 const calendarioLetivoPaginateConfig = buildTypeOrmPaginateConfig<CalendarioLetivoEntity>(

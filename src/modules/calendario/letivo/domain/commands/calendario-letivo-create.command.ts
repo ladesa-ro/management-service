@@ -2,6 +2,12 @@ import { CampusInputRef } from "@/modules/ambientes/campus";
 import { OfertaFormacaoInputRef } from "@/modules/ensino/oferta-formacao";
 import { CalendarioLetivoFields } from "../calendario-letivo.fields";
 
+export interface ICalendarioLetivoEtapaInput {
+  ofertaFormacaoPeriodoEtapaId: string;
+  dataInicio: string;
+  dataTermino: string;
+}
+
 export const CalendarioLetivoCreateCommandFields = {
   nome: CalendarioLetivoFields.nome,
   ano: CalendarioLetivoFields.ano,
@@ -16,4 +22,5 @@ export class CalendarioLetivoCreateCommand {
   campus!: CampusInputRef;
   ofertaFormacao!: OfertaFormacaoInputRef;
   situacao?: string;
+  etapas?: ICalendarioLetivoEtapaInput[];
 }

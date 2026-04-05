@@ -8,6 +8,7 @@ import {
   CalendarioLetivoSchema,
   CalendarioLetivoUpdateSchema,
 } from "./calendario-letivo.schemas";
+import type { ICalendarioLetivoEtapaInput } from "./commands/calendario-letivo-create.command";
 
 export enum CalendarioLetivoSituacao {
   ATIVO = "ATIVO",
@@ -22,6 +23,7 @@ export interface ICalendarioLetivoCreate {
   campus: { id: IdUuid };
   ofertaFormacao?: { id: IdUuid };
   situacao?: CalendarioLetivoSituacao;
+  etapas?: ICalendarioLetivoEtapaInput[];
 }
 
 export interface ICalendarioLetivoUpdate {
@@ -30,6 +32,7 @@ export interface ICalendarioLetivoUpdate {
   campus?: { id: IdUuid };
   ofertaFormacao?: { id: IdUuid } | null;
   situacao?: CalendarioLetivoSituacao;
+  etapas?: ICalendarioLetivoEtapaInput[];
 }
 
 export class CalendarioLetivo {

@@ -13,6 +13,7 @@ import {
 } from "@/domain/abstractions";
 import { datedSchema, uuidSchema } from "@/shared/validation/schemas";
 import { CalendarioLetivoFields, CalendarioLetivoSituacaoSchema } from "./calendario-letivo.fields";
+import { CalendarioLetivoEtapaBulkReplaceItemFields } from "./calendario-letivo-etapa.fields";
 
 // ============================================================================
 // Fragments de referência
@@ -37,6 +38,13 @@ export const CalendarioLetivoSchema = z
   })
   .extend(datedSchema.shape);
 
+const CalendarioLetivoEtapaInputItemSchema = z.object({
+  ofertaFormacaoPeriodoEtapaId:
+    CalendarioLetivoEtapaBulkReplaceItemFields.ofertaFormacaoPeriodoEtapaId.domainSchema,
+  dataInicio: CalendarioLetivoEtapaBulkReplaceItemFields.dataInicio.domainSchema,
+  dataTermino: CalendarioLetivoEtapaBulkReplaceItemFields.dataTermino.domainSchema,
+});
+
 export const CalendarioLetivoCreateSchema = createSchema((standard) =>
   z.object({
     nome: CalendarioLetivoFields.nome.create(standard),
@@ -44,6 +52,7 @@ export const CalendarioLetivoCreateSchema = createSchema((standard) =>
     campus: CalendarioLetivoCampusRefSchema.create(standard),
     ofertaFormacao: CalendarioLetivoOfertaFormacaoRefSchema.create(standard).optional(),
     situacao: CalendarioLetivoFields.situacao.create(standard).optional(),
+    etapas: z.array(CalendarioLetivoEtapaInputItemSchema).optional(),
   }),
 );
 
@@ -54,5 +63,6 @@ export const CalendarioLetivoUpdateSchema = createSchema((standard) =>
     campus: CalendarioLetivoCampusRefSchema.create(standard).optional(),
     ofertaFormacao: CalendarioLetivoOfertaFormacaoRefSchema.create(standard).optional(),
     situacao: CalendarioLetivoFields.situacao.create(standard).optional(),
+    etapas: z.array(CalendarioLetivoEtapaInputItemSchema).optional(),
   }),
 );

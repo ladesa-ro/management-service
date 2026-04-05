@@ -17,6 +17,34 @@ import { CalendarioLetivoFindOneQueryResultFields } from "../domain/queries/cale
 import { CalendarioLetivoListQueryFields } from "../domain/queries/calendario-letivo-list.query";
 
 // ============================================================================
+// Embedded Etapa GraphQL Types
+// ============================================================================
+
+@ObjectType("CalendarioLetivoEtapaOutputDto")
+export class CalendarioLetivoEtapaOutputGraphQlDto {
+  @Field(() => String, { description: "ID da etapa" }) id: string;
+  @Field(() => String, { description: "Identificador externo da etapa" })
+  identificadorExterno: string;
+  @Field(() => Int, { description: "Versao da etapa" }) version: number;
+  @Field(() => String, { description: "ID da etapa da oferta de formacao periodo" })
+  ofertaFormacaoPeriodoEtapaId: string;
+  @Field(() => String, { description: "Nome da etapa" }) nome: string;
+  @Field(() => String, { description: "Cor da etapa" }) cor: string;
+  @Field(() => Int, { description: "Ordem da etapa" }) ordem: number;
+  @Field(() => Int, { description: "Numero do periodo" }) numeroPeriodo: number;
+  @Field(() => String, { description: "Data inicio da etapa" }) dataInicio: string;
+  @Field(() => String, { description: "Data termino da etapa" }) dataTermino: string;
+}
+
+@InputType("CalendarioLetivoEtapaInputDto")
+export class CalendarioLetivoEtapaInputGraphQlDto {
+  @Field(() => String, { description: "ID da etapa da oferta de formacao periodo" })
+  ofertaFormacaoPeriodoEtapaId: string;
+  @Field(() => String, { description: "Data inicio da etapa" }) dataInicio: string;
+  @Field(() => String, { description: "Data termino da etapa" }) dataTermino: string;
+}
+
+// ============================================================================
 // FindOne Output
 // ============================================================================
 
@@ -36,6 +64,11 @@ export class CalendarioLetivoFindOneOutputGraphQlDto extends EntityBaseGraphQlDt
   ofertaFormacao: OfertaFormacaoFindOneOutputGraphQlDto;
   @Field(() => String, CalendarioLetivoFindOneQueryResultFields.situacao.gqlMetadata)
   situacao: string;
+
+  @Field(() => [CalendarioLetivoEtapaOutputGraphQlDto], {
+    description: "Etapas do calendario letivo",
+  })
+  etapas: CalendarioLetivoEtapaOutputGraphQlDto[];
 }
 
 // ============================================================================
@@ -77,6 +110,12 @@ export class CalendarioLetivoCreateInputGraphQlDto {
     ...CalendarioLetivoCreateCommandFields.situacao.gqlMetadata,
   })
   situacao?: string;
+
+  @Field(() => [CalendarioLetivoEtapaInputGraphQlDto], {
+    nullable: true,
+    description: "Etapas do calendario letivo",
+  })
+  etapas?: CalendarioLetivoEtapaInputGraphQlDto[];
 }
 
 // ============================================================================
@@ -106,6 +145,12 @@ export class CalendarioLetivoUpdateInputGraphQlDto {
     ...CalendarioLetivoUpdateCommandFields.situacao.gqlMetadata,
   })
   situacao?: string;
+
+  @Field(() => [CalendarioLetivoEtapaInputGraphQlDto], {
+    nullable: true,
+    description: "Etapas do calendario letivo",
+  })
+  etapas?: CalendarioLetivoEtapaInputGraphQlDto[];
 }
 
 // ============================================================================

@@ -7,6 +7,21 @@ export class CalendarioLetivoEtapaEntity {
   @PrimaryColumn("uuid")
   id!: string;
 
+  @Column({ name: "identificador_externo", type: "uuid", nullable: false })
+  identificadorExterno!: string;
+
+  @Column({ name: "nome", type: "text", nullable: false })
+  nome!: string;
+
+  @Column({ name: "cor", type: "text", nullable: false })
+  cor!: string;
+
+  @Column({ name: "ordem", type: "integer", nullable: false })
+  ordem!: number;
+
+  @Column({ name: "numero_periodo", type: "integer", nullable: false })
+  numeroPeriodo!: number;
+
   @Column({ name: "data_inicio", type: "date", nullable: false })
   dataInicio!: string;
 
@@ -20,6 +35,22 @@ export class CalendarioLetivoEtapaEntity {
   @ManyToOne(() => CalendarioLetivoEntity, {})
   @JoinColumn({ name: "id_calendario_letivo_fk" })
   calendarioLetivo!: Relation<CalendarioLetivoEntity>;
+
+  @Column({ name: "version", type: "integer", nullable: false })
+  version!: number;
+
+  @ManyToOne(() => CalendarioLetivoEtapaEntity, { nullable: true })
+  @JoinColumn({ name: "previous_version_id" })
+  previousVersion!: Relation<CalendarioLetivoEtapaEntity> | null;
+
+  @Column({ name: "previous_version_id", type: "uuid", nullable: true })
+  previousVersionId!: string | null;
+
+  @Column({ name: "valid_from", type: "timestamptz", nullable: false })
+  validFrom!: string;
+
+  @Column({ name: "valid_to", type: "timestamptz", nullable: true })
+  validTo!: string | null;
 
   @Column({ name: "date_created", type: "timestamptz", nullable: false })
   dateCreated!: string;

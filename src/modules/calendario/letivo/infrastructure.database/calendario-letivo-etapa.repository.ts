@@ -1,7 +1,11 @@
-import { IsNull } from "typeorm";
+import { In, IsNull } from "typeorm";
 import { Dep, Impl } from "@/domain/dependency-injection";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
-import type { ICalendarioLetivoEtapaRepository } from "@/modules/calendario/letivo/domain/repositories";
+import type {
+  ICalendarioLetivoEtapaRepository,
+  IOfertaFormacaoPeriodoEtapaSnapshot,
+} from "@/modules/calendario/letivo/domain/repositories";
+import { OfertaFormacaoPeriodoEtapaEntity } from "@/modules/ensino/oferta-formacao/infrastructure.database/typeorm/oferta-formacao-periodo-etapa.typeorm.entity";
 import { getNowISO } from "@/utils/date";
 import { CalendarioLetivoEtapaEntity } from "./typeorm/calendario-letivo-etapa.typeorm.entity";
 
@@ -26,6 +30,42 @@ export class CalendarioLetivoEtapaTypeOrmRepositoryAdapter
       relations: ["ofertaFormacaoPeriodoEtapa"],
       order: { dataInicio: "ASC" },
     });
+  }
+
+  async findByCalendarioLetivoIds(
+    calendarioLetivoIds: string[],
+  ): Promise<CalendarioLetivoEtapaEntity[]> {
+    if (calendarioLetivoIds.length === 0) return [];
+
+    const repo = this.appTypeormConnection.getRepository(CalendarioLetivoEtapaEntity);
+    return repo.find({
+      where: {
+        calendarioLetivo: { id: In(calendarioLetivoIds) },
+        dateDeleted: IsNull(),
+      },
+      relations: ["ofertaFormacaoPeriodoEtapa", "calendarioLetivo"],
+      order: { dataInicio: "ASC" },
+    });
+  }
+
+  async findOfertaFormacaoPeriodoEtapaSnapshot(
+    id: string,
+  ): Promise<IOfertaFormacaoPeriodoEtapaSnapshot | null> {
+    const repo = this.appTypeormConnection.getRepository(OfertaFormacaoPeriodoEtapaEntity);
+
+    const etapa = await repo.findOne({
+      where: { id, dateDeleted: IsNull() },
+      relations: ["ofertaFormacaoPeriodo"],
+    });
+
+    if (!etapa) return null;
+
+    return {
+      nome: etapa.nome,
+      cor: etapa.cor,
+      ordem: etapa.ordem,
+      numeroPeriodo: etapa.ofertaFormacaoPeriodo.numeroPeriodo,
+    };
   }
 
   async softDeleteByCalendarioLetivoId(calendarioLetivoId: string): Promise<void> {

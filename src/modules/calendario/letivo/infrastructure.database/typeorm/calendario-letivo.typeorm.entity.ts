@@ -1,7 +1,16 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, type Relation } from "typeorm";
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryColumn,
+  type Relation,
+} from "typeorm";
 import { CampusEntity } from "@/modules/ambientes/campus/infrastructure.database/typeorm/campus.typeorm.entity";
 import { CalendarioLetivoSituacao } from "@/modules/calendario/letivo/domain/calendario-letivo";
 import { OfertaFormacaoEntity } from "@/modules/ensino/oferta-formacao/infrastructure.database/typeorm/oferta-formacao.typeorm.entity";
+import { CalendarioLetivoEtapaEntity } from "./calendario-letivo-etapa.typeorm.entity";
 
 @Entity("calendario_letivo")
 export class CalendarioLetivoEntity {
@@ -41,4 +50,10 @@ export class CalendarioLetivoEntity {
 
   @Column({ name: "date_deleted", type: "timestamptz", nullable: true })
   dateDeleted!: string | null;
+
+  @OneToMany(
+    () => CalendarioLetivoEtapaEntity,
+    (etapa) => etapa.calendarioLetivo,
+  )
+  etapas!: Relation<CalendarioLetivoEtapaEntity>[];
 }
