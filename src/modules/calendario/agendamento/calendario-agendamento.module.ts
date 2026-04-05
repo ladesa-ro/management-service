@@ -3,6 +3,7 @@ import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adap
 import {
   CalendarioAgendamentoCreateCommandHandlerImpl,
   CalendarioAgendamentoDeleteCommandHandlerImpl,
+  CalendarioAgendamentoDesvincularPerfilCommandHandlerImpl,
   CalendarioAgendamentoDesvincularTurmaCommandHandlerImpl,
   CalendarioAgendamentoUpdateCommandHandlerImpl,
   CalendarioAgendamentoUpdateStatusCommandHandlerImpl,
@@ -13,6 +14,7 @@ import {
 } from "./application/queries";
 import { ICalendarioAgendamentoCreateCommandHandler } from "./domain/commands/calendario-agendamento-create.command.handler.interface";
 import { ICalendarioAgendamentoDeleteCommandHandler } from "./domain/commands/calendario-agendamento-delete.command.handler.interface";
+import { ICalendarioAgendamentoDesvincularPerfilCommandHandler } from "./domain/commands/calendario-agendamento-desvincular-perfil.command.handler.interface";
 import { ICalendarioAgendamentoDesvincularTurmaCommandHandler } from "./domain/commands/calendario-agendamento-desvincular-turma.command.handler.interface";
 import { ICalendarioAgendamentoUpdateCommandHandler } from "./domain/commands/calendario-agendamento-update.command.handler.interface";
 import { ICalendarioAgendamentoUpdateStatusCommandHandler } from "./domain/commands/calendario-agendamento-update-status.command.handler.interface";
@@ -45,6 +47,10 @@ import { CalendarioAgendamentoRestController } from "./presentation.rest/calenda
     {
       provide: ICalendarioAgendamentoDesvincularTurmaCommandHandler,
       useClass: CalendarioAgendamentoDesvincularTurmaCommandHandlerImpl,
+    },
+    {
+      provide: ICalendarioAgendamentoDesvincularPerfilCommandHandler,
+      useClass: CalendarioAgendamentoDesvincularPerfilCommandHandlerImpl,
     },
     {
       provide: ICalendarioAgendamentoUpdateStatusCommandHandler,

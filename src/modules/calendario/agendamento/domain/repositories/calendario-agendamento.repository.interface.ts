@@ -69,6 +69,9 @@ export interface ICalendarioAgendamentoRepository {
   /** Remove a juncao entre um agendamento e uma turma. */
   deleteTurmaJunction(agendamentoId: string, turmaId: string): Promise<void>;
 
+  /** Remove a juncao entre um agendamento e um perfil. */
+  deletePerfilJunction(agendamentoId: string, perfilId: string): Promise<void>;
+
   // ==========================================
   // Direct field updates
   // ==========================================
