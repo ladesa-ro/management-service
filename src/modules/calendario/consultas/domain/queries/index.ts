@@ -1,2 +1,2 @@
-export * from "./consulta-agendamentos-por-data.query";
-export * from "./consulta-agendamentos-por-data.query.handler.interface";
+export * from "./consulta-ocorrencias-por-data.query";
+export * from "./consulta-ocorrencias-por-data.query.handler.interface";

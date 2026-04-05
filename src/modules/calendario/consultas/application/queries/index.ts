@@ -1,1 +1,1 @@
-export { ConsultaAgendamentosPorDataQueryHandlerImpl } from "./consulta-agendamentos-por-data.query.handler";
+export { ConsultaOcorrenciasPorDataQueryHandlerImpl } from "./consulta-ocorrencias-por-data.query.handler";
