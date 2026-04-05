@@ -9,6 +9,10 @@
 import { z } from "zod";
 import { createFieldMetadata, createSchema, safeInt } from "@/domain/abstractions";
 
+export const CalendarioLetivoSituacaoValues = ["ATIVO", "INATIVO"] as const;
+
+export const CalendarioLetivoSituacaoSchema = z.enum(CalendarioLetivoSituacaoValues);
+
 export const CalendarioLetivoFields = {
   nome: createFieldMetadata({
     description: "Nome do calendario letivo",
@@ -23,5 +27,9 @@ export const CalendarioLetivoFields = {
   }),
   ofertaFormacao: createFieldMetadata({
     description: "Oferta de formacao do calendario letivo",
+  }),
+  situacao: createFieldMetadata({
+    description: "Situação do calendário letivo",
+    schema: createSchema(() => CalendarioLetivoSituacaoSchema),
   }),
 };

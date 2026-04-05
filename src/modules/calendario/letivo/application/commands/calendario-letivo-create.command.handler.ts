@@ -3,7 +3,10 @@ import type { IAccessContext } from "@/domain/abstractions";
 import { Dep, Impl } from "@/domain/dependency-injection";
 import { Campus } from "@/modules/ambientes/campus/domain/campus";
 import { ICampusFindOneQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-find-one.query.handler.interface";
-import { CalendarioLetivo } from "@/modules/calendario/letivo/domain/calendario-letivo";
+import {
+  CalendarioLetivo,
+  CalendarioLetivoSituacao,
+} from "@/modules/calendario/letivo/domain/calendario-letivo";
 import type { CalendarioLetivoCreateCommand } from "@/modules/calendario/letivo/domain/commands/calendario-letivo-create.command";
 import { ICalendarioLetivoCreateCommandHandler } from "@/modules/calendario/letivo/domain/commands/calendario-letivo-create.command.handler.interface";
 import { OfertaFormacao } from "@/modules/ensino/oferta-formacao/domain/oferta-formacao";
@@ -50,6 +53,7 @@ export class CalendarioLetivoCreateCommandHandlerImpl
       ano: dto.ano,
       campus: { id: campus.id },
       ofertaFormacao: ofertaFormacaoRef,
+      situacao: dto.situacao as CalendarioLetivoSituacao | undefined,
     });
 
     await this.repository.save(domain);

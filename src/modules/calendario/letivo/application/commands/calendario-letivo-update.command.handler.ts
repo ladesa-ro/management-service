@@ -39,7 +39,7 @@ export class CalendarioLetivoUpdateCommandHandlerImpl
 
     await this.permissionChecker.ensureCanUpdate(accessContext, { dto }, dto.id);
 
-    domain.update({ nome: dto.nome, ano: dto.ano });
+    domain.update({ nome: dto.nome, ano: dto.ano, situacao: dto.situacao });
 
     if (has(dto, "campus") && dto.campus !== undefined) {
       const campus = await this.campusFindOneHandler.execute(accessContext, { id: dto.campus.id });

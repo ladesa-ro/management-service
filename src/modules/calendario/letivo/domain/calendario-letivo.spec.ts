@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { createTestDatedFields, createTestId, createTestRef } from "@/test/helpers";
-import { CalendarioLetivo } from "./calendario-letivo";
+import { CalendarioLetivo, CalendarioLetivoSituacao } from "./calendario-letivo";
 
 describe("CalendarioLetivo (domain entity)", () => {
   const validCreateInput = {
@@ -15,6 +15,7 @@ describe("CalendarioLetivo (domain entity)", () => {
     ano: 2026,
     campus: createTestRef(),
     ofertaFormacao: null,
+    situacao: CalendarioLetivoSituacao.ATIVO,
     ...createTestDatedFields(),
   });
 
@@ -26,6 +27,7 @@ describe("CalendarioLetivo (domain entity)", () => {
       expect(entity.nome).toBe("Calendário 2026");
       expect(entity.ano).toBe(2026);
       expect(entity.campus).toEqual(validCreateInput.campus);
+      expect(entity.situacao).toBe(CalendarioLetivoSituacao.ATIVO);
       expect(entity.dateCreated).toBeDefined();
       expect(entity.dateDeleted).toBeNull();
     });
@@ -78,6 +80,12 @@ describe("CalendarioLetivo (domain entity)", () => {
       const entity = CalendarioLetivo.load(validLoadInput());
       entity.update({ ano: 2027 });
       expect(entity.ano).toBe(2027);
+    });
+
+    it("should update situacao", () => {
+      const entity = CalendarioLetivo.load(validLoadInput());
+      entity.update({ situacao: CalendarioLetivoSituacao.INATIVO });
+      expect(entity.situacao).toBe(CalendarioLetivoSituacao.INATIVO);
     });
   });
 });

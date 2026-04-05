@@ -49,6 +49,7 @@ export const createInputDtoToCreateCommand = createMapper<
   input.ano = dto.ano;
   input.campus = { id: dto.campus.id };
   input.ofertaFormacao = { id: dto.ofertaFormacao.id };
+  input.situacao = dto.situacao;
   return input;
 });
 
@@ -61,6 +62,7 @@ export const updateInputDtoToUpdateCommand = createMapper<
   ano: dto.ano,
   campus: dto.campus ? { id: dto.campus.id } : undefined,
   ofertaFormacao: dto.ofertaFormacao ? { id: dto.ofertaFormacao.id } : undefined,
+  situacao: dto.situacao,
 }));
 
 // ============================================================================
@@ -79,6 +81,7 @@ export const findOneQueryResultToOutputDto = createMapper<
   dto.ofertaFormacao = OfertaFormacaoRestMapper.findOneQueryResultToOutputDto.map(
     output.ofertaFormacao,
   );
+  dto.situacao = output.situacao;
   dto.dateCreated = output.dateCreated;
   dto.dateUpdated = output.dateUpdated;
   dto.dateDeleted = output.dateDeleted;

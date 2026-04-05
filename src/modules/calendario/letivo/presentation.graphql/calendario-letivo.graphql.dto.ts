@@ -34,6 +34,8 @@ export class CalendarioLetivoFindOneOutputGraphQlDto extends EntityBaseGraphQlDt
     CalendarioLetivoFindOneQueryResultFields.ofertaFormacao.gqlMetadata,
   )
   ofertaFormacao: OfertaFormacaoFindOneOutputGraphQlDto;
+  @Field(() => String, CalendarioLetivoFindOneQueryResultFields.situacao.gqlMetadata)
+  situacao: string;
 }
 
 // ============================================================================
@@ -70,6 +72,11 @@ export class CalendarioLetivoCreateInputGraphQlDto {
     CalendarioLetivoCreateCommandFields.ofertaFormacao.gqlMetadata,
   )
   ofertaFormacao: CalendarioLetivoOfertaFormacaoRefInputGraphQlDto;
+  @Field(() => String, {
+    nullable: true,
+    ...CalendarioLetivoCreateCommandFields.situacao.gqlMetadata,
+  })
+  situacao?: string;
 }
 
 // ============================================================================
@@ -94,6 +101,11 @@ export class CalendarioLetivoUpdateInputGraphQlDto {
     ...CalendarioLetivoUpdateCommandFields.ofertaFormacao.gqlMetadata,
   })
   ofertaFormacao?: CalendarioLetivoOfertaFormacaoRefInputGraphQlDto;
+  @Field(() => String, {
+    nullable: true,
+    ...CalendarioLetivoUpdateCommandFields.situacao.gqlMetadata,
+  })
+  situacao?: string;
 }
 
 // ============================================================================

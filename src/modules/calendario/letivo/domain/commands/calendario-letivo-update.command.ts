@@ -7,6 +7,7 @@ export const CalendarioLetivoUpdateCommandFields = {
   ano: CalendarioLetivoFields.ano,
   campus: CalendarioLetivoFields.campus,
   ofertaFormacao: CalendarioLetivoFields.ofertaFormacao,
+  situacao: CalendarioLetivoFields.situacao,
 };
 
 export class CalendarioLetivoUpdateCommand {
@@ -14,4 +15,5 @@ export class CalendarioLetivoUpdateCommand {
   ano?: number;
   campus?: CampusInputRef;
   ofertaFormacao?: OfertaFormacaoInputRef;
+  situacao?: string;
 }

@@ -1,6 +1,9 @@
 import type { DeepPartial } from "typeorm";
 import { CampusTypeormMapper } from "@/modules/ambientes/campus/infrastructure.database/typeorm";
-import type { ICalendarioLetivo } from "@/modules/calendario/letivo/domain/calendario-letivo";
+import {
+  CalendarioLetivoSituacao,
+  type ICalendarioLetivo,
+} from "@/modules/calendario/letivo/domain/calendario-letivo";
 import type { CalendarioLetivoFindOneQueryResult } from "@/modules/calendario/letivo/domain/queries/calendario-letivo-find-one.query.result";
 import { OfertaFormacaoTypeormMapper } from "@/modules/ensino/oferta-formacao/infrastructure.database/typeorm";
 import { createMapper, pickId } from "@/shared/mapping";
@@ -16,6 +19,7 @@ export const entityToDomain = createMapper<CalendarioLetivoEntity, ICalendarioLe
   ano: e.ano,
   campus: pickId(e.campus),
   ofertaFormacao: e.ofertaFormacao ? pickId(e.ofertaFormacao) : null,
+  situacao: e.situacao,
   dateCreated: e.dateCreated,
   dateUpdated: e.dateUpdated,
   dateDeleted: e.dateDeleted,
@@ -30,6 +34,7 @@ export const entityToFindOneQueryResult = createMapper<
   ano: e.ano,
   campus: CampusTypeormMapper.entityToFindOneQueryResult.map(e.campus),
   ofertaFormacao: OfertaFormacaoTypeormMapper.entityToFindOneQueryResult.map(e.ofertaFormacao),
+  situacao: e.situacao,
   dateCreated: e.dateCreated,
   dateUpdated: e.dateUpdated,
   dateDeleted: e.dateDeleted,
@@ -48,6 +53,7 @@ export const domainToPersistence = createMapper<
   ano: d.ano,
   campus: pickId(d.campus),
   ofertaFormacao: d.ofertaFormacao ? pickId(d.ofertaFormacao) : undefined,
+  situacao: d.situacao as CalendarioLetivoSituacao,
   dateCreated: d.dateCreated,
   dateUpdated: d.dateUpdated,
   dateDeleted: d.dateDeleted,
