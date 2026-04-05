@@ -16,6 +16,7 @@ import {
   CalendarioLetivoEtapaBulkReplaceCommandMetadata,
   CalendarioLetivoEtapaFindAllQueryMetadata,
 } from "../domain/calendario-letivo-etapa.operations";
+import { validateEtapasNaoSobrepostas } from "../domain/calendario-letivo-etapa.validators";
 import { ICalendarioLetivoRepository } from "../domain/repositories/calendario-letivo.repository.interface";
 import { ICalendarioLetivoEtapaRepository } from "../domain/repositories/calendario-letivo-etapa.repository.interface";
 import { CalendarioLetivoFindOneInputRestDto } from "./calendario-letivo.rest.dto";
@@ -66,6 +67,8 @@ export class CalendarioLetivoEtapaRestController {
     @Body() dto: CalendarioLetivoEtapaBulkReplaceInputRestDto,
   ): Promise<CalendarioLetivoEtapaListOutputRestDto> {
     const calendarioLetivoId = parentParams.calendarioLetivoId;
+
+    validateEtapasNaoSobrepostas(dto.etapas);
 
     // Soft-delete existing
     await this.etapaRepository.softDeleteByCalendarioLetivoId(calendarioLetivoId);

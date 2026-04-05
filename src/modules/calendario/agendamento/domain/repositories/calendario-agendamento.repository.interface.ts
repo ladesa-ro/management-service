@@ -69,9 +69,6 @@ export interface ICalendarioAgendamentoRepository {
   /** Remove a juncao entre um agendamento e uma turma. */
   deleteTurmaJunction(agendamentoId: string, turmaId: string): Promise<void>;
 
-  /** Remove a juncao entre um agendamento e um perfil. */
-  deletePerfilJunction(agendamentoId: string, perfilId: string): Promise<void>;
-
   // ==========================================
   // Direct field updates
   // ==========================================
@@ -95,6 +92,22 @@ export interface ICalendarioAgendamentoRepository {
     accessContext: IAccessContext | null,
     dto: CalendarioAgendamentoListQuery | null,
   ): Promise<CalendarioAgendamentoListQueryResult>;
+
+  /**
+   * Verifica se existe algum agendamento ativo que conflita em horario
+   * com os parametros fornecidos (mesma data/horario para turma, perfil ou ambiente).
+   * Retorna os conflitos encontrados.
+   */
+  findConflicting(params: {
+    dataInicio: string;
+    dataFim: string | null;
+    horarioInicio: string;
+    horarioFim: string;
+    turmaIds: string[];
+    perfilIds: string[];
+    ambienteIds: string[];
+    excludeIdentificadorExterno?: string;
+  }): Promise<{ id: string; identificadorExterno: string; recurso: string; recursoId: string }[]>;
 
   /** Busca agendamentos que se sobrepõem a um período, com filtros opcionais. */
   findByDateRange(query: {

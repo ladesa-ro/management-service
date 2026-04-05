@@ -1,6 +1,7 @@
 import { ensureActiveEntity, ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { Dep, Impl } from "@/domain/dependency-injection";
+import { ICalendarioAgendamentoPermissionChecker } from "../../domain/authorization";
 import { CalendarioAgendamento } from "../../domain/calendario-agendamento";
 import { ICalendarioAgendamentoDeleteCommandHandler } from "../../domain/commands/calendario-agendamento-delete.command.handler.interface";
 import type { CalendarioAgendamentoFindOneQuery } from "../../domain/queries/calendario-agendamento-find-one.query";
@@ -13,12 +14,16 @@ export class CalendarioAgendamentoDeleteCommandHandlerImpl
   constructor(
     @Dep(ICalendarioAgendamentoRepository)
     private readonly repository: ICalendarioAgendamentoRepository,
+    @Dep(ICalendarioAgendamentoPermissionChecker)
+    private readonly permissionChecker: ICalendarioAgendamentoPermissionChecker,
   ) {}
 
   async execute(
     accessContext: IAccessContext | null,
     dto: CalendarioAgendamentoFindOneQuery,
   ): Promise<boolean> {
+    await this.permissionChecker.ensureCanDelete(accessContext, { dto }, dto.id);
+
     const domain = await this.repository.loadById(accessContext, dto.id);
     ensureExists(domain, CalendarioAgendamento.entityName, dto.id);
     ensureActiveEntity(domain, CalendarioAgendamento.entityName, dto.id);

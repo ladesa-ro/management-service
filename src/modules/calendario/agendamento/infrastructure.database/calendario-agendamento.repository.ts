@@ -227,16 +227,6 @@ export class CalendarioAgendamentoTypeOrmRepositoryAdapter
       .execute();
   }
 
-  async deletePerfilJunction(agendamentoId: string, perfilId: string): Promise<void> {
-    const repo = this.appTypeormConnection.getRepository(CalendarioAgendamentoProfessorEntity);
-    await repo
-      .createQueryBuilder()
-      .delete()
-      .where("id_calendario_agendamento_fk = :agendamentoId", { agendamentoId })
-      .andWhere("id_perfil_fk = :perfilId", { perfilId })
-      .execute();
-  }
-
   // ============================================================================
   // Direct field updates
   // ============================================================================
@@ -447,6 +437,125 @@ export class CalendarioAgendamentoTypeOrmRepositoryAdapter
     }
 
     return results;
+  }
+
+  async findConflicting(params: {
+    dataInicio: string;
+    dataFim: string | null;
+    horarioInicio: string;
+    horarioFim: string;
+    turmaIds: string[];
+    perfilIds: string[];
+    ambienteIds: string[];
+    excludeIdentificadorExterno?: string;
+  }): Promise<{ id: string; identificadorExterno: string; recurso: string; recursoId: string }[]> {
+    const conflicts: {
+      id: string;
+      identificadorExterno: string;
+      recurso: string;
+      recursoId: string;
+    }[] = [];
+    const repo = this.appTypeormConnection.getRepository(CalendarioAgendamentoEntity);
+    const dataFimEfetiva = params.dataFim ?? params.dataInicio;
+
+    const buildBaseQuery = () => {
+      const qb = repo
+        .createQueryBuilder("ca")
+        .where("ca.valid_to IS NULL")
+        .andWhere("ca.status = :status", { status: CalendarioAgendamentoStatus.ATIVO })
+        .andWhere("ca.data_inicio <= :dataFimParam", { dataFimParam: dataFimEfetiva })
+        .andWhere("(ca.data_fim IS NULL OR ca.data_fim >= :dataInicioParam)", {
+          dataInicioParam: params.dataInicio,
+        })
+        .andWhere("ca.horario_inicio < :horarioFimParam", {
+          horarioFimParam: params.horarioFim,
+        })
+        .andWhere("ca.horario_fim > :horarioInicioParam", {
+          horarioInicioParam: params.horarioInicio,
+        });
+
+      if (params.excludeIdentificadorExterno) {
+        qb.andWhere("ca.identificador_externo != :excludeIdExt", {
+          excludeIdExt: params.excludeIdentificadorExterno,
+        });
+      }
+
+      return qb;
+    };
+
+    // Verificar conflitos por turma
+    if (params.turmaIds.length > 0) {
+      const qb = buildBaseQuery();
+      qb.innerJoin(
+        CalendarioAgendamentoTurmaEntity,
+        "cat",
+        "cat.id_calendario_agendamento_fk = ca.id",
+      ).andWhere("cat.id_turma_fk IN (:...turmaIds)", { turmaIds: params.turmaIds });
+
+      qb.addSelect("cat.id_turma_fk", "recursoId");
+
+      const rows = await qb.getRawAndEntities();
+      for (let i = 0; i < rows.entities.length; i++) {
+        const entity = rows.entities[i];
+        const raw = rows.raw[i];
+        conflicts.push({
+          id: entity.id,
+          identificadorExterno: entity.identificadorExterno,
+          recurso: "turma",
+          recursoId: raw.recursoId ?? raw.id_turma_fk,
+        });
+      }
+    }
+
+    // Verificar conflitos por perfil (professor)
+    if (params.perfilIds.length > 0) {
+      const qb = buildBaseQuery();
+      qb.innerJoin(
+        CalendarioAgendamentoProfessorEntity,
+        "cap",
+        "cap.id_calendario_agendamento_fk = ca.id",
+      ).andWhere("cap.id_perfil_fk IN (:...perfilIds)", { perfilIds: params.perfilIds });
+
+      qb.addSelect("cap.id_perfil_fk", "recursoId");
+
+      const rows = await qb.getRawAndEntities();
+      for (let i = 0; i < rows.entities.length; i++) {
+        const entity = rows.entities[i];
+        const raw = rows.raw[i];
+        conflicts.push({
+          id: entity.id,
+          identificadorExterno: entity.identificadorExterno,
+          recurso: "perfil",
+          recursoId: raw.recursoId ?? raw.id_perfil_fk,
+        });
+      }
+    }
+
+    // Verificar conflitos por ambiente
+    if (params.ambienteIds.length > 0) {
+      const qb = buildBaseQuery();
+      qb.innerJoin(
+        CalendarioAgendamentoAmbienteEntity,
+        "caa",
+        "caa.id_calendario_agendamento_fk = ca.id",
+      ).andWhere("caa.id_ambiente_fk IN (:...ambienteIds)", { ambienteIds: params.ambienteIds });
+
+      qb.addSelect("caa.id_ambiente_fk", "recursoId");
+
+      const rows = await qb.getRawAndEntities();
+      for (let i = 0; i < rows.entities.length; i++) {
+        const entity = rows.entities[i];
+        const raw = rows.raw[i];
+        conflicts.push({
+          id: entity.id,
+          identificadorExterno: entity.identificadorExterno,
+          recurso: "ambiente",
+          recursoId: raw.recursoId ?? raw.id_ambiente_fk,
+        });
+      }
+    }
+
+    return conflicts;
   }
 
   // ============================================================================

@@ -36,6 +36,26 @@ export function createMockCqrsRepository() {
 }
 
 /**
+ * Creates a mock repository implementing the ICalendarioAgendamentoRepository interface.
+ * Extends the CQRS mock with agendamento-specific methods.
+ */
+
+export function createMockAgendamentoRepository() {
+  return {
+    ...createMockCqrsRepository(),
+    findConflicting: vi.fn().mockResolvedValue([]),
+    saveMetadata: vi.fn().mockResolvedValue(undefined),
+    closeVersion: vi.fn().mockResolvedValue(undefined),
+    updateMetadata: vi.fn().mockResolvedValue(undefined),
+    deleteTurmaJunction: vi.fn().mockResolvedValue(undefined),
+    updateStatus: vi.fn().mockResolvedValue(undefined),
+    loadMetadata: vi.fn().mockResolvedValue(null),
+    saveNewVersion: vi.fn().mockResolvedValue(undefined),
+    findByDateRange: vi.fn().mockResolvedValue([]),
+  };
+}
+
+/**
  * Creates a mock permission checker where all ensureCan* methods resolve.
  */
 

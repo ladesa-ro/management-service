@@ -3,10 +3,11 @@ import { CalendarioAgendamentoModule } from "@/modules/calendario/agendamento/ca
 import { ConsultaOcorrenciasPorDataQueryHandlerImpl } from "./application/queries";
 import { IConsultaOcorrenciasPorDataQueryHandler } from "./domain/queries";
 import { ConsultasRestController } from "./presentation.rest/consultas.rest.controller";
+import { ProfessorAgendaRestController } from "./presentation.rest/professor-agenda.rest.controller";
 
 @Module({
   imports: [CalendarioAgendamentoModule],
-  controllers: [ConsultasRestController],
+  controllers: [ConsultasRestController, ProfessorAgendaRestController],
   providers: [
     {
       provide: IConsultaOcorrenciasPorDataQueryHandler,
