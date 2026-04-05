@@ -86,7 +86,7 @@ export class AddSnapshotVersioningToCalendarioLetivoEtapa1776000000000
         nome = COALESCE(ofpe.nome, ''),
         cor = COALESCE(ofpe.cor, '#000000'),
         ordem = COALESCE(ofpe.ordem, 0),
-        numero_periodo = COALESCE(ofp.numero, 1),
+        numero_periodo = COALESCE(ofp.numero_periodo, 1),
         identificador_externo = cle.id,
         version = 1,
         valid_from = cle.date_created,
