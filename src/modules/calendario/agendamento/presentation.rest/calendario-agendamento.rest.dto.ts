@@ -27,7 +27,15 @@ import {
   TurmaFindOneInputRestDto,
   TurmaFindOneOutputRestDto,
 } from "@/modules/ensino/turma/presentation.rest/turma.rest.dto";
-import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@/shared/presentation/rest";
+import {
+  ApiProperty,
+  ApiPropertyOptional,
+  ApiSchema,
+  TransformToArray,
+} from "@/shared/presentation/rest";
+import { PaginatedFilterByIdRestDto, PaginationMetaRestDto } from "@/shared/presentation/rest/dtos";
+import { CalendarioAgendamentoListQueryFields } from "../domain/queries/calendario-agendamento-list.query";
+import { CalendarioAgendamentoPaginationInputSchema } from "../domain/queries/calendario-agendamento-list.query.schemas";
 
 // ============================================================================
 // Create Input
@@ -175,6 +183,20 @@ export class CalendarioAgendamentoUpdateInputRestDto {
 }
 
 // ============================================================================
+// Update Status Input
+// ============================================================================
+
+@ApiSchema({ name: "CalendarioAgendamentoUpdateStatusInputDto" })
+export class CalendarioAgendamentoUpdateStatusInputRestDto {
+  @ApiProperty({
+    ...CalendarioEventoFields.status.swaggerMetadata,
+    enum: ["ATIVO", "INATIVO", "RASCUNHO"],
+    description: "Novo status do agendamento (ATIVO, INATIVO, RASCUNHO)",
+  })
+  status: string;
+}
+
+// ============================================================================
 // Params
 // ============================================================================
 
@@ -182,6 +204,15 @@ export class CalendarioAgendamentoUpdateInputRestDto {
 export class CalendarioAgendamentoFindOneParamsRestDto {
   @ApiProperty(CalendarioEventoFields.id.swaggerMetadata)
   id: string;
+}
+
+@ApiSchema({ name: "CalendarioAgendamentoDesvincularTurmaParamsDto" })
+export class CalendarioAgendamentoDesvincularTurmaParamsRestDto {
+  @ApiProperty(CalendarioEventoFields.id.swaggerMetadata)
+  id: string;
+
+  @ApiProperty({ type: "string", format: "uuid", description: "ID da turma a desvincular" })
+  turmaId: string;
 }
 
 // ============================================================================
@@ -248,4 +279,66 @@ export class CalendarioAgendamentoFindOneOutputRestDto {
     type: () => [DiarioFindOneOutputRestDto],
   })
   diarios: DiarioFindOneOutputRestDto[];
+}
+
+// ============================================================================
+// List Input/Output
+// ============================================================================
+
+@ApiSchema({ name: "CalendarioAgendamentoListInputDto" })
+export class CalendarioAgendamentoListInputRestDto extends PaginatedFilterByIdRestDto {
+  static schema = CalendarioAgendamentoPaginationInputSchema;
+
+  @ApiPropertyOptional(CalendarioAgendamentoListQueryFields.filterTipo.swaggerMetadata)
+  @TransformToArray()
+  "filter.tipo"?: string[];
+
+  @ApiPropertyOptional(CalendarioAgendamentoListQueryFields.filterStatus.swaggerMetadata)
+  @TransformToArray()
+  "filter.status"?: string[];
+
+  @ApiPropertyOptional(CalendarioAgendamentoListQueryFields.filterTurmaId.swaggerMetadata)
+  @TransformToArray()
+  "filter.turma.id"?: string[];
+
+  @ApiPropertyOptional(CalendarioAgendamentoListQueryFields.filterPerfilId.swaggerMetadata)
+  @TransformToArray()
+  "filter.perfil.id"?: string[];
+
+  @ApiPropertyOptional(
+    CalendarioAgendamentoListQueryFields.filterCalendarioLetivoId.swaggerMetadata,
+  )
+  @TransformToArray()
+  "filter.calendarioLetivo.id"?: string[];
+
+  @ApiPropertyOptional(CalendarioAgendamentoListQueryFields.filterOfertaFormacaoId.swaggerMetadata)
+  @TransformToArray()
+  "filter.ofertaFormacao.id"?: string[];
+
+  @ApiPropertyOptional(CalendarioAgendamentoListQueryFields.filterModalidadeId.swaggerMetadata)
+  @TransformToArray()
+  "filter.modalidade.id"?: string[];
+
+  @ApiPropertyOptional(CalendarioAgendamentoListQueryFields.filterAmbienteId.swaggerMetadata)
+  @TransformToArray()
+  "filter.ambiente.id"?: string[];
+
+  @ApiPropertyOptional(CalendarioAgendamentoListQueryFields.filterDiarioId.swaggerMetadata)
+  @TransformToArray()
+  "filter.diario.id"?: string[];
+}
+
+@ApiSchema({ name: "CalendarioAgendamentoListOutputDto" })
+export class CalendarioAgendamentoListOutputRestDto {
+  @ApiProperty({
+    ...CalendarioAgendamentoListQueryFields.meta.swaggerMetadata,
+    type: () => PaginationMetaRestDto,
+  })
+  meta: PaginationMetaRestDto;
+
+  @ApiProperty({
+    ...CalendarioAgendamentoListQueryFields.data.swaggerMetadata,
+    type: () => [CalendarioAgendamentoFindOneOutputRestDto],
+  })
+  data: CalendarioAgendamentoFindOneOutputRestDto[];
 }

@@ -3,7 +3,6 @@ import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adap
 import { AmbienteModule } from "@/modules/ambientes/ambiente/ambiente.module";
 import { ArquivoModule } from "@/modules/armazenamento/arquivo/arquivo.module";
 import { ImagemModule } from "@/modules/armazenamento/imagem/imagem.module";
-import { CalendarioAgendamentoModule } from "@/modules/calendario/agendamento/calendario-agendamento.module";
 import { HorarioConsultaModule } from "@/modules/calendario/horario-consulta/horario-consulta.module";
 import { CursoModule } from "@/modules/ensino/curso/curso.module";
 import { TurmaPermissionCheckerImpl } from "@/modules/ensino/turma/application/authorization";
@@ -32,33 +31,19 @@ import {
 } from "@/modules/ensino/turma/domain/queries";
 import {
   IDiarioConfigurarRepository,
-  ITurmaEventoRepository,
   ITurmaRepository,
 } from "@/modules/ensino/turma/domain/repositories";
 import {
   DiarioConfigurarTypeOrmRepositoryAdapter,
-  TurmaEventoTypeOrmRepositoryAdapter,
   TurmaTypeOrmRepositoryAdapter,
 } from "@/modules/ensino/turma/infrastructure.database";
 import { TurmaGraphqlResolver } from "@/modules/ensino/turma/presentation.graphql/turma.graphql.resolver";
 import { TurmaRestController } from "@/modules/ensino/turma/presentation.rest/turma.rest.controller";
 import { TurmaDiarioConfigurarRestController } from "@/modules/ensino/turma/presentation.rest/turma-diario-configurar.rest.controller";
-import { TurmaEventoRestController } from "@/modules/ensino/turma/presentation.rest/turma-evento.rest.controller";
 
 @Module({
-  imports: [
-    AmbienteModule,
-    CursoModule,
-    ImagemModule,
-    ArquivoModule,
-    CalendarioAgendamentoModule,
-    HorarioConsultaModule,
-  ],
-  controllers: [
-    TurmaRestController,
-    TurmaEventoRestController,
-    TurmaDiarioConfigurarRestController,
-  ],
+  imports: [AmbienteModule, CursoModule, ImagemModule, ArquivoModule, HorarioConsultaModule],
+  controllers: [TurmaRestController, TurmaDiarioConfigurarRestController],
   providers: [
     NestJsPaginateAdapter,
     TurmaGraphqlResolver,
@@ -69,10 +54,6 @@ import { TurmaEventoRestController } from "@/modules/ensino/turma/presentation.r
     {
       provide: IDiarioConfigurarRepository,
       useClass: DiarioConfigurarTypeOrmRepositoryAdapter,
-    },
-    {
-      provide: ITurmaEventoRepository,
-      useClass: TurmaEventoTypeOrmRepositoryAdapter,
     },
     { provide: ITurmaPermissionChecker, useClass: TurmaPermissionCheckerImpl },
 

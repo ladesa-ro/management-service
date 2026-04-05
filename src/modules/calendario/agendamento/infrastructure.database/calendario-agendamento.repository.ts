@@ -1,7 +1,10 @@
-import type { FindOptionsWhere } from "typeorm";
+import type { FindOptionsWhere, ObjectLiteral, SelectQueryBuilder } from "typeorm";
+import type { IPaginationCriteria } from "@/application/pagination";
 import type { IAccessContext } from "@/domain/abstractions";
 import { Dep, Impl } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
+import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
+import { buildTypeOrmPaginateConfig } from "@/infrastructure.database/pagination/adapters/pagination-spec.adapter";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import { dateToISO, dateToISONullable } from "@/infrastructure.database/typeorm/mapping";
 import * as PerfilTypeormMapper from "@/modules/acesso/usuario/perfil/infrastructure.database/typeorm/perfil.typeorm.mapper";
@@ -21,6 +24,9 @@ import {
   type ICalendarioAgendamentoMetadata,
 } from "../domain/calendario-agendamento-metadata";
 import { CalendarioAgendamentoFindOneQueryResult } from "../domain/queries/calendario-agendamento-find-one.query.result";
+import type { CalendarioAgendamentoListQuery } from "../domain/queries/calendario-agendamento-list.query";
+import { calendarioAgendamentoPaginationSpec } from "../domain/queries/calendario-agendamento-list.query.handler.interface";
+import type { CalendarioAgendamentoListQueryResult } from "../domain/queries/calendario-agendamento-list.query.result";
 import type { ICalendarioAgendamentoRepository } from "../domain/repositories/calendario-agendamento.repository.interface";
 import {
   CalendarioAgendamentoEntity,
@@ -82,6 +88,10 @@ const DIARIO_DEEP_RELATIONS = {
   },
 };
 
+const agendamentoPaginateConfig = buildTypeOrmPaginateConfig<CalendarioAgendamentoEntity>(
+  calendarioAgendamentoPaginationSpec,
+);
+
 @Impl()
 export class CalendarioAgendamentoTypeOrmRepositoryAdapter
   implements ICalendarioAgendamentoRepository
@@ -89,6 +99,7 @@ export class CalendarioAgendamentoTypeOrmRepositoryAdapter
   constructor(
     @Dep(IAppTypeormConnection)
     private readonly appTypeormConnection: IAppTypeormConnection,
+    private readonly paginationAdapter: NestJsPaginateAdapter,
   ) {}
 
   // ============================================================================
@@ -203,8 +214,143 @@ export class CalendarioAgendamentoTypeOrmRepositoryAdapter
   }
 
   // ============================================================================
+  // Junction operations
+  // ============================================================================
+
+  async deleteTurmaJunction(agendamentoId: string, turmaId: string): Promise<void> {
+    const repo = this.appTypeormConnection.getRepository(CalendarioAgendamentoTurmaEntity);
+    await repo
+      .createQueryBuilder()
+      .delete()
+      .where("id_calendario_agendamento_fk = :agendamentoId", { agendamentoId })
+      .andWhere("id_turma_fk = :turmaId", { turmaId })
+      .execute();
+  }
+
+  // ============================================================================
+  // Direct field updates
+  // ============================================================================
+
+  async updateStatus(id: string, status: string): Promise<void> {
+    const repo = this.appTypeormConnection.getRepository(CalendarioAgendamentoEntity);
+    await repo.update(id, { status: status as CalendarioAgendamentoStatus });
+  }
+
+  // ============================================================================
   // Read side
   // ============================================================================
+
+  async getFindAllQueryResult(
+    _accessContext: IAccessContext | null,
+    dto: CalendarioAgendamentoListQuery | null = null,
+  ): Promise<CalendarioAgendamentoListQueryResult> {
+    const repo = this.appTypeormConnection.getRepository(CalendarioAgendamentoEntity);
+    const qb = repo.createQueryBuilder("ca");
+
+    // Por padrao, retornar somente registros ativos (valid_to IS NULL e status != INATIVO)
+    qb.andWhere("ca.valid_to IS NULL");
+
+    const hasStatusFilter = dto?.["filter.status"] !== undefined;
+    if (!hasStatusFilter) {
+      qb.andWhere("ca.status != :defaultExcludeStatus", {
+        defaultExcludeStatus: CalendarioAgendamentoStatus.INATIVO,
+      });
+    }
+
+    // Aplicar filtros de junction via LEFT JOIN + WHERE
+    this.applyJunctionFilter(
+      qb,
+      dto?.["filter.turma.id"],
+      CalendarioAgendamentoTurmaEntity,
+      "cat",
+      "id_turma_fk",
+    );
+    this.applyJunctionFilter(
+      qb,
+      dto?.["filter.perfil.id"],
+      CalendarioAgendamentoProfessorEntity,
+      "cap",
+      "id_perfil_fk",
+    );
+    this.applyJunctionFilter(
+      qb,
+      dto?.["filter.calendarioLetivo.id"],
+      CalendarioAgendamentoCalendarioLetivoEntity,
+      "cacl",
+      "id_calendario_letivo_fk",
+    );
+    this.applyJunctionFilter(
+      qb,
+      dto?.["filter.ofertaFormacao.id"],
+      CalendarioAgendamentoOfertaFormacaoEntity,
+      "caof",
+      "id_oferta_formacao_fk",
+    );
+    this.applyJunctionFilter(
+      qb,
+      dto?.["filter.modalidade.id"],
+      CalendarioAgendamentoModalidadeEntity,
+      "cam",
+      "id_modalidade_fk",
+    );
+    this.applyJunctionFilter(
+      qb,
+      dto?.["filter.ambiente.id"],
+      CalendarioAgendamentoAmbienteEntity,
+      "caa",
+      "id_ambiente_fk",
+    );
+    this.applyJunctionFilter(
+      qb,
+      dto?.["filter.diario.id"],
+      CalendarioAgendamentoDiarioEntity,
+      "cad",
+      "id_diario_fk",
+    );
+
+    // Remover filtros de junction do dto para que nestjs-paginate nao tente aplica-los
+    const paginationDto = dto ? { ...dto } : null;
+    if (paginationDto) {
+      delete (paginationDto as Record<string, unknown>)["filter.turma.id"];
+      delete (paginationDto as Record<string, unknown>)["filter.perfil.id"];
+      delete (paginationDto as Record<string, unknown>)["filter.calendarioLetivo.id"];
+      delete (paginationDto as Record<string, unknown>)["filter.ofertaFormacao.id"];
+      delete (paginationDto as Record<string, unknown>)["filter.modalidade.id"];
+      delete (paginationDto as Record<string, unknown>)["filter.ambiente.id"];
+      delete (paginationDto as Record<string, unknown>)["filter.diario.id"];
+    }
+
+    const criteria: IPaginationCriteria = {
+      ...(paginationDto as object),
+      sortBy: (paginationDto as Record<string, unknown> | null)?.sortBy
+        ? ((paginationDto as Record<string, unknown>).sortBy as string[])
+        : undefined,
+      filters: this.extractFilters(paginationDto as Record<string, unknown> | null),
+    };
+
+    const paginated = await this.paginationAdapter.paginate<CalendarioAgendamentoEntity>(
+      qb as unknown as SelectQueryBuilder<ObjectLiteral>,
+      criteria,
+      agendamentoPaginateConfig,
+    );
+
+    // Hidratar cada resultado com junctions + metadata
+    const hydratedData: CalendarioAgendamentoFindOneQueryResult[] = [];
+
+    for (const entity of paginated.data as CalendarioAgendamentoEntity[]) {
+      const [junctions, metadata] = await Promise.all([
+        this.findJunctionEntities(entity.id),
+        this.findMetadataByIdentificadorExterno(entity.identificadorExterno),
+      ]);
+      hydratedData.push(this.toQueryResult(entity, junctions, metadata));
+    }
+
+    return {
+      meta: paginated.meta,
+      data: hydratedData,
+      links: paginated.links,
+    } as CalendarioAgendamentoListQueryResult;
+  }
 
   async getFindOneQueryResult(
     _accessContext: IAccessContext | null,
@@ -291,6 +437,51 @@ export class CalendarioAgendamentoTypeOrmRepositoryAdapter
     }
 
     return results;
+  }
+
+  // ============================================================================
+  // Pagination helpers
+  // ============================================================================
+
+  private applyJunctionFilter(
+    qb: SelectQueryBuilder<CalendarioAgendamentoEntity>,
+    filterValue: string | string[] | number | number[] | null | undefined,
+    junctionEntity: new () => unknown,
+    alias: string,
+    fkColumn: string,
+  ): void {
+    if (filterValue === undefined || filterValue === null) return;
+
+    const values = Array.isArray(filterValue) ? filterValue : [filterValue];
+    if (values.length === 0) return;
+
+    const paramName = `${alias}Ids`;
+
+    qb.innerJoin(
+      junctionEntity as never,
+      alias,
+      `${alias}.id_calendario_agendamento_fk = ca.id`,
+    ).andWhere(`${alias}.${fkColumn} IN (:...${paramName})`, { [paramName]: values });
+  }
+
+  private extractFilters(
+    dto: Record<string, unknown> | null | undefined,
+  ): Record<string, string | string[]> {
+    const filters: Record<string, string | string[]> = {};
+    if (!dto) return filters;
+
+    for (const [key, value] of Object.entries(dto)) {
+      if (key.startsWith("filter.")) {
+        if (
+          typeof value === "string" ||
+          (Array.isArray(value) && value.every((v) => typeof v === "string"))
+        ) {
+          filters[key.replace("filter.", "")] = value;
+        }
+      }
+    }
+
+    return filters;
   }
 
   // ============================================================================
