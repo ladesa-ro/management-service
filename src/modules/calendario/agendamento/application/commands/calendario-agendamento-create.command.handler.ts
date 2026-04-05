@@ -21,13 +21,14 @@ export class CalendarioAgendamentoCreateCommandHandlerImpl
     accessContext: IAccessContext | null,
     dto: CalendarioAgendamentoCreateCommand,
   ): Promise<CalendarioAgendamentoFindOneQueryResult> {
-    const domain = CalendarioAgendamento.create(dto);
+    const { nome, cor, ...domainData } = dto;
+    const domain = CalendarioAgendamento.create(domainData);
 
     // Criar metadata (nome/cor) na tabela separada
     const metadata = CalendarioAgendamentoMetadata.create({
       identificadorExternoCalendarioAgendamento: domain.identificadorExterno,
-      nome: dto.nome,
-      cor: dto.cor,
+      nome,
+      cor,
     });
 
     await this.repository.save(domain);

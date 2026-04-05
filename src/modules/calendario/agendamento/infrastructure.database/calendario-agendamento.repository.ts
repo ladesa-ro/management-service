@@ -227,6 +227,16 @@ export class CalendarioAgendamentoTypeOrmRepositoryAdapter
       .execute();
   }
 
+  async deletePerfilJunction(agendamentoId: string, perfilId: string): Promise<void> {
+    const repo = this.appTypeormConnection.getRepository(CalendarioAgendamentoProfessorEntity);
+    await repo
+      .createQueryBuilder()
+      .delete()
+      .where("id_calendario_agendamento_fk = :agendamentoId", { agendamentoId })
+      .andWhere("id_perfil_fk = :perfilId", { perfilId })
+      .execute();
+  }
+
   // ============================================================================
   // Direct field updates
   // ============================================================================

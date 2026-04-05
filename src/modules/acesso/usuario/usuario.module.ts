@@ -38,13 +38,11 @@ import {
 } from "@/modules/acesso/usuario/domain/queries";
 import {
   IUsuarioDisponibilidadeRepository,
-  IUsuarioEventoRepository,
   IUsuarioRepository,
 } from "@/modules/acesso/usuario/domain/repositories";
 import { IUsuarioAvailabilityChecker } from "@/modules/acesso/usuario/domain/services";
 import {
   UsuarioDisponibilidadeTypeOrmRepositoryAdapter,
-  UsuarioEventoTypeOrmRepositoryAdapter,
   UsuarioTypeOrmRepositoryAdapter,
 } from "@/modules/acesso/usuario/infrastructure.database";
 import { PerfilDefinirPerfisAtivosCommandHandlerImpl } from "@/modules/acesso/usuario/perfil/application/commands";
@@ -68,7 +66,6 @@ import {
 } from "@/modules/acesso/usuario/perfil/presentation.rest/perfil.rest.controller";
 import { UsuarioGraphqlResolver } from "@/modules/acesso/usuario/presentation.graphql/usuario.graphql.resolver";
 import { UsuarioRestController } from "@/modules/acesso/usuario/presentation.rest/usuario.rest.controller";
-import { UsuarioEventoRestController } from "@/modules/acesso/usuario/presentation.rest/usuario-evento.rest.controller";
 import { CampusModule } from "@/modules/ambientes/campus/campus.module";
 import { ArquivoModule } from "@/modules/armazenamento/arquivo/arquivo.module";
 import { ImagemModule } from "@/modules/armazenamento/imagem/imagem.module";
@@ -82,12 +79,7 @@ import { HorarioConsultaModule } from "@/modules/calendario/horario-consulta/hor
     HorarioConsultaModule,
     CampusModule,
   ],
-  controllers: [
-    UsuarioRestController,
-    UsuarioEventoRestController,
-    PerfilListRestController,
-    PerfilRestController,
-  ],
+  controllers: [UsuarioRestController, PerfilListRestController, PerfilRestController],
   providers: [
     NestJsPaginateAdapter,
     UsuarioGraphqlResolver,
@@ -104,11 +96,6 @@ import { HorarioConsultaModule } from "@/modules/calendario/horario-consulta/hor
       provide: IUsuarioDisponibilidadeRepository,
       useClass: UsuarioDisponibilidadeTypeOrmRepositoryAdapter,
     },
-    {
-      provide: IUsuarioEventoRepository,
-      useClass: UsuarioEventoTypeOrmRepositoryAdapter,
-    },
-
     // Usuario Services
     { provide: IUsuarioAvailabilityChecker, useClass: UsuarioAvailabilityCheckerImpl },
 
