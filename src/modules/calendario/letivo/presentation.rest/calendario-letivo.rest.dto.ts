@@ -29,6 +29,33 @@ import { CalendarioLetivoFindOneQueryResultFields } from "../domain/queries/cale
 import { CalendarioLetivoListQueryFields } from "../domain/queries/calendario-letivo-list.query";
 
 // ============================================================================
+// Embedded Etapa DTOs
+// ============================================================================
+
+@ApiSchema({ name: "CalendarioLetivoEtapaOutputDto" })
+export class CalendarioLetivoEtapaOutputRestDto {
+  @ApiProperty({ description: "ID da etapa" }) id: string;
+  @ApiProperty({ description: "Identificador externo da etapa" }) identificadorExterno: string;
+  @ApiProperty({ description: "Versao da etapa" }) version: number;
+  @ApiProperty({ description: "ID da etapa da oferta de formacao periodo" })
+  ofertaFormacaoPeriodoEtapaId: string;
+  @ApiProperty({ description: "Nome da etapa" }) nome: string;
+  @ApiProperty({ description: "Cor da etapa" }) cor: string;
+  @ApiProperty({ description: "Ordem da etapa" }) ordem: number;
+  @ApiProperty({ description: "Numero do periodo" }) numeroPeriodo: number;
+  @ApiProperty({ description: "Data inicio da etapa" }) dataInicio: string;
+  @ApiProperty({ description: "Data termino da etapa" }) dataTermino: string;
+}
+
+@ApiSchema({ name: "CalendarioLetivoEtapaInputDto" })
+export class CalendarioLetivoEtapaInputRestDto {
+  @ApiProperty({ description: "ID da etapa da oferta de formacao periodo" })
+  ofertaFormacaoPeriodoEtapaId: string;
+  @ApiProperty({ description: "Data inicio da etapa" }) dataInicio: string;
+  @ApiProperty({ description: "Data termino da etapa" }) dataTermino: string;
+}
+
+// ============================================================================
 // FindOne Output
 // ============================================================================
 
@@ -54,6 +81,12 @@ export class CalendarioLetivoFindOneOutputRestDto extends EntityBaseRestDto {
 
   @ApiProperty(CalendarioLetivoFindOneQueryResultFields.situacao.swaggerMetadata)
   situacao: string;
+
+  @ApiProperty({
+    type: () => [CalendarioLetivoEtapaOutputRestDto],
+    description: "Etapas do calendario letivo",
+  })
+  etapas: CalendarioLetivoEtapaOutputRestDto[];
 }
 
 // ============================================================================
@@ -120,6 +153,12 @@ export class CalendarioLetivoCreateInputRestDto {
 
   @ApiPropertyOptional(CalendarioLetivoCreateCommandFields.situacao.swaggerMetadata)
   situacao?: string;
+
+  @ApiPropertyOptional({
+    type: () => [CalendarioLetivoEtapaInputRestDto],
+    description: "Etapas do calendario letivo",
+  })
+  etapas?: CalendarioLetivoEtapaInputRestDto[];
 }
 
 @ApiSchema({ name: "CalendarioLetivoUpdateInputDto" })

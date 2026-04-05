@@ -50,6 +50,11 @@ export const createInputDtoToCreateCommand = createMapper<
   input.campus = { id: dto.campus.id };
   input.ofertaFormacao = { id: dto.ofertaFormacao.id };
   input.situacao = dto.situacao;
+  input.etapas = dto.etapas?.map((e) => ({
+    ofertaFormacaoPeriodoEtapaId: e.ofertaFormacaoPeriodoEtapaId,
+    dataInicio: e.dataInicio,
+    dataTermino: e.dataTermino,
+  }));
   return input;
 });
 
@@ -63,6 +68,11 @@ export const updateInputDtoToUpdateCommand = createMapper<
   campus: dto.campus ? { id: dto.campus.id } : undefined,
   ofertaFormacao: dto.ofertaFormacao ? { id: dto.ofertaFormacao.id } : undefined,
   situacao: dto.situacao,
+  etapas: dto.etapas?.map((e) => ({
+    ofertaFormacaoPeriodoEtapaId: e.ofertaFormacaoPeriodoEtapaId,
+    dataInicio: e.dataInicio,
+    dataTermino: e.dataTermino,
+  })),
 }));
 
 // ============================================================================
@@ -82,6 +92,18 @@ export const findOneQueryResultToOutputDto = createMapper<
     output.ofertaFormacao,
   );
   dto.situacao = output.situacao;
+  dto.etapas = (output.etapas ?? []).map((e) => ({
+    id: e.id,
+    identificadorExterno: e.identificadorExterno,
+    version: e.version,
+    ofertaFormacaoPeriodoEtapaId: e.ofertaFormacaoPeriodoEtapaId,
+    nome: e.nome,
+    cor: e.cor,
+    ordem: e.ordem,
+    numeroPeriodo: e.numeroPeriodo,
+    dataInicio: e.dataInicio,
+    dataTermino: e.dataTermino,
+  }));
   dto.dateCreated = output.dateCreated;
   dto.dateUpdated = output.dateUpdated;
   dto.dateDeleted = output.dateDeleted;

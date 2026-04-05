@@ -40,10 +40,7 @@ import {
 import { CalendarioLetivoGraphqlResolver } from "@/modules/calendario/letivo/presentation.graphql/calendario-letivo.graphql.resolver";
 import { CalendarioLetivoRestController } from "@/modules/calendario/letivo/presentation.rest/calendario-letivo.rest.controller";
 import { CalendarioLetivoDiaRestController } from "@/modules/calendario/letivo/presentation.rest/calendario-letivo-dia.rest.controller";
-import {
-  CalendarioLetivoDesativarRestController,
-  CalendarioLetivoEtapaRestController,
-} from "@/modules/calendario/letivo/presentation.rest/calendario-letivo-etapa.rest.controller";
+import { CalendarioLetivoDesativarRestController } from "@/modules/calendario/letivo/presentation.rest/calendario-letivo-etapa.rest.controller";
 import { OfertaFormacaoModule } from "@/modules/ensino/oferta-formacao/oferta-formacao.module";
 
 @Module({
@@ -51,7 +48,6 @@ import { OfertaFormacaoModule } from "@/modules/ensino/oferta-formacao/oferta-fo
   controllers: [
     CalendarioLetivoRestController,
     CalendarioLetivoDiaRestController,
-    CalendarioLetivoEtapaRestController,
     CalendarioLetivoDesativarRestController,
   ],
   providers: [

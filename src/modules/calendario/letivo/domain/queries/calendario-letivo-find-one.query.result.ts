@@ -8,10 +8,24 @@ export const CalendarioLetivoFindOneQueryResultFields = {
   ...CalendarioLetivoFields,
 };
 
+export interface CalendarioLetivoEtapaQueryResult {
+  id: string;
+  identificadorExterno: string;
+  version: number;
+  ofertaFormacaoPeriodoEtapaId: string;
+  nome: string;
+  cor: string;
+  ordem: number;
+  numeroPeriodo: number;
+  dataInicio: string;
+  dataTermino: string;
+}
+
 export class CalendarioLetivoFindOneQueryResult extends EntityQueryResult {
   nome!: string;
   ano!: number;
   campus!: CampusFindOneQueryResult;
   ofertaFormacao!: OfertaFormacaoFindOneQueryResult;
   situacao!: string;
+  etapas!: CalendarioLetivoEtapaQueryResult[];
 }

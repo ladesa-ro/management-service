@@ -26,6 +26,48 @@ export const CalendarioLetivoEtapaBulkReplaceItemFields = {
   }),
 };
 
+export const CalendarioLetivoEtapaSnapshotFields = {
+  nome: createFieldMetadata({
+    description: "Nome da etapa (snapshot)",
+    schema: z.string(),
+  }),
+  cor: createFieldMetadata({
+    description: "Cor da etapa para exibicao (snapshot)",
+    schema: z.string().nullable(),
+  }),
+  ordem: createFieldMetadata({
+    description: "Ordem da etapa (snapshot)",
+    schema: z.number().int(),
+  }),
+  numeroPeriodo: createFieldMetadata({
+    description: "Numero do periodo da etapa (snapshot)",
+    schema: z.number().int(),
+  }),
+};
+
+export const CalendarioLetivoEtapaVersionedFields = {
+  identificadorExterno: createFieldMetadata({
+    description: "Identificador externo para versionamento",
+    schema: z.string().uuid(),
+  }),
+  version: createFieldMetadata({
+    description: "Numero da versao",
+    schema: z.number().int().min(1),
+  }),
+  previousVersionId: createFieldMetadata({
+    description: "ID da versao anterior",
+    schema: z.string().uuid().nullable(),
+  }),
+  validFrom: createFieldMetadata({
+    description: "Data de inicio de validade da versao",
+    schema: z.string().datetime(),
+  }),
+  validTo: createFieldMetadata({
+    description: "Data de termino de validade da versao",
+    schema: z.string().datetime().nullable(),
+  }),
+};
+
 export const CalendarioLetivoEtapaOutputFields = {
   id: SharedFields.idUuid,
   ofertaFormacaoPeriodoEtapaId: createFieldMetadata({
@@ -44,4 +86,6 @@ export const CalendarioLetivoEtapaOutputFields = {
     description: "Data termino da etapa",
     schema: z.string().date(),
   }),
+  ...CalendarioLetivoEtapaSnapshotFields,
+  ...CalendarioLetivoEtapaVersionedFields,
 };

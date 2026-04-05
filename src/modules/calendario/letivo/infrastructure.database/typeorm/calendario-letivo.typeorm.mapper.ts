@@ -35,6 +35,20 @@ export const entityToFindOneQueryResult = createMapper<
   campus: CampusTypeormMapper.entityToFindOneQueryResult.map(e.campus),
   ofertaFormacao: OfertaFormacaoTypeormMapper.entityToFindOneQueryResult.map(e.ofertaFormacao),
   situacao: e.situacao,
+  etapas: (e.etapas ?? [])
+    .filter((etapa) => !etapa.dateDeleted)
+    .map((etapa) => ({
+      id: etapa.id,
+      identificadorExterno: etapa.identificadorExterno,
+      version: etapa.version,
+      ofertaFormacaoPeriodoEtapaId: etapa.ofertaFormacaoPeriodoEtapa?.id ?? "",
+      nome: etapa.nome,
+      cor: etapa.cor,
+      ordem: etapa.ordem,
+      numeroPeriodo: etapa.numeroPeriodo,
+      dataInicio: String(etapa.dataInicio),
+      dataTermino: String(etapa.dataTermino),
+    })),
   dateCreated: e.dateCreated,
   dateUpdated: e.dateUpdated,
   dateDeleted: e.dateDeleted,
