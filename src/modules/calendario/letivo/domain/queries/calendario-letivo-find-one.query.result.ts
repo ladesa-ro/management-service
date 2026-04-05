@@ -13,4 +13,5 @@ export class CalendarioLetivoFindOneQueryResult extends EntityQueryResult {
   ano!: number;
   campus!: CampusFindOneQueryResult;
   ofertaFormacao!: OfertaFormacaoFindOneQueryResult;
+  situacao!: string;
 }

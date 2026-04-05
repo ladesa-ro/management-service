@@ -12,7 +12,7 @@ import {
   ObjectIdUuidFactoryNullable,
 } from "@/domain/abstractions";
 import { datedSchema, uuidSchema } from "@/shared/validation/schemas";
-import { CalendarioLetivoFields } from "./calendario-letivo.fields";
+import { CalendarioLetivoFields, CalendarioLetivoSituacaoSchema } from "./calendario-letivo.fields";
 
 // ============================================================================
 // Fragments de referência
@@ -33,6 +33,7 @@ export const CalendarioLetivoSchema = z
     ano: CalendarioLetivoFields.ano.domainSchema,
     campus: ObjectIdUuidFactory.domain,
     ofertaFormacao: ObjectIdUuidFactoryNullable.domain,
+    situacao: CalendarioLetivoSituacaoSchema,
   })
   .extend(datedSchema.shape);
 
@@ -42,6 +43,7 @@ export const CalendarioLetivoCreateSchema = createSchema((standard) =>
     ano: CalendarioLetivoFields.ano.create(standard),
     campus: CalendarioLetivoCampusRefSchema.create(standard),
     ofertaFormacao: CalendarioLetivoOfertaFormacaoRefSchema.create(standard).optional(),
+    situacao: CalendarioLetivoFields.situacao.create(standard).optional(),
   }),
 );
 
@@ -51,5 +53,6 @@ export const CalendarioLetivoUpdateSchema = createSchema((standard) =>
     ano: CalendarioLetivoFields.ano.create(standard).optional(),
     campus: CalendarioLetivoCampusRefSchema.create(standard).optional(),
     ofertaFormacao: CalendarioLetivoOfertaFormacaoRefSchema.create(standard).optional(),
+    situacao: CalendarioLetivoFields.situacao.create(standard).optional(),
   }),
 );

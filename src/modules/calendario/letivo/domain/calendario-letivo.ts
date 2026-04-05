@@ -9,6 +9,11 @@ import {
   CalendarioLetivoUpdateSchema,
 } from "./calendario-letivo.schemas";
 
+export enum CalendarioLetivoSituacao {
+  ATIVO = "ATIVO",
+  INATIVO = "INATIVO",
+}
+
 export type ICalendarioLetivo = z.infer<typeof CalendarioLetivoSchema>;
 
 export interface ICalendarioLetivoCreate {
@@ -16,6 +21,7 @@ export interface ICalendarioLetivoCreate {
   ano: number;
   campus: { id: IdUuid };
   ofertaFormacao?: { id: IdUuid };
+  situacao?: CalendarioLetivoSituacao;
 }
 
 export interface ICalendarioLetivoUpdate {
@@ -23,6 +29,7 @@ export interface ICalendarioLetivoUpdate {
   ano?: number;
   campus?: { id: IdUuid };
   ofertaFormacao?: { id: IdUuid } | null;
+  situacao?: CalendarioLetivoSituacao;
 }
 
 export class CalendarioLetivo {
@@ -33,6 +40,7 @@ export class CalendarioLetivo {
   ano!: number;
   campus!: { id: string };
   ofertaFormacao!: { id: string } | null;
+  situacao!: CalendarioLetivoSituacao;
   dateCreated!: ScalarDateTimeString;
   dateUpdated!: ScalarDateTimeString;
   dateDeleted!: ScalarDateTimeString | null;
@@ -53,6 +61,8 @@ export class CalendarioLetivo {
     instance.ano = parsed.ano;
     instance.campus = parsed.campus;
     instance.ofertaFormacao = parsed.ofertaFormacao ?? null;
+    instance.situacao = (parsed.situacao ??
+      CalendarioLetivoSituacao.ATIVO) as CalendarioLetivoSituacao;
     instance.dateCreated = getNowISO();
     instance.dateUpdated = getNowISO();
     instance.dateDeleted = null;
@@ -70,6 +80,7 @@ export class CalendarioLetivo {
     instance.ano = parsed.ano;
     instance.campus = parsed.campus;
     instance.ofertaFormacao = parsed.ofertaFormacao;
+    instance.situacao = parsed.situacao as CalendarioLetivoSituacao;
     instance.dateCreated = parsed.dateCreated;
     instance.dateUpdated = parsed.dateUpdated;
     instance.dateDeleted = parsed.dateDeleted;
@@ -85,6 +96,7 @@ export class CalendarioLetivo {
 
     if (parsed.nome !== undefined) this.nome = parsed.nome;
     if (parsed.ano !== undefined) this.ano = parsed.ano;
+    if (parsed.situacao !== undefined) this.situacao = parsed.situacao as CalendarioLetivoSituacao;
 
     this.dateUpdated = getNowISO();
   }

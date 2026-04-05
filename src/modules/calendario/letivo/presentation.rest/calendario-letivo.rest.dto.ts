@@ -51,6 +51,9 @@ export class CalendarioLetivoFindOneOutputRestDto extends EntityBaseRestDto {
     type: () => OfertaFormacaoFindOneOutputRestDto,
   })
   ofertaFormacao: OfertaFormacaoFindOneOutputRestDto;
+
+  @ApiProperty(CalendarioLetivoFindOneQueryResultFields.situacao.swaggerMetadata)
+  situacao: string;
 }
 
 // ============================================================================
@@ -114,6 +117,9 @@ export class CalendarioLetivoCreateInputRestDto {
     type: () => OfertaFormacaoFindOneInputRestDto,
   })
   ofertaFormacao: OfertaFormacaoFindOneInputRestDto;
+
+  @ApiPropertyOptional(CalendarioLetivoCreateCommandFields.situacao.swaggerMetadata)
+  situacao?: string;
 }
 
 @ApiSchema({ name: "CalendarioLetivoUpdateInputDto" })
