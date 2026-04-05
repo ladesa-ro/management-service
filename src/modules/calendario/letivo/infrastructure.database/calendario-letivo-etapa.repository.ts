@@ -1,6 +1,7 @@
 import { In, IsNull } from "typeorm";
 import { Dep, Impl } from "@/domain/dependency-injection";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
+import type { ICalendarioLetivoEtapa } from "@/modules/calendario/letivo/domain/calendario-letivo-etapa.types";
 import type {
   ICalendarioLetivoEtapaRepository,
   IOfertaFormacaoPeriodoEtapaSnapshot,
@@ -80,8 +81,8 @@ export class CalendarioLetivoEtapaTypeOrmRepositoryAdapter
       .execute();
   }
 
-  async save(entity: CalendarioLetivoEtapaEntity): Promise<CalendarioLetivoEtapaEntity> {
+  async save(entity: Partial<ICalendarioLetivoEtapa>): Promise<ICalendarioLetivoEtapa> {
     const repo = this.appTypeormConnection.getRepository(CalendarioLetivoEtapaEntity);
-    return repo.save(entity);
+    return repo.save(entity as CalendarioLetivoEtapaEntity);
   }
 }

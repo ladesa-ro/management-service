@@ -33,7 +33,7 @@ export const CalendarioLetivoEtapaSnapshotFields = {
   }),
   cor: createFieldMetadata({
     description: "Cor da etapa para exibicao (snapshot)",
-    schema: z.string().nullable(),
+    schema: z.string(),
   }),
   ordem: createFieldMetadata({
     description: "Ordem da etapa (snapshot)",

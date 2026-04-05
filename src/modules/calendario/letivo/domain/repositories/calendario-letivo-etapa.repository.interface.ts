@@ -4,7 +4,7 @@ export const ICalendarioLetivoEtapaRepository = Symbol("ICalendarioLetivoEtapaRe
 
 export interface IOfertaFormacaoPeriodoEtapaSnapshot {
   nome: string;
-  cor: string | null;
+  cor: string;
   ordem: number;
   numeroPeriodo: number;
 }

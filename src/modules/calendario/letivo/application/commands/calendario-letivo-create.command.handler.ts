@@ -83,7 +83,7 @@ export class CalendarioLetivoCreateCommandHandlerImpl
           calendarioLetivo: { id: domain.id },
           ofertaFormacaoPeriodoEtapa: { id: item.ofertaFormacaoPeriodoEtapaId },
           nome: snapshot.nome,
-          cor: snapshot.cor ?? "",
+          cor: snapshot.cor,
           ordem: snapshot.ordem,
           numeroPeriodo: snapshot.numeroPeriodo,
           dataInicio: item.dataInicio,
