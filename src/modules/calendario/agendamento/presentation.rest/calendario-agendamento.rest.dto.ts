@@ -215,15 +215,6 @@ export class CalendarioAgendamentoDesvincularTurmaParamsRestDto {
   turmaId: string;
 }
 
-@ApiSchema({ name: "CalendarioAgendamentoDesvincularPerfilParamsDto" })
-export class CalendarioAgendamentoDesvincularPerfilParamsRestDto {
-  @ApiProperty(CalendarioEventoFields.id.swaggerMetadata)
-  id: string;
-
-  @ApiProperty({ type: "string", format: "uuid", description: "ID do perfil a desvincular" })
-  perfilId: string;
-}
-
 // ============================================================================
 // Output (reutiliza o mesmo output — tipo já existe nele)
 // ============================================================================

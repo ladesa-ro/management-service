@@ -22,10 +22,6 @@ import {
   ICalendarioAgendamentoDeleteCommandHandler,
 } from "../domain/commands/calendario-agendamento-delete.command.handler.interface";
 import {
-  CalendarioAgendamentoDesvincularPerfilCommandMetadata,
-  ICalendarioAgendamentoDesvincularPerfilCommandHandler,
-} from "../domain/commands/calendario-agendamento-desvincular-perfil.command.handler.interface";
-import {
   CalendarioAgendamentoDesvincularTurmaCommandMetadata,
   ICalendarioAgendamentoDesvincularTurmaCommandHandler,
 } from "../domain/commands/calendario-agendamento-desvincular-turma.command.handler.interface";
@@ -47,7 +43,6 @@ import {
 } from "../domain/queries/calendario-agendamento-list.query.handler.interface";
 import {
   CalendarioAgendamentoCreateInputRestDto,
-  CalendarioAgendamentoDesvincularPerfilParamsRestDto,
   CalendarioAgendamentoDesvincularTurmaParamsRestDto,
   CalendarioAgendamentoFindOneOutputRestDto,
   CalendarioAgendamentoFindOneParamsRestDto,
@@ -74,8 +69,6 @@ export class CalendarioAgendamentoRestController {
     private readonly deleteHandler: ICalendarioAgendamentoDeleteCommandHandler,
     @Dep(ICalendarioAgendamentoDesvincularTurmaCommandHandler)
     private readonly desvincularTurmaHandler: ICalendarioAgendamentoDesvincularTurmaCommandHandler,
-    @Dep(ICalendarioAgendamentoDesvincularPerfilCommandHandler)
-    private readonly desvincularPerfilHandler: ICalendarioAgendamentoDesvincularPerfilCommandHandler,
     @Dep(ICalendarioAgendamentoUpdateStatusCommandHandler)
     private readonly updateStatusHandler: ICalendarioAgendamentoUpdateStatusCommandHandler,
   ) {}
@@ -162,21 +155,6 @@ export class CalendarioAgendamentoRestController {
     return this.desvincularTurmaHandler.execute(accessContext, {
       id: params.id,
       turmaId: params.turmaId,
-    });
-  }
-
-  @Delete("/:id/perfis/:perfilId")
-  @ApiOperation(CalendarioAgendamentoDesvincularPerfilCommandMetadata.swaggerMetadata)
-  @ApiOkResponse({ type: Boolean })
-  @ApiForbiddenResponse()
-  @ApiNotFoundResponse()
-  async desvincularPerfil(
-    @AccessContextHttp() accessContext: IAccessContext,
-    @Param() params: CalendarioAgendamentoDesvincularPerfilParamsRestDto,
-  ): Promise<boolean> {
-    return this.desvincularPerfilHandler.execute(accessContext, {
-      id: params.id,
-      perfilId: params.perfilId,
     });
   }
 

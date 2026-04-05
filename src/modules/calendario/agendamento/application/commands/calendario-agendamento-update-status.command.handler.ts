@@ -1,6 +1,7 @@
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { Dep, Impl } from "@/domain/dependency-injection";
+import { ICalendarioAgendamentoPermissionChecker } from "../../domain/authorization";
 import { CalendarioAgendamento } from "../../domain/calendario-agendamento";
 import type { CalendarioAgendamentoUpdateStatusCommand } from "../../domain/commands/calendario-agendamento-update-status.command";
 import { ICalendarioAgendamentoUpdateStatusCommandHandler } from "../../domain/commands/calendario-agendamento-update-status.command.handler.interface";
@@ -14,12 +15,16 @@ export class CalendarioAgendamentoUpdateStatusCommandHandlerImpl
   constructor(
     @Dep(ICalendarioAgendamentoRepository)
     private readonly repository: ICalendarioAgendamentoRepository,
+    @Dep(ICalendarioAgendamentoPermissionChecker)
+    private readonly permissionChecker: ICalendarioAgendamentoPermissionChecker,
   ) {}
 
   async execute(
     accessContext: IAccessContext | null,
     dto: CalendarioAgendamentoUpdateStatusCommand,
   ): Promise<CalendarioAgendamentoFindOneQueryResult> {
+    await this.permissionChecker.ensureCanUpdate(accessContext, { dto }, dto.id);
+
     const domain = await this.repository.loadById(accessContext, dto.id);
     ensureExists(domain, CalendarioAgendamento.entityName, dto.id);
 

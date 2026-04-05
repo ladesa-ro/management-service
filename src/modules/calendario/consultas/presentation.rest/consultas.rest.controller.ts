@@ -45,15 +45,4 @@ export class ConsultasRestController {
       ocorrencias: CalendarioAgendamentoRestMapper.findOneQueryResultToOutputDto.mapArray(results),
     };
   }
-
-  @Get("/agendamentos")
-  @ApiOperation({ ...ConsultaOcorrenciasPorDataQueryMetadata.swaggerMetadata, deprecated: true })
-  @ApiOkResponse({ type: ConsultaOcorrenciasOutputRestDto })
-  @ApiForbiddenResponse()
-  async findAgendamentos(
-    @AccessContextHttp() accessContext: IAccessContext,
-    @Query() queryParams: ConsultaOcorrenciasQueryRestDto,
-  ): Promise<ConsultaOcorrenciasOutputRestDto> {
-    return this.findOcorrencias(accessContext, queryParams);
-  }
 }

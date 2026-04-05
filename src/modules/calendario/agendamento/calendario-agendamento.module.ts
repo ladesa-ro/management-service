@@ -1,9 +1,9 @@
 import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
+import { CalendarioAgendamentoPermissionCheckerImpl } from "./application/authorization";
 import {
   CalendarioAgendamentoCreateCommandHandlerImpl,
   CalendarioAgendamentoDeleteCommandHandlerImpl,
-  CalendarioAgendamentoDesvincularPerfilCommandHandlerImpl,
   CalendarioAgendamentoDesvincularTurmaCommandHandlerImpl,
   CalendarioAgendamentoUpdateCommandHandlerImpl,
   CalendarioAgendamentoUpdateStatusCommandHandlerImpl,
@@ -12,9 +12,9 @@ import {
   CalendarioAgendamentoFindOneQueryHandlerImpl,
   CalendarioAgendamentoListQueryHandlerImpl,
 } from "./application/queries";
+import { ICalendarioAgendamentoPermissionChecker } from "./domain/authorization";
 import { ICalendarioAgendamentoCreateCommandHandler } from "./domain/commands/calendario-agendamento-create.command.handler.interface";
 import { ICalendarioAgendamentoDeleteCommandHandler } from "./domain/commands/calendario-agendamento-delete.command.handler.interface";
-import { ICalendarioAgendamentoDesvincularPerfilCommandHandler } from "./domain/commands/calendario-agendamento-desvincular-perfil.command.handler.interface";
 import { ICalendarioAgendamentoDesvincularTurmaCommandHandler } from "./domain/commands/calendario-agendamento-desvincular-turma.command.handler.interface";
 import { ICalendarioAgendamentoUpdateCommandHandler } from "./domain/commands/calendario-agendamento-update.command.handler.interface";
 import { ICalendarioAgendamentoUpdateStatusCommandHandler } from "./domain/commands/calendario-agendamento-update-status.command.handler.interface";
@@ -28,6 +28,10 @@ import { CalendarioAgendamentoRestController } from "./presentation.rest/calenda
   controllers: [CalendarioAgendamentoRestController],
   providers: [
     NestJsPaginateAdapter,
+    {
+      provide: ICalendarioAgendamentoPermissionChecker,
+      useClass: CalendarioAgendamentoPermissionCheckerImpl,
+    },
     {
       provide: ICalendarioAgendamentoRepository,
       useClass: CalendarioAgendamentoTypeOrmRepositoryAdapter,
@@ -49,10 +53,6 @@ import { CalendarioAgendamentoRestController } from "./presentation.rest/calenda
       useClass: CalendarioAgendamentoDesvincularTurmaCommandHandlerImpl,
     },
     {
-      provide: ICalendarioAgendamentoDesvincularPerfilCommandHandler,
-      useClass: CalendarioAgendamentoDesvincularPerfilCommandHandlerImpl,
-    },
-    {
       provide: ICalendarioAgendamentoUpdateStatusCommandHandler,
       useClass: CalendarioAgendamentoUpdateStatusCommandHandlerImpl,
     },
@@ -65,6 +65,6 @@ import { CalendarioAgendamentoRestController } from "./presentation.rest/calenda
       useClass: CalendarioAgendamentoListQueryHandlerImpl,
     },
   ],
-  exports: [ICalendarioAgendamentoRepository],
+  exports: [ICalendarioAgendamentoRepository, ICalendarioAgendamentoListQueryHandler],
 })
 export class CalendarioAgendamentoModule {}
