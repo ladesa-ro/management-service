@@ -14,6 +14,8 @@ class FakeEntity {
   dateDeleted?: string | null;
 }
 
+const identityMapper = (e: FakeEntity) => e;
+
 function createMockQueryBuilder(alias: string) {
   const qb = {
     alias,
@@ -79,7 +81,14 @@ describe("typeormFindAll", () => {
     const conn = createMockConn(repo);
     const adapter = createMockPaginationAdapter([entity("a")]);
 
-    await typeormFindAll(conn as never, FakeEntity, deepConfig as never, adapter as never, null);
+    await typeormFindAll(
+      conn as never,
+      FakeEntity,
+      deepConfig as never,
+      adapter as never,
+      null,
+      identityMapper,
+    );
 
     const passedConfig = adapter.paginate.mock.calls[0][2];
     // Only the relation needed for sorting ("child.name" → { child: true }), not the full deep tree
@@ -93,7 +102,14 @@ describe("typeormFindAll", () => {
     const conn = createMockConn(repo);
     const adapter = createMockPaginationAdapter(items);
 
-    await typeormFindAll(conn as never, FakeEntity, config as never, adapter as never, null);
+    await typeormFindAll(
+      conn as never,
+      FakeEntity,
+      config as never,
+      adapter as never,
+      null,
+      identityMapper,
+    );
 
     expect(repo.find).toHaveBeenCalledOnce();
     expect(repo.find).toHaveBeenCalledWith({
@@ -116,6 +132,7 @@ describe("typeormFindAll", () => {
       config as never,
       adapter as never,
       null,
+      identityMapper,
     );
 
     expect(result.data.map((e) => e.id)).toEqual(["1", "2", "3"]);
@@ -128,7 +145,14 @@ describe("typeormFindAll", () => {
     const conn = createMockConn(repo);
     const adapter = createMockPaginationAdapter([]);
 
-    await typeormFindAll(conn as never, FakeEntity, config as never, adapter as never, null);
+    await typeormFindAll(
+      conn as never,
+      FakeEntity,
+      config as never,
+      adapter as never,
+      null,
+      identityMapper,
+    );
 
     expect(repo.find).not.toHaveBeenCalled();
   });
@@ -150,6 +174,7 @@ describe("typeormFindAll", () => {
       noRelationsConfig as never,
       adapter as never,
       null,
+      identityMapper,
     );
 
     expect(repo.find).not.toHaveBeenCalled();
@@ -196,6 +221,7 @@ describe("typeormFindAll", () => {
       noSoftDeleteConfig as never,
       adapter as never,
       null,
+      identityMapper,
     );
 
     expect(repo.find).toHaveBeenCalledWith({
@@ -209,7 +235,14 @@ describe("typeormFindAll", () => {
     const conn = createMockConn(repo);
     const adapter = createMockPaginationAdapter([]);
 
-    await typeormFindAll(conn as never, FakeEntity, config as never, adapter as never, null);
+    await typeormFindAll(
+      conn as never,
+      FakeEntity,
+      config as never,
+      adapter as never,
+      null,
+      identityMapper,
+    );
 
     expect(repo.qb.andWhere).toHaveBeenCalledWith("item.dateDeleted IS NULL");
   });
@@ -228,6 +261,7 @@ describe("typeormFindAll", () => {
       config as never,
       adapter as never,
       null,
+      identityMapper,
     );
 
     expect(result.data.map((e) => e.id)).toEqual(["a", "c"]);
@@ -247,7 +281,14 @@ describe("typeormFindAll", () => {
     const conn = createMockConn(repo);
     const adapter = createMockPaginationAdapter([entity("a")]);
 
-    await typeormFindAll(conn as never, FakeEntity, filterConfig as never, adapter as never, null);
+    await typeormFindAll(
+      conn as never,
+      FakeEntity,
+      filterConfig as never,
+      adapter as never,
+      null,
+      identityMapper,
+    );
 
     const passedConfig = adapter.paginate.mock.calls[0][2];
     expect(passedConfig.relations).toEqual({ parent: { child: true } });
@@ -302,7 +343,7 @@ describe("typeormFindById", () => {
     const repo = createMockRepo({ findOneResult: entity("a") });
     const conn = createMockConn(repo);
 
-    await typeormFindById(conn as never, FakeEntity, config as never, { id: "a" });
+    await typeormFindById(conn as never, FakeEntity, config as never, { id: "a" }, identityMapper);
 
     expect(repo.findOne).toHaveBeenCalledWith({
       where: { id: "a", dateDeleted: IsNull() },
@@ -314,7 +355,13 @@ describe("typeormFindById", () => {
     const repo = createMockRepo({ findOneResult: null });
     const conn = createMockConn(repo);
 
-    const result = await typeormFindById(conn as never, FakeEntity, config as never, { id: "x" });
+    const result = await typeormFindById(
+      conn as never,
+      FakeEntity,
+      config as never,
+      { id: "x" },
+      identityMapper,
+    );
 
     expect(result).toBeNull();
   });
@@ -343,7 +390,13 @@ describe("typeormFindById", () => {
     const repo = createMockRepo({ findOneResult: entity("a") });
     const conn = createMockConn(repo);
 
-    await typeormFindById(conn as never, FakeEntity, noSoftDeleteConfig as never, { id: "a" });
+    await typeormFindById(
+      conn as never,
+      FakeEntity,
+      noSoftDeleteConfig as never,
+      { id: "a" },
+      identityMapper,
+    );
 
     expect(repo.findOne).toHaveBeenCalledWith({
       where: { id: "a" },

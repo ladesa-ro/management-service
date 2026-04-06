@@ -21,7 +21,10 @@ import type {
 import { diarioPreferenciaAgrupamentoPaginationSpec } from "@/modules/ensino/diario/domain/queries";
 import type { IDiarioPreferenciaAgrupamentoRepository } from "@/modules/ensino/diario/domain/repositories";
 import { getNowISO } from "@/utils/date";
-import { DiarioPreferenciaAgrupamentoEntity, DiarioPreferenciaAgrupamentoTypeormMapper } from "./typeorm";
+import {
+  DiarioPreferenciaAgrupamentoEntity,
+  DiarioPreferenciaAgrupamentoTypeormMapper,
+} from "./typeorm";
 
 const config = {
   alias: "diario_preferencia_agrupamento",
