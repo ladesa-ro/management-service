@@ -59,7 +59,10 @@ export class ModalidadeTypeOrmRepositoryAdapter implements IModalidadeRepository
 
   async loadById(_accessContext: IAccessContext | null, id: string): Promise<Modalidade | null> {
     const repo = this.appTypeormConnection.getRepository(ModalidadeEntity);
-    const entity = await repo.findOne({ where: { id, dateDeleted: IsNull() } });
+    const entity = await repo.findOne({
+      where: { id, dateDeleted: IsNull() },
+      relations: { imagemCapa: true },
+    });
     if (!entity) return null;
     return Modalidade.load(ModalidadeTypeormMapper.entityToDomain.map(entity));
   }

@@ -83,7 +83,7 @@ export const domainToPersistence = createMapper<ICurso, DeepPartial<CursoEntity>
   quantidadePeriodos: d.quantidadePeriodos,
   campus: d.campus,
   ofertaFormacao: d.ofertaFormacao,
-  imagemCapa: d.imagemCapa,
+  imagemCapa: d.imagemCapa ? pickId(d.imagemCapa) : null,
   dateCreated: d.dateCreated,
   dateUpdated: d.dateUpdated,
   dateDeleted: d.dateDeleted,

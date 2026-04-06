@@ -44,7 +44,7 @@ export const domainToPersistence = createMapper<IDisciplina, DeepPartial<Discipl
     nome: d.nome,
     nomeAbreviado: d.nomeAbreviado,
     cargaHoraria: d.cargaHoraria,
-    imagemCapa: d.imagemCapa,
+    imagemCapa: d.imagemCapa ? pickId(d.imagemCapa) : null,
     dateCreated: d.dateCreated,
     dateUpdated: d.dateUpdated,
     dateDeleted: d.dateDeleted,

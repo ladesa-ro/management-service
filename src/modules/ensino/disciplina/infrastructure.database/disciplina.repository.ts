@@ -55,7 +55,10 @@ export class DisciplinaTypeOrmRepositoryAdapter implements IDisciplinaRepository
 
   async loadById(_accessContext: IAccessContext | null, id: string): Promise<Disciplina | null> {
     const repo = this.appTypeormConnection.getRepository(DisciplinaEntity);
-    const entity = await repo.findOne({ where: { id, dateDeleted: IsNull() } });
+    const entity = await repo.findOne({
+      where: { id, dateDeleted: IsNull() },
+      relations: { imagemCapa: true },
+    });
     if (!entity) return null;
     return Disciplina.load(DisciplinaTypeormMapper.entityToDomain.map(entity));
   }
