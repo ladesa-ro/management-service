@@ -21,7 +21,7 @@ import type {
 import { diarioPreferenciaAgrupamentoPaginationSpec } from "@/modules/ensino/diario/domain/queries";
 import type { IDiarioPreferenciaAgrupamentoRepository } from "@/modules/ensino/diario/domain/repositories";
 import { getNowISO } from "@/utils/date";
-import { DiarioPreferenciaAgrupamentoEntity } from "./typeorm/diario-preferencia-agrupamento.typeorm.entity";
+import { DiarioPreferenciaAgrupamentoEntity, DiarioPreferenciaAgrupamentoTypeormMapper } from "./typeorm";
 
 const config = {
   alias: "diario_preferencia_agrupamento",
@@ -115,6 +115,7 @@ export class DiarioPreferenciaAgrupamentoTypeOrmRepositoryAdapter
       { ...config, paginateConfig: diarioPreferenciaAgrupamentoPaginateConfig },
       this.paginationAdapter,
       dto,
+      DiarioPreferenciaAgrupamentoTypeormMapper.entityToFindOneQueryResult.map,
     );
   }
 
@@ -131,6 +132,7 @@ export class DiarioPreferenciaAgrupamentoTypeOrmRepositoryAdapter
       DiarioPreferenciaAgrupamentoEntity,
       { ...config, paginateConfig: diarioPreferenciaAgrupamentoPaginateConfig },
       dto,
+      DiarioPreferenciaAgrupamentoTypeormMapper.entityToFindOneQueryResult.map,
     );
   }
 

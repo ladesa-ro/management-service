@@ -52,7 +52,7 @@ export class CalendarioLetivoUpdateCommandHandlerImpl
     if (has(dto, "campus") && dto.campus !== undefined) {
       const campus = await this.campusFindOneHandler.execute(accessContext, { id: dto.campus.id });
       ensureExists(campus, Campus.entityName, dto.campus.id);
-      domain.campus = { id: campus.id } as CalendarioLetivo["campus"];
+      domain.campus = { id: campus.id };
     }
     if (has(dto, "ofertaFormacao") && dto.ofertaFormacao !== undefined) {
       if (dto.ofertaFormacao) {
@@ -60,7 +60,7 @@ export class CalendarioLetivoUpdateCommandHandlerImpl
           id: dto.ofertaFormacao.id,
         });
         ensureExists(ofertaFormacao, OfertaFormacao.entityName, dto.ofertaFormacao.id);
-        domain.ofertaFormacao = { id: ofertaFormacao.id } as CalendarioLetivo["ofertaFormacao"];
+        domain.ofertaFormacao = { id: ofertaFormacao.id };
       } else {
         domain.ofertaFormacao = null;
       }
@@ -91,7 +91,7 @@ export class CalendarioLetivoUpdateCommandHandlerImpl
           calendarioLetivo: { id: dto.id },
           ofertaFormacaoPeriodoEtapa: { id: item.ofertaFormacaoPeriodoEtapaId },
           nome: snapshot.nome,
-          cor: snapshot.cor ?? "",
+          cor: snapshot.cor,
           ordem: snapshot.ordem,
           numeroPeriodo: snapshot.numeroPeriodo,
           dataInicio: item.dataInicio,

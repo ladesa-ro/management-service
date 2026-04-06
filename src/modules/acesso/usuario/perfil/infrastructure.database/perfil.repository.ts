@@ -61,6 +61,7 @@ export class PerfilTypeOrmRepositoryAdapter implements IPerfilRepository {
       { ...config, paginateConfig: perfilPaginateConfig },
       this.paginationAdapter,
       dto,
+      PerfilTypeormMapper.entityToFindOneQueryResult.map,
     );
   }
 
@@ -70,6 +71,7 @@ export class PerfilTypeOrmRepositoryAdapter implements IPerfilRepository {
       PerfilEntity,
       { ...config, paginateConfig: perfilPaginateConfig },
       dto,
+      PerfilTypeormMapper.entityToFindOneQueryResult.map,
     );
   }
 

@@ -15,7 +15,7 @@ import type {
 } from "@/modules/armazenamento/imagem-arquivo/domain/queries";
 import { imagemArquivoPaginationSpec } from "@/modules/armazenamento/imagem-arquivo/domain/queries";
 import type { IImagemArquivoQueryRepository } from "@/modules/armazenamento/imagem-arquivo/domain/repositories";
-import { ImagemArquivoEntity } from "./typeorm/imagem-arquivo.typeorm.entity";
+import { ImagemArquivoEntity, ImagemArquivoTypeormMapper } from "./typeorm";
 
 const config = {
   alias: "imagem_arquivo",
@@ -53,6 +53,7 @@ export class ImagemArquivoQueryTypeOrmRepositoryAdapter implements IImagemArquiv
       { ...config, paginateConfig: imagemArquivoPaginateConfig },
       this.paginationAdapter,
       dto,
+      ImagemArquivoTypeormMapper.entityToFindOneQueryResult.map,
     );
   }
 
@@ -66,6 +67,7 @@ export class ImagemArquivoQueryTypeOrmRepositoryAdapter implements IImagemArquiv
       ImagemArquivoEntity,
       { ...config, paginateConfig: imagemArquivoPaginateConfig },
       dto,
+      ImagemArquivoTypeormMapper.entityToFindOneQueryResult.map,
     );
   }
 }

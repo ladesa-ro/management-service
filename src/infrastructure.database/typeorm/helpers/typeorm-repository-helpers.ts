@@ -93,7 +93,7 @@ export async function typeormFindAll<Entity extends IEntityWithId, ListInputDto,
   config: TypeormResourceConfig<Entity>,
   paginationAdapter: NestJsPaginateAdapter,
   dto: ListInputDto | null,
-  mapEntity?: (entity: Entity) => unknown,
+  mapEntity: (entity: Entity) => unknown,
 ): Promise<ListOutputDto> {
   const repo = getRepository(conn, entity);
   const qb = repo.createQueryBuilder(config.alias);
@@ -138,9 +138,7 @@ export async function typeormFindAll<Entity extends IEntityWithId, ListInputDto,
   );
 
   if (paginated.data.length === 0 || !relations) {
-    if (mapEntity) {
-      (paginated as { data: unknown[] }).data = paginated.data.map(mapEntity);
-    }
+    (paginated as { data: unknown[] }).data = paginated.data.map(mapEntity);
     return paginated as unknown as ListOutputDto;
   }
 
@@ -161,9 +159,7 @@ export async function typeormFindAll<Entity extends IEntityWithId, ListInputDto,
     .map((id) => entityMap.get(id))
     .filter((e): e is Entity => e !== undefined);
 
-  (paginated as { data: unknown[] }).data = mapEntity
-    ? orderedEntities.map(mapEntity)
-    : orderedEntities;
+  (paginated as { data: unknown[] }).data = orderedEntities.map(mapEntity);
 
   return paginated as unknown as ListOutputDto;
 }
@@ -177,7 +173,7 @@ export async function typeormFindById<
   entity: EntityTarget<Entity>,
   config: Pick<TypeormResourceConfig<Entity>, "alias" | "hasSoftDelete" | "paginateConfig">,
   dto: FindOneQuery,
-  mapEntity?: (entity: Entity) => unknown,
+  mapEntity: (entity: Entity) => FindOneOutputDto,
 ): Promise<FindOneOutputDto | null> {
   const repo = getRepository(conn, entity);
   const hasSoftDelete = config.hasSoftDelete ?? true;
@@ -194,11 +190,7 @@ export async function typeormFindById<
 
   if (!result) return null;
 
-  if (mapEntity) {
-    return mapEntity(result) as FindOneOutputDto;
-  }
-
-  return result as unknown as FindOneOutputDto;
+  return mapEntity(result);
 }
 
 export async function typeormCreate<Entity extends IEntityWithId>(

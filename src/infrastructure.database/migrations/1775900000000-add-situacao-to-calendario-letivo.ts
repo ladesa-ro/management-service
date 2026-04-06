@@ -1,4 +1,4 @@
-import { MigrationInterface, QueryRunner, TableColumn } from "typeorm";
+import { type MigrationInterface, type QueryRunner, TableColumn } from "typeorm";
 
 export class AddSituacaoToCalendarioLetivo1775900000000 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {

@@ -20,7 +20,7 @@ import {
 } from "@/modules/ensino/diario/domain/queries";
 import type { IDiarioProfessorRepository } from "@/modules/ensino/diario/domain/repositories";
 import { getNowISO } from "@/utils/date";
-import { DiarioProfessorEntity } from "./typeorm/diario-professor.typeorm.entity";
+import { DiarioProfessorEntity, DiarioProfessorTypeormMapper } from "./typeorm";
 
 const config = {
   alias: "diario_professor",
@@ -121,6 +121,7 @@ export class DiarioProfessorTypeOrmRepositoryAdapter implements IDiarioProfessor
       { ...config, paginateConfig: diarioProfessorPaginateConfig },
       this.paginationAdapter,
       dto,
+      DiarioProfessorTypeormMapper.entityToFindOneQueryResult.map,
     );
   }
 
@@ -134,6 +135,7 @@ export class DiarioProfessorTypeOrmRepositoryAdapter implements IDiarioProfessor
       DiarioProfessorEntity,
       { ...config, paginateConfig: diarioProfessorPaginateConfig },
       dto,
+      DiarioProfessorTypeormMapper.entityToFindOneQueryResult.map,
     );
   }
 
