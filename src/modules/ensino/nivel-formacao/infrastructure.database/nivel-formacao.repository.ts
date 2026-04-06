@@ -59,7 +59,10 @@ export class NivelFormacaoTypeOrmRepositoryAdapter implements INivelFormacaoRepo
 
   async loadById(_accessContext: IAccessContext | null, id: string): Promise<NivelFormacao | null> {
     const repo = this.appTypeormConnection.getRepository(NivelFormacaoEntity);
-    const entity = await repo.findOne({ where: { id, dateDeleted: IsNull() } });
+    const entity = await repo.findOne({
+      where: { id, dateDeleted: IsNull() },
+      relations: { imagemCapa: true },
+    });
     if (!entity) return null;
     return NivelFormacao.load(NivelFormacaoTypeormMapper.entityToDomain.map(entity));
   }
