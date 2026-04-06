@@ -69,6 +69,7 @@ export class UsuarioTypeOrmRepositoryAdapter implements IUsuarioRepository {
       { ...config, paginateConfig: usuarioPaginateConfig },
       this.paginationAdapter,
       dto,
+      UsuarioTypeormMapper.entityToFindOneQueryResult.map,
     );
   }
 
@@ -78,6 +79,7 @@ export class UsuarioTypeOrmRepositoryAdapter implements IUsuarioRepository {
       UsuarioEntity,
       { ...config, paginateConfig: usuarioPaginateConfig },
       dto,
+      UsuarioTypeormMapper.entityToFindOneQueryResult.map,
     );
   }
 

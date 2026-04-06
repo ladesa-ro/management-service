@@ -120,6 +120,7 @@ export class CalendarioLetivoDiaTypeOrmRepositoryAdapter implements ICalendarioL
       CalendarioLetivoDiaEntity,
       { ...config, paginateConfig: calendarioLetivoDiaPaginateConfig },
       dto,
+      CalendarioLetivoDiaTypeormMapper.entityToFindOneQueryResult.map,
     );
   }
 
@@ -137,6 +138,7 @@ export class CalendarioLetivoDiaTypeOrmRepositoryAdapter implements ICalendarioL
       { ...config, paginateConfig: calendarioLetivoDiaPaginateConfig },
       this.paginationAdapter,
       dto,
+      CalendarioLetivoDiaTypeormMapper.entityToFindOneQueryResult.map,
     );
   }
 
