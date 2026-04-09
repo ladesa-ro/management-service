@@ -20,6 +20,7 @@ export const diarioPaginationSpec: IPaginationSpec = {
   defaultSortBy: [],
   filterableColumns: {
     "turma.id": [PaginationFilter.EQ],
+    "turma.curso.campus.id": [PaginationFilter.EQ],
     "disciplina.id": [PaginationFilter.EQ],
     "ambientePadrao.id": [PaginationFilter.EQ],
   },

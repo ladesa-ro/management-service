@@ -8,6 +8,10 @@ import {
 export const DiarioListQueryFields = {
   ...SharedListFields,
   filterTurmaId: createFieldMetadata({ description: "Filtro por ID da Turma", nullable: true }),
+  filterTurmaCursoCampusId: createFieldMetadata({
+    description: "Filtro por ID do Campus do Curso da Turma",
+    nullable: true,
+  }),
   filterDisciplinaId: createFieldMetadata({
     description: "Filtro por ID da Disciplina",
     nullable: true,
@@ -25,6 +29,7 @@ export const DiarioListQueryFields = {
 export class DiarioListQuery extends PaginationQuery {
   "filter.id"?: IFilterAcceptableValues;
   "filter.turma.id"?: IFilterAcceptableValues;
+  "filter.turma.curso.campus.id"?: IFilterAcceptableValues;
   "filter.disciplina.id"?: IFilterAcceptableValues;
   "filter.calendarioLetivo.id"?: IFilterAcceptableValues;
 }
