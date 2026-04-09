@@ -96,6 +96,10 @@ export class DiarioListInputRestDto extends PaginatedFilterByIdRestDto {
   @TransformToArray()
   "filter.turma.id"?: string[];
 
+  @ApiPropertyOptional(DiarioListQueryFields.filterTurmaCursoCampusId.swaggerMetadata)
+  @TransformToArray()
+  "filter.turma.curso.campus.id"?: string[];
+
   @ApiPropertyOptional(DiarioListQueryFields.filterDisciplinaId.swaggerMetadata)
   @TransformToArray()
   "filter.disciplina.id"?: string[];

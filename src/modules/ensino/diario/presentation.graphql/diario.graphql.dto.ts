@@ -192,6 +192,9 @@ export class DiarioListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {
   @Field(() => [String], DiarioListQueryFields.filterTurmaId.gqlMetadata)
   filterTurmaId?: string[];
 
+  @Field(() => [String], DiarioListQueryFields.filterTurmaCursoCampusId.gqlMetadata)
+  filterTurmaCursoCampusId?: string[];
+
   @Field(() => [String], DiarioListQueryFields.filterDisciplinaId.gqlMetadata)
   filterDisciplinaId?: string[];
 
