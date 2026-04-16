@@ -26,7 +26,7 @@
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.3",
     "jwks-rsa": "^4.0.1",
-    "lodash": "^4.17.23",
+    "lodash": "^4.18.1",
     "lru-cache": "^11.2.6",
     "nestjs-paginate": "^12.9.0",
     "openid-client": "^6.8.2",
