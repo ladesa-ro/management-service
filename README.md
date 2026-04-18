@@ -2347,6 +2347,7 @@ graph LR
 
 **O que contém:**
 - **Controllers REST** — recebem HTTP, validam DTO (via Zod pipe), extraem `AccessContext`, delegam para handler. Sempre com `@ApiTags` e `@ApiOperation` para documentação Swagger.
+- **Importação em lote** — o módulo de usuários expõe `POST /usuarios/importar/csv` para upload de CSV (`multipart/form-data`), criando usuários com o campo `E-mail Pessoal` e sem exigir senha inicial.
 - **Resolvers GraphQL** — equivalente ao controller, mas para queries/mutations GraphQL. Reutilizam os mesmos handlers.
 - **DTOs de entrada** — classes com `static schema` (Zod) para validação automática. O schema é reutilizado do domínio.
 - **DTOs de saída** — definem a forma da resposta (REST com tipos TypeScript, GraphQL com `@ObjectType`/`@Field`).
