@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -14,6 +15,7 @@ import {
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import {
+  ApiBadRequestResponse,
   ApiBody,
   ApiConsumes,
   ApiCreatedResponse,
@@ -79,11 +81,14 @@ import {
   HorarioSemanalQueryParamsRestDto,
 } from "@/modules/calendario/horario-consulta/presentation.rest";
 import { AccessContextHttp } from "@/server/nest/access-context";
+import { parseUsuarioImportCsv } from "../application/helpers/usuario-import-csv.helper";
 import {
   UsuarioCreateInputRestDto,
   UsuarioEnsinoOutputRestDto,
   UsuarioFindOneInputRestDto,
   UsuarioFindOneOutputRestDto,
+  UsuarioImportCsvItemRestDto,
+  UsuarioImportCsvOutputRestDto,
   UsuarioListInputRestDto,
   UsuarioListOutputRestDto,
   UsuarioUpdateInputRestDto,
@@ -173,6 +178,95 @@ export class UsuarioRestController {
     const command = UsuarioRestMapper.createInputDtoToCreateCommand.map(dto);
     const queryResult = await this.createHandler.execute(accessContext, command);
     return UsuarioRestMapper.findOneQueryResultToOutputDto.map(queryResult);
+  }
+
+  @Post("/importar/csv")
+  @ApiOperation({
+    operationId: "usuarioImportCsv",
+    summary: "Importa varios usuarios a partir de um CSV",
+  })
+  @ApiConsumes("multipart/form-data")
+  @ApiBody({
+    schema: {
+      type: "object",
+      properties: {
+        file: { type: "string", format: "binary" },
+      },
+      required: ["file"],
+    },
+  })
+  @ApiCreatedResponse({ type: UsuarioImportCsvOutputRestDto })
+  @ApiBadRequestResponse()
+  @ApiForbiddenResponse()
+  @UseInterceptors(FileInterceptor("file"))
+  async importCsv(
+    @AccessContextHttp() accessContext: IAccessContext,
+    @UploadedFile() file: Express.Multer.File,
+  ): Promise<UsuarioImportCsvOutputRestDto> {
+    if (!file?.buffer) {
+      throw new BadRequestException("Arquivo CSV não informado.");
+    }
+
+    const content = file.buffer.toString("utf8");
+    const parsed = (() => {
+      try {
+        return parseUsuarioImportCsv(content);
+      } catch (error) {
+        throw new BadRequestException(error instanceof Error ? error.message : "CSV inválido.");
+      }
+    })();
+
+    const items: UsuarioImportCsvItemRestDto[] = parsed.skipped.map((row) => {
+      const item = new UsuarioImportCsvItemRestDto();
+      item.line = row.line;
+      item.nome = "";
+      item.matricula = "";
+      item.emailPessoal = "";
+      item.status = "skipped";
+      item.reason = row.reason;
+      return item;
+    });
+
+    let created = 0;
+    let failed = 0;
+
+    for (const row of parsed.entries) {
+      try {
+        const queryResult = await this.createHandler.execute(accessContext, {
+          nome: row.nome,
+          matricula: row.matricula,
+          email: row.emailPessoal,
+        });
+
+        const item = new UsuarioImportCsvItemRestDto();
+        item.line = row.line;
+        item.nome = row.nome;
+        item.matricula = row.matricula;
+        item.emailPessoal = row.emailPessoal;
+        item.status = "created";
+        item.usuarioId = queryResult.id;
+        items.push(item);
+        created += 1;
+      } catch (error) {
+        const item = new UsuarioImportCsvItemRestDto();
+        item.line = row.line;
+        item.nome = row.nome;
+        item.matricula = row.matricula;
+        item.emailPessoal = row.emailPessoal;
+        item.status = "failed";
+        item.reason = error instanceof Error ? error.message : "Falha ao cadastrar usuario.";
+        items.push(item);
+        failed += 1;
+      }
+    }
+
+    return {
+      total: parsed.totalRows,
+      created,
+      skipped: parsed.skipped.length,
+      failed,
+      items,
+    };
   }
 
   @Patch("/:id")
