@@ -170,6 +170,48 @@ export class UsuarioListOutputRestDto {
   data: UsuarioFindOneOutputRestDto[];
 }
 
+@ApiSchema({ name: "UsuarioImportCsvItemDto" })
+export class UsuarioImportCsvItemRestDto {
+  @ApiProperty()
+  line: number;
+
+  @ApiProperty()
+  nome: string;
+
+  @ApiProperty()
+  matricula: string;
+
+  @ApiProperty()
+  emailPessoal: string;
+
+  @ApiProperty()
+  status: "created" | "skipped" | "failed";
+
+  @ApiPropertyOptional()
+  usuarioId?: string;
+
+  @ApiPropertyOptional()
+  reason?: string;
+}
+
+@ApiSchema({ name: "UsuarioImportCsvOutputDto" })
+export class UsuarioImportCsvOutputRestDto {
+  @ApiProperty()
+  total: number;
+
+  @ApiProperty()
+  created: number;
+
+  @ApiProperty()
+  skipped: number;
+
+  @ApiProperty()
+  failed: number;
+
+  @ApiProperty({ type: () => [UsuarioImportCsvItemRestDto] })
+  items: UsuarioImportCsvItemRestDto[];
+}
+
 // ============================================================================
 // Create/Update Input
 // ============================================================================
