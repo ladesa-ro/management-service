@@ -9,7 +9,14 @@
 import { z } from "zod";
 import { createFieldMetadata, createSchema, safeInt } from "@/domain/abstractions";
 
-export const EstagioStatusValues = ["ABERTA", "EM_ANDAMENTO", "CONCLUIDA"] as const;
+export const EstagioStatusValues = [
+  "EM_FASE_INICIAL",
+  "EM_ANDAMENTO",
+  "RESCINDIDO",
+  "COM_PENDENCIA",
+  "ENCERRADO",
+  "APTO_PARA_ENCERRAMENTO",
+] as const;
 
 export const EstagioStatusSchema = z.enum(EstagioStatusValues);
 
@@ -19,6 +26,10 @@ export const EstagioFields = {
   }),
   estagiario: createFieldMetadata({
     description: "Estagiário (opcional enquanto a vaga estiver aberta)",
+    nullable: true,
+  }),
+  usuarioOrientador: createFieldMetadata({
+    description: "Usuário orientador do estágio",
     nullable: true,
   }),
   cargaHoraria: createFieldMetadata({
@@ -38,6 +49,30 @@ export const EstagioFields = {
   status: createFieldMetadata({
     description: "Status do estágio",
     schema: createSchema(() => EstagioStatusSchema),
+  }),
+  nomeSupervisor: createFieldMetadata({
+    description: "Nome do supervisor",
+    schema: createSchema(() => z.string().max(255)),
+    nullable: true,
+  }),
+  emailSupervisor: createFieldMetadata({
+    description: "Email do supervisor",
+    schema: createSchema(() => z.string().email().max(255)),
+    nullable: true,
+  }),
+  telefoneSupervisor: createFieldMetadata({
+    description: "Telefone do supervisor",
+    schema: createSchema(() => z.string().max(20)),
+    nullable: true,
+  }),
+  aditivo: createFieldMetadata({
+    description: "Se há aditivo ao contrato",
+    schema: createSchema(() => z.boolean()),
+  }),
+  tipoAditivo: createFieldMetadata({
+    description: "Tipo de aditivo",
+    schema: createSchema(() => z.string().max(255)),
+    nullable: true,
   }),
   horariosEstagio: createFieldMetadata({
     description: "Horários do estágio",
