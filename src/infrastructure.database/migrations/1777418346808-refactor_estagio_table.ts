@@ -56,6 +56,14 @@ export class RefactorEstagioTable1777418346808 implements MigrationInterface {
             }),
         );
 
+                await queryRunner.query(`
+                    ALTER TYPE estagio_status_enum ADD VALUE IF NOT EXISTS 'EM_FASE_INICIAL';
+                    ALTER TYPE estagio_status_enum ADD VALUE IF NOT EXISTS 'RESCINDIDO';
+                    ALTER TYPE estagio_status_enum ADD VALUE IF NOT EXISTS 'COM_PENDENCIA';
+                    ALTER TYPE estagio_status_enum ADD VALUE IF NOT EXISTS 'ENCERRADO';
+                    ALTER TYPE estagio_status_enum ADD VALUE IF NOT EXISTS 'APTO_PARA_ENCERRAMENTO';
+                `);
+
         await queryRunner.manager
             .createQueryBuilder()
             .update("estagio")
@@ -78,8 +86,10 @@ export class RefactorEstagioTable1777418346808 implements MigrationInterface {
                 type: "enum",
                 enumName: "estagio_status_enum",
                 enum: [
-                    "EM_FASE_INICIAL",
+                    "ABERTA",
                     "EM_ANDAMENTO",
+                    "CONCLUIDA",
+                    "EM_FASE_INICIAL",
                     "RESCINDIDO",
                     "COM_PENDENCIA",
                     "ENCERRADO",
@@ -120,7 +130,16 @@ export class RefactorEstagioTable1777418346808 implements MigrationInterface {
                 name: "status",
                 type: "enum",
                 enumName: "estagio_status_enum",
-                enum: ["ABERTA", "EM_ANDAMENTO", "CONCLUIDA"],
+                enum: [
+                    "ABERTA",
+                    "EM_ANDAMENTO",
+                    "CONCLUIDA",
+                    "EM_FASE_INICIAL",
+                    "RESCINDIDO",
+                    "COM_PENDENCIA",
+                    "ENCERRADO",
+                    "APTO_PARA_ENCERRAMENTO",
+                ],
                 isNullable: false,
                 default: "'ABERTA'",
             }),
