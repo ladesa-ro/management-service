@@ -4,6 +4,7 @@ export interface EstagiarioImportCsvEntry {
   matricula: string;
   emailPessoal?: string;
   emailAcademico?: string;
+  periodoReferencia?: string;
   curso?: string;
   campus?: string;
   telefoneEstagiario?: string;
@@ -154,6 +155,7 @@ export function parseEstagiariosCsv(content: string): EstagiarioImportCsvParseRe
   const nomeIndex = findIndex(["estagiario", "estudante"]);
   const emailPessoalIndex = findIndex(["emailpessoal"]);
   const emailAcademicoIndex = findIndex(["emailacademico"]);
+  const periodoReferenciaIndex = findIndex(["periododereferencia", "periodoreferencia"]);
   const cursoIndex = findIndex(["curso"]);
   const campusIndex = findIndex(["campus"]);
   const concedenteIndex = findIndex(["concedente"]);
@@ -181,6 +183,7 @@ export function parseEstagiariosCsv(content: string): EstagiarioImportCsvParseRe
     const { nome, matricula } = extractNameAndMatricula(nomeField || "");
     const emailPessoal = emailPessoalIndex !== -1 ? getCell(row, emailPessoalIndex) : "";
     const emailAcademico = emailAcademicoIndex !== -1 ? getCell(row, emailAcademicoIndex) : "";
+    const periodoReferencia = periodoReferenciaIndex !== -1 ? getCell(row, periodoReferenciaIndex) : "";
     const curso = cursoIndex !== -1 ? getCell(row, cursoIndex) : "";
     const campus = campusIndex !== -1 ? getCell(row, campusIndex) : "";
     const concedenteNome = concedenteIndex !== -1 ? getCell(row, concedenteIndex) : "";
@@ -211,6 +214,7 @@ export function parseEstagiariosCsv(content: string): EstagiarioImportCsvParseRe
       matricula,
       emailPessoal,
       emailAcademico,
+      periodoReferencia,
       curso,
       campus,
       telefoneEstagiario: "",
