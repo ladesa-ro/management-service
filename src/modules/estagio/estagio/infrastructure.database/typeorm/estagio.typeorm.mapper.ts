@@ -85,10 +85,21 @@ export const entityToFindOneQueryResult = createMapper<
   id: entity.id,
   empresa: { id: entity.empresa.id },
   estagiario: entity.estagiario ? { id: entity.estagiario.id } : null,
+
+  usuarioOrientador: entity.usuarioOrientador ? { id: entity.usuarioOrientador.id } : null,
+
+  nomeSupervisor: entity.nomeSupervisor,
+  emailSupervisor: entity.emailSupervisor,
+  telefoneSupervisor: entity.telefoneSupervisor,
+
+  aditivo: entity.aditivo,
+  tipoAditivo: entity.tipoAditivo,
+
   cargaHoraria: entity.cargaHoraria,
   dataInicio: entity.dataInicio,
   dataFim: entity.dataFim,
   status: entity.status,
+
   horariosEstagio: (entity.horariosEstagio ?? [])
     .filter((horario) => !horario.dateDeleted)
     .map((horario) => ({
@@ -97,6 +108,7 @@ export const entityToFindOneQueryResult = createMapper<
       horaInicio: horario.horaInicio,
       horaFim: horario.horaFim,
     })),
+
   ativo: !entity.dateDeleted,
   dateCreated: entity.dateCreated,
   dateUpdated: entity.dateUpdated,

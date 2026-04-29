@@ -184,10 +184,16 @@ export class EstagioCreateInputGraphQlDto {
   @Field(() => String, { nullable: true, ...EstagioCreateCommandFields.nomeSupervisor.gqlMetadata })
   nomeSupervisor?: string;
 
-  @Field(() => String, { nullable: true, ...EstagioCreateCommandFields.emailSupervisor.gqlMetadata })
+  @Field(() => String, {
+    nullable: true,
+    ...EstagioCreateCommandFields.emailSupervisor.gqlMetadata,
+  })
   emailSupervisor?: string;
 
-  @Field(() => String, { nullable: true, ...EstagioCreateCommandFields.telefoneSupervisor.gqlMetadata })
+  @Field(() => String, {
+    nullable: true,
+    ...EstagioCreateCommandFields.telefoneSupervisor.gqlMetadata,
+  })
   telefoneSupervisor?: string;
 
   @Field(() => Boolean, { nullable: true, ...EstagioCreateCommandFields.aditivo.gqlMetadata })
@@ -240,10 +246,16 @@ export class EstagioUpdateInputGraphQlDto {
   @Field(() => String, { nullable: true, ...EstagioUpdateCommandFields.nomeSupervisor.gqlMetadata })
   nomeSupervisor?: string;
 
-  @Field(() => String, { nullable: true, ...EstagioUpdateCommandFields.emailSupervisor.gqlMetadata })
+  @Field(() => String, {
+    nullable: true,
+    ...EstagioUpdateCommandFields.emailSupervisor.gqlMetadata,
+  })
   emailSupervisor?: string;
 
-  @Field(() => String, { nullable: true, ...EstagioUpdateCommandFields.telefoneSupervisor.gqlMetadata })
+  @Field(() => String, {
+    nullable: true,
+    ...EstagioUpdateCommandFields.telefoneSupervisor.gqlMetadata,
+  })
   telefoneSupervisor?: string;
 
   @Field(() => Boolean, { nullable: true, ...EstagioUpdateCommandFields.aditivo.gqlMetadata })
