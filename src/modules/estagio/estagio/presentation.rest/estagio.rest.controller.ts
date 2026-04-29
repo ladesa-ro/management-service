@@ -19,6 +19,8 @@ import {
   EstagioDeleteCommandMetadata,
   IEstagioDeleteCommandHandler,
 } from "@/modules/estagio/estagio/domain/commands/estagio-delete.command.handler.interface";
+import { EstagioImportBulkCommand } from "@/modules/estagio/estagio/domain/commands/estagio-import-bulk.command";
+import { IEstagioImportBulkCommandHandler } from "@/modules/estagio/estagio/domain/commands/estagio-import-bulk.command.handler.interface";
 import {
   EstagioUpdateCommandMetadata,
   IEstagioUpdateCommandHandler,
@@ -37,6 +39,8 @@ import {
   EstagioCreateInputRestDto,
   EstagioFindOneInputRestDto,
   EstagioFindOneOutputRestDto,
+  EstagioImportBulkInputRestDto,
+  EstagioImportBulkOutputRestDto,
   EstagioListInputRestDto,
   EstagioListOutputRestDto,
   EstagioUpdateInputRestDto,
@@ -95,6 +99,27 @@ export class EstagioRestController {
     const command = EstagioRestMapper.createInputDtoToCreateCommand.map(dto);
     const queryResult = await createHandler.execute(accessContext, command);
     return EstagioRestMapper.findOneQueryResultToOutputDto.map(queryResult);
+  }
+
+  @Post("/import-bulk")
+  @ApiOperation({
+    summary: "Importar estágios em massa",
+    description:
+      "Importa múltiplos estágios de uma vez. Valida matrícula de usuário, perfis, curso e empresa.",
+  })
+  @ApiBody({ type: EstagioImportBulkInputRestDto })
+  @ApiCreatedResponse({ type: EstagioImportBulkOutputRestDto })
+  @ApiForbiddenResponse()
+  async importBulk(
+    @AccessContextHttp() accessContext: IAccessContext,
+    @Body() dto: EstagioImportBulkInputRestDto,
+  ): Promise<EstagioImportBulkOutputRestDto> {
+    const bulkHandler = this.container.get<IEstagioImportBulkCommandHandler>(
+      IEstagioImportBulkCommandHandler,
+    );
+    const command = new EstagioImportBulkCommand(dto.items);
+    const result = await bulkHandler.execute(accessContext, command);
+    return result;
   }
 
   @Patch("/:id")
