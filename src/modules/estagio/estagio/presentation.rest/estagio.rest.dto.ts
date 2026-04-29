@@ -222,3 +222,103 @@ export class EstagioListOutputRestDto {
   @ApiProperty(SharedFields.limit.swaggerMetadata)
   limit!: number;
 }
+
+// ============================================================================
+// Bulk Import
+// ============================================================================
+
+@ApiSchema({ name: "EstagioImportBulkItemInputDto" })
+export class EstagioImportBulkItemInputRestDto {
+  @ApiProperty({ type: "string", description: "Matrícula do estagiário" })
+  matriculaEstagiario!: string;
+
+  @ApiProperty({ type: "string", description: "Nome do estagiário" })
+  nomeEstagiario!: string;
+
+  @ApiProperty({ type: "string", description: "Email pessoal do estagiário" })
+  emailPessoal!: string;
+
+  @ApiPropertyOptional({ type: "string", description: "Email acadêmico do estagiário" })
+  emailAcademico?: string;
+
+  @ApiProperty({ type: "string", description: "Nome do curso" })
+  curso!: string;
+
+  @ApiProperty({ type: "string", description: "Nome do campus" })
+  campus!: string;
+
+  @ApiProperty({ type: "string", format: "uuid", description: "ID da empresa concedente" })
+  empresaId!: string;
+
+  @ApiProperty({ type: "string", description: "Nome do supervisor" })
+  nomeSupervisor!: string;
+
+  @ApiProperty({ type: "string", description: "Email do supervisor" })
+  emailSupervisor!: string;
+
+  @ApiProperty({ type: "string", description: "Telefone do supervisor" })
+  telefoneSupervisor!: string;
+
+  @ApiProperty({ type: "number", description: "Carga horária semanal" })
+  cargaHoraria!: number;
+
+  @ApiProperty({ type: "string", format: "date", description: "Data de início (YYYY-MM-DD)" })
+  dataInicio!: string;
+
+  @ApiProperty({ type: "string", format: "date", description: "Data de término (YYYY-MM-DD)" })
+  dataFim!: string;
+}
+
+@ApiSchema({ name: "EstagioImportBulkInputDto" })
+export class EstagioImportBulkInputRestDto {
+  @ApiProperty({
+    type: () => [EstagioImportBulkItemInputRestDto],
+    description: "Lista de estágios a importar",
+  })
+  items!: EstagioImportBulkItemInputRestDto[];
+}
+
+@ApiSchema({ name: "EstagioImportBulkResultItemDto" })
+export class EstagioImportBulkResultItemRestDto {
+  @ApiProperty({ type: "number", description: "Número da linha no batch" })
+  line!: number;
+
+  @ApiProperty({ type: "string", description: "Matrícula do estagiário" })
+  matriculaEstagiario!: string;
+
+  @ApiProperty({ type: "string", description: "Nome do estagiário" })
+  nomeEstagiario!: string;
+
+  @ApiProperty({
+    enum: ["created", "skipped", "failed"],
+    description: "Status do processamento",
+  })
+  status!: "created" | "skipped" | "failed";
+
+  @ApiPropertyOptional({ type: "string", description: "ID do estágio criado" })
+  estágioId?: string;
+
+  @ApiPropertyOptional({ type: "string", description: "Motivo da falha ou skip" })
+  reason?: string;
+}
+
+@ApiSchema({ name: "EstagioImportBulkOutputDto" })
+export class EstagioImportBulkOutputRestDto {
+  @ApiProperty({ type: "number", description: "Total de registros processados" })
+  total!: number;
+
+  @ApiProperty({ type: "number", description: "Quantidade de estágios criados" })
+  created!: number;
+
+  @ApiProperty({ type: "number", description: "Quantidade de registros pulados" })
+  skipped!: number;
+
+  @ApiProperty({ type: "number", description: "Quantidade de registros com falha" })
+  failed!: number;
+
+  @ApiProperty({
+    type: () => [EstagioImportBulkResultItemRestDto],
+    description: "Detalhes de cada item processado",
+  })
+  items!: EstagioImportBulkResultItemRestDto[];
+}
