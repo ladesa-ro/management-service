@@ -46,7 +46,8 @@ import { EnderecoModule } from "@/modules/localidades/endereco/endereco.module";
     // Queries
     { provide: ICampusListQueryHandler, useClass: CampusListQueryHandlerImpl },
     { provide: ICampusFindOneQueryHandler, useClass: CampusFindOneQueryHandlerImpl },
+    { provide: ICampusListQueryHandler, useClass: CampusListQueryHandlerImpl}
   ],
-  exports: [ICampusFindOneQueryHandler],
+  exports: [ICampusFindOneQueryHandler, ICampusListQueryHandler],
 })
 export class CampusModule {}
