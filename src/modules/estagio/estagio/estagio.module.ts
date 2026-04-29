@@ -29,9 +29,10 @@ import { IEstagioRepository } from "@/modules/estagio/estagio/domain/repositorie
 import { EstagioTypeOrmRepositoryAdapter } from "@/modules/estagio/estagio/infrastructure.database";
 import { EstagioGraphqlResolver } from "@/modules/estagio/estagio/presentation.graphql";
 import { EstagioRestController } from "@/modules/estagio/estagio/presentation.rest/estagio.rest.controller";
+import { OfertaFormacao } from "@/modules/ensino/oferta-formacao";
 
 @Module({
-  imports: [EstagiarioModule, EmpresaModule, UsuarioModule, CursoModule, CampusModule],
+  imports: [EstagiarioModule, EmpresaModule, UsuarioModule, CursoModule, CampusModule, OfertaFormacao],
   controllers: [EstagioRestController],
   providers: [
     NestJsPaginateAdapter,

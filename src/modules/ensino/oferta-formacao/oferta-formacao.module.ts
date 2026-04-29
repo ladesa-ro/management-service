@@ -62,6 +62,10 @@ import { OfertaFormacaoRestController } from "@/modules/ensino/oferta-formacao/p
       provide: IOfertaFormacaoUpdateImagemCapaCommandHandler,
       useClass: OfertaFormacaoUpdateImagemCapaCommandHandlerImpl,
     },
+    {
+      provide: IOfertaFormacaoListQueryHandler,
+      useClass: OfertaFormacaoListQueryHandlerImpl,
+    },
     // OfertaFormacao Queries
     { provide: IOfertaFormacaoListQueryHandler, useClass: OfertaFormacaoListQueryHandlerImpl },
     {

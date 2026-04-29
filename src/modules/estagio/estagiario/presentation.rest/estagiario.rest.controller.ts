@@ -230,6 +230,34 @@ export class EstagiarioRestController {
           perfilId = perfis.data?.[0]?.id ?? null;
         }
 
+        if (!perfilId) {
+          try {
+            if (this.usuarioFindByMatriculaHandler) {
+              const usuario = await this.usuarioFindByMatriculaHandler.execute(accessContext, {
+                matricula: row.matricula,
+              } as any);
+
+              if (usuario && this.campusListHandler) {
+                const campuses = await this.campusListHandler.execute(accessContext, {
+                  search: campusSearch,
+                  limit: 1,
+                } as any);
+                const campusId = campuses.data?.[0]?.id ?? null;
+                if (campusId) {
+                  const created = await this.perfilRepository.create({
+                    cargo: "estagiario",
+                    campus: { id: campusId },
+                    usuario: { id: usuario.id },
+                  } as any);
+                  perfilId = String((created as any).id ?? created.id);
+                }
+              }
+            }
+          } catch (err) {
+            // ignore and keep trying to import the rest of the row
+          }
+        }
+
         const campusId = campusSearch
           ? (
               await this.campusListHandler.execute(accessContext, {
@@ -337,35 +365,6 @@ export class EstagiarioRestController {
 
         // resolve turma
         const turmaId = await resolveOrCreateTurmaId(cursoId);
-
-        if (!perfilId) {
-          // try to create perfil for the user if possible
-          try {
-            if (this.usuarioFindByMatriculaHandler) {
-              const usuario = await this.usuarioFindByMatriculaHandler.execute(accessContext, {
-                matricula: row.matricula,
-              } as any);
-
-              if (usuario && this.campusListHandler) {
-                const campuses = await this.campusListHandler.execute(accessContext, {
-                  search: campusSearch,
-                  limit: 1,
-                } as any);
-                const campusId = campuses.data?.[0]?.id ?? null;
-                if (campusId) {
-                  const created = await this.perfilRepository.create({
-                    cargo: "estagiario",
-                    campus: { id: campusId },
-                    usuario: { id: usuario.id },
-                  } as any);
-                  perfilId = String((created as any).id ?? created.id);
-                }
-              }
-            }
-          } catch (err) {
-            // ignore and fallthrough to standard failure handling
-          }
-        }
 
         if (!perfilId || !cursoId || !turmaId) {
           const reasonParts: string[] = [];
