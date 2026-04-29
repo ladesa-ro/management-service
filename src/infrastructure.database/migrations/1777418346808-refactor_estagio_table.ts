@@ -56,27 +56,13 @@ export class RefactorEstagioTable1777418346808 implements MigrationInterface {
             }),
         );
 
-                await queryRunner.query(`
-                    ALTER TYPE estagio_status_enum ADD VALUE IF NOT EXISTS 'EM_FASE_INICIAL';
-                    ALTER TYPE estagio_status_enum ADD VALUE IF NOT EXISTS 'RESCINDIDO';
-                    ALTER TYPE estagio_status_enum ADD VALUE IF NOT EXISTS 'COM_PENDENCIA';
-                    ALTER TYPE estagio_status_enum ADD VALUE IF NOT EXISTS 'ENCERRADO';
-                    ALTER TYPE estagio_status_enum ADD VALUE IF NOT EXISTS 'APTO_PARA_ENCERRAMENTO';
-                `);
-
-        await queryRunner.manager
-            .createQueryBuilder()
-            .update("estagio")
-            .set({ status: "EM_FASE_INICIAL" })
-            .where("status = :status", { status: "ABERTA" })
-            .execute();
-
-        await queryRunner.manager
-            .createQueryBuilder()
-            .update("estagio")
-            .set({ status: "ENCERRADO" })
-            .where("status = :status", { status: "CONCLUIDA" })
-            .execute();
+        await queryRunner.query(`
+            ALTER TYPE estagio_status_enum ADD VALUE IF NOT EXISTS 'RESCINDIDO';
+            ALTER TYPE estagio_status_enum ADD VALUE IF NOT EXISTS 'COM_PENDENCIA';
+            ALTER TYPE estagio_status_enum ADD VALUE IF NOT EXISTS 'APTO_PARA_ENCERRAMENTO';
+            ALTER TYPE estagio_status_enum RENAME VALUE 'ABERTA' TO 'EM_FASE_INICIAL';
+            ALTER TYPE estagio_status_enum RENAME VALUE 'CONCLUIDA' TO 'ENCERRADO';
+        `);
 
         await queryRunner.changeColumn(
             "estagio",
@@ -86,10 +72,8 @@ export class RefactorEstagioTable1777418346808 implements MigrationInterface {
                 type: "enum",
                 enumName: "estagio_status_enum",
                 enum: [
-                    "ABERTA",
-                    "EM_ANDAMENTO",
-                    "CONCLUIDA",
                     "EM_FASE_INICIAL",
+                    "EM_ANDAMENTO",
                     "RESCINDIDO",
                     "COM_PENDENCIA",
                     "ENCERRADO",
@@ -102,26 +86,10 @@ export class RefactorEstagioTable1777418346808 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.manager
-            .createQueryBuilder()
-            .update("estagio")
-            .set({ status: "ABERTA" })
-            .where("status IN (:...status)", {
-                status: [
-                    "EM_FASE_INICIAL",
-                    "RESCINDIDO",
-                    "COM_PENDENCIA",
-                    "APTO_PARA_ENCERRAMENTO",
-                ],
-            })
-            .execute();
-
-        await queryRunner.manager
-            .createQueryBuilder()
-            .update("estagio")
-            .set({ status: "CONCLUIDA" })
-            .where("status = :status", { status: "ENCERRADO" })
-            .execute();
+        await queryRunner.query(`
+            ALTER TYPE estagio_status_enum RENAME VALUE 'EM_FASE_INICIAL' TO 'ABERTA';
+            ALTER TYPE estagio_status_enum RENAME VALUE 'ENCERRADO' TO 'CONCLUIDA';
+        `);
 
         await queryRunner.changeColumn(
             "estagio",
@@ -134,10 +102,8 @@ export class RefactorEstagioTable1777418346808 implements MigrationInterface {
                     "ABERTA",
                     "EM_ANDAMENTO",
                     "CONCLUIDA",
-                    "EM_FASE_INICIAL",
                     "RESCINDIDO",
                     "COM_PENDENCIA",
-                    "ENCERRADO",
                     "APTO_PARA_ENCERRAMENTO",
                 ],
                 isNullable: false,
