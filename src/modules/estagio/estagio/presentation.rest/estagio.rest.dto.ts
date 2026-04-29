@@ -37,13 +37,13 @@ export class EstagioCreateInputRestDto {
   static schema = EstagioCreateSchema.presentation;
 
   @ApiProperty(EstagioCreateCommandFields.empresa.swaggerMetadata)
-  empresa!: { id: string };
+  empresa!: string;
 
   @ApiPropertyOptional(EstagioCreateCommandFields.estagiario.swaggerMetadata)
-  estagiario?: { id: string };
+  estagiario?: string;
 
   @ApiPropertyOptional(EstagioCreateCommandFields.usuarioOrientador.swaggerMetadata)
-  usuarioOrientador?: { id: string };
+  usuarioOrientador?: string;
 
   @ApiProperty(EstagioCreateCommandFields.cargaHoraria.swaggerMetadata)
   cargaHoraria!: number;
@@ -84,13 +84,13 @@ export class EstagioUpdateInputRestDto {
   static schema = EstagioUpdateSchema.presentation;
 
   @ApiPropertyOptional(EstagioUpdateCommandFields.empresa.swaggerMetadata)
-  empresa?: { id: string };
+  empresa?: string;
 
   @ApiPropertyOptional(EstagioUpdateCommandFields.estagiario.swaggerMetadata)
-  estagiario?: { id: string };
+  estagiario?: string;
 
   @ApiPropertyOptional(EstagioUpdateCommandFields.usuarioOrientador.swaggerMetadata)
-  usuarioOrientador?: { id: string };
+  usuarioOrientador?: string;
 
   @ApiPropertyOptional(EstagioUpdateCommandFields.cargaHoraria.swaggerMetadata)
   cargaHoraria?: number;

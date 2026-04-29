@@ -52,9 +52,9 @@ export const createInputDtoToCreateCommand = createMapper<
   EstagioCreateInputRestDto,
   EstagioCreateCommand
 >((dto) => ({
-  empresa: dto.empresa,
-  estagiario: dto.estagiario,
-  usuarioOrientador: dto.usuarioOrientador,
+  empresa: { id: dto.empresa },
+  estagiario: dto.estagiario ? { id: dto.estagiario } : undefined,
+  usuarioOrientador: dto.usuarioOrientador ? { id: dto.usuarioOrientador } : undefined,
   cargaHoraria: dto.cargaHoraria,
   dataInicio: dto.dataInicio,
   dataFim: dto.dataFim,
@@ -71,9 +71,9 @@ export const updateInputDtoToUpdateCommand = createMapper<
   EstagioUpdateInputRestDto,
   EstagioUpdateCommand
 >((dto) => ({
-  empresa: dto.empresa,
-  estagiario: dto.estagiario,
-  usuarioOrientador: dto.usuarioOrientador,
+  empresa: dto.empresa ? { id: dto.empresa } : undefined,
+  estagiario: dto.estagiario ? { id: dto.estagiario } : undefined,
+  usuarioOrientador: dto.usuarioOrientador ? { id: dto.usuarioOrientador } : undefined,
   cargaHoraria: dto.cargaHoraria,
   dataInicio: dto.dataInicio,
   dataFim: dto.dataFim,
