@@ -42,6 +42,6 @@ import { EmpresaGraphqlResolver } from "./presentation.graphql";
     { provide: IEmpresaListQueryHandler, useClass: EmpresaListQueryHandlerImpl },
     { provide: IEmpresaFindOneQueryHandler, useClass: EmpresaFindOneQueryHandlerImpl },
   ],
-  exports: [IEmpresaFindOneQueryHandler],
+  exports: [IEmpresaFindOneQueryHandler, IEmpresaListQueryHandler, IEmpresaCreateCommandHandler],
 })
 export class EmpresaModule {}
