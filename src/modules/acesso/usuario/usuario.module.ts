@@ -148,6 +148,7 @@ import { HorarioConsultaModule } from "@/modules/calendario/horario-consulta/hor
     IPerfilFindAllActiveQueryHandler,
     IPerfilFindOneQueryHandler,
     IPerfilListQueryHandler,
+    IPerfilRepository,
   ],
 })
 export class UsuarioModule {}
