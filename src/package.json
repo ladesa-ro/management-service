@@ -96,7 +96,8 @@
     "code:fix:format": "commands/code-fix-format",
     "code:fix:lint": "commands/code-fix-lint",
     "modulecheck": "nx run @ladesa-ro/management-service:modulecheck",
-    "check": "nx run @ladesa-ro/management-service:check"
+    "check": "nx run @ladesa-ro/management-service:check",
+    "seed": "tsx src/infrastructure.database/seeds/seed.cli.ts"
   },
   "nx": {
     "targets": {
