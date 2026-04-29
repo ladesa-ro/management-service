@@ -73,6 +73,6 @@ import { OfertaFormacaoRestController } from "@/modules/ensino/oferta-formacao/p
       useClass: OfertaFormacaoGetImagemCapaQueryHandlerImpl,
     },
   ],
-  exports: [IOfertaFormacaoFindOneQueryHandler],
+  exports: [IOfertaFormacaoFindOneQueryHandler, IOfertaFormacaoListQueryHandler],
 })
 export class OfertaFormacaoModule {}
