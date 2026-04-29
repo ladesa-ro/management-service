@@ -9,8 +9,7 @@
  * Este script irá popular o banco de dados com dados fictícios baseados nas entities do projeto.
  */
 
-import { createDataSource } from "@/infrastructure.database/data-sources/create-data-source";
-import { runSeed } from "@/infrastructure.database/seeds/run-seed";
+import { runSeed } from "./run-seed";
 
 async function main(): Promise<void> {
   console.log("🌱 Inicializando seed de dados...\n");
