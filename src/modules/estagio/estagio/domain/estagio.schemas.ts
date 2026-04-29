@@ -66,10 +66,16 @@ export const EstagioSchema = z
     id: uuidSchema,
     empresa: ObjectIdUuidFactory.domain,
     estagiario: ObjectIdUuidFactoryNullable.domain,
+    usuarioOrientador: ObjectIdUuidFactoryNullable.domain,
     cargaHoraria: z.number().int().min(1),
     dataInicio: z.string().nullable(),
     dataFim: z.string().nullable(),
     status: EstagioStatusSchema,
+    nomeSupervisor: z.string().max(255).nullable(),
+    emailSupervisor: z.string().email().max(255).nullable(),
+    telefoneSupervisor: z.string().max(20).nullable(),
+    aditivo: z.boolean(),
+    tipoAditivo: z.string().max(255).nullable(),
     horariosEstagio: z.array(HorarioEstagioSchema),
   })
   .extend(datedSchema.shape);
@@ -79,14 +85,20 @@ export const EstagioCreateSchema = createSchema((standard) =>
     .object({
       empresa: EstagioEmpresaRefSchema.create(standard),
       estagiario: EstagioEstagiarioRefSchema.create(standard).optional(),
+      usuarioOrientador: ObjectIdUuidFactoryNullable.create(standard).optional(),
       cargaHoraria: EstagioFields.cargaHoraria.create(standard),
       dataInicio: EstagioFields.dataInicio.create(standard).optional(),
       dataFim: EstagioFields.dataFim.create(standard).optional(),
       status: EstagioFields.status.create(standard).optional(),
+      nomeSupervisor: EstagioFields.nomeSupervisor.create(standard).optional(),
+      emailSupervisor: EstagioFields.emailSupervisor.create(standard).optional(),
+      telefoneSupervisor: EstagioFields.telefoneSupervisor.create(standard).optional(),
+      aditivo: EstagioFields.aditivo.create(standard).optional(),
+      tipoAditivo: EstagioFields.tipoAditivo.create(standard).optional(),
       horariosEstagio: z.array(HorarioEstagioInputSchema).optional(),
     })
     .superRefine((data, ctx) => {
-      const status = data.status ?? "ABERTA";
+      const status = data.status ?? "EM_FASE_INICIAL";
 
       if (data.dataInicio && data.dataFim) {
         if (new Date(data.dataFim) < new Date(data.dataInicio)) {
@@ -98,11 +110,11 @@ export const EstagioCreateSchema = createSchema((standard) =>
         }
       }
 
-      if (status === "EM_ANDAMENTO" || status === "CONCLUIDA") {
+      if (status === "EM_ANDAMENTO" || status === "ENCERRADO") {
         if (!data.estagiario) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: "estagiário é obrigatório quando o estágio não está aberto",
+            message: "estagiário é obrigatório quando o estágio está em andamento ou encerrado",
             path: ["estagiario"],
           });
         }
@@ -115,11 +127,11 @@ export const EstagioCreateSchema = createSchema((standard) =>
         }
       }
 
-      if (status === "CONCLUIDA") {
+      if (status === "ENCERRADO") {
         if (!data.dataFim) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: "data de fim é obrigatória para estágio concluído",
+            message: "data de fim é obrigatória para estágio encerrado",
             path: ["dataFim"],
           });
         }
@@ -131,10 +143,16 @@ export const EstagioUpdateSchema = createSchema((standard) =>
   z.object({
     empresa: EstagioEmpresaRefSchema.create(standard).optional(),
     estagiario: ObjectIdUuidFactoryNullable.create(standard).optional(),
+    usuarioOrientador: ObjectIdUuidFactoryNullable.create(standard).optional(),
     cargaHoraria: EstagioFields.cargaHoraria.create(standard).optional(),
     dataInicio: EstagioFields.dataInicio.create(standard).nullable().optional(),
     dataFim: EstagioFields.dataFim.create(standard).optional(),
     status: EstagioFields.status.create(standard).optional(),
+    nomeSupervisor: EstagioFields.nomeSupervisor.create(standard).optional(),
+    emailSupervisor: EstagioFields.emailSupervisor.create(standard).optional(),
+    telefoneSupervisor: EstagioFields.telefoneSupervisor.create(standard).optional(),
+    aditivo: EstagioFields.aditivo.create(standard).optional(),
+    tipoAditivo: EstagioFields.tipoAditivo.create(standard).optional(),
     horariosEstagio: z.array(HorarioEstagioInputSchema).optional(),
   }),
 );

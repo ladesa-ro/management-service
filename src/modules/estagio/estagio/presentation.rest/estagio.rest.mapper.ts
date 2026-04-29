@@ -52,12 +52,18 @@ export const createInputDtoToCreateCommand = createMapper<
   EstagioCreateInputRestDto,
   EstagioCreateCommand
 >((dto) => ({
-  empresa: dto.empresa,
-  estagiario: dto.estagiario,
+  empresa: { id: dto.empresa },
+  estagiario: dto.estagiario ? { id: dto.estagiario } : undefined,
+  usuarioOrientador: dto.usuarioOrientador ? { id: dto.usuarioOrientador } : undefined,
   cargaHoraria: dto.cargaHoraria,
   dataInicio: dto.dataInicio,
   dataFim: dto.dataFim,
   status: dto.status as EstagioStatus | undefined,
+  nomeSupervisor: dto.nomeSupervisor,
+  emailSupervisor: dto.emailSupervisor,
+  telefoneSupervisor: dto.telefoneSupervisor,
+  aditivo: dto.aditivo,
+  tipoAditivo: dto.tipoAditivo,
   horariosEstagio: dto.horariosEstagio,
 }));
 
@@ -65,12 +71,18 @@ export const updateInputDtoToUpdateCommand = createMapper<
   EstagioUpdateInputRestDto,
   EstagioUpdateCommand
 >((dto) => ({
-  empresa: dto.empresa,
-  estagiario: dto.estagiario,
+  empresa: dto.empresa ? { id: dto.empresa } : undefined,
+  estagiario: dto.estagiario ? { id: dto.estagiario } : undefined,
+  usuarioOrientador: dto.usuarioOrientador ? { id: dto.usuarioOrientador } : undefined,
   cargaHoraria: dto.cargaHoraria,
   dataInicio: dto.dataInicio,
   dataFim: dto.dataFim,
   status: dto.status as EstagioStatus | undefined,
+  nomeSupervisor: dto.nomeSupervisor,
+  emailSupervisor: dto.emailSupervisor,
+  telefoneSupervisor: dto.telefoneSupervisor,
+  aditivo: dto.aditivo,
+  tipoAditivo: dto.tipoAditivo,
   horariosEstagio: dto.horariosEstagio,
 }));
 
@@ -85,10 +97,16 @@ export const findOneQueryResultToOutputDto = createMapper<
   id: data.id,
   empresa: data.empresa,
   estagiario: data.estagiario,
+  usuarioOrientador: data.usuarioOrientador,
   cargaHoraria: data.cargaHoraria,
   dataInicio: data.dataInicio,
   dataFim: data.dataFim,
   status: data.status,
+  nomeSupervisor: data.nomeSupervisor,
+  emailSupervisor: data.emailSupervisor,
+  telefoneSupervisor: data.telefoneSupervisor,
+  aditivo: data.aditivo,
+  tipoAditivo: data.tipoAditivo,
   horariosEstagio: data.horariosEstagio,
   ativo: data.ativo,
   dateCreated: data.dateCreated,

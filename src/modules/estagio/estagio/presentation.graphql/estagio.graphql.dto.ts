@@ -66,6 +66,18 @@ export class EstagioEstagiarioRefInputGraphQlDto {
   id: string;
 }
 
+@ObjectType("EstagioUsuarioOrientadorRefDto")
+export class EstagioUsuarioOrientadorRefGraphQlDto {
+  @Field(() => String)
+  id: string;
+}
+
+@InputType("EstagioUsuarioOrientadorRefInputDto")
+export class EstagioUsuarioOrientadorRefInputGraphQlDto {
+  @Field(() => String)
+  id: string;
+}
+
 @ObjectType("EstagioFindOneOutputDto")
 export class EstagioFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
   @Field(() => EstagioEmpresaRefGraphQlDto, EstagioFindOneQueryResultFields.empresa.gqlMetadata)
@@ -76,6 +88,12 @@ export class EstagioFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
     ...EstagioFindOneQueryResultFields.estagiario.gqlMetadata,
   })
   estagiario: EstagioEstagiarioRefGraphQlDto | null;
+
+  @Field(() => EstagioUsuarioOrientadorRefGraphQlDto, {
+    nullable: true,
+    ...EstagioFindOneQueryResultFields.usuarioOrientador.gqlMetadata,
+  })
+  usuarioOrientador: EstagioUsuarioOrientadorRefGraphQlDto | null;
 
   @Field(() => Int, EstagioFindOneQueryResultFields.cargaHoraria.gqlMetadata)
   cargaHoraria: number;
@@ -94,6 +112,33 @@ export class EstagioFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
 
   @Field(() => String, EstagioFindOneQueryResultFields.status.gqlMetadata)
   status: string;
+
+  @Field(() => String, {
+    nullable: true,
+    ...EstagioFindOneQueryResultFields.nomeSupervisor.gqlMetadata,
+  })
+  nomeSupervisor: string | null;
+
+  @Field(() => String, {
+    nullable: true,
+    ...EstagioFindOneQueryResultFields.emailSupervisor.gqlMetadata,
+  })
+  emailSupervisor: string | null;
+
+  @Field(() => String, {
+    nullable: true,
+    ...EstagioFindOneQueryResultFields.telefoneSupervisor.gqlMetadata,
+  })
+  telefoneSupervisor: string | null;
+
+  @Field(() => Boolean, EstagioFindOneQueryResultFields.aditivo.gqlMetadata)
+  aditivo: boolean;
+
+  @Field(() => String, {
+    nullable: true,
+    ...EstagioFindOneQueryResultFields.tipoAditivo.gqlMetadata,
+  })
+  tipoAditivo: string | null;
 
   @Field(
     () => [HorarioEstagioOutputGraphQlDto],
@@ -118,6 +163,12 @@ export class EstagioCreateInputGraphQlDto {
   })
   estagiario?: EstagioEstagiarioRefInputGraphQlDto;
 
+  @Field(() => EstagioUsuarioOrientadorRefInputGraphQlDto, {
+    nullable: true,
+    ...EstagioCreateCommandFields.usuarioOrientador.gqlMetadata,
+  })
+  usuarioOrientador?: EstagioUsuarioOrientadorRefInputGraphQlDto;
+
   @Field(() => Int, EstagioCreateCommandFields.cargaHoraria.gqlMetadata)
   cargaHoraria: number;
 
@@ -129,6 +180,21 @@ export class EstagioCreateInputGraphQlDto {
 
   @Field(() => String, { nullable: true, ...EstagioCreateCommandFields.status.gqlMetadata })
   status?: EstagioStatus;
+
+  @Field(() => String, { nullable: true, ...EstagioCreateCommandFields.nomeSupervisor.gqlMetadata })
+  nomeSupervisor?: string;
+
+  @Field(() => String, { nullable: true, ...EstagioCreateCommandFields.emailSupervisor.gqlMetadata })
+  emailSupervisor?: string;
+
+  @Field(() => String, { nullable: true, ...EstagioCreateCommandFields.telefoneSupervisor.gqlMetadata })
+  telefoneSupervisor?: string;
+
+  @Field(() => Boolean, { nullable: true, ...EstagioCreateCommandFields.aditivo.gqlMetadata })
+  aditivo?: boolean;
+
+  @Field(() => String, { nullable: true, ...EstagioCreateCommandFields.tipoAditivo.gqlMetadata })
+  tipoAditivo?: string;
 
   @Field(() => [HorarioEstagioInputGraphQlDto], {
     nullable: true,
@@ -153,6 +219,12 @@ export class EstagioUpdateInputGraphQlDto {
   })
   estagiario?: EstagioEstagiarioRefInputGraphQlDto;
 
+  @Field(() => EstagioUsuarioOrientadorRefInputGraphQlDto, {
+    nullable: true,
+    ...EstagioUpdateCommandFields.usuarioOrientador.gqlMetadata,
+  })
+  usuarioOrientador?: EstagioUsuarioOrientadorRefInputGraphQlDto;
+
   @Field(() => Int, { nullable: true, ...EstagioUpdateCommandFields.cargaHoraria.gqlMetadata })
   cargaHoraria?: number;
 
@@ -164,6 +236,21 @@ export class EstagioUpdateInputGraphQlDto {
 
   @Field(() => String, { nullable: true, ...EstagioUpdateCommandFields.status.gqlMetadata })
   status?: EstagioStatus;
+
+  @Field(() => String, { nullable: true, ...EstagioUpdateCommandFields.nomeSupervisor.gqlMetadata })
+  nomeSupervisor?: string;
+
+  @Field(() => String, { nullable: true, ...EstagioUpdateCommandFields.emailSupervisor.gqlMetadata })
+  emailSupervisor?: string;
+
+  @Field(() => String, { nullable: true, ...EstagioUpdateCommandFields.telefoneSupervisor.gqlMetadata })
+  telefoneSupervisor?: string;
+
+  @Field(() => Boolean, { nullable: true, ...EstagioUpdateCommandFields.aditivo.gqlMetadata })
+  aditivo?: boolean;
+
+  @Field(() => String, { nullable: true, ...EstagioUpdateCommandFields.tipoAditivo.gqlMetadata })
+  tipoAditivo?: string;
 
   @Field(() => [HorarioEstagioInputGraphQlDto], {
     nullable: true,

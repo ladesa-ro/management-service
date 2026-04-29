@@ -20,10 +20,16 @@ export class EstagioFindOneQueryResult {
   id!: string;
   empresa!: { id: string };
   estagiario!: { id: string } | null;
+  usuarioOrientador!: { id: string } | null;
   cargaHoraria!: number;
   dataInicio!: string | null;
   dataFim!: string | null;
   status!: EstagioStatus;
+  nomeSupervisor!: string | null;
+  emailSupervisor!: string | null;
+  telefoneSupervisor!: string | null;
+  aditivo!: boolean;
+  tipoAditivo!: string | null;
   horariosEstagio!: HorarioEstagioQueryResult[];
   ativo!: boolean;
   dateCreated!: string;

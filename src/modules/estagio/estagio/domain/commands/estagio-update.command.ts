@@ -15,9 +15,15 @@ export class HorarioEstagioUpdateCommand {
 export class EstagioUpdateCommand {
   empresa?: ObjectUuidRef;
   estagiario?: ObjectUuidRef;
+  usuarioOrientador?: ObjectUuidRef;
   cargaHoraria?: number;
   dataInicio?: string;
   dataFim?: string | null;
   status?: EstagioStatus;
+  nomeSupervisor?: string;
+  emailSupervisor?: string;
+  telefoneSupervisor?: string;
+  aditivo?: boolean;
+  tipoAditivo?: string;
   horariosEstagio?: IHorarioEstagio[];
 }

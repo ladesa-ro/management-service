@@ -37,10 +37,13 @@ export class EstagioCreateInputRestDto {
   static schema = EstagioCreateSchema.presentation;
 
   @ApiProperty(EstagioCreateCommandFields.empresa.swaggerMetadata)
-  empresa!: { id: string };
+  empresa!: string;
 
   @ApiPropertyOptional(EstagioCreateCommandFields.estagiario.swaggerMetadata)
-  estagiario?: { id: string };
+  estagiario?: string;
+
+  @ApiPropertyOptional(EstagioCreateCommandFields.usuarioOrientador.swaggerMetadata)
+  usuarioOrientador?: string;
 
   @ApiProperty(EstagioCreateCommandFields.cargaHoraria.swaggerMetadata)
   cargaHoraria!: number;
@@ -54,6 +57,21 @@ export class EstagioCreateInputRestDto {
   @ApiPropertyOptional(EstagioCreateCommandFields.status.swaggerMetadata)
   status?: string;
 
+  @ApiPropertyOptional(EstagioCreateCommandFields.nomeSupervisor.swaggerMetadata)
+  nomeSupervisor?: string;
+
+  @ApiPropertyOptional(EstagioCreateCommandFields.emailSupervisor.swaggerMetadata)
+  emailSupervisor?: string;
+
+  @ApiPropertyOptional(EstagioCreateCommandFields.telefoneSupervisor.swaggerMetadata)
+  telefoneSupervisor?: string;
+
+  @ApiPropertyOptional(EstagioCreateCommandFields.aditivo.swaggerMetadata)
+  aditivo?: boolean;
+
+  @ApiPropertyOptional(EstagioCreateCommandFields.tipoAditivo.swaggerMetadata)
+  tipoAditivo?: string;
+
   @ApiPropertyOptional({
     ...EstagioCreateCommandFields.horariosEstagio.swaggerMetadata,
     type: () => [HorarioEstagioInputRestDto],
@@ -66,10 +84,13 @@ export class EstagioUpdateInputRestDto {
   static schema = EstagioUpdateSchema.presentation;
 
   @ApiPropertyOptional(EstagioUpdateCommandFields.empresa.swaggerMetadata)
-  empresa?: { id: string };
+  empresa?: string;
 
   @ApiPropertyOptional(EstagioUpdateCommandFields.estagiario.swaggerMetadata)
-  estagiario?: { id: string };
+  estagiario?: string;
+
+  @ApiPropertyOptional(EstagioUpdateCommandFields.usuarioOrientador.swaggerMetadata)
+  usuarioOrientador?: string;
 
   @ApiPropertyOptional(EstagioUpdateCommandFields.cargaHoraria.swaggerMetadata)
   cargaHoraria?: number;
@@ -85,6 +106,21 @@ export class EstagioUpdateInputRestDto {
     enum: EstagioStatusValues,
   })
   status?: string;
+
+  @ApiPropertyOptional(EstagioUpdateCommandFields.nomeSupervisor.swaggerMetadata)
+  nomeSupervisor?: string;
+
+  @ApiPropertyOptional(EstagioUpdateCommandFields.emailSupervisor.swaggerMetadata)
+  emailSupervisor?: string;
+
+  @ApiPropertyOptional(EstagioUpdateCommandFields.telefoneSupervisor.swaggerMetadata)
+  telefoneSupervisor?: string;
+
+  @ApiPropertyOptional(EstagioUpdateCommandFields.aditivo.swaggerMetadata)
+  aditivo?: boolean;
+
+  @ApiPropertyOptional(EstagioUpdateCommandFields.tipoAditivo.swaggerMetadata)
+  tipoAditivo?: string;
 
   @ApiPropertyOptional({
     ...EstagioUpdateCommandFields.horariosEstagio.swaggerMetadata,
@@ -123,6 +159,9 @@ export class EstagioFindOneOutputRestDto {
   @ApiPropertyOptional(EstagioFindOneQueryResultFields.estagiario.swaggerMetadata)
   estagiario!: { id: string } | null;
 
+  @ApiPropertyOptional(EstagioFindOneQueryResultFields.usuarioOrientador.swaggerMetadata)
+  usuarioOrientador!: { id: string } | null;
+
   @ApiProperty(EstagioFindOneQueryResultFields.cargaHoraria.swaggerMetadata)
   cargaHoraria!: number;
 
@@ -134,6 +173,21 @@ export class EstagioFindOneOutputRestDto {
 
   @ApiProperty(EstagioFindOneQueryResultFields.status.swaggerMetadata)
   status!: string;
+
+  @ApiPropertyOptional(EstagioFindOneQueryResultFields.nomeSupervisor.swaggerMetadata)
+  nomeSupervisor!: string | null;
+
+  @ApiPropertyOptional(EstagioFindOneQueryResultFields.emailSupervisor.swaggerMetadata)
+  emailSupervisor!: string | null;
+
+  @ApiPropertyOptional(EstagioFindOneQueryResultFields.telefoneSupervisor.swaggerMetadata)
+  telefoneSupervisor!: string | null;
+
+  @ApiProperty(EstagioFindOneQueryResultFields.aditivo.swaggerMetadata)
+  aditivo!: boolean;
+
+  @ApiPropertyOptional(EstagioFindOneQueryResultFields.tipoAditivo.swaggerMetadata)
+  tipoAditivo!: string | null;
 
   @ApiProperty({
     ...EstagioFindOneQueryResultFields.horariosEstagio.swaggerMetadata,
