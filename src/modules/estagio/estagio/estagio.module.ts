@@ -1,8 +1,14 @@
 import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
+import { UsuarioModule } from "@/modules/acesso/usuario/usuario.module";
+import { CampusModule } from "@/modules/ambientes/campus/campus.module";
+import { CursoModule } from "@/modules/ensino/curso/curso.module";
+import { EmpresaModule } from "@/modules/estagio/empresa/empresa.module";
+import { EstagiarioModule } from "@/modules/estagio/estagiario/estagiario.module";
 import {
   EstagioCreateCommandHandlerImpl,
   EstagioDeleteCommandHandlerImpl,
+  EstagioImportBulkCommandHandlerImpl,
   EstagioUpdateCommandHandlerImpl,
 } from "@/modules/estagio/estagio/application/commands";
 import {
@@ -12,6 +18,7 @@ import {
 import {
   IEstagioCreateCommandHandler,
   IEstagioDeleteCommandHandler,
+  IEstagioImportBulkCommandHandler,
   IEstagioUpdateCommandHandler,
 } from "@/modules/estagio/estagio/domain/commands";
 import {
@@ -24,7 +31,7 @@ import { EstagioGraphqlResolver } from "@/modules/estagio/estagio/presentation.g
 import { EstagioRestController } from "@/modules/estagio/estagio/presentation.rest/estagio.rest.controller";
 
 @Module({
-  imports: [],
+  imports: [EstagiarioModule, EmpresaModule, UsuarioModule, CursoModule, CampusModule],
   controllers: [EstagioRestController],
   providers: [
     NestJsPaginateAdapter,
@@ -38,6 +45,7 @@ import { EstagioRestController } from "@/modules/estagio/estagio/presentation.re
     { provide: IEstagioCreateCommandHandler, useClass: EstagioCreateCommandHandlerImpl },
     { provide: IEstagioUpdateCommandHandler, useClass: EstagioUpdateCommandHandlerImpl },
     { provide: IEstagioDeleteCommandHandler, useClass: EstagioDeleteCommandHandlerImpl },
+    { provide: IEstagioImportBulkCommandHandler, useClass: EstagioImportBulkCommandHandlerImpl },
     // Queries
     { provide: IEstagioListQueryHandler, useClass: EstagioListQueryHandlerImpl },
     { provide: IEstagioFindOneQueryHandler, useClass: EstagioFindOneQueryHandlerImpl },
