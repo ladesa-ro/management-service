@@ -29,7 +29,10 @@ import { IPerfilListQueryHandler } from "@/modules/acesso/usuario/perfil/domain/
 import { IPerfilRepository } from "@/modules/acesso/usuario/perfil/domain/repositories/perfil.repository.interface";
 import { IUsuarioFindByMatriculaQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-find-by-matricula.query.handler.interface";
 import { ICampusListQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-list.query.handler.interface";
+import { ICursoCreateCommandHandler } from "@/modules/ensino/curso/domain/commands/curso-create.command.handler.interface";
 import { ICursoListQueryHandler } from "@/modules/ensino/curso/domain/queries/curso-list.query.handler.interface";
+import { IOfertaFormacaoListQueryHandler } from "@/modules/ensino/oferta-formacao/domain/queries/oferta-formacao-list.query.handler.interface";
+import { ITurmaCreateCommandHandler } from "@/modules/ensino/turma/domain/commands/turma-create.command.handler.interface";
 import { ITurmaListQueryHandler } from "@/modules/ensino/turma/domain/queries/turma-list.query.handler.interface";
 import { IEmpresaListQueryHandler } from "@/modules/estagio/empresa/domain/queries/empresa-list.query.handler.interface";
 import {
@@ -95,10 +98,16 @@ export class EstagiarioRestController {
     private readonly usuarioFindByMatriculaHandler: IUsuarioFindByMatriculaQueryHandler,
     @Dep(ICampusListQueryHandler)
     private readonly campusListHandler: ICampusListQueryHandler,
+    @Dep(IOfertaFormacaoListQueryHandler)
+    private readonly ofertaFormacaoListHandler: IOfertaFormacaoListQueryHandler,
     @Dep(ICursoListQueryHandler)
     private readonly cursoListHandler: ICursoListQueryHandler,
+    @Dep(ICursoCreateCommandHandler)
+    private readonly cursoCreateHandler: ICursoCreateCommandHandler,
     @Dep(ITurmaListQueryHandler)
     private readonly turmaListHandler: ITurmaListQueryHandler,
+    @Dep(ITurmaCreateCommandHandler)
+    private readonly turmaCreateHandler: ITurmaCreateCommandHandler,
     @Dep(IEmpresaListQueryHandler)
     private readonly empresaListHandler: IEmpresaListQueryHandler,
     @Dep(IEmpresaCreateCommandHandler)
@@ -202,9 +211,16 @@ export class EstagiarioRestController {
     const perfilHandler = this.perfilListHandler;
     const cursoHandler = this.cursoListHandler;
     const turmaHandler = this.turmaListHandler;
+    const cursoCache = new Map<string, string | null>();
+    const turmaCache = new Map<string, string | null>();
+    const ofertaFormacaoCache = new Map<string, string | null>();
 
     for (const row of parsed.entries) {
       try {
+        const campusSearch = row.campus?.trim() ?? "";
+        const cursoSearch = row.curso?.trim() ?? "";
+        const periodoReferencia = (row as any).periodoReferencia?.trim() ?? "";
+
         // resolve perfil
         let perfilId: string | null = null;
         if (perfilHandler) {
@@ -214,25 +230,113 @@ export class EstagiarioRestController {
           perfilId = perfis.data?.[0]?.id ?? null;
         }
 
-        // resolve curso
-        let cursoId: string | null = null;
-        if (cursoHandler && row.curso) {
-          const cursos = await cursoHandler.execute(accessContext, {
-            search: row.curso,
+        const campusId = campusSearch
+          ? (
+              await this.campusListHandler.execute(accessContext, {
+                search: campusSearch,
+                limit: 1,
+              } as any)
+            ).data?.[0]?.id ?? null
+          : null;
+
+        const resolveOfertaFormacaoId = async (): Promise<string | null> => {
+          if (!campusId) return null;
+
+          if (ofertaFormacaoCache.has(campusId)) {
+            return ofertaFormacaoCache.get(campusId) ?? null;
+          }
+
+          const ofertas = await this.ofertaFormacaoListHandler.execute(accessContext, {
+            "filter.campus.id": [campusId],
             limit: 1,
           } as any);
-          cursoId = cursos.data?.[0]?.id ?? null;
-        }
+
+          const ofertaFormacaoId = ofertas.data?.[0]?.id ?? null;
+          ofertaFormacaoCache.set(campusId, ofertaFormacaoId);
+          return ofertaFormacaoId;
+        };
+
+        const resolveOrCreateCursoId = async (): Promise<string | null> => {
+          if (!campusId || !cursoSearch) return null;
+
+          const cacheKey = `${campusId}:${cursoSearch.toLowerCase()}`;
+          if (cursoCache.has(cacheKey)) {
+            return cursoCache.get(cacheKey) ?? null;
+          }
+
+          if (cursoHandler) {
+            const cursos = await cursoHandler.execute(accessContext, {
+              search: cursoSearch,
+              limit: 1,
+            } as any);
+            const cursoId = cursos.data?.[0]?.id ?? null;
+            if (cursoId) {
+              cursoCache.set(cacheKey, cursoId);
+              return cursoId;
+            }
+          }
+
+          const ofertaFormacaoId = await resolveOfertaFormacaoId();
+          if (!ofertaFormacaoId) {
+            cursoCache.set(cacheKey, null);
+            return null;
+          }
+
+          const quantidadePeriodos = Math.min(
+            12,
+            Math.max(1, Number(periodoReferencia || 1) || 1),
+          );
+
+          const cursoCreated = await this.cursoCreateHandler.execute(accessContext, {
+            nome: cursoSearch,
+            nomeAbreviado: cursoSearch.length > 80 ? cursoSearch.slice(0, 80) : cursoSearch,
+            quantidadePeriodos,
+            campus: { id: campusId },
+            ofertaFormacao: { id: ofertaFormacaoId },
+          } as any);
+
+          const cursoId = String(cursoCreated.id);
+          cursoCache.set(cacheKey, cursoId);
+          return cursoId;
+        };
+
+        const resolveOrCreateTurmaId = async (cursoId: string | null): Promise<string | null> => {
+          if (!cursoId) return null;
+
+          const cacheKey = `${cursoId}:${periodoReferencia || "1"}`;
+          if (turmaCache.has(cacheKey)) {
+            return turmaCache.get(cacheKey) ?? null;
+          }
+
+          if (turmaHandler) {
+            const turmas = await turmaHandler.execute(accessContext, {
+              "filter.curso.id": [cursoId],
+              limit: 1,
+            } as any);
+            const turmaId = turmas.data?.[0]?.id ?? null;
+            if (turmaId) {
+              turmaCache.set(cacheKey, turmaId);
+              return turmaId;
+            }
+          }
+
+          const turmaCreated = await this.turmaCreateHandler.execute(accessContext, {
+            periodo: periodoReferencia || "1",
+            nome: cursoSearch ? `${cursoSearch} - ${periodoReferencia || "1"}` : null,
+            curso: { id: cursoId },
+            ambientePadraoAula: null,
+          } as any);
+
+          const turmaId = String(turmaCreated.id);
+          turmaCache.set(cacheKey, turmaId);
+          return turmaId;
+        };
+
+        // resolve curso
+        const cursoId = await resolveOrCreateCursoId();
 
         // resolve turma
-        let turmaId: string | null = null;
-        if (turmaHandler && cursoId) {
-          const turmas = await turmaHandler.execute(accessContext, {
-            "filter.curso.id": [cursoId],
-            limit: 1,
-          } as any);
-          turmaId = turmas.data?.[0]?.id ?? null;
-        }
+        const turmaId = await resolveOrCreateTurmaId(cursoId);
 
         if (!perfilId) {
           // try to create perfil for the user if possible
@@ -244,7 +348,7 @@ export class EstagiarioRestController {
 
               if (usuario && this.campusListHandler) {
                 const campuses = await this.campusListHandler.execute(accessContext, {
-                  search: row.campus,
+                  search: campusSearch,
                   limit: 1,
                 } as any);
                 const campusId = campuses.data?.[0]?.id ?? null;
