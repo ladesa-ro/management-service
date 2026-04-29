@@ -158,3 +158,55 @@ export class EstagiarioFindOneInputRestDto {
   @ApiProperty(EstagiarioFindOneQueryFields.id.swaggerMetadata)
   id: string;
 }
+
+// ============================================================================
+// Bulk import DTOs
+// ============================================================================
+
+@ApiSchema({ name: "EstagiarioImportCsvItemDto" })
+export class EstagiarioImportCsvItemRestDto {
+  @ApiProperty({ type: "number", description: "Número da linha no CSV" })
+  line!: number;
+
+  @ApiProperty({ type: "string", description: "Nome do estagiário" })
+  nome!: string;
+
+  @ApiProperty({ type: "string", description: "Matrícula do estagiário" })
+  matricula!: string;
+
+  @ApiPropertyOptional({ type: "string", description: "Email institucional (acadêmico)" })
+  emailInstitucional?: string;
+
+  @ApiProperty({
+    enum: ["created", "skipped", "failed"],
+    description: "Status do processamento",
+  })
+  status!: "created" | "skipped" | "failed";
+
+  @ApiPropertyOptional({ type: "string", description: "ID do estagiário criado" })
+  estagiarioId?: string;
+
+  @ApiPropertyOptional({ type: "string", description: "Motivo da falha ou skip" })
+  reason?: string;
+}
+
+@ApiSchema({ name: "EstagiarioImportCsvOutputDto" })
+export class EstagiarioImportCsvOutputRestDto {
+  @ApiProperty({ type: "number", description: "Total de registros processados" })
+  total!: number;
+
+  @ApiProperty({ type: "number", description: "Quantidade de estagiários criados" })
+  created!: number;
+
+  @ApiProperty({ type: "number", description: "Quantidade de registros pulados" })
+  skipped!: number;
+
+  @ApiProperty({ type: "number", description: "Quantidade de registros com falha" })
+  failed!: number;
+
+  @ApiProperty({
+    type: () => [EstagiarioImportCsvItemRestDto],
+    description: "Detalhes de cada item processado",
+  })
+  items!: EstagiarioImportCsvItemRestDto[];
+}
