@@ -68,6 +68,6 @@ import { OfertaFormacaoModule } from "@/modules/ensino/oferta-formacao/oferta-fo
     { provide: ICursoFindOneQueryHandler, useClass: CursoFindOneQueryHandlerImpl },
     { provide: ICursoGetImagemCapaQueryHandler, useClass: CursoGetImagemCapaQueryHandlerImpl },
   ],
-  exports: [ICursoFindOneQueryHandler],
+  exports: [ICursoFindOneQueryHandler, ICursoListQueryHandler],
 })
 export class CursoModule {}

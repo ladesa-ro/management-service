@@ -1,6 +1,8 @@
 import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
 import { UsuarioModule } from "@/modules/acesso/usuario/usuario.module";
+import { CursoModule } from "@/modules/ensino/curso/curso.module";
+import { TurmaModule } from "@/modules/ensino/turma/turma.module";
 import {
   EstagiarioCreateCommandHandlerImpl,
   EstagiarioDeleteCommandHandlerImpl,
@@ -25,7 +27,7 @@ import { EstagiarioGraphqlResolver } from "@/modules/estagio/estagiario/presenta
 import { EstagiarioRestController } from "@/modules/estagio/estagiario/presentation.rest/estagiario.rest.controller";
 
 @Module({
-  imports: [UsuarioModule],
+  imports: [UsuarioModule, CursoModule, TurmaModule],
   controllers: [EstagiarioRestController],
   providers: [
     NestJsPaginateAdapter,

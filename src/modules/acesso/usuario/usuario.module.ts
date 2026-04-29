@@ -140,6 +140,7 @@ import { HorarioConsultaModule } from "@/modules/calendario/horario-consulta/hor
     { provide: IPerfilFindAllActiveQueryHandler, useClass: PerfilFindAllActiveQueryHandlerImpl },
   ],
   exports: [
+    IUsuarioRepository,
     IUsuarioFindOneQueryHandler,
     IUsuarioFindByIdSimpleQueryHandler,
     IUsuarioFindByMatriculaQueryHandler,
