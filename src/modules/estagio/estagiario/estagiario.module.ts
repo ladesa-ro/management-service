@@ -3,6 +3,8 @@ import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adap
 import { UsuarioModule } from "@/modules/acesso/usuario/usuario.module";
 import { CursoModule } from "@/modules/ensino/curso/curso.module";
 import { TurmaModule } from "@/modules/ensino/turma/turma.module";
+import { EmpresaModule } from "@/modules/estagio/empresa/empresa.module";
+import { EnderecoModule } from "@/modules/localidades/endereco/endereco.module";
 import {
   EstagiarioCreateCommandHandlerImpl,
   EstagiarioDeleteCommandHandlerImpl,
@@ -25,9 +27,10 @@ import { IEstagiarioRepository } from "@/modules/estagio/estagiario/domain/repos
 import { EstagiarioTypeOrmRepositoryAdapter } from "@/modules/estagio/estagiario/infrastructure.database";
 import { EstagiarioGraphqlResolver } from "@/modules/estagio/estagiario/presentation.graphql";
 import { EstagiarioRestController } from "@/modules/estagio/estagiario/presentation.rest/estagiario.rest.controller";
+import { CampusModule } from "@/modules/ambientes/campus/campus.module";
 
 @Module({
-  imports: [UsuarioModule, CursoModule, TurmaModule],
+  imports: [UsuarioModule, CursoModule, TurmaModule, EmpresaModule, EnderecoModule, CampusModule],
   controllers: [EstagiarioRestController],
   providers: [
     NestJsPaginateAdapter,
