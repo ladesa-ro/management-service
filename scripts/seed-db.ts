@@ -108,7 +108,7 @@ async function run() {
           try {
             // skip many-to-many (handled via join tables)
             if (rel.isManyToMany) continue;
-            const refMeta = rel.inverseEntityMetadata || rel.inverseEntityMetadata;
+            const refMeta = rel.inverseEntityMetadata;
             const refTable = refMeta && refMeta.tableName;
             if (!refTable) continue;
             const refIds = inserted.get(refTable);
