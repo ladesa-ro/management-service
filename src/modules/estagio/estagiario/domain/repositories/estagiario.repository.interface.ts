@@ -34,6 +34,9 @@ export interface IEstagiarioRepository {
   /** Persiste o aggregate (create ou update). */
   save: IRepositorySave<Estagiario>;
 
+  /** Busca um estagiário ativo pelo ID do usuário vinculado ao perfil. */
+  findByUsuarioId(usuarioId: string): Promise<EstagiarioFindOneQueryResult | null>;
+
   /** Soft-delete por ID. */
   softDeleteById: IRepositorySoftDeleteById;
 
