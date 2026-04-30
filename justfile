@@ -97,6 +97,11 @@ exec *ARGS:
     {{COMMAND_COMPOSE_SERVICE}} exec -u {{COMPOSE_SERVICE_USER}} -w {{SHELL_WORKING_DIR}} {{COMPOSE_SERVICE_APP}} \
         bash -c "{{ARGS}}"
 
+# Popula o banco de dados usando o seeder (garante containers up)
+seed: start
+    {{COMMAND_COMPOSE_SERVICE}} exec -u {{COMPOSE_SERVICE_USER}} -w {{SHELL_WORKING_DIR}} {{COMPOSE_SERVICE_APP}} \
+        bash -c "bun ../scripts/seed-db.ts"
+
 # Sobe containers e inicia a API em modo dev (background)
 dev:
     #!/usr/bin/env bash
