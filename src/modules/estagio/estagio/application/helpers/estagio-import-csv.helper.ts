@@ -238,6 +238,13 @@ export function parseEstagioImportCsv(content: string): EstagioImportCsvParseRes
   }
 
   const headers = rows[0].map(normalizeHeader);
+
+  // Debug
+  if (process.env.DEBUG_CSV_IMPORT) {
+    console.log("Raw headers:", rows[0].slice(0, 10));
+    console.log("Normalized headers:", headers.slice(0, 10));
+  }
+
   const headerIndexes = {
     estagiario: findHeaderIndex(headers, "estagiario"),
     situacaoMatricula: findHeaderIndex(headers, "situacaodematricula"),
