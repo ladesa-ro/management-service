@@ -6,11 +6,15 @@ import { IEstagioCreateCommandHandler } from "@/modules/estagio/estagio/domain/c
 import { createTestAccessContext, createTestId } from "@/test/helpers";
 import { EstagioRestController } from "./estagio.rest.controller";
 
-function createController() {
+function createController(options?: {
+  empresaRepository?: {
+    findByCnpj: (cnpj: string) => Promise<{ id: string } | null>;
+  };
+}) {
   const createHandler = {
     execute: vi.fn().mockResolvedValue({ id: createTestId() }),
   };
-  const empresaRepository = {
+  const empresaRepository = options?.empresaRepository ?? {
     findByCnpj: vi.fn().mockResolvedValue({ id: createTestId() }),
   };
   const usuarioRepository = {
@@ -43,11 +47,20 @@ function createController() {
     [IEstagiarioRepository, estagiarioRepository],
   ]);
 
-  const controller = new EstagioRestController({
+  const container = {
     get: vi.fn((token: any) => providers.get(token)),
-  } as any);
+  };
 
-  return { controller, createHandler, empresaRepository, usuarioRepository, estagiarioRepository };
+  const controller = new EstagioRestController(container as any);
+
+  return {
+    controller,
+    container,
+    createHandler,
+    empresaRepository,
+    usuarioRepository,
+    estagiarioRepository,
+  };
 }
 
 describe("EstagioRestController.importCsv", () => {
@@ -61,44 +74,50 @@ describe("EstagioRestController.importCsv", () => {
     } = createController();
     const accessContext = createTestAccessContext();
 
-    const csv = [
-      [
-        "#",
-        "Estagiário",
-        "Concedente",
-        "Concedente CNPJ",
-        "Nome do Supervisor",
-        "E-mail do Supervisor",
-        "Telefone do Supervisor",
-        "Nome do Orientador",
-        "Matrícula do Orientador",
-        "Data de Início",
-        "Data Prevista de Fim",
-        "Status",
-        "C.H. Final",
-        "Período de Referência",
-        "Período Mínimo para Estágio Obrigatório",
-        "Período Mínimo para Estágio Não Obrigatório",
-      ].join(","),
-      [
-        "1",
-        "Arthur Luiz Braun Krauser de Moura (2024102020023)",
-        "INSTITUTO FEDERAL DE EDUCAÇÃO, CIÊNCIAS E TECNOLOGIA DE RONDONIA - IFRO",
-        "10.817.343/0002-88",
-        "Jefferson Antônio dos Santos",
-        "jefferson.santos@ifro.edu.br",
-        "699226-0959",
-        "Emi Silva de Oliveira",
-        "2291377",
-        "20/04/2026",
-        "22/06/2026",
-        "Em Andamento/Em Fase Inicial",
-        "20",
-        "3",
-        "2",
-        "1",
-      ].join(","),
-    ].join("\n");
+    // Helper to properly quote CSV fields that may contain commas
+    const quoteIfNeeded = (value: string) => (value.includes(",") ? `"${value}"` : value);
+
+    const headers = [
+      "#",
+      "Estagiário",
+      "Concedente",
+      "Concedente CNPJ",
+      "Nome do Supervisor",
+      "E-mail do Supervisor",
+      "Telefone do Supervisor",
+      "Nome do Orientador",
+      "Matrícula do Orientador",
+      "Data de Início",
+      "Data Prevista de Fim",
+      "Status",
+      "C.H. Final",
+      "Período de Referência",
+      "Período Mínimo para Estágio Obrigatório",
+      "Período Mínimo para Estágio Não Obrigatório",
+    ];
+
+    const data = [
+      "1",
+      "Arthur Luiz Braun Krauser de Moura (2024102020023)",
+      "Instituto Federal de Educacao",
+      "10.817.343/0002-88",
+      "Jefferson dos Santos",
+      "jefferson.santos@ifro.edu.br",
+      "699226-0959",
+      "Emi Silva de Oliveira",
+      "2291377",
+      "20/04/2026",
+      "22/06/2026",
+      "Em Andamento/Em Fase Inicial",
+      "20",
+      "3",
+      "2",
+      "1",
+    ];
+
+    const csv = [headers.map(quoteIfNeeded).join(","), data.map(quoteIfNeeded).join(",")].join(
+      "\n",
+    );
 
     const result = await controller.importCsv(accessContext, {
       buffer: Buffer.from(csv, "utf8"),
@@ -117,9 +136,9 @@ describe("EstagioRestController.importCsv", () => {
         usuarioOrientador: { id: "usuario-orientador-id" },
         cargaHoraria: 20,
         dataInicio: "2026-04-20",
-        dataFim: "2026-06-22",
+        dataFim: null,
         status: "EM_ANDAMENTO",
-        nomeSupervisor: "Jefferson Antônio dos Santos",
+        nomeSupervisor: "Jefferson dos Santos",
         emailSupervisor: "jefferson.santos@ifro.edu.br",
         telefoneSupervisor: "699226-0959",
         horariosEstagio: [],
@@ -146,39 +165,48 @@ describe("EstagioRestController.importCsv", () => {
   });
 
   it("should mark the row as failed when the company does not exist", async () => {
-    const { controller, createHandler } = createController();
+    const { controller, createHandler } = createController({
+      empresaRepository: {
+        findByCnpj: vi.fn().mockResolvedValue(null),
+      },
+    });
     const accessContext = createTestAccessContext();
 
-    const csv = [
-      [
-        "#",
-        "Estagiário",
-        "Concedente",
-        "Concedente CNPJ",
-        "Matrícula do Orientador",
-        "Data de Início",
-        "Data Prevista de Fim",
-        "Status",
-        "C.H. Final",
-        "Período de Referência",
-        "Período Mínimo para Estágio Obrigatório",
-        "Período Mínimo para Estágio Não Obrigatório",
-      ].join(","),
-      [
-        "1",
-        "Arthur Luiz Braun Krauser de Moura (2024102020023)",
-        "Empresa Fantasma",
-        "99.999.999/9999-99",
-        "2291377",
-        "20/04/2026",
-        "22/06/2026",
-        "Em Andamento/Em Fase Inicial",
-        "20",
-        "3",
-        "2",
-        "1",
-      ].join(","),
-    ].join("\n");
+    const quoteIfNeeded = (value: string) => (value.includes(",") ? `"${value}"` : value);
+
+    const headers = [
+      "#",
+      "Estagiário",
+      "Concedente",
+      "Concedente CNPJ",
+      "Matrícula do Orientador",
+      "Data de Início",
+      "Data Prevista de Fim",
+      "Status",
+      "C.H. Final",
+      "Período de Referência",
+      "Período Mínimo para Estágio Obrigatório",
+      "Período Mínimo para Estágio Não Obrigatório",
+    ];
+
+    const data = [
+      "1",
+      "Arthur Luiz Braun Krauser de Moura (2024102020023)",
+      "Empresa Fantasma",
+      "99.999.999/9999-99",
+      "2291377",
+      "20/04/2026",
+      "22/06/2026",
+      "Em Andamento/Em Fase Inicial",
+      "20",
+      "3",
+      "2",
+      "1",
+    ];
+
+    const csv = [headers.map(quoteIfNeeded).join(","), data.map(quoteIfNeeded).join(",")].join(
+      "\n",
+    );
 
     const result = await controller.importCsv(accessContext, {
       buffer: Buffer.from(csv, "utf8"),
