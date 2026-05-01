@@ -149,6 +149,14 @@ export class EstagioRestController {
       throw new BadRequestException("Arquivo CSV não informado.");
     }
 
+    if (process.env.DEBUG_CSV_IMPORT) {
+      console.log("[CSV import] arquivo recebido", {
+        fileName: file.originalname,
+        mimeType: file.mimetype,
+        size: file.size,
+      });
+    }
+
     const content = file.buffer.toString("utf8");
     const parsed = (() => {
       try {
@@ -178,6 +186,16 @@ export class EstagioRestController {
     let failed = 0;
 
     for (const row of parsed.entries) {
+      if (process.env.DEBUG_CSV_IMPORT) {
+        console.log("[CSV import] processando linha", {
+          line: row.line,
+          estagiarioNome: row.estagiarioNome,
+          estagiarioMatricula: row.estagiarioMatricula,
+          concedenteCnpj: row.concedenteCnpj,
+          matriculaOrientador: row.matriculaOrientador,
+        });
+      }
+
       try {
         const empresa = await empresaRepository.findByCnpj(row.concedenteCnpj ?? "");
 
@@ -185,6 +203,13 @@ export class EstagioRestController {
           throw new BadRequestException(
             `Empresa não encontrada para o CNPJ ${row.concedenteCnpj ?? "-"}.`,
           );
+        }
+
+        if (process.env.DEBUG_CSV_IMPORT) {
+          console.log("[CSV import] empresa encontrada", {
+            line: row.line,
+            empresaId: empresa.id,
+          });
         }
 
         const usuarioEstagiario = row.estagiarioMatricula
@@ -197,6 +222,15 @@ export class EstagioRestController {
         const usuarioOrientador = row.matriculaOrientador
           ? await usuarioRepository.findByMatricula(row.matriculaOrientador)
           : null;
+
+        if (process.env.DEBUG_CSV_IMPORT) {
+          console.log("[CSV import] vínculos resolvidos", {
+            line: row.line,
+            usuarioEstagiarioId: usuarioEstagiario?.id ?? null,
+            estagiarioId: estagiario?.id ?? null,
+            usuarioOrientadorId: usuarioOrientador?.id ?? null,
+          });
+        }
 
         const command = {
           empresa: { id: empresa.id },
@@ -215,6 +249,13 @@ export class EstagioRestController {
         };
 
         const queryResult = await createHandler.execute(accessContext, command as never);
+
+        if (process.env.DEBUG_CSV_IMPORT) {
+          console.log("[CSV import] estágio criado", {
+            line: row.line,
+            estagioId: queryResult.id,
+          });
+        }
 
         const item = new EstagioImportCsvItemRestDto();
         item.line = row.line;
@@ -235,6 +276,15 @@ export class EstagioRestController {
         item.estagiarioMatricula = row.estagiarioMatricula;
         item.status = "failed";
         item.reason = error instanceof Error ? error.message : "Falha ao cadastrar estágio.";
+
+        if (process.env.DEBUG_CSV_IMPORT) {
+          console.log("[CSV import] linha rejeitada", {
+            line: row.line,
+            estagiarioNome: row.estagiarioNome,
+            reason: item.reason,
+          });
+        }
+
         items.push(item);
         failed += 1;
       }
