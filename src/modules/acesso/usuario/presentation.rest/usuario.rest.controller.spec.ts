@@ -6,6 +6,8 @@ function createController() {
   const createHandler = {
     execute: vi.fn().mockResolvedValue({ id: createTestId() }),
   };
+  const campusListHandler = { execute: vi.fn().mockResolvedValue({ data: [] }) };
+  const definirPerfisAtivosHandler = { execute: vi.fn().mockResolvedValue({}) };
 
   const controller = new UsuarioRestController(
     {} as any,
@@ -20,6 +22,8 @@ function createController() {
     {} as any,
     {} as any,
     {} as any,
+    campusListHandler as any,
+    definirPerfisAtivosHandler as any,
   );
 
   return { controller, createHandler };
