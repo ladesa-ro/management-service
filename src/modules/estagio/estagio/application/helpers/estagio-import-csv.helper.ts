@@ -239,12 +239,6 @@ export function parseEstagioImportCsv(content: string): EstagioImportCsvParseRes
 
   const headers = rows[0].map(normalizeHeader);
 
-  // Debug
-  if (process.env.DEBUG_CSV_IMPORT) {
-    console.log("Raw headers:", rows[0].slice(0, 10));
-    console.log("Normalized headers:", headers.slice(0, 10));
-  }
-
   const headerIndexes = {
     estagiario: findHeaderIndex(headers, "estagiario"),
     situacaoMatricula: findHeaderIndex(headers, "situacaodematricula"),
@@ -310,6 +304,14 @@ export function parseEstagioImportCsv(content: string): EstagioImportCsvParseRes
   for (let index = 1; index < rows.length; index += 1) {
     const row = rows[index];
     const line = index + 1;
+
+    if (process.env.DEBUG_CSV_IMPORT && index === 1) {
+      console.log("First data row length:", row.length);
+      console.log("Header length:", headers.length);
+      for (let i = 0; i < Math.min(row.length, 20); i += 1) {
+        console.log(`  [${i}]: "${row[i]}"`);
+      }
+    }
 
     const estagiario = parseEstagiarioField(getCell(row, headerIndexes.estagiario));
     const concedente = toNullIfEmpty(getCell(row, headerIndexes.concedente));
