@@ -82,6 +82,8 @@ import {
 } from "@/modules/calendario/horario-consulta/presentation.rest";
 import { AccessContextHttp } from "@/server/nest/access-context";
 import { parseUsuarioImportCsv } from "../application/helpers/usuario-import-csv.helper";
+import { ICampusListQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-list.query.handler.interface";
+import { IPerfilDefinirPerfisAtivosCommandHandler } from "@/modules/acesso/usuario/perfil/domain/commands";
 import {
   UsuarioCreateInputRestDto,
   UsuarioEnsinoOutputRestDto,
@@ -123,6 +125,10 @@ export class UsuarioRestController {
     private readonly horarioConsultaHandler: IHorarioConsultaQueryHandler,
     @Dep(IUsuarioDisponibilidadeRepository)
     private readonly disponibilidadeRepository: IUsuarioDisponibilidadeRepository,
+    @Dep(ICampusListQueryHandler)
+    private readonly campusListHandler: ICampusListQueryHandler,
+    @Dep(IPerfilDefinirPerfisAtivosCommandHandler)
+    private readonly definirPerfisAtivosHandler: IPerfilDefinirPerfisAtivosCommandHandler,
   ) {}
 
   @Get("/")
@@ -245,6 +251,32 @@ export class UsuarioRestController {
         item.emailPessoal = row.emailPessoal;
         item.status = "created";
         item.usuarioId = queryResult.id;
+        // Tenta criar perfil automaticamente quando houver campus e estiver matriculado
+        try {
+          const campusText = (row as any).campus;
+          const situacaoText = (row as any).situacao ?? "";
+
+          if (campusText) {
+            const campusList = await this.campusListHandler.execute(accessContext, {
+              search: campusText,
+              page: 1,
+              limit: 1,
+            } as any);
+
+            const campusFound = campusList?.data?.[0];
+
+            if (campusFound && /matricul/i.test(situacaoText)) {
+              await this.definirPerfisAtivosHandler.execute(accessContext, {
+                vinculos: [{ campus: { id: campusFound.id }, cargo: "aluno" }],
+                usuario: { id: queryResult.id },
+              } as any);
+            }
+          }
+        } catch (err) {
+          // não interrompe o import, apenas registra motivo parcial
+          item.reason = (item.reason ? item.reason + "; " : "") +
+            (err instanceof Error ? err.message : String(err));
+        }
         items.push(item);
         created += 1;
       } catch (error) {
