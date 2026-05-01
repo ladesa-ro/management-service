@@ -246,7 +246,7 @@ jobs:
           PROMPT
 
       - name: Aplicar patch com Claude Code
-        uses: anthropics/claude-code-action@5fb899572b81d2bb648d4d187173a2f423a9677c
+        uses: anthropics/claude-code-action@0d2971c794049856e777f4e8bb5a81623ec632d3
         with:
           anthropic-api-key: ${{ secrets.ANTHROPIC_API_KEY }}
           prompt: |
