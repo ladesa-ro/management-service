@@ -19,9 +19,9 @@
         "@nestjs/passport": "^11.0.5",
         "@nestjs/platform-express": "^11.1.19",
         "@nestjs/schedule": "^6.1.3",
-        "@nestjs/swagger": "^11.3.0",
+        "@nestjs/swagger": "^11.3.1",
         "@nestjs/throttler": "^6.5.0",
-        "@scalar/nestjs-api-reference": "^1.1.8",
+        "@scalar/nestjs-api-reference": "^1.1.9",
         "compression": "^1.8.1",
         "fs-jetpack": "^5.1.0",
         "graphql": "^16.13.2",
@@ -30,7 +30,7 @@
         "jwks-rsa": "^4.0.1",
         "lodash": "^4.18.1",
         "lru-cache": "^11.3.5",
-        "nestjs-paginate": "^12.10.1",
+        "nestjs-paginate": "^12.11.0",
         "openid-client": "^6.8.3",
         "passport": "^0.7.0",
         "passport-http-bearer": "^1.0.1",
@@ -335,7 +335,7 @@
 
     "@nestjs/schematics": ["@nestjs/schematics@11.1.0", "", { "dependencies": { "@angular-devkit/core": "19.2.24", "@angular-devkit/schematics": "19.2.24", "comment-json": "5.0.0", "jsonc-parser": "3.3.1", "pluralize": "8.0.0" }, "peerDependencies": { "prettier": "^3.0.0", "typescript": ">=4.8.2" }, "optionalPeers": ["prettier"] }, "sha512-lVxGZ46tcdItFMoXr6vyKWlnOsm1SZm/GUqAEDvy2RL4Q4O+3bkziAhrO7Y8JLssFUUvNFEGqAizI52WAxhjDw=="],
 
-    "@nestjs/swagger": ["@nestjs/swagger@11.3.0", "", { "dependencies": { "@microsoft/tsdoc": "0.16.0", "@nestjs/mapped-types": "2.1.1", "js-yaml": "4.1.1", "lodash": "4.18.1", "path-to-regexp": "8.4.2", "swagger-ui-dist": "5.32.4" }, "peerDependencies": { "@fastify/static": "^8.0.0 || ^9.0.0", "@nestjs/common": "^11.0.1", "@nestjs/core": "^11.0.1", "class-transformer": "*", "class-validator": "*", "reflect-metadata": "^0.1.12 || ^0.2.0" }, "optionalPeers": ["@fastify/static", "class-transformer", "class-validator"] }, "sha512-SCS8fG2DL/ZF+9l5in09FwPhpBo5i1Gdo8Se3GYlJ2cn+iNTzF7u13QjHo5XI92BN8DN+Gcug+QTcmWmGvZyNw=="],
+    "@nestjs/swagger": ["@nestjs/swagger@11.3.1", "", { "dependencies": { "@microsoft/tsdoc": "0.16.0", "@nestjs/mapped-types": "2.1.1", "js-yaml": "4.1.1", "lodash": "4.18.1", "path-to-regexp": "8.4.2", "swagger-ui-dist": "5.32.4" }, "peerDependencies": { "@fastify/static": "^8.0.0 || ^9.0.0", "@nestjs/common": "^11.0.1", "@nestjs/core": "^11.0.1", "class-transformer": "*", "class-validator": "*", "reflect-metadata": "^0.1.12 || ^0.2.0" }, "optionalPeers": ["@fastify/static", "class-transformer", "class-validator"] }, "sha512-xQge2VMCPqSae7keTrfAimFVVj/1V87qJOVSf013OuScs12KxNHaMQlREBmTHrIAguuySFImkkt98bVwp562IA=="],
 
     "@nestjs/testing": ["@nestjs/testing@11.1.19", "", { "dependencies": { "tslib": "2.8.1" }, "peerDependencies": { "@nestjs/common": "^11.0.0", "@nestjs/core": "^11.0.0", "@nestjs/microservices": "^11.0.0", "@nestjs/platform-express": "^11.0.0" }, "optionalPeers": ["@nestjs/microservices", "@nestjs/platform-express"] }, "sha512-/UFNWXvPEdu4v4DlC5oWLbGKmD27LehLK06b8oLzs6D6lf4vAQTdST8LRAXBadyMUQnVEQWMuBo3CtAVtlfXtQ=="],
 
@@ -435,15 +435,13 @@
 
     "@rolldown/pluginutils": ["@rolldown/pluginutils@1.0.0-rc.9", "", {}, "sha512-w6oiRWgEBl04QkFZgmW+jnU1EC9b57Oihi2ot3HNWIQRqgHp5PnYDia5iZ5FF7rpa4EQdiqMDXjlqKGXBhsoXw=="],
 
-    "@scalar/client-side-rendering": ["@scalar/client-side-rendering@0.1.1", "", { "dependencies": { "@scalar/types": "0.9.0" } }, "sha512-ACASA/nQAC6HXQTIkkBlvCFxUN9xfCy3Zdgo75rw8jzUqsxRIpTuucR7r9VW1bO/N4qsgEQumC4hK4ESCMdZmQ=="],
+    "@scalar/client-side-rendering": ["@scalar/client-side-rendering@0.1.2", "", { "dependencies": { "@scalar/types": "0.9.1" } }, "sha512-gX2QIc+lpErO9RWkJmt02sBZoCOjyZ7EiLLEyGj7x9UKkk7E4zj6Wbk1eUPo6i3oIwhtZ+Vybj/xzexCK2bxwA=="],
 
-    "@scalar/core": ["@scalar/core@0.5.1", "", { "dependencies": { "@scalar/client-side-rendering": "0.1.1", "@scalar/types": "0.9.0" } }, "sha512-LvH4m502KjEICn7d6lG28fU2TT5AIAJN/czpnx1wusLei2EAgVeEfy0Gkr/kQy+lU215fockVngcvOktYb6KrA=="],
+    "@scalar/helpers": ["@scalar/helpers@0.5.1", "", {}, "sha512-9VvPfv8b+YZVIFwR3SWeq4Y8ij/kU3/kf2M6NKcbf2iVyh63d8s0ssap5m/nOhiz/Puidv/29MAJlJCA0LRssA=="],
 
-    "@scalar/helpers": ["@scalar/helpers@0.5.0", "", {}, "sha512-S7m46UWqngUmDXuihUerNKS58vlUqF/qaXle3QREfc8Xh9wperAKxFmmxrnulAayrcCQ/fTJyGu5oSM2STlxkA=="],
+    "@scalar/nestjs-api-reference": ["@scalar/nestjs-api-reference@1.1.9", "", { "dependencies": { "@scalar/client-side-rendering": "0.1.2" } }, "sha512-ewnZgvEhn9UM/ErIo8ZbJbtPn7SOS5kVL2K8nqKtVfIPXO19TiMu3kCXNqtYYm5UHl1xLBWy7OXIwq391dloGQ=="],
 
-    "@scalar/nestjs-api-reference": ["@scalar/nestjs-api-reference@1.1.8", "", { "dependencies": { "@scalar/core": "0.5.1" } }, "sha512-GuZqaSLbFuO7xHG5VyBVRzV+vLsgQtt1LDUVpAWr7BqDpPWHDz1UGHsWQvwHoPB9sSdbRdcnVZ+ULQxQvaRsng=="],
-
-    "@scalar/types": ["@scalar/types@0.9.0", "", { "dependencies": { "@scalar/helpers": "0.5.0", "nanoid": "^5.1.6", "type-fest": "^5.3.1", "zod": "^4.3.5" } }, "sha512-SJNI2f2ZEsN+Cp7o4rAjPu2nFRFXdSkO1ocG9rzynhJhbMBniHnbkCAe19QT/iHMvSCXfj8J8qDOn2S+TnMymg=="],
+    "@scalar/types": ["@scalar/types@0.9.1", "", { "dependencies": { "@scalar/helpers": "0.5.1", "nanoid": "^5.1.6", "type-fest": "^5.3.1", "zod": "^4.3.5" } }, "sha512-3EbkhtQc+XuDE8Ur1MPosM3YTACFIFNba4M3vGulqv8jcvhMXT+KWPvGUJxq0CDvySqjGa8cE6w85v8T+MjDng=="],
 
     "@scarf/scarf": ["@scarf/scarf@1.4.0", "", {}, "sha512-xxeapPiUXdZAE3che6f3xogoJPeZgig6omHEy1rIY5WVsB3H2BHNnZH+gHG6x91SCWyQCzWGsuL2Hh3ClO5/qQ=="],
 
@@ -1257,7 +1255,7 @@
 
     "neo-async": ["neo-async@2.6.2", "", {}, "sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw=="],
 
-    "nestjs-paginate": ["nestjs-paginate@12.10.1", "", { "dependencies": { "lodash": "^4.17.21" }, "peerDependencies": { "@nestjs/common": "^10.0.0 || ^11.0.0", "@nestjs/swagger": "^8.0.0 || ^11.0.0", "express": "^4.21.2 || ^5.0.0", "fastify": "^4.0.0 || ^5.0.0", "typeorm": "^0.3.17" } }, "sha512-cAdGjMImmuLDk6445yMLnPXhwEx2wAPvxxOJkwITQwjj0KaelsQ/HtI9kMRm1gnpG4sotW0F/0wAKZAyZGZ5OA=="],
+    "nestjs-paginate": ["nestjs-paginate@12.11.0", "", { "dependencies": { "lodash": "^4.17.21" }, "peerDependencies": { "@nestjs/common": "^10.0.0 || ^11.0.0", "@nestjs/swagger": "^8.0.0 || ^11.0.0", "express": "^4.21.2 || ^5.0.0", "fastify": "^4.0.0 || ^5.0.0", "typeorm": "^0.3.17" } }, "sha512-JDEXFlbHxuUXwJMD/m6uK0Eo7jX+i7XuueqJtBv30tQrzzWAtaTS42Nj9e03veDZqZYv7pjaAVx+lITJ4kRcPQ=="],
 
     "node-abort-controller": ["node-abort-controller@3.1.1", "", {}, "sha512-AGK2yQKIjRuqnc6VkX2Xj5d+QW8xZ87pa1UK6yA6ouUyuxfHuMP6umE5QK7UmTeOAymo+Zx1Fxiuw9rVx8taHQ=="],
 
