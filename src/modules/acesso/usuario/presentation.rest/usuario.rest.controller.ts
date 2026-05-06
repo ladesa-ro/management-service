@@ -237,22 +237,45 @@ export class UsuarioRestController {
     let failed = 0;
 
     for (const row of parsed.entries) {
+      let usuarioId: string | undefined = undefined;
+      let usuarioCriado = false;
+      const item = new UsuarioImportCsvItemRestDto();
+      item.line = row.line;
+      item.nome = row.nome;
+      item.matricula = row.matricula;
+      item.emailPessoal = row.emailPessoal;
       try {
         const queryResult = await this.createHandler.execute(accessContext, {
           nome: row.nome,
           matricula: row.matricula,
           email: row.emailPessoal,
         });
-
-        const item = new UsuarioImportCsvItemRestDto();
-        item.line = row.line;
-        item.nome = row.nome;
-        item.matricula = row.matricula;
-        item.emailPessoal = row.emailPessoal;
+        usuarioId = queryResult.id;
+        usuarioCriado = true;
         item.status = "created";
-        item.usuarioId = queryResult.id;
+        item.usuarioId = usuarioId;
+      } catch (error) {
+        // Se o erro retornar um id de usuário já criado, tente extrair
+        if (error && typeof error === "object" && "usuarioId" in error && typeof (error as any).usuarioId === "string") {
+          usuarioId = (error as any).usuarioId;
+          usuarioCriado = true;
+          item.status = "created";
+          item.usuarioId = usuarioId;
+          item.reason = (error as any).message || (error instanceof Error ? error.message : "Falha parcial ao cadastrar usuario.");
+        } else {
+          item.status = "failed";
+          // Mostra erro detalhado de validação se for ZodError
+          if (error && typeof error === "object" && "errors" in error && Array.isArray((error as any).errors)) {
+            const zodErrors = (error as any).errors;
+            item.reason = zodErrors.map((e: any) => `${e.path?.join(".") || "campo"}: ${e.message}`).join("; ");
+          } else {
+            item.reason = error instanceof Error ? error.message : "Falha ao cadastrar usuario.";
+          }
+        }
+      }
 
-        // Tenta criar perfil automaticamente para cada usuário importado (idempotente)
+      // Se o usuário foi criado (mesmo que parcialmente), tente criar o perfil
+      if (usuarioCriado && usuarioId) {
         try {
           const campusText = (row as any).campus;
           const _situacaoText = (row as any).situacao ?? "";
@@ -290,7 +313,7 @@ export class UsuarioRestController {
                     apelido: (row.nome || "").slice(0, 60),
                   },
                 ],
-                usuario: { id: queryResult.id },
+                usuario: { id: usuarioId },
               } as any);
               // Loga nome completo do campus encontrado
               item.reason =
@@ -317,7 +340,7 @@ export class UsuarioRestController {
             // Mesmo sem campus, tenta criar perfil (ex: perfil geral)
             await this.definirPerfisAtivosHandler.execute(accessContext, {
               vinculos: [{ apelido: (row.nome || "").slice(0, 60), cargo: "aluno" }],
-              usuario: { id: queryResult.id },
+              usuario: { id: usuarioId },
             } as any);
             item.reason = (item.reason ? item.reason + "; " : "") + `Perfil criado sem campus.`;
           }
@@ -327,19 +350,14 @@ export class UsuarioRestController {
             (item.reason ? item.reason + "; " : "") +
             (err instanceof Error ? err.message : String(err));
         }
-        items.push(item);
+      }
+      // Atualiza contadores e adiciona item ao relatório
+      if (item.status === "created") {
         created += 1;
-      } catch (error) {
-        const item = new UsuarioImportCsvItemRestDto();
-        item.line = row.line;
-        item.nome = row.nome;
-        item.matricula = row.matricula;
-        item.emailPessoal = row.emailPessoal;
-        item.status = "failed";
-        item.reason = error instanceof Error ? error.message : "Falha ao cadastrar usuario.";
-        items.push(item);
+      } else if (item.status === "failed") {
         failed += 1;
       }
+      items.push(item);
     }
 
     // Ordena o relatório por status e linha para facilitar análise/exportação
