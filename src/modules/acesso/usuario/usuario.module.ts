@@ -1,4 +1,3 @@
-import { CampusListQueryHandlerImpl } from './../../ambientes/campus/application/queries/campus-list.query.handler';
 import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
 import { IdentityProviderModule } from "@/infrastructure.identity-provider/identity-provider.module";
