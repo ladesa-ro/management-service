@@ -136,10 +136,18 @@ export function parseUsuarioImportCsv(content: string): UsuarioImportCsvParseRes
       continue;
     }
 
-    if (!nome || !matricula || !emailPessoal) {
+    if (!nome || !matricula) {
       skipped.push({
         line,
-        reason: "Linha sem nome, matrícula ou e-mail pessoal obrigatório.",
+        reason: "Linha sem nome ou matrícula obrigatória.",
+      });
+      continue;
+    }
+
+    if (!emailPessoal) {
+      skipped.push({
+        line,
+        reason: "Linha sem e-mail pessoal obrigatório. Usuário ignorado.",
       });
       continue;
     }

@@ -75,6 +75,8 @@ import {
 } from "@/modules/acesso/usuario/domain/queries/usuario-list.query.handler.interface";
 import { IUsuarioDisponibilidadeRepository } from "@/modules/acesso/usuario/domain/repositories/usuario-disponibilidade.repository.interface";
 import { Usuario } from "@/modules/acesso/usuario/domain/usuario";
+import { IPerfilDefinirPerfisAtivosCommandHandler } from "@/modules/acesso/usuario/perfil/domain/commands";
+import { ICampusListQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-list.query.handler.interface";
 import { IHorarioConsultaQueryHandler } from "@/modules/calendario/horario-consulta";
 import {
   HorarioSemanalOutputRestDto,
@@ -82,8 +84,6 @@ import {
 } from "@/modules/calendario/horario-consulta/presentation.rest";
 import { AccessContextHttp } from "@/server/nest/access-context";
 import { parseUsuarioImportCsv } from "../application/helpers/usuario-import-csv.helper";
-import { ICampusListQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-list.query.handler.interface";
-import { IPerfilDefinirPerfisAtivosCommandHandler } from "@/modules/acesso/usuario/perfil/domain/commands";
 import {
   UsuarioCreateInputRestDto,
   UsuarioEnsinoOutputRestDto,
@@ -251,30 +251,80 @@ export class UsuarioRestController {
         item.emailPessoal = row.emailPessoal;
         item.status = "created";
         item.usuarioId = queryResult.id;
-        // Tenta criar perfil automaticamente quando houver campus e estiver matriculado
+
+        // Tenta criar perfil automaticamente para cada usuário importado (idempotente)
         try {
           const campusText = (row as any).campus;
-          const situacaoText = (row as any).situacao ?? "";
+          const _situacaoText = (row as any).situacao ?? "";
 
           if (campusText) {
+            // Busca todos os campus que contenham o texto (case-insensitive, ignora acentos)
             const campusList = await this.campusListHandler.execute(accessContext, {
               search: campusText,
               page: 1,
-              limit: 1,
+              limit: 20, // busca até 20 para detectar ambiguidade
             } as any);
 
-            const campusFound = campusList?.data?.[0];
+            const matches = (campusList?.data || []).filter((campus: any) => {
+              // Normaliza para comparar ignorando acentos/case
+              const normalize = (str: string) =>
+                str
+                  ?.normalize("NFD")
+                  .replace(/\p{Diacritic}/gu, "")
+                  .toLowerCase() || "";
+              return (
+                normalize(campus.nomeFantasia).includes(normalize(campusText)) ||
+                normalize(campus.razaoSocial).includes(normalize(campusText)) ||
+                normalize(campus.apelido).includes(normalize(campusText))
+              );
+            });
 
-            if (campusFound && /matricul/i.test(situacaoText)) {
+            if (matches.length === 1) {
+              const campusFound = matches[0];
+              // Sempre tenta criar perfil, mas handler deve ser idempotente
               await this.definirPerfisAtivosHandler.execute(accessContext, {
-                vinculos: [{ campus: { id: campusFound.id }, cargo: "aluno" }],
+                vinculos: [
+                  {
+                    campus: { id: campusFound.id },
+                    cargo: "aluno",
+                    apelido: (row.nome || "").slice(0, 60),
+                  },
+                ],
                 usuario: { id: queryResult.id },
               } as any);
+              // Loga nome completo do campus encontrado
+              item.reason =
+                (item.reason ? item.reason + "; " : "") +
+                `Campus encontrado: ${campusFound.nomeFantasia || campusFound.razaoSocial || campusFound.apelido}`;
+            } else if (matches.length > 1) {
+              item.status = "failed";
+              item.reason =
+                (item.reason ? item.reason + "; " : "") +
+                `Ambiguidade: mais de um campus corresponde ao termo '${campusText}'. Matches: ${matches.map((c: any) => c.nomeFantasia || c.razaoSocial || c.apelido).join(", ")}`;
+              failed += 1;
+              items.push(item);
+              continue;
+            } else if (matches.length === 0) {
+              item.status = "failed";
+              item.reason =
+                (item.reason ? item.reason + "; " : "") +
+                `Nenhum campus encontrado para '${campusText}'.`;
+              failed += 1;
+              items.push(item);
+              continue;
             }
+          } else {
+            // Mesmo sem campus, tenta criar perfil (ex: perfil geral)
+            await this.definirPerfisAtivosHandler.execute(accessContext, {
+              vinculos: [{ apelido: (row.nome || "").slice(0, 60), cargo: "aluno" }],
+              usuario: { id: queryResult.id },
+            } as any);
+            item.reason = (item.reason ? item.reason + "; " : "") + `Perfil criado sem campus.`;
           }
         } catch (err) {
           // não interrompe o import, apenas registra motivo parcial
-          item.reason = (item.reason ? item.reason + "; " : "") +
+          item.reason =
+            (item.reason ? item.reason + "; " : "") +
             (err instanceof Error ? err.message : String(err));
         }
         items.push(item);
@@ -292,12 +342,23 @@ export class UsuarioRestController {
       }
     }
 
+    // Ordena o relatório por status e linha para facilitar análise/exportação
+    items.sort((a, b) => {
+      if (a.status === b.status) return a.line - b.line;
+      if (a.status === "failed") return -1;
+      if (b.status === "failed") return 1;
+      if (a.status === "skipped") return -1;
+      if (b.status === "skipped") return 1;
+      return a.line - b.line;
+    });
+
     return {
       total: parsed.totalRows,
       created,
       skipped: parsed.skipped.length,
       failed,
-      items,
+      items, // cada item tem: line, nome, matricula, emailPessoal, status, usuarioId, reason
+      // Dica: para exportação, basta serializar items como CSV/JSON
     };
   }
 
