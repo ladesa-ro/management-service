@@ -14,11 +14,11 @@ import {
 export const EstagiarioPaginationInputSchema = createPaginationInputSchema({
   "filter.perfil.id": stringFilterSchema,
   "filter.curso.id": stringFilterSchema,
-  "filter.turma.id": stringFilterSchema,
+  "filter.periodo": stringFilterSchema,
 });
 
 export const EstagiarioGraphqlListInputSchema = createGraphqlListInputSchema({
   filterPerfilId: z.array(z.string()).optional(),
   filterCursoId: z.array(z.string()).optional(),
-  filterTurmaId: z.array(z.string()).optional(),
+  filterPeriodo: z.array(z.string()).optional(),
 });
