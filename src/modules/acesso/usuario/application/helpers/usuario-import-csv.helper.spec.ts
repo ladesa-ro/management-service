@@ -18,6 +18,9 @@ describe("parseUsuarioImportCsv", () => {
         nome: "Ana Clara",
         matricula: "202610200001",
         emailPessoal: "ana.clara@gmail.com",
+        curso: "Curso com, vírgula",
+        campus: "JIPARANA",
+        situacao: "Matriculado",
       },
     ]);
   });
@@ -34,7 +37,7 @@ describe("parseUsuarioImportCsv", () => {
     expect(result.skipped).toEqual([
       {
         line: 2,
-        reason: "Linha sem nome, matrícula ou e-mail pessoal obrigatório.",
+        reason: "Linha sem e-mail pessoal obrigatório. Usuário ignorado.",
       },
     ]);
   });
