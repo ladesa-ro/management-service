@@ -294,7 +294,7 @@ export class UsuarioRestController {
       // Se o usuário foi criado (mesmo que parcialmente), tente criar o perfil
       if (usuarioCriado && usuarioId) {
         try {
-          const campusText = (row as any).campus;
+              const campusText = (row as any).campus;
           const _situacaoText = (row as any).situacao ?? "";
 
           if (campusText) {
@@ -346,9 +346,12 @@ export class UsuarioRestController {
               items.push(item);
               continue;
             } else if (matches.length === 0) {
-              item.reason =
-                (item.reason ? item.reason + "; " : "") +
-                `Nenhum campus encontrado para '${campusText}'.`;
+                  await this.definirPerfisAtivosHandler.execute(accessContext, {
+                    vinculos: [{ apelido: (row.nome || "").slice(0, 60), cargo: "aluno" }],
+                    usuario: { id: usuarioId },
+                  } as any);
+                  item.reason = (item.reason ? item.reason + "; " : "") + `Nenhum campus encontrado para '${campusText}'.`;
+                  item.reason = (item.reason ? item.reason + "; " : "") + `Perfil criado sem campus.`;
             }
           } else {
             // Mesmo sem campus, tenta criar perfil (ex: perfil geral)
