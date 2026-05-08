@@ -298,27 +298,55 @@ export class UsuarioRestController {
           const _situacaoText = (row as any).situacao ?? "";
 
           if (campusText) {
-            // Busca todos os campus que contenham o texto (case-insensitive, ignora acentos)
-            const campusList = await this.campusListHandler.execute(accessContext, {
-              search: campusText,
-              page: 1,
-              limit: 20, // busca até 20 para detectar ambiguidade
-            } as any);
+            // Tenta buscar campus usando várias variantes do texto (heurística):
+            // - texto original
+            // - texto sem separadores
+            // - texto extraído do campo curso entre parênteses (ex: "JI-PARANÁ")
+            const cursoText = (row as any).curso ?? "";
+            const parenMatch = /\(([^)]+)\)/.exec(cursoText);
 
-            const matches = (campusList?.data || []).filter((campus: any) => {
-              // Normaliza para comparar ignorando acentos/case
-              const normalize = (str: string) =>
-                str
-                  ?.normalize("NFD")
-                  .replace(/\p{Diacritic}/gu, "")
-                  .replace(/[^a-zA-Z0-9]/g, "")
-                  .toLowerCase() || "";
-              return (
-                normalize(campus.nomeFantasia).includes(normalize(campusText)) ||
-                normalize(campus.razaoSocial).includes(normalize(campusText)) ||
-                normalize(campus.apelido).includes(normalize(campusText))
-              );
-            });
+            const candidates: string[] = [];
+            candidates.push(campusText);
+            // sem separadores (ex: JI-PARANÁ -> JIPARANA)
+            candidates.push(campusText.replace(/[^a-zA-Z0-9]/g, ""));
+            // com espaços no lugar de hífens/underscores
+            candidates.push(campusText.replace(/[-_]+/g, " "));
+            if (parenMatch?.[1]) {
+              candidates.push(parenMatch[1]);
+              candidates.push(parenMatch[1].replace(/[^a-zA-Z0-9]/g, ""));
+            }
+
+            const normalize = (str: string) =>
+              str
+                ?.normalize("NFD")
+                .replace(/\p{Diacritic}/gu, "")
+                .replace(/[^a-zA-Z0-9]/g, "")
+                .toLowerCase() || "";
+
+            let matches: any[] = [];
+            const tried = new Set<string>();
+            for (const term of candidates) {
+              if (!term) continue;
+              const key = term.trim().toLowerCase();
+              if (tried.has(key)) continue;
+              tried.add(key);
+
+              const campusList = await this.campusListHandler.execute(accessContext, {
+                search: term,
+                page: 1,
+                limit: 20,
+              } as any);
+
+              matches = (campusList?.data || []).filter((campus: any) => {
+                return (
+                  normalize(campus.nomeFantasia).includes(normalize(term)) ||
+                  normalize(campus.razaoSocial).includes(normalize(term)) ||
+                  normalize(campus.apelido).includes(normalize(term))
+                );
+              });
+
+              if (matches.length > 0) break;
+            }
 
             if (matches.length === 1) {
               const campusFound = matches[0];
@@ -346,20 +374,19 @@ export class UsuarioRestController {
               items.push(item);
               continue;
             } else if (matches.length === 0) {
-                  await this.definirPerfisAtivosHandler.execute(accessContext, {
-                    vinculos: [{ apelido: (row.nome || "").slice(0, 60), cargo: "aluno" }],
-                    usuario: { id: usuarioId },
-                  } as any);
+                  item.status = "failed";
                   item.reason = (item.reason ? item.reason + "; " : "") + `Nenhum campus encontrado para '${campusText}'.`;
-                  item.reason = (item.reason ? item.reason + "; " : "") + `Perfil criado sem campus.`;
+                  failed += 1;
+                  items.push(item);
+                  continue;
             }
           } else {
-            // Mesmo sem campus, tenta criar perfil (ex: perfil geral)
-            await this.definirPerfisAtivosHandler.execute(accessContext, {
-              vinculos: [{ apelido: (row.nome || "").slice(0, 60), cargo: "aluno" }],
-              usuario: { id: usuarioId },
-            } as any);
-            item.reason = (item.reason ? item.reason + "; " : "") + `Perfil criado sem campus.`;
+                // Sem texto de campus não é possível determinar campus; marca como failed
+                item.status = "failed";
+                item.reason = (item.reason ? item.reason + "; " : "") + `Nenhum campus informado.`;
+                failed += 1;
+                items.push(item);
+                continue;
           }
         } catch (err) {
           // não interrompe o import, apenas registra motivo parcial
