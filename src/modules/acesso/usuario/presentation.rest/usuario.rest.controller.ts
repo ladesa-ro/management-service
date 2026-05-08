@@ -57,6 +57,9 @@ import {
   UsuarioEnsinoQueryMetadata,
 } from "@/modules/acesso/usuario/domain/queries/usuario-ensino.query.handler.interface";
 import {
+  IUsuarioFindByMatriculaQueryHandler,
+} from "@/modules/acesso/usuario/domain/queries/usuario-find-by-matricula.query.handler.interface";
+import {
   IUsuarioFindOneQueryHandler,
   UsuarioFindOneQueryMetadata,
 } from "@/modules/acesso/usuario/domain/queries/usuario-find-one.query.handler.interface";
@@ -109,6 +112,8 @@ export class UsuarioRestController {
     private readonly ensinoHandler: IUsuarioEnsinoQueryHandler,
     @Dep(IUsuarioCreateCommandHandler)
     private readonly createHandler: IUsuarioCreateCommandHandler,
+    @Dep(IUsuarioFindByMatriculaQueryHandler)
+    private readonly findByMatriculaHandler: IUsuarioFindByMatriculaQueryHandler,
     @Dep(IUsuarioUpdateCommandHandler)
     private readonly updateHandler: IUsuarioUpdateCommandHandler,
     @Dep(IUsuarioGetImagemCapaQueryHandler)
@@ -255,20 +260,18 @@ export class UsuarioRestController {
         item.status = "created";
         item.usuarioId = usuarioId;
       } catch (error) {
-        // Se o erro retornar um id de usuário já criado, tente extrair
-        if (
-          error &&
-          typeof error === "object" &&
-          "usuarioId" in error &&
-          typeof (error as any).usuarioId === "string"
-        ) {
-          usuarioId = (error as any).usuarioId;
+        const localUsuario = await this.findByMatriculaHandler.execute(accessContext, {
+          matricula: row.matricula,
+        });
+
+        if (localUsuario?.id) {
+          usuarioId = localUsuario.id;
           usuarioCriado = true;
           item.status = "created";
           item.usuarioId = usuarioId;
           item.reason =
-            (error as any).message ||
-            (error instanceof Error ? error.message : "Falha parcial ao cadastrar usuario.");
+            (error instanceof Error ? error.message : "Falha parcial ao cadastrar usuario.") +
+            ". Usuário localizado pelo banco local e seguirá para criação de perfil.";
         } else {
           item.status = "failed";
           // Mostra erro detalhado de validação se for ZodError
@@ -342,13 +345,9 @@ export class UsuarioRestController {
               items.push(item);
               continue;
             } else if (matches.length === 0) {
-              item.status = "failed";
               item.reason =
                 (item.reason ? item.reason + "; " : "") +
                 `Nenhum campus encontrado para '${campusText}'.`;
-              failed += 1;
-              items.push(item);
-              continue;
             }
           } else {
             // Mesmo sem campus, tenta criar perfil (ex: perfil geral)
@@ -363,6 +362,7 @@ export class UsuarioRestController {
           item.reason =
             (item.reason ? item.reason + "; " : "") +
             (err instanceof Error ? err.message : String(err));
+          item.status = "failed";
         }
       }
       // Atualiza contadores e adiciona item ao relatório
