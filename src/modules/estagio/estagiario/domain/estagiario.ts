@@ -13,7 +13,7 @@ export interface IEstagiario {
   id: string;
   perfil: { id: string };
   curso: { id: string };
-  turma: { id: string };
+  periodo: string;
   telefone: string;
   emailInstitucional: string | null;
   dataNascimento: string;
@@ -29,7 +29,7 @@ export class Estagiario {
   id!: IdUuid;
   perfil!: ObjectUuidRef;
   curso!: ObjectUuidRef;
-  turma!: ObjectUuidRef;
+  periodo!: string;
   telefone!: string;
   emailInstitucional!: string | null;
   dataNascimento!: string;
@@ -51,7 +51,7 @@ export class Estagiario {
     instance.id = generateUuidV7();
     instance.perfil = parsed.perfil;
     instance.curso = parsed.curso;
-    instance.turma = parsed.turma;
+    instance.periodo = parsed.periodo;
     instance.telefone = parsed.telefone;
     instance.emailInstitucional = parsed.emailInstitucional ?? null;
     instance.dataNascimento = parsed.dataNascimento;
@@ -70,7 +70,7 @@ export class Estagiario {
     instance.id = parsed.id;
     instance.perfil = parsed.perfil;
     instance.curso = parsed.curso;
-    instance.turma = parsed.turma;
+    instance.periodo = parsed.periodo;
     instance.telefone = parsed.telefone;
     instance.emailInstitucional = parsed.emailInstitucional;
     instance.dataNascimento = parsed.dataNascimento;
@@ -86,7 +86,7 @@ export class Estagiario {
 
     if (parsed.perfil !== undefined) this.perfil = parsed.perfil;
     if (parsed.curso !== undefined) this.curso = parsed.curso;
-    if (parsed.turma !== undefined) this.turma = parsed.turma;
+    if (parsed.periodo !== undefined) this.periodo = parsed.periodo;
     if (parsed.telefone !== undefined) this.telefone = parsed.telefone;
     if (parsed.emailInstitucional !== undefined)
       this.emailInstitucional = parsed.emailInstitucional ?? null;
