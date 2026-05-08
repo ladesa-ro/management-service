@@ -1,6 +1,5 @@
 import * as PerfilGraphqlMapper from "@/modules/acesso/usuario/perfil/presentation.graphql/perfil.graphql.mapper";
 import * as CursoGraphqlMapper from "@/modules/ensino/curso/presentation.graphql/curso.graphql.mapper";
-import * as TurmaGraphqlMapper from "@/modules/ensino/turma/presentation.graphql/turma.graphql.mapper";
 import {
   EstagiarioCreateCommand,
   EstagiarioFindOneQuery,
@@ -34,7 +33,7 @@ const listInputMapper = createPaginatedInputMapper<
   into(query).field("filter.id").from(dto, "filterId");
   into(query).field("filter.perfil.id").from(dto, "filterPerfilId");
   into(query).field("filter.curso.id").from(dto, "filterCursoId");
-  into(query).field("filter.turma.id").from(dto, "filterTurmaId");
+  into(query).field("filter.periodo").from(dto, "filterPeriodo");
 });
 
 export function listInputDtoToListQuery(
@@ -50,7 +49,7 @@ export const createInputDtoToCreateCommand = createMapper<
 >((dto) => ({
   perfil: { id: dto.perfil.id },
   curso: { id: dto.curso.id },
-  turma: { id: dto.turma.id },
+  periodo: dto.periodo,
   telefone: dto.telefone,
   emailInstitucional: dto.emailInstitucional,
   dataNascimento: dto.dataNascimento,
@@ -63,7 +62,7 @@ export const updateInputDtoToUpdateCommand = createMapper<
   id,
   perfil: dto.perfil ? { id: dto.perfil.id } : undefined,
   curso: dto.curso ? { id: dto.curso.id } : undefined,
-  turma: dto.turma ? { id: dto.turma.id } : undefined,
+  periodo: dto.periodo,
   telefone: dto.telefone,
   emailInstitucional: dto.emailInstitucional,
   dataNascimento: dto.dataNascimento,
@@ -80,7 +79,7 @@ export const findOneQueryResultToOutputDto = createMapper<
   id: output.id,
   perfil: PerfilGraphqlMapper.findOneQueryResultToOutputDto.map(output.perfil),
   curso: CursoGraphqlMapper.findOneQueryResultToOutputDto.map(output.curso),
-  turma: TurmaGraphqlMapper.findOneQueryResultToOutputDto.map(output.turma),
+  periodo: output.periodo,
   telefone: output.telefone,
   emailInstitucional: output.emailInstitucional,
   dataNascimento: output.dataNascimento,
