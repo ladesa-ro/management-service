@@ -44,27 +44,6 @@ const estagiarioRelations = {
       },
     },
   },
-  turma: {
-    curso: {
-      campus: {
-        endereco: {
-          cidade: {
-            estado: true,
-          },
-        },
-      },
-      ofertaFormacao: {
-        modalidade: true,
-        campus: {
-          endereco: {
-            cidade: {
-              estado: true,
-            },
-          },
-        },
-      },
-    },
-  },
 };
 
 const estagiarioPaginateConfig = buildTypeOrmPaginateConfig<EstagiarioTypeormEntity>(
@@ -76,7 +55,6 @@ const estagiarioPaginateConfig = buildTypeOrmPaginateConfig<EstagiarioTypeormEnt
 const writeRelations = {
   perfil: true,
   curso: true,
-  turma: true,
 } as const;
 
 @Impl()
