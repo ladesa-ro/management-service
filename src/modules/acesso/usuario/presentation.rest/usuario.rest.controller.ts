@@ -256,18 +256,32 @@ export class UsuarioRestController {
         item.usuarioId = usuarioId;
       } catch (error) {
         // Se o erro retornar um id de usuário já criado, tente extrair
-        if (error && typeof error === "object" && "usuarioId" in error && typeof (error as any).usuarioId === "string") {
+        if (
+          error &&
+          typeof error === "object" &&
+          "usuarioId" in error &&
+          typeof (error as any).usuarioId === "string"
+        ) {
           usuarioId = (error as any).usuarioId;
           usuarioCriado = true;
           item.status = "created";
           item.usuarioId = usuarioId;
-          item.reason = (error as any).message || (error instanceof Error ? error.message : "Falha parcial ao cadastrar usuario.");
+          item.reason =
+            (error as any).message ||
+            (error instanceof Error ? error.message : "Falha parcial ao cadastrar usuario.");
         } else {
           item.status = "failed";
           // Mostra erro detalhado de validação se for ZodError
-          if (error && typeof error === "object" && "errors" in error && Array.isArray((error as any).errors)) {
+          if (
+            error &&
+            typeof error === "object" &&
+            "errors" in error &&
+            Array.isArray((error as any).errors)
+          ) {
             const zodErrors = (error as any).errors;
-            item.reason = zodErrors.map((e: any) => `${e.path?.join(".") || "campo"}: ${e.message}`).join("; ");
+            item.reason = zodErrors
+              .map((e: any) => `${e.path?.join(".") || "campo"}: ${e.message}`)
+              .join("; ");
           } else {
             item.reason = error instanceof Error ? error.message : "Falha ao cadastrar usuario.";
           }
