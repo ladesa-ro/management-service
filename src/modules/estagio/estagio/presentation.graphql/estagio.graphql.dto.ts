@@ -153,7 +153,7 @@ export class EstagioFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
 @InputType("EstagioCreateInputDto")
 export class EstagioCreateInputGraphQlDto {
   static schema = EstagioCreateSchema.domain;
-
+d
   @Field(() => EstagioEmpresaRefInputGraphQlDto, EstagioCreateCommandFields.empresa.gqlMetadata)
   empresa: EstagioEmpresaRefInputGraphQlDto;
 
