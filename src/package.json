@@ -19,7 +19,7 @@
     "@nestjs/schedule": "^6.1.3",
     "@nestjs/swagger": "^11.4.1",
     "@nestjs/throttler": "^6.5.0",
-    "@scalar/nestjs-api-reference": "^1.1.9",
+    "@scalar/nestjs-api-reference": "^1.1.10",
     "compression": "^1.8.1",
     "fs-jetpack": "^5.1.0",
     "graphql": "^16.13.2",
