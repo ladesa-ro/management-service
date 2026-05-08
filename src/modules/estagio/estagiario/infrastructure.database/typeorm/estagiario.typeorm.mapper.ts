@@ -1,7 +1,6 @@
 import type { DeepPartial } from "typeorm";
 import { PerfilTypeormMapper } from "@/modules/acesso/usuario/perfil/infrastructure.database/typeorm";
 import { CursoTypeormMapper } from "@/modules/ensino/curso/infrastructure.database/typeorm";
-import { TurmaTypeormMapper } from "@/modules/ensino/turma/infrastructure.database/typeorm";
 import type { IEstagiario } from "@/modules/estagio/estagiario/domain/estagiario";
 import type { EstagiarioFindOneQueryResult } from "@/modules/estagio/estagiario/domain/queries";
 import { createMapper, pickId } from "@/shared/mapping";
@@ -15,7 +14,7 @@ export const entityToDomain = createMapper<EstagiarioTypeormEntity, IEstagiario>
   id: e.id,
   perfil: pickId(e.perfil),
   curso: pickId(e.curso),
-  turma: pickId(e.turma),
+  periodo: e.periodo,
   telefone: e.telefone,
   emailInstitucional: e.emailInstitucional,
   dataNascimento: e.dataNascimento,
@@ -38,7 +37,7 @@ export const entityToFindOneQueryResult = createMapper<
   id: e.id,
   perfil: PerfilTypeormMapper.entityToFindOneQueryResult.map(e.perfil),
   curso: CursoTypeormMapper.entityToFindOneQueryResult.map(e.curso),
-  turma: TurmaTypeormMapper.entityToFindOneQueryResult.map(e.turma),
+  periodo: e.periodo,
   telefone: e.telefone,
   emailInstitucional: e.emailInstitucional,
   dataNascimento: e.dataNascimento,
@@ -57,7 +56,7 @@ export const domainToPersistence = createMapper<IEstagiario, DeepPartial<Estagia
     id: d.id,
     perfil: pickId(d.perfil),
     curso: pickId(d.curso),
-    turma: pickId(d.turma),
+    periodo: d.periodo,
     telefone: d.telefone,
     emailInstitucional: d.emailInstitucional,
     dataNascimento: d.dataNascimento,
