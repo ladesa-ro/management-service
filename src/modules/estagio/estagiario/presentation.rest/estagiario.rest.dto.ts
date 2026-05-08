@@ -1,6 +1,5 @@
 import { PerfilFindOneOutputRestDto } from "@/modules/acesso/usuario/perfil/presentation.rest/perfil.rest.dto";
 import { CursoFindOneOutputRestDto } from "@/modules/ensino/curso/presentation.rest/curso.rest.dto";
-import { TurmaFindOneOutputRestDto } from "@/modules/ensino/turma/presentation.rest/turma.rest.dto";
 import { EstagiarioCreateCommandFields } from "@/modules/estagio/estagiario/domain/commands/estagiario-create.command";
 import { EstagiarioUpdateCommandFields } from "@/modules/estagio/estagiario/domain/commands/estagiario-update.command";
 import {
@@ -43,10 +42,9 @@ export class EstagiarioFindOneOutputRestDto extends EntityBaseRestDto {
   curso: CursoFindOneOutputRestDto | null;
 
   @ApiProperty({
-    ...EstagiarioFindOneQueryResultFields.turma.swaggerMetadata,
-    type: () => TurmaFindOneOutputRestDto,
+    ...EstagiarioFindOneQueryResultFields.periodo.swaggerMetadata,
   })
-  turma: TurmaFindOneOutputRestDto | null;
+  periodo: string;
 
   @ApiProperty(EstagiarioFindOneQueryResultFields.telefone.swaggerMetadata)
   telefone: string;
@@ -77,9 +75,9 @@ export class EstagiarioListInputRestDto extends PaginatedFilterByIdRestDto {
   @TransformToArray()
   "filter.curso.id"?: string[];
 
-  @ApiPropertyOptional(EstagiarioListQueryFields.filterTurmaId.swaggerMetadata)
+  @ApiPropertyOptional(EstagiarioListQueryFields.filterPeriodo.swaggerMetadata)
   @TransformToArray()
-  "filter.turma.id"?: string[];
+  "filter.periodo"?: string[];
 }
 
 @ApiSchema({ name: "EstagiarioListOutputDto" })
@@ -111,8 +109,8 @@ export class EstagiarioCreateInputRestDto {
   @ApiProperty(EstagiarioCreateCommandFields.curso.swaggerMetadata)
   curso: { id: string };
 
-  @ApiProperty(EstagiarioCreateCommandFields.turma.swaggerMetadata)
-  turma: { id: string };
+  @ApiProperty(EstagiarioCreateCommandFields.periodo.swaggerMetadata)
+  periodo: string;
 
   @ApiProperty(EstagiarioCreateCommandFields.telefone.swaggerMetadata)
   telefone: string;
@@ -134,8 +132,8 @@ export class EstagiarioUpdateInputRestDto {
   @ApiPropertyOptional(EstagiarioUpdateCommandFields.curso.swaggerMetadata)
   curso?: { id: string };
 
-  @ApiPropertyOptional(EstagiarioUpdateCommandFields.turma.swaggerMetadata)
-  turma?: { id: string };
+  @ApiPropertyOptional(EstagiarioUpdateCommandFields.periodo.swaggerMetadata)
+  periodo?: string;
 
   @ApiPropertyOptional(EstagiarioUpdateCommandFields.telefone.swaggerMetadata)
   telefone?: string;
