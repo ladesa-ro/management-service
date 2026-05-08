@@ -19,11 +19,11 @@ export type IEstagiarioListQueryHandler = IQueryHandler<
 
 export const estagiarioPaginationSpec: IPaginationSpec = {
   sortableColumns: ["telefone", "dataNascimento", "dateCreated"],
-  searchableColumns: ["telefone", "emailInstitucional"],
+  searchableColumns: ["telefone", "emailInstitucional", "periodo"],
   defaultSortBy: [["dateCreated", "DESC"]],
   filterableColumns: {
     "perfil.id": [PaginationFilter.EQ],
     "curso.id": [PaginationFilter.EQ],
-    "turma.id": [PaginationFilter.EQ],
+    periodo: [PaginationFilter.EQ],
   },
 };
