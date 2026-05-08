@@ -18,8 +18,6 @@ export const EstagiarioPerfilRefSchema = ObjectIdUuidFactory;
 
 export const EstagiarioCursoRefSchema = ObjectIdUuidFactory;
 
-export const EstagiarioTurmaRefSchema = ObjectIdUuidFactory;
-
 // ============================================================================
 // Schemas compostos
 // ============================================================================
@@ -29,7 +27,7 @@ export const EstagiarioSchema = z
     id: uuidSchema,
     perfil: ObjectIdUuidFactory.domain,
     curso: ObjectIdUuidFactory.domain,
-    turma: ObjectIdUuidFactory.domain,
+    periodo: EstagiarioFields.periodo.domainSchema,
     telefone: z.string().min(1).max(15),
     emailInstitucional: z.string().nullable(),
     dataNascimento: z.string(),
@@ -40,7 +38,7 @@ export const EstagiarioCreateSchema = createSchema((standard) =>
   z.object({
     perfil: EstagiarioPerfilRefSchema.create(standard),
     curso: EstagiarioCursoRefSchema.create(standard),
-    turma: EstagiarioTurmaRefSchema.create(standard),
+    periodo: EstagiarioFields.periodo.create(standard),
     telefone: EstagiarioFields.telefone.create(standard),
     emailInstitucional: EstagiarioFields.emailInstitucional.create(standard),
     dataNascimento: EstagiarioFields.dataNascimento.create(standard),
@@ -51,7 +49,7 @@ export const EstagiarioUpdateSchema = createSchema((standard) =>
   z.object({
     perfil: EstagiarioPerfilRefSchema.create(standard).optional(),
     curso: EstagiarioCursoRefSchema.create(standard).optional(),
-    turma: EstagiarioTurmaRefSchema.create(standard).optional(),
+    periodo: EstagiarioFields.periodo.create(standard).optional(),
     telefone: EstagiarioFields.telefone.create(standard).optional(),
     emailInstitucional: EstagiarioFields.emailInstitucional.create(standard),
     dataNascimento: EstagiarioFields.dataNascimento.create(standard).optional(),
