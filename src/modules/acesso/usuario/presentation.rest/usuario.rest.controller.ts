@@ -348,6 +348,26 @@ export class UsuarioRestController {
               if (matches.length > 0) break;
             }
 
+            // Fallback: se nenhuma busca por termo encontrou resultados, busque uma lista mais ampla
+            // e compare localmente usando a mesma normalização — útil quando o termo está muito truncado.
+            if (matches.length === 0) {
+              const campusList = await this.campusListHandler.execute(accessContext, {
+                search: "",
+                page: 1,
+                limit: 200,
+              } as any);
+
+              const all = (campusList?.data || []).filter((campus: any) => {
+                return (
+                  normalize(campus.nomeFantasia).includes(normalize(campusText)) ||
+                  normalize(campus.razaoSocial).includes(normalize(campusText)) ||
+                  normalize(campus.apelido).includes(normalize(campusText))
+                );
+              });
+
+              matches = all;
+            }
+
             if (matches.length === 1) {
               const campusFound = matches[0];
               // Sempre tenta criar perfil, mas handler deve ser idempotente
