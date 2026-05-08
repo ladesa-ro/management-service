@@ -1,6 +1,5 @@
 import * as PerfilRestMapper from "@/modules/acesso/usuario/perfil/presentation.rest/perfil.rest.mapper";
 import * as CursoRestMapper from "@/modules/ensino/curso/presentation.rest/curso.rest.mapper";
-import * as TurmaRestMapper from "@/modules/ensino/turma/presentation.rest/turma.rest.mapper";
 import {
   EstagiarioCreateCommand,
   EstagiarioUpdateCommand,
@@ -40,7 +39,7 @@ export const listInputDtoToListQuery = createPaginatedInputMapper<
   into(query).field("filter.id").from(dto);
   into(query).field("filter.perfil.id").from(dto);
   into(query).field("filter.curso.id").from(dto);
-  into(query).field("filter.turma.id").from(dto);
+  into(query).field("filter.periodo").from(dto, "filterPeriodo");
 });
 
 export const createInputDtoToCreateCommand = createMapper<
@@ -49,7 +48,7 @@ export const createInputDtoToCreateCommand = createMapper<
 >((dto) => ({
   perfil: { id: dto.perfil.id },
   curso: { id: dto.curso.id },
-  turma: { id: dto.turma.id },
+  periodo: dto.periodo,
   telefone: dto.telefone,
   emailInstitucional: dto.emailInstitucional,
   dataNascimento: dto.dataNascimento,
@@ -62,7 +61,7 @@ export const updateInputDtoToUpdateCommand = createMapper<
   id: params.id,
   perfil: dto.perfil ? { id: dto.perfil.id } : undefined,
   curso: dto.curso ? { id: dto.curso.id } : undefined,
-  turma: dto.turma ? { id: dto.turma.id } : undefined,
+  periodo: dto.periodo,
   telefone: dto.telefone,
   emailInstitucional: dto.emailInstitucional,
   dataNascimento: dto.dataNascimento,
@@ -79,7 +78,7 @@ export const findOneQueryResultToOutputDto = createMapper<
   id: output.id,
   perfil: PerfilRestMapper.findOneQueryResultToOutputDto.mapOptional(output.perfil),
   curso: CursoRestMapper.findOneQueryResultToOutputDto.mapOptional(output.curso),
-  turma: TurmaRestMapper.findOneQueryResultToOutputDto.mapOptional(output.turma),
+  periodo: output.periodo,
   telefone: output.telefone,
   emailInstitucional: output.emailInstitucional,
   dataNascimento: output.dataNascimento,
