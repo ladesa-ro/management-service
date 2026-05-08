@@ -311,6 +311,7 @@ export class UsuarioRestController {
                 str
                   ?.normalize("NFD")
                   .replace(/\p{Diacritic}/gu, "")
+                  .replace(/[^a-zA-Z0-9]/g, "")
                   .toLowerCase() || "";
               return (
                 normalize(campus.nomeFantasia).includes(normalize(campusText)) ||
