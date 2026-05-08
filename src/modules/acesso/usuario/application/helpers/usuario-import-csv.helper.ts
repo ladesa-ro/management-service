@@ -20,10 +20,12 @@ export interface UsuarioImportCsvParseResult {
 }
 
 function normalizeHeader(value: string): string {
-  return value
+  return (value || "")
     .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-zA-Z0-9]/g, "")
+    .replace(/[\u0300-\u036f]/g, "") // remove acentos
+    .replace(/\s+/g, "") // remove espaços
+    .replace(/[-_]/g, "") // remove hífens e underscores
+    .replace(/[^a-zA-Z0-9]/g, "") // remove outros caracteres especiais
     .toLowerCase();
 }
 
