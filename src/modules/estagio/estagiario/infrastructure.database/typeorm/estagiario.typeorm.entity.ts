@@ -19,7 +19,7 @@ export class EstagiarioTypeormEntity {
   curso!: Relation<CursoEntity>;
 
   @Column({ name: "periodo", type: "varchar", length: 20, nullable: false })
-  periodo: string;
+  periodo!: string;
 
   @Column({ name: "telefone", type: "varchar", length: 15, nullable: false })
   telefone!: string;
