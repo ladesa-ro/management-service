@@ -32,7 +32,9 @@ import { IEstagiarioRepository } from "@/modules/estagio/estagiario";
 import {
   parseEstagioImportCsv,
   resolveEstagioImportCargaHoraria,
+  resolveEstagioImportOrientador,
   resolveEstagioImportStatus,
+  resolveEstagioImportSupervisor,
 } from "@/modules/estagio/estagio/application/helpers";
 import {
   EstagioCreateCommandMetadata,
@@ -223,12 +225,20 @@ export class EstagioRestController {
           ? await usuarioRepository.findByMatricula(row.matriculaOrientador)
           : null;
 
+        // Resolve dados estruturados de supervisor e orientador
+        const supervisorData = resolveEstagioImportSupervisor(row);
+        const orientadorData = resolveEstagioImportOrientador(row);
+
         if (process.env.DEBUG_CSV_IMPORT) {
           console.log("[CSV import] vínculos resolvidos", {
             line: row.line,
             usuarioEstagiarioId: usuarioEstagiario?.id ?? null,
             estagiarioId: estagiario?.id ?? null,
             usuarioOrientadorId: usuarioOrientador?.id ?? null,
+            supervisorNome: supervisorData.nomeSupervisor,
+            supervisorEmail: supervisorData.emailSupervisor,
+            orientadorNome: orientadorData.nome,
+            orientadorMatricula: orientadorData.matricula,
           });
         }
 
@@ -240,9 +250,9 @@ export class EstagioRestController {
           dataInicio: row.dataInicio ?? undefined,
           dataFim: row.dataFim,
           status: resolveEstagioImportStatus(row, Boolean(estagiario)),
-          nomeSupervisor: row.nomeSupervisor ?? undefined,
-          emailSupervisor: row.emailSupervisor ?? undefined,
-          telefoneSupervisor: row.telefoneSupervisor ?? undefined,
+          nomeSupervisor: supervisorData.nomeSupervisor,
+          emailSupervisor: supervisorData.emailSupervisor,
+          telefoneSupervisor: supervisorData.telefoneSupervisor,
           aditivo: row.temAditivo ?? undefined,
           tipoAditivo: row.tiposAditivo ?? undefined,
           horariosEstagio: [],
