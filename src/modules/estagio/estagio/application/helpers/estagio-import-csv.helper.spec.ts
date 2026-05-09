@@ -4,6 +4,8 @@ import {
   parseEstagioImportCsv,
   resolveEstagioImportCargaHoraria,
   resolveEstagioImportStatus,
+  resolveEstagioImportSupervisor,
+  resolveEstagioImportOrientador,
 } from "./estagio-import-csv.helper";
 
 describe("parseEstagioImportCsv", () => {
@@ -119,5 +121,107 @@ describe("parseEstagioImportCsv", () => {
     expect(() => parseEstagioImportCsv("Estagiário\nFulano")).toThrow(
       "CSV inválido: colunas obrigatórias ausentes",
     );
+  });
+});
+
+describe("resolveEstagioImportSupervisor", () => {
+  it("should resolve supervisor data with valid email", () => {
+    const entry = {
+      nomeSupervisor: "jefferson antonio dos santos",
+      emailSupervisor: "jefferson.santos@ifro.edu.br",
+      telefoneSupervisor: "699226-0959",
+    } as never;
+
+    const result = resolveEstagioImportSupervisor(entry);
+
+    expect(result.nomeSupervisor).toBe("Jefferson Antonio Dos Santos");
+    expect(result.emailSupervisor).toBe("jefferson.santos@ifro.edu.br");
+    expect(result.telefoneSupervisor).toBe("6992260959");
+  });
+
+  it("should handle empty supervisor data", () => {
+    const entry = {
+      nomeSupervisor: null,
+      emailSupervisor: null,
+      telefoneSupervisor: null,
+    } as never;
+
+    const result = resolveEstagioImportSupervisor(entry);
+
+    expect(result.nomeSupervisor).toBeUndefined();
+    expect(result.emailSupervisor).toBeUndefined();
+    expect(result.telefoneSupervisor).toBeUndefined();
+  });
+
+  it("should reject invalid email", () => {
+    const entry = {
+      nomeSupervisor: "João Silva",
+      emailSupervisor: "email-invalido",
+      telefoneSupervisor: "(69) 9 9226-0959",
+    } as never;
+
+    const result = resolveEstagioImportSupervisor(entry);
+
+    expect(result.nomeSupervisor).toBe("João Silva");
+    expect(result.emailSupervisor).toBeUndefined();
+    expect(result.telefoneSupervisor).toBe("69992260959");
+  });
+
+  it("should handle dash-prefixed data", () => {
+    const entry = {
+      nomeSupervisor: "-",
+      emailSupervisor: "-",
+      telefoneSupervisor: "-",
+    } as never;
+
+    const result = resolveEstagioImportSupervisor(entry);
+
+    expect(result.nomeSupervisor).toBeUndefined();
+    expect(result.emailSupervisor).toBeUndefined();
+    expect(result.telefoneSupervisor).toBeUndefined();
+  });
+});
+
+describe("resolveEstagioImportOrientador", () => {
+  it("should resolve orientador data with all fields", () => {
+    const entry = {
+      matriculaOrientador: "1938406",
+      nomeOrientador: "leiva custodio pereira",
+      emailOrientador: "leiva.pereira@ifro.edu.br",
+    } as never;
+
+    const result = resolveEstagioImportOrientador(entry);
+
+    expect(result.matricula).toBe("1938406");
+    expect(result.nome).toBe("Leiva Custodio Pereira");
+    expect(result.email).toBe("leiva.pereira@ifro.edu.br");
+  });
+
+  it("should handle empty orientador data", () => {
+    const entry = {
+      matriculaOrientador: null,
+      nomeOrientador: null,
+      emailOrientador: null,
+    } as never;
+
+    const result = resolveEstagioImportOrientador(entry);
+
+    expect(result.matricula).toBeNull();
+    expect(result.nome).toBeNull();
+    expect(result.email).toBeNull();
+  });
+
+  it("should reject invalid email for orientador", () => {
+    const entry = {
+      matriculaOrientador: "123456",
+      nomeOrientador: "Maria Silva",
+      emailOrientador: "invalid.email",
+    } as never;
+
+    const result = resolveEstagioImportOrientador(entry);
+
+    expect(result.matricula).toBe("123456");
+    expect(result.nome).toBe("Maria Silva");
+    expect(result.email).toBeNull();
   });
 });
