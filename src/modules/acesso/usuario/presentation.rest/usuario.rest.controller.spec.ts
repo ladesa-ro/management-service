@@ -72,7 +72,7 @@ describe("UsuarioRestController.importCsv", () => {
 
     const csv = [
       "#,Nome,Matrícula,Curso,Campus,Polo,Situação,E-mail Acadêmico,E-mail Pessoal,Ano/Periodo Letivo",
-      '1,Ana Clara,202610200001,0202 - Técnico em Informática Integrado ao Ensino Médio (JI-PARANÁ),JIPARANA,None,Matriculado,ana@ifro.edu.br,ana.clara@gmail.com,2026.1',
+      "1,Ana Clara,202610200001,0202 - Técnico em Informática Integrado ao Ensino Médio (JI-PARANÁ),JIPARANA,None,Matriculado,ana@ifro.edu.br,ana.clara@gmail.com,2026.1",
     ].join("\n");
 
     const result = await controller.importCsv(accessContext, {
