@@ -56,9 +56,7 @@ import {
   IUsuarioEnsinoQueryHandler,
   UsuarioEnsinoQueryMetadata,
 } from "@/modules/acesso/usuario/domain/queries/usuario-ensino.query.handler.interface";
-import {
-  IUsuarioFindByMatriculaQueryHandler,
-} from "@/modules/acesso/usuario/domain/queries/usuario-find-by-matricula.query.handler.interface";
+import { IUsuarioFindByMatriculaQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-find-by-matricula.query.handler.interface";
 import {
   IUsuarioFindOneQueryHandler,
   UsuarioFindOneQueryMetadata,
@@ -294,7 +292,7 @@ export class UsuarioRestController {
       // Se o usuário foi criado (mesmo que parcialmente), tente criar o perfil
       if (usuarioCriado && usuarioId) {
         try {
-              const campusText = (row as any).campus;
+          const campusText = (row as any).campus;
           const _situacaoText = (row as any).situacao ?? "";
 
           if (campusText) {
@@ -394,19 +392,21 @@ export class UsuarioRestController {
               items.push(item);
               continue;
             } else if (matches.length === 0) {
-                  item.status = "failed";
-                  item.reason = (item.reason ? item.reason + "; " : "") + `Nenhum campus encontrado para '${campusText}'.`;
-                  failed += 1;
-                  items.push(item);
-                  continue;
+              item.status = "failed";
+              item.reason =
+                (item.reason ? item.reason + "; " : "") +
+                `Nenhum campus encontrado para '${campusText}'.`;
+              failed += 1;
+              items.push(item);
+              continue;
             }
           } else {
-                // Sem texto de campus não é possível determinar campus; marca como failed
-                item.status = "failed";
-                item.reason = (item.reason ? item.reason + "; " : "") + `Nenhum campus informado.`;
-                failed += 1;
-                items.push(item);
-                continue;
+            // Sem texto de campus não é possível determinar campus; marca como failed
+            item.status = "failed";
+            item.reason = (item.reason ? item.reason + "; " : "") + `Nenhum campus informado.`;
+            failed += 1;
+            items.push(item);
+            continue;
           }
         } catch (err) {
           // não interrompe o import, apenas registra motivo parcial
