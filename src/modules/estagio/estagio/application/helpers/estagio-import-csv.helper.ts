@@ -199,6 +199,30 @@ function parseEstagiarioField(value: string): { nome: string; matricula: string 
   };
 }
 
+function isValidEmail(email: string | null): email is string {
+  if (!email) return false;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
+
+function normalizePhoneNumber(value: string): string | null {
+  const normalized = value.trim();
+  if (!normalized || normalized === "-") return null;
+  // Remove common characters used in phone formatting
+  return normalized.replace(/[\s\-()]/g, "");
+}
+
+function normalizeSupervisorName(value: string): string | null {
+  const normalized = value.trim();
+  if (!normalized || normalized === "-") return null;
+  // Convert to title case
+  return normalized
+    .toLowerCase()
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}
+
 function parseStatus(value: string): EstagioStatus | null {
   const normalized = normalizeText(value);
 
@@ -428,4 +452,44 @@ export function resolveEstagioImportStatus(
   }
 
   return EstagioStatus.EM_FASE_INICIAL;
+}
+
+/**
+ * Resolve os dados do supervisor a partir da entrada parseada do CSV.
+ * Valida e normaliza: nome, email e telefone.
+ */
+export function resolveEstagioImportSupervisor(entry: EstagioImportCsvEntry): {
+  nomeSupervisor: string | undefined;
+  emailSupervisor: string | undefined;
+  telefoneSupervisor: string | undefined;
+} {
+  const nomeSupervisor = normalizeSupervisorName(entry.nomeSupervisor ?? "");
+  const emailSupervisor = isValidEmail(entry.emailSupervisor) ? entry.emailSupervisor : undefined;
+  const telefoneSupervisor = normalizePhoneNumber(entry.telefoneSupervisor ?? "");
+
+  return {
+    nomeSupervisor: nomeSupervisor ?? undefined,
+    emailSupervisor,
+    telefoneSupervisor: telefoneSupervisor ?? undefined,
+  };
+}
+
+/**
+ * Resolve os dados do orientador a partir da entrada parseada do CSV.
+ * Retorna informações estruturadas sobre o orientador.
+ */
+export interface EstagioImportOrientadorInfo {
+  matricula: string | null;
+  nome: string | null;
+  email: string | null;
+}
+
+export function resolveEstagioImportOrientador(
+  entry: EstagioImportCsvEntry,
+): EstagioImportOrientadorInfo {
+  return {
+    matricula: entry.matriculaOrientador,
+    nome: entry.nomeOrientador ? normalizeSupervisorName(entry.nomeOrientador) : null,
+    email: isValidEmail(entry.emailOrientador) ? entry.emailOrientador : null,
+  };
 }
