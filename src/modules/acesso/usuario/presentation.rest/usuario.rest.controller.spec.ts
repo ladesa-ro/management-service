@@ -88,9 +88,7 @@ describe("UsuarioRestController.importCsv", () => {
     });
     expect(definirPerfisAtivosHandler.execute).toHaveBeenCalledOnce();
     expect(definirPerfisAtivosHandler.execute).toHaveBeenCalledWith(accessContext, {
-      vinculos: [
-        { apelido: "Ana Clara", cargo: "aluno", campus: { id: expect.any(String) } },
-      ],
+      vinculos: [{ apelido: "Ana Clara", cargo: "aluno", campus: { id: expect.any(String) } }],
       usuario: { id: usuarioId },
     });
     expect(result).toMatchObject({
