@@ -6,6 +6,8 @@ import {
   resolveEstagioImportStatus,
   resolveEstagioImportSupervisor,
   resolveEstagioImportOrientador,
+  resolveEstagioImportEstagiarioDefaults,
+  prepareEstagiarioDataForCreation,
 } from "./estagio-import-csv.helper";
 
 describe("parseEstagioImportCsv", () => {
@@ -223,5 +225,107 @@ describe("resolveEstagioImportOrientador", () => {
     expect(result.matricula).toBe("123456");
     expect(result.nome).toBe("Maria Silva");
     expect(result.email).toBeNull();
+  });
+});
+
+describe("resolveEstagioImportEstagiarioDefaults", () => {
+  it("should resolve with default values when all data is missing", () => {
+    const entry = {
+      periodoReferencia: null,
+      periodoMinimoObrigatorio: null,
+      periodoMinimoNaoObrigatorio: null,
+    } as never;
+
+    const result = resolveEstagioImportEstagiarioDefaults(entry);
+
+    expect(result.telefone).toBe("00000000");
+    expect(result.dataNascimento).toBe("2008-03-01");
+    expect(result.periodo).toBe("2");
+  });
+
+  it("should use periodo from CSV when available", () => {
+    const entry = {
+      periodoReferencia: 4,
+      periodoMinimoObrigatorio: null,
+      periodoMinimoNaoObrigatorio: null,
+    } as never;
+
+    const result = resolveEstagioImportEstagiarioDefaults(entry);
+
+    expect(result.periodo).toBe("4");
+  });
+
+  it("should prioritize periodoReferencia over other periodo fields", () => {
+    const entry = {
+      periodoReferencia: 5,
+      periodoMinimoObrigatorio: 2,
+      periodoMinimoNaoObrigatorio: 3,
+    } as never;
+
+    const result = resolveEstagioImportEstagiarioDefaults(entry);
+
+    expect(result.periodo).toBe("5");
+  });
+
+  it("should always return fixed phone and birth date", () => {
+    const entry = {
+      periodoReferencia: 3,
+      periodoMinimoObrigatorio: null,
+      periodoMinimoNaoObrigatorio: null,
+    } as never;
+
+    const result = resolveEstagioImportEstagiarioDefaults(entry);
+
+    expect(result.telefone).toBe("00000000");
+    expect(result.dataNascimento).toBe("2008-03-01");
+  });
+});
+
+describe("prepareEstagiarioDataForCreation", () => {
+  it("should prepare estagiario data with defaults and academic email", () => {
+    const entry = {
+      estagiarioEmailAcademico: "aluno@estudante.ifro.edu.br",
+      periodoReferencia: 2,
+      periodoMinimoObrigatorio: null,
+      periodoMinimoNaoObrigatorio: null,
+    } as never;
+
+    const result = prepareEstagiarioDataForCreation(entry);
+
+    expect(result.telefone).toBe("00000000");
+    expect(result.dataNascimento).toBe("2008-03-01");
+    expect(result.periodo).toBe("2");
+    expect(result.emailInstitucional).toBe("aluno@estudante.ifro.edu.br");
+  });
+
+  it("should handle missing academic email", () => {
+    const entry = {
+      estagiarioEmailAcademico: null,
+      periodoReferencia: 3,
+      periodoMinimoObrigatorio: null,
+      periodoMinimoNaoObrigatorio: null,
+    } as never;
+
+    const result = prepareEstagiarioDataForCreation(entry);
+
+    expect(result.emailInstitucional).toBeUndefined();
+  });
+
+  it("should prepare data with all fields populated", () => {
+    const entry = {
+      estagiarioEmailAcademico: "user@estudante.ifro.edu.br",
+      periodoReferencia: 1,
+      periodoMinimoObrigatorio: 2,
+      periodoMinimoNaoObrigatorio: 3,
+    } as never;
+
+    const result = prepareEstagiarioDataForCreation(entry);
+
+    expect(result).toMatchObject({
+      telefone: "00000000",
+      dataNascimento: "2008-03-01",
+      periodo: "1",
+      emailInstitucional: "user@estudante.ifro.edu.br",
+    });
   });
 });
