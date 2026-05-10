@@ -9,7 +9,11 @@ function createController() {
   const findByMatriculaHandler = {
     execute: vi.fn().mockResolvedValue(null),
   };
-  const campusListHandler = { execute: vi.fn().mockResolvedValue({ data: [] }) };
+  const campusListHandler = {
+    execute: vi.fn().mockResolvedValue({
+      data: [{ id: createTestId(), nomeFantasia: "JIPARANA", apelido: "JI-PARANÁ" }],
+    }),
+  };
   const definirPerfisAtivosHandler = { execute: vi.fn().mockResolvedValue({}) };
 
   const controller = new UsuarioRestController(
