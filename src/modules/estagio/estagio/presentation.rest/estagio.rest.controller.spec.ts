@@ -1,5 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { IUsuarioRepository } from "@/modules/acesso/usuario";
+import { IPerfilDefinirPerfisAtivosCommandHandler } from "@/modules/acesso/usuario/perfil/domain/commands";
+import { ICampusListQueryHandler } from "@/modules/ambientes/campus";
 import { ICursoListQueryHandler } from "@/modules/ensino/curso";
 import { IEmpresaRepository } from "@/modules/estagio/empresa";
 import {
@@ -33,10 +35,32 @@ function createController(options?: {
 
       return null;
     }),
+    getFindOneQueryResult: vi
+      .fn()
+      .mockImplementation(async (_accessContext: unknown, dto: { id: string }) => {
+        if (dto.id === "usuario-estagiario-id") {
+          return {
+            id: dto.id,
+            vinculos: [
+              {
+                id: "perfil-aluno-id",
+                ativo: true,
+                cargo: { id: "cargo-aluno-id", nome: "aluno" },
+                campus: { id: "campus-id" },
+              },
+            ],
+          };
+        }
+
+        return null;
+      }),
+  };
+  const definirPerfisAtivosHandler = {
+    execute: vi.fn().mockResolvedValue([]),
   };
   const estagiarioRepository = {
-    findByUsuarioId: vi.fn().mockImplementation(async (usuarioId: string) => {
-      if (usuarioId === "usuario-estagiario-id") {
+    findByPerfilId: vi.fn().mockImplementation(async (perfilId: string) => {
+      if (perfilId === "perfil-aluno-id") {
         return { id: "estagiario-id" };
       }
 
@@ -47,11 +71,24 @@ function createController(options?: {
   const providers = new Map<any, any>([
     [IEstagioCreateCommandHandler, createHandler],
     [IEmpresaRepository, empresaRepository],
-    [ICursoListQueryHandler, { execute: vi.fn().mockResolvedValue({ data: [] }) }],
     [
-      IEstagiarioCreateCommandHandler,
-      { execute: vi.fn().mockResolvedValue({ id: createTestId() }) },
+      ICursoListQueryHandler,
+      {
+        execute: vi.fn().mockResolvedValue({
+          data: [{ id: "curso-id", nome: "Técnico em Informática" }],
+        }),
+      },
     ],
+    [
+      ICampusListQueryHandler,
+      {
+        execute: vi.fn().mockResolvedValue({
+          data: [{ id: "campus-id", nomeFantasia: "JIPARANA", apelido: "JIPARANA" }],
+        }),
+      },
+    ],
+    [IEstagiarioCreateCommandHandler, { execute: vi.fn().mockResolvedValue({ id: createTestId() }) }],
+    [IPerfilDefinirPerfisAtivosCommandHandler, definirPerfisAtivosHandler],
     [IUsuarioRepository, usuarioRepository],
     [IEstagiarioRepository, estagiarioRepository],
   ]);
@@ -69,6 +106,7 @@ function createController(options?: {
     empresaRepository,
     usuarioRepository,
     estagiarioRepository,
+    definirPerfisAtivosHandler,
   };
 }
 
@@ -83,12 +121,12 @@ describe("EstagioRestController.importCsv", () => {
     } = createController();
     const accessContext = createTestAccessContext();
 
-    // Helper to properly quote CSV fields that may contain commas
     const quoteIfNeeded = (value: string) => (value.includes(",") ? `"${value}"` : value);
 
     const headers = [
       "#",
       "Estagiário",
+      "Campus",
       "Concedente",
       "Concedente CNPJ",
       "Nome do Supervisor",
@@ -108,6 +146,7 @@ describe("EstagioRestController.importCsv", () => {
     const data = [
       "1",
       "Arthur Luiz Braun Krauser de Moura (2024102020023)",
+      "JIPARANA",
       "Instituto Federal de Educacao",
       "10.817.343/0002-88",
       "Jefferson dos Santos",
@@ -135,7 +174,7 @@ describe("EstagioRestController.importCsv", () => {
     expect(empresaRepository.findByCnpj).toHaveBeenCalledWith("10.817.343/0002-88");
     expect(usuarioRepository.findByMatricula).toHaveBeenCalledWith("2024102020023");
     expect(usuarioRepository.findByMatricula).toHaveBeenCalledWith("2291377");
-    expect(estagiarioRepository.findByUsuarioId).toHaveBeenCalledWith("usuario-estagiario-id");
+    expect(estagiarioRepository.findByPerfilId).toHaveBeenCalledWith("perfil-aluno-id");
     expect(createHandler.execute).toHaveBeenCalledOnce();
     expect(createHandler.execute).toHaveBeenCalledWith(
       accessContext,
@@ -172,6 +211,97 @@ describe("EstagioRestController.importCsv", () => {
           status: "created",
         },
       ],
+    });
+  });
+
+  it("should create aluno vínculo when the estagiário user already exists without vínculos", async () => {
+    const {
+      controller,
+      createHandler,
+      usuarioRepository,
+      estagiarioRepository,
+      definirPerfisAtivosHandler,
+    } = createController();
+    const accessContext = createTestAccessContext();
+
+    const usuarioState = { vinculos: [] as any[] };
+    usuarioRepository.getFindOneQueryResult.mockImplementation(async (_accessContext, dto) => {
+      if (dto.id === "usuario-estagiario-id") {
+        return {
+          id: dto.id,
+          vinculos: usuarioState.vinculos,
+        };
+      }
+
+      return null;
+    });
+
+    definirPerfisAtivosHandler.execute.mockImplementation(async () => {
+      usuarioState.vinculos = [
+        {
+          id: "perfil-aluno-id",
+          ativo: true,
+          cargo: { id: "cargo-aluno-id", nome: "aluno" },
+          campus: { id: "campus-id" },
+        },
+      ];
+      return usuarioState.vinculos;
+    });
+
+    const quoteIfNeeded = (value: string) => (value.includes(",") ? `"${value}"` : value);
+    const headers = [
+      "#",
+      "Estagiário",
+      "Campus",
+      "Concedente",
+      "Concedente CNPJ",
+      "Nome do Supervisor",
+      "E-mail do Supervisor",
+      "Telefone do Supervisor",
+      "Nome do Orientador",
+      "Matrícula do Orientador",
+      "Data de Início",
+      "Data Prevista de Fim",
+      "Status",
+      "C.H. Final",
+      "Período de Referência",
+      "Período Mínimo para Estágio Obrigatório",
+      "Período Mínimo para Estágio Não Obrigatório",
+    ];
+    const data = [
+      "1",
+      "Arthur Luiz Braun Krauser de Moura (2024102020023)",
+      "JIPARANA",
+      "Instituto Federal de Educacao",
+      "10.817.343/0002-88",
+      "Jefferson dos Santos",
+      "jefferson.santos@ifro.edu.br",
+      "699226-0959",
+      "Emi Silva de Oliveira",
+      "2291377",
+      "20/04/2026",
+      "22/06/2026",
+      "Em Andamento/Em Fase Inicial",
+      "20",
+      "3",
+      "2",
+      "1",
+    ];
+    const csv = [headers.map(quoteIfNeeded).join(","), data.map(quoteIfNeeded).join(",")].join(
+      "\n",
+    );
+
+    const result = await controller.importCsv(accessContext, {
+      buffer: Buffer.from(csv, "utf8"),
+    } as Express.Multer.File);
+
+    expect(definirPerfisAtivosHandler.execute).toHaveBeenCalledOnce();
+    expect(estagiarioRepository.findByPerfilId).toHaveBeenCalledWith("perfil-aluno-id");
+    expect(createHandler.execute).toHaveBeenCalledOnce();
+    expect(result).toMatchObject({
+      created: 1,
+      failed: 0,
+      items: [{ status: "created" }],
     });
   });
 
@@ -297,7 +427,7 @@ describe("EstagioRestController.importCsv", () => {
           line: 2,
           estagiarioNome: "Arthur Luiz Braun Krauser de Moura",
           status: "failed",
-          reason: "Não foi possível vincular um estagiário para a linha 2.",
+          reason: "Não foi possível localizar o perfil do estagiário para a linha 2.",
         },
       ],
     });
