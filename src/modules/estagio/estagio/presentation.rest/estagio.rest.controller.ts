@@ -233,7 +233,7 @@ export class EstagioRestController {
           });
         }
 
-        const usuarioEstagiario = row.estagiarioMatricula
+        let usuarioEstagiario = row.estagiarioMatricula
           ? await usuarioRepository.findByMatricula(row.estagiarioMatricula)
           : null;
         let estagiario = usuarioEstagiario
