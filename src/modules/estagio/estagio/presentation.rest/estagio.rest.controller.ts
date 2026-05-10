@@ -74,6 +74,16 @@ import {
 } from "./estagio.rest.dto";
 import * as EstagioRestMapper from "./estagio.rest.mapper";
 
+function normalizeSearchValue(value: string): string {
+  return value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/\s+/g, " ")
+    .replace(/[^a-zA-Z0-9 ]/g, "")
+    .trim()
+    .toLowerCase();
+}
+
 @ApiTags("estagios")
 @Controller("/estagios")
 export class EstagioRestController {
@@ -258,9 +268,9 @@ export class EstagioRestController {
                   limit: 20,
                 } as any);
                 const matches = (campuses?.data || []).filter((c: any) =>
-                  (c.nomeFantasia || c.apelido || "")
-                    .toLowerCase()
-                    .includes((row.campus || "").toLowerCase()),
+                  normalizeSearchValue(c.nomeFantasia || c.apelido || "").includes(
+                    normalizeSearchValue(row.campus || ""),
+                  ),
                 );
                 if (matches.length >= 1) campusId = matches[0].id;
               } catch (_) {
@@ -278,7 +288,9 @@ export class EstagioRestController {
                   limit: 20,
                 } as any);
                 const matches = (cursos?.data || []).filter((c: any) =>
-                  (c.nome || "").toLowerCase().includes((row.curso || "").toLowerCase()),
+                  normalizeSearchValue(c.nome || "").includes(
+                    normalizeSearchValue(row.curso || ""),
+                  ),
                 );
                 if (matches.length >= 1) cursoId = matches[0].id;
               } catch (_) {
@@ -441,6 +453,13 @@ export class EstagioRestController {
           tipoAditivo: row.tiposAditivo ?? undefined,
           horariosEstagio: [],
         };
+
+        if (process.env.DEBUG_CSV_IMPORT) {
+          console.log("[CSV import] comando a ser enviado para createHandler.execute", {
+            line: row.line,
+            command,
+          });
+        }
 
         const queryResult = await createHandler.execute(accessContext, command as never);
 

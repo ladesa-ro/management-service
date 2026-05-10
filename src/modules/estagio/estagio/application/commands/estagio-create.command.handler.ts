@@ -18,9 +18,28 @@ export class EstagioCreateCommandHandlerImpl implements IEstagioCreateCommandHan
     accessContext: IAccessContext | null,
     dto: EstagioCreateCommand,
   ): Promise<EstagioFindOneQueryResult> {
+    if (process.env.DEBUG_CSV_IMPORT) {
+      console.log("[CSV import][handler] dto recebido para criar estagio", { dto });
+    }
+
     const estagio = Estagio.create(dto);
 
+    if (process.env.DEBUG_CSV_IMPORT) {
+      console.log("[CSV import][handler] aggregate antes do save", {
+        id: estagio.id,
+        estagiario: estagio.estagiario,
+        empresa: estagio.empresa,
+      });
+    }
+
     await this.repository.save(estagio);
+
+    if (process.env.DEBUG_CSV_IMPORT) {
+      console.log("[CSV import][handler] aggregate salvo (após save)", {
+        id: estagio.id,
+        estagiario: estagio.estagiario,
+      });
+    }
 
     const result = await this.repository.getFindOneQueryResult(accessContext, {
       id: estagio.id,
