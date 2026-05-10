@@ -3,6 +3,8 @@ import { IUsuarioRepository } from "@/modules/acesso/usuario";
 import { IEmpresaRepository } from "@/modules/estagio/empresa";
 import { IEstagiarioRepository } from "@/modules/estagio/estagiario";
 import { IEstagioCreateCommandHandler } from "@/modules/estagio/estagio/domain/commands";
+import { ICursoListQueryHandler } from "@/modules/ensino/curso";
+import { IEstagiarioCreateCommandHandler } from "@/modules/estagio/estagiario";
 import { createTestAccessContext, createTestId } from "@/test/helpers";
 import { EstagioRestController } from "./estagio.rest.controller";
 
@@ -43,6 +45,8 @@ function createController(options?: {
   const providers = new Map<any, any>([
     [IEstagioCreateCommandHandler, createHandler],
     [IEmpresaRepository, empresaRepository],
+    [ICursoListQueryHandler, { execute: vi.fn().mockResolvedValue({ data: [] }) }],
+    [IEstagiarioCreateCommandHandler, { execute: vi.fn().mockResolvedValue({ id: createTestId() }) }],
     [IUsuarioRepository, usuarioRepository],
     [IEstagiarioRepository, estagiarioRepository],
   ]);
