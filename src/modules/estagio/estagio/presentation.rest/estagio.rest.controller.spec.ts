@@ -147,10 +147,12 @@ describe("EstagioRestController.importCsv", () => {
         dataInicio: "2026-04-20",
         dataFim: null,
         status: "EM_ANDAMENTO",
-        nomeSupervisor: "Jefferson dos Santos",
+        nomeSupervisor: "Jefferson Dos Santos",
         emailSupervisor: "jefferson.santos@ifro.edu.br",
-        telefoneSupervisor: "699226-0959",
+        telefoneSupervisor: "6992260959",
         horariosEstagio: [],
+        aditivo: undefined,
+        tipoAditivo: undefined,
       }),
     );
 
