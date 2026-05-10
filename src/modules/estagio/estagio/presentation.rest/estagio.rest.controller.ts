@@ -27,6 +27,10 @@ import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { Dep, IContainer } from "@/domain/dependency-injection";
 import { IUsuarioRepository } from "@/modules/acesso/usuario";
+import { IUsuarioCreateCommandHandler } from "@/modules/acesso/usuario/domain/commands/usuario-create.command.handler.interface";
+import { IPerfilDefinirPerfisAtivosCommandHandler } from "@/modules/acesso/usuario/perfil/domain/commands/perfil-definir-perfis-ativos.command.handler.interface";
+import { ICampusListQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-list.query.handler.interface";
+import { ICursoListQueryHandler } from "@/modules/ensino/curso/domain/queries/curso-list.query.handler.interface";
 import { IEmpresaRepository } from "@/modules/estagio/empresa";
 import {
   IEstagiarioCreateCommandHandler,
@@ -188,26 +192,12 @@ export class EstagioRestController {
     const empresaRepository = this.container.get<IEmpresaRepository>(IEmpresaRepository);
     const usuarioRepository = this.container.get<IUsuarioRepository>(IUsuarioRepository);
     const estagiarioRepository = this.container.get<IEstagiarioRepository>(IEstagiarioRepository);
-    const usuarioCreateHandler = this.container.get<any>(
-      // IUsuarioCreateCommandHandler is declared in usuario module
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      require("@/modules/acesso/usuario/domain/commands/usuario-create.command.handler.interface")
-        .IUsuarioCreateCommandHandler,
-    );
+    const usuarioCreateHandler = this.container.get<any>(IUsuarioCreateCommandHandler);
     const definirPerfisAtivosHandler = this.container.get<any>(
-      // IPerfilDefinirPerfisAtivosCommandHandler token
-      require("@/modules/acesso/usuario/perfil/domain/commands/perfil-definir-perfis-ativos.command.handler.interface")
-        .IPerfilDefinirPerfisAtivosCommandHandler,
+      IPerfilDefinirPerfisAtivosCommandHandler,
     );
-    const cursoListHandler = this.container.get<any>(
-      // ICursoListQueryHandler token
-      require("@/modules/ensino/curso/domain/queries/curso-list.query.handler.interface")
-        .ICursoListQueryHandler,
-    );
-    const campusListHandler = this.container.get<any>(
-      require("@/modules/ambientes/campus/domain/queries/campus-list.query.handler.interface")
-        .ICampusListQueryHandler,
-    );
+    const cursoListHandler = this.container.get<any>(ICursoListQueryHandler);
+    const campusListHandler = this.container.get<any>(ICampusListQueryHandler);
 
     const items: EstagioImportCsvItemRestDto[] = parsed.skipped.map((row) => {
       const item = new EstagioImportCsvItemRestDto();
@@ -383,6 +373,12 @@ export class EstagioRestController {
             }
             throw err;
           }
+        }
+
+        if (!estagiario) {
+          throw new BadRequestException(
+            `Não foi possível vincular um estagiário para a linha ${row.line}.`,
+          );
         }
 
         const usuarioOrientador = row.matriculaOrientador
