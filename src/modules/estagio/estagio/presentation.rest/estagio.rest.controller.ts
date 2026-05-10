@@ -177,6 +177,22 @@ export class EstagioRestController {
     const empresaRepository = this.container.get<IEmpresaRepository>(IEmpresaRepository);
     const usuarioRepository = this.container.get<IUsuarioRepository>(IUsuarioRepository);
     const estagiarioRepository = this.container.get<IEstagiarioRepository>(IEstagiarioRepository);
+    const usuarioCreateHandler = this.container.get<any>(
+      // IUsuarioCreateCommandHandler is declared in usuario module
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      require("@/modules/acesso/usuario/domain/commands/usuario-create.command.handler.interface").IUsuarioCreateCommandHandler,
+    );
+    const definirPerfisAtivosHandler = this.container.get<any>(
+      // IPerfilDefinirPerfisAtivosCommandHandler token
+      require("@/modules/acesso/usuario/perfil/domain/commands/perfil-definir-perfis-ativos.command.handler.interface").IPerfilDefinirPerfisAtivosCommandHandler,
+    );
+    const cursoListHandler = this.container.get<any>(
+      // ICursoListQueryHandler token
+      require("@/modules/ensino/curso/domain/queries/curso-list.query.handler.interface").ICursoListQueryHandler,
+    );
+    const campusListHandler = this.container.get<any>(
+      require("@/modules/ambientes/campus/domain/queries/campus-list.query.handler.interface").ICampusListQueryHandler,
+    );
 
     const items: EstagioImportCsvItemRestDto[] = parsed.skipped.map((row) => {
       const item = new EstagioImportCsvItemRestDto();
@@ -224,67 +240,117 @@ export class EstagioRestController {
           ? await estagiarioRepository.findByUsuarioId(usuarioEstagiario.id)
           : null;
 
-        // Se existe usuário (por matrícula) mas não existe estagiário, tenta criar estagiário
-        if (!estagiario && usuarioEstagiario) {
+        // Se não existe estagiario e existe matrícula, garantimos criação do Usuario+Perfil e do Estagiario
+        if (!estagiario && row.estagiarioMatricula) {
           try {
-            const usuarioFull = await usuarioRepository.getFindOneQueryResult(accessContext, {
-              id: usuarioEstagiario.id,
-            } as any);
+            // Tenta obter/gerar campusId
+            let campusId: string | undefined;
+            if (row.campus) {
+              try {
+                const campuses = await campusListHandler.execute(accessContext, {
+                  search: row.campus,
+                  page: 1,
+                  limit: 20,
+                } as any);
+                const matches = (campuses?.data || []).filter((c: any) =>
+                  (c.nomeFantasia || c.apelido || "").toLowerCase().includes((row.campus || "").toLowerCase()),
+                );
+                if (matches.length >= 1) campusId = matches[0].id;
+              } catch (_) {
+                campusId = undefined;
+              }
+            }
 
-            const vinculos = (usuarioFull?.vinculos as any[]) || [];
-            // procura perfil com cargo 'aluno' ou pega primeiro
-            let perfilFound = vinculos.find((v) => v.cargo?.nome?.toLowerCase() === "aluno");
-            if (!perfilFound && vinculos.length > 0) perfilFound = vinculos[0];
+            // Tenta resolver cursoId
+            let cursoId: string | undefined;
+            if (row.curso) {
+              try {
+                const cursos = await cursoListHandler.execute(accessContext, {
+                  search: row.curso,
+                  page: 1,
+                  limit: 20,
+                } as any);
+                const matches = (cursos?.data || []).filter((c: any) =>
+                  (c.nome || "").toLowerCase().includes((row.curso || "").toLowerCase()),
+                );
+                if (matches.length >= 1) cursoId = matches[0].id;
+              } catch (_) {
+                cursoId = undefined;
+              }
+            }
 
-            if (perfilFound) {
-              // Resolve curso pelo nome fornecido no CSV, se houver
-              let cursoId: string | undefined;
-              if (row.curso) {
-                try {
-                  const cursoListHandler = this.container.get<ICursoListQueryHandler>(
-                    ICursoListQueryHandler,
-                  );
-                  const cursos = await cursoListHandler.execute(accessContext, {
-                    search: row.curso,
-                    page: 1,
-                    limit: 20,
-                  } as any);
-                  const matches = (cursos?.data || []).filter((c: any) => {
-                    const nome = (c.nome || "").toLowerCase();
-                    return nome.includes((row.curso || "").toLowerCase());
-                  });
-                  if (matches.length === 1) cursoId = matches[0].id;
-                  else if (matches.length > 1) cursoId = matches[0].id; // fallback
-                } catch (_) {
-                  cursoId = undefined;
+            // Se não existe usuario, cria usando handler de criação (que também define perfis)
+            let usuarioFull: any = null;
+            if (!usuarioEstagiario) {
+              if (!campusId) {
+                // não podemos criar perfil sem campus — aborta criação do estagiário
+                throw new BadRequestException("Campus não encontrado para criação de perfil do estagiário.");
+              }
+
+              const usuarioToCreate = {
+                nome: row.estagiarioNome,
+                matricula: row.estagiarioMatricula,
+                email: row.estagiarioEmailAcademico ?? row.estagiarioEmailPessoal ?? undefined,
+                vinculos: [
+                  {
+                    campus: { id: campusId },
+                    cargo: "aluno",
+                    apelido: (row.estagiarioNome || "").slice(0, 60),
+                  },
+                ],
+              } as any;
+
+              usuarioFull = await usuarioCreateHandler.execute(accessContext, usuarioToCreate);
+            } else {
+              usuarioFull = await usuarioRepository.getFindOneQueryResult(accessContext, {
+                id: usuarioEstagiario.id,
+              } as any);
+              // Se não tem perfil 'aluno', tenta definir um perfil ativo
+              const vinculos = (usuarioFull?.vinculos as any[]) || [];
+              const hasAluno = vinculos.some((v) => v.cargo?.nome?.toLowerCase() === "aluno");
+              if (!hasAluno) {
+                if (!campusId) {
+                  throw new BadRequestException("Campus não encontrado para definição de perfil do estagiário.");
                 }
+                await definirPerfisAtivosHandler.execute(accessContext, {
+                  vinculos: [
+                    { campus: { id: campusId }, cargo: "aluno", apelido: (row.estagiarioNome || "").slice(0, 60) },
+                  ],
+                  usuario: { id: usuarioEstagiario.id },
+                } as any);
+                usuarioFull = await usuarioRepository.getFindOneQueryResult(accessContext, {
+                  id: usuarioEstagiario.id,
+                } as any);
               }
+            }
 
-              if (cursoId) {
-                const estagiarioCreateHandler = this.container.get<IEstagiarioCreateCommandHandler>(
-                  IEstagiarioCreateCommandHandler,
-                );
-                const defaults = prepareEstagiarioDataForCreation(row as any);
-                const estagiarioCommand = {
-                  perfil: { id: perfilFound.id },
-                  curso: { id: cursoId },
-                  periodo: defaults.periodo,
-                  telefone: defaults.telefone,
-                  dataNascimento: defaults.dataNascimento,
-                  emailInstitucional: row.estagiarioEmailAcademico ?? undefined,
-                } as any;
+            // Agora cria estagiário se tiver perfil e curso
+            const perfil = (usuarioFull?.vinculos as any[])?.[0];
+            if (!perfil) throw new BadRequestException("Perfil do usuário não encontrado para criar estagiário.");
+            if (!cursoId) throw new BadRequestException("Curso não encontrado para criar estagiário.");
 
-                const createdEstagiario = await estagiarioCreateHandler.execute(
-                  accessContext,
-                  estagiarioCommand,
-                );
+            const estagiarioCreateHandler = this.container.get<IEstagiarioCreateCommandHandler>(
+              IEstagiarioCreateCommandHandler,
+            );
+            const defaults = prepareEstagiarioDataForCreation(row as any);
+            const estagiarioCommand = {
+              perfil: { id: perfil.id },
+              curso: { id: cursoId },
+              periodo: defaults.periodo,
+              telefone: defaults.telefone,
+              dataNascimento: defaults.dataNascimento,
+              emailInstitucional: row.estagiarioEmailAcademico ?? undefined,
+            } as any;
 
-                estagiario = { id: createdEstagiario.id } as any;
-              }
+            const createdEstagiario = await estagiarioCreateHandler.execute(accessContext, estagiarioCommand);
+            estagiario = { id: createdEstagiario.id } as any;
+            // se criamos usuario agora, atualiza usuarioEstagiario para report
+            if (!usuarioEstagiario && usuarioFull) {
+              usuarioEstagiario = { id: usuarioFull.id } as any;
             }
           } catch (err) {
             if (process.env.DEBUG_CSV_IMPORT) {
-              console.log("[CSV import] falha ao criar estagiario", {
+              console.log("[CSV import] falha ao criar estagiario completo", {
                 line: row.line,
                 error: err instanceof Error ? err.message : String(err),
               });
