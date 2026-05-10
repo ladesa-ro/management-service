@@ -15,8 +15,8 @@ export const EstagiarioFindOneQueryResultFields = {
 };
 
 export class EstagiarioFindOneQueryResult extends EntityQueryResult {
-  perfil!: PerfilFindOneQueryResult;
-  curso!: CursoFindOneQueryResult;
+  perfil!: PerfilFindOneQueryResult | null;
+  curso!: CursoFindOneQueryResult | null;
   periodo!: string;
   telefone!: string;
   emailInstitucional!: string | null;
