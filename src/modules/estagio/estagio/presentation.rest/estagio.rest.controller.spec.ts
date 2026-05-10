@@ -239,4 +239,67 @@ describe("EstagioRestController.importCsv", () => {
       ],
     });
   });
+
+  it("should fail the row when it cannot resolve or create an estagiario", async () => {
+    const { controller, createHandler, usuarioRepository } = createController();
+    const accessContext = createTestAccessContext();
+
+    usuarioRepository.findByMatricula.mockResolvedValue(null);
+
+    const quoteIfNeeded = (value: string) => (value.includes(",") ? `"${value}"` : value);
+
+    const headers = [
+      "#",
+      "Estagiário",
+      "Concedente",
+      "Concedente CNPJ",
+      "Matrícula do Orientador",
+      "Data de Início",
+      "Data Prevista de Fim",
+      "Status",
+      "C.H. Final",
+      "Período de Referência",
+      "Período Mínimo para Estágio Obrigatório",
+      "Período Mínimo para Estágio Não Obrigatório",
+    ];
+
+    const data = [
+      "1",
+      "Arthur Luiz Braun Krauser de Moura (2024102020023)",
+      "Instituto Federal de Educacao",
+      "10.817.343/0002-88",
+      "2291377",
+      "20/04/2026",
+      "22/06/2026",
+      "Em Andamento/Em Fase Inicial",
+      "20",
+      "3",
+      "2",
+      "1",
+    ];
+
+    const csv = [headers.map(quoteIfNeeded).join(","), data.map(quoteIfNeeded).join(",")].join(
+      "\n",
+    );
+
+    const result = await controller.importCsv(accessContext, {
+      buffer: Buffer.from(csv, "utf8"),
+    } as Express.Multer.File);
+
+    expect(createHandler.execute).not.toHaveBeenCalled();
+    expect(result).toMatchObject({
+      total: 1,
+      created: 0,
+      skipped: 0,
+      failed: 1,
+      items: [
+        {
+          line: 2,
+          estagiarioNome: "Arthur Luiz Braun Krauser de Moura",
+          status: "failed",
+          reason: "Não foi possível vincular um estagiário para a linha 2.",
+        },
+      ],
+    });
+  });
 });
