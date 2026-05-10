@@ -22,11 +22,17 @@ import { ArgsType, Field, InputType, ObjectType } from "@/shared/presentation/gr
 
 @ObjectType("EstagiarioFindOneOutputDto")
 export class EstagiarioFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
-  @Field(() => PerfilFindOneOutputGraphQlDto, EstagiarioFindOneQueryResultFields.perfil.gqlMetadata)
-  perfil: PerfilFindOneOutputGraphQlDto;
+  @Field(() => PerfilFindOneOutputGraphQlDto, {
+    nullable: true,
+    ...EstagiarioFindOneQueryResultFields.perfil.gqlMetadata,
+  })
+  perfil: PerfilFindOneOutputGraphQlDto | null;
 
-  @Field(() => CursoFindOneOutputGraphQlDto, EstagiarioFindOneQueryResultFields.curso.gqlMetadata)
-  curso: CursoFindOneOutputGraphQlDto;
+  @Field(() => CursoFindOneOutputGraphQlDto, {
+    nullable: true,
+    ...EstagiarioFindOneQueryResultFields.curso.gqlMetadata,
+  })
+  curso: CursoFindOneOutputGraphQlDto | null;
 
   @Field(() => String, EstagiarioFindOneQueryResultFields.periodo.gqlMetadata)
   periodo: string;
