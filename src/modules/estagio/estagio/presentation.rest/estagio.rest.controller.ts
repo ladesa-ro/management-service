@@ -28,17 +28,18 @@ import type { IAccessContext } from "@/domain/abstractions";
 import { Dep, IContainer } from "@/domain/dependency-injection";
 import { IUsuarioRepository } from "@/modules/acesso/usuario";
 import { IEmpresaRepository } from "@/modules/estagio/empresa";
-import { IEstagiarioRepository } from "@/modules/estagio/estagiario";
+import {
+  IEstagiarioCreateCommandHandler,
+  IEstagiarioRepository,
+} from "@/modules/estagio/estagiario";
 import {
   parseEstagioImportCsv,
+  prepareEstagiarioDataForCreation,
   resolveEstagioImportCargaHoraria,
   resolveEstagioImportOrientador,
   resolveEstagioImportStatus,
   resolveEstagioImportSupervisor,
-  prepareEstagiarioDataForCreation,
 } from "@/modules/estagio/estagio/application/helpers";
-import { ICursoListQueryHandler } from "@/modules/ensino/curso";
-import { IEstagiarioCreateCommandHandler } from "@/modules/estagio/estagiario";
 import {
   EstagioCreateCommandMetadata,
   IEstagioCreateCommandHandler,
@@ -180,18 +181,22 @@ export class EstagioRestController {
     const usuarioCreateHandler = this.container.get<any>(
       // IUsuarioCreateCommandHandler is declared in usuario module
       // eslint-disable-next-line @typescript-eslint/no-var-requires
-      require("@/modules/acesso/usuario/domain/commands/usuario-create.command.handler.interface").IUsuarioCreateCommandHandler,
+      require("@/modules/acesso/usuario/domain/commands/usuario-create.command.handler.interface")
+        .IUsuarioCreateCommandHandler,
     );
     const definirPerfisAtivosHandler = this.container.get<any>(
       // IPerfilDefinirPerfisAtivosCommandHandler token
-      require("@/modules/acesso/usuario/perfil/domain/commands/perfil-definir-perfis-ativos.command.handler.interface").IPerfilDefinirPerfisAtivosCommandHandler,
+      require("@/modules/acesso/usuario/perfil/domain/commands/perfil-definir-perfis-ativos.command.handler.interface")
+        .IPerfilDefinirPerfisAtivosCommandHandler,
     );
     const cursoListHandler = this.container.get<any>(
       // ICursoListQueryHandler token
-      require("@/modules/ensino/curso/domain/queries/curso-list.query.handler.interface").ICursoListQueryHandler,
+      require("@/modules/ensino/curso/domain/queries/curso-list.query.handler.interface")
+        .ICursoListQueryHandler,
     );
     const campusListHandler = this.container.get<any>(
-      require("@/modules/ambientes/campus/domain/queries/campus-list.query.handler.interface").ICampusListQueryHandler,
+      require("@/modules/ambientes/campus/domain/queries/campus-list.query.handler.interface")
+        .ICampusListQueryHandler,
     );
 
     const items: EstagioImportCsvItemRestDto[] = parsed.skipped.map((row) => {
@@ -253,7 +258,9 @@ export class EstagioRestController {
                   limit: 20,
                 } as any);
                 const matches = (campuses?.data || []).filter((c: any) =>
-                  (c.nomeFantasia || c.apelido || "").toLowerCase().includes((row.campus || "").toLowerCase()),
+                  (c.nomeFantasia || c.apelido || "")
+                    .toLowerCase()
+                    .includes((row.campus || "").toLowerCase()),
                 );
                 if (matches.length >= 1) campusId = matches[0].id;
               } catch (_) {
@@ -284,7 +291,9 @@ export class EstagioRestController {
             if (!usuarioEstagiario) {
               if (!campusId) {
                 // não podemos criar perfil sem campus — aborta criação do estagiário
-                throw new BadRequestException("Campus não encontrado para criação de perfil do estagiário.");
+                throw new BadRequestException(
+                  "Campus não encontrado para criação de perfil do estagiário.",
+                );
               }
 
               const usuarioToCreate = {
@@ -310,11 +319,17 @@ export class EstagioRestController {
               const hasAluno = vinculos.some((v) => v.cargo?.nome?.toLowerCase() === "aluno");
               if (!hasAluno) {
                 if (!campusId) {
-                  throw new BadRequestException("Campus não encontrado para definição de perfil do estagiário.");
+                  throw new BadRequestException(
+                    "Campus não encontrado para definição de perfil do estagiário.",
+                  );
                 }
                 await definirPerfisAtivosHandler.execute(accessContext, {
                   vinculos: [
-                    { campus: { id: campusId }, cargo: "aluno", apelido: (row.estagiarioNome || "").slice(0, 60) },
+                    {
+                      campus: { id: campusId },
+                      cargo: "aluno",
+                      apelido: (row.estagiarioNome || "").slice(0, 60),
+                    },
                   ],
                   usuario: { id: usuarioEstagiario.id },
                 } as any);
@@ -326,8 +341,12 @@ export class EstagioRestController {
 
             // Agora cria estagiário se tiver perfil e curso
             const perfil = (usuarioFull?.vinculos as any[])?.[0];
-            if (!perfil) throw new BadRequestException("Perfil do usuário não encontrado para criar estagiário.");
-            if (!cursoId) throw new BadRequestException("Curso não encontrado para criar estagiário.");
+            if (!perfil)
+              throw new BadRequestException(
+                "Perfil do usuário não encontrado para criar estagiário.",
+              );
+            if (!cursoId)
+              throw new BadRequestException("Curso não encontrado para criar estagiário.");
 
             const estagiarioCreateHandler = this.container.get<IEstagiarioCreateCommandHandler>(
               IEstagiarioCreateCommandHandler,
@@ -342,7 +361,10 @@ export class EstagioRestController {
               emailInstitucional: row.estagiarioEmailAcademico ?? undefined,
             } as any;
 
-            const createdEstagiario = await estagiarioCreateHandler.execute(accessContext, estagiarioCommand);
+            const createdEstagiario = await estagiarioCreateHandler.execute(
+              accessContext,
+              estagiarioCommand,
+            );
             estagiario = { id: createdEstagiario.id } as any;
             // se criamos usuario agora, atualiza usuarioEstagiario para report
             if (!usuarioEstagiario && usuarioFull) {
@@ -355,6 +377,7 @@ export class EstagioRestController {
                 error: err instanceof Error ? err.message : String(err),
               });
             }
+            throw err;
           }
         }
 
@@ -378,11 +401,11 @@ export class EstagioRestController {
             } else if (orientadorData.email) {
               const available = await usuarioRepository.isEmailAvailable(orientadorData.email);
               if (available) {
-                const created = await usuarioRepository.create({
+                const created = await usuarioCreateHandler.execute(accessContext, {
                   nome: orientadorData.nome,
                   email: orientadorData.email,
-                  matricula: orientadorData.matricula ?? null,
-                });
+                  matricula: orientadorData.matricula ?? undefined,
+                } as any);
                 usuarioOrientadorResolved = { id: created.id } as any;
               }
             }
@@ -412,7 +435,9 @@ export class EstagioRestController {
         const command = {
           empresa: { id: empresa.id },
           estagiario: estagiario ? { id: estagiario.id } : undefined,
-          usuarioOrientador: usuarioOrientadorResolved ? { id: usuarioOrientadorResolved.id } : undefined,
+          usuarioOrientador: usuarioOrientadorResolved
+            ? { id: usuarioOrientadorResolved.id }
+            : undefined,
           cargaHoraria: resolveEstagioImportCargaHoraria(row),
           dataInicio: row.dataInicio ?? undefined,
           dataFim: row.dataFim,

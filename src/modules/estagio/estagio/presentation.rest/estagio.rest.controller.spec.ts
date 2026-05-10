@@ -1,10 +1,12 @@
 import { describe, expect, it, vi } from "vitest";
 import { IUsuarioRepository } from "@/modules/acesso/usuario";
-import { IEmpresaRepository } from "@/modules/estagio/empresa";
-import { IEstagiarioRepository } from "@/modules/estagio/estagiario";
-import { IEstagioCreateCommandHandler } from "@/modules/estagio/estagio/domain/commands";
 import { ICursoListQueryHandler } from "@/modules/ensino/curso";
-import { IEstagiarioCreateCommandHandler } from "@/modules/estagio/estagiario";
+import { IEmpresaRepository } from "@/modules/estagio/empresa";
+import {
+  IEstagiarioCreateCommandHandler,
+  IEstagiarioRepository,
+} from "@/modules/estagio/estagiario";
+import { IEstagioCreateCommandHandler } from "@/modules/estagio/estagio/domain/commands";
 import { createTestAccessContext, createTestId } from "@/test/helpers";
 import { EstagioRestController } from "./estagio.rest.controller";
 
@@ -46,7 +48,10 @@ function createController(options?: {
     [IEstagioCreateCommandHandler, createHandler],
     [IEmpresaRepository, empresaRepository],
     [ICursoListQueryHandler, { execute: vi.fn().mockResolvedValue({ data: [] }) }],
-    [IEstagiarioCreateCommandHandler, { execute: vi.fn().mockResolvedValue({ id: createTestId() }) }],
+    [
+      IEstagiarioCreateCommandHandler,
+      { execute: vi.fn().mockResolvedValue({ id: createTestId() }) },
+    ],
     [IUsuarioRepository, usuarioRepository],
     [IEstagiarioRepository, estagiarioRepository],
   ]);

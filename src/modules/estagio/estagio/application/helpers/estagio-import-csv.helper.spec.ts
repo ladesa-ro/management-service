@@ -2,12 +2,12 @@ import { describe, expect, it } from "vitest";
 import { EstagioStatus } from "@/modules/estagio/estagio/domain/estagio";
 import {
   parseEstagioImportCsv,
+  prepareEstagiarioDataForCreation,
   resolveEstagioImportCargaHoraria,
+  resolveEstagioImportEstagiarioDefaults,
+  resolveEstagioImportOrientador,
   resolveEstagioImportStatus,
   resolveEstagioImportSupervisor,
-  resolveEstagioImportOrientador,
-  resolveEstagioImportEstagiarioDefaults,
-  prepareEstagiarioDataForCreation,
 } from "./estagio-import-csv.helper";
 
 describe("parseEstagioImportCsv", () => {
