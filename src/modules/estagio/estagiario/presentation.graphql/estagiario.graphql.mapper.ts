@@ -77,8 +77,8 @@ export const findOneQueryResultToOutputDto = createMapper<
   EstagiarioFindOneOutputGraphQlDto
 >((output) => ({
   id: output.id,
-  perfil: PerfilGraphqlMapper.findOneQueryResultToOutputDto.map(output.perfil),
-  curso: CursoGraphqlMapper.findOneQueryResultToOutputDto.map(output.curso),
+  perfil: PerfilGraphqlMapper.findOneQueryResultToOutputDto.mapOptional(output.perfil),
+  curso: CursoGraphqlMapper.findOneQueryResultToOutputDto.mapOptional(output.curso),
   periodo: output.periodo,
   telefone: output.telefone,
   emailInstitucional: output.emailInstitucional,
