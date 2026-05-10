@@ -99,6 +99,17 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
     return entity ? EstagiarioTypeormMapper.entityToFindOneQueryResult.map(entity) : null;
   }
 
+  async findByPerfilId(perfilId: string): Promise<EstagiarioFindOneQueryResult | null> {
+    const repo = this.appTypeormConnection.getRepository(EstagiarioTypeormEntity);
+
+    const entity = await repo.findOne({
+      where: { perfil: { id: perfilId }, dateDeleted: IsNull() },
+      relations: estagiarioRelations,
+    });
+
+    return entity ? EstagiarioTypeormMapper.entityToFindOneQueryResult.map(entity) : null;
+  }
+
   softDeleteById(id: string) {
     return typeormSoftDeleteById(
       this.appTypeormConnection,

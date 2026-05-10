@@ -37,6 +37,9 @@ export interface IEstagiarioRepository {
   /** Busca um estagiário ativo pelo ID do usuário vinculado ao perfil. */
   findByUsuarioId(usuarioId: string): Promise<EstagiarioFindOneQueryResult | null>;
 
+  /** Busca um estagiário ativo pelo ID do perfil vinculado ao usuário. */
+  findByPerfilId(perfilId: string): Promise<EstagiarioFindOneQueryResult | null>;
+
   /** Soft-delete por ID. */
   softDeleteById: IRepositorySoftDeleteById;
 
