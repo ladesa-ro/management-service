@@ -22,7 +22,7 @@ function createValidCreateDto() {
   return {
     empresa: { id: createTestId() },
     cargaHoraria: 20,
-    status: "ABERTA",
+    status: "EM_FASE_INICIAL",
     horariosEstagio: [{ diaSemana: 1, horaInicio: "08:00", horaFim: "12:00" }],
   };
 }
@@ -30,7 +30,7 @@ function createValidCreateDto() {
 describe("EstagioCreateCommandHandler", () => {
   it("should create estagio with horarios and return query result", async () => {
     const repository = createMockEstagioRepository();
-    const savedResult = { id: createTestId(), status: "ABERTA" };
+    const savedResult = { id: createTestId(), status: "EM_FASE_INICIAL" };
     repository.getFindOneQueryResult.mockResolvedValue(savedResult);
 
     const handler = new EstagioCreateCommandHandlerImpl(repository as any);
