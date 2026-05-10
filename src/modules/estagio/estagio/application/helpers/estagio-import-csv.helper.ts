@@ -20,6 +20,8 @@ export interface EstagioImportCsvEntry {
   emailOrientador: string | null;
   nomeAgenteIntegracao: string | null;
   cnpjAgenteIntegracao: string | null;
+  curso: string | null;
+  campus: string | null;
   dataInicio: string | null;
   dataPrevistaFim: string | null;
   nomeSeguradora: string | null;
@@ -305,6 +307,8 @@ export function parseEstagioImportCsv(content: string): EstagioImportCsvParseRes
     periodoReferencia: findHeaderIndex(headers, "periododereferencia"),
     periodoMinimoObrigatorio: findHeaderIndex(headers, "periodominimoparaestagioobrigatorio"),
     periodoMinimoNaoObrigatorio: findHeaderIndex(headers, "periodominimoparaestagionaobrigatorio"),
+    curso: findHeaderIndex(headers, "curso"),
+    campus: findHeaderIndex(headers, "campus"),
     foiOuSeraContratado: findHeaderIndex(headers, "foiseracontratadapelaconcedente"),
   };
 
@@ -375,6 +379,8 @@ export function parseEstagioImportCsv(content: string): EstagioImportCsvParseRes
       emailOrientador: toNullIfEmpty(getCell(row, headerIndexes.emailOrientador)),
       nomeAgenteIntegracao: toNullIfEmpty(getCell(row, headerIndexes.nomeAgenteIntegracao)),
       cnpjAgenteIntegracao: toNullIfEmpty(getCell(row, headerIndexes.cnpjAgenteIntegracao)),
+      curso: toNullIfEmpty(getCell(row, headerIndexes.curso)),
+      campus: toNullIfEmpty(getCell(row, headerIndexes.campus)),
       dataInicio: parseDate(getCell(row, headerIndexes.dataInicio)),
       dataPrevistaFim: parseDate(getCell(row, headerIndexes.dataPrevistaFim)),
       nomeSeguradora: toNullIfEmpty(getCell(row, headerIndexes.nomeSeguradora)),
