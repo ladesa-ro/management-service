@@ -493,3 +493,66 @@ export function resolveEstagioImportOrientador(
     email: isValidEmail(entry.emailOrientador) ? entry.emailOrientador : null,
   };
 }
+
+/**
+ * Resolve dados de estagiário com valores padrão (fallback) quando não informados.
+ * Valores padrão utilizados:
+ * - telefone: "00000000"
+ * - dataNascimento: "2008-03-01" (01/03/2008)
+ * - periodo: "2"
+ */
+export interface EstagioImportEstagiarioDefaultData {
+  telefone: string;
+  dataNascimento: string;
+  periodo: string;
+}
+
+export function resolveEstagioImportEstagiarioDefaults(
+  entry: EstagioImportCsvEntry,
+): EstagioImportEstagiarioDefaultData {
+  // Resolve telefone: usar email como fallback, ou padrão "00000000"
+  // O telefone é crítico pois é obrigatório no estagiário
+  const telefone = "00000000";
+
+  // Resolve data de nascimento: usar padrão "2008-03-01" (01/03/2008)
+  // Garante que todos os estagiários têm uma data válida
+  const dataNascimento = "2008-03-01";
+
+  // Resolve período: tenta usar dados do CSV, ou padrão "2"
+  const periodoValue =
+    entry.periodoReferencia ||
+    entry.periodoMinimoObrigatorio ||
+    entry.periodoMinimoNaoObrigatorio ||
+    2;
+  const periodo = String(periodoValue);
+
+  return {
+    telefone,
+    dataNascimento,
+    periodo,
+  };
+}
+
+/**
+ * Prepara dados de estagiário para criação, aplicando valores padrão quando necessário.
+ * Útil para importações de CSV onde dados críticos podem estar faltando.
+ */
+export interface EstagiarioDataForCreation {
+  telefone: string;
+  dataNascimento: string;
+  periodo: string;
+  emailInstitucional?: string;
+}
+
+export function prepareEstagiarioDataForCreation(
+  entry: EstagioImportCsvEntry,
+): EstagiarioDataForCreation {
+  const defaults = resolveEstagioImportEstagiarioDefaults(entry);
+
+  return {
+    telefone: defaults.telefone,
+    dataNascimento: defaults.dataNascimento,
+    periodo: defaults.periodo,
+    emailInstitucional: entry.estagiarioEmailAcademico || undefined,
+  };
+}
