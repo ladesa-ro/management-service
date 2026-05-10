@@ -12,8 +12,8 @@ import type { EstagiarioTypeormEntity } from "./estagiario.typeorm.entity";
 
 export const entityToDomain = createMapper<EstagiarioTypeormEntity, IEstagiario>((e) => ({
   id: e.id,
-  perfil: pickId(e.perfil),
-  curso: pickId(e.curso),
+  perfil: pickId(e.perfil ?? null),
+  curso: pickId(e.curso ?? null),
   periodo: e.periodo,
   telefone: e.telefone,
   emailInstitucional: e.emailInstitucional,
@@ -35,8 +35,8 @@ export const entityToFindOneQueryResult = createMapper<
   EstagiarioFindOneQueryResult
 >((e) => ({
   id: e.id,
-  perfil: PerfilTypeormMapper.entityToFindOneQueryResult.map(e.perfil),
-  curso: CursoTypeormMapper.entityToFindOneQueryResult.map(e.curso),
+  perfil: e.perfil ? PerfilTypeormMapper.entityToFindOneQueryResult.map(e.perfil) : null,
+  curso: e.curso ? CursoTypeormMapper.entityToFindOneQueryResult.map(e.curso) : null,
   periodo: e.periodo,
   telefone: e.telefone,
   emailInstitucional: e.emailInstitucional,
