@@ -35,7 +35,10 @@ import {
   resolveEstagioImportOrientador,
   resolveEstagioImportStatus,
   resolveEstagioImportSupervisor,
+  prepareEstagiarioDataForCreation,
 } from "@/modules/estagio/estagio/application/helpers";
+import { ICursoListQueryHandler } from "@/modules/ensino/curso";
+import { IEstagiarioCreateCommandHandler } from "@/modules/estagio/estagiario";
 import {
   EstagioCreateCommandMetadata,
   IEstagioCreateCommandHandler,
@@ -217,9 +220,77 @@ export class EstagioRestController {
         const usuarioEstagiario = row.estagiarioMatricula
           ? await usuarioRepository.findByMatricula(row.estagiarioMatricula)
           : null;
-        const estagiario = usuarioEstagiario
+        let estagiario = usuarioEstagiario
           ? await estagiarioRepository.findByUsuarioId(usuarioEstagiario.id)
           : null;
+
+        // Se existe usuário (por matrícula) mas não existe estagiário, tenta criar estagiário
+        if (!estagiario && usuarioEstagiario) {
+          try {
+            const usuarioFull = await usuarioRepository.getFindOneQueryResult(accessContext, {
+              id: usuarioEstagiario.id,
+            } as any);
+
+            const vinculos = (usuarioFull?.vinculos as any[]) || [];
+            // procura perfil com cargo 'aluno' ou pega primeiro
+            let perfilFound = vinculos.find((v) => v.cargo?.nome?.toLowerCase() === "aluno");
+            if (!perfilFound && vinculos.length > 0) perfilFound = vinculos[0];
+
+            if (perfilFound) {
+              // Resolve curso pelo nome fornecido no CSV, se houver
+              let cursoId: string | undefined;
+              if (row.curso) {
+                try {
+                  const cursoListHandler = this.container.get<ICursoListQueryHandler>(
+                    ICursoListQueryHandler,
+                  );
+                  const cursos = await cursoListHandler.execute(accessContext, {
+                    search: row.curso,
+                    page: 1,
+                    limit: 20,
+                  } as any);
+                  const matches = (cursos?.data || []).filter((c: any) => {
+                    const nome = (c.nome || "").toLowerCase();
+                    return nome.includes((row.curso || "").toLowerCase());
+                  });
+                  if (matches.length === 1) cursoId = matches[0].id;
+                  else if (matches.length > 1) cursoId = matches[0].id; // fallback
+                } catch (_) {
+                  cursoId = undefined;
+                }
+              }
+
+              if (cursoId) {
+                const estagiarioCreateHandler = this.container.get<IEstagiarioCreateCommandHandler>(
+                  IEstagiarioCreateCommandHandler,
+                );
+                const defaults = prepareEstagiarioDataForCreation(row as any);
+                const estagiarioCommand = {
+                  perfil: { id: perfilFound.id },
+                  curso: { id: cursoId },
+                  periodo: defaults.periodo,
+                  telefone: defaults.telefone,
+                  dataNascimento: defaults.dataNascimento,
+                  emailInstitucional: row.estagiarioEmailAcademico ?? undefined,
+                } as any;
+
+                const createdEstagiario = await estagiarioCreateHandler.execute(
+                  accessContext,
+                  estagiarioCommand,
+                );
+
+                estagiario = { id: createdEstagiario.id } as any;
+              }
+            }
+          } catch (err) {
+            if (process.env.DEBUG_CSV_IMPORT) {
+              console.log("[CSV import] falha ao criar estagiario", {
+                line: row.line,
+                error: err instanceof Error ? err.message : String(err),
+              });
+            }
+          }
+        }
 
         const usuarioOrientador = row.matriculaOrientador
           ? await usuarioRepository.findByMatricula(row.matriculaOrientador)
@@ -228,6 +299,36 @@ export class EstagioRestController {
         // Resolve dados estruturados de supervisor e orientador
         const supervisorData = resolveEstagioImportSupervisor(row);
         const orientadorData = resolveEstagioImportOrientador(row);
+
+        // Não criar usuário para supervisor se não houver matrícula.
+        // Para orientador, apenas considerar criação/align quando houver matrícula informada.
+        let usuarioOrientadorResolved = usuarioOrientador;
+        if (!usuarioOrientadorResolved && orientadorData.matricula) {
+          try {
+            // tenta localizar por matrícula (redundante) e criar se email disponível
+            const byMat = await usuarioRepository.findByMatricula(orientadorData.matricula);
+            if (byMat) {
+              usuarioOrientadorResolved = byMat as any;
+            } else if (orientadorData.email) {
+              const available = await usuarioRepository.isEmailAvailable(orientadorData.email);
+              if (available) {
+                const created = await usuarioRepository.create({
+                  nome: orientadorData.nome,
+                  email: orientadorData.email,
+                  matricula: orientadorData.matricula ?? null,
+                });
+                usuarioOrientadorResolved = { id: created.id } as any;
+              }
+            }
+          } catch (err) {
+            if (process.env.DEBUG_CSV_IMPORT) {
+              console.log("[CSV import] falha ao criar/alinhar orientador", {
+                line: row.line,
+                error: err instanceof Error ? err.message : String(err),
+              });
+            }
+          }
+        }
 
         if (process.env.DEBUG_CSV_IMPORT) {
           console.log("[CSV import] vínculos resolvidos", {
@@ -245,7 +346,7 @@ export class EstagioRestController {
         const command = {
           empresa: { id: empresa.id },
           estagiario: estagiario ? { id: estagiario.id } : undefined,
-          usuarioOrientador: usuarioOrientador ? { id: usuarioOrientador.id } : undefined,
+          usuarioOrientador: usuarioOrientadorResolved ? { id: usuarioOrientadorResolved.id } : undefined,
           cargaHoraria: resolveEstagioImportCargaHoraria(row),
           dataInicio: row.dataInicio ?? undefined,
           dataFim: row.dataFim,
@@ -274,7 +375,7 @@ export class EstagioRestController {
         item.usuarioEstagiarioId = usuarioEstagiario?.id ?? null;
         item.estagiarioId = estagiario?.id ?? null;
         item.empresaId = empresa.id;
-        item.usuarioOrientadorId = usuarioOrientador?.id ?? null;
+        item.usuarioOrientadorId = usuarioOrientadorResolved?.id ?? null;
         item.estagioId = queryResult.id;
         item.status = "created";
         items.push(item);
