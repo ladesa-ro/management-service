@@ -88,8 +88,6 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
     await repo.save(repo.create(entityData));
   }
 
-
-
   softDeleteById(id: string) {
     return typeormSoftDeleteById(
       this.appTypeormConnection,
@@ -131,35 +129,33 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
     );
   }
 
-
   async findByUsuarioId(usuarioId: string): Promise<Estagiario | null> {
-  const repo = this.appTypeormConnection.getRepository(EstagiarioTypeormEntity);
+    const repo = this.appTypeormConnection.getRepository(EstagiarioTypeormEntity);
 
-  const entity = await repo.findOne({
-    where: {
-      perfil: { usuario: { id: usuarioId } },
-      dateDeleted: IsNull(),
-    },
-    relations: writeRelations,
-  });
+    const entity = await repo.findOne({
+      where: {
+        perfil: { usuario: { id: usuarioId } },
+        dateDeleted: IsNull(),
+      },
+      relations: writeRelations,
+    });
 
-  if (!entity) return null;
-  return Estagiario.load(EstagiarioTypeormMapper.entityToDomain.map(entity));
-}
+    if (!entity) return null;
+    return Estagiario.load(EstagiarioTypeormMapper.entityToDomain.map(entity));
+  }
 
-async findByPerfilId(perfilId: string): Promise<Estagiario | null> {
-  const repo = this.appTypeormConnection.getRepository(EstagiarioTypeormEntity);
+  async findByPerfilId(perfilId: string): Promise<Estagiario | null> {
+    const repo = this.appTypeormConnection.getRepository(EstagiarioTypeormEntity);
 
-  const entity = await repo.findOne({
-    where: {
-      perfil: { id: perfilId },
-      dateDeleted: IsNull(),
-    },
-    relations: writeRelations,
-  });
+    const entity = await repo.findOne({
+      where: {
+        perfil: { id: perfilId },
+        dateDeleted: IsNull(),
+      },
+      relations: writeRelations,
+    });
 
-  if (!entity) return null;
-  return Estagiario.load(EstagiarioTypeormMapper.entityToDomain.map(entity));
-}
-
+    if (!entity) return null;
+    return Estagiario.load(EstagiarioTypeormMapper.entityToDomain.map(entity));
+  }
 }
