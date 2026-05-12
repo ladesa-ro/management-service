@@ -504,7 +504,7 @@ export class EstagioRestController {
 
         const command = {
           empresa: { id: empresa.id },
-          estagiario: estagiario ? { id: estagiario.id } : undefined,
+          estagiario: { id: estagiario.id },
           usuarioOrientador: usuarioOrientadorResolved
             ? { id: usuarioOrientadorResolved.id }
             : undefined,
