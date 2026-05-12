@@ -28,6 +28,7 @@ import type { IAccessContext } from "@/domain/abstractions";
 import { Dep, IContainer } from "@/domain/dependency-injection";
 import { IUsuarioRepository } from "@/modules/acesso/usuario";
 import { IUsuarioCreateCommandHandler } from "@/modules/acesso/usuario/domain/commands/usuario-create.command.handler.interface";
+import { IPerfilDefinirPerfisAtivosCommandHandler } from "@/modules/acesso/usuario/perfil/domain/commands";
 import { ICampusListQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-list.query.handler.interface";
 import { ICursoListQueryHandler } from "@/modules/ensino/curso/domain/queries/curso-list.query.handler.interface";
 import { IEmpresaRepository } from "@/modules/estagio/empresa";
@@ -35,7 +36,6 @@ import {
   IEstagiarioCreateCommandHandler,
   IEstagiarioRepository,
 } from "@/modules/estagio/estagiario";
-import { IPerfilDefinirPerfisAtivosCommandHandler } from "@/modules/acesso/usuario/perfil/domain/commands";
 import {
   parseEstagioImportCsv,
   prepareEstagiarioDataForCreation,
@@ -322,8 +322,46 @@ export class EstagioRestController {
                 vinculosAtualizados[0];
             }
 
-            if (perfilAluno && perfilAluno.id) {
-              estagiario = await estagiarioRepository.findByPerfilId(perfilAluno.id);
+            if (usuarioEstagiario?.id) {
+              try {
+                estagiario = await estagiarioRepository.findByUsuarioId(usuarioEstagiario.id);
+                if (estagiario?.id) {
+                  console.log("[CSV import] ✓ estagiário encontrado por usuário", {
+                    line: row.line,
+                    usuarioId: usuarioEstagiario.id,
+                    estagiarioId: estagiario.id,
+                  });
+                }
+              } catch (error) {
+                if (process.env.DEBUG_CSV_IMPORT) {
+                  console.log("[CSV import] falha ao localizar estagiario por usuario", {
+                    line: row.line,
+                    usuarioId: usuarioEstagiario.id,
+                    error: error instanceof Error ? error.message : String(error),
+                  });
+                }
+              }
+            }
+
+            if (!estagiario && perfilAluno?.id) {
+              try {
+                estagiario = await estagiarioRepository.findByPerfilId(perfilAluno.id);
+                if (estagiario?.id) {
+                  console.log("[CSV import] ✓ estagiário encontrado por perfil", {
+                    line: row.line,
+                    perfilId: perfilAluno.id,
+                    estagiarioId: estagiario.id,
+                  });
+                }
+              } catch (error) {
+                if (process.env.DEBUG_CSV_IMPORT) {
+                  console.log("[CSV import] falha ao localizar estagiario por perfil", {
+                    line: row.line,
+                    perfilId: perfilAluno.id,
+                    error: error instanceof Error ? error.message : String(error),
+                  });
+                }
+              }
             }
 
             // Tenta resolver cursoId
@@ -346,30 +384,36 @@ export class EstagioRestController {
               }
             }
 
-            if (!perfilAluno) {
+            if (!perfilAluno?.id) {
               throw new BadRequestException(
                 `Não foi possível localizar o perfil do estagiário para a linha ${row.line}.`,
               );
             }
 
-            if (!estagiario && cursoId) {
+            if (!estagiario) {
               const estagiarioCreateHandler = this.container.get<IEstagiarioCreateCommandHandler>(
                 IEstagiarioCreateCommandHandler,
               );
               const defaults = prepareEstagiarioDataForCreation(row as any);
-              const estagiarioCommand = {
+              const estagiarioCommand: any = {
                 perfil: { id: perfilAluno.id },
-                curso: { id: cursoId },
                 periodo: defaults.periodo,
                 telefone: defaults.telefone,
                 dataNascimento: defaults.dataNascimento,
                 emailInstitucional: row.estagiarioEmailAcademico ?? undefined,
-              } as any;
+              };
+              if (cursoId) estagiarioCommand.curso = { id: cursoId };
 
               const createdEstagiario = await estagiarioCreateHandler.execute(
                 accessContext,
                 estagiarioCommand,
               );
+              console.log("[CSV import] ✓ novo estagiário criado", {
+                line: row.line,
+                estagiarioMatricula: row.estagiarioMatricula,
+                perfilId: perfilAluno.id,
+                estagiarioId: createdEstagiario.id,
+              });
               estagiario = { id: createdEstagiario.id } as any;
               // se criamos usuario agora, atualiza usuarioEstagiario para report
               if (!usuarioEstagiario && usuarioFull) {
@@ -485,12 +529,12 @@ export class EstagioRestController {
 
         const queryResult = await createHandler.execute(accessContext, command as never);
 
-        if (process.env.DEBUG_CSV_IMPORT) {
-          console.log("[CSV import] estágio criado", {
-            line: row.line,
-            estagioId: queryResult.id,
-          });
-        }
+        console.log("[CSV import] ✓ estágio criado com sucesso", {
+          line: row.line,
+          estagioId: queryResult.id,
+          estagiarioId: estagiario?.id,
+          estagiarioMatricula: row.estagiarioMatricula,
+        });
 
         const item = new EstagioImportCsvItemRestDto();
         item.line = row.line;
