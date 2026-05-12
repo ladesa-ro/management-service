@@ -75,7 +75,7 @@ function normalizeText(value: string): string {
 }
 
 function sanitizeForLog(value: string): string {
-  return value.replace(/[\r\n]+/g, " ").replace(/[\u0000-\u001F\u007F]/g, "");
+  return value.replace(/[\r\n]+/g, " ");
 }
 
 function parseCsvRows(content: string): string[][] {
