@@ -88,27 +88,7 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
     await repo.save(repo.create(entityData));
   }
 
-  async findByUsuarioId(usuarioId: string): Promise<EstagiarioFindOneQueryResult | null> {
-    const repo = this.appTypeormConnection.getRepository(EstagiarioTypeormEntity);
 
-    const entity = await repo.findOne({
-      where: { perfil: { usuario: { id: usuarioId } }, dateDeleted: IsNull() },
-      relations: estagiarioRelations,
-    });
-
-    return entity ? EstagiarioTypeormMapper.entityToFindOneQueryResult.map(entity) : null;
-  }
-
-  async findByPerfilId(perfilId: string): Promise<EstagiarioFindOneQueryResult | null> {
-    const repo = this.appTypeormConnection.getRepository(EstagiarioTypeormEntity);
-
-    const entity = await repo.findOne({
-      where: { perfil: { id: perfilId }, dateDeleted: IsNull() },
-      relations: estagiarioRelations,
-    });
-
-    return entity ? EstagiarioTypeormMapper.entityToFindOneQueryResult.map(entity) : null;
-  }
 
   softDeleteById(id: string) {
     return typeormSoftDeleteById(
@@ -150,4 +130,36 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
       EstagiarioTypeormMapper.entityToFindOneQueryResult.map,
     );
   }
+
+
+  async findByUsuarioId(usuarioId: string): Promise<Estagiario | null> {
+  const repo = this.appTypeormConnection.getRepository(EstagiarioTypeormEntity);
+
+  const entity = await repo.findOne({
+    where: {
+      perfil: { usuario: { id: usuarioId } },
+      dateDeleted: IsNull(),
+    },
+    relations: writeRelations,
+  });
+
+  if (!entity) return null;
+  return Estagiario.load(EstagiarioTypeormMapper.entityToDomain.map(entity));
+}
+
+async findByPerfilId(perfilId: string): Promise<Estagiario | null> {
+  const repo = this.appTypeormConnection.getRepository(EstagiarioTypeormEntity);
+
+  const entity = await repo.findOne({
+    where: {
+      perfil: { id: perfilId },
+      dateDeleted: IsNull(),
+    },
+    relations: writeRelations,
+  });
+
+  if (!entity) return null;
+  return Estagiario.load(EstagiarioTypeormMapper.entityToDomain.map(entity));
+}
+
 }
