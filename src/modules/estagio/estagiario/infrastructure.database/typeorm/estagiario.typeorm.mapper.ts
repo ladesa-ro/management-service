@@ -10,18 +10,23 @@ import type { EstagiarioTypeormEntity } from "./estagiario.typeorm.entity";
 // Persistencia -> Dominio (TypeORM Entity -> Domain / Query Result)
 // ============================================================================
 
-export const entityToDomain = createMapper<EstagiarioTypeormEntity, IEstagiario>((e) => ({
-  id: e.id,
-  perfil: pickId(e.perfil ?? null),
-  curso: pickId(e.curso ?? null),
-  periodo: e.periodo,
-  telefone: e.telefone,
-  emailInstitucional: e.emailInstitucional,
-  dataNascimento: e.dataNascimento,
-  dateCreated: e.dateCreated,
-  dateUpdated: e.dateUpdated,
-  dateDeleted: e.dateDeleted,
-}));
+export const entityToDomain = createMapper<EstagiarioTypeormEntity, IEstagiario>((e) => {
+  if (!e) {
+    throw new Error("EstagiarioTypeormMapper.entityToDomain received null/undefined entity");
+  }
+  return {
+    id: e.id,
+    perfil: pickId(e.perfil ?? null),
+    curso: pickId(e.curso ?? null),
+    periodo: e.periodo,
+    telefone: e.telefone,
+    emailInstitucional: e.emailInstitucional,
+    dataNascimento: e.dataNascimento,
+    dateCreated: e.dateCreated,
+    dateUpdated: e.dateUpdated,
+    dateDeleted: e.dateDeleted,
+  };
+});
 
 /**
  * Entity -> Query Result (read side).
@@ -33,19 +38,27 @@ export const entityToDomain = createMapper<EstagiarioTypeormEntity, IEstagiario>
 export const entityToFindOneQueryResult = createMapper<
   EstagiarioTypeormEntity,
   EstagiarioFindOneQueryResult
->((e) => ({
-  id: e.id,
-  perfil: e.perfil ? PerfilTypeormMapper.entityToFindOneQueryResult.map(e.perfil) : null,
-  curso: e.curso ? CursoTypeormMapper.entityToFindOneQueryResult.map(e.curso) : null,
-  periodo: e.periodo,
-  telefone: e.telefone,
-  emailInstitucional: e.emailInstitucional,
-  dataNascimento: e.dataNascimento,
-  ativo: e.dateDeleted === null,
-  dateCreated: e.dateCreated,
-  dateUpdated: e.dateUpdated,
-  dateDeleted: e.dateDeleted,
-}));
+>((e) => {
+  if (!e) {
+    throw new Error(
+      "EstagiarioTypeormMapper.entityToFindOneQueryResult received null/undefined entity",
+    );
+  }
+
+  return {
+    id: e.id,
+    perfil: e.perfil ? PerfilTypeormMapper.entityToFindOneQueryResult.map(e.perfil) : null,
+    curso: e.curso ? CursoTypeormMapper.entityToFindOneQueryResult.map(e.curso) : null,
+    periodo: e.periodo,
+    telefone: e.telefone,
+    emailInstitucional: e.emailInstitucional,
+    dataNascimento: e.dataNascimento,
+    ativo: e.dateDeleted === null,
+    dateCreated: e.dateCreated,
+    dateUpdated: e.dateUpdated,
+    dateDeleted: e.dateDeleted,
+  };
+});
 
 // ============================================================================
 // Dominio -> Persistencia (Domain -> TypeORM Entity)
