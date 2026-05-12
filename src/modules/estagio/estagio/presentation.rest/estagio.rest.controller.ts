@@ -496,7 +496,7 @@ export class EstagioRestController {
         }
 
         // Defensive check before accessing estagiario.id
-        if (!estagiario || typeof estagiario !== "object" || !("id" in estagiario)) {
+        if (typeof estagiario !== "object" || !("id" in estagiario)) {
           throw new BadRequestException(
             `Estado inválido para estagiário na linha ${row.line}: ${typeof estagiario} ${JSON.stringify(estagiario)}`,
           );
