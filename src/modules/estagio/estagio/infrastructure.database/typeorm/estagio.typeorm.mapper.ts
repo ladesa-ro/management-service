@@ -11,8 +11,12 @@ import { HorarioEstagioTypeormEntity } from "./horario-estagio.typeorm.entity";
 // Persistência → Domínio (TypeORM Entity → Domain Aggregate)
 // ============================================================================
 
-export const entityToDomain = createMapper<EstagioTypeormEntity, Estagio>((entity) =>
-  Estagio.load({
+export const entityToDomain = createMapper<EstagioTypeormEntity, Estagio>((entity) => {
+  if (!entity) {
+    throw new Error("EstagioTypeormMapper.entityToDomain received null/undefined entity");
+  }
+
+  return Estagio.load({
     id: entity.id,
     empresa: { id: entity.empresa.id },
     estagiario: entity.estagiario ? { id: entity.estagiario.id } : null,
@@ -37,8 +41,8 @@ export const entityToDomain = createMapper<EstagioTypeormEntity, Estagio>((entit
     dateCreated: entity.dateCreated,
     dateUpdated: entity.dateUpdated,
     dateDeleted: entity.dateDeleted,
-  }),
-);
+  });
+});
 
 // ============================================================================
 // Domínio → Persistência (Domain Aggregate → TypeORM Entity)
@@ -93,35 +97,43 @@ export function horarioToPersistence(
 export const entityToFindOneQueryResult = createMapper<
   EstagioTypeormEntity,
   EstagioFindOneQueryResult
->((entity) => ({
-  id: entity.id,
-  empresa: { id: entity.empresa.id },
-  estagiario: entity.estagiario ? { id: entity.estagiario.id } : null,
+>((entity) => {
+  if (!entity) {
+    throw new Error(
+      "EstagioTypeormMapper.entityToFindOneQueryResult received null/undefined entity",
+    );
+  }
 
-  usuarioOrientador: entity.usuarioOrientador ? { id: entity.usuarioOrientador.id } : null,
+  return {
+    id: entity.id,
+    empresa: { id: entity.empresa.id },
+    estagiario: entity.estagiario ? { id: entity.estagiario.id } : null,
 
-  nomeSupervisor: entity.nomeSupervisor,
-  emailSupervisor: entity.emailSupervisor,
-  telefoneSupervisor: entity.telefoneSupervisor,
+    usuarioOrientador: entity.usuarioOrientador ? { id: entity.usuarioOrientador.id } : null,
 
-  aditivo: entity.aditivo,
-  tipoAditivo: entity.tipoAditivo,
+    nomeSupervisor: entity.nomeSupervisor,
+    emailSupervisor: entity.emailSupervisor,
+    telefoneSupervisor: entity.telefoneSupervisor,
 
-  cargaHoraria: entity.cargaHoraria,
-  dataInicio: entity.dataInicio,
-  dataFim: entity.dataFim,
-  status: entity.status,
+    aditivo: entity.aditivo,
+    tipoAditivo: entity.tipoAditivo,
 
-  horariosEstagio: (entity.horariosEstagio ?? [])
-    .filter((horario) => !horario.dateDeleted)
-    .map((horario) => ({
-      id: horario.id,
-      diaSemana: horario.diaSemana,
-      horaInicio: horario.horaInicio,
-      horaFim: horario.horaFim,
-    })),
+    cargaHoraria: entity.cargaHoraria,
+    dataInicio: entity.dataInicio,
+    dataFim: entity.dataFim,
+    status: entity.status,
 
-  ativo: !entity.dateDeleted,
-  dateCreated: entity.dateCreated,
-  dateUpdated: entity.dateUpdated,
-}));
+    horariosEstagio: (entity.horariosEstagio ?? [])
+      .filter((horario) => !horario.dateDeleted)
+      .map((horario) => ({
+        id: horario.id,
+        diaSemana: horario.diaSemana,
+        horaInicio: horario.horaInicio,
+        horaFim: horario.horaFim,
+      })),
+
+    ativo: !entity.dateDeleted,
+    dateCreated: entity.dateCreated,
+    dateUpdated: entity.dateUpdated,
+  };
+});
