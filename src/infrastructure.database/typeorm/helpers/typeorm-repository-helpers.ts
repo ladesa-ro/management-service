@@ -138,13 +138,21 @@ export async function typeormFindAll<Entity extends IEntityWithId, ListInputDto,
   );
 
   if (paginated.data.length === 0 || !relations) {
-    (paginated as { data: unknown[] }).data = paginated.data.map(mapEntity);
+    // Defensive: filter out any null/undefined items before mapping to avoid
+    // calling mapper functions with invalid input which may access properties
+    // like `e.id` and crash.
+    (paginated as { data: unknown[] }).data = paginated.data
+      .filter((d) => d != null)
+      .map((d) => mapEntity(d as Entity));
     return paginated as unknown as ListOutputDto;
   }
 
   // Second query: load full entities with relations using TypeORM's find(),
   // which generates safe short-hash aliases instead of concatenated paths.
-  const ids = paginated.data.map((e) => (e as IEntityWithId).id);
+  // Defensive: ensure we only read .id from defined entries that contain it.
+  const ids = paginated.data
+    .filter((e) => e != null && (e as any).id !== undefined)
+    .map((e) => (e as IEntityWithId).id);
 
   const where: FindOptionsWhere<Entity> = { id: In(ids) } as FindOptionsWhere<Entity>;
   if (hasSoftDelete) {
@@ -159,7 +167,7 @@ export async function typeormFindAll<Entity extends IEntityWithId, ListInputDto,
     .map((id) => entityMap.get(id))
     .filter((e): e is Entity => e !== undefined);
 
-  (paginated as { data: unknown[] }).data = orderedEntities.map(mapEntity);
+  (paginated as { data: unknown[] }).data = orderedEntities.map((e) => mapEntity(e as Entity));
 
   return paginated as unknown as ListOutputDto;
 }
