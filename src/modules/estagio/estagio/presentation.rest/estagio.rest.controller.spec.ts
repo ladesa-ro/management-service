@@ -87,7 +87,10 @@ function createController(options?: {
         }),
       },
     ],
-    [IEstagiarioCreateCommandHandler, { execute: vi.fn().mockResolvedValue({ id: createTestId() }) }],
+    [
+      IEstagiarioCreateCommandHandler,
+      { execute: vi.fn().mockResolvedValue({ id: createTestId() }) },
+    ],
     [IPerfilDefinirPerfisAtivosCommandHandler, definirPerfisAtivosHandler],
     [IUsuarioRepository, usuarioRepository],
     [IEstagiarioRepository, estagiarioRepository],
