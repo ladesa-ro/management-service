@@ -74,6 +74,10 @@ function normalizeText(value: string): string {
     .toLowerCase();
 }
 
+function sanitizeForLog(value: string): string {
+  return value.replace(/[\r\n]+/g, " ").replace(/[\x00-\x1F\x7F]/g, "");
+}
+
 function parseCsvRows(content: string): string[][] {
   const rows: string[][] = [];
   let currentRow: string[] = [];
@@ -337,7 +341,7 @@ export function parseEstagioImportCsv(content: string): EstagioImportCsvParseRes
       console.log("First data row length:", row.length);
       console.log("Header length:", headers.length);
       for (let i = 0; i < Math.min(row.length, 20); i += 1) {
-        console.log(`  [${i}]: "${row[i]}"`);
+        console.log(`  [${i}]: "${sanitizeForLog(row[i] ?? "")}"`);
       }
     }
 
