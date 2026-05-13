@@ -8,7 +8,7 @@ export const EstagiarioUpdateCommandFields = {
 export class EstagiarioUpdateCommand {
   perfil?: ObjectUuidRef;
   curso?: ObjectUuidRef;
-  turma?: ObjectUuidRef;
+  periodo?: string;
   telefone?: string;
   emailInstitucional?: string;
   dataNascimento?: string;

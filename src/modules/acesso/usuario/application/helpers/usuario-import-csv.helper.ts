@@ -3,6 +3,9 @@ export interface UsuarioImportCsvEntry {
   nome: string;
   matricula: string;
   emailPessoal: string;
+  curso?: string;
+  campus?: string;
+  situacao?: string;
 }
 
 export interface UsuarioImportCsvSkippedRow {
@@ -17,10 +20,12 @@ export interface UsuarioImportCsvParseResult {
 }
 
 function normalizeHeader(value: string): string {
-  return value
+  return (value || "")
     .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-zA-Z0-9]/g, "")
+    .replace(/[\u0300-\u036f]/g, "") // remove acentos
+    .replace(/\s+/g, "") // remove espaços
+    .replace(/[-_]/g, "") // remove hífens e underscores
+    .replace(/[^a-zA-Z0-9]/g, "") // remove outros caracteres especiais
     .toLowerCase();
 }
 
@@ -101,6 +106,9 @@ export function parseUsuarioImportCsv(content: string): UsuarioImportCsvParseRes
   const nomeIndex = headers.indexOf("nome");
   const matriculaIndex = headers.indexOf("matricula");
   const emailPessoalIndex = headers.indexOf("emailpessoal");
+  const cursoIndex = headers.indexOf("curso");
+  const campusIndex = headers.indexOf("campus");
+  const situacaoIndex = headers.indexOf("situacao");
 
   const missingHeaders = [
     nomeIndex === -1 ? "Nome" : null,
@@ -122,15 +130,26 @@ export function parseUsuarioImportCsv(content: string): UsuarioImportCsvParseRes
     const nome = getCell(row, nomeIndex);
     const matricula = getCell(row, matriculaIndex);
     const emailPessoal = getCell(row, emailPessoalIndex);
+    const curso = getCell(row, cursoIndex);
+    const campus = getCell(row, campusIndex);
+    const situacao = getCell(row, situacaoIndex);
 
     if (!nome && !matricula && !emailPessoal) {
       continue;
     }
 
-    if (!nome || !matricula || !emailPessoal) {
+    if (!nome || !matricula) {
       skipped.push({
         line,
-        reason: "Linha sem nome, matrícula ou e-mail pessoal obrigatório.",
+        reason: "Linha sem nome ou matrícula obrigatória.",
+      });
+      continue;
+    }
+
+    if (!emailPessoal) {
+      skipped.push({
+        line,
+        reason: "Linha sem e-mail pessoal obrigatório. Usuário ignorado.",
       });
       continue;
     }
@@ -140,6 +159,9 @@ export function parseUsuarioImportCsv(content: string): UsuarioImportCsvParseRes
       nome,
       matricula,
       emailPessoal,
+      curso: curso || undefined,
+      campus: campus || undefined,
+      situacao: situacao || undefined,
     });
   }
 

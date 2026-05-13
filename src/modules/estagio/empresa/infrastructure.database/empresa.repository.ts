@@ -73,6 +73,18 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
     await repo.save(repo.create({ id: aggregate.id, ...entityData } as EmpresaTypeormEntity));
   }
 
+  async findByCnpj(cnpj: string): Promise<EmpresaFindOneQueryResult | null> {
+    const repo = this.appTypeormConnection.getRepository(EmpresaTypeormEntity);
+    const normalizedCnpj = cnpj.replace(/\D/g, "");
+
+    const entity = await repo.findOne({
+      where: { cnpj: normalizedCnpj, dateDeleted: IsNull() },
+      relations: writeRelations,
+    });
+
+    return entity ? EmpresaTypeormMapper.entityToFindOneQueryResult.map(entity) : null;
+  }
+
   softDeleteById(id: string) {
     return typeormSoftDeleteById(this.appTypeormConnection, EmpresaTypeormEntity, config.alias, id);
   }

@@ -16,8 +16,14 @@ export const EstagiarioFields = {
   curso: createFieldMetadata({
     description: "Curso vinculado ao estagiário",
   }),
-  turma: createFieldMetadata({
-    description: "Turma vinculada ao estagiário",
+  periodo: createFieldMetadata({
+    description: "Período do estagiário",
+    schema: createSchema(() =>
+      z
+        .string()
+        .min(1, "periodo é obrigatório")
+        .max(20, "periodo deve ter no máximo 20 caracteres"),
+    ),
   }),
   telefone: createFieldMetadata({
     description: "Telefone do estagiário",

@@ -5,7 +5,6 @@ import {
 } from "@/infrastructure.graphql/dtos";
 import { PerfilFindOneOutputGraphQlDto } from "@/modules/acesso/usuario/perfil/presentation.graphql/perfil.graphql.dto";
 import { CursoFindOneOutputGraphQlDto } from "@/modules/ensino/curso/presentation.graphql/curso.graphql.dto";
-import { TurmaFindOneOutputGraphQlDto } from "@/modules/ensino/turma/presentation.graphql/turma.graphql.dto";
 import { EstagiarioCreateCommandFields } from "@/modules/estagio/estagiario/domain/commands/estagiario-create.command";
 import { EstagiarioUpdateCommandFields } from "@/modules/estagio/estagiario/domain/commands/estagiario-update.command";
 import {
@@ -23,14 +22,20 @@ import { ArgsType, Field, InputType, ObjectType } from "@/shared/presentation/gr
 
 @ObjectType("EstagiarioFindOneOutputDto")
 export class EstagiarioFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
-  @Field(() => PerfilFindOneOutputGraphQlDto, EstagiarioFindOneQueryResultFields.perfil.gqlMetadata)
-  perfil: PerfilFindOneOutputGraphQlDto;
+  @Field(() => PerfilFindOneOutputGraphQlDto, {
+    nullable: true,
+    ...EstagiarioFindOneQueryResultFields.perfil.gqlMetadata,
+  })
+  perfil: PerfilFindOneOutputGraphQlDto | null;
 
-  @Field(() => CursoFindOneOutputGraphQlDto, EstagiarioFindOneQueryResultFields.curso.gqlMetadata)
-  curso: CursoFindOneOutputGraphQlDto;
+  @Field(() => CursoFindOneOutputGraphQlDto, {
+    nullable: true,
+    ...EstagiarioFindOneQueryResultFields.curso.gqlMetadata,
+  })
+  curso: CursoFindOneOutputGraphQlDto | null;
 
-  @Field(() => TurmaFindOneOutputGraphQlDto, EstagiarioFindOneQueryResultFields.turma.gqlMetadata)
-  turma: TurmaFindOneOutputGraphQlDto;
+  @Field(() => String, EstagiarioFindOneQueryResultFields.periodo.gqlMetadata)
+  periodo: string;
 
   @Field(() => String, EstagiarioFindOneQueryResultFields.telefone.gqlMetadata)
   telefone: string;
@@ -62,11 +67,6 @@ export class EstagiarioCursoRefInputGraphQlDto {
   @Field(() => String) id: string;
 }
 
-@InputType("EstagiarioTurmaRefInputDto")
-export class EstagiarioTurmaRefInputGraphQlDto {
-  @Field(() => String) id: string;
-}
-
 // ============================================================================
 // Create Input
 // ============================================================================
@@ -81,8 +81,8 @@ export class EstagiarioCreateInputGraphQlDto {
   @Field(() => EstagiarioCursoRefInputGraphQlDto, EstagiarioCreateCommandFields.curso.gqlMetadata)
   curso: EstagiarioCursoRefInputGraphQlDto;
 
-  @Field(() => EstagiarioTurmaRefInputGraphQlDto, EstagiarioCreateCommandFields.turma.gqlMetadata)
-  turma: EstagiarioTurmaRefInputGraphQlDto;
+  @Field(() => String, EstagiarioCreateCommandFields.periodo.gqlMetadata)
+  periodo: string;
 
   @Field(() => String, EstagiarioCreateCommandFields.telefone.gqlMetadata)
   telefone: string;
@@ -114,11 +114,8 @@ export class EstagiarioUpdateInputGraphQlDto {
   })
   curso?: EstagiarioCursoRefInputGraphQlDto;
 
-  @Field(() => EstagiarioTurmaRefInputGraphQlDto, {
-    nullable: true,
-    ...EstagiarioUpdateCommandFields.turma.gqlMetadata,
-  })
-  turma?: EstagiarioTurmaRefInputGraphQlDto;
+  @Field(() => String, { nullable: true, ...EstagiarioUpdateCommandFields.periodo.gqlMetadata })
+  periodo?: string;
 
   @Field(() => String, { nullable: true, ...EstagiarioUpdateCommandFields.telefone.gqlMetadata })
   telefone?: string;
@@ -150,8 +147,8 @@ export class EstagiarioListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto
   @Field(() => [String], EstagiarioListQueryFields.filterCursoId.gqlMetadata)
   filterCursoId?: string[];
 
-  @Field(() => [String], EstagiarioListQueryFields.filterTurmaId.gqlMetadata)
-  filterTurmaId?: string[];
+  @Field(() => [String], EstagiarioListQueryFields.filterPeriodo.gqlMetadata)
+  filterPeriodo?: string[];
 }
 
 // ============================================================================

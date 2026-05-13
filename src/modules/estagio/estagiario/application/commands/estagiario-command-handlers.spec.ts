@@ -14,7 +14,7 @@ function createValidCreateDto() {
   return {
     perfil: { id: createTestId() },
     curso: { id: createTestId() },
-    turma: { id: createTestId() },
+    periodo: "2026.1",
     telefone: "69999999999",
     emailInstitucional: "aluno@ifro.edu.br",
     dataNascimento: "2000-01-15",

@@ -1,7 +1,6 @@
 import type { DeepPartial } from "typeorm";
 import { PerfilTypeormMapper } from "@/modules/acesso/usuario/perfil/infrastructure.database/typeorm";
 import { CursoTypeormMapper } from "@/modules/ensino/curso/infrastructure.database/typeorm";
-import { TurmaTypeormMapper } from "@/modules/ensino/turma/infrastructure.database/typeorm";
 import type { IEstagiario } from "@/modules/estagio/estagiario/domain/estagiario";
 import type { EstagiarioFindOneQueryResult } from "@/modules/estagio/estagiario/domain/queries";
 import { createMapper, pickId } from "@/shared/mapping";
@@ -11,18 +10,23 @@ import type { EstagiarioTypeormEntity } from "./estagiario.typeorm.entity";
 // Persistencia -> Dominio (TypeORM Entity -> Domain / Query Result)
 // ============================================================================
 
-export const entityToDomain = createMapper<EstagiarioTypeormEntity, IEstagiario>((e) => ({
-  id: e.id,
-  perfil: pickId(e.perfil),
-  curso: pickId(e.curso),
-  turma: pickId(e.turma),
-  telefone: e.telefone,
-  emailInstitucional: e.emailInstitucional,
-  dataNascimento: e.dataNascimento,
-  dateCreated: e.dateCreated,
-  dateUpdated: e.dateUpdated,
-  dateDeleted: e.dateDeleted,
-}));
+export const entityToDomain = createMapper<EstagiarioTypeormEntity, IEstagiario>((e) => {
+  if (!e) {
+    throw new Error("EstagiarioTypeormMapper.entityToDomain received null/undefined entity");
+  }
+  return {
+    id: e.id,
+    perfil: pickId(e.perfil ?? null),
+    curso: pickId(e.curso ?? null),
+    periodo: e.periodo,
+    telefone: e.telefone,
+    emailInstitucional: e.emailInstitucional,
+    dataNascimento: e.dataNascimento,
+    dateCreated: e.dateCreated,
+    dateUpdated: e.dateUpdated,
+    dateDeleted: e.dateDeleted,
+  };
+});
 
 /**
  * Entity -> Query Result (read side).
@@ -34,19 +38,27 @@ export const entityToDomain = createMapper<EstagiarioTypeormEntity, IEstagiario>
 export const entityToFindOneQueryResult = createMapper<
   EstagiarioTypeormEntity,
   EstagiarioFindOneQueryResult
->((e) => ({
-  id: e.id,
-  perfil: PerfilTypeormMapper.entityToFindOneQueryResult.map(e.perfil),
-  curso: CursoTypeormMapper.entityToFindOneQueryResult.map(e.curso),
-  turma: TurmaTypeormMapper.entityToFindOneQueryResult.map(e.turma),
-  telefone: e.telefone,
-  emailInstitucional: e.emailInstitucional,
-  dataNascimento: e.dataNascimento,
-  ativo: e.dateDeleted === null,
-  dateCreated: e.dateCreated,
-  dateUpdated: e.dateUpdated,
-  dateDeleted: e.dateDeleted,
-}));
+>((e) => {
+  if (!e) {
+    throw new Error(
+      "EstagiarioTypeormMapper.entityToFindOneQueryResult received null/undefined entity",
+    );
+  }
+
+  return {
+    id: e.id,
+    perfil: e.perfil ? PerfilTypeormMapper.entityToFindOneQueryResult.map(e.perfil) : null,
+    curso: e.curso ? CursoTypeormMapper.entityToFindOneQueryResult.map(e.curso) : null,
+    periodo: e.periodo,
+    telefone: e.telefone,
+    emailInstitucional: e.emailInstitucional,
+    dataNascimento: e.dataNascimento,
+    ativo: e.dateDeleted === null,
+    dateCreated: e.dateCreated,
+    dateUpdated: e.dateUpdated,
+    dateDeleted: e.dateDeleted,
+  };
+});
 
 // ============================================================================
 // Dominio -> Persistencia (Domain -> TypeORM Entity)
@@ -57,7 +69,7 @@ export const domainToPersistence = createMapper<IEstagiario, DeepPartial<Estagia
     id: d.id,
     perfil: pickId(d.perfil),
     curso: pickId(d.curso),
-    turma: pickId(d.turma),
+    periodo: d.periodo,
     telefone: d.telefone,
     emailInstitucional: d.emailInstitucional,
     dataNascimento: d.dataNascimento,

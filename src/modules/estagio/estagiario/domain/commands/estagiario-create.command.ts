@@ -8,7 +8,7 @@ export const EstagiarioCreateCommandFields = {
 export class EstagiarioCreateCommand {
   perfil!: ObjectUuidRef;
   curso!: ObjectUuidRef;
-  turma!: ObjectUuidRef;
+  periodo!: string;
   telefone!: string;
   emailInstitucional!: string;
   dataNascimento!: string;

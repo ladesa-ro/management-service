@@ -34,6 +34,9 @@ export interface IEmpresaRepository {
   /** Persiste o aggregate (create ou update). */
   save: IRepositorySave<Empresa>;
 
+  /** Busca uma empresa ativa pelo CNPJ. */
+  findByCnpj(cnpj: string): Promise<EmpresaFindOneQueryResult | null>;
+
   /** Soft-delete por ID. */
   softDeleteById: IRepositorySoftDeleteById;
 

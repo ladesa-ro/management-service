@@ -56,6 +56,7 @@ import {
   IUsuarioEnsinoQueryHandler,
   UsuarioEnsinoQueryMetadata,
 } from "@/modules/acesso/usuario/domain/queries/usuario-ensino.query.handler.interface";
+import { IUsuarioFindByMatriculaQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-find-by-matricula.query.handler.interface";
 import {
   IUsuarioFindOneQueryHandler,
   UsuarioFindOneQueryMetadata,
@@ -75,6 +76,8 @@ import {
 } from "@/modules/acesso/usuario/domain/queries/usuario-list.query.handler.interface";
 import { IUsuarioDisponibilidadeRepository } from "@/modules/acesso/usuario/domain/repositories/usuario-disponibilidade.repository.interface";
 import { Usuario } from "@/modules/acesso/usuario/domain/usuario";
+import { IPerfilDefinirPerfisAtivosCommandHandler } from "@/modules/acesso/usuario/perfil/domain/commands";
+import { ICampusListQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-list.query.handler.interface";
 import { IHorarioConsultaQueryHandler } from "@/modules/calendario/horario-consulta";
 import {
   HorarioSemanalOutputRestDto,
@@ -107,6 +110,8 @@ export class UsuarioRestController {
     private readonly ensinoHandler: IUsuarioEnsinoQueryHandler,
     @Dep(IUsuarioCreateCommandHandler)
     private readonly createHandler: IUsuarioCreateCommandHandler,
+    @Dep(IUsuarioFindByMatriculaQueryHandler)
+    private readonly findByMatriculaHandler: IUsuarioFindByMatriculaQueryHandler,
     @Dep(IUsuarioUpdateCommandHandler)
     private readonly updateHandler: IUsuarioUpdateCommandHandler,
     @Dep(IUsuarioGetImagemCapaQueryHandler)
@@ -123,6 +128,10 @@ export class UsuarioRestController {
     private readonly horarioConsultaHandler: IHorarioConsultaQueryHandler,
     @Dep(IUsuarioDisponibilidadeRepository)
     private readonly disponibilidadeRepository: IUsuarioDisponibilidadeRepository,
+    @Dep(ICampusListQueryHandler)
+    private readonly campusListHandler: ICampusListQueryHandler,
+    @Dep(IPerfilDefinirPerfisAtivosCommandHandler)
+    private readonly definirPerfisAtivosHandler: IPerfilDefinirPerfisAtivosCommandHandler,
   ) {}
 
   @Get("/")
@@ -231,41 +240,208 @@ export class UsuarioRestController {
     let failed = 0;
 
     for (const row of parsed.entries) {
+      let usuarioId: string | undefined = undefined;
+      let usuarioCriado = false;
+      const item = new UsuarioImportCsvItemRestDto();
+      item.line = row.line;
+      item.nome = row.nome;
+      item.matricula = row.matricula;
+      item.emailPessoal = row.emailPessoal;
       try {
         const queryResult = await this.createHandler.execute(accessContext, {
           nome: row.nome,
           matricula: row.matricula,
           email: row.emailPessoal,
         });
-
-        const item = new UsuarioImportCsvItemRestDto();
-        item.line = row.line;
-        item.nome = row.nome;
-        item.matricula = row.matricula;
-        item.emailPessoal = row.emailPessoal;
+        usuarioId = queryResult.id;
+        usuarioCriado = true;
         item.status = "created";
-        item.usuarioId = queryResult.id;
-        items.push(item);
-        created += 1;
+        item.usuarioId = usuarioId;
       } catch (error) {
-        const item = new UsuarioImportCsvItemRestDto();
-        item.line = row.line;
-        item.nome = row.nome;
-        item.matricula = row.matricula;
-        item.emailPessoal = row.emailPessoal;
-        item.status = "failed";
-        item.reason = error instanceof Error ? error.message : "Falha ao cadastrar usuario.";
-        items.push(item);
+        const localUsuario = await this.findByMatriculaHandler.execute(accessContext, {
+          matricula: row.matricula,
+        });
+
+        if (localUsuario?.id) {
+          usuarioId = localUsuario.id;
+          usuarioCriado = true;
+          item.status = "created";
+          item.usuarioId = usuarioId;
+          item.reason =
+            (error instanceof Error ? error.message : "Falha parcial ao cadastrar usuario.") +
+            ". Usuário localizado pelo banco local e seguirá para criação de perfil.";
+        } else {
+          item.status = "failed";
+          // Mostra erro detalhado de validação se for ZodError
+          if (
+            error &&
+            typeof error === "object" &&
+            "errors" in error &&
+            Array.isArray((error as any).errors)
+          ) {
+            const zodErrors = (error as any).errors;
+            item.reason = zodErrors
+              .map((e: any) => `${e.path?.join(".") || "campo"}: ${e.message}`)
+              .join("; ");
+          } else {
+            item.reason = error instanceof Error ? error.message : "Falha ao cadastrar usuario.";
+          }
+        }
+      }
+
+      // Se o usuário foi criado (mesmo que parcialmente), tente criar o perfil
+      if (usuarioCriado && usuarioId) {
+        try {
+          const campusText = (row as any).campus;
+          const _situacaoText = (row as any).situacao ?? "";
+
+          if (campusText) {
+            // Tenta buscar campus usando várias variantes do texto (heurística):
+            // - texto original
+            // - texto sem separadores
+            // - texto extraído do campo curso entre parênteses (ex: "JI-PARANÁ")
+            const cursoText = (row as any).curso ?? "";
+            const parenMatch = /\(([^)]+)\)/.exec(cursoText);
+
+            const candidates: string[] = [];
+            candidates.push(campusText);
+            // sem separadores (ex: JI-PARANÁ -> JIPARANA)
+            candidates.push(campusText.replace(/[^a-zA-Z0-9]/g, ""));
+            // com espaços no lugar de hífens/underscores
+            candidates.push(campusText.replace(/[-_]+/g, " "));
+            if (parenMatch?.[1]) {
+              candidates.push(parenMatch[1]);
+              candidates.push(parenMatch[1].replace(/[^a-zA-Z0-9]/g, ""));
+            }
+
+            const normalize = (str: string) =>
+              str
+                ?.normalize("NFD")
+                .replace(/\p{Diacritic}/gu, "")
+                .replace(/[^a-zA-Z0-9]/g, "")
+                .toLowerCase() || "";
+
+            let matches: any[] = [];
+            const tried = new Set<string>();
+            for (const term of candidates) {
+              if (!term) continue;
+              const key = term.trim().toLowerCase();
+              if (tried.has(key)) continue;
+              tried.add(key);
+
+              const campusList = await this.campusListHandler.execute(accessContext, {
+                search: term,
+                page: 1,
+                limit: 20,
+              } as any);
+
+              matches = (campusList?.data || []).filter((campus: any) => {
+                return (
+                  normalize(campus.nomeFantasia).includes(normalize(term)) ||
+                  normalize(campus.razaoSocial).includes(normalize(term)) ||
+                  normalize(campus.apelido).includes(normalize(term))
+                );
+              });
+
+              if (matches.length > 0) break;
+            }
+
+            // Fallback: se nenhuma busca por termo encontrou resultados, busque uma lista mais ampla
+            // e compare localmente usando a mesma normalização — útil quando o termo está muito truncado.
+            if (matches.length === 0) {
+              const campusList = await this.campusListHandler.execute(accessContext, {
+                search: "",
+                page: 1,
+                limit: 200,
+              } as any);
+
+              const all = (campusList?.data || []).filter((campus: any) => {
+                return (
+                  normalize(campus.nomeFantasia).includes(normalize(campusText)) ||
+                  normalize(campus.razaoSocial).includes(normalize(campusText)) ||
+                  normalize(campus.apelido).includes(normalize(campusText))
+                );
+              });
+
+              matches = all;
+            }
+
+            if (matches.length === 1) {
+              const campusFound = matches[0];
+              // Sempre tenta criar perfil, mas handler deve ser idempotente
+              await this.definirPerfisAtivosHandler.execute(accessContext, {
+                vinculos: [
+                  {
+                    campus: { id: campusFound.id },
+                    cargo: "aluno",
+                    apelido: (row.nome || "").slice(0, 60),
+                  },
+                ],
+                usuario: { id: usuarioId },
+              } as any);
+              // Loga nome completo do campus encontrado
+              item.reason =
+                (item.reason ? item.reason + "; " : "") +
+                `Campus encontrado: ${campusFound.nomeFantasia || campusFound.razaoSocial || campusFound.apelido}`;
+            } else if (matches.length > 1) {
+              item.status = "failed";
+              item.reason =
+                (item.reason ? item.reason + "; " : "") +
+                `Ambiguidade: mais de um campus corresponde ao termo '${campusText}'. Matches: ${matches.map((c: any) => c.nomeFantasia || c.razaoSocial || c.apelido).join(", ")}`;
+              failed += 1;
+              items.push(item);
+              continue;
+            } else if (matches.length === 0) {
+              item.status = "failed";
+              item.reason =
+                (item.reason ? item.reason + "; " : "") +
+                `Nenhum campus encontrado para '${campusText}'.`;
+              failed += 1;
+              items.push(item);
+              continue;
+            }
+          } else {
+            // Sem texto de campus não é possível determinar campus; marca como failed
+            item.status = "failed";
+            item.reason = (item.reason ? item.reason + "; " : "") + `Nenhum campus informado.`;
+            failed += 1;
+            items.push(item);
+            continue;
+          }
+        } catch (err) {
+          // não interrompe o import, apenas registra motivo parcial
+          item.reason =
+            (item.reason ? item.reason + "; " : "") +
+            (err instanceof Error ? err.message : String(err));
+          item.status = "failed";
+        }
+      }
+      // Atualiza contadores e adiciona item ao relatório
+      if (item.status === "created") {
+        created += 1;
+      } else if (item.status === "failed") {
         failed += 1;
       }
+      items.push(item);
     }
+
+    // Ordena o relatório por status e linha para facilitar análise/exportação
+    items.sort((a, b) => {
+      if (a.status === b.status) return a.line - b.line;
+      if (a.status === "failed") return -1;
+      if (b.status === "failed") return 1;
+      if (a.status === "skipped") return -1;
+      if (b.status === "skipped") return 1;
+      return a.line - b.line;
+    });
 
     return {
       total: parsed.totalRows,
       created,
       skipped: parsed.skipped.length,
       failed,
-      items,
+      items, // cada item tem: line, nome, matricula, emailPessoal, status, usuarioId, reason
+      // Dica: para exportação, basta serializar items como CSV/JSON
     };
   }
 

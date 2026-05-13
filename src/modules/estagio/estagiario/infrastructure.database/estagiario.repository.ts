@@ -44,27 +44,6 @@ const estagiarioRelations = {
       },
     },
   },
-  turma: {
-    curso: {
-      campus: {
-        endereco: {
-          cidade: {
-            estado: true,
-          },
-        },
-      },
-      ofertaFormacao: {
-        modalidade: true,
-        campus: {
-          endereco: {
-            cidade: {
-              estado: true,
-            },
-          },
-        },
-      },
-    },
-  },
 };
 
 const estagiarioPaginateConfig = buildTypeOrmPaginateConfig<EstagiarioTypeormEntity>(
@@ -76,7 +55,6 @@ const estagiarioPaginateConfig = buildTypeOrmPaginateConfig<EstagiarioTypeormEnt
 const writeRelations = {
   perfil: true,
   curso: true,
-  turma: true,
 } as const;
 
 @Impl()
@@ -149,5 +127,35 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
       dto,
       EstagiarioTypeormMapper.entityToFindOneQueryResult.map,
     );
+  }
+
+  async findByUsuarioId(usuarioId: string): Promise<Estagiario | null> {
+    const repo = this.appTypeormConnection.getRepository(EstagiarioTypeormEntity);
+
+    const entity = await repo.findOne({
+      where: {
+        perfil: { usuario: { id: usuarioId } },
+        dateDeleted: IsNull(),
+      },
+      relations: writeRelations,
+    });
+
+    if (!entity) return null;
+    return Estagiario.load(EstagiarioTypeormMapper.entityToDomain.map(entity));
+  }
+
+  async findByPerfilId(perfilId: string): Promise<Estagiario | null> {
+    const repo = this.appTypeormConnection.getRepository(EstagiarioTypeormEntity);
+
+    const entity = await repo.findOne({
+      where: {
+        perfil: { id: perfilId },
+        dateDeleted: IsNull(),
+      },
+      relations: writeRelations,
+    });
+
+    if (!entity) return null;
+    return Estagiario.load(EstagiarioTypeormMapper.entityToDomain.map(entity));
   }
 }

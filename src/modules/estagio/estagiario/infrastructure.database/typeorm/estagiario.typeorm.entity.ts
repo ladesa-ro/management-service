@@ -1,7 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, type Relation } from "typeorm";
 import { PerfilEntity } from "@/modules/acesso/usuario/perfil/infrastructure.database/typeorm/perfil.typeorm.entity";
 import { CursoEntity } from "@/modules/ensino/curso/infrastructure.database/typeorm/curso.typeorm.entity";
-import { TurmaEntity } from "@/modules/ensino/turma/infrastructure.database/typeorm/turma.typeorm.entity";
 
 /**
  * Entidade TypeORM para Estagiario
@@ -19,9 +18,8 @@ export class EstagiarioTypeormEntity {
   @JoinColumn({ name: "id_curso_fk" })
   curso!: Relation<CursoEntity>;
 
-  @ManyToOne(() => TurmaEntity)
-  @JoinColumn({ name: "id_turma_fk" })
-  turma!: Relation<TurmaEntity>;
+  @Column({ name: "periodo", type: "varchar", length: 20, nullable: false })
+  periodo!: string;
 
   @Column({ name: "telefone", type: "varchar", length: 15, nullable: false })
   telefone!: string;
