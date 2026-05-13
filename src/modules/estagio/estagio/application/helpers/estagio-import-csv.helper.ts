@@ -340,14 +340,6 @@ export function parseEstagioImportCsv(content: string): EstagioImportCsvParseRes
     const row = rows[index];
     const line = index + 1;
 
-    if (process.env.DEBUG_CSV_IMPORT && index === 1) {
-      console.log("First data row length:", row.length);
-      console.log("Header length:", headers.length);
-      for (let i = 0; i < Math.min(row.length, 20); i += 1) {
-        console.log(`  [${i}]: "${sanitizeForLog(row[i] ?? "")}"`);
-      }
-    }
-
     const estagiario = parseEstagiarioField(getCell(row, headerIndexes.estagiario));
     const concedente = toNullIfEmpty(getCell(row, headerIndexes.concedente));
     const concedenteCnpj = toNullIfEmpty(getCell(row, headerIndexes.concedenteCnpj));
