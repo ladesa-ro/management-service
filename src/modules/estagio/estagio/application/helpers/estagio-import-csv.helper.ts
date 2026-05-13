@@ -192,19 +192,20 @@ function parseDate(value: string): string | null {
 
 function parseEstagiarioField(value: string): { nome: string; matricula: string | null } {
   const trimmed = value.trim();
-  const match = trimmed.match(/^(.*?)(?:\s*\(([^)]+)\))?\s*$/);
 
-  if (!match) {
-    return { nome: trimmed, matricula: null };
+  const parenStart = trimmed.lastIndexOf("(");
+  const parenEnd = trimmed.lastIndexOf(")");
+
+  if (parenStart !== -1 && parenEnd === trimmed.length - 1 && parenEnd > parenStart) {
+    const nome = trimmed.slice(0, parenStart).trim();
+    const matricula = trimmed.slice(parenStart + 1, parenEnd).trim();
+    return {
+      nome,
+      matricula: matricula && matricula !== "-" ? matricula : null,
+    };
   }
 
-  const nome = match[1].trim();
-  const matricula = match[2]?.trim() ?? null;
-
-  return {
-    nome,
-    matricula: matricula && matricula !== "-" ? matricula : null,
-  };
+  return { nome: trimmed, matricula: null };
 }
 
 function isValidEmail(email: string | null): email is string {
