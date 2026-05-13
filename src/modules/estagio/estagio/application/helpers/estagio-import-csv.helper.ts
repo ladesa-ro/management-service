@@ -74,12 +74,6 @@ function normalizeText(value: string): string {
     .toLowerCase();
 }
 
-function sanitizeForLog(value: string): string {
-  return value
-    .replace(/[\r\n\u2028\u2029]+/g, " ")
-    .replace(/[\x00-\x1F\x7F]/g, "");
-}
-
 function parseCsvRows(content: string): string[][] {
   const rows: string[][] = [];
   let currentRow: string[] = [];
