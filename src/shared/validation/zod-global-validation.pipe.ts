@@ -53,8 +53,7 @@ export class ZodGlobalValidationPipe implements PipeTransform {
 
     const normalized = normalize(value);
 
-    const tryParse = (input: unknown) =>
-      metatype.schema.safeParse(input);
+    const tryParse = (input: unknown) => metatype.schema.safeParse(input);
 
     const result = tryParse(normalized);
 
