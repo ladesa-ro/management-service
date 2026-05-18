@@ -12,8 +12,8 @@ export const EstagioFindOneQueryResultFields = {
 export class HorarioEstagioQueryResult {
   id!: string;
   diaSemana!: number;
-  horaInicio!: string;
-  horaFim!: string;
+  horaInicio!: string | null;
+  horaFim!: string | null;
 }
 
 export class EstagioFindOneQueryResult {
