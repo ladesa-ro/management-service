@@ -57,8 +57,8 @@ export const createInputDtoToCreateCommand = createMapper<
     dto.estagiario === undefined
       ? undefined
       : dto.estagiario === null
-      ? null
-      : { id: dto.estagiario },
+        ? null
+        : { id: dto.estagiario },
   usuarioOrientador: dto.usuarioOrientador ? { id: dto.usuarioOrientador } : undefined,
   cargaHoraria: dto.cargaHoraria,
   dataInicio: dto.dataInicio === "" ? null : dto.dataInicio,
@@ -73,12 +73,12 @@ export const createInputDtoToCreateCommand = createMapper<
     dto.horariosEstagio === undefined
       ? undefined
       : dto.horariosEstagio === null
-      ? null
-      : dto.horariosEstagio.map((h) => ({
-          diaSemana: h.diaSemana,
-          horaInicio: h.horaInicio === "" ? null : (h.horaInicio ?? null),
-          horaFim: h.horaFim === "" ? null : (h.horaFim ?? null),
-        })),
+        ? null
+        : dto.horariosEstagio.map((h) => ({
+            diaSemana: h.diaSemana,
+            horaInicio: h.horaInicio === "" ? null : (h.horaInicio ?? null),
+            horaFim: h.horaFim === "" ? null : (h.horaFim ?? null),
+          })),
 }));
 
 export const updateInputDtoToUpdateCommand = createMapper<
@@ -90,8 +90,8 @@ export const updateInputDtoToUpdateCommand = createMapper<
     dto.estagiario === undefined
       ? undefined
       : dto.estagiario === null
-      ? null
-      : { id: dto.estagiario },
+        ? null
+        : { id: dto.estagiario },
   usuarioOrientador: dto.usuarioOrientador ? { id: dto.usuarioOrientador } : undefined,
   cargaHoraria: dto.cargaHoraria,
   dataInicio: dto.dataInicio === "" ? null : dto.dataInicio,
@@ -106,12 +106,12 @@ export const updateInputDtoToUpdateCommand = createMapper<
     dto.horariosEstagio === undefined
       ? undefined
       : dto.horariosEstagio === null
-      ? null
-      : dto.horariosEstagio.map((h) => ({
-          diaSemana: h.diaSemana,
-          horaInicio: h.horaInicio === "" ? null : (h.horaInicio ?? null),
-          horaFim: h.horaFim === "" ? null : (h.horaFim ?? null),
-        })),
+        ? null
+        : dto.horariosEstagio.map((h) => ({
+            diaSemana: h.diaSemana,
+            horaInicio: h.horaInicio === "" ? null : (h.horaInicio ?? null),
+            horaFim: h.horaFim === "" ? null : (h.horaFim ?? null),
+          })),
 }));
 
 // ============================================================================
