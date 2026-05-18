@@ -14,16 +14,22 @@ import { EstagioPaginationInputSchema } from "@/modules/estagio/estagio/domain/q
 import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@/shared/presentation/rest";
 import { PaginationInputRestDto, UuidParamRestDto } from "@/shared/presentation/rest/dtos";
 
+@ApiSchema({ name: "EstagioEmpresaRefInputDto" })
+export class EstagioEmpresaRefInputRestDto {
+  @ApiProperty(EstagioCreateCommandFields.empresa.swaggerMetadata)
+  id!: string;
+}
+
 @ApiSchema({ name: "HorarioEstagioInputDto" })
 export class HorarioEstagioInputRestDto {
   @ApiProperty(HorarioEstagioFields.diaSemana.swaggerMetadata)
   diaSemana!: number;
 
-  @ApiProperty(HorarioEstagioFields.horaInicio.swaggerMetadata)
-  horaInicio!: string;
+  @ApiPropertyOptional(HorarioEstagioFields.horaInicio.swaggerMetadata)
+  horaInicio?: string | null;
 
-  @ApiProperty(HorarioEstagioFields.horaFim.swaggerMetadata)
-  horaFim!: string;
+  @ApiPropertyOptional(HorarioEstagioFields.horaFim.swaggerMetadata)
+  horaFim?: string | null;
 }
 
 @ApiSchema({ name: "HorarioEstagioOutputDto" })
@@ -37,10 +43,10 @@ export class EstagioCreateInputRestDto {
   static schema = EstagioCreateSchema.presentation;
 
   @ApiProperty(EstagioCreateCommandFields.empresa.swaggerMetadata)
-  empresa!: string;
+  empresa!: EstagioEmpresaRefInputRestDto;
 
   @ApiPropertyOptional(EstagioCreateCommandFields.estagiario.swaggerMetadata)
-  estagiario?: string;
+  estagiario?: string | null;
 
   @ApiPropertyOptional(EstagioCreateCommandFields.usuarioOrientador.swaggerMetadata)
   usuarioOrientador?: string;
@@ -49,7 +55,7 @@ export class EstagioCreateInputRestDto {
   cargaHoraria!: number;
 
   @ApiPropertyOptional(EstagioCreateCommandFields.dataInicio.swaggerMetadata)
-  dataInicio?: string;
+  dataInicio?: string | null;
 
   @ApiPropertyOptional(EstagioCreateCommandFields.dataFim.swaggerMetadata)
   dataFim?: string | null;
@@ -58,25 +64,25 @@ export class EstagioCreateInputRestDto {
   status?: string;
 
   @ApiPropertyOptional(EstagioCreateCommandFields.nomeSupervisor.swaggerMetadata)
-  nomeSupervisor?: string;
+  nomeSupervisor?: string | null;
 
   @ApiPropertyOptional(EstagioCreateCommandFields.emailSupervisor.swaggerMetadata)
-  emailSupervisor?: string;
+  emailSupervisor?: string | null;
 
   @ApiPropertyOptional(EstagioCreateCommandFields.telefoneSupervisor.swaggerMetadata)
-  telefoneSupervisor?: string;
+  telefoneSupervisor?: string | null;
 
   @ApiPropertyOptional(EstagioCreateCommandFields.aditivo.swaggerMetadata)
   aditivo?: boolean;
 
   @ApiPropertyOptional(EstagioCreateCommandFields.tipoAditivo.swaggerMetadata)
-  tipoAditivo?: string;
+  tipoAditivo?: string | null;
 
   @ApiPropertyOptional({
     ...EstagioCreateCommandFields.horariosEstagio.swaggerMetadata,
     type: () => [HorarioEstagioInputRestDto],
   })
-  horariosEstagio?: HorarioEstagioInputRestDto[];
+  horariosEstagio?: HorarioEstagioInputRestDto[] | null;
 }
 
 @ApiSchema({ name: "EstagioUpdateInputDto" })
@@ -84,10 +90,10 @@ export class EstagioUpdateInputRestDto {
   static schema = EstagioUpdateSchema.presentation;
 
   @ApiPropertyOptional(EstagioUpdateCommandFields.empresa.swaggerMetadata)
-  empresa?: string;
+  empresa?: EstagioEmpresaRefInputRestDto;
 
   @ApiPropertyOptional(EstagioUpdateCommandFields.estagiario.swaggerMetadata)
-  estagiario?: string;
+  estagiario?: string | null;
 
   @ApiPropertyOptional(EstagioUpdateCommandFields.usuarioOrientador.swaggerMetadata)
   usuarioOrientador?: string;
@@ -96,7 +102,7 @@ export class EstagioUpdateInputRestDto {
   cargaHoraria?: number;
 
   @ApiPropertyOptional(EstagioUpdateCommandFields.dataInicio.swaggerMetadata)
-  dataInicio?: string;
+  dataInicio?: string | null;
 
   @ApiPropertyOptional(EstagioUpdateCommandFields.dataFim.swaggerMetadata)
   dataFim?: string | null;
@@ -108,25 +114,25 @@ export class EstagioUpdateInputRestDto {
   status?: string;
 
   @ApiPropertyOptional(EstagioUpdateCommandFields.nomeSupervisor.swaggerMetadata)
-  nomeSupervisor?: string;
+  nomeSupervisor?: string | null;
 
   @ApiPropertyOptional(EstagioUpdateCommandFields.emailSupervisor.swaggerMetadata)
-  emailSupervisor?: string;
+  emailSupervisor?: string | null;
 
   @ApiPropertyOptional(EstagioUpdateCommandFields.telefoneSupervisor.swaggerMetadata)
-  telefoneSupervisor?: string;
+  telefoneSupervisor?: string | null;
 
   @ApiPropertyOptional(EstagioUpdateCommandFields.aditivo.swaggerMetadata)
   aditivo?: boolean;
 
   @ApiPropertyOptional(EstagioUpdateCommandFields.tipoAditivo.swaggerMetadata)
-  tipoAditivo?: string;
+  tipoAditivo?: string | null;
 
   @ApiPropertyOptional({
     ...EstagioUpdateCommandFields.horariosEstagio.swaggerMetadata,
     type: () => [HorarioEstagioInputRestDto],
   })
-  horariosEstagio?: HorarioEstagioInputRestDto[];
+  horariosEstagio?: HorarioEstagioInputRestDto[] | null;
 }
 
 @ApiSchema({ name: "EstagioFindOneInputDto" })

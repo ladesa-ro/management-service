@@ -17,11 +17,11 @@ export class HorarioEstagioTypeormEntity {
   @Column({ name: "dia_semana", type: "integer", nullable: false })
   diaSemana!: number;
 
-  @Column({ name: "hora_inicio", type: "time", nullable: false })
-  horaInicio!: string;
+  @Column({ name: "hora_inicio", type: "time", nullable: true })
+  horaInicio!: string | null;
 
-  @Column({ name: "hora_fim", type: "time", nullable: false })
-  horaFim!: string;
+  @Column({ name: "hora_fim", type: "time", nullable: true })
+  horaFim!: string | null;
 
   @Column({ name: "date_created", type: "timestamptz", nullable: false })
   dateCreated!: string;

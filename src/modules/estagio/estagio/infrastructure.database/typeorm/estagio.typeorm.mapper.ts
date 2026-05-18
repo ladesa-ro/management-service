@@ -77,13 +77,23 @@ export const domainToPersistence = createMapper<Estagio, EstagioTypeormEntity>((
 export function horarioToPersistence(
   idEstagioFk: string,
   horario: IHorarioEstagio,
-): HorarioEstagioTypeormEntity {
+): HorarioEstagioTypeormEntity | null {
+  // If both times are missing, skip creating a persistence entity
+  const horaInicio = horario.horaInicio ?? null;
+  const horaFim = horario.horaFim ?? null;
+
+  if (!horaInicio && !horaFim) return null;
+
+  // If one side is missing, mirror the existing one to avoid inserting nulls
+  const start = horaInicio ?? horaFim!;
+  const end = horaFim ?? horaInicio!;
+
   const entity = new HorarioEstagioTypeormEntity();
   entity.id = horario.id || generateUuidV7();
   Object.assign(entity, { estagio: { id: idEstagioFk } });
   entity.diaSemana = horario.diaSemana;
-  entity.horaInicio = horario.horaInicio;
-  entity.horaFim = horario.horaFim;
+  entity.horaInicio = start;
+  entity.horaFim = end;
   entity.dateCreated = getNowISO();
   entity.dateUpdated = getNowISO();
   entity.dateDeleted = null;

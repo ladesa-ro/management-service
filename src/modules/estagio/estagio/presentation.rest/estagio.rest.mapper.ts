@@ -52,38 +52,66 @@ export const createInputDtoToCreateCommand = createMapper<
   EstagioCreateInputRestDto,
   EstagioCreateCommand
 >((dto) => ({
-  empresa: { id: dto.empresa },
-  estagiario: dto.estagiario ? { id: dto.estagiario } : undefined,
+  empresa: { id: dto.empresa.id },
+  estagiario:
+    dto.estagiario === undefined
+      ? undefined
+      : dto.estagiario === null
+        ? null
+        : { id: dto.estagiario },
   usuarioOrientador: dto.usuarioOrientador ? { id: dto.usuarioOrientador } : undefined,
   cargaHoraria: dto.cargaHoraria,
-  dataInicio: dto.dataInicio,
-  dataFim: dto.dataFim,
+  dataInicio: dto.dataInicio === "" ? null : dto.dataInicio,
+  dataFim: dto.dataFim === "" ? null : dto.dataFim,
   status: dto.status as EstagioStatus | undefined,
-  nomeSupervisor: dto.nomeSupervisor,
-  emailSupervisor: dto.emailSupervisor,
-  telefoneSupervisor: dto.telefoneSupervisor,
+  nomeSupervisor: dto.nomeSupervisor === "" ? null : dto.nomeSupervisor,
+  emailSupervisor: dto.emailSupervisor === "" ? null : dto.emailSupervisor,
+  telefoneSupervisor: dto.telefoneSupervisor === "" ? null : dto.telefoneSupervisor,
   aditivo: dto.aditivo,
-  tipoAditivo: dto.tipoAditivo,
-  horariosEstagio: dto.horariosEstagio,
+  tipoAditivo: dto.tipoAditivo === "" ? null : dto.tipoAditivo,
+  horariosEstagio:
+    dto.horariosEstagio === undefined
+      ? undefined
+      : dto.horariosEstagio === null
+        ? null
+        : dto.horariosEstagio.map((h) => ({
+            diaSemana: h.diaSemana,
+            horaInicio: h.horaInicio === "" ? null : (h.horaInicio ?? null),
+            horaFim: h.horaFim === "" ? null : (h.horaFim ?? null),
+          })),
 }));
 
 export const updateInputDtoToUpdateCommand = createMapper<
   EstagioUpdateInputRestDto,
   EstagioUpdateCommand
 >((dto) => ({
-  empresa: dto.empresa ? { id: dto.empresa } : undefined,
-  estagiario: dto.estagiario ? { id: dto.estagiario } : undefined,
+  empresa: dto.empresa ? { id: dto.empresa.id } : undefined,
+  estagiario:
+    dto.estagiario === undefined
+      ? undefined
+      : dto.estagiario === null
+        ? null
+        : { id: dto.estagiario },
   usuarioOrientador: dto.usuarioOrientador ? { id: dto.usuarioOrientador } : undefined,
   cargaHoraria: dto.cargaHoraria,
-  dataInicio: dto.dataInicio,
-  dataFim: dto.dataFim,
+  dataInicio: dto.dataInicio === "" ? null : dto.dataInicio,
+  dataFim: dto.dataFim === "" ? null : dto.dataFim,
   status: dto.status as EstagioStatus | undefined,
-  nomeSupervisor: dto.nomeSupervisor,
-  emailSupervisor: dto.emailSupervisor,
-  telefoneSupervisor: dto.telefoneSupervisor,
+  nomeSupervisor: dto.nomeSupervisor === "" ? null : dto.nomeSupervisor,
+  emailSupervisor: dto.emailSupervisor === "" ? null : dto.emailSupervisor,
+  telefoneSupervisor: dto.telefoneSupervisor === "" ? null : dto.telefoneSupervisor,
   aditivo: dto.aditivo,
-  tipoAditivo: dto.tipoAditivo,
-  horariosEstagio: dto.horariosEstagio,
+  tipoAditivo: dto.tipoAditivo === "" ? null : dto.tipoAditivo,
+  horariosEstagio:
+    dto.horariosEstagio === undefined
+      ? undefined
+      : dto.horariosEstagio === null
+        ? null
+        : dto.horariosEstagio.map((h) => ({
+            diaSemana: h.diaSemana,
+            horaInicio: h.horaInicio === "" ? null : (h.horaInicio ?? null),
+            horaFim: h.horaFim === "" ? null : (h.horaFim ?? null),
+          })),
 }));
 
 // ============================================================================

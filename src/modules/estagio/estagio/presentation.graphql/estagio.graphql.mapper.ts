@@ -16,6 +16,7 @@ import {
   type EstagioListInputGraphQlDto,
   EstagioListOutputGraphQlDto,
   type EstagioUpdateInputGraphQlDto,
+  type HorarioEstagioInputGraphQlDto,
 } from "./estagio.graphql.dto";
 
 export const findOneInputDtoToFindOneQuery = createMapper<string, EstagioFindOneQuery>((id) => {
@@ -40,12 +41,30 @@ export function listInputDtoToListQuery(
   return listInputMapper.map(dto);
 }
 
+function normalizeHorariosEstagio(
+  horarios: HorarioEstagioInputGraphQlDto[] | null | undefined,
+): { diaSemana: number; horaInicio: string | null; horaFim: string | null }[] | null | undefined {
+  if (horarios === undefined) return undefined;
+  if (horarios === null) return null;
+
+  return horarios.map((horario) => ({
+    diaSemana: horario.diaSemana,
+    horaInicio: horario.horaInicio === "" ? null : (horario.horaInicio ?? null),
+    horaFim: horario.horaFim === "" ? null : (horario.horaFim ?? null),
+  }));
+}
+
 export const createInputDtoToCreateCommand = createMapper<
   EstagioCreateInputGraphQlDto,
   EstagioCreateCommand
 >((dto) => ({
   empresa: { id: dto.empresa.id },
-  estagiario: dto.estagiario ? { id: dto.estagiario.id } : undefined,
+  estagiario:
+    dto.estagiario === undefined
+      ? undefined
+      : dto.estagiario === null
+        ? null
+        : { id: dto.estagiario.id },
   usuarioOrientador: dto.usuarioOrientador ? { id: dto.usuarioOrientador.id } : undefined,
   cargaHoraria: dto.cargaHoraria,
   dataInicio: dto.dataInicio,
@@ -56,7 +75,7 @@ export const createInputDtoToCreateCommand = createMapper<
   telefoneSupervisor: dto.telefoneSupervisor,
   aditivo: dto.aditivo,
   tipoAditivo: dto.tipoAditivo,
-  horariosEstagio: dto.horariosEstagio,
+  horariosEstagio: normalizeHorariosEstagio(dto.horariosEstagio),
 }));
 
 export const updateInputDtoToUpdateCommand = createMapper<
@@ -65,7 +84,12 @@ export const updateInputDtoToUpdateCommand = createMapper<
 >(({ id, dto }) => ({
   id,
   empresa: dto.empresa ? { id: dto.empresa.id } : undefined,
-  estagiario: dto.estagiario ? { id: dto.estagiario.id } : undefined,
+  estagiario:
+    dto.estagiario === undefined
+      ? undefined
+      : dto.estagiario === null
+        ? null
+        : { id: dto.estagiario.id },
   usuarioOrientador: dto.usuarioOrientador ? { id: dto.usuarioOrientador.id } : undefined,
   cargaHoraria: dto.cargaHoraria,
   dataInicio: dto.dataInicio,
@@ -76,7 +100,7 @@ export const updateInputDtoToUpdateCommand = createMapper<
   telefoneSupervisor: dto.telefoneSupervisor,
   aditivo: dto.aditivo,
   tipoAditivo: dto.tipoAditivo,
-  horariosEstagio: dto.horariosEstagio,
+  horariosEstagio: normalizeHorariosEstagio(dto.horariosEstagio),
 }));
 
 export const findOneQueryResultToOutputDto = createMapper<

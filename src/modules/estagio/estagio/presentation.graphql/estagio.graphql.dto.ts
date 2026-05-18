@@ -23,11 +23,11 @@ export class HorarioEstagioOutputGraphQlDto {
   @Field(() => Int)
   diaSemana: number;
 
-  @Field(() => String)
-  horaInicio: string;
+  @Field(() => String, { nullable: true })
+  horaInicio: string | null;
 
-  @Field(() => String)
-  horaFim: string;
+  @Field(() => String, { nullable: true })
+  horaFim: string | null;
 }
 
 @InputType("HorarioEstagioInputDto")
@@ -35,11 +35,11 @@ export class HorarioEstagioInputGraphQlDto {
   @Field(() => Int)
   diaSemana: number;
 
-  @Field(() => String)
-  horaInicio: string;
+  @Field(() => String, { nullable: true })
+  horaInicio?: string | null;
 
-  @Field(() => String)
-  horaFim: string;
+  @Field(() => String, { nullable: true })
+  horaFim?: string | null;
 }
 
 @ObjectType("EstagioEmpresaRefDto")
@@ -206,7 +206,7 @@ export class EstagioCreateInputGraphQlDto {
     nullable: true,
     ...EstagioCreateCommandFields.horariosEstagio.gqlMetadata,
   })
-  horariosEstagio?: HorarioEstagioInputGraphQlDto[];
+  horariosEstagio?: HorarioEstagioInputGraphQlDto[] | null;
 }
 
 @InputType("EstagioUpdateInputDto")
@@ -268,7 +268,7 @@ export class EstagioUpdateInputGraphQlDto {
     nullable: true,
     ...EstagioUpdateCommandFields.horariosEstagio.gqlMetadata,
   })
-  horariosEstagio?: HorarioEstagioInputGraphQlDto[];
+  horariosEstagio?: HorarioEstagioInputGraphQlDto[] | null;
 }
 
 @ArgsType()
