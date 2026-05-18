@@ -88,10 +88,13 @@ export class EstagioTypeOrmRepositoryAdapter implements IEstagioRepository {
     if (horarios.length === 0) return;
 
     const repo = this.appTypeormConnection.getRepository(HorarioEstagioTypeormEntity);
-    const entities = horarios.map((horario) =>
-      EstagioTypeormMapper.horarioToPersistence(estagioId, horario),
-    );
-    await repo.save(entities);
+    const entities = horarios
+      .map((horario) => EstagioTypeormMapper.horarioToPersistence(estagioId, horario))
+      .filter((e): e is HorarioEstagioTypeormEntity => e !== null);
+
+    if (entities.length > 0) {
+      await repo.save(entities);
+    }
   }
 
   async softDeleteHorariosEstagio(estagioId: string): Promise<void> {
