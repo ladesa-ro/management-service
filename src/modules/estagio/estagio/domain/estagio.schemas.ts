@@ -175,35 +175,35 @@ export const EstagioUpdateSchema = createSchema((standard) =>
     estagiario: ObjectIdUuidFactoryNullable.create(standard).optional(),
     usuarioOrientador: ObjectIdUuidFactoryNullable.create(standard).optional(),
     cargaHoraria: EstagioFields.cargaHoraria.create(standard).optional(),
-      dataInicio: z.preprocess(
-        (v) => (v === "" ? null : v),
-        EstagioFields.dataInicio.create(standard).nullable().optional(),
-      ),
-      dataFim: z.preprocess(
-        (v) => (v === "" ? null : v),
-        EstagioFields.dataFim.create(standard).nullable().optional(),
-      ),
-      status: EstagioFields.status.create(standard).optional(),
-      nomeSupervisor: z.preprocess(
-        (v) => (v === "" ? null : v),
-        EstagioFields.nomeSupervisor.create(standard).nullable().optional(),
-      ),
-      emailSupervisor: z.preprocess(
-        (v) => (v === "" ? null : v),
-        EstagioFields.emailSupervisor.create(standard).nullable().optional(),
-      ),
-      telefoneSupervisor: z.preprocess(
-        (v) => (v === "" ? null : v),
-        EstagioFields.telefoneSupervisor.create(standard).nullable().optional(),
-      ),
+    dataInicio: z.preprocess(
+      (v) => (v === "" ? null : v),
+      EstagioFields.dataInicio.create(standard).nullable().optional(),
+    ),
+    dataFim: z.preprocess(
+      (v) => (v === "" ? null : v),
+      EstagioFields.dataFim.create(standard).nullable().optional(),
+    ),
+    status: EstagioFields.status.create(standard).optional(),
+    nomeSupervisor: z.preprocess(
+      (v) => (v === "" ? null : v),
+      EstagioFields.nomeSupervisor.create(standard).nullable().optional(),
+    ),
+    emailSupervisor: z.preprocess(
+      (v) => (v === "" ? null : v),
+      EstagioFields.emailSupervisor.create(standard).nullable().optional(),
+    ),
+    telefoneSupervisor: z.preprocess(
+      (v) => (v === "" ? null : v),
+      EstagioFields.telefoneSupervisor.create(standard).nullable().optional(),
+    ),
     aditivo: EstagioFields.aditivo.create(standard).optional(),
-      tipoAditivo: z.preprocess(
-        (v) => (v === "" ? null : v),
-        EstagioFields.tipoAditivo.create(standard).nullable().optional(),
-      ),
-      horariosEstagio: z.preprocess(
-        (v) => (v === "" ? null : v),
-        z.array(HorarioEstagioInputSchema).nullable().optional(),
-      ),
+    tipoAditivo: z.preprocess(
+      (v) => (v === "" ? null : v),
+      EstagioFields.tipoAditivo.create(standard).nullable().optional(),
+    ),
+    horariosEstagio: z.preprocess(
+      (v) => (v === "" ? null : v),
+      z.array(HorarioEstagioInputSchema).nullable().optional(),
+    ),
   }),
 );
