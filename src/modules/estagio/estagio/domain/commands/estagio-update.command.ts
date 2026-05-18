@@ -8,8 +8,8 @@ export const EstagioUpdateCommandFields = {
 
 export class HorarioEstagioUpdateCommand {
   diaSemana!: number;
-  horaInicio!: string;
-  horaFim!: string;
+  horaInicio!: string | null;
+  horaFim!: string | null;
 }
 
 export class EstagioUpdateCommand {
@@ -17,13 +17,13 @@ export class EstagioUpdateCommand {
   estagiario?: ObjectUuidRef | null;
   usuarioOrientador?: ObjectUuidRef;
   cargaHoraria?: number;
-  dataInicio?: string;
+  dataInicio?: string | null;
   dataFim?: string | null;
   status?: EstagioStatus;
-  nomeSupervisor?: string;
-  emailSupervisor?: string;
-  telefoneSupervisor?: string;
+  nomeSupervisor?: string | null;
+  emailSupervisor?: string | null;
+  telefoneSupervisor?: string | null;
   aditivo?: boolean;
-  tipoAditivo?: string;
-  horariosEstagio?: IHorarioEstagio[];
+  tipoAditivo?: string | null;
+  horariosEstagio?: IHorarioEstagio[] | null;
 }
