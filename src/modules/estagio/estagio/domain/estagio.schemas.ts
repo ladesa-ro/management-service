@@ -35,8 +35,14 @@ export const HorarioEstagioSchema = z.object({
 export const HorarioEstagioInputSchema = z
   .object({
     diaSemana: z.number().int().min(0).max(6),
-    horaInicio: z.preprocess((v) => (v === "" ? null : v), TimeFormatSchema.nullable().optional()),
-    horaFim: z.preprocess((v) => (v === "" ? null : v), TimeFormatSchema.nullable().optional()),
+    horaInicio: z.preprocess(
+      (v) => (v === "" || v === undefined ? null : v),
+      TimeFormatSchema.nullable(),
+    ),
+    horaFim: z.preprocess(
+      (v) => (v === "" || v === undefined ? null : v),
+      TimeFormatSchema.nullable(),
+    ),
   })
   .refine(
     (h) => {
