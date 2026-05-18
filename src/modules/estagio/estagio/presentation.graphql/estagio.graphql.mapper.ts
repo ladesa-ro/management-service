@@ -49,8 +49,8 @@ export const createInputDtoToCreateCommand = createMapper<
     dto.estagiario === undefined
       ? undefined
       : dto.estagiario === null
-      ? null
-      : { id: dto.estagiario.id },
+        ? null
+        : { id: dto.estagiario.id },
   usuarioOrientador: dto.usuarioOrientador ? { id: dto.usuarioOrientador.id } : undefined,
   cargaHoraria: dto.cargaHoraria,
   dataInicio: dto.dataInicio,
@@ -74,8 +74,8 @@ export const updateInputDtoToUpdateCommand = createMapper<
     dto.estagiario === undefined
       ? undefined
       : dto.estagiario === null
-      ? null
-      : { id: dto.estagiario.id },
+        ? null
+        : { id: dto.estagiario.id },
   usuarioOrientador: dto.usuarioOrientador ? { id: dto.usuarioOrientador.id } : undefined,
   cargaHoraria: dto.cargaHoraria,
   dataInicio: dto.dataInicio,
