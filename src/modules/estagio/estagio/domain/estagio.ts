@@ -120,7 +120,9 @@ export class Estagio {
       this.telefoneSupervisor = parsed.telefoneSupervisor ?? null;
     if (parsed.aditivo !== undefined) this.aditivo = parsed.aditivo;
     if (parsed.tipoAditivo !== undefined) this.tipoAditivo = parsed.tipoAditivo ?? null;
-    if (parsed.horariosEstagio !== undefined) this.horariosEstagio = parsed.horariosEstagio;
+    if (parsed.horariosEstagio !== undefined && parsed.horariosEstagio !== null) {
+      this.horariosEstagio = parsed.horariosEstagio;
+    }
 
     this.dateUpdated = getNowISO();
 
