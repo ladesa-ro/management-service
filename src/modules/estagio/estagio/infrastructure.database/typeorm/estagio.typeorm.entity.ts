@@ -8,6 +8,7 @@ import {
   type Relation,
 } from "typeorm";
 import { UsuarioEntity } from "@/modules/acesso/usuario/infrastructure.database/typeorm/usuario.typeorm.entity";
+import { CursoEntity } from "@/modules/ensino/curso/infrastructure.database/typeorm/curso.typeorm.entity";
 import { EmpresaTypeormEntity } from "@/modules/estagio/empresa/infrastructure.database/typeorm/empresa.typeorm.entity";
 import { EstagiarioTypeormEntity } from "@/modules/estagio/estagiario/infrastructure.database/typeorm/estagiario.typeorm.entity";
 import { EstagioStatus } from "@/modules/estagio/estagio/domain/estagio";
@@ -29,6 +30,10 @@ export class EstagioTypeormEntity {
   @ManyToOne(() => UsuarioEntity, { nullable: true })
   @JoinColumn({ name: "id_usuario_orientador_fk" })
   usuarioOrientador!: Relation<UsuarioEntity> | null;
+
+  @ManyToOne(() => CursoEntity, { nullable: true })
+  @JoinColumn({ name: "id_curso_fk" })
+  CursoReferencia!: Relation<CursoEntity> | null;
 
   @Column({ name: "carga_horaria", type: "integer", nullable: false })
   cargaHoraria!: number;
