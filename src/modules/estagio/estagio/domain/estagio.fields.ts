@@ -74,6 +74,10 @@ export const EstagioFields = {
     schema: createSchema(() => z.string().max(255)),
     nullable: true,
   }),
+  CursoReferencia: createFieldMetadata({
+    description: "Referência ao curso (opcional)",
+    nullable: true,
+  }),
   horariosEstagio: createFieldMetadata({
     description: "Horários do estágio",
   }),
