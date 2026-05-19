@@ -14,6 +14,7 @@ export class HorarioEstagioUpdateCommand {
 
 export class EstagioUpdateCommand {
   empresa?: ObjectUuidRef;
+  CursoReferencia?: ObjectUuidRef | null;
   estagiario?: ObjectUuidRef | null;
   usuarioOrientador?: ObjectUuidRef;
   cargaHoraria?: number;
