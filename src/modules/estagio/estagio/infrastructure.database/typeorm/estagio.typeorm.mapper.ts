@@ -19,6 +19,7 @@ export const entityToDomain = createMapper<EstagioTypeormEntity, Estagio>((entit
   return Estagio.load({
     id: entity.id,
     empresa: { id: entity.empresa.id },
+    CursoReferencia: entity.CursoReferencia ? { id: entity.CursoReferencia.id } : null,
     estagiario: entity.estagiario ? { id: entity.estagiario.id } : null,
     usuarioOrientador: entity.usuarioOrientador ? { id: entity.usuarioOrientador.id } : null,
     cargaHoraria: entity.cargaHoraria,
@@ -52,6 +53,7 @@ export const domainToPersistence = createMapper<Estagio, EstagioTypeormEntity>((
   const entity = Object.assign(Object.create(EstagioTypeormEntity.prototype), {
     id: estagio.id || generateUuidV7(),
     empresa: { id: estagio.empresa.id },
+    CursoReferencia: estagio.CursoReferencia ? { id: estagio.CursoReferencia.id } : null,
     estagiario: estagio.estagiario ? { id: estagio.estagiario.id } : null,
     usuarioOrientador: estagio.usuarioOrientador ? { id: estagio.usuarioOrientador.id } : null,
     cargaHoraria: estagio.cargaHoraria,
@@ -117,6 +119,7 @@ export const entityToFindOneQueryResult = createMapper<
   return {
     id: entity.id,
     empresa: { id: entity.empresa.id },
+    CursoReferencia: entity.CursoReferencia ? { id: entity.CursoReferencia.id } : null,
     estagiario: entity.estagiario ? { id: entity.estagiario.id } : null,
 
     usuarioOrientador: entity.usuarioOrientador ? { id: entity.usuarioOrientador.id } : null,
