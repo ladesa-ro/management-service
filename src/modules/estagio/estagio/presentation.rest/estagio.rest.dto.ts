@@ -20,6 +20,12 @@ export class EstagioEmpresaRefInputRestDto {
   id!: string;
 }
 
+@ApiSchema({ name: "EstagioCursoRefInputDto" })
+export class EstagioCursoRefInputRestDto {
+  @ApiProperty(EstagioCreateCommandFields.CursoReferencia.swaggerMetadata)
+  id!: string;
+}
+
 @ApiSchema({ name: "HorarioEstagioInputDto" })
 export class HorarioEstagioInputRestDto {
   @ApiProperty(HorarioEstagioFields.diaSemana.swaggerMetadata)
@@ -53,6 +59,9 @@ export class EstagioCreateInputRestDto {
 
   @ApiProperty(EstagioCreateCommandFields.cargaHoraria.swaggerMetadata)
   cargaHoraria!: number;
+
+  @ApiPropertyOptional(EstagioCreateCommandFields.CursoReferencia.swaggerMetadata)
+  CursoReferencia?: EstagioCursoRefInputRestDto | null;
 
   @ApiPropertyOptional(EstagioCreateCommandFields.dataInicio.swaggerMetadata)
   dataInicio?: string | null;
@@ -100,6 +109,9 @@ export class EstagioUpdateInputRestDto {
 
   @ApiPropertyOptional(EstagioUpdateCommandFields.cargaHoraria.swaggerMetadata)
   cargaHoraria?: number;
+
+  @ApiPropertyOptional(EstagioUpdateCommandFields.CursoReferencia.swaggerMetadata)
+  CursoReferencia?: EstagioCursoRefInputRestDto | null;
 
   @ApiPropertyOptional(EstagioUpdateCommandFields.dataInicio.swaggerMetadata)
   dataInicio?: string | null;
@@ -164,6 +176,9 @@ export class EstagioFindOneOutputRestDto {
 
   @ApiPropertyOptional(EstagioFindOneQueryResultFields.estagiario.swaggerMetadata)
   estagiario!: { id: string } | null;
+
+  @ApiPropertyOptional(EstagioFindOneQueryResultFields.CursoReferencia.swaggerMetadata)
+  CursoReferencia!: { id: string } | null;
 
   @ApiPropertyOptional(EstagioFindOneQueryResultFields.usuarioOrientador.swaggerMetadata)
   usuarioOrientador!: { id: string } | null;

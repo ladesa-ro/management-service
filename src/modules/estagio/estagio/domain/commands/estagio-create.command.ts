@@ -14,6 +14,7 @@ export class HorarioEstagioInputCommand {
 
 export class EstagioCreateCommand {
   empresa!: ObjectUuidRef;
+  CursoReferencia?: ObjectUuidRef | null;
   estagiario?: ObjectUuidRef | null;
   usuarioOrientador?: ObjectUuidRef;
   cargaHoraria!: number;

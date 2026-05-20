@@ -78,6 +78,18 @@ export class EstagioUsuarioOrientadorRefInputGraphQlDto {
   id: string;
 }
 
+@ObjectType("EstagioCursoRefDto")
+export class EstagioCursoRefGraphQlDto {
+  @Field(() => String)
+  id: string;
+}
+
+@InputType("EstagioCursoRefInputDto")
+export class EstagioCursoRefInputGraphQlDto {
+  @Field(() => String)
+  id: string;
+}
+
 @ObjectType("EstagioFindOneOutputDto")
 export class EstagioFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
   @Field(() => EstagioEmpresaRefGraphQlDto, EstagioFindOneQueryResultFields.empresa.gqlMetadata)
@@ -94,6 +106,12 @@ export class EstagioFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
     ...EstagioFindOneQueryResultFields.usuarioOrientador.gqlMetadata,
   })
   usuarioOrientador: EstagioUsuarioOrientadorRefGraphQlDto | null;
+
+  @Field(() => EstagioCursoRefGraphQlDto, {
+    nullable: true,
+    ...EstagioFindOneQueryResultFields.CursoReferencia.gqlMetadata,
+  })
+  CursoReferencia: EstagioCursoRefGraphQlDto | null;
 
   @Field(() => Int, EstagioFindOneQueryResultFields.cargaHoraria.gqlMetadata)
   cargaHoraria: number;
@@ -153,7 +171,7 @@ export class EstagioFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
 @InputType("EstagioCreateInputDto")
 export class EstagioCreateInputGraphQlDto {
   static schema = EstagioCreateSchema.domain;
-  d;
+
   @Field(() => EstagioEmpresaRefInputGraphQlDto, EstagioCreateCommandFields.empresa.gqlMetadata)
   empresa: EstagioEmpresaRefInputGraphQlDto;
 
@@ -168,6 +186,12 @@ export class EstagioCreateInputGraphQlDto {
     ...EstagioCreateCommandFields.usuarioOrientador.gqlMetadata,
   })
   usuarioOrientador?: EstagioUsuarioOrientadorRefInputGraphQlDto;
+
+  @Field(() => EstagioCursoRefInputGraphQlDto, {
+    nullable: true,
+    ...EstagioCreateCommandFields.CursoReferencia.gqlMetadata,
+  })
+  CursoReferencia?: EstagioCursoRefInputGraphQlDto | null;
 
   @Field(() => Int, EstagioCreateCommandFields.cargaHoraria.gqlMetadata)
   cargaHoraria: number;
@@ -230,6 +254,12 @@ export class EstagioUpdateInputGraphQlDto {
     ...EstagioUpdateCommandFields.usuarioOrientador.gqlMetadata,
   })
   usuarioOrientador?: EstagioUsuarioOrientadorRefInputGraphQlDto;
+
+  @Field(() => EstagioCursoRefInputGraphQlDto, {
+    nullable: true,
+    ...EstagioUpdateCommandFields.CursoReferencia.gqlMetadata,
+  })
+  CursoReferencia?: EstagioCursoRefInputGraphQlDto | null;
 
   @Field(() => Int, { nullable: true, ...EstagioUpdateCommandFields.cargaHoraria.gqlMetadata })
   cargaHoraria?: number;

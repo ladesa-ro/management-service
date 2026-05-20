@@ -19,6 +19,7 @@ export class HorarioEstagioQueryResult {
 export class EstagioFindOneQueryResult {
   id!: string;
   empresa!: { id: string };
+  CursoReferencia!: { id: string } | null;
   estagiario!: { id: string } | null;
   usuarioOrientador!: { id: string } | null;
   cargaHoraria!: number;
