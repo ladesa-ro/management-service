@@ -63,8 +63,8 @@ export const createInputDtoToCreateCommand = createMapper<
     dto.CursoReferencia === undefined
       ? undefined
       : dto.CursoReferencia === null
-      ? null
-      : { id: dto.CursoReferencia.id },
+        ? null
+        : { id: dto.CursoReferencia.id },
   estagiario:
     dto.estagiario === undefined
       ? undefined
@@ -94,8 +94,8 @@ export const updateInputDtoToUpdateCommand = createMapper<
     dto.CursoReferencia === undefined
       ? undefined
       : dto.CursoReferencia === null
-      ? null
-      : { id: dto.CursoReferencia.id },
+        ? null
+        : { id: dto.CursoReferencia.id },
   estagiario:
     dto.estagiario === undefined
       ? undefined
