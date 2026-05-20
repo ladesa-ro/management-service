@@ -64,6 +64,8 @@ export const EstagioEmpresaRefSchema = ObjectIdUuidFactory;
 
 export const EstagioEstagiarioRefSchema = ObjectIdUuidFactory;
 
+export const EstagioCursoRefSchema = ObjectIdUuidFactoryNullable;
+
 // ============================================================================
 // Schemas compostos
 // ============================================================================
@@ -72,6 +74,7 @@ export const EstagioSchema = z
   .object({
     id: uuidSchema,
     empresa: ObjectIdUuidFactory.domain,
+    CursoReferencia: EstagioCursoRefSchema.domain,
     estagiario: ObjectIdUuidFactoryNullable.domain,
     usuarioOrientador: ObjectIdUuidFactoryNullable.domain,
     cargaHoraria: z.number().int().min(1),
@@ -114,6 +117,7 @@ export const EstagioCreateSchema = createSchema((standard) =>
         (v) => (v === "" ? null : v),
         EstagioFields.emailSupervisor.create(standard).nullable().optional(),
       ),
+      CursoReferencia: EstagioCursoRefSchema.create(standard).optional(),
       telefoneSupervisor: z.preprocess(
         (v) => (v === "" ? null : v),
         EstagioFields.telefoneSupervisor.create(standard).nullable().optional(),
@@ -180,6 +184,7 @@ export const EstagioUpdateSchema = createSchema((standard) =>
       .optional(),
     estagiario: ObjectIdUuidFactoryNullable.create(standard).optional(),
     usuarioOrientador: ObjectIdUuidFactoryNullable.create(standard).optional(),
+    CursoReferencia: EstagioCursoRefSchema.create(standard).optional(),
     cargaHoraria: EstagioFields.cargaHoraria.create(standard).optional(),
     dataInicio: z.preprocess(
       (v) => (v === "" ? null : v),

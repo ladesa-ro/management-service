@@ -59,6 +59,12 @@ export const createInputDtoToCreateCommand = createMapper<
   EstagioCreateCommand
 >((dto) => ({
   empresa: { id: dto.empresa.id },
+  CursoReferencia:
+    dto.CursoReferencia === undefined
+      ? undefined
+      : dto.CursoReferencia === null
+        ? null
+        : { id: dto.CursoReferencia.id },
   estagiario:
     dto.estagiario === undefined
       ? undefined
@@ -84,6 +90,12 @@ export const updateInputDtoToUpdateCommand = createMapper<
 >(({ id, dto }) => ({
   id,
   empresa: dto.empresa ? { id: dto.empresa.id } : undefined,
+  CursoReferencia:
+    dto.CursoReferencia === undefined
+      ? undefined
+      : dto.CursoReferencia === null
+        ? null
+        : { id: dto.CursoReferencia.id },
   estagiario:
     dto.estagiario === undefined
       ? undefined
@@ -109,6 +121,7 @@ export const findOneQueryResultToOutputDto = createMapper<
 >((output) => ({
   id: output.id,
   empresa: output.empresa,
+  CursoReferencia: output.CursoReferencia,
   estagiario: output.estagiario,
   usuarioOrientador: output.usuarioOrientador,
   cargaHoraria: output.cargaHoraria,
