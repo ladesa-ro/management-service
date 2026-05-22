@@ -96,6 +96,22 @@ export class EstagiarioListOutputRestDto {
 }
 
 // ============================================================================
+// Ref Input Types
+// ============================================================================
+
+@ApiSchema({ name: "EstagiarioPerfilRefInputDto" })
+export class EstagiarioPerfilRefInputRestDto {
+  @ApiProperty({ description: "ID do perfil", format: "uuid" })
+  id: string;
+}
+
+@ApiSchema({ name: "EstagiarioCursoRefInputDto" })
+export class EstagiarioCursoRefInputRestDto {
+  @ApiProperty({ description: "ID do curso", format: "uuid" })
+  id: string;
+}
+
+// ============================================================================
 // Create/Update Input
 // ============================================================================
 
@@ -103,22 +119,32 @@ export class EstagiarioListOutputRestDto {
 export class EstagiarioCreateInputRestDto {
   static schema = EstagiarioCreateSchema.presentation;
 
-  @ApiProperty(EstagiarioCreateCommandFields.perfil.swaggerMetadata)
-  perfil: { id: string };
+  @ApiProperty({
+    ...EstagiarioCreateCommandFields.perfil.swaggerMetadata,
+    type: () => EstagiarioPerfilRefInputRestDto,
+  })
+  perfil: EstagiarioPerfilRefInputRestDto;
 
-  @ApiProperty(EstagiarioCreateCommandFields.curso.swaggerMetadata)
-  curso: { id: string };
+  @ApiProperty({
+    ...EstagiarioCreateCommandFields.curso.swaggerMetadata,
+    type: () => EstagiarioCursoRefInputRestDto,
+  })
+  curso: EstagiarioCursoRefInputRestDto;
 
-  @ApiProperty(EstagiarioCreateCommandFields.periodo.swaggerMetadata)
+  @ApiProperty({ ...EstagiarioCreateCommandFields.periodo.swaggerMetadata })
   periodo: string;
 
-  @ApiProperty(EstagiarioCreateCommandFields.telefone.swaggerMetadata)
+  @ApiProperty({ ...EstagiarioCreateCommandFields.telefone.swaggerMetadata })
   telefone: string;
 
-  @ApiProperty(EstagiarioCreateCommandFields.emailInstitucional.swaggerMetadata)
+  @ApiProperty({
+    ...EstagiarioCreateCommandFields.emailInstitucional.swaggerMetadata,
+  })
   emailInstitucional: string;
 
-  @ApiProperty(EstagiarioCreateCommandFields.dataNascimento.swaggerMetadata)
+  @ApiProperty({
+    ...EstagiarioCreateCommandFields.dataNascimento.swaggerMetadata,
+  })
   dataNascimento: string;
 }
 
@@ -126,11 +152,17 @@ export class EstagiarioCreateInputRestDto {
 export class EstagiarioUpdateInputRestDto {
   static schema = EstagiarioUpdateSchema.presentation;
 
-  @ApiPropertyOptional(EstagiarioUpdateCommandFields.perfil.swaggerMetadata)
-  perfil?: { id: string };
+  @ApiPropertyOptional({
+    ...EstagiarioUpdateCommandFields.perfil.swaggerMetadata,
+    type: () => EstagiarioPerfilRefInputRestDto,
+  })
+  perfil?: EstagiarioPerfilRefInputRestDto;
 
-  @ApiPropertyOptional(EstagiarioUpdateCommandFields.curso.swaggerMetadata)
-  curso?: { id: string };
+  @ApiPropertyOptional({
+    ...EstagiarioUpdateCommandFields.curso.swaggerMetadata,
+    type: () => EstagiarioCursoRefInputRestDto,
+  })
+  curso?: EstagiarioCursoRefInputRestDto;
 
   @ApiPropertyOptional(EstagiarioUpdateCommandFields.periodo.swaggerMetadata)
   periodo?: string;
