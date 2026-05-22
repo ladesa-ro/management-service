@@ -62,8 +62,10 @@ export const entityToFindOneQueryResult = createMapper<CursoEntity, CursoFindOne
     nome: e.nome,
     nomeAbreviado: e.nomeAbreviado,
     quantidadePeriodos: e.quantidadePeriodos,
-    campus: CampusTypeormMapper.entityToFindOneQueryResult.map(e.campus),
-    ofertaFormacao: OfertaFormacaoTypeormMapper.entityToFindOneQueryResult.map(e.ofertaFormacao),
+    campus: e.campus ? CampusTypeormMapper.entityToFindOneQueryResult.map(e.campus) : null,
+    ofertaFormacao: e.ofertaFormacao
+      ? OfertaFormacaoTypeormMapper.entityToFindOneQueryResult.map(e.ofertaFormacao)
+      : null,
     imagemCapa: e.imagemCapa,
     periodos: groupPeriodoDisciplinas(e.periodoDisciplinas),
     dateCreated: e.dateCreated,
