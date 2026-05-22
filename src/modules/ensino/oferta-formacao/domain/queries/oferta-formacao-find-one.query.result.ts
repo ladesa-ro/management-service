@@ -26,8 +26,8 @@ export class OfertaFormacaoFindOneQueryResult extends EntityQueryResult {
   nome!: string;
   slug!: string;
   duracaoPeriodoEmMeses!: number;
-  modalidade!: ModalidadeFindOneQueryResult;
-  campus!: CampusFindOneQueryResult;
+  modalidade!: ModalidadeFindOneQueryResult | null;
+  campus!: CampusFindOneQueryResult | null;
   niveisFormacoes!: NivelFormacaoFindOneQueryResult[];
   periodos!: IOfertaFormacaoPeriodoQueryResult[];
   imagemCapa!: ImagemFindOneQueryResult | null;
