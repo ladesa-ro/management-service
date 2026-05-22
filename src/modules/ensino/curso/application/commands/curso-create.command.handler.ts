@@ -42,7 +42,7 @@ export class CursoCreateCommandHandlerImpl implements ICursoCreateCommandHandler
     });
     ensureExists(ofertaFormacao, OfertaFormacao.entityName, dto.ofertaFormacao.id);
 
-    if (ofertaFormacao.campus.id !== campus.id) {
+    if (ofertaFormacao.campus?.id !== campus.id) {
       throw new BusinessRuleViolationError(
         "OFERTA_FORMACAO_CAMPUS_MATCH",
         "A formação selecionada não pertence ao campus informado.",
