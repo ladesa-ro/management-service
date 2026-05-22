@@ -79,8 +79,10 @@ export const findOneQueryResultToOutputDto = createMapper<
   nome: output.nome,
   nomeAbreviado: output.nomeAbreviado,
   quantidadePeriodos: output.quantidadePeriodos,
-  campus: CampusRestMapper.findOneQueryResultToOutputDto.map(output.campus),
-  ofertaFormacao: OfertaFormacaoRestMapper.findOneQueryResultToOutputDto.map(output.ofertaFormacao),
+  campus: CampusRestMapper.findOneQueryResultToOutputDto.mapOptional(output.campus),
+  ofertaFormacao: OfertaFormacaoRestMapper.findOneQueryResultToOutputDto.mapOptional(
+    output.ofertaFormacao,
+  ),
   imagemCapa: output.imagemCapa ? BlocoRestMapper.toImagemOutput(output.imagemCapa) : null,
   periodos: output.periodos ?? [],
   dateCreated: output.dateCreated,

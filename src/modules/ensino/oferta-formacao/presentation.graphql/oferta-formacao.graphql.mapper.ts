@@ -96,8 +96,8 @@ export const findOneQueryResultToOutputDto = createMapper<
   nome: output.nome,
   slug: output.slug,
   duracaoPeriodoEmMeses: output.duracaoPeriodoEmMeses,
-  modalidade: ModalidadeGraphqlMapper.findOneQueryResultToOutputDto.map(output.modalidade),
-  campus: CampusGraphqlMapper.findOneQueryResultToOutputDto.map(output.campus),
+  modalidade: ModalidadeGraphqlMapper.findOneQueryResultToOutputDto.mapOptional(output.modalidade),
+  campus: CampusGraphqlMapper.findOneQueryResultToOutputDto.mapOptional(output.campus),
   niveisFormacoes: (output.niveisFormacoes ?? []).map((nf) =>
     NivelFormacaoGraphqlMapper.findOneQueryResultToOutputDto.map(nf),
   ),

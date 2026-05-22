@@ -58,9 +58,9 @@ export const entityToFindOneQueryResult = createMapper<
   dateUpdated: e.dateUpdated,
   dateDeleted: e.dateDeleted,
 
-  modalidade: mapDatedEntity(e.modalidade),
+  modalidade: e.modalidade ? mapDatedEntity(e.modalidade) : null,
 
-  campus: CampusTypeormMapper.entityToFindOneQueryResult.map(e.campus),
+  campus: e.campus ? CampusTypeormMapper.entityToFindOneQueryResult.map(e.campus) : null,
 
   niveisFormacoes: filterActive(e.ofertaFormacaoNiveisFormacoes).map((nf) =>
     mapDatedEntity(nf.nivelFormacao),

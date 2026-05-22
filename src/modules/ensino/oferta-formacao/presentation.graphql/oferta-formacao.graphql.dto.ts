@@ -65,17 +65,17 @@ export class OfertaFormacaoFindOneOutputGraphQlDto extends EntityBaseGraphQlDto 
   @Field(() => Int, OfertaFormacaoFindOneQueryResultFields.duracaoPeriodoEmMeses.gqlMetadata)
   duracaoPeriodoEmMeses: number;
 
-  @Field(
-    () => ModalidadeFindOneOutputGraphQlDto,
-    OfertaFormacaoFindOneQueryResultFields.modalidade.gqlMetadata,
-  )
-  modalidade: ModalidadeFindOneOutputGraphQlDto;
+  @Field(() => ModalidadeFindOneOutputGraphQlDto, {
+    nullable: true,
+    ...OfertaFormacaoFindOneQueryResultFields.modalidade.gqlMetadata,
+  })
+  modalidade: ModalidadeFindOneOutputGraphQlDto | null;
 
-  @Field(
-    () => CampusFindOneOutputGraphQlDto,
-    OfertaFormacaoFindOneQueryResultFields.campus.gqlMetadata,
-  )
-  campus: CampusFindOneOutputGraphQlDto;
+  @Field(() => CampusFindOneOutputGraphQlDto, {
+    nullable: true,
+    ...OfertaFormacaoFindOneQueryResultFields.campus.gqlMetadata,
+  })
+  campus: CampusFindOneOutputGraphQlDto | null;
 
   @Field(
     () => [NivelFormacaoFindOneOutputGraphQlDto],

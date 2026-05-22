@@ -87,17 +87,17 @@ export class OfertaFormacaoFindOneOutputRestDto extends EntityBaseRestDto {
   @ApiProperty(OfertaFormacaoFindOneQueryResultFields.duracaoPeriodoEmMeses.swaggerMetadata)
   duracaoPeriodoEmMeses: number;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     ...OfertaFormacaoFindOneQueryResultFields.modalidade.swaggerMetadata,
     type: () => ModalidadeFindOneOutputRestDto,
   })
-  modalidade: ModalidadeFindOneOutputRestDto;
+  modalidade: ModalidadeFindOneOutputRestDto | null;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     ...OfertaFormacaoFindOneQueryResultFields.campus.swaggerMetadata,
     type: () => CampusFindOneOutputRestDto,
   })
-  campus: CampusFindOneOutputRestDto;
+  campus: CampusFindOneOutputRestDto | null;
 
   @ApiProperty({
     ...OfertaFormacaoFindOneQueryResultFields.niveisFormacoes.swaggerMetadata,

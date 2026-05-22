@@ -25,8 +25,8 @@ export class CursoFindOneQueryResult extends EntityQueryResult {
   nome!: string;
   nomeAbreviado!: string;
   quantidadePeriodos!: number;
-  campus!: CampusFindOneQueryResult;
-  ofertaFormacao!: OfertaFormacaoFindOneQueryResult;
+  campus!: CampusFindOneQueryResult | null;
+  ofertaFormacao!: OfertaFormacaoFindOneQueryResult | null;
   imagemCapa!: ImagemFindOneQueryResult | null;
   periodos!: CursoPeriodoQueryResult[];
 }

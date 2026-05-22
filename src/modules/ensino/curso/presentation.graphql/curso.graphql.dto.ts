@@ -26,13 +26,16 @@ export class CursoFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
   nomeAbreviado: string;
   @Field(() => Int, CursoFindOneQueryResultFields.quantidadePeriodos.gqlMetadata)
   quantidadePeriodos: number;
-  @Field(() => CampusFindOneOutputGraphQlDto, CursoFindOneQueryResultFields.campus.gqlMetadata)
-  campus: CampusFindOneOutputGraphQlDto;
-  @Field(
-    () => OfertaFormacaoFindOneOutputGraphQlDto,
-    CursoFindOneQueryResultFields.ofertaFormacao.gqlMetadata,
-  )
-  ofertaFormacao: OfertaFormacaoFindOneOutputGraphQlDto;
+  @Field(() => CampusFindOneOutputGraphQlDto, {
+    nullable: true,
+    ...CursoFindOneQueryResultFields.campus.gqlMetadata,
+  })
+  campus: CampusFindOneOutputGraphQlDto | null;
+  @Field(() => OfertaFormacaoFindOneOutputGraphQlDto, {
+    nullable: true,
+    ...CursoFindOneQueryResultFields.ofertaFormacao.gqlMetadata,
+  })
+  ofertaFormacao: OfertaFormacaoFindOneOutputGraphQlDto | null;
   @Field(() => ImagemFindOneOutputGraphQlDto, {
     nullable: true,
     ...CursoFindOneQueryResultFields.imagemCapa.gqlMetadata,

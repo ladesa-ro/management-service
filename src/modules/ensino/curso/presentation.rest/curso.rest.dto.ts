@@ -35,17 +35,17 @@ export class CursoFindOneOutputRestDto extends EntityBaseRestDto {
   @ApiProperty(CursoFindOneQueryResultFields.quantidadePeriodos.swaggerMetadata)
   quantidadePeriodos: number;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     ...CursoFindOneQueryResultFields.campus.swaggerMetadata,
     type: () => CampusFindOneOutputRestDto,
   })
-  campus: CampusFindOneOutputRestDto;
+  campus: CampusFindOneOutputRestDto | null;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     ...CursoFindOneQueryResultFields.ofertaFormacao.swaggerMetadata,
     type: () => OfertaFormacaoFindOneOutputRestDto,
   })
-  ofertaFormacao: OfertaFormacaoFindOneOutputRestDto;
+  ofertaFormacao: OfertaFormacaoFindOneOutputRestDto | null;
 
   @ApiPropertyOptional({
     ...CursoFindOneQueryResultFields.imagemCapa.swaggerMetadata,
