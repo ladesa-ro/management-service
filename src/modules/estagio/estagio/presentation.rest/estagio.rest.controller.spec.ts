@@ -367,7 +367,7 @@ describe("EstagioRestController.importCsv", () => {
           line: 2,
           estagiarioNome: "Arthur Luiz Braun Krauser de Moura",
           status: "failed",
-          reason: "Empresa não encontrada para o CNPJ 99.999.999/9999-99.",
+          reason: "Cidade não encontrada para a empresa da linha 2 (Cidade: null).",
         },
       ],
     });

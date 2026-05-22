@@ -31,7 +31,7 @@ import { IUsuarioCreateCommandHandler } from "@/modules/acesso/usuario/domain/co
 import { IPerfilDefinirPerfisAtivosCommandHandler } from "@/modules/acesso/usuario/perfil/domain/commands";
 import { ICampusListQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-list.query.handler.interface";
 import { ICursoListQueryHandler } from "@/modules/ensino/curso/domain/queries/curso-list.query.handler.interface";
-import { IEmpresaRepository } from "@/modules/estagio/empresa";
+import { IEmpresaCreateCommandHandler, IEmpresaRepository } from "@/modules/estagio/empresa";
 import {
   IEstagiarioCreateCommandHandler,
   IEstagiarioRepository,
@@ -65,6 +65,8 @@ import {
   EstagioListQueryMetadata,
   IEstagioListQueryHandler,
 } from "@/modules/estagio/estagio/domain/queries/estagio-list.query.handler.interface";
+import { ICidadeListQueryHandler } from "@/modules/localidades/cidade/domain/queries/cidade-list.query.handler.interface";
+import { IEnderecoCreateOrUpdateCommandHandler } from "@/modules/localidades/endereco/domain/commands/endereco-create-or-update.command.handler.interface";
 import { AccessContextHttp } from "@/server/nest/access-context";
 import {
   EstagioCreateInputRestDto,
@@ -82,9 +84,7 @@ function normalizeSearchValue(value: string): string {
   return value
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
-    .replace(/\s+/g, " ")
-    .replace(/[^a-zA-Z0-9 ]/g, "")
-    .trim()
+    .replace(/[^a-zA-Z0-9]/g, "")
     .toLowerCase();
 }
 
@@ -181,6 +181,13 @@ export class EstagioRestController {
     const createHandler = this.container.get<IEstagioCreateCommandHandler>(
       IEstagioCreateCommandHandler,
     );
+    const empresaCreateHandler = this.container.get<IEmpresaCreateCommandHandler>(
+      IEmpresaCreateCommandHandler,
+    );
+    const enderecoCreateOrUpdateHandler = this.container.get<IEnderecoCreateOrUpdateCommandHandler>(
+      IEnderecoCreateOrUpdateCommandHandler,
+    );
+    const cidadeListHandler = this.container.get<ICidadeListQueryHandler>(ICidadeListQueryHandler);
     const empresaRepository = this.container.get<IEmpresaRepository>(IEmpresaRepository);
     const usuarioRepository = this.container.get<IUsuarioRepository>(IUsuarioRepository);
     const estagiarioRepository = this.container.get<IEstagiarioRepository>(IEstagiarioRepository);
@@ -205,12 +212,69 @@ export class EstagioRestController {
 
     for (const row of parsed.entries) {
       try {
-        const empresa = await empresaRepository.findByCnpj(row.concedenteCnpj ?? "");
+        let empresa: any = await empresaRepository.findByCnpj(row.concedenteCnpj ?? "");
 
         if (!empresa) {
-          throw new BadRequestException(
-            `Empresa não encontrada para o CNPJ ${row.concedenteCnpj ?? "-"}.`,
-          );
+          const nomeCidade = (row.concedenteCidade || "").split("/")[0].trim();
+          let cidadeId: number | undefined;
+
+          if (nomeCidade) {
+            try {
+              const cidades = await cidadeListHandler.execute(accessContext, {
+                search: nomeCidade,
+                page: 1,
+                limit: 20,
+              } as any);
+              const matches = (cidades?.data || []).filter((c: any) =>
+                normalizeSearchValue(c.nome || "").includes(normalizeSearchValue(nomeCidade)),
+              );
+              if (matches.length >= 1) {
+                cidadeId = Number(matches[0].id);
+              }
+            } catch (_) {
+              cidadeId = undefined;
+            }
+          }
+
+          if (!cidadeId) {
+            throw new BadRequestException(
+              `Cidade não encontrada para a empresa da linha ${row.line} (Cidade: ${row.concedenteCidade}).`,
+            );
+          }
+
+          let logradouro = row.concedenteEndereco || "Não informado";
+          let numero = 0;
+          const numMatch = logradouro.match(/\b\d+\b/);
+          if (numMatch) {
+            numero = parseInt(numMatch[0], 10);
+            logradouro = logradouro
+              .replace(numMatch[0], "")
+              .replace(/,\s*$/, "")
+              .replace(/-\s*$/, "")
+              .trim();
+            if (!logradouro) logradouro = "Não informado";
+          }
+
+          const enderecoResult = await enderecoCreateOrUpdateHandler.execute(accessContext, {
+            dto: {
+              cep: "00000000",
+              logradouro,
+              numero,
+              bairro: row.concedenteBairro || "Não informado",
+              cidade: { id: cidadeId },
+            },
+          } as any);
+
+          const createdEmpresa = await empresaCreateHandler.execute(accessContext, {
+            razaoSocial: row.concedente || "Empresa sem nome",
+            nomeFantasia: row.concedente || "Empresa sem nome",
+            cnpj: row.concedenteCnpj || "",
+            telefone: "00000000000",
+            email: "email@naoinformado.com",
+            endereco: { id: String(enderecoResult.id) },
+          });
+
+          empresa = { id: createdEmpresa.id };
         }
 
         let usuarioEstagiario = row.estagiarioMatricula
@@ -346,7 +410,14 @@ export class EstagioRestController {
               dataNascimento: defaults.dataNascimento,
               emailInstitucional: row.estagiarioEmailAcademico ?? undefined,
             };
-            if (cursoId) estagiarioCommand.curso = { id: cursoId };
+
+            if (!cursoId) {
+              throw new BadRequestException(
+                `Curso não encontrado na base de dados para o estagiário da linha ${row.line} (Curso informado: ${row.curso || "vazio"}).`,
+              );
+            }
+
+            estagiarioCommand.curso = { id: cursoId };
 
             const createdEstagiario = await estagiarioCreateHandler.execute(
               accessContext,
