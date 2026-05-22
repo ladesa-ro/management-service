@@ -90,8 +90,8 @@ export const findOneQueryResultToOutputDto = createMapper<
   nome: output.nome,
   nomeAbreviado: output.nomeAbreviado,
   quantidadePeriodos: output.quantidadePeriodos,
-  campus: CampusGraphqlMapper.findOneQueryResultToOutputDto.map(output.campus),
-  ofertaFormacao: OfertaFormacaoGraphqlMapper.findOneQueryResultToOutputDto.map(
+  campus: CampusGraphqlMapper.findOneQueryResultToOutputDto.mapOptional(output.campus),
+  ofertaFormacao: OfertaFormacaoGraphqlMapper.findOneQueryResultToOutputDto.mapOptional(
     output.ofertaFormacao,
   ),
   imagemCapa: mapImagemOutput(output.imagemCapa),
