@@ -20,6 +20,12 @@ export class EstagioEmpresaRefInputRestDto {
   id!: string;
 }
 
+@ApiSchema({ name: "EstagioCampusRefInputDto" })
+export class EstagioCampusRefInputRestDto {
+  @ApiProperty(EstagioCreateCommandFields.campus.swaggerMetadata)
+  id!: string;
+}
+
 @ApiSchema({ name: "EstagioCursoRefInputDto" })
 export class EstagioCursoRefInputRestDto {
   @ApiProperty(EstagioCreateCommandFields.CursoReferencia.swaggerMetadata)
@@ -47,6 +53,9 @@ export class HorarioEstagioOutputRestDto extends HorarioEstagioInputRestDto {
 @ApiSchema({ name: "EstagioCreateInputDto" })
 export class EstagioCreateInputRestDto {
   static schema = EstagioCreateSchema.presentation;
+
+  @ApiPropertyOptional(EstagioCreateCommandFields.campus.swaggerMetadata)
+  campus?: EstagioCampusRefInputRestDto;
 
   @ApiProperty(EstagioCreateCommandFields.empresa.swaggerMetadata)
   empresa!: EstagioEmpresaRefInputRestDto;
@@ -97,6 +106,9 @@ export class EstagioCreateInputRestDto {
 @ApiSchema({ name: "EstagioUpdateInputDto" })
 export class EstagioUpdateInputRestDto {
   static schema = EstagioUpdateSchema.presentation;
+
+  @ApiPropertyOptional(EstagioUpdateCommandFields.campus.swaggerMetadata)
+  campus?: EstagioCampusRefInputRestDto;
 
   @ApiPropertyOptional(EstagioUpdateCommandFields.empresa.swaggerMetadata)
   empresa?: EstagioEmpresaRefInputRestDto;
@@ -170,6 +182,9 @@ export class EstagioListInputRestDto extends PaginationInputRestDto {
 export class EstagioFindOneOutputRestDto {
   @ApiProperty(EstagioFindOneQueryResultFields.id.swaggerMetadata)
   id!: string;
+
+  @ApiPropertyOptional(EstagioFindOneQueryResultFields.campus.swaggerMetadata)
+  campus!: { id: string } | null;
 
   @ApiProperty(EstagioFindOneQueryResultFields.empresa.swaggerMetadata)
   empresa!: { id: string };
