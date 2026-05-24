@@ -26,6 +26,7 @@ const config = {
 } as const;
 
 const estagioRelations = {
+  campus: true,
   empresa: true,
   estagiario: true,
   horariosEstagio: true,
@@ -38,6 +39,7 @@ const estagioPaginateConfig = buildTypeOrmPaginateConfig<EstagioTypeormEntity>(
 
 /** Relations para o write side (loadById). */
 const writeRelations = {
+  campus: true,
   empresa: true,
   estagiario: true,
   horariosEstagio: true,
