@@ -5,6 +5,9 @@ export const RequestActorGraphQL = createParamDecorator(
   (_data: unknown, context: ExecutionContext) => {
     const ctx = GqlExecutionContext.create(context);
     const request = ctx.getContext().req;
-    return request.user ?? null;
+    return {
+      requestActor: request.user ?? null,
+      currentCampusId: (request.headers["x-campus-id"] as string) ?? null,
+    };
   },
 );
