@@ -8,6 +8,7 @@ import {
   type Relation,
 } from "typeorm";
 import { UsuarioEntity } from "@/modules/acesso/usuario/infrastructure.database/typeorm/usuario.typeorm.entity";
+import { CampusEntity } from "@/modules/ambientes/campus/infrastructure.database/typeorm/campus.typeorm.entity";
 import { CursoEntity } from "@/modules/ensino/curso/infrastructure.database/typeorm/curso.typeorm.entity";
 import { EmpresaTypeormEntity } from "@/modules/estagio/empresa/infrastructure.database/typeorm/empresa.typeorm.entity";
 import { EstagiarioTypeormEntity } from "@/modules/estagio/estagiario/infrastructure.database/typeorm/estagiario.typeorm.entity";
@@ -18,6 +19,10 @@ import { HorarioEstagioTypeormEntity } from "./horario-estagio.typeorm.entity";
 export class EstagioTypeormEntity {
   @PrimaryColumn("uuid")
   id!: string;
+
+  @ManyToOne(() => CampusEntity, { nullable: true })
+  @JoinColumn({ name: "id_campus_fk" })
+  campus!: Relation<CampusEntity> | null;
 
   @ManyToOne(() => EmpresaTypeormEntity)
   @JoinColumn({ name: "id_empresa_fk" })
