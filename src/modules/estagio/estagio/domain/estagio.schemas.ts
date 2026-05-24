@@ -96,7 +96,10 @@ export const EstagioCreateSchema = createSchema((standard) =>
     .object({
       campus: z.preprocess((v: any) => {
         if (v === null || v === undefined) return undefined;
-        if (typeof v === "object" && v !== null && (v.id === "" || v.id === null)) return undefined;
+        if (typeof v === "object" && v !== null && "id" in v) {
+          const id = (v as { id?: unknown }).id;
+          if (id === "" || id === null) return undefined;
+        }
         return v;
       }, ObjectIdUuidFactory.create(standard).optional()),
       empresa: z.preprocess(
