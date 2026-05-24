@@ -73,6 +73,7 @@ export const EstagioCursoRefSchema = ObjectIdUuidFactoryNullable;
 export const EstagioSchema = z
   .object({
     id: uuidSchema,
+    campus: ObjectIdUuidFactory.domain,
     empresa: ObjectIdUuidFactory.domain,
     CursoReferencia: EstagioCursoRefSchema.domain,
     estagiario: ObjectIdUuidFactoryNullable.domain,
@@ -93,6 +94,11 @@ export const EstagioSchema = z
 export const EstagioCreateSchema = createSchema((standard) =>
   z
     .object({
+      campus: z.preprocess((v: any) => {
+        if (v === null || v === undefined) return undefined;
+        if (typeof v === "object" && v !== null && (v.id === "" || v.id === null)) return undefined;
+        return v;
+      }, ObjectIdUuidFactory.create(standard).optional()),
       empresa: z.preprocess(
         (v) => (typeof v === "string" ? { id: v } : v),
         EstagioEmpresaRefSchema.create(standard),
@@ -176,6 +182,11 @@ export const EstagioCreateSchema = createSchema((standard) =>
 
 export const EstagioUpdateSchema = createSchema((standard) =>
   z.object({
+    campus: z.preprocess((v: any) => {
+      if (v === null || v === undefined) return undefined;
+      if (typeof v === "object" && v !== null && (v.id === "" || v.id === null)) return undefined;
+      return v;
+    }, ObjectIdUuidFactory.create(standard).optional()),
     empresa: z
       .preprocess(
         (v) => (typeof v === "string" ? { id: v } : v),
