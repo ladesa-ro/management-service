@@ -28,6 +28,7 @@ export class Estagio {
   static readonly entityName = "Estagio";
 
   id!: IdUuid;
+  campus!: ObjectUuidRef;
   empresa!: ObjectUuidRef;
   estagiario!: ObjectUuidRef | null;
   usuarioOrientador!: ObjectUuidRef | null;
@@ -58,6 +59,7 @@ export class Estagio {
     const instance = new Estagio();
 
     instance.id = generateUuidV7();
+    instance.campus = parsed.campus!;
     instance.empresa = parsed.empresa;
     instance.CursoReferencia = parsed.CursoReferencia ?? null;
     instance.estagiario = parsed.estagiario ?? null;
@@ -85,6 +87,7 @@ export class Estagio {
     const instance = new Estagio();
 
     instance.id = parsed.id;
+    instance.campus = parsed.campus;
     instance.empresa = parsed.empresa;
     instance.CursoReferencia = parsed.CursoReferencia;
     instance.estagiario = parsed.estagiario;
@@ -109,6 +112,7 @@ export class Estagio {
   update(dados: unknown): void {
     const parsed = zodValidate(Estagio.entityName, EstagioUpdateSchema.domain, dados);
 
+    if (parsed.campus !== undefined) this.campus = parsed.campus!;
     if (parsed.empresa !== undefined) this.empresa = parsed.empresa;
     if (parsed.CursoReferencia !== undefined) this.CursoReferencia = parsed.CursoReferencia ?? null;
     if (parsed.estagiario !== undefined) this.estagiario = parsed.estagiario ?? null;
