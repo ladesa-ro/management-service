@@ -20,6 +20,7 @@ function createMockEstagioRepository() {
 
 function createValidCreateDto() {
   return {
+    campus: { id: createTestId() },
     empresa: { id: createTestId() },
     cargaHoraria: 20,
     status: "EM_FASE_INICIAL",
@@ -27,13 +28,27 @@ function createValidCreateDto() {
   };
 }
 
+function createMockPerfilRepository() {
+  return {
+    create: vi.fn(),
+    update: vi.fn(),
+    softDeleteById: vi.fn(),
+    getFindOneQueryResult: vi.fn(),
+    getFindAllQueryResult: vi.fn(),
+    findAllActiveByUsuarioId: vi.fn().mockResolvedValue([]),
+    findByUsuarioAndCampus: vi.fn(),
+    deactivateByIds: vi.fn(),
+  };
+}
+
 describe("EstagioCreateCommandHandler", () => {
   it("should create estagio with horarios and return query result", async () => {
     const repository = createMockEstagioRepository();
+    const perfilRepository = createMockPerfilRepository();
     const savedResult = { id: createTestId(), status: "EM_FASE_INICIAL" };
     repository.getFindOneQueryResult.mockResolvedValue(savedResult);
 
-    const handler = new EstagioCreateCommandHandlerImpl(repository as any);
+    const handler = new EstagioCreateCommandHandlerImpl(repository as any, perfilRepository as any);
     const result = await handler.execute(createTestAccessContext(), createValidCreateDto() as any);
 
     expect(result).toEqual(savedResult);
@@ -42,9 +57,10 @@ describe("EstagioCreateCommandHandler", () => {
 
   it("should throw if created entity not found", async () => {
     const repository = createMockEstagioRepository();
+    const perfilRepository = createMockPerfilRepository();
     repository.getFindOneQueryResult.mockResolvedValue(null);
 
-    const handler = new EstagioCreateCommandHandlerImpl(repository as any);
+    const handler = new EstagioCreateCommandHandlerImpl(repository as any, perfilRepository as any);
 
     await expect(
       handler.execute(createTestAccessContext(), createValidCreateDto() as any),
