@@ -11,5 +11,6 @@ export class AccessContext implements IAccessContext {
   constructor(
     readonly appTypeormConnection: IAppTypeormConnection,
     readonly requestActor: IRequestActor | null,
+    readonly currentCampusId: string | null = null,
   ) {}
 }
