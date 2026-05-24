@@ -42,6 +42,18 @@ export class HorarioEstagioInputGraphQlDto {
   horaFim?: string | null;
 }
 
+@ObjectType("EstagioCampusRefDto")
+export class EstagioCampusRefGraphQlDto {
+  @Field(() => String)
+  id: string;
+}
+
+@InputType("EstagioCampusRefInputDto")
+export class EstagioCampusRefInputGraphQlDto {
+  @Field(() => String)
+  id: string;
+}
+
 @ObjectType("EstagioEmpresaRefDto")
 export class EstagioEmpresaRefGraphQlDto {
   @Field(() => String)
@@ -92,6 +104,12 @@ export class EstagioCursoRefInputGraphQlDto {
 
 @ObjectType("EstagioFindOneOutputDto")
 export class EstagioFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
+  @Field(() => EstagioCampusRefGraphQlDto, {
+    nullable: true,
+    ...EstagioFindOneQueryResultFields.campus.gqlMetadata,
+  })
+  campus: EstagioCampusRefGraphQlDto | null;
+
   @Field(() => EstagioEmpresaRefGraphQlDto, EstagioFindOneQueryResultFields.empresa.gqlMetadata)
   empresa: EstagioEmpresaRefGraphQlDto;
 
@@ -172,6 +190,12 @@ export class EstagioFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
 export class EstagioCreateInputGraphQlDto {
   static schema = EstagioCreateSchema.domain;
 
+  @Field(() => EstagioCampusRefInputGraphQlDto, {
+    nullable: true,
+    ...EstagioCreateCommandFields.campus.gqlMetadata,
+  })
+  campus?: EstagioCampusRefInputGraphQlDto;
+
   @Field(() => EstagioEmpresaRefInputGraphQlDto, EstagioCreateCommandFields.empresa.gqlMetadata)
   empresa: EstagioEmpresaRefInputGraphQlDto;
 
@@ -236,6 +260,12 @@ export class EstagioCreateInputGraphQlDto {
 @InputType("EstagioUpdateInputDto")
 export class EstagioUpdateInputGraphQlDto {
   static schema = EstagioUpdateSchema.domain;
+
+  @Field(() => EstagioCampusRefInputGraphQlDto, {
+    nullable: true,
+    ...EstagioUpdateCommandFields.campus.gqlMetadata,
+  })
+  campus?: EstagioCampusRefInputGraphQlDto;
 
   @Field(() => EstagioEmpresaRefInputGraphQlDto, {
     nullable: true,
