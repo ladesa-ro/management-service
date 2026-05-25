@@ -187,7 +187,7 @@ export const EstagioUpdateSchema = createSchema((standard) =>
   z.object({
     campus: z.preprocess((v: any) => {
       if (v === null || v === undefined) return undefined;
-      if (typeof v === "object" && v !== null && (v.id === "" || v.id === null)) return undefined;
+      if (typeof v === "object" && v !== null && (v.id === "" || v.id == null)) return undefined;
       return v;
     }, ObjectIdUuidFactory.create(standard).optional()),
     empresa: z
