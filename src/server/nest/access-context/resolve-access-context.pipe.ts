@@ -16,7 +16,24 @@ export class ResolveAccessContextPipe implements PipeTransform {
     private readonly appTypeormConnection: IAppTypeormConnection,
   ) {}
 
-  async transform(requestActor: IRequestActor | null): Promise<AccessContext> {
-    return new AccessContext(this.appTypeormConnection, requestActor ?? null);
+  async transform(
+    input:
+      | { requestActor: IRequestActor | null; currentCampusId: string | null }
+      | IRequestActor
+      | null,
+  ): Promise<AccessContext> {
+    let requestActor: IRequestActor | null = null;
+    let currentCampusId: string | null = null;
+
+    if (input) {
+      if ("requestActor" in input || "currentCampusId" in input) {
+        requestActor = (input as any).requestActor ?? null;
+        currentCampusId = (input as any).currentCampusId ?? null;
+      } else {
+        requestActor = input as IRequestActor;
+      }
+    }
+
+    return new AccessContext(this.appTypeormConnection, requestActor, currentCampusId);
   }
 }

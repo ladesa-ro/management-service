@@ -21,6 +21,9 @@ export const EstagioStatusValues = [
 export const EstagioStatusSchema = z.enum(EstagioStatusValues);
 
 export const EstagioFields = {
+  campus: createFieldMetadata({
+    description: "Campus do estágio",
+  }),
   empresa: createFieldMetadata({
     description: "Empresa do estágio",
   }),

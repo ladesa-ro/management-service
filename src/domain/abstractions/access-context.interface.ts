@@ -9,4 +9,5 @@ import type { IRequestActor } from "./request-actor";
 
 export interface IAccessContext {
   readonly requestActor: IRequestActor | null;
+  readonly currentCampusId?: string | null;
 }

@@ -1,6 +1,8 @@
+import { BadRequestException } from "@nestjs/common";
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { Dep, Impl } from "@/domain/dependency-injection";
+import { IPerfilRepository } from "@/modules/acesso/usuario/perfil/domain/repositories/perfil.repository.interface";
 import type { EstagioCreateCommand } from "@/modules/estagio/estagio/domain/commands/estagio-create.command";
 import { IEstagioCreateCommandHandler } from "@/modules/estagio/estagio/domain/commands/estagio-create.command.handler.interface";
 import { Estagio } from "@/modules/estagio/estagio/domain/estagio";
@@ -12,6 +14,8 @@ export class EstagioCreateCommandHandlerImpl implements IEstagioCreateCommandHan
   constructor(
     @Dep(IEstagioRepository)
     private readonly repository: IEstagioRepository,
+    @Dep(IPerfilRepository)
+    private readonly perfilRepository: IPerfilRepository,
   ) {}
 
   async execute(
@@ -20,6 +24,30 @@ export class EstagioCreateCommandHandlerImpl implements IEstagioCreateCommandHan
   ): Promise<EstagioFindOneQueryResult> {
     if (process.env.DEBUG_CSV_IMPORT) {
       console.log("[CSV import][handler] dto recebido para criar estagio", { dto });
+    }
+
+    let perfis: any[] = [];
+    if (!dto.campus) {
+      if (accessContext?.currentCampusId) {
+        dto.campus = { id: accessContext.currentCampusId };
+      } else if (accessContext?.requestActor?.id) {
+        perfis = await this.perfilRepository.findAllActiveByUsuarioId(
+          accessContext,
+          accessContext.requestActor.id,
+        );
+        if (perfis.length > 0 && perfis[0].campus) {
+          dto.campus = { id: perfis[0].campus.id };
+        }
+      }
+
+      if (!dto.campus) {
+        throw new BadRequestException(
+          `Não foi possível determinar o campus para o estágio de forma automática. ` +
+            `requestActor.id: ${accessContext?.requestActor?.id || "nenhum"}. ` +
+            `Perfis encontrados: ${perfis.length}. ` +
+            `Selecione um perfil com campus associado ou forneça o campus explicitamente.`,
+        );
+      }
     }
 
     const estagio = Estagio.create(dto);
@@ -58,6 +86,7 @@ export class EstagioCreateCommandHandlerImpl implements IEstagioCreateCommandHan
       // Fallback: construir um objeto mínimo compatível com EstagioFindOneQueryResult
       result = {
         id: estagio.id,
+        campus: { id: estagio.campus.id },
         empresa: { id: estagio.empresa.id },
         estagiario: estagio.estagiario ? { id: estagio.estagiario.id } : null,
         usuarioOrientador: estagio.usuarioOrientador ? { id: estagio.usuarioOrientador.id } : null,

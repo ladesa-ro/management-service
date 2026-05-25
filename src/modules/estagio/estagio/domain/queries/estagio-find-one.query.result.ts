@@ -18,6 +18,7 @@ export class HorarioEstagioQueryResult {
 
 export class EstagioFindOneQueryResult {
   id!: string;
+  campus!: { id: string } | null;
   empresa!: { id: string };
   CursoReferencia!: { id: string } | null;
   estagiario!: { id: string } | null;
