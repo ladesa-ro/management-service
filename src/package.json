@@ -48,7 +48,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.4.14",
+    "@biomejs/biome": "^2.4.15",
     "@nestjs/cli": "^11.0.21",
     "@nestjs/schematics": "^11.1.0",
     "@nestjs/testing": "^11.1.19",
@@ -63,14 +63,14 @@
     "@types/supertest": "^7.2.0",
     "@types/swagger-ui-express": "^4.1.8",
     "@types/uuid": "^11.0.0",
-    "@vitest/coverage-v8": "^4.1.5",
+    "@vitest/coverage-v8": "^4.1.6",
     "nx": "22.7.1",
     "quicktype": "^23.2.6",
     "supertest": "^7.2.2",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^6.0.3",
-    "vitest": "^4.1.5"
+    "vitest": "^4.1.6"
   },
   "scripts": {
     "dev": "nx run @ladesa-ro/management-service:dev",
