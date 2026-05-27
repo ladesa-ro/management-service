@@ -28,6 +28,7 @@ export const EmpresaSchema = z
     cnpj: z.string(),
     telefone: z.string().min(1).max(15),
     email: z.string().email(),
+    fotoEmpresa: z.string().nullable().optional(),
     endereco: ObjectIdUuidFactory.domain,
   })
   .extend(datedSchema.shape);
@@ -39,6 +40,7 @@ export const EmpresaCreateSchema = createSchema((standard) =>
     cnpj: EmpresaFields.cnpj.create(standard),
     telefone: EmpresaFields.telefone.create(standard),
     email: EmpresaFields.email.create(standard),
+    fotoEmpresa: EmpresaFields.fotoEmpresa.create(standard).optional(),
     endereco: EmpresaEnderecoRefSchema.create(standard),
   }),
 );
@@ -50,6 +52,7 @@ export const EmpresaUpdateSchema = createSchema((standard) =>
     cnpj: EmpresaFields.cnpj.create(standard).optional(),
     telefone: EmpresaFields.telefone.create(standard).optional(),
     email: EmpresaFields.email.create(standard).optional(),
+    fotoEmpresa: EmpresaFields.fotoEmpresa.create(standard).optional(),
     endereco: EmpresaEnderecoRefSchema.create(standard).optional(),
   }),
 );
