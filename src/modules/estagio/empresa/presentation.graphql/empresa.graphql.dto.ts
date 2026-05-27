@@ -59,8 +59,6 @@ export class EmpresaCreateInputGraphQlDto {
   @Field(() => String, EmpresaCreateCommandFields.cnpj.gqlMetadata) cnpj: string;
   @Field(() => String, EmpresaCreateCommandFields.telefone.gqlMetadata) telefone: string;
   @Field(() => String, EmpresaCreateCommandFields.email.gqlMetadata) email: string;
-  @Field(() => String, { nullable: true, ...EmpresaCreateCommandFields.fotoEmpresa.gqlMetadata })
-  fotoEmpresa?: string | null;
   @Field(() => EmpresaEnderecoRefInputGraphQlDto, EmpresaCreateCommandFields.endereco.gqlMetadata)
   endereco: EmpresaEnderecoRefInputGraphQlDto;
 }
@@ -87,9 +85,6 @@ export class EmpresaUpdateInputGraphQlDto {
 
   @Field(() => String, { nullable: true, ...EmpresaUpdateCommandFields.email.gqlMetadata })
   email?: string;
-
-  @Field(() => String, { nullable: true, ...EmpresaUpdateCommandFields.fotoEmpresa.gqlMetadata })
-  fotoEmpresa?: string | null;
 
   @Field(() => EmpresaEnderecoRefInputGraphQlDto, {
     nullable: true,
