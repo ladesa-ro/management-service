@@ -7,7 +7,6 @@ export const EmpresaCreateCommandFields = {
   cnpj: EmpresaFields.cnpj,
   telefone: EmpresaFields.telefone,
   email: EmpresaFields.email,
-  fotoEmpresa: EmpresaFields.fotoEmpresa,
   endereco: EmpresaFields.endereco,
 };
 
@@ -17,6 +16,5 @@ export class EmpresaCreateCommand {
   cnpj!: string;
   telefone!: string;
   email!: string;
-  fotoEmpresa?: { id: string } | null;
   endereco!: EnderecoInputRef;
 }
