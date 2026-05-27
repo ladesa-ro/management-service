@@ -119,9 +119,6 @@ export class EmpresaCreateInputRestDto {
   @ApiProperty(EmpresaCreateCommandFields.email.swaggerMetadata)
   email: string;
 
-  @ApiPropertyOptional(EmpresaCreateCommandFields.fotoEmpresa.swaggerMetadata)
-  fotoEmpresa?: string | null;
-
   @ApiProperty(EmpresaCreateCommandFields.endereco.swaggerMetadata)
   endereco: { id: string };
 }
@@ -144,9 +141,6 @@ export class EmpresaUpdateInputRestDto {
 
   @ApiPropertyOptional(EmpresaUpdateCommandFields.email.swaggerMetadata)
   email?: string;
-
-  @ApiPropertyOptional(EmpresaUpdateCommandFields.fotoEmpresa.swaggerMetadata)
-  fotoEmpresa?: string | null;
 
   @ApiPropertyOptional(EmpresaUpdateCommandFields.endereco.swaggerMetadata)
   endereco?: { id: string };
