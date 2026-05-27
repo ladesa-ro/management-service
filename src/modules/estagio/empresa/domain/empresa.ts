@@ -51,7 +51,7 @@ export class Empresa {
     instance.cnpj = parsed.cnpj;
     instance.telefone = parsed.telefone;
     instance.email = parsed.email;
-    instance.fotoEmpresa = parsed.fotoEmpresa ?? null;
+    instance.fotoEmpresa = null;
     instance.endereco = parsed.endereco;
     instance.dateCreated = getNowISO();
     instance.dateUpdated = getNowISO();
@@ -88,7 +88,7 @@ export class Empresa {
     if (parsed.cnpj !== undefined) this.cnpj = parsed.cnpj;
     if (parsed.telefone !== undefined) this.telefone = parsed.telefone;
     if (parsed.email !== undefined) this.email = parsed.email;
-    if (parsed.fotoEmpresa !== undefined) this.fotoEmpresa = parsed.fotoEmpresa ?? null;
+
     if (parsed.endereco !== undefined) this.endereco = parsed.endereco;
 
     this.dateUpdated = getNowISO();
