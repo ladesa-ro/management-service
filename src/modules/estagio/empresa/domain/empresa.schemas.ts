@@ -28,7 +28,7 @@ export const EmpresaSchema = z
     cnpj: z.string(),
     telefone: z.string().min(1).max(15),
     email: z.string().email(),
-    fotoEmpresa: z.string().nullable().optional(),
+    fotoEmpresa: ObjectIdUuidFactory.domain.nullable().optional(),
     endereco: ObjectIdUuidFactory.domain,
   })
   .extend(datedSchema.shape);
