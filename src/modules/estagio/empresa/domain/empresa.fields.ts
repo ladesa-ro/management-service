@@ -41,6 +41,10 @@ export const EmpresaFields = {
     description: "E-mail da empresa",
     schema: createSchema(() => z.string().email("email inválido")),
   }),
+  fotoEmpresa: createFieldMetadata({
+    description: "Foto da empresa",
+    schema: createSchema(() => z.string().nullable().optional()),
+  }),
   endereco: createFieldMetadata({
     description: "Endereço vinculado à empresa",
     schema: ObjectIdUuidFactory,
