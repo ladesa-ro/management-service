@@ -11,7 +11,7 @@ export interface IEmpresa {
   cnpj: string;
   telefone: string;
   email: string;
-  fotoEmpresa: string | null;
+  fotoEmpresa: { id: string } | null;
   endereco: { id: string };
   ativo?: boolean;
   dateCreated: string;
@@ -28,7 +28,7 @@ export class Empresa {
   cnpj!: string;
   telefone!: string;
   email!: string;
-  fotoEmpresa!: string | null;
+  fotoEmpresa!: { id: string } | null;
   endereco!: { id: string };
   dateCreated!: ScalarDateTimeString;
   dateUpdated!: ScalarDateTimeString;
