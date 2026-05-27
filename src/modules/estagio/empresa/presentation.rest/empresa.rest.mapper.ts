@@ -6,7 +6,13 @@ import {
   EmpresaUpdateCommand,
 } from "@/modules/estagio/empresa";
 import * as EnderecoRestMapper from "@/modules/localidades/endereco/presentation.rest/endereco.rest.mapper";
-import { createListMapper, createMapper, createPaginatedInputMapper, into } from "@/shared/mapping";
+import {
+  createListMapper,
+  createMapper,
+  createPaginatedInputMapper,
+  into,
+  mapImagemOutput,
+} from "@/shared/mapping";
 import {
   type EmpresaCreateInputRestDto,
   type EmpresaFindOneInputRestDto,
@@ -49,7 +55,7 @@ export const createInputDtoToCreateCommand = createMapper<
   input.cnpj = dto.cnpj;
   input.telefone = dto.telefone;
   input.email = dto.email;
-  input.fotoEmpresa = dto.fotoEmpresa ?? null;
+  input.fotoEmpresa = dto.fotoEmpresa ? { id: dto.fotoEmpresa } : null;
   input.endereco = { id: dto.endereco.id };
   return input;
 });
@@ -64,7 +70,7 @@ export const updateInputDtoToUpdateCommand = createMapper<
   cnpj: dto.cnpj,
   telefone: dto.telefone,
   email: dto.email,
-  fotoEmpresa: dto.fotoEmpresa ?? null,
+  fotoEmpresa: dto.fotoEmpresa ? { id: dto.fotoEmpresa } : null,
   endereco: dto.endereco ? { id: dto.endereco.id } : undefined,
 }));
 
@@ -82,7 +88,7 @@ export const findOneQueryResultToOutputDto = createMapper<
   cnpj: output.cnpj,
   telefone: output.telefone,
   email: output.email,
-  fotoEmpresa: output.fotoEmpresa,
+  fotoEmpresa: mapImagemOutput(output.fotoEmpresa),
   endereco: EnderecoRestMapper.findOneQueryResultToOutputDto.map(output.endereco),
   ativo: output.ativo,
   dateCreated: output.dateCreated,
