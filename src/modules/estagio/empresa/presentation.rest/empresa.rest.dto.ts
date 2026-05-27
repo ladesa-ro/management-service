@@ -1,3 +1,4 @@
+import { ImagemFindOneOutputRestDto } from "@/modules/armazenamento/imagem/presentation.rest/imagem.rest.dto";
 import { EmpresaCreateCommandFields } from "@/modules/estagio/empresa/domain/commands/empresa-create.command";
 import { EmpresaUpdateCommandFields } from "@/modules/estagio/empresa/domain/commands/empresa-update.command";
 import {
@@ -42,6 +43,12 @@ export class EmpresaFindOneOutputRestDto extends EntityBaseRestDto {
 
   @ApiProperty(EmpresaFindOneQueryResultFields.email.swaggerMetadata)
   email: string;
+
+  @ApiPropertyOptional({
+    ...EmpresaFindOneQueryResultFields.fotoEmpresa.swaggerMetadata,
+    type: () => ImagemFindOneOutputRestDto,
+  })
+  fotoEmpresa: ImagemFindOneOutputRestDto | null;
 
   @ApiProperty({
     ...EmpresaFindOneQueryResultFields.endereco.swaggerMetadata,
@@ -112,6 +119,9 @@ export class EmpresaCreateInputRestDto {
   @ApiProperty(EmpresaCreateCommandFields.email.swaggerMetadata)
   email: string;
 
+  @ApiPropertyOptional(EmpresaCreateCommandFields.fotoEmpresa.swaggerMetadata)
+  fotoEmpresa?: string | null;
+
   @ApiProperty(EmpresaCreateCommandFields.endereco.swaggerMetadata)
   endereco: { id: string };
 }
@@ -134,6 +144,9 @@ export class EmpresaUpdateInputRestDto {
 
   @ApiPropertyOptional(EmpresaUpdateCommandFields.email.swaggerMetadata)
   email?: string;
+
+  @ApiPropertyOptional(EmpresaUpdateCommandFields.fotoEmpresa.swaggerMetadata)
+  fotoEmpresa?: string | null;
 
   @ApiPropertyOptional(EmpresaUpdateCommandFields.endereco.swaggerMetadata)
   endereco?: { id: string };
