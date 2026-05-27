@@ -1,4 +1,5 @@
 import { EntityQueryResult, SharedFields } from "@/domain/abstractions";
+import { ImagemFindOneQueryResult } from "@/modules/armazenamento/imagem";
 import { EnderecoFindOneQueryResult } from "@/modules/localidades/endereco";
 import { EmpresaFields } from "../empresa.fields";
 
@@ -13,6 +14,7 @@ export class EmpresaFindOneQueryResult extends EntityQueryResult {
   cnpj!: string;
   telefone!: string;
   email!: string;
+  fotoEmpresa!: ImagemFindOneQueryResult | null;
   endereco!: EnderecoFindOneQueryResult;
   ativo!: boolean;
 }

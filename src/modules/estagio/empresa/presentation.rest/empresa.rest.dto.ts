@@ -1,3 +1,4 @@
+import { ImagemFindOneOutputRestDto } from "@/modules/armazenamento/imagem/presentation.rest/imagem.rest.dto";
 import { EmpresaCreateCommandFields } from "@/modules/estagio/empresa/domain/commands/empresa-create.command";
 import { EmpresaUpdateCommandFields } from "@/modules/estagio/empresa/domain/commands/empresa-update.command";
 import {
@@ -42,6 +43,12 @@ export class EmpresaFindOneOutputRestDto extends EntityBaseRestDto {
 
   @ApiProperty(EmpresaFindOneQueryResultFields.email.swaggerMetadata)
   email: string;
+
+  @ApiPropertyOptional({
+    ...EmpresaFindOneQueryResultFields.fotoEmpresa.swaggerMetadata,
+    type: () => ImagemFindOneOutputRestDto,
+  })
+  fotoEmpresa: ImagemFindOneOutputRestDto | null;
 
   @ApiProperty({
     ...EmpresaFindOneQueryResultFields.endereco.swaggerMetadata,

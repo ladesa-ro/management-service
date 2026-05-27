@@ -1,5 +1,21 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
 import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Put,
+  Query,
+  StreamableFile,
+  UploadedFile,
+  UseInterceptors,
+} from "@nestjs/common";
+import { FileInterceptor } from "@nestjs/platform-express";
+import {
+  ApiBody,
+  ApiConsumes,
   ApiCreatedResponse,
   ApiForbiddenResponse,
   ApiNotFoundResponse,
@@ -22,11 +38,19 @@ import {
   EmpresaUpdateCommandMetadata,
   IEmpresaUpdateCommandHandler,
 } from "@/modules/estagio/empresa/domain/commands/empresa-update.command.handler.interface";
+import {
+  EmpresaUpdateFotoEmpresaCommandMetadata,
+  IEmpresaUpdateFotoEmpresaCommandHandler,
+} from "@/modules/estagio/empresa/domain/commands/empresa-update-foto-empresa.command.handler.interface";
 import { Empresa } from "@/modules/estagio/empresa/domain/empresa";
 import {
   EmpresaFindOneQueryMetadata,
   IEmpresaFindOneQueryHandler,
 } from "@/modules/estagio/empresa/domain/queries/empresa-find-one.query.handler.interface";
+import {
+  EmpresaGetFotoEmpresaQueryMetadata,
+  IEmpresaGetFotoEmpresaQueryHandler,
+} from "@/modules/estagio/empresa/domain/queries/empresa-get-foto-empresa.query.handler.interface";
 import {
   EmpresaListQueryMetadata,
   IEmpresaListQueryHandler,
@@ -54,6 +78,10 @@ export class EmpresaRestController {
     private readonly createHandler: IEmpresaCreateCommandHandler,
     @Dep(IEmpresaUpdateCommandHandler)
     private readonly updateHandler: IEmpresaUpdateCommandHandler,
+    @Dep(IEmpresaUpdateFotoEmpresaCommandHandler)
+    private readonly updateFotoEmpresaHandler: IEmpresaUpdateFotoEmpresaCommandHandler,
+    @Dep(IEmpresaGetFotoEmpresaQueryHandler)
+    private readonly getFotoEmpresaHandler: IEmpresaGetFotoEmpresaQueryHandler,
     @Dep(IEmpresaDeleteCommandHandler)
     private readonly deleteHandler: IEmpresaDeleteCommandHandler,
   ) {}
@@ -112,6 +140,46 @@ export class EmpresaRestController {
     const command = EmpresaRestMapper.updateInputDtoToUpdateCommand.map({ params, dto });
     const queryResult = await this.updateHandler.execute(accessContext, command);
     return EmpresaRestMapper.findOneQueryResultToOutputDto.map(queryResult);
+  }
+
+  @Get("/:id/imagem/foto-empresa")
+  @ApiOperation(EmpresaGetFotoEmpresaQueryMetadata.swaggerMetadata)
+  @ApiOkResponse()
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async getFotoEmpresa(
+    @AccessContextHttp() accessContext: IAccessContext,
+    @Param() params: EmpresaFindOneInputRestDto,
+  ) {
+    const queryResult = await this.getFotoEmpresaHandler.execute(accessContext, { id: params.id });
+    return new StreamableFile(queryResult.stream, {
+      type: queryResult.mimeType,
+      disposition: queryResult.disposition,
+    });
+  }
+
+  @Put("/:id/imagem/foto-empresa")
+  @ApiOperation(EmpresaUpdateFotoEmpresaCommandMetadata.swaggerMetadata)
+  @ApiConsumes("multipart/form-data")
+  @ApiBody({
+    schema: {
+      type: "object",
+      properties: {
+        file: { type: "string", format: "binary" },
+      },
+      required: ["file"],
+    },
+  })
+  @ApiOkResponse({ type: Boolean })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  @UseInterceptors(FileInterceptor("file"))
+  async updateFotoEmpresa(
+    @AccessContextHttp() accessContext: IAccessContext,
+    @Param() params: EmpresaFindOneInputRestDto,
+    @UploadedFile() file: Express.Multer.File,
+  ): Promise<boolean> {
+    return this.updateFotoEmpresaHandler.execute(accessContext, { dto: params, file });
   }
 
   @Delete("/:id")

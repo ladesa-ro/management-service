@@ -7,3 +7,4 @@ export * from "./empresa-delete.command.handler.interface";
 export * from "./empresa-update.command";
 
 export * from "./empresa-update.command.handler.interface";
+export * from "./empresa-update-foto-empresa.command.handler.interface";

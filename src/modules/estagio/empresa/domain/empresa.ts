@@ -11,6 +11,7 @@ export interface IEmpresa {
   cnpj: string;
   telefone: string;
   email: string;
+  fotoEmpresa: { id: string } | null;
   endereco: { id: string };
   ativo?: boolean;
   dateCreated: string;
@@ -27,6 +28,7 @@ export class Empresa {
   cnpj!: string;
   telefone!: string;
   email!: string;
+  fotoEmpresa!: { id: string } | null;
   endereco!: { id: string };
   dateCreated!: ScalarDateTimeString;
   dateUpdated!: ScalarDateTimeString;
@@ -49,6 +51,7 @@ export class Empresa {
     instance.cnpj = parsed.cnpj;
     instance.telefone = parsed.telefone;
     instance.email = parsed.email;
+    instance.fotoEmpresa = null;
     instance.endereco = parsed.endereco;
     instance.dateCreated = getNowISO();
     instance.dateUpdated = getNowISO();
@@ -68,6 +71,7 @@ export class Empresa {
     instance.cnpj = parsed.cnpj;
     instance.telefone = parsed.telefone;
     instance.email = parsed.email;
+    instance.fotoEmpresa = parsed.fotoEmpresa ?? null;
     instance.endereco = parsed.endereco;
     instance.dateCreated = parsed.dateCreated;
     instance.dateUpdated = parsed.dateUpdated;
@@ -84,6 +88,7 @@ export class Empresa {
     if (parsed.cnpj !== undefined) this.cnpj = parsed.cnpj;
     if (parsed.telefone !== undefined) this.telefone = parsed.telefone;
     if (parsed.email !== undefined) this.email = parsed.email;
+
     if (parsed.endereco !== undefined) this.endereco = parsed.endereco;
 
     this.dateUpdated = getNowISO();

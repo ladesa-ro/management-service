@@ -7,7 +7,12 @@
  * @see createFieldMetadata (domain/abstractions/fields/field-metadata.ts)
  */
 import { z } from "zod";
-import { createFieldMetadata, createSchema, ObjectIdUuidFactory } from "@/domain/abstractions";
+import {
+  createFieldMetadata,
+  createSchema,
+  ObjectIdUuidFactory,
+  ObjectIdUuidFactoryNullable,
+} from "@/domain/abstractions";
 
 export const EmpresaFields = {
   razaoSocial: createFieldMetadata({
@@ -40,6 +45,10 @@ export const EmpresaFields = {
   email: createFieldMetadata({
     description: "E-mail da empresa",
     schema: createSchema(() => z.string().email("email inválido")),
+  }),
+  fotoEmpresa: createFieldMetadata({
+    description: "Foto da empresa",
+    schema: ObjectIdUuidFactoryNullable,
   }),
   endereco: createFieldMetadata({
     description: "Endereço vinculado à empresa",

@@ -6,7 +6,13 @@ import {
   EmpresaUpdateCommand,
 } from "@/modules/estagio/empresa";
 import * as EnderecoGraphqlMapper from "@/modules/localidades/endereco/presentation.graphql/endereco.graphql.mapper";
-import { createListMapper, createMapper, createPaginatedInputMapper, into } from "@/shared/mapping";
+import {
+  createListMapper,
+  createMapper,
+  createPaginatedInputMapper,
+  into,
+  mapImagemOutput,
+} from "@/shared/mapping";
 import {
   type EmpresaCreateInputGraphQlDto,
   EmpresaFindOneOutputGraphQlDto,
@@ -86,6 +92,7 @@ export const findOneQueryResultToOutputDto = createMapper<
   cnpj: output.cnpj,
   telefone: output.telefone,
   email: output.email,
+  fotoEmpresa: mapImagemOutput(output.fotoEmpresa),
   endereco: EnderecoGraphqlMapper.findOneQueryResultToOutputDto.map(output.endereco),
   ativo: output.ativo,
   dateCreated: new Date(output.dateCreated),

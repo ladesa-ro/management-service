@@ -3,6 +3,7 @@ import {
   PaginatedFilterByIdGraphQlDto,
   PaginationMetaGraphQlDto,
 } from "@/infrastructure.graphql/dtos";
+import { ImagemFindOneOutputGraphQlDto } from "@/modules/armazenamento/imagem-arquivo/presentation.graphql/imagem-arquivo.graphql.dto";
 import { EmpresaCreateCommandFields } from "@/modules/estagio/empresa/domain/commands/empresa-create.command";
 import { EmpresaUpdateCommandFields } from "@/modules/estagio/empresa/domain/commands/empresa-update.command";
 import {
@@ -27,6 +28,11 @@ export class EmpresaFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
   @Field(() => String, EmpresaFindOneQueryResultFields.cnpj.gqlMetadata) cnpj: string;
   @Field(() => String, EmpresaFindOneQueryResultFields.telefone.gqlMetadata) telefone: string;
   @Field(() => String, EmpresaFindOneQueryResultFields.email.gqlMetadata) email: string;
+  @Field(() => ImagemFindOneOutputGraphQlDto, {
+    nullable: true,
+    ...EmpresaFindOneQueryResultFields.fotoEmpresa.gqlMetadata,
+  })
+  fotoEmpresa: ImagemFindOneOutputGraphQlDto | null;
   @Field(
     () => EnderecoFindOneOutputGraphQlDto,
     EmpresaFindOneQueryResultFields.endereco.gqlMetadata,

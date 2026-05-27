@@ -24,7 +24,14 @@ const config = {
   alias: "empresa",
 } as const;
 
+const imagemRelations = {
+  versoes: {
+    arquivo: true,
+  },
+};
+
 const empresaRelations = {
+  fotoEmpresa: imagemRelations,
   endereco: {
     cidade: {
       estado: true,
@@ -37,8 +44,8 @@ const empresaPaginateConfig = buildTypeOrmPaginateConfig<EmpresaTypeormEntity>(
   empresaRelations,
 );
 
-/** Relations para o write side (loadById). */
 const writeRelations = {
+  fotoEmpresa: true,
   endereco: true,
 } as const;
 
@@ -87,6 +94,16 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
 
   softDeleteById(id: string) {
     return typeormSoftDeleteById(this.appTypeormConnection, EmpresaTypeormEntity, config.alias, id);
+  }
+
+  async updateImagemField(id: string, fieldName: string, imagemId: string | null): Promise<void> {
+    const repo = this.appTypeormConnection.getRepository(EmpresaTypeormEntity);
+    await repo
+      .createQueryBuilder()
+      .update()
+      .set({ [fieldName]: imagemId ? { id: imagemId } : null })
+      .where("id = :id", { id })
+      .execute();
   }
 
   // ==========================================

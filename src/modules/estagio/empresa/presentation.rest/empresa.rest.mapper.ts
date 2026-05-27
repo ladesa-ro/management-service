@@ -6,7 +6,13 @@ import {
   EmpresaUpdateCommand,
 } from "@/modules/estagio/empresa";
 import * as EnderecoRestMapper from "@/modules/localidades/endereco/presentation.rest/endereco.rest.mapper";
-import { createListMapper, createMapper, createPaginatedInputMapper, into } from "@/shared/mapping";
+import {
+  createListMapper,
+  createMapper,
+  createPaginatedInputMapper,
+  into,
+  mapImagemOutput,
+} from "@/shared/mapping";
 import {
   type EmpresaCreateInputRestDto,
   type EmpresaFindOneInputRestDto,
@@ -80,6 +86,7 @@ export const findOneQueryResultToOutputDto = createMapper<
   cnpj: output.cnpj,
   telefone: output.telefone,
   email: output.email,
+  fotoEmpresa: mapImagemOutput(output.fotoEmpresa),
   endereco: EnderecoRestMapper.findOneQueryResultToOutputDto.map(output.endereco),
   ativo: output.ativo,
   dateCreated: output.dateCreated,
