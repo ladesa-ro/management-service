@@ -40,7 +40,6 @@ export const EmpresaCreateSchema = createSchema((standard) =>
     cnpj: EmpresaFields.cnpj.create(standard),
     telefone: EmpresaFields.telefone.create(standard),
     email: EmpresaFields.email.create(standard),
-    fotoEmpresa: EmpresaFields.fotoEmpresa.create(standard).optional(),
     endereco: EmpresaEnderecoRefSchema.create(standard),
   }),
 );
@@ -52,7 +51,6 @@ export const EmpresaUpdateSchema = createSchema((standard) =>
     cnpj: EmpresaFields.cnpj.create(standard).optional(),
     telefone: EmpresaFields.telefone.create(standard).optional(),
     email: EmpresaFields.email.create(standard).optional(),
-    fotoEmpresa: EmpresaFields.fotoEmpresa.create(standard).optional(),
     endereco: EmpresaEnderecoRefSchema.create(standard).optional(),
   }),
 );
