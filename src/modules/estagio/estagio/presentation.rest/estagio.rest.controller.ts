@@ -405,6 +405,11 @@ export class EstagioRestController {
           }
 
           if (!perfilAluno?.id) {
+            if (!campusId) {
+              throw new BadRequestException(
+                `O usuário autenticado não possui um campus e o campus informado na planilha não foi encontrado para a linha ${row.line}.`,
+              );
+            }
             throw new BadRequestException(
               `Não foi possível localizar o perfil do estagiário para a linha ${row.line}.`,
             );
@@ -501,6 +506,11 @@ export class EstagioRestController {
           tipoAditivo: row.tiposAditivo ?? undefined,
           horariosEstagio: [],
         };
+
+        const finalCampusId = campusId ?? perfilAluno?.campus?.id;
+        if (finalCampusId) {
+          (command as any).campus = { id: finalCampusId };
+        }
 
         const queryResult = await createHandler.execute(accessContext, command as never);
 
