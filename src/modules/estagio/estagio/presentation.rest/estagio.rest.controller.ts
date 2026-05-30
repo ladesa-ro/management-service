@@ -292,6 +292,7 @@ export class EstagioRestController {
           ? await usuarioRepository.findByMatricula(row.estagiarioMatricula)
           : null;
         let estagiario: { id: string } | null = null;
+        let finalCampusId: string | undefined = requestActorCampusId;
 
         if (row.estagiarioMatricula) {
           let campusId: string | undefined = requestActorCampusId;
@@ -405,7 +406,7 @@ export class EstagioRestController {
           }
 
           if (!perfilAluno?.id) {
-            if (!campusId) {
+            if (!finalCampusId && !campusId) {
               throw new BadRequestException(
                 `O usuário autenticado não possui um campus e o campus informado na planilha não foi encontrado para a linha ${row.line}.`,
               );
@@ -414,6 +415,8 @@ export class EstagioRestController {
               `Não foi possível localizar o perfil do estagiário para a linha ${row.line}.`,
             );
           }
+
+          finalCampusId = campusId ?? perfilAluno?.campus?.id;
 
           if (!estagiario) {
             const estagiarioCreateHandler = this.container.get<IEstagiarioCreateCommandHandler>(
@@ -507,7 +510,6 @@ export class EstagioRestController {
           horariosEstagio: [],
         };
 
-        const finalCampusId = campusId ?? perfilAluno?.campus?.id;
         if (finalCampusId) {
           (command as any).campus = { id: finalCampusId };
         }
