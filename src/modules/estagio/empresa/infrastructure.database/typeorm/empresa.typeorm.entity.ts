@@ -1,4 +1,5 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, type Relation } from "typeorm";
+import { ImagemEntity } from "@/modules/armazenamento/imagem/infrastructure.database/typeorm/imagem.typeorm.entity";
 import { EnderecoEntity } from "@/modules/localidades/endereco/infrastructure.database/typeorm/endereco.typeorm.entity";
 
 /**
@@ -23,6 +24,10 @@ export class EmpresaTypeormEntity {
 
   @Column({ name: "email", type: "text", nullable: false })
   email!: string;
+
+  @ManyToOne(() => ImagemEntity, { nullable: true })
+  @JoinColumn({ name: "id_foto_empresa_fk" })
+  fotoEmpresa!: Relation<ImagemEntity> | null;
 
   @ManyToOne(() => EnderecoEntity)
   @JoinColumn({ name: "id_endereco_fk" })

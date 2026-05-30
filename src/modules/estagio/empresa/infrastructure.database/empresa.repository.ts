@@ -24,13 +24,14 @@ const config = {
   alias: "empresa",
 } as const;
 
-const _imagemRelations = {
+const imagemRelations = {
   versoes: {
     arquivo: true,
   },
 };
 
 const empresaRelations = {
+  fotoEmpresa: imagemRelations,
   endereco: {
     cidade: {
       estado: true,
@@ -44,6 +45,7 @@ const empresaPaginateConfig = buildTypeOrmPaginateConfig<EmpresaTypeormEntity>(
 );
 
 const writeRelations = {
+  fotoEmpresa: true,
   endereco: true,
 } as const;
 
