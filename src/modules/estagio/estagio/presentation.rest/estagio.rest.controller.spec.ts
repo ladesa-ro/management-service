@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { IUsuarioRepository } from "@/modules/acesso/usuario";
+import { IUsuarioCreateCommandHandler } from "@/modules/acesso/usuario/domain/commands/usuario-create.command.handler.interface";
 import { IPerfilDefinirPerfisAtivosCommandHandler } from "@/modules/acesso/usuario/perfil/domain/commands";
 import { ICampusListQueryHandler } from "@/modules/ambientes/campus";
 import { ICursoListQueryHandler } from "@/modules/ensino/curso";
@@ -37,7 +38,7 @@ function createController(options?: {
     }),
     getFindOneQueryResult: vi
       .fn()
-      .mockImplementation(async (_accessContext: unknown, dto: { id: string }) => {
+      .mockImplementation(async (accessContext: any, dto: { id: string }) => {
         if (dto.id === "usuario-estagiario-id") {
           return {
             id: dto.id,
@@ -47,6 +48,20 @@ function createController(options?: {
                 ativo: true,
                 cargo: { id: "cargo-aluno-id", nome: "aluno" },
                 campus: { id: "campus-id" },
+              },
+            ],
+          };
+        }
+
+        if (accessContext?.requestActor?.id && dto.id === accessContext.requestActor.id) {
+          return {
+            id: dto.id,
+            vinculos: [
+              {
+                id: "perfil-actor-id",
+                ativo: true,
+                cargo: { id: "cargo-actor-id", nome: "servidor" },
+                campus: { id: "campus-actor-id" },
               },
             ],
           };
@@ -94,6 +109,7 @@ function createController(options?: {
     [IPerfilDefinirPerfisAtivosCommandHandler, definirPerfisAtivosHandler],
     [IUsuarioRepository, usuarioRepository],
     [IEstagiarioRepository, estagiarioRepository],
+    [IUsuarioCreateCommandHandler, { execute: vi.fn().mockResolvedValue({ id: createTestId() }) }],
   ]);
 
   const container = {
@@ -228,11 +244,25 @@ describe("EstagioRestController.importCsv", () => {
     const accessContext = createTestAccessContext();
 
     const usuarioState = { vinculos: [] as any[] };
-    usuarioRepository.getFindOneQueryResult.mockImplementation(async (_accessContext, dto) => {
+    usuarioRepository.getFindOneQueryResult.mockImplementation(async (accessContext, dto) => {
       if (dto.id === "usuario-estagiario-id") {
         return {
           id: dto.id,
           vinculos: usuarioState.vinculos,
+        };
+      }
+
+      if (accessContext?.requestActor?.id && dto.id === accessContext.requestActor.id) {
+        return {
+          id: dto.id,
+          vinculos: [
+            {
+              id: "perfil-actor-id",
+              ativo: true,
+              cargo: { id: "cargo-actor-id", nome: "servidor" },
+              campus: { id: "campus-actor-id" },
+            },
+          ],
         };
       }
 
