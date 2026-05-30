@@ -196,7 +196,7 @@ export class EstagioRestController {
       IPerfilDefinirPerfisAtivosCommandHandler,
     );
     const cursoListHandler = this.container.get<any>(ICursoListQueryHandler);
-    const _campusListHandler = this.container.get<any>(ICampusListQueryHandler);
+    const campusListHandler = this.container.get<any>(ICampusListQueryHandler);
 
     const idUsuarioActor = accessContext.requestActor?.id;
     if (!idUsuarioActor) {
@@ -208,10 +208,6 @@ export class EstagioRestController {
     const vinculosActor = (usuarioActorFull?.vinculos as any[]) || [];
     const requestActorCampusId =
       vinculosActor.find((v: any) => v.campus?.id)?.campus?.id ?? undefined;
-
-    if (!requestActorCampusId) {
-      throw new BadRequestException("O usuário autenticado não possui um campus vinculado.");
-    }
 
     const items: EstagioImportCsvItemRestDto[] = parsed.skipped.map((row) => {
       const item = new EstagioImportCsvItemRestDto();
@@ -298,7 +294,25 @@ export class EstagioRestController {
         let estagiario: { id: string } | null = null;
 
         if (row.estagiarioMatricula) {
-          const campusId: string | undefined = requestActorCampusId;
+          let campusId: string | undefined = requestActorCampusId;
+
+          if (!campusId && row.campus) {
+            try {
+              const campuses = await campusListHandler.execute(accessContext, {
+                search: row.campus,
+                page: 1,
+                limit: 20,
+              } as any);
+              const matches = (campuses?.data || []).filter((c: any) =>
+                normalizeSearchValue(c.nomeFantasia || c.apelido || "").includes(
+                  normalizeSearchValue(row.campus || ""),
+                ),
+              );
+              if (matches.length >= 1) campusId = matches[0].id;
+            } catch (_) {
+              campusId = undefined;
+            }
+          }
 
           let usuarioFull: any = null;
           if (usuarioEstagiario) {
