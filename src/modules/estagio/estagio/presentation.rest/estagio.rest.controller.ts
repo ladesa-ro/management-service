@@ -23,9 +23,15 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
+import * as xlsx from "xlsx";
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { Dep, IContainer } from "@/domain/dependency-injection";
+import { transactionStorage } from "@/infrastructure.database/typeorm/connection/transaction-storage";
+import {
+  INotificacaoRepository,
+  type INotificacaoRepository as INotificacaoRepositoryType,
+} from "@/modules/acesso/notificacao/domain/repositories/notificacao.repository.interface";
 import { IUsuarioRepository } from "@/modules/acesso/usuario";
 import { IUsuarioCreateCommandHandler } from "@/modules/acesso/usuario/domain/commands/usuario-create.command.handler.interface";
 import { IPerfilDefinirPerfisAtivosCommandHandler } from "@/modules/acesso/usuario/perfil/domain/commands";
@@ -72,8 +78,7 @@ import {
   EstagioCreateInputRestDto,
   EstagioFindOneInputRestDto,
   EstagioFindOneOutputRestDto,
-  EstagioImportCsvItemRestDto,
-  EstagioImportCsvOutputRestDto,
+  EstagioImportJobOutputRestDto,
   EstagioListInputRestDto,
   EstagioListOutputRestDto,
   EstagioUpdateInputRestDto,
@@ -145,7 +150,7 @@ export class EstagioRestController {
   @Post("/importar/csv")
   @ApiOperation({
     operationId: "estagioImportCsv",
-    summary: "Importa vários estágios a partir de um CSV",
+    summary: "Importa vários estágios a partir de uma planilha (CSV ou XLSX)",
   })
   @ApiConsumes("multipart/form-data")
   @ApiBody({
@@ -157,24 +162,38 @@ export class EstagioRestController {
       required: ["file"],
     },
   })
-  @ApiCreatedResponse({ type: EstagioImportCsvOutputRestDto })
+  @ApiCreatedResponse({ type: EstagioImportJobOutputRestDto })
   @ApiBadRequestResponse()
   @ApiForbiddenResponse()
   @UseInterceptors(FileInterceptor("file"))
   async importCsv(
     @AccessContextHttp() accessContext: IAccessContext,
     @UploadedFile() file: Express.Multer.File,
-  ): Promise<EstagioImportCsvOutputRestDto> {
+  ): Promise<EstagioImportJobOutputRestDto> {
     if (!file?.buffer) {
-      throw new BadRequestException("Arquivo CSV não informado.");
+      throw new BadRequestException("Arquivo não informado.");
     }
 
-    const content = file.buffer.toString("utf8");
+    let content = "";
+    if (
+      file.mimetype === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ||
+      file.originalname?.endsWith(".xlsx")
+    ) {
+      const workbook = xlsx.read(file.buffer, { type: "buffer" });
+      const firstSheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[firstSheetName];
+      content = xlsx.utils.sheet_to_csv(worksheet);
+    } else {
+      content = file.buffer.toString("utf8");
+    }
+
     const parsed = (() => {
       try {
         return parseEstagioImportCsv(content);
       } catch (error) {
-        throw new BadRequestException(error instanceof Error ? error.message : "CSV inválido.");
+        throw new BadRequestException(
+          error instanceof Error ? error.message : "Planilha inválida.",
+        );
       }
     })();
 
@@ -202,351 +221,352 @@ export class EstagioRestController {
     if (!idUsuarioActor) {
       throw new BadRequestException("Usuário não autenticado.");
     }
-    const usuarioActorFull = await usuarioRepository.getFindOneQueryResult(accessContext, {
-      id: idUsuarioActor,
-    } as any);
-    const vinculosActor = (usuarioActorFull?.vinculos as any[]) || [];
-    const requestActorCampusId =
-      vinculosActor.find((v: any) => v.campus?.id)?.campus?.id ?? undefined;
 
-    const items: EstagioImportCsvItemRestDto[] = parsed.skipped.map((row) => {
-      const item = new EstagioImportCsvItemRestDto();
-      item.line = row.line;
-      item.estagiarioNome = "";
-      item.status = "skipped";
-      item.reason = row.reason;
-      return item;
+    setImmediate(() => {
+      transactionStorage.run(undefined as any, async () => {
+        try {
+          const usuarioActorFull = await usuarioRepository.getFindOneQueryResult(accessContext, {
+            id: idUsuarioActor,
+          } as any);
+          const vinculosActor = (usuarioActorFull?.vinculos as any[]) || [];
+          const requestActorCampusId =
+            vinculosActor.find((v: any) => v.campus?.id)?.campus?.id ?? undefined;
+
+          let created = 0;
+          let failed = 0;
+
+          for (const row of parsed.entries) {
+            try {
+              let empresa: any = await empresaRepository.findByCnpj(row.concedenteCnpj ?? "");
+
+              if (!empresa) {
+                const nomeCidade = (row.concedenteCidade || "").split("/")[0].trim();
+                let cidadeId: number | undefined;
+
+                if (nomeCidade) {
+                  try {
+                    const cidades = await cidadeListHandler.execute(accessContext, {
+                      search: nomeCidade,
+                      page: 1,
+                      limit: 20,
+                    } as any);
+                    const matches = (cidades?.data || []).filter((c: any) =>
+                      normalizeSearchValue(c.nome || "").includes(normalizeSearchValue(nomeCidade)),
+                    );
+                    if (matches.length >= 1) {
+                      cidadeId = Number(matches[0].id);
+                    }
+                  } catch (_) {
+                    cidadeId = undefined;
+                  }
+                }
+
+                if (!cidadeId) {
+                  throw new BadRequestException(
+                    `Cidade não encontrada para a empresa da linha ${row.line} (Cidade: ${row.concedenteCidade}).`,
+                  );
+                }
+
+                let logradouro = row.concedenteEndereco || "Não informado";
+                let numero = 0;
+                const numMatch = logradouro.match(/\b\d+\b/);
+                if (numMatch) {
+                  numero = parseInt(numMatch[0], 10);
+                  logradouro = logradouro
+                    .replace(numMatch[0], "")
+                    .replace(/,\s*$/, "")
+                    .replace(/-\s*$/, "")
+                    .trim();
+                  if (!logradouro) logradouro = "Não informado";
+                }
+
+                const enderecoResult = await enderecoCreateOrUpdateHandler.execute(accessContext, {
+                  dto: {
+                    cep: "00000000",
+                    logradouro,
+                    numero,
+                    bairro: row.concedenteBairro || "Não informado",
+                    cidade: { id: cidadeId },
+                  },
+                } as any);
+
+                const createdEmpresa = await empresaCreateHandler.execute(accessContext, {
+                  razaoSocial: row.concedente || "Empresa sem nome",
+                  nomeFantasia: row.concedente || "Empresa sem nome",
+                  cnpj: row.concedenteCnpj || "",
+                  telefone: "00000000000",
+                  email: "email@naoinformado.com",
+                  endereco: { id: String(enderecoResult.id) },
+                });
+
+                empresa = { id: createdEmpresa.id };
+              }
+
+              let usuarioEstagiario = row.estagiarioMatricula
+                ? await usuarioRepository.findByMatricula(row.estagiarioMatricula)
+                : null;
+              let estagiario: { id: string } | null = null;
+              let finalCampusId: string | undefined = requestActorCampusId;
+
+              if (row.estagiarioMatricula) {
+                let campusId: string | undefined = requestActorCampusId;
+
+                if (!campusId && row.campus) {
+                  try {
+                    const campuses = await campusListHandler.execute(accessContext, {
+                      search: row.campus,
+                      page: 1,
+                      limit: 20,
+                    } as any);
+                    const matches = (campuses?.data || []).filter((c: any) =>
+                      normalizeSearchValue(c.nomeFantasia || c.apelido || "").includes(
+                        normalizeSearchValue(row.campus || ""),
+                      ),
+                    );
+                    if (matches.length >= 1) campusId = matches[0].id;
+                  } catch (_) {
+                    campusId = undefined;
+                  }
+                }
+
+                let usuarioFull: any = null;
+                if (usuarioEstagiario) {
+                  usuarioFull = await usuarioRepository.getFindOneQueryResult(accessContext, {
+                    id: usuarioEstagiario.id,
+                  } as any);
+                }
+
+                if (!usuarioEstagiario && campusId) {
+                  const usuarioToCreate = {
+                    nome: row.estagiarioNome,
+                    matricula: row.estagiarioMatricula,
+                    email: row.estagiarioEmailAcademico ?? row.estagiarioEmailPessoal ?? undefined,
+                    vinculos: [
+                      {
+                        campus: { id: campusId },
+                        cargo: "aluno",
+                        apelido: (row.estagiarioNome || "").slice(0, 60),
+                      },
+                    ],
+                  } as any;
+
+                  usuarioFull = await usuarioCreateHandler.execute(accessContext, usuarioToCreate);
+                  usuarioEstagiario = { id: usuarioFull.id } as any;
+                }
+
+                if (!usuarioFull && usuarioEstagiario) {
+                  usuarioFull = await usuarioRepository.getFindOneQueryResult(accessContext, {
+                    id: usuarioEstagiario.id,
+                  } as any);
+                }
+
+                const vinculos = (usuarioFull?.vinculos as any[]) || [];
+                let perfilAluno =
+                  vinculos.find((v) => v.cargo?.nome?.toLowerCase() === "aluno") ?? vinculos[0];
+
+                if (!perfilAluno && campusId) {
+                  if (!usuarioEstagiario) {
+                    throw new BadRequestException(
+                      `Não foi possível localizar o usuário do estagiário para a linha ${row.line}.`,
+                    );
+                  }
+
+                  await definirPerfisAtivosHandler.execute(accessContext, {
+                    usuario: { id: usuarioEstagiario.id },
+                    vinculos: [{ campus: { id: campusId }, cargo: "aluno" }],
+                  });
+
+                  usuarioFull = await usuarioRepository.getFindOneQueryResult(accessContext, {
+                    id: usuarioEstagiario.id,
+                  } as any);
+
+                  const vinculosAtualizados = (usuarioFull?.vinculos as any[]) || [];
+                  perfilAluno =
+                    vinculosAtualizados.find((v) => v.cargo?.nome?.toLowerCase() === "aluno") ??
+                    vinculosAtualizados[0];
+                }
+
+                if (usuarioEstagiario?.id) {
+                  try {
+                    estagiario = await estagiarioRepository.findByUsuarioId(usuarioEstagiario.id);
+                  } catch (_) {
+                    // silencia: tenta fallback por perfil abaixo
+                  }
+                }
+
+                if (!estagiario && perfilAluno?.id) {
+                  try {
+                    estagiario = await estagiarioRepository.findByPerfilId(perfilAluno.id);
+                  } catch (_) {
+                    // silencia: estagiário será criado abaixo se perfilAluno existir
+                  }
+                }
+
+                let cursoId: string | undefined;
+                if (row.curso) {
+                  try {
+                    const cursos = await cursoListHandler.execute(accessContext, {
+                      search: row.curso,
+                      page: 1,
+                      limit: 20,
+                    } as any);
+                    const matches = (cursos?.data || []).filter((c: any) =>
+                      normalizeSearchValue(c.nome || "").includes(
+                        normalizeSearchValue(row.curso || ""),
+                      ),
+                    );
+                    if (matches.length >= 1) cursoId = matches[0].id;
+                  } catch (_) {
+                    cursoId = undefined;
+                  }
+                }
+
+                if (!perfilAluno?.id) {
+                  if (!finalCampusId && !campusId) {
+                    throw new BadRequestException(
+                      `O usuário autenticado não possui um campus e o campus informado na planilha não foi encontrado para a linha ${row.line}.`,
+                    );
+                  }
+                  throw new BadRequestException(
+                    `Não foi possível localizar o perfil do estagiário para a linha ${row.line}.`,
+                  );
+                }
+
+                finalCampusId = campusId ?? perfilAluno?.campus?.id;
+
+                if (!estagiario) {
+                  const estagiarioCreateHandler =
+                    this.container.get<IEstagiarioCreateCommandHandler>(
+                      IEstagiarioCreateCommandHandler,
+                    );
+                  const defaults = prepareEstagiarioDataForCreation(row as any);
+                  const estagiarioCommand: any = {
+                    perfil: { id: perfilAluno.id },
+                    periodo: defaults.periodo,
+                    telefone: defaults.telefone,
+                    dataNascimento: defaults.dataNascimento,
+                    emailInstitucional: row.estagiarioEmailAcademico ?? undefined,
+                  };
+
+                  if (!cursoId) {
+                    throw new BadRequestException(
+                      `Curso não encontrado na base de dados para o estagiário da linha ${row.line} (Curso informado: ${row.curso || "vazio"}).`,
+                    );
+                  }
+
+                  estagiarioCommand.curso = { id: cursoId };
+
+                  const createdEstagiario = await estagiarioCreateHandler.execute(
+                    accessContext,
+                    estagiarioCommand,
+                  );
+                  estagiario = { id: createdEstagiario.id } as any;
+
+                  if (!usuarioEstagiario && usuarioFull) {
+                    usuarioEstagiario = { id: usuarioFull.id } as any;
+                  }
+                }
+              }
+
+              if (!estagiario) {
+                throw new BadRequestException(
+                  `Não foi possível vincular um estagiário para a linha ${row.line}.`,
+                );
+              }
+
+              const usuarioOrientador = row.matriculaOrientador
+                ? await usuarioRepository.findByMatricula(row.matriculaOrientador)
+                : null;
+
+              const supervisorData = resolveEstagioImportSupervisor(row);
+              const orientadorData = resolveEstagioImportOrientador(row);
+
+              let usuarioOrientadorResolved = usuarioOrientador;
+              if (!usuarioOrientadorResolved && orientadorData.matricula) {
+                try {
+                  const byMat = await usuarioRepository.findByMatricula(orientadorData.matricula);
+                  if (byMat) {
+                    usuarioOrientadorResolved = byMat as any;
+                  } else if (orientadorData.email) {
+                    const available = await usuarioRepository.isEmailAvailable(
+                      orientadorData.email,
+                    );
+                    if (available) {
+                      const created = await usuarioCreateHandler.execute(accessContext, {
+                        nome: orientadorData.nome,
+                        email: orientadorData.email,
+                        matricula: orientadorData.matricula ?? undefined,
+                      } as any);
+                      usuarioOrientadorResolved = { id: created.id } as any;
+                    }
+                  }
+                } catch (_) {
+                  // orientador não encontrado — continua sem ele
+                }
+              }
+
+              if (typeof estagiario !== "object" || !("id" in estagiario)) {
+                throw new BadRequestException(
+                  `Estado inválido para estagiário na linha ${row.line}: ${typeof estagiario} ${JSON.stringify(estagiario)}`,
+                );
+              }
+
+              const command = {
+                empresa: { id: empresa.id },
+                estagiario: { id: estagiario.id },
+                usuarioOrientador: usuarioOrientadorResolved
+                  ? { id: usuarioOrientadorResolved.id }
+                  : undefined,
+                cargaHoraria: resolveEstagioImportCargaHoraria(row),
+                dataInicio: row.dataInicio ?? undefined,
+                dataFim: row.dataFim,
+                status: resolveEstagioImportStatus(row, Boolean(estagiario)),
+                nomeSupervisor: supervisorData.nomeSupervisor,
+                emailSupervisor: supervisorData.emailSupervisor,
+                telefoneSupervisor: supervisorData.telefoneSupervisor,
+                aditivo: row.temAditivo ?? undefined,
+                tipoAditivo: row.tiposAditivo ?? undefined,
+                horariosEstagio: [],
+              };
+
+              if (finalCampusId) {
+                (command as any).campus = { id: finalCampusId };
+              }
+
+              const _queryResult = await createHandler.execute(accessContext, command as never);
+              created += 1;
+            } catch (_error) {
+              failed += 1;
+            }
+          }
+
+          console.log(
+            `Job de Importação de Estágios Concluído - Total Sucessos: ${created}, Falhas: ${failed}`,
+          );
+          if (idUsuarioActor) {
+            try {
+              const notificacaoRepository =
+                this.container.get<INotificacaoRepositoryType>(INotificacaoRepository);
+              await notificacaoRepository.save({
+                titulo: "Importação de Estágios",
+                conteudo: `A importação foi finalizada. Sucessos: ${created}, Falhas: ${failed}.`,
+                lida: false,
+                usuario: { id: idUsuarioActor },
+              } as any);
+            } catch (notifError) {
+              console.error(
+                "Erro ao criar notificação do job de importação de estágios:",
+                notifError,
+              );
+            }
+          }
+        } catch (e) {
+          console.error("Erro fatal no background job de importação de estágios:", e);
+        }
+      });
     });
 
-    let created = 0;
-    let failed = 0;
-
-    for (const row of parsed.entries) {
-      try {
-        let empresa: any = await empresaRepository.findByCnpj(row.concedenteCnpj ?? "");
-
-        if (!empresa) {
-          const nomeCidade = (row.concedenteCidade || "").split("/")[0].trim();
-          let cidadeId: number | undefined;
-
-          if (nomeCidade) {
-            try {
-              const cidades = await cidadeListHandler.execute(accessContext, {
-                search: nomeCidade,
-                page: 1,
-                limit: 20,
-              } as any);
-              const matches = (cidades?.data || []).filter((c: any) =>
-                normalizeSearchValue(c.nome || "").includes(normalizeSearchValue(nomeCidade)),
-              );
-              if (matches.length >= 1) {
-                cidadeId = Number(matches[0].id);
-              }
-            } catch (_) {
-              cidadeId = undefined;
-            }
-          }
-
-          if (!cidadeId) {
-            throw new BadRequestException(
-              `Cidade não encontrada para a empresa da linha ${row.line} (Cidade: ${row.concedenteCidade}).`,
-            );
-          }
-
-          let logradouro = row.concedenteEndereco || "Não informado";
-          let numero = 0;
-          const numMatch = logradouro.match(/\b\d+\b/);
-          if (numMatch) {
-            numero = parseInt(numMatch[0], 10);
-            logradouro = logradouro
-              .replace(numMatch[0], "")
-              .replace(/,\s*$/, "")
-              .replace(/-\s*$/, "")
-              .trim();
-            if (!logradouro) logradouro = "Não informado";
-          }
-
-          const enderecoResult = await enderecoCreateOrUpdateHandler.execute(accessContext, {
-            dto: {
-              cep: "00000000",
-              logradouro,
-              numero,
-              bairro: row.concedenteBairro || "Não informado",
-              cidade: { id: cidadeId },
-            },
-          } as any);
-
-          const createdEmpresa = await empresaCreateHandler.execute(accessContext, {
-            razaoSocial: row.concedente || "Empresa sem nome",
-            nomeFantasia: row.concedente || "Empresa sem nome",
-            cnpj: row.concedenteCnpj || "",
-            telefone: "00000000000",
-            email: "email@naoinformado.com",
-            endereco: { id: String(enderecoResult.id) },
-          });
-
-          empresa = { id: createdEmpresa.id };
-        }
-
-        let usuarioEstagiario = row.estagiarioMatricula
-          ? await usuarioRepository.findByMatricula(row.estagiarioMatricula)
-          : null;
-        let estagiario: { id: string } | null = null;
-        let finalCampusId: string | undefined = requestActorCampusId;
-
-        if (row.estagiarioMatricula) {
-          let campusId: string | undefined = requestActorCampusId;
-
-          if (!campusId && row.campus) {
-            try {
-              const campuses = await campusListHandler.execute(accessContext, {
-                search: row.campus,
-                page: 1,
-                limit: 20,
-              } as any);
-              const matches = (campuses?.data || []).filter((c: any) =>
-                normalizeSearchValue(c.nomeFantasia || c.apelido || "").includes(
-                  normalizeSearchValue(row.campus || ""),
-                ),
-              );
-              if (matches.length >= 1) campusId = matches[0].id;
-            } catch (_) {
-              campusId = undefined;
-            }
-          }
-
-          let usuarioFull: any = null;
-          if (usuarioEstagiario) {
-            usuarioFull = await usuarioRepository.getFindOneQueryResult(accessContext, {
-              id: usuarioEstagiario.id,
-            } as any);
-          }
-
-          if (!usuarioEstagiario && campusId) {
-            const usuarioToCreate = {
-              nome: row.estagiarioNome,
-              matricula: row.estagiarioMatricula,
-              email: row.estagiarioEmailAcademico ?? row.estagiarioEmailPessoal ?? undefined,
-              vinculos: [
-                {
-                  campus: { id: campusId },
-                  cargo: "aluno",
-                  apelido: (row.estagiarioNome || "").slice(0, 60),
-                },
-              ],
-            } as any;
-
-            usuarioFull = await usuarioCreateHandler.execute(accessContext, usuarioToCreate);
-            usuarioEstagiario = { id: usuarioFull.id } as any;
-          }
-
-          if (!usuarioFull && usuarioEstagiario) {
-            usuarioFull = await usuarioRepository.getFindOneQueryResult(accessContext, {
-              id: usuarioEstagiario.id,
-            } as any);
-          }
-
-          const vinculos = (usuarioFull?.vinculos as any[]) || [];
-          let perfilAluno =
-            vinculos.find((v) => v.cargo?.nome?.toLowerCase() === "aluno") ?? vinculos[0];
-
-          if (!perfilAluno && campusId) {
-            if (!usuarioEstagiario) {
-              throw new BadRequestException(
-                `Não foi possível localizar o usuário do estagiário para a linha ${row.line}.`,
-              );
-            }
-
-            await definirPerfisAtivosHandler.execute(accessContext, {
-              usuario: { id: usuarioEstagiario.id },
-              vinculos: [{ campus: { id: campusId }, cargo: "aluno" }],
-            });
-
-            usuarioFull = await usuarioRepository.getFindOneQueryResult(accessContext, {
-              id: usuarioEstagiario.id,
-            } as any);
-
-            const vinculosAtualizados = (usuarioFull?.vinculos as any[]) || [];
-            perfilAluno =
-              vinculosAtualizados.find((v) => v.cargo?.nome?.toLowerCase() === "aluno") ??
-              vinculosAtualizados[0];
-          }
-
-          if (usuarioEstagiario?.id) {
-            try {
-              estagiario = await estagiarioRepository.findByUsuarioId(usuarioEstagiario.id);
-            } catch (_) {
-              // silencia: tenta fallback por perfil abaixo
-            }
-          }
-
-          if (!estagiario && perfilAluno?.id) {
-            try {
-              estagiario = await estagiarioRepository.findByPerfilId(perfilAluno.id);
-            } catch (_) {
-              // silencia: estagiário será criado abaixo se perfilAluno existir
-            }
-          }
-
-          let cursoId: string | undefined;
-          if (row.curso) {
-            try {
-              const cursos = await cursoListHandler.execute(accessContext, {
-                search: row.curso,
-                page: 1,
-                limit: 20,
-              } as any);
-              const matches = (cursos?.data || []).filter((c: any) =>
-                normalizeSearchValue(c.nome || "").includes(normalizeSearchValue(row.curso || "")),
-              );
-              if (matches.length >= 1) cursoId = matches[0].id;
-            } catch (_) {
-              cursoId = undefined;
-            }
-          }
-
-          if (!perfilAluno?.id) {
-            if (!finalCampusId && !campusId) {
-              throw new BadRequestException(
-                `O usuário autenticado não possui um campus e o campus informado na planilha não foi encontrado para a linha ${row.line}.`,
-              );
-            }
-            throw new BadRequestException(
-              `Não foi possível localizar o perfil do estagiário para a linha ${row.line}.`,
-            );
-          }
-
-          finalCampusId = campusId ?? perfilAluno?.campus?.id;
-
-          if (!estagiario) {
-            const estagiarioCreateHandler = this.container.get<IEstagiarioCreateCommandHandler>(
-              IEstagiarioCreateCommandHandler,
-            );
-            const defaults = prepareEstagiarioDataForCreation(row as any);
-            const estagiarioCommand: any = {
-              perfil: { id: perfilAluno.id },
-              periodo: defaults.periodo,
-              telefone: defaults.telefone,
-              dataNascimento: defaults.dataNascimento,
-              emailInstitucional: row.estagiarioEmailAcademico ?? undefined,
-            };
-
-            if (!cursoId) {
-              throw new BadRequestException(
-                `Curso não encontrado na base de dados para o estagiário da linha ${row.line} (Curso informado: ${row.curso || "vazio"}).`,
-              );
-            }
-
-            estagiarioCommand.curso = { id: cursoId };
-
-            const createdEstagiario = await estagiarioCreateHandler.execute(
-              accessContext,
-              estagiarioCommand,
-            );
-            estagiario = { id: createdEstagiario.id } as any;
-
-            if (!usuarioEstagiario && usuarioFull) {
-              usuarioEstagiario = { id: usuarioFull.id } as any;
-            }
-          }
-        }
-
-        if (!estagiario) {
-          throw new BadRequestException(
-            `Não foi possível vincular um estagiário para a linha ${row.line}.`,
-          );
-        }
-
-        const usuarioOrientador = row.matriculaOrientador
-          ? await usuarioRepository.findByMatricula(row.matriculaOrientador)
-          : null;
-
-        const supervisorData = resolveEstagioImportSupervisor(row);
-        const orientadorData = resolveEstagioImportOrientador(row);
-
-        let usuarioOrientadorResolved = usuarioOrientador;
-        if (!usuarioOrientadorResolved && orientadorData.matricula) {
-          try {
-            const byMat = await usuarioRepository.findByMatricula(orientadorData.matricula);
-            if (byMat) {
-              usuarioOrientadorResolved = byMat as any;
-            } else if (orientadorData.email) {
-              const available = await usuarioRepository.isEmailAvailable(orientadorData.email);
-              if (available) {
-                const created = await usuarioCreateHandler.execute(accessContext, {
-                  nome: orientadorData.nome,
-                  email: orientadorData.email,
-                  matricula: orientadorData.matricula ?? undefined,
-                } as any);
-                usuarioOrientadorResolved = { id: created.id } as any;
-              }
-            }
-          } catch (_) {
-            // orientador não encontrado — continua sem ele
-          }
-        }
-
-        if (typeof estagiario !== "object" || !("id" in estagiario)) {
-          throw new BadRequestException(
-            `Estado inválido para estagiário na linha ${row.line}: ${typeof estagiario} ${JSON.stringify(estagiario)}`,
-          );
-        }
-
-        const command = {
-          empresa: { id: empresa.id },
-          estagiario: { id: estagiario.id },
-          usuarioOrientador: usuarioOrientadorResolved
-            ? { id: usuarioOrientadorResolved.id }
-            : undefined,
-          cargaHoraria: resolveEstagioImportCargaHoraria(row),
-          dataInicio: row.dataInicio ?? undefined,
-          dataFim: row.dataFim,
-          status: resolveEstagioImportStatus(row, Boolean(estagiario)),
-          nomeSupervisor: supervisorData.nomeSupervisor,
-          emailSupervisor: supervisorData.emailSupervisor,
-          telefoneSupervisor: supervisorData.telefoneSupervisor,
-          aditivo: row.temAditivo ?? undefined,
-          tipoAditivo: row.tiposAditivo ?? undefined,
-          horariosEstagio: [],
-        };
-
-        if (finalCampusId) {
-          (command as any).campus = { id: finalCampusId };
-        }
-
-        const queryResult = await createHandler.execute(accessContext, command as never);
-
-        const item = new EstagioImportCsvItemRestDto();
-        item.line = row.line;
-        item.estagiarioNome = row.estagiarioNome;
-        item.estagiarioMatricula = row.estagiarioMatricula;
-        item.usuarioEstagiarioId = usuarioEstagiario?.id ?? null;
-        item.estagiarioId = estagiario?.id ?? null;
-        item.empresaId = empresa.id;
-        item.usuarioOrientadorId = usuarioOrientadorResolved?.id ?? null;
-        item.estagioId = queryResult.id;
-        item.status = "created";
-        items.push(item);
-        created += 1;
-      } catch (error) {
-        const item = new EstagioImportCsvItemRestDto();
-        item.line = row.line;
-        item.estagiarioNome = row.estagiarioNome;
-        item.estagiarioMatricula = row.estagiarioMatricula;
-        item.status = "failed";
-        item.reason = error instanceof Error ? error.message : "Falha ao cadastrar estágio.";
-        items.push(item);
-        failed += 1;
-      }
-    }
-
-    return {
-      total: parsed.totalRows,
-      created,
-      skipped: parsed.skipped.length,
-      failed,
-      items,
-    };
+    return { message: "A importação foi iniciada em background e pode levar alguns minutos." };
   }
 
   @Patch("/:id")
