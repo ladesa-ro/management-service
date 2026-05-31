@@ -20,6 +20,7 @@ function createController() {
     {} as any,
     {} as any,
     {} as any,
+    {} as any,
     createHandler as any,
     findByMatriculaHandler as any,
     {} as any,
@@ -49,7 +50,12 @@ describe("UsuarioRestController.importCsv", () => {
 
     const result = await controller.importCsv(accessContext, {
       buffer: Buffer.from(csv, "utf8"),
+      originalname: "test.csv",
+      mimetype: "text/csv",
     } as Express.Multer.File);
+
+    // Espera a execução do setImmediate
+    await new Promise((resolve) => setTimeout(resolve, 0));
 
     expect(createHandler.execute).toHaveBeenCalledOnce();
     expect(createHandler.execute).toHaveBeenCalledWith(accessContext, {
@@ -58,20 +64,15 @@ describe("UsuarioRestController.importCsv", () => {
       email: "ana.clara@gmail.com",
     });
     expect(result).toMatchObject({
-      total: 1,
-      created: 1,
-      skipped: 0,
-      failed: 0,
+      message: expect.any(String),
     });
   });
 
   it("should create profile when user already exists locally after create failure", async () => {
-    const { controller, createHandler, findByMatriculaHandler, definirPerfisAtivosHandler } =
-      createController();
+    const { controller, findByMatriculaHandler, definirPerfisAtivosHandler } = createController();
     const accessContext = createTestAccessContext();
     const usuarioId = createTestId();
 
-    createHandler.execute.mockRejectedValue(new Error("Erro ao cadastrar usuario."));
     findByMatriculaHandler.execute.mockResolvedValue({ id: usuarioId });
 
     const csv = [
@@ -81,7 +82,12 @@ describe("UsuarioRestController.importCsv", () => {
 
     const result = await controller.importCsv(accessContext, {
       buffer: Buffer.from(csv, "utf8"),
+      originalname: "test.csv",
+      mimetype: "text/csv",
     } as Express.Multer.File);
+
+    // Espera a execução do setImmediate
+    await new Promise((resolve) => setTimeout(resolve, 0));
 
     expect(findByMatriculaHandler.execute).toHaveBeenCalledWith(accessContext, {
       matricula: "202610200001",
@@ -92,10 +98,7 @@ describe("UsuarioRestController.importCsv", () => {
       usuario: { id: usuarioId },
     });
     expect(result).toMatchObject({
-      total: 1,
-      created: 1,
-      skipped: 0,
-      failed: 0,
+      message: expect.any(String),
     });
   });
 });

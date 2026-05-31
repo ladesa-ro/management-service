@@ -188,7 +188,12 @@ describe("EstagioRestController.importCsv", () => {
 
     const result = await controller.importCsv(accessContext, {
       buffer: Buffer.from(csv, "utf8"),
+      originalname: "test.csv",
+      mimetype: "text/csv",
     } as Express.Multer.File);
+
+    // Espera a execução do setImmediate
+    await new Promise((resolve) => setTimeout(resolve, 0));
 
     expect(empresaRepository.findByCnpj).toHaveBeenCalledWith("10.817.343/0002-88");
     expect(usuarioRepository.findByMatricula).toHaveBeenCalledWith("2024102020023");
@@ -215,21 +220,7 @@ describe("EstagioRestController.importCsv", () => {
     );
 
     expect(result).toMatchObject({
-      total: 1,
-      created: 1,
-      skipped: 0,
-      failed: 0,
-      items: [
-        {
-          line: 2,
-          estagiarioNome: "Arthur Luiz Braun Krauser de Moura",
-          estagiarioMatricula: "2024102020023",
-          usuarioEstagiarioId: "usuario-estagiario-id",
-          estagiarioId: "estagiario-id",
-          usuarioOrientadorId: "usuario-orientador-id",
-          status: "created",
-        },
-      ],
+      message: expect.any(String),
     });
   });
 
@@ -326,15 +317,18 @@ describe("EstagioRestController.importCsv", () => {
 
     const result = await controller.importCsv(accessContext, {
       buffer: Buffer.from(csv, "utf8"),
+      originalname: "test.csv",
+      mimetype: "text/csv",
     } as Express.Multer.File);
+
+    // Espera a execução do setImmediate
+    await new Promise((resolve) => setTimeout(resolve, 0));
 
     expect(definirPerfisAtivosHandler.execute).toHaveBeenCalledOnce();
     expect(estagiarioRepository.findByPerfilId).toHaveBeenCalledWith("perfil-aluno-id");
     expect(createHandler.execute).toHaveBeenCalledOnce();
     expect(result).toMatchObject({
-      created: 1,
-      failed: 0,
-      items: [{ status: "created" }],
+      message: expect.any(String),
     });
   });
 
@@ -384,22 +378,16 @@ describe("EstagioRestController.importCsv", () => {
 
     const result = await controller.importCsv(accessContext, {
       buffer: Buffer.from(csv, "utf8"),
+      originalname: "test.csv",
+      mimetype: "text/csv",
     } as Express.Multer.File);
+
+    // Espera a execução do setImmediate
+    await new Promise((resolve) => setTimeout(resolve, 0));
 
     expect(createHandler.execute).not.toHaveBeenCalled();
     expect(result).toMatchObject({
-      total: 1,
-      created: 0,
-      skipped: 0,
-      failed: 1,
-      items: [
-        {
-          line: 2,
-          estagiarioNome: "Arthur Luiz Braun Krauser de Moura",
-          status: "failed",
-          reason: "Cidade não encontrada para a empresa da linha 2 (Cidade: null).",
-        },
-      ],
+      message: expect.any(String),
     });
   });
 
@@ -447,22 +435,16 @@ describe("EstagioRestController.importCsv", () => {
 
     const result = await controller.importCsv(accessContext, {
       buffer: Buffer.from(csv, "utf8"),
+      originalname: "test.csv",
+      mimetype: "text/csv",
     } as Express.Multer.File);
+
+    // Espera a execução do setImmediate
+    await new Promise((resolve) => setTimeout(resolve, 0));
 
     expect(createHandler.execute).not.toHaveBeenCalled();
     expect(result).toMatchObject({
-      total: 1,
-      created: 0,
-      skipped: 0,
-      failed: 1,
-      items: [
-        {
-          line: 2,
-          estagiarioNome: "Arthur Luiz Braun Krauser de Moura",
-          status: "failed",
-          reason: "Não foi possível localizar o perfil do estagiário para a linha 2.",
-        },
-      ],
+      message: expect.any(String),
     });
   });
 });

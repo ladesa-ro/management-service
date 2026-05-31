@@ -259,53 +259,8 @@ export class EstagioListOutputRestDto {
   limit!: number;
 }
 
-@ApiSchema({ name: "EstagioImportCsvItemDto" })
-export class EstagioImportCsvItemRestDto {
+@ApiSchema({ name: "EstagioImportJobOutputDto" })
+export class EstagioImportJobOutputRestDto {
   @ApiProperty()
-  line!: number;
-
-  @ApiProperty()
-  estagiarioNome!: string;
-
-  @ApiPropertyOptional()
-  estagiarioMatricula?: string | null;
-
-  @ApiPropertyOptional()
-  usuarioEstagiarioId?: string | null;
-
-  @ApiPropertyOptional()
-  estagiarioId?: string | null;
-
-  @ApiPropertyOptional()
-  empresaId?: string | null;
-
-  @ApiPropertyOptional()
-  usuarioOrientadorId?: string | null;
-
-  @ApiPropertyOptional()
-  estagioId?: string | null;
-
-  @ApiProperty()
-  status!: "created" | "skipped" | "failed";
-
-  @ApiPropertyOptional()
-  reason?: string;
-}
-
-@ApiSchema({ name: "EstagioImportCsvOutputDto" })
-export class EstagioImportCsvOutputRestDto {
-  @ApiProperty()
-  total!: number;
-
-  @ApiProperty()
-  created!: number;
-
-  @ApiProperty()
-  skipped!: number;
-
-  @ApiProperty()
-  failed!: number;
-
-  @ApiProperty({ type: () => [EstagioImportCsvItemRestDto] })
-  items!: EstagioImportCsvItemRestDto[];
+  message!: string;
 }
