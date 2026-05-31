@@ -253,7 +253,6 @@ export class UsuarioRestController {
 
         for (const row of parsed.entries) {
           let usuarioId: string | undefined = undefined;
-          let usuarioCriado = false;
 
           let localUsuario: { id: string } | null = null;
           try {
@@ -266,7 +265,6 @@ export class UsuarioRestController {
 
           if (localUsuario?.id) {
             usuarioId = localUsuario.id;
-            usuarioCriado = true;
           } else {
             try {
               const queryResult = await this.createHandler.execute(accessContext, {
@@ -275,7 +273,6 @@ export class UsuarioRestController {
                 email: row.emailPessoal,
               });
               usuarioId = queryResult.id;
-              usuarioCriado = true;
             } catch (_error) {
               failed += 1;
               continue;
@@ -283,7 +280,7 @@ export class UsuarioRestController {
           }
 
           // Se o usuário foi criado (mesmo que parcialmente), ou se já existia, tente criar o perfil
-          if (usuarioCriado && usuarioId) {
+          if (usuarioId) {
             try {
               const campusText = (row as any).campus;
 
