@@ -461,10 +461,6 @@ export class EstagioRestController {
                     estagiarioCommand,
                   );
                   estagiario = { id: createdEstagiario.id } as any;
-
-                  if (!usuarioEstagiario && usuarioFull) {
-                    usuarioEstagiario = { id: usuarioFull.id } as any;
-                  }
                 }
               }
 
