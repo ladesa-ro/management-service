@@ -198,6 +198,17 @@ export class EstagioRestController {
     const cursoListHandler = this.container.get<any>(ICursoListQueryHandler);
     const campusListHandler = this.container.get<any>(ICampusListQueryHandler);
 
+    const idUsuarioActor = accessContext.requestActor?.id;
+    if (!idUsuarioActor) {
+      throw new BadRequestException("Usuário não autenticado.");
+    }
+    const usuarioActorFull = await usuarioRepository.getFindOneQueryResult(accessContext, {
+      id: idUsuarioActor,
+    } as any);
+    const vinculosActor = (usuarioActorFull?.vinculos as any[]) || [];
+    const requestActorCampusId =
+      vinculosActor.find((v: any) => v.campus?.id)?.campus?.id ?? undefined;
+
     const items: EstagioImportCsvItemRestDto[] = parsed.skipped.map((row) => {
       const item = new EstagioImportCsvItemRestDto();
       item.line = row.line;
@@ -281,10 +292,12 @@ export class EstagioRestController {
           ? await usuarioRepository.findByMatricula(row.estagiarioMatricula)
           : null;
         let estagiario: { id: string } | null = null;
+        let finalCampusId: string | undefined = requestActorCampusId;
 
         if (row.estagiarioMatricula) {
-          let campusId: string | undefined;
-          if (row.campus) {
+          let campusId: string | undefined = requestActorCampusId;
+
+          if (!campusId && row.campus) {
             try {
               const campuses = await campusListHandler.execute(accessContext, {
                 search: row.campus,
@@ -393,10 +406,17 @@ export class EstagioRestController {
           }
 
           if (!perfilAluno?.id) {
+            if (!finalCampusId && !campusId) {
+              throw new BadRequestException(
+                `O usuário autenticado não possui um campus e o campus informado na planilha não foi encontrado para a linha ${row.line}.`,
+              );
+            }
             throw new BadRequestException(
               `Não foi possível localizar o perfil do estagiário para a linha ${row.line}.`,
             );
           }
+
+          finalCampusId = campusId ?? perfilAluno?.campus?.id;
 
           if (!estagiario) {
             const estagiarioCreateHandler = this.container.get<IEstagiarioCreateCommandHandler>(
@@ -489,6 +509,10 @@ export class EstagioRestController {
           tipoAditivo: row.tiposAditivo ?? undefined,
           horariosEstagio: [],
         };
+
+        if (finalCampusId) {
+          (command as any).campus = { id: finalCampusId };
+        }
 
         const queryResult = await createHandler.execute(accessContext, command as never);
 
