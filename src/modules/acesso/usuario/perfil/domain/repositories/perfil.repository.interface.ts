@@ -62,4 +62,11 @@ export interface IPerfilRepository {
 
   /** Desativa perfis em lote por IDs. */
   deactivateByIds(ids: string[]): Promise<void>;
+
+  /** Retorna perfis baseados em filtros flexíveis (campus, cargo, curso). */
+  findVinculosByFiltros(
+    campusId?: string,
+    cargoNome?: string,
+    cursoId?: string,
+  ): Promise<PerfilFindOneQueryResult[]>;
 }
