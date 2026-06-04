@@ -96,6 +96,15 @@ export class UsuarioTypeOrmRepositoryAdapter implements IUsuarioRepository {
     return entity ? UsuarioTypeormMapper.entityToFindOneQueryResult.map(entity) : null;
   }
 
+  async findByEmail(email: string): Promise<UsuarioFindOneQueryResult | null> {
+    const repo = this.appTypeormConnection.getRepository(UsuarioEntity);
+    const entity = await repo.findOne({
+      where: { email, dateDeleted: IsNull() },
+      relations: usuarioRelations,
+    });
+    return entity ? UsuarioTypeormMapper.entityToFindOneQueryResult.map(entity) : null;
+  }
+
   async isMatriculaAvailable(
     matricula: string,
     excludeUsuarioId?: string | null,
