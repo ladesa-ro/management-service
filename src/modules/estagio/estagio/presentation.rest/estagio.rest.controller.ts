@@ -27,6 +27,7 @@ import * as xlsx from "xlsx";
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { Dep, IContainer } from "@/domain/dependency-injection";
+import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import { transactionStorage } from "@/infrastructure.database/typeorm/connection/transaction-storage";
 import {
   INotificacaoRepository,
@@ -36,6 +37,7 @@ import { IUsuarioRepository } from "@/modules/acesso/usuario";
 import { IUsuarioCreateCommandHandler } from "@/modules/acesso/usuario/domain/commands/usuario-create.command.handler.interface";
 import { IPerfilDefinirPerfisAtivosCommandHandler } from "@/modules/acesso/usuario/perfil/domain/commands";
 import { ICampusListQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-list.query.handler.interface";
+import { ICursoCreateCommandHandler } from "@/modules/ensino/curso/domain/commands/curso-create.command.handler.interface";
 import { ICursoListQueryHandler } from "@/modules/ensino/curso/domain/queries/curso-list.query.handler.interface";
 import { IEmpresaCreateCommandHandler, IEmpresaRepository } from "@/modules/estagio/empresa";
 import {
@@ -72,7 +74,9 @@ import {
   IEstagioListQueryHandler,
 } from "@/modules/estagio/estagio/domain/queries/estagio-list.query.handler.interface";
 import { ICidadeListQueryHandler } from "@/modules/localidades/cidade/domain/queries/cidade-list.query.handler.interface";
+import { CidadeEntity } from "@/modules/localidades/cidade/infrastructure.database/typeorm/cidade.typeorm.entity";
 import { IEnderecoCreateOrUpdateCommandHandler } from "@/modules/localidades/endereco/domain/commands/endereco-create-or-update.command.handler.interface";
+import { IEstadoListQueryHandler } from "@/modules/localidades/estado/domain/queries/estado-list.query.handler.interface";
 import { AccessContextHttp } from "@/server/nest/access-context";
 import {
   EstagioCreateInputRestDto,
@@ -215,6 +219,9 @@ export class EstagioRestController {
       IPerfilDefinirPerfisAtivosCommandHandler,
     );
     const cursoListHandler = this.container.get<any>(ICursoListQueryHandler);
+    const cursoCreateHandler = this.container.get<any>(ICursoCreateCommandHandler);
+    const estadoListHandler = this.container.get<any>(IEstadoListQueryHandler);
+    const appTypeormConnection = this.container.get<any>(IAppTypeormConnection);
     const campusListHandler = this.container.get<any>(ICampusListQueryHandler);
 
     const idUsuarioActor = accessContext.requestActor?.id;
@@ -255,6 +262,30 @@ export class EstagioRestController {
                     );
                     if (matches.length >= 1) {
                       cidadeId = Number(matches[0].id);
+                    } else {
+                      const estadoSigla = (row.concedenteCidade || "").split("/")[1]?.trim();
+                      if (estadoSigla) {
+                        const estados = await estadoListHandler.execute(accessContext, {
+                          search: estadoSigla,
+                          limit: 5,
+                        } as any);
+                        const matchEstado = (estados?.data || []).find(
+                          (e: any) =>
+                            e.sigla === estadoSigla ||
+                            e.nome.toUpperCase() === estadoSigla.toUpperCase(),
+                        );
+                        if (matchEstado) {
+                          const cidadeRepo = appTypeormConnection.getRepository(CidadeEntity);
+                          const generatedId = Math.floor(Math.random() * 90000000) + 10000000;
+                          const novaCidade = cidadeRepo.create({
+                            id: generatedId,
+                            nome: nomeCidade,
+                            estado: { id: matchEstado.id },
+                          });
+                          await cidadeRepo.save(novaCidade);
+                          cidadeId = novaCidade.id;
+                        }
+                      }
                     }
                   } catch (_) {
                     cidadeId = undefined;
@@ -337,21 +368,35 @@ export class EstagioRestController {
                 }
 
                 if (!usuarioEstagiario && campusId) {
-                  const usuarioToCreate = {
-                    nome: row.estagiarioNome,
-                    matricula: row.estagiarioMatricula,
-                    email: row.estagiarioEmailAcademico ?? row.estagiarioEmailPessoal ?? undefined,
-                    vinculos: [
-                      {
-                        campus: { id: campusId },
-                        cargo: "aluno",
-                        apelido: (row.estagiarioNome || "").slice(0, 60),
-                      },
-                    ],
-                  } as any;
+                  const emailEstagiario =
+                    row.estagiarioEmailAcademico ?? row.estagiarioEmailPessoal ?? undefined;
+                  if (emailEstagiario) {
+                    const byEmail = await usuarioRepository.findByEmail(emailEstagiario);
+                    if (byEmail) {
+                      usuarioEstagiario = { id: byEmail.id } as any;
+                    }
+                  }
 
-                  usuarioFull = await usuarioCreateHandler.execute(accessContext, usuarioToCreate);
-                  usuarioEstagiario = { id: usuarioFull.id } as any;
+                  if (!usuarioEstagiario) {
+                    const usuarioToCreate = {
+                      nome: row.estagiarioNome,
+                      matricula: row.estagiarioMatricula,
+                      email: emailEstagiario,
+                      vinculos: [
+                        {
+                          campus: { id: campusId },
+                          cargo: "aluno",
+                          apelido: (row.estagiarioNome || "").slice(0, 60),
+                        },
+                      ],
+                    } as any;
+
+                    usuarioFull = await usuarioCreateHandler.execute(
+                      accessContext,
+                      usuarioToCreate,
+                    );
+                    usuarioEstagiario = { id: usuarioFull.id } as any;
+                  }
                 }
 
                 if (!usuarioFull && usuarioEstagiario) {
@@ -415,7 +460,15 @@ export class EstagioRestController {
                         normalizeSearchValue(row.curso || ""),
                       ),
                     );
-                    if (matches.length >= 1) cursoId = matches[0].id;
+                    if (matches.length >= 1) {
+                      cursoId = matches[0].id;
+                    } else {
+                      const createdCurso = await cursoCreateHandler.execute(accessContext, {
+                        nome: row.curso,
+                        nomeAbreviado: row.curso.slice(0, 10),
+                      } as any);
+                      cursoId = createdCurso.id;
+                    }
                   } catch (_) {
                     cursoId = undefined;
                   }
@@ -532,6 +585,7 @@ export class EstagioRestController {
               const _queryResult = await createHandler.execute(accessContext, command as never);
               created += 1;
             } catch (_error) {
+              console.error(`[IMPORT CSV] Erro na linha ${row.line}:`, _error);
               failed += 1;
             }
           }
