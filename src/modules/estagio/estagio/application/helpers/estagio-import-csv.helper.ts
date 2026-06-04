@@ -177,11 +177,20 @@ function parseDate(value: string): string | null {
     return normalized;
   }
 
-  const match = normalized.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
-  if (!match) return null;
+  let match = normalized.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+  if (match) {
+    const [, day, month, year] = match;
+    return `${year}-${month}-${day}`;
+  }
 
-  const [, day, month, year] = match;
-  return `${year}-${month}-${day}`;
+  match = normalized.match(/^(\d{2})-(\d{2})-(\d{2})$/);
+  if (match) {
+    const [, month, day, year2] = match;
+    const year = parseInt(year2, 10) + 2000;
+    return `${year}-${month}-${day}`;
+  }
+
+  return null;
 }
 
 function parseEstagiarioField(value: string): { nome: string; matricula: string | null } {
@@ -273,7 +282,7 @@ export function parseEstagioImportCsv(content: string): EstagioImportCsvParseRes
     emailAcademicoEstagiario: findHeaderIndex(headers, "emailacademicodoestagiario"),
     concedente: findHeaderIndex(headers, "concedente"),
     concedenteCnpj: findHeaderIndex(headers, "concedentecnpj"),
-    concedenteEndereco: findHeaderIndex(headers, "concedentendereco"),
+    concedenteEndereco: findHeaderIndex(headers, "concedenteendereco"),
     concedenteBairro: findHeaderIndex(headers, "concedentebairro"),
     concedenteCidade: findHeaderIndex(headers, "concedentecidade"),
     nomeSupervisor: findHeaderIndex(headers, "nomedosupervisor"),
@@ -298,7 +307,7 @@ export function parseEstagioImportCsv(content: string): EstagioImportCsvParseRes
     temAditivo: findHeaderIndex(headers, "temaditivo"),
     tiposAditivo: findHeaderIndex(headers, "tiposdeaditivo"),
     encerramentoPor: findHeaderIndex(headers, "encerramentopor"),
-    motivacaoDesligamento: findHeaderIndex(headers, "motivacaodesligamentoencerramento"),
+    motivacaoDesligamento: findHeaderIndex(headers, "motivacaododesligamentoencerramento"),
     motivoRescisao: findHeaderIndex(headers, "motivodarescisao"),
     mediaNotasSupervisor: findHeaderIndex(
       headers,
