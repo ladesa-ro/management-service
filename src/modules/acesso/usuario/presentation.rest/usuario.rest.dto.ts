@@ -229,6 +229,15 @@ export class UsuarioUpdateInputRestDto {
   vinculos?: VinculoInput[];
 }
 
+@ApiSchema({ name: "UsuarioDefinirPerfisInputDto" })
+export class UsuarioDefinirPerfisInputRestDto {
+  @ApiProperty({
+    ...UsuarioCreateCommandFields.vinculos.swaggerMetadata,
+    type: () => [VinculoInputRestDto],
+  })
+  vinculos!: VinculoInput[];
+}
+
 // ============================================================================
 // FindOne Input (for path params)
 // ============================================================================
