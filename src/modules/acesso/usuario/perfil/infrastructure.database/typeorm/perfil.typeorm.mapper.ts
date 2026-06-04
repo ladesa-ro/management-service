@@ -36,10 +36,10 @@ export const entityToFindOneQueryResult = createMapper<PerfilEntity, PerfilFindO
 // Domínio → Persistência (Domain → TypeORM Entity)
 // ============================================================================
 
-export const domainToPersistence = createMapper<IPerfil, DeepPartial<PerfilEntity>>((d) => ({
+export const domainToPersistence = createMapper<any, DeepPartial<PerfilEntity>>((d) => ({
   id: d.id,
   ativo: d.ativo,
-  cargo: { nome: d.cargo },
+  cargo: d.cargoId ? { id: d.cargoId } : { nome: d.cargo },
   campus: pickId(d.campus),
   usuario: pickId(d.usuario),
   dateCreated: d.dateCreated,

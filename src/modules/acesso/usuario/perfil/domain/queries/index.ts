@@ -1,5 +1,8 @@
+export * from "./cargo-find-one.query";
+export * from "./cargo-find-one.query.handler.interface";
+export * from "./cargo-list.query";
+export * from "./cargo-list.query.handler.interface";
 export * from "./cargo-nested.query.result";
-
 export * from "./perfil-ensino-by-id.query.metadata";
 
 export * from "./perfil-find-all-active.query.handler.interface";
@@ -21,3 +24,5 @@ export * from "./perfil-list.query.result";
 export * from "./perfil-list.query.schemas";
 
 export * from "./perfil-nested.query.result";
+export * from "./perfil-vinculos-filtro.query";
+export * from "./perfil-vinculos-filtro.query.handler.interface";

@@ -136,6 +136,61 @@ export class PerfilTypeOrmRepositoryAdapter implements IPerfilRepository {
     return PerfilTypeormMapper.entityToFindOneQueryResult.mapArray(vinculos);
   }
 
+  async findVinculosByFiltros(
+    campusId?: string,
+    cargoNome?: string,
+    cursoId?: string,
+  ): Promise<PerfilFindOneQueryResult[]> {
+    const repo = this.appTypeormConnection.getRepository(PerfilEntity);
+    const qb = repo.createQueryBuilder(config.alias);
+
+    qb.innerJoinAndSelect(`${config.alias}.campus`, "campus");
+    qb.innerJoinAndSelect(`${config.alias}.usuario`, "usuario");
+    qb.leftJoinAndSelect(`${config.alias}.cargo`, "cargo");
+    qb.leftJoinAndSelect("campus.endereco", "endereco");
+    qb.leftJoinAndSelect("endereco.cidade", "cidade");
+    qb.leftJoinAndSelect("cidade.estado", "estado");
+
+    qb.andWhere(`${config.alias}.dateDeleted IS NULL`);
+
+    if (campusId) {
+      qb.andWhere("campus.id = :campusId", { campusId });
+    }
+
+    if (cargoNome) {
+      qb.andWhere("cargo.nome = :cargoNome", { cargoNome });
+    }
+
+    if (cursoId) {
+      qb.andWhere(
+        `
+        (
+          EXISTS (
+            SELECT 1 FROM estagiario e 
+            WHERE e.id_perfil_fk = ${config.alias}.id 
+            AND e.id_curso_fk = :cursoId
+            AND e.date_deleted IS NULL
+          )
+          OR EXISTS (
+            SELECT 1 FROM diario_professor dp
+            INNER JOIN diario d ON d.id = dp.id_diario_fk
+            INNER JOIN turma t ON t.id = d.id_turma_fk
+            WHERE dp.id_perfil_fk = ${config.alias}.id
+            AND t.id_curso_fk = :cursoId
+            AND dp.date_deleted IS NULL
+            AND d.date_deleted IS NULL
+            AND t.date_deleted IS NULL
+          )
+        )
+      `,
+        { cursoId },
+      );
+    }
+
+    const vinculos = await qb.getMany();
+    return PerfilTypeormMapper.entityToFindOneQueryResult.mapArray(vinculos);
+  }
+
   async deactivateByIds(ids: string[]): Promise<void> {
     if (ids.length === 0) return;
 

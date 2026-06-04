@@ -65,6 +65,9 @@ export interface IUsuarioRepository {
     id: string,
   ): Promise<UsuarioFindOneQueryResult | null>;
 
+  /** Busca por email. */
+  findByEmail(email: string): Promise<UsuarioFindOneQueryResult | null>;
+
   /** Busca por matrícula. */
   findByMatricula(matricula: string): Promise<UsuarioFindOneQueryResult | null>;
 

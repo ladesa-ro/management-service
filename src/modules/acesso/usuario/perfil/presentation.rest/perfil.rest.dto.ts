@@ -89,3 +89,19 @@ export class PerfilListOutputRestDto {
   })
   data: PerfilFindOneOutputRestDto[];
 }
+
+// ============================================================================
+// Vinculos Filtro Input
+// ============================================================================
+
+@ApiSchema({ name: "PerfilVinculosFiltroInputDto" })
+export class PerfilVinculosFiltroInputRestDto {
+  @ApiPropertyOptional({ description: "Filtro por ID de campus", format: "uuid" })
+  campusId?: string;
+
+  @ApiPropertyOptional({ description: "Filtro por nome do cargo (ex: aluno, professor)" })
+  cargoNome?: string;
+
+  @ApiPropertyOptional({ description: "Filtro por ID de curso", format: "uuid" })
+  cursoId?: string;
+}
