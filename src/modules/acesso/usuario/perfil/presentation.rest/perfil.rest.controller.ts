@@ -18,11 +18,17 @@ import {
   PerfilListQueryMetadata,
 } from "@/modules/acesso/usuario/perfil/domain/queries/perfil-list.query.handler.interface";
 import { AccessContextHttp } from "@/server/nest/access-context";
+import { PerfilVinculosFiltroQuery } from "../domain/queries/perfil-vinculos-filtro.query";
+import {
+  IPerfilVinculosFiltroQueryHandler,
+  PerfilVinculosFiltroQueryMetadata,
+} from "../domain/queries/perfil-vinculos-filtro.query.handler.interface";
 import {
   PerfilFindOneInputRestDto,
   PerfilFindOneOutputRestDto,
   PerfilListInputRestDto,
   PerfilListOutputRestDto,
+  PerfilVinculosFiltroInputRestDto,
 } from "./perfil.rest.dto";
 import * as PerfilRestMapper from "./perfil.rest.mapper";
 
@@ -34,6 +40,8 @@ export class PerfilListRestController {
     private readonly listHandler: IPerfilListQueryHandler,
     @Dep(IPerfilFindOneQueryHandler)
     private readonly findOneHandler: IPerfilFindOneQueryHandler,
+    @Dep(IPerfilVinculosFiltroQueryHandler)
+    private readonly vinculosFiltroHandler: IPerfilVinculosFiltroQueryHandler,
   ) {}
 
   @Get("/")
@@ -47,6 +55,23 @@ export class PerfilListRestController {
     const query = PerfilRestMapper.listInputDtoToListQuery.map(dto);
     const queryResult = await this.listHandler.execute(accessContext, query);
     return PerfilRestMapper.listQueryResultToListOutputDto(queryResult);
+  }
+
+  @Get("/vinculos")
+  @ApiOperation(PerfilVinculosFiltroQueryMetadata.swaggerMetadata)
+  @ApiOkResponse({ type: [PerfilFindOneOutputRestDto] })
+  @ApiForbiddenResponse()
+  async findVinculos(
+    @AccessContextHttp() accessContext: IAccessContext,
+    @Query() dto: PerfilVinculosFiltroInputRestDto,
+  ): Promise<PerfilFindOneOutputRestDto[]> {
+    const query = new PerfilVinculosFiltroQuery();
+    query.campusId = dto.campusId;
+    query.cargoNome = dto.cargoNome;
+    query.cursoId = dto.cursoId;
+
+    const queryResult = await this.vinculosFiltroHandler.execute(accessContext, query);
+    return queryResult.map((result) => PerfilRestMapper.findOneQueryResultToOutputDto.map(result));
   }
 
   @Get("/:id")
