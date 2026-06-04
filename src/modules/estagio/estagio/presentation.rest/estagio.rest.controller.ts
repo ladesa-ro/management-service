@@ -241,6 +241,7 @@ export class EstagioRestController {
 
           let created = 0;
           let failed = 0;
+          const errorDetails: string[] = [];
 
           for (const row of parsed.entries) {
             try {
@@ -584,9 +585,11 @@ export class EstagioRestController {
 
               const _queryResult = await createHandler.execute(accessContext, command as never);
               created += 1;
-            } catch (_error) {
+            } catch (_error: any) {
               console.error(`[IMPORT CSV] Erro na linha ${row.line}:`, _error);
               failed += 1;
+              const errorMessage = _error?.response?.message || _error?.message || String(_error);
+              errorDetails.push(`Linha ${row.line}: ${errorMessage}`);
             }
           }
 
@@ -597,9 +600,16 @@ export class EstagioRestController {
             try {
               const notificacaoRepository =
                 this.container.get<INotificacaoRepositoryType>(INotificacaoRepository);
+
+              const resumo = `A importação foi finalizada. Sucessos: ${created}, Falhas: ${failed}.`;
+              const detalhes =
+                errorDetails.length > 0
+                  ? `\n\nErros:\n${errorDetails.slice(0, 10).join("\n")}${errorDetails.length > 10 ? `\n... e mais ${errorDetails.length - 10} erros.` : ""}`
+                  : "";
+
               await notificacaoRepository.save({
                 titulo: "Importação de Estágios",
-                conteudo: `A importação foi finalizada. Sucessos: ${created}, Falhas: ${failed}.`,
+                conteudo: `${resumo}${detalhes}`,
                 lida: false,
                 usuario: { id: idUsuarioActor },
               } as any);
