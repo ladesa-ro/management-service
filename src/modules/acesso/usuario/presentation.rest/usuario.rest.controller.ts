@@ -93,6 +93,7 @@ import { AccessContextHttp } from "@/server/nest/access-context";
 import { parseUsuarioImportCsv } from "../application/helpers/usuario-import-csv.helper";
 import {
   UsuarioCreateInputRestDto,
+  UsuarioDefinirPerfisInputRestDto,
   UsuarioEnsinoOutputRestDto,
   UsuarioFindOneInputRestDto,
   UsuarioFindOneOutputRestDto,
@@ -578,5 +579,28 @@ export class UsuarioRestController {
   ): Promise<boolean> {
     const query = UsuarioRestMapper.findOneInputDtoToFindOneQuery.map(params);
     return this.deleteHandler.execute(accessContext, query);
+  }
+
+  @Post("/:id/perfis")
+  @ApiOperation({
+    summary: "Adiciona ou redefine os perfis (vínculos) de um usuário para os campi informados",
+  })
+  @ApiBody({ type: UsuarioDefinirPerfisInputRestDto })
+  @ApiOkResponse({ type: Boolean })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async definirPerfis(
+    @AccessContextHttp() accessContext: IAccessContext,
+    @Param() params: UsuarioFindOneInputRestDto,
+    @Body() dto: UsuarioDefinirPerfisInputRestDto,
+  ): Promise<boolean> {
+    const handler = this.container.get<IPerfilDefinirPerfisAtivosCommandHandler>(
+      IPerfilDefinirPerfisAtivosCommandHandler,
+    );
+    await handler.execute(accessContext, {
+      usuario: { id: params.id },
+      vinculos: dto.vinculos,
+    });
+    return true;
   }
 }
