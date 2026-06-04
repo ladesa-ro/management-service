@@ -107,6 +107,7 @@ export class PerfilDefinirPerfisAtivosCommandHandlerImpl
         id: vinculoExistente?.id ?? generateUuidV7(),
         ativo: true,
         cargo: cargo.nome,
+        cargoId: cargo.id,
         dateDeleted: null,
         usuario: { id: usuarioId },
         campus: { id: campusId },
