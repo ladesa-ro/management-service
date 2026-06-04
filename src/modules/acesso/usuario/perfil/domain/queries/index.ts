@@ -24,3 +24,5 @@ export * from "./perfil-list.query.result";
 export * from "./perfil-list.query.schemas";
 
 export * from "./perfil-nested.query.result";
+export * from "./perfil-vinculos-filtro.query";
+export * from "./perfil-vinculos-filtro.query.handler.interface";
