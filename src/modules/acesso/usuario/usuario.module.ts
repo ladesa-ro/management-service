@@ -57,6 +57,7 @@ import {
   PerfilFindAllActiveQueryHandlerImpl,
   PerfilFindOneQueryHandlerImpl,
   PerfilListQueryHandlerImpl,
+  PerfilVinculosFiltroQueryHandlerImpl,
 } from "@/modules/acesso/usuario/perfil/application/queries";
 import {
   ICargoCreateCommandHandler,
@@ -70,6 +71,7 @@ import {
   IPerfilFindAllActiveQueryHandler,
   IPerfilFindOneQueryHandler,
   IPerfilListQueryHandler,
+  IPerfilVinculosFiltroQueryHandler,
 } from "@/modules/acesso/usuario/perfil/domain/queries";
 import { IPerfilRepository } from "@/modules/acesso/usuario/perfil/domain/repositories";
 import { PerfilTypeOrmRepositoryAdapter } from "@/modules/acesso/usuario/perfil/infrastructure.database";
@@ -163,6 +165,7 @@ import { HorarioConsultaModule } from "@/modules/calendario/horario-consulta/hor
     { provide: IPerfilListQueryHandler, useClass: PerfilListQueryHandlerImpl },
     { provide: IPerfilFindOneQueryHandler, useClass: PerfilFindOneQueryHandlerImpl },
     { provide: IPerfilFindAllActiveQueryHandler, useClass: PerfilFindAllActiveQueryHandlerImpl },
+    { provide: IPerfilVinculosFiltroQueryHandler, useClass: PerfilVinculosFiltroQueryHandlerImpl },
   ],
   exports: [
     IUsuarioFindOneQueryHandler,
@@ -172,6 +175,7 @@ import { HorarioConsultaModule } from "@/modules/calendario/horario-consulta/hor
     IPerfilFindAllActiveQueryHandler,
     IPerfilFindOneQueryHandler,
     IPerfilListQueryHandler,
+    IPerfilVinculosFiltroQueryHandler,
     IPerfilRepository,
   ],
 })
