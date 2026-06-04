@@ -45,14 +45,28 @@ import {
   UsuarioDisponibilidadeTypeOrmRepositoryAdapter,
   UsuarioTypeOrmRepositoryAdapter,
 } from "@/modules/acesso/usuario/infrastructure.database";
-import { PerfilDefinirPerfisAtivosCommandHandlerImpl } from "@/modules/acesso/usuario/perfil/application/commands";
 import {
+  CargoCreateCommandHandlerImpl,
+  CargoDeleteCommandHandlerImpl,
+  CargoUpdateCommandHandlerImpl,
+  PerfilDefinirPerfisAtivosCommandHandlerImpl,
+} from "@/modules/acesso/usuario/perfil/application/commands";
+import {
+  CargoFindOneQueryHandlerImpl,
+  CargoListQueryHandlerImpl,
   PerfilFindAllActiveQueryHandlerImpl,
   PerfilFindOneQueryHandlerImpl,
   PerfilListQueryHandlerImpl,
 } from "@/modules/acesso/usuario/perfil/application/queries";
-import { IPerfilDefinirPerfisAtivosCommandHandler } from "@/modules/acesso/usuario/perfil/domain/commands";
 import {
+  ICargoCreateCommandHandler,
+  ICargoDeleteCommandHandler,
+  ICargoUpdateCommandHandler,
+  IPerfilDefinirPerfisAtivosCommandHandler,
+} from "@/modules/acesso/usuario/perfil/domain/commands";
+import {
+  ICargoFindOneQueryHandler,
+  ICargoListQueryHandler,
   IPerfilFindAllActiveQueryHandler,
   IPerfilFindOneQueryHandler,
   IPerfilListQueryHandler,
@@ -60,6 +74,7 @@ import {
 import { IPerfilRepository } from "@/modules/acesso/usuario/perfil/domain/repositories";
 import { PerfilTypeOrmRepositoryAdapter } from "@/modules/acesso/usuario/perfil/infrastructure.database";
 import { PerfilGraphqlResolver } from "@/modules/acesso/usuario/perfil/presentation.graphql/perfil.graphql.resolver";
+import { CargoRestController } from "@/modules/acesso/usuario/perfil/presentation.rest/cargo.rest.controller";
 import {
   PerfilListRestController,
   PerfilRestController,
@@ -79,7 +94,12 @@ import { HorarioConsultaModule } from "@/modules/calendario/horario-consulta/hor
     HorarioConsultaModule,
     CampusModule,
   ],
-  controllers: [UsuarioRestController, PerfilListRestController, PerfilRestController],
+  controllers: [
+    UsuarioRestController,
+    PerfilListRestController,
+    PerfilRestController,
+    CargoRestController,
+  ],
   providers: [
     NestJsPaginateAdapter,
     UsuarioGraphqlResolver,
@@ -131,6 +151,11 @@ import { HorarioConsultaModule } from "@/modules/calendario/horario-consulta/hor
 
     // Perfil (sub-entidade de Usuario)
     { provide: IPerfilRepository, useClass: PerfilTypeOrmRepositoryAdapter },
+    { provide: ICargoCreateCommandHandler, useClass: CargoCreateCommandHandlerImpl },
+    { provide: ICargoUpdateCommandHandler, useClass: CargoUpdateCommandHandlerImpl },
+    { provide: ICargoDeleteCommandHandler, useClass: CargoDeleteCommandHandlerImpl },
+    { provide: ICargoListQueryHandler, useClass: CargoListQueryHandlerImpl },
+    { provide: ICargoFindOneQueryHandler, useClass: CargoFindOneQueryHandlerImpl },
     {
       provide: IPerfilDefinirPerfisAtivosCommandHandler,
       useClass: PerfilDefinirPerfisAtivosCommandHandlerImpl,
