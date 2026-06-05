@@ -20,7 +20,7 @@ export const DatabaseOptionsProvider: Provider = {
 
     return {
       url,
-      schema: configService.get<string>(ConfigTokens.DatabaseOptions.Schema) ?? "",
+      schema: configService.get<string>(ConfigTokens.DatabaseOptions.Schema) || undefined,
       useSSL: configService.get<string>(ConfigTokens.DatabaseOptions.UseSSL) ?? "true",
     };
   },
