@@ -31,7 +31,7 @@ jobs:
 
     steps:
       - name: "[CI] Checkout do código-fonte"
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6.0.2
 
       - name: "[CI] Set up QEMU"
         uses: docker/setup-qemu-action@ce360397dd3f832beb865e1373c09c0e9f86d70a
@@ -75,7 +75,7 @@ jobs:
       url: ${{ vars.DEPLOY_URL }}
     steps:
       - name: "[CD] Checkout do código-fonte"
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6.0.2
 
       - name: "[CD] Implantação"
         shell: bash
