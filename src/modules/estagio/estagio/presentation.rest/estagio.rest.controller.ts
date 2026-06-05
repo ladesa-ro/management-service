@@ -39,6 +39,7 @@ import { IPerfilDefinirPerfisAtivosCommandHandler } from "@/modules/acesso/usuar
 import { ICampusListQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-list.query.handler.interface";
 import { ICursoCreateCommandHandler } from "@/modules/ensino/curso/domain/commands/curso-create.command.handler.interface";
 import { ICursoListQueryHandler } from "@/modules/ensino/curso/domain/queries/curso-list.query.handler.interface";
+import { IOfertaFormacaoListQueryHandler } from "@/modules/ensino/oferta-formacao/domain/queries/oferta-formacao-list.query.handler.interface";
 import { IEmpresaCreateCommandHandler, IEmpresaRepository } from "@/modules/estagio/empresa";
 import {
   IEstagiarioCreateCommandHandler,
@@ -223,6 +224,7 @@ export class EstagioRestController {
     const estadoListHandler = this.container.get<any>(IEstadoListQueryHandler);
     const appTypeormConnection = this.container.get<any>(IAppTypeormConnection);
     const campusListHandler = this.container.get<any>(ICampusListQueryHandler);
+    const ofertaFormacaoListHandler = this.container.get<any>(IOfertaFormacaoListQueryHandler);
 
     const idUsuarioActor = accessContext.requestActor?.id;
     if (!idUsuarioActor) {
@@ -464,13 +466,47 @@ export class EstagioRestController {
                     if (matches.length >= 1) {
                       cursoId = matches[0].id;
                     } else {
-                      const createdCurso = await cursoCreateHandler.execute(accessContext, {
-                        nome: row.curso,
-                        nomeAbreviado: row.curso.slice(0, 10),
-                      } as any);
-                      cursoId = createdCurso.id;
+                      // Curso não encontrado: tenta criar usando campus + ofertaFormacao disponível
+                      const campusIdParaCurso = campusId ?? finalCampusId ?? requestActorCampusId;
+                      if (campusIdParaCurso) {
+                        let ofertaFormacaoId: string | undefined;
+                        try {
+                          const ofertas = await ofertaFormacaoListHandler.execute(accessContext, {
+                            "filter.campus.id": `$eq:${campusIdParaCurso}`,
+                            page: 1,
+                            limit: 1,
+                          } as any);
+                          ofertaFormacaoId = ofertas?.data?.[0]?.id;
+                        } catch (_) {
+                          ofertaFormacaoId = undefined;
+                        }
+
+                        if (ofertaFormacaoId) {
+                          const createdCurso = await cursoCreateHandler.execute(accessContext, {
+                            nome: row.curso,
+                            nomeAbreviado: (row.curso || "").slice(0, 10),
+                            quantidadePeriodos:
+                              row.periodoMinimoObrigatorio ?? row.periodoReferencia ?? 1,
+                            campus: { id: campusIdParaCurso },
+                            ofertaFormacao: { id: ofertaFormacaoId },
+                          } as any);
+                          cursoId = createdCurso.id;
+                        } else {
+                          // Sem ofertaFormacao disponível — não é possível criar o curso pelo handler
+                          console.warn(
+                            `[IMPORT CSV] Linha ${row.line}: nenhuma ofertaFormacao encontrada para o campus ${campusIdParaCurso}. Curso "${row.curso}" não pôde ser criado.`,
+                          );
+                        }
+                      } else {
+                        console.warn(
+                          `[IMPORT CSV] Linha ${row.line}: campus não identificado. Curso "${row.curso}" não pôde ser criado.`,
+                        );
+                      }
                     }
-                  } catch (_) {
+                  } catch (_error: any) {
+                    console.warn(
+                      `[IMPORT CSV] Linha ${row.line}: erro ao buscar/criar curso "${row.curso}": ${_error?.message ?? _error}`,
+                    );
                     cursoId = undefined;
                   }
                 }
