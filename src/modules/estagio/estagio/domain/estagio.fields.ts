@@ -87,4 +87,69 @@ export const EstagioFields = {
   ativo: createFieldMetadata({
     description: "Se o estágio está ativo",
   }),
+  dataPrevistaFim: createFieldMetadata({
+    description: "Data prevista de fim do estágio",
+    schema: createSchema(() => z.string().date().nullable()),
+    nullable: true,
+  }),
+  nomeSeguradora: createFieldMetadata({
+    description: "Nome da seguradora",
+    schema: createSchema(() => z.string().max(255)),
+    nullable: true,
+  }),
+  numeroApoliceSeguro: createFieldMetadata({
+    description: "Número da apólice do seguro",
+    schema: createSchema(() => z.string().max(100)),
+    nullable: true,
+  }),
+  visitasRealizadas: createFieldMetadata({
+    description: "Quantidade de visitas realizadas",
+    schema: createSchema((standard) => safeInt(standard, (s) => s.min(0))),
+    nullable: true,
+  }),
+  visitasJustificadas: createFieldMetadata({
+    description: "Quantidade de visitas justificadas",
+    schema: createSchema((standard) => safeInt(standard, (s) => s.min(0))),
+    nullable: true,
+  }),
+  visitasAVencer: createFieldMetadata({
+    description: "Quantidade de visitas a vencer",
+    schema: createSchema((standard) => safeInt(standard, (s) => s.min(0))),
+    nullable: true,
+  }),
+  visitasNaoRealizadas: createFieldMetadata({
+    description: "Quantidade de visitas não realizadas",
+    schema: createSchema((standard) => safeInt(standard, (s) => s.min(0))),
+    nullable: true,
+  }),
+  resumoPendencias: createFieldMetadata({
+    description: "Resumo das pendências do estágio",
+    schema: createSchema(() => z.string().max(1000)),
+    nullable: true,
+  }),
+  encerramentoPor: createFieldMetadata({
+    description: "Motivo de encerramento",
+    schema: createSchema(() => z.string().max(255)),
+    nullable: true,
+  }),
+  motivacaoDesligamento: createFieldMetadata({
+    description: "Motivação do desligamento ou encerramento",
+    schema: createSchema(() => z.string().max(1000)),
+    nullable: true,
+  }),
+  motivoRescisao: createFieldMetadata({
+    description: "Motivo da rescisão",
+    schema: createSchema(() => z.string().max(1000)),
+    nullable: true,
+  }),
+  mediaNotasSupervisor: createFieldMetadata({
+    description: "Média das notas de avaliações semestrais do supervisor",
+    schema: createSchema(() => z.number().min(0).max(10)),
+    nullable: true,
+  }),
+  foiOuSeraContratado: createFieldMetadata({
+    description: "Se o estagiário foi ou será contratado pela concedente",
+    schema: createSchema(() => z.boolean()),
+    nullable: true,
+  }),
 };
