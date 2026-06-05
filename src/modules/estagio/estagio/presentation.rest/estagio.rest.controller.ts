@@ -409,10 +409,12 @@ export class EstagioRestController {
                 }
 
                 const vinculos = (usuarioFull?.vinculos as any[]) || [];
-                let perfilAluno =
-                  vinculos.find((v) => v.cargo?.nome?.toLowerCase() === "aluno") ?? vinculos[0];
+                // Garante que o perfil seja sempre o de cargo "aluno"
+                // Nunca usa outro cargo como fallback
+                let perfilAluno = vinculos.find((v) => v.cargo?.nome?.toLowerCase() === "aluno");
 
                 if (!perfilAluno && campusId) {
+                  // Usuário existe mas não tem vínculo de aluno: cria o vínculo
                   if (!usuarioEstagiario) {
                     throw new BadRequestException(
                       `Não foi possível localizar o usuário do estagiário para a linha ${row.line}.`,
@@ -429,9 +431,10 @@ export class EstagioRestController {
                   } as any);
 
                   const vinculosAtualizados = (usuarioFull?.vinculos as any[]) || [];
-                  perfilAluno =
-                    vinculosAtualizados.find((v) => v.cargo?.nome?.toLowerCase() === "aluno") ??
-                    vinculosAtualizados[0];
+                  // Após criação, busca estritamente o vínculo de aluno
+                  perfilAluno = vinculosAtualizados.find(
+                    (v) => v.cargo?.nome?.toLowerCase() === "aluno",
+                  );
                 }
 
                 if (usuarioEstagiario?.id) {
