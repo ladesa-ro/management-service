@@ -577,6 +577,20 @@ export class EstagioRestController {
                 aditivo: row.temAditivo ?? undefined,
                 tipoAditivo: row.tiposAditivo ?? undefined,
                 horariosEstagio: [],
+                // Campos extras do CSV
+                dataPrevistaFim: row.dataPrevistaFim ?? undefined,
+                nomeSeguradora: row.nomeSeguradora ?? undefined,
+                numeroApoliceSeguro: row.numeroApoliceSeguro ?? undefined,
+                visitasRealizadas: row.visitasRealizadas ?? undefined,
+                visitasJustificadas: row.visitasJustificadas ?? undefined,
+                visitasAVencer: row.visitasAVencer ?? undefined,
+                visitasNaoRealizadas: row.visitasNaoRealizadas ?? undefined,
+                resumoPendencias: row.resumoPendencias ?? undefined,
+                encerramentoPor: row.encerramentoPor ?? undefined,
+                motivacaoDesligamento: row.motivacaoDesligamento ?? undefined,
+                motivoRescisao: row.motivoRescisao ?? undefined,
+                mediaNotasSupervisor: row.mediaNotasSupervisor ?? undefined,
+                foiOuSeraContratado: row.foiOuSeraContratado ?? undefined,
               };
 
               if (finalCampusId) {
