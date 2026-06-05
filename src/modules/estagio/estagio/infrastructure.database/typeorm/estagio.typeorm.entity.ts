@@ -79,6 +79,52 @@ export class EstagioTypeormEntity {
   )
   horariosEstagio!: Relation<HorarioEstagioTypeormEntity[]>;
 
+  // Campos adicionais do CSV
+  @Column({ name: "data_prevista_fim", type: "date", nullable: true })
+  dataPrevistaFim!: string | null;
+
+  @Column({ name: "nome_seguradora", type: "varchar", length: 255, nullable: true })
+  nomeSeguradora!: string | null;
+
+  @Column({ name: "numero_apolice_seguro", type: "varchar", length: 100, nullable: true })
+  numeroApoliceSeguro!: string | null;
+
+  @Column({ name: "visitas_realizadas", type: "integer", nullable: true })
+  visitasRealizadas!: number | null;
+
+  @Column({ name: "visitas_justificadas", type: "integer", nullable: true })
+  visitasJustificadas!: number | null;
+
+  @Column({ name: "visitas_a_vencer", type: "integer", nullable: true })
+  visitasAVencer!: number | null;
+
+  @Column({ name: "visitas_nao_realizadas", type: "integer", nullable: true })
+  visitasNaoRealizadas!: number | null;
+
+  @Column({ name: "resumo_pendencias", type: "varchar", length: 1000, nullable: true })
+  resumoPendencias!: string | null;
+
+  @Column({ name: "encerramento_por", type: "varchar", length: 255, nullable: true })
+  encerramentoPor!: string | null;
+
+  @Column({ name: "motivacao_desligamento", type: "varchar", length: 1000, nullable: true })
+  motivacaoDesligamento!: string | null;
+
+  @Column({ name: "motivo_rescisao", type: "varchar", length: 1000, nullable: true })
+  motivoRescisao!: string | null;
+
+  @Column({
+    name: "media_notas_supervisor",
+    type: "decimal",
+    precision: 5,
+    scale: 2,
+    nullable: true,
+  })
+  mediaNotasSupervisor!: number | null;
+
+  @Column({ name: "foi_ou_sera_contratado", type: "boolean", nullable: true })
+  foiOuSeraContratado!: boolean | null;
+
   @Column({ name: "date_created", type: "timestamptz", nullable: false })
   dateCreated!: string;
 

@@ -43,6 +43,20 @@ export class Estagio {
   aditivo!: boolean;
   tipoAditivo!: string | null;
   horariosEstagio!: IHorarioEstagio[];
+  // Campos adicionais do CSV
+  dataPrevistaFim!: string | null;
+  nomeSeguradora!: string | null;
+  numeroApoliceSeguro!: string | null;
+  visitasRealizadas!: number | null;
+  visitasJustificadas!: number | null;
+  visitasAVencer!: number | null;
+  visitasNaoRealizadas!: number | null;
+  resumoPendencias!: string | null;
+  encerramentoPor!: string | null;
+  motivacaoDesligamento!: string | null;
+  motivoRescisao!: string | null;
+  mediaNotasSupervisor!: number | null;
+  foiOuSeraContratado!: boolean | null;
   dateCreated!: ScalarDateTimeString;
   dateUpdated!: ScalarDateTimeString;
   dateDeleted!: ScalarDateTimeString | null;
@@ -74,6 +88,20 @@ export class Estagio {
     instance.aditivo = parsed.aditivo ?? false;
     instance.tipoAditivo = parsed.tipoAditivo ?? null;
     instance.horariosEstagio = parsed.horariosEstagio ?? [];
+    // Campos adicionais do CSV
+    instance.dataPrevistaFim = parsed.dataPrevistaFim ?? null;
+    instance.nomeSeguradora = parsed.nomeSeguradora ?? null;
+    instance.numeroApoliceSeguro = parsed.numeroApoliceSeguro ?? null;
+    instance.visitasRealizadas = parsed.visitasRealizadas ?? null;
+    instance.visitasJustificadas = parsed.visitasJustificadas ?? null;
+    instance.visitasAVencer = parsed.visitasAVencer ?? null;
+    instance.visitasNaoRealizadas = parsed.visitasNaoRealizadas ?? null;
+    instance.resumoPendencias = parsed.resumoPendencias ?? null;
+    instance.encerramentoPor = parsed.encerramentoPor ?? null;
+    instance.motivacaoDesligamento = parsed.motivacaoDesligamento ?? null;
+    instance.motivoRescisao = parsed.motivoRescisao ?? null;
+    instance.mediaNotasSupervisor = parsed.mediaNotasSupervisor ?? null;
+    instance.foiOuSeraContratado = parsed.foiOuSeraContratado ?? null;
     instance.dateCreated = getNowISO();
     instance.dateUpdated = getNowISO();
     instance.dateDeleted = null;
@@ -102,6 +130,20 @@ export class Estagio {
     instance.aditivo = parsed.aditivo;
     instance.tipoAditivo = parsed.tipoAditivo;
     instance.horariosEstagio = parsed.horariosEstagio;
+    // Campos adicionais do CSV
+    instance.dataPrevistaFim = parsed.dataPrevistaFim ?? null;
+    instance.nomeSeguradora = parsed.nomeSeguradora ?? null;
+    instance.numeroApoliceSeguro = parsed.numeroApoliceSeguro ?? null;
+    instance.visitasRealizadas = parsed.visitasRealizadas ?? null;
+    instance.visitasJustificadas = parsed.visitasJustificadas ?? null;
+    instance.visitasAVencer = parsed.visitasAVencer ?? null;
+    instance.visitasNaoRealizadas = parsed.visitasNaoRealizadas ?? null;
+    instance.resumoPendencias = parsed.resumoPendencias ?? null;
+    instance.encerramentoPor = parsed.encerramentoPor ?? null;
+    instance.motivacaoDesligamento = parsed.motivacaoDesligamento ?? null;
+    instance.motivoRescisao = parsed.motivoRescisao ?? null;
+    instance.mediaNotasSupervisor = parsed.mediaNotasSupervisor ?? null;
+    instance.foiOuSeraContratado = parsed.foiOuSeraContratado ?? null;
     instance.dateCreated = parsed.dateCreated;
     instance.dateUpdated = parsed.dateUpdated;
     instance.dateDeleted = parsed.dateDeleted;
@@ -131,6 +173,28 @@ export class Estagio {
     if (parsed.horariosEstagio !== undefined && parsed.horariosEstagio !== null) {
       this.horariosEstagio = parsed.horariosEstagio;
     }
+    // Campos adicionais do CSV
+    if (parsed.dataPrevistaFim !== undefined) this.dataPrevistaFim = parsed.dataPrevistaFim ?? null;
+    if (parsed.nomeSeguradora !== undefined) this.nomeSeguradora = parsed.nomeSeguradora ?? null;
+    if (parsed.numeroApoliceSeguro !== undefined)
+      this.numeroApoliceSeguro = parsed.numeroApoliceSeguro ?? null;
+    if (parsed.visitasRealizadas !== undefined)
+      this.visitasRealizadas = parsed.visitasRealizadas ?? null;
+    if (parsed.visitasJustificadas !== undefined)
+      this.visitasJustificadas = parsed.visitasJustificadas ?? null;
+    if (parsed.visitasAVencer !== undefined) this.visitasAVencer = parsed.visitasAVencer ?? null;
+    if (parsed.visitasNaoRealizadas !== undefined)
+      this.visitasNaoRealizadas = parsed.visitasNaoRealizadas ?? null;
+    if (parsed.resumoPendencias !== undefined)
+      this.resumoPendencias = parsed.resumoPendencias ?? null;
+    if (parsed.encerramentoPor !== undefined) this.encerramentoPor = parsed.encerramentoPor ?? null;
+    if (parsed.motivacaoDesligamento !== undefined)
+      this.motivacaoDesligamento = parsed.motivacaoDesligamento ?? null;
+    if (parsed.motivoRescisao !== undefined) this.motivoRescisao = parsed.motivoRescisao ?? null;
+    if (parsed.mediaNotasSupervisor !== undefined)
+      this.mediaNotasSupervisor = parsed.mediaNotasSupervisor ?? null;
+    if (parsed.foiOuSeraContratado !== undefined)
+      this.foiOuSeraContratado = parsed.foiOuSeraContratado ?? null;
 
     this.dateUpdated = getNowISO();
 
