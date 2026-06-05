@@ -83,7 +83,7 @@ export class EnderecoTypeOrmRepositoryAdapter implements IEnderecoRepository {
     const repo = this.appTypeormConnection.getRepository(EnderecoEntity);
     const endereco = await repo.findOne({
       where: { id },
-      relations: ["cidade", "cidade.estado"],
+      relations: { cidade: { estado: true } },
     });
 
     if (!endereco) return null;
@@ -94,7 +94,7 @@ export class EnderecoTypeOrmRepositoryAdapter implements IEnderecoRepository {
     const repo = this.appTypeormConnection.getRepository(EnderecoEntity);
     const endereco = await repo.findOne({
       where: { id },
-      relations: ["cidade", "cidade.estado"],
+      relations: { cidade: { estado: true } },
     });
 
     if (!endereco) return null;

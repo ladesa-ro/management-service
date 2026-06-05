@@ -28,7 +28,7 @@ export class CalendarioLetivoEtapaTypeOrmRepositoryAdapter
         calendarioLetivo: { id: calendarioLetivoId },
         dateDeleted: IsNull(),
       },
-      relations: ["ofertaFormacaoPeriodoEtapa"],
+      relations: { ofertaFormacaoPeriodoEtapa: true },
       order: { dataInicio: "ASC" },
     });
   }
@@ -44,7 +44,7 @@ export class CalendarioLetivoEtapaTypeOrmRepositoryAdapter
         calendarioLetivo: { id: In(calendarioLetivoIds) },
         dateDeleted: IsNull(),
       },
-      relations: ["ofertaFormacaoPeriodoEtapa", "calendarioLetivo"],
+      relations: { ofertaFormacaoPeriodoEtapa: true, calendarioLetivo: true },
       order: { dataInicio: "ASC" },
     });
   }
@@ -56,7 +56,7 @@ export class CalendarioLetivoEtapaTypeOrmRepositoryAdapter
 
     const etapa = await repo.findOne({
       where: { id, dateDeleted: IsNull() },
-      relations: ["ofertaFormacaoPeriodo"],
+      relations: { ofertaFormacaoPeriodo: true },
     });
 
     if (!etapa) return null;
