@@ -88,6 +88,20 @@ export const EstagioSchema = z
     aditivo: z.boolean(),
     tipoAditivo: z.string().max(255).nullable(),
     horariosEstagio: z.array(HorarioEstagioSchema),
+    // Campos adicionais do CSV
+    dataPrevistaFim: z.string().nullable(),
+    nomeSeguradora: z.string().max(255).nullable(),
+    numeroApoliceSeguro: z.string().max(100).nullable(),
+    visitasRealizadas: z.number().int().min(0).nullable(),
+    visitasJustificadas: z.number().int().min(0).nullable(),
+    visitasAVencer: z.number().int().min(0).nullable(),
+    visitasNaoRealizadas: z.number().int().min(0).nullable(),
+    resumoPendencias: z.string().max(1000).nullable(),
+    encerramentoPor: z.string().max(255).nullable(),
+    motivacaoDesligamento: z.string().max(1000).nullable(),
+    motivoRescisao: z.string().max(1000).nullable(),
+    mediaNotasSupervisor: z.number().min(0).max(10).nullable(),
+    foiOuSeraContratado: z.boolean().nullable(),
   })
   .extend(datedSchema.shape);
 
@@ -139,6 +153,59 @@ export const EstagioCreateSchema = createSchema((standard) =>
       horariosEstagio: z.preprocess(
         (v) => (v === "" ? null : v),
         z.array(HorarioEstagioInputSchema).nullable().optional(),
+      ),
+      // Campos adicionais do CSV
+      dataPrevistaFim: z.preprocess(
+        (v) => (v === "" ? null : v),
+        z.string().date().nullable().optional(),
+      ),
+      nomeSeguradora: z.preprocess(
+        (v) => (v === "" ? null : v),
+        z.string().max(255).nullable().optional(),
+      ),
+      numeroApoliceSeguro: z.preprocess(
+        (v) => (v === "" ? null : v),
+        z.string().max(100).nullable().optional(),
+      ),
+      visitasRealizadas: z.preprocess(
+        (v) => (v === null || v === undefined || v === "" ? null : v),
+        z.number().int().min(0).nullable().optional(),
+      ),
+      visitasJustificadas: z.preprocess(
+        (v) => (v === null || v === undefined || v === "" ? null : v),
+        z.number().int().min(0).nullable().optional(),
+      ),
+      visitasAVencer: z.preprocess(
+        (v) => (v === null || v === undefined || v === "" ? null : v),
+        z.number().int().min(0).nullable().optional(),
+      ),
+      visitasNaoRealizadas: z.preprocess(
+        (v) => (v === null || v === undefined || v === "" ? null : v),
+        z.number().int().min(0).nullable().optional(),
+      ),
+      resumoPendencias: z.preprocess(
+        (v) => (v === "" ? null : v),
+        z.string().max(1000).nullable().optional(),
+      ),
+      encerramentoPor: z.preprocess(
+        (v) => (v === "" ? null : v),
+        z.string().max(255).nullable().optional(),
+      ),
+      motivacaoDesligamento: z.preprocess(
+        (v) => (v === "" ? null : v),
+        z.string().max(1000).nullable().optional(),
+      ),
+      motivoRescisao: z.preprocess(
+        (v) => (v === "" ? null : v),
+        z.string().max(1000).nullable().optional(),
+      ),
+      mediaNotasSupervisor: z.preprocess(
+        (v) => (v === null || v === undefined || v === "" ? null : v),
+        z.number().min(0).max(10).nullable().optional(),
+      ),
+      foiOuSeraContratado: z.preprocess(
+        (v) => (v === null || v === undefined || v === "" ? null : v),
+        z.boolean().nullable().optional(),
       ),
     })
     .superRefine((data, ctx) => {
@@ -229,6 +296,59 @@ export const EstagioUpdateSchema = createSchema((standard) =>
     horariosEstagio: z.preprocess(
       (v) => (v === "" ? null : v),
       z.array(HorarioEstagioInputSchema).nullable().optional(),
+    ),
+    // Campos adicionais do CSV
+    dataPrevistaFim: z.preprocess(
+      (v) => (v === "" ? null : v),
+      z.string().date().nullable().optional(),
+    ),
+    nomeSeguradora: z.preprocess(
+      (v) => (v === "" ? null : v),
+      z.string().max(255).nullable().optional(),
+    ),
+    numeroApoliceSeguro: z.preprocess(
+      (v) => (v === "" ? null : v),
+      z.string().max(100).nullable().optional(),
+    ),
+    visitasRealizadas: z.preprocess(
+      (v) => (v === null || v === undefined || v === "" ? null : v),
+      z.number().int().min(0).nullable().optional(),
+    ),
+    visitasJustificadas: z.preprocess(
+      (v) => (v === null || v === undefined || v === "" ? null : v),
+      z.number().int().min(0).nullable().optional(),
+    ),
+    visitasAVencer: z.preprocess(
+      (v) => (v === null || v === undefined || v === "" ? null : v),
+      z.number().int().min(0).nullable().optional(),
+    ),
+    visitasNaoRealizadas: z.preprocess(
+      (v) => (v === null || v === undefined || v === "" ? null : v),
+      z.number().int().min(0).nullable().optional(),
+    ),
+    resumoPendencias: z.preprocess(
+      (v) => (v === "" ? null : v),
+      z.string().max(1000).nullable().optional(),
+    ),
+    encerramentoPor: z.preprocess(
+      (v) => (v === "" ? null : v),
+      z.string().max(255).nullable().optional(),
+    ),
+    motivacaoDesligamento: z.preprocess(
+      (v) => (v === "" ? null : v),
+      z.string().max(1000).nullable().optional(),
+    ),
+    motivoRescisao: z.preprocess(
+      (v) => (v === "" ? null : v),
+      z.string().max(1000).nullable().optional(),
+    ),
+    mediaNotasSupervisor: z.preprocess(
+      (v) => (v === null || v === undefined || v === "" ? null : v),
+      z.number().min(0).max(10).nullable().optional(),
+    ),
+    foiOuSeraContratado: z.preprocess(
+      (v) => (v === null || v === undefined || v === "" ? null : v),
+      z.boolean().nullable().optional(),
     ),
   }),
 );
