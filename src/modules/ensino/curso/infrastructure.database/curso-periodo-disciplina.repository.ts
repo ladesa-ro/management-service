@@ -20,7 +20,7 @@ export class CursoPeriodoDisciplinaTypeOrmRepositoryAdapter
   async findByCursoId(cursoId: string): Promise<CursoPeriodoDisciplinaEntity[]> {
     return this.repository.find({
       where: { curso: { id: cursoId } } as FindOptionsWhere<CursoPeriodoDisciplinaEntity>,
-      relations: ["disciplina"],
+      relations: { disciplina: true },
       order: { numeroPeriodo: "ASC" },
     });
   }
