@@ -25,5 +25,6 @@ export const estagioPaginationSpec: IPaginationSpec = {
     "empresa.id": [PaginationFilter.EQ],
     "estagiario.id": [PaginationFilter.EQ],
     status: [PaginationFilter.EQ],
+    emailSupervisor: [PaginationFilter.EQ],
   },
 };
