@@ -115,6 +115,7 @@ confidence_scope: Versões das tecnologias principais (NestJS ^11.1.17, TypeORM 
   - [Paginação](#paginação)
 - [GraphQL](#graphql)
 - [Message broker](#message-broker)
+- [WebSockets e Notificações](#websockets-e-notificações)
 - [Testes](#testes)
 - [CI/CD](#cicd)
 - [Boas práticas de desenvolvimento](#boas-práticas-de-desenvolvimento)
@@ -3755,6 +3756,18 @@ source_patterns:
   - .docker/compose.yml
 confidence_scope: RabbitMQ via Rascal v21, filas de timetable (request/response), padrões RPC e fire-and-forget, porta 15672 UI, credenciais admin/admin
 -->
+
+---
+
+## WebSockets e Notificações
+
+O sistema utiliza **WebSockets** (através da biblioteca [Socket.IO](https://socket.io/)) para fornecer comunicação bidirecional em tempo real. Esta interface possibilita funcionalidades orientadas a evento como a notificação instantânea para os usuários finais.
+
+A arquitetura WebSocket suporta escala horizontal através do adaptador oficial **RedisAdapter** (`@socket.io/redis-adapter` e `ioredis`), permitindo que as mensagens de pub/sub sejam trafegadas pelo Redis para sincronizar todos os nós rodando o Management Service.
+
+**Uso atual:** Notificações em tempo real do módulo de Estágios, contendo alertas preventivos de prazos, encerramentos, criação, importações CSV assíncronas e status das visitas.
+
+- Para se aprofundar nos tipos de notificações, canais (rooms) e formatação dos pacotes trocados com os clientes, consulte a documentação dedicada na pasta de arquitetura: [WebSockets: Notificações de Estágio](.claude/docs/notificacoes-websocket.md).
 
 ---
 
