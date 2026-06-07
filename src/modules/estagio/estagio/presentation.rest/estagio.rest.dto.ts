@@ -176,6 +176,9 @@ export class EstagioListInputRestDto extends PaginationInputRestDto {
 
   @ApiPropertyOptional(EstagioListQueryFields.filterStatus.swaggerMetadata)
   "filter.status"?: string | string[];
+
+  @ApiPropertyOptional(EstagioListQueryFields.filterCursoReferenciaId.swaggerMetadata)
+  "filter.CursoReferencia.id"?: string | string[];
 }
 
 @ApiSchema({ name: "EstagioFindOneOutputDto" })
