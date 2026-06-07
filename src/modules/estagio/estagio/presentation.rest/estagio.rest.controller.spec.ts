@@ -448,3 +448,61 @@ describe("EstagioRestController.importCsv", () => {
     });
   });
 });
+
+describe("EstagioRestController.findMyEstagiosAsSupervisor", () => {
+  it("should return empty array if user has no email", async () => {
+    const { controller, usuarioRepository } = createController();
+    const accessContext = createTestAccessContext();
+
+    usuarioRepository.getFindOneQueryResult.mockResolvedValueOnce({
+      id: accessContext.requestActor?.id,
+      email: null,
+    });
+
+    const result = await controller.findMyEstagiosAsSupervisor(accessContext, {});
+
+    expect(result.data).toHaveLength(0);
+    expect(result.total).toBe(0);
+  });
+
+  it("should pass user email as filter.emailSupervisor to the query handler", async () => {
+    const { controller, container, usuarioRepository } = createController();
+    const accessContext = createTestAccessContext();
+
+    const listHandler = {
+      execute: vi.fn().mockResolvedValue({
+        data: [{ id: "estagio-id" }],
+        total: 1,
+        page: 1,
+        limit: 10,
+      }),
+    };
+    container.get.mockImplementation((token: any) => {
+      if (token.toString().includes("IEstagioListQueryHandler")) return listHandler;
+      if (token.toString().includes("IUsuarioRepository")) return usuarioRepository;
+      return null;
+    });
+
+    usuarioRepository.getFindOneQueryResult.mockResolvedValueOnce({
+      id: accessContext.requestActor?.id,
+      email: "supervisor@test.com",
+    });
+
+    const result = await controller.findMyEstagiosAsSupervisor(accessContext, {
+      page: 2,
+      limit: 15,
+    });
+
+    expect(listHandler.execute).toHaveBeenCalledWith(
+      accessContext,
+      expect.objectContaining({
+        page: 2,
+        limit: 15,
+        "filter.emailSupervisor": "supervisor@test.com",
+      }),
+    );
+
+    expect(result.data).toHaveLength(1);
+    expect(result.total).toBe(1);
+  });
+});
