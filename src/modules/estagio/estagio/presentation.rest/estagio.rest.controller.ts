@@ -119,10 +119,10 @@ export class EstagioRestController {
 
   @Get("/supervisor/me")
   @ApiOperation({
-    operationId: "estagioFindMyAsSupervisor",
-    summary: "Lista os estágios onde o usuário autenticado é supervisor",
+    operationId: "estagioFindMyAsOrientador",
+    summary: "Lista os estágios onde o usuário autenticado é orientador",
     description:
-      "Retorna os estágios associados ao e-mail do usuário logado no campo emailSupervisor.",
+      "Retorna os estágios associados à matrícula do usuário logado no campo usuarioOrientador.",
   })
   @ApiOkResponse({ type: EstagioListOutputRestDto })
   @ApiForbiddenResponse()
@@ -142,7 +142,7 @@ export class EstagioRestController {
       id: idUsuarioActor,
     } as any);
 
-    if (!usuarioFull?.email) {
+    if (!usuarioFull?.matricula) {
       return {
         data: [],
         total: 0,
@@ -152,7 +152,7 @@ export class EstagioRestController {
     }
 
     const query = EstagioRestMapper.listInputDtoToListQuery.map(dto);
-    (query as any)["filter.emailSupervisor"] = usuarioFull.email;
+    (query as any)["filter.usuarioOrientador.id"] = usuarioFull.id;
 
     const queryResult = await listHandler.execute(accessContext, query);
     return EstagioRestMapper.listQueryResultToListOutputDto.map(queryResult);

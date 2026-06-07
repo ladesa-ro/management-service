@@ -450,13 +450,13 @@ describe("EstagioRestController.importCsv", () => {
 });
 
 describe("EstagioRestController.findMyEstagiosAsSupervisor", () => {
-  it("should return empty array if user has no email", async () => {
+  it("should return empty array if user has no matricula", async () => {
     const { controller, usuarioRepository } = createController();
     const accessContext = createTestAccessContext();
 
     usuarioRepository.getFindOneQueryResult.mockResolvedValueOnce({
       id: accessContext.requestActor?.id,
-      email: null,
+      matricula: null,
     });
 
     const result = await controller.findMyEstagiosAsSupervisor(accessContext, {});
@@ -465,7 +465,7 @@ describe("EstagioRestController.findMyEstagiosAsSupervisor", () => {
     expect(result.total).toBe(0);
   });
 
-  it("should pass user email as filter.emailSupervisor to the query handler", async () => {
+  it("should pass user id as filter.usuarioOrientador.id to the query handler", async () => {
     const { controller, container, usuarioRepository } = createController();
     const accessContext = createTestAccessContext();
 
@@ -485,7 +485,7 @@ describe("EstagioRestController.findMyEstagiosAsSupervisor", () => {
 
     usuarioRepository.getFindOneQueryResult.mockResolvedValueOnce({
       id: accessContext.requestActor?.id,
-      email: "supervisor@test.com",
+      matricula: "20230001",
     });
 
     const result = await controller.findMyEstagiosAsSupervisor(accessContext, {
@@ -498,7 +498,7 @@ describe("EstagioRestController.findMyEstagiosAsSupervisor", () => {
       expect.objectContaining({
         page: 2,
         limit: 15,
-        "filter.emailSupervisor": "supervisor@test.com",
+        "filter.usuarioOrientador.id": accessContext.requestActor?.id,
       }),
     );
 
