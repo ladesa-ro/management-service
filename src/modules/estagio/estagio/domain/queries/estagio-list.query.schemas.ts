@@ -15,4 +15,6 @@ export const EstagioPaginationInputSchema = createPaginationInputSchema({
   "filter.empresa.id": stringFilterSchema,
   "filter.estagiario.id": stringFilterSchema,
   "filter.status": coerceFilterArray(EstagioStatusSchema),
+  "filter.CursoReferencia.id": stringFilterSchema,
+  "filter.situacao": stringFilterSchema,
 });
