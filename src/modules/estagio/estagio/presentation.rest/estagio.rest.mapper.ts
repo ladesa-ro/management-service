@@ -38,6 +38,8 @@ export const listInputDtoToListQuery = createMapper<EstagioListInputRestDto, Est
       search: dto.search,
     };
 
+    into(query).field("filterCampusId").from(dto, "filter.campus.id");
+
     into(query).field("filterEmpresaId").from(dto, "filter.empresa.id");
 
     into(query).field("filterEstagiarioId").from(dto, "filter.estagiario.id");
