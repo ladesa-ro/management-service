@@ -17,10 +17,6 @@ export const EstagioListQueryFields = {
     description: "Filtro por ID do curso",
     nullable: true,
   }),
-  filterSituacao: createFieldMetadata({
-    description: "Filtro por situação (COMPLETO, OCUPADO, DISPONIVEL)",
-    nullable: true,
-  }),
 };
 
 export class EstagioListQuery extends PaginationQuery {
@@ -28,5 +24,4 @@ export class EstagioListQuery extends PaginationQuery {
   filterEstagiarioId?: string[];
   filterStatus?: EstagioStatus[];
   filterCursoReferenciaId?: string[];
-  filterSituacao?: string[];
 }

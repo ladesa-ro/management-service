@@ -32,7 +32,6 @@ const listInputMapper = createPaginatedInputMapper<EstagioListInputGraphQlDto, E
     into(query).field("filterEstagiarioId").from(dto, "filterEstagiarioId");
     into(query).field("filterStatus").from(dto, "filterStatus");
     into(query).field("filterCursoReferenciaId").from(dto, "filterCursoReferenciaId");
-    into(query).field("filterSituacao").from(dto, "filterSituacao");
   },
 );
 
