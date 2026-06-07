@@ -12,6 +12,7 @@ import {
 import { EstagioStatusSchema } from "../estagio.fields";
 
 export const EstagioPaginationInputSchema = createPaginationInputSchema({
+  "filter.campus.id": stringFilterSchema,
   "filter.empresa.id": stringFilterSchema,
   "filter.estagiario.id": stringFilterSchema,
   "filter.status": coerceFilterArray(EstagioStatusSchema),

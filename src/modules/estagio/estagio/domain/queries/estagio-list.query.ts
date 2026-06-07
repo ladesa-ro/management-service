@@ -4,6 +4,7 @@ import { EstagioStatus } from "../estagio";
 
 export const EstagioListQueryFields = {
   ...SharedListFields,
+  filterCampusId: createFieldMetadata({ description: "Filtro por campus", nullable: true }),
   filterEmpresaId: createFieldMetadata({ description: "Filtro por empresa", nullable: true }),
   filterEstagiarioId: createFieldMetadata({
     description: "Filtro por estagiário",
@@ -20,6 +21,7 @@ export const EstagioListQueryFields = {
 };
 
 export class EstagioListQuery extends PaginationQuery {
+  filterCampusId?: string[];
   filterEmpresaId?: string[];
   filterEstagiarioId?: string[];
   filterStatus?: EstagioStatus[];

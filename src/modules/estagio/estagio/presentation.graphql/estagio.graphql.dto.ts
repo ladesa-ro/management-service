@@ -335,6 +335,9 @@ export class EstagioUpdateInputGraphQlDto {
 export class EstagioListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {
   static schema = EstagioPaginationInputSchema;
 
+  @Field(() => [String], { nullable: true, ...EstagioListQueryFields.filterCampusId.gqlMetadata })
+  filterCampusId?: string[];
+
   @Field(() => [String], EstagioListQueryFields.filterEmpresaId.gqlMetadata)
   filterEmpresaId?: string[];
 

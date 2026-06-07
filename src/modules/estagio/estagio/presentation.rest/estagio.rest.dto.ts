@@ -168,6 +168,9 @@ export class EstagioFindOneInputRestDto extends UuidParamRestDto {
 export class EstagioListInputRestDto extends PaginationInputRestDto {
   static schema = EstagioPaginationInputSchema;
 
+  @ApiPropertyOptional(EstagioListQueryFields.filterCampusId.swaggerMetadata)
+  "filter.campus.id"?: string | string[];
+
   @ApiPropertyOptional(EstagioListQueryFields.filterEmpresaId.swaggerMetadata)
   "filter.empresa.id"?: string | string[];
 
