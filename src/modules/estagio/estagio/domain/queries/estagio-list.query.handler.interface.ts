@@ -29,5 +29,6 @@ export const estagioPaginationSpec: IPaginationSpec = {
     emailSupervisor: [PaginationFilter.EQ],
     "CursoReferencia.id": [PaginationFilter.EQ],
     "usuarioOrientador.id": [PaginationFilter.EQ],
+    "usuarioOrientador.matricula": [PaginationFilter.EQ],
   },
 };
