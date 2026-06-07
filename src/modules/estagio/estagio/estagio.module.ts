@@ -1,5 +1,6 @@
 import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
+import { NotificacaoModule } from "@/modules/acesso/notificacao/notificacao.module";
 import { UsuarioModule } from "@/modules/acesso/usuario/usuario.module";
 import {
   EstagioCreateCommandHandlerImpl,
@@ -25,7 +26,11 @@ import { EstagioGraphqlResolver } from "@/modules/estagio/estagio/presentation.g
 import { EstagioRestController } from "@/modules/estagio/estagio/presentation.rest/estagio.rest.controller";
 
 @Module({
-  imports: [UsuarioModule],
+  imports: [
+    UsuarioModule,
+    // Fornece EstagioNotificacaoPushService e NotificacaoGateway
+    NotificacaoModule,
+  ],
   controllers: [EstagioRestController],
   providers: [
     NestJsPaginateAdapter,
