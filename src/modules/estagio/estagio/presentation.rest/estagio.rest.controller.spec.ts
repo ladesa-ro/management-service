@@ -449,24 +449,9 @@ describe("EstagioRestController.importCsv", () => {
   });
 });
 
-describe("EstagioRestController.findMyEstagiosAsSupervisor", () => {
-  it("should return empty array if user has no matricula", async () => {
-    const { controller, usuarioRepository } = createController();
-    const accessContext = createTestAccessContext();
-
-    usuarioRepository.getFindOneQueryResult.mockResolvedValueOnce({
-      id: accessContext.requestActor?.id,
-      matricula: null,
-    });
-
-    const result = await controller.findMyEstagiosAsSupervisor(accessContext, {});
-
-    expect(result.data).toHaveLength(0);
-    expect(result.total).toBe(0);
-  });
-
-  it("should pass user id as filter.usuarioOrientador.id to the query handler", async () => {
-    const { controller, container, usuarioRepository } = createController();
+describe("EstagioRestController.findByOrientadorMatricula", () => {
+  it("should pass matricula as filter.usuarioOrientador.matricula to the query handler", async () => {
+    const { controller, container } = createController();
     const accessContext = createTestAccessContext();
 
     const listHandler = {
@@ -479,16 +464,10 @@ describe("EstagioRestController.findMyEstagiosAsSupervisor", () => {
     };
     container.get.mockImplementation((token: any) => {
       if (token.toString().includes("IEstagioListQueryHandler")) return listHandler;
-      if (token.toString().includes("IUsuarioRepository")) return usuarioRepository;
       return null;
     });
 
-    usuarioRepository.getFindOneQueryResult.mockResolvedValueOnce({
-      id: accessContext.requestActor?.id,
-      matricula: "20230001",
-    });
-
-    const result = await controller.findMyEstagiosAsSupervisor(accessContext, {
+    const result = await controller.findByOrientadorMatricula(accessContext, "20230001", {
       page: 2,
       limit: 15,
     });
@@ -498,7 +477,7 @@ describe("EstagioRestController.findMyEstagiosAsSupervisor", () => {
       expect.objectContaining({
         page: 2,
         limit: 15,
-        "filter.usuarioOrientador.id": accessContext.requestActor?.id,
+        "filter.usuarioOrientador.matricula": "20230001",
       }),
     );
 
