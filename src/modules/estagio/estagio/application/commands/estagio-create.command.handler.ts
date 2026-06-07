@@ -2,6 +2,7 @@ import { BadRequestException } from "@nestjs/common";
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { Dep, Impl } from "@/domain/dependency-injection";
+import { EstagioNotificacaoPushService } from "@/modules/acesso/notificacao/application/services";
 import { IPerfilRepository } from "@/modules/acesso/usuario/perfil/domain/repositories/perfil.repository.interface";
 import type { EstagioCreateCommand } from "@/modules/estagio/estagio/domain/commands/estagio-create.command";
 import { IEstagioCreateCommandHandler } from "@/modules/estagio/estagio/domain/commands/estagio-create.command.handler.interface";
@@ -16,6 +17,7 @@ export class EstagioCreateCommandHandlerImpl implements IEstagioCreateCommandHan
     private readonly repository: IEstagioRepository,
     @Dep(IPerfilRepository)
     private readonly perfilRepository: IPerfilRepository,
+    private readonly pushService: EstagioNotificacaoPushService,
   ) {}
 
   async execute(
@@ -139,6 +141,10 @@ export class EstagioCreateCommandHandlerImpl implements IEstagioCreateCommandHan
       }
     }
     ensureExists(result, Estagio.entityName, estagio.id);
+
+    // Notifica via WebSocket: estágio criado
+    const estagiarioNome = (result as any)?.estagiario?.perfil?.usuario?.nome as string | undefined;
+    this.pushService.notificarEstagioFaseInicial(estagio.id, estagiarioNome);
 
     return result;
   }
