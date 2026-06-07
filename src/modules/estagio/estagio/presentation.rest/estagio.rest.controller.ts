@@ -117,42 +117,24 @@ export class EstagioRestController {
     return EstagioRestMapper.listQueryResultToListOutputDto.map(queryResult);
   }
 
-  @Get("/supervisor/me")
+  @Get("/orientador/:matricula")
   @ApiOperation({
-    operationId: "estagioFindMyAsOrientador",
-    summary: "Lista os estágios onde o usuário autenticado é orientador",
+    operationId: "estagioFindByOrientadorMatricula",
+    summary: "Lista os estágios de um orientador pela matrícula",
     description:
-      "Retorna os estágios associados à matrícula do usuário logado no campo usuarioOrientador.",
+      "Retorna os estágios associados a um orientador específico, buscando pela matrícula.",
   })
   @ApiOkResponse({ type: EstagioListOutputRestDto })
   @ApiForbiddenResponse()
-  async findMyEstagiosAsSupervisor(
+  async findByOrientadorMatricula(
     @AccessContextHttp() accessContext: IAccessContext,
+    @Param("matricula") matricula: string,
     @Query() dto: EstagioListInputRestDto,
   ): Promise<EstagioListOutputRestDto> {
     const listHandler = this.container.get<IEstagioListQueryHandler>(IEstagioListQueryHandler);
-    const usuarioRepository = this.container.get<IUsuarioRepository>(IUsuarioRepository);
-
-    const idUsuarioActor = accessContext.requestActor?.id;
-    if (!idUsuarioActor) {
-      throw new BadRequestException("Usuário não autenticado.");
-    }
-
-    const usuarioFull = await usuarioRepository.getFindOneQueryResult(accessContext, {
-      id: idUsuarioActor,
-    } as any);
-
-    if (!usuarioFull?.matricula) {
-      return {
-        data: [],
-        total: 0,
-        page: dto.page ?? 1,
-        limit: dto.limit ?? 10,
-      };
-    }
 
     const query = EstagioRestMapper.listInputDtoToListQuery.map(dto);
-    (query as any)["filter.usuarioOrientador.id"] = usuarioFull.id;
+    (query as any)["filter.usuarioOrientador.matricula"] = matricula;
 
     const queryResult = await listHandler.execute(accessContext, query);
     return EstagioRestMapper.listQueryResultToListOutputDto.map(queryResult);
