@@ -117,6 +117,47 @@ export class EstagioRestController {
     return EstagioRestMapper.listQueryResultToListOutputDto.map(queryResult);
   }
 
+  @Get("/supervisor/me")
+  @ApiOperation({
+    operationId: "estagioFindMyAsSupervisor",
+    summary: "Lista os estágios onde o usuário autenticado é supervisor",
+    description:
+      "Retorna os estágios associados ao e-mail do usuário logado no campo emailSupervisor.",
+  })
+  @ApiOkResponse({ type: EstagioListOutputRestDto })
+  @ApiForbiddenResponse()
+  async findMyEstagiosAsSupervisor(
+    @AccessContextHttp() accessContext: IAccessContext,
+    @Query() dto: EstagioListInputRestDto,
+  ): Promise<EstagioListOutputRestDto> {
+    const listHandler = this.container.get<IEstagioListQueryHandler>(IEstagioListQueryHandler);
+    const usuarioRepository = this.container.get<IUsuarioRepository>(IUsuarioRepository);
+
+    const idUsuarioActor = accessContext.requestActor?.id;
+    if (!idUsuarioActor) {
+      throw new BadRequestException("Usuário não autenticado.");
+    }
+
+    const usuarioFull = await usuarioRepository.getFindOneQueryResult(accessContext, {
+      id: idUsuarioActor,
+    } as any);
+
+    if (!usuarioFull?.email) {
+      return {
+        data: [],
+        total: 0,
+        page: dto.page ?? 1,
+        limit: dto.limit ?? 10,
+      };
+    }
+
+    const query = EstagioRestMapper.listInputDtoToListQuery.map(dto);
+    (query as any)["filter.emailSupervisor"] = usuarioFull.email;
+
+    const queryResult = await listHandler.execute(accessContext, query);
+    return EstagioRestMapper.listQueryResultToListOutputDto.map(queryResult);
+  }
+
   @Get("/:id")
   @ApiOperation(EstagioFindOneQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: EstagioFindOneOutputRestDto })
