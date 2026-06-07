@@ -28,6 +28,7 @@ export const findOneInputDtoToFindOneQuery = createMapper<string, EstagioFindOne
 const listInputMapper = createPaginatedInputMapper<EstagioListInputGraphQlDto, EstagioListQuery>(
   EstagioListQuery,
   (dto, query) => {
+    into(query).field("filterCampusId").from(dto, "filterCampusId");
     into(query).field("filterEmpresaId").from(dto, "filterEmpresaId");
     into(query).field("filterEstagiarioId").from(dto, "filterEstagiarioId");
     into(query).field("filterStatus").from(dto, "filterStatus");
