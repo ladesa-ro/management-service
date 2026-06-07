@@ -23,8 +23,9 @@ export const estagioPaginationSpec: IPaginationSpec = {
   defaultSortBy: [["dateCreated", "DESC"]],
   filterableColumns: {
     "empresa.id": [PaginationFilter.EQ],
-    "estagiario.id": [PaginationFilter.EQ],
+    "estagiario.id": [PaginationFilter.EQ, PaginationFilter.NULL, PaginationFilter.NOT_NULL],
     status: [PaginationFilter.EQ],
     emailSupervisor: [PaginationFilter.EQ],
+    "CursoReferencia.id": [PaginationFilter.EQ],
   },
 };
