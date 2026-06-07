@@ -343,6 +343,12 @@ export class EstagioListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {
 
   @Field(() => [String], EstagioListQueryFields.filterStatus.gqlMetadata)
   filterStatus?: string[];
+
+  @Field(() => [String], EstagioListQueryFields.filterCursoReferenciaId.gqlMetadata)
+  filterCursoReferenciaId?: string[];
+
+  @Field(() => [String], EstagioListQueryFields.filterSituacao.gqlMetadata)
+  filterSituacao?: string[];
 }
 
 @ObjectType("EstagioListResult")
