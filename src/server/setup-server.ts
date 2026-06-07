@@ -3,6 +3,7 @@ import { NestFactory } from "@nestjs/core";
 import { IRuntimeOptions } from "@/infrastructure.config/options/runtime/runtime-options.interface";
 import { correlationIdMiddleware } from "@/infrastructure.logging";
 import { AppModule } from "@/server/nest/app.module";
+import { RedisIoAdapter } from "@/server/plugins/redis-io.adapter";
 import { useCompression } from "@/server/plugins/use-compression";
 import { useCors } from "@/server/plugins/use-cors";
 import { useDocs } from "@/server/plugins/use-docs";
@@ -12,6 +13,11 @@ import { useValidationPipe } from "@/server/plugins/use-validation-pipe";
 
 export async function setupServer() {
   const app = await NestFactory.create(AppModule);
+
+  // Habilita WebSockets via Socket.IO com Redis Adapter
+  const redisIoAdapter = new RedisIoAdapter(app);
+  await redisIoAdapter.connectToRedis();
+  app.useWebSocketAdapter(redisIoAdapter);
 
   app.use(correlationIdMiddleware);
   usePrefix(app);
