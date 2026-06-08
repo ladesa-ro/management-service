@@ -23,7 +23,7 @@
         "@nestjs/swagger": "^11.4.4",
         "@nestjs/throttler": "^6.5.0",
         "@nestjs/websockets": "^11.1.24",
-        "@scalar/nestjs-api-reference": "^1.1.18",
+        "@scalar/nestjs-api-reference": "^1.1.19",
         "@socket.io/redis-adapter": "^8.3.0",
         "compression": "^1.8.1",
         "fs-jetpack": "^5.1.0",
@@ -448,15 +448,15 @@
 
     "@rolldown/pluginutils": ["@rolldown/pluginutils@1.0.0-rc.9", "", {}, "sha512-w6oiRWgEBl04QkFZgmW+jnU1EC9b57Oihi2ot3HNWIQRqgHp5PnYDia5iZ5FF7rpa4EQdiqMDXjlqKGXBhsoXw=="],
 
-    "@scalar/client-side-rendering": ["@scalar/client-side-rendering@0.1.11", "", { "dependencies": { "@scalar/schemas": "0.3.1", "@scalar/types": "0.12.1", "@scalar/validation": "0.6.0" } }, "sha512-0Iugq4wtkH8tLMezyabD7VxEXx66KpUxZ2zlw4BCmQKbQbcupnV2KxfgahTk6LuDBMkiUyFPj9YTFeLAAMoYmQ=="],
+    "@scalar/client-side-rendering": ["@scalar/client-side-rendering@0.1.12", "", { "dependencies": { "@scalar/schemas": "0.3.2", "@scalar/types": "0.12.2", "@scalar/validation": "0.6.0" } }, "sha512-prwHK4ozTU268BHZ/5OstoKB23JSidDuvddAOp0bVz9c29ZxsyzzxPtPcVgF7X16LiZnS1OzY030FoDCM+iC9Q=="],
 
     "@scalar/helpers": ["@scalar/helpers@0.8.0", "", {}, "sha512-gmOC6VravNB9VDl6wnt/GOj4K/hn48tj5bpW4AM4MhH8Ubil6uu7g1DSoKHwltu8Ks79KEtR6JmOrROi9R7jaQ=="],
 
-    "@scalar/nestjs-api-reference": ["@scalar/nestjs-api-reference@1.1.18", "", { "dependencies": { "@scalar/client-side-rendering": "0.1.11" } }, "sha512-6Ae076btRVGyZ48wo2abjln3zgXOBcM7X224SYQNO86P2pS2msiZ19/ZN5FTPWmJ1nCGonSskYvlIYyexzz0Bw=="],
+    "@scalar/nestjs-api-reference": ["@scalar/nestjs-api-reference@1.1.19", "", { "dependencies": { "@scalar/client-side-rendering": "0.1.12" } }, "sha512-XHm0Ohhq6N7sSw980DA34gwXxjNoJC+bl8xFw4QNv32gTsEibb8psZbgte0KOwPbD8M0H814VLrfwQNLQQbnfQ=="],
 
-    "@scalar/schemas": ["@scalar/schemas@0.3.1", "", { "dependencies": { "@scalar/helpers": "0.8.0", "@scalar/validation": "0.6.0" } }, "sha512-vTAhka3M9EGVXx909d6MGvekCnUt2Lz/Hz4MIoM7oLP9LxjwPm0ZMX6PWSYtZrxDji9ASqfwd/9jcIKMf7jPlA=="],
+    "@scalar/schemas": ["@scalar/schemas@0.3.2", "", { "dependencies": { "@scalar/helpers": "0.8.0", "@scalar/validation": "0.6.0" } }, "sha512-iadXBgJ02XUU5C5s6/xh/PmGLzUPd7X8upXIvPWBXDcQ4FHACNgkG8PPZ/beYM8UPDDkTUPM3ygEs0G6jKwGjQ=="],
 
-    "@scalar/types": ["@scalar/types@0.12.1", "", { "dependencies": { "@scalar/helpers": "0.8.0", "nanoid": "^5.1.6", "type-fest": "^5.3.1", "zod": "^4.3.5" } }, "sha512-qbUGuoRdzMUEDZmXuES9uZYnOw54wx+UgxE6fOwpaHVTyaCC/jcZultbcTLMiFFmgRinSoZjm/EJtSVtNknD2Q=="],
+    "@scalar/types": ["@scalar/types@0.12.2", "", { "dependencies": { "@scalar/helpers": "0.8.0", "nanoid": "^5.1.6", "type-fest": "^5.3.1", "zod": "^4.3.5" } }, "sha512-EzLkubCb7xioiTm9eYnmn/032akaq4kkrrdclgV2uezwtniR8ErQICjhMl2AjBWL6nstHiFZ9RnPZm2Z2/KM0Q=="],
 
     "@scalar/validation": ["@scalar/validation@0.6.0", "", {}, "sha512-tpmmG+/xRE2Kn9RpflU3AIyZv08v10+E1ZrJCx7z6+/91zHVxy0M73kC1LT4/8PbYNt85ywyC8+n+D99JdMcGA=="],
 
