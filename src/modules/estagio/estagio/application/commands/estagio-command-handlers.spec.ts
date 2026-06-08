@@ -41,14 +41,32 @@ function createMockPerfilRepository() {
   };
 }
 
+function createMockPushService() {
+  return {
+    notificarEstagioFaseInicial: vi.fn(),
+    notificarEstagioEmAndamento: vi.fn(),
+    notificarEstagioAptoEncerramento: vi.fn(),
+    notificarEstagioEncerrado: vi.fn(),
+    notificarEstagioRescindido: vi.fn(),
+    notificarEstagioComPendencia: vi.fn(),
+    notificarStatusAtualizado: vi.fn(),
+    notificarEstagiarioContratado: vi.fn(),
+  };
+}
+
 describe("EstagioCreateCommandHandler", () => {
   it("should create estagio with horarios and return query result", async () => {
     const repository = createMockEstagioRepository();
     const perfilRepository = createMockPerfilRepository();
     const savedResult = { id: createTestId(), status: "EM_FASE_INICIAL" };
     repository.getFindOneQueryResult.mockResolvedValue(savedResult);
+    const pushService = createMockPushService();
 
-    const handler = new EstagioCreateCommandHandlerImpl(repository as any, perfilRepository as any);
+    const handler = new EstagioCreateCommandHandlerImpl(
+      repository as any,
+      perfilRepository as any,
+      pushService as any,
+    );
     const result = await handler.execute(createTestAccessContext(), createValidCreateDto() as any);
 
     expect(result).toEqual(savedResult);
@@ -59,8 +77,13 @@ describe("EstagioCreateCommandHandler", () => {
     const repository = createMockEstagioRepository();
     const perfilRepository = createMockPerfilRepository();
     repository.getFindOneQueryResult.mockResolvedValue(null);
+    const pushService = createMockPushService();
 
-    const handler = new EstagioCreateCommandHandlerImpl(repository as any, perfilRepository as any);
+    const handler = new EstagioCreateCommandHandlerImpl(
+      repository as any,
+      perfilRepository as any,
+      pushService as any,
+    );
 
     await expect(
       handler.execute(createTestAccessContext(), createValidCreateDto() as any),
@@ -76,8 +99,9 @@ describe("EstagioUpdateCommandHandler", () => {
     const updated = { id, status: "EM_ANDAMENTO" };
     repository.loadById.mockResolvedValue(domain);
     repository.getFindOneQueryResult.mockResolvedValue(updated);
+    const pushService = createMockPushService();
 
-    const handler = new EstagioUpdateCommandHandlerImpl(repository as any);
+    const handler = new EstagioUpdateCommandHandlerImpl(repository as any, pushService as any);
     const newHorarios = [{ diaSemana: 2, horaInicio: "14:00", horaFim: "18:00" }];
     const result = await handler.execute(createTestAccessContext(), {
       id,
@@ -92,8 +116,9 @@ describe("EstagioUpdateCommandHandler", () => {
   it("should throw if entity not found", async () => {
     const repository = createMockEstagioRepository();
     repository.loadById.mockResolvedValue(null);
+    const pushService = createMockPushService();
 
-    const handler = new EstagioUpdateCommandHandlerImpl(repository as any);
+    const handler = new EstagioUpdateCommandHandlerImpl(repository as any, pushService as any);
 
     await expect(
       handler.execute(createTestAccessContext(), { id: createTestId() } as any),
@@ -107,8 +132,9 @@ describe("EstagioDeleteCommandHandler", () => {
     const repository = createMockEstagioRepository();
     const domain = createTestDomainEntity({ id });
     repository.loadById.mockResolvedValue(domain);
+    const pushService = createMockPushService();
 
-    const handler = new EstagioDeleteCommandHandlerImpl(repository as any);
+    const handler = new EstagioDeleteCommandHandlerImpl(repository as any, pushService as any);
     await handler.execute(createTestAccessContext(), { id } as any);
 
     expect(repository.softDeleteHorariosEstagio).toHaveBeenCalledWith(id);
@@ -118,8 +144,9 @@ describe("EstagioDeleteCommandHandler", () => {
   it("should throw if entity not found", async () => {
     const repository = createMockEstagioRepository();
     repository.loadById.mockResolvedValue(null);
+    const pushService = createMockPushService();
 
-    const handler = new EstagioDeleteCommandHandlerImpl(repository as any);
+    const handler = new EstagioDeleteCommandHandlerImpl(repository as any, pushService as any);
 
     await expect(
       handler.execute(createTestAccessContext(), { id: createTestId() } as any),

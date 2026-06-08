@@ -116,7 +116,12 @@ function createController(options?: {
     get: vi.fn((token: any) => providers.get(token)),
   };
 
-  const controller = new EstagioRestController(container as any);
+  const pushService = {
+    notificarImportacaoIniciada: vi.fn(),
+    notificarImportacaoConcluida: vi.fn(),
+  };
+
+  const controller = new EstagioRestController(container as any, pushService as any);
 
   return {
     controller,

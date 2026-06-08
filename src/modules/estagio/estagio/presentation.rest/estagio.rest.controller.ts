@@ -29,6 +29,7 @@ import type { IAccessContext } from "@/domain/abstractions";
 import { Dep, IContainer } from "@/domain/dependency-injection";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import { transactionStorage } from "@/infrastructure.database/typeorm/connection/transaction-storage";
+import { EstagioNotificacaoPushService } from "@/modules/acesso/notificacao/application/services";
 import {
   INotificacaoRepository,
   type INotificacaoRepository as INotificacaoRepositoryType,
@@ -101,7 +102,10 @@ function normalizeSearchValue(value: string): string {
 @ApiTags("estagios")
 @Controller("/estagios")
 export class EstagioRestController {
-  constructor(@Dep(IContainer) private readonly container: IContainer) {}
+  constructor(
+    @Dep(IContainer) private readonly container: IContainer,
+    private readonly pushService: EstagioNotificacaoPushService,
+  ) {}
 
   @Get("/")
   @ApiOperation(EstagioListQueryMetadata.swaggerMetadata)
@@ -255,6 +259,8 @@ export class EstagioRestController {
     }
 
     setImmediate(() => {
+      this.pushService.notificarImportacaoIniciada(parsed.entries.length);
+
       transactionStorage.run(undefined as any, async () => {
         try {
           const usuarioActorFull = await usuarioRepository.getFindOneQueryResult(accessContext, {
@@ -689,6 +695,8 @@ export class EstagioRestController {
                 lida: false,
                 usuario: { id: idUsuarioActor },
               } as any);
+
+              this.pushService.notificarImportacaoConcluida(created, failed, errorDetails);
             } catch (notifError) {
               console.error(
                 "Erro ao criar notificação do job de importação de estágios:",
