@@ -8,7 +8,7 @@
     "@as-integrations/express5": "^1.1.2",
     "@keycloak/keycloak-admin-client": "^26.6.2",
     "@nestjs/apollo": "^13.4.2",
-    "@nestjs/common": "^11.1.23",
+    "@nestjs/common": "^11.1.24",
     "@nestjs/config": "^4.0.4",
     "@nestjs/core": "^11.1.23",
     "@nestjs/event-emitter": "^3.1.0",
