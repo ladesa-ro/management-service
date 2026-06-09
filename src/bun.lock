@@ -10,20 +10,20 @@
         "@as-integrations/express5": "^1.1.2",
         "@keycloak/keycloak-admin-client": "^26.6.2",
         "@nestjs/apollo": "^13.4.2",
-        "@nestjs/common": "^11.1.23",
+        "@nestjs/common": "^11.1.24",
         "@nestjs/config": "^4.0.4",
-        "@nestjs/core": "^11.1.23",
+        "@nestjs/core": "^11.1.24",
         "@nestjs/event-emitter": "^3.1.0",
         "@nestjs/graphql": "^13.4.2",
         "@nestjs/mapped-types": "*",
         "@nestjs/passport": "^11.0.5",
-        "@nestjs/platform-express": "^11.1.23",
+        "@nestjs/platform-express": "^11.1.24",
         "@nestjs/platform-socket.io": "^11.1.24",
         "@nestjs/schedule": "^6.1.3",
         "@nestjs/swagger": "^11.4.4",
         "@nestjs/throttler": "^6.5.0",
         "@nestjs/websockets": "^11.1.24",
-        "@scalar/nestjs-api-reference": "^1.1.18",
+        "@scalar/nestjs-api-reference": "^1.1.19",
         "@socket.io/redis-adapter": "^8.3.0",
         "compression": "^1.8.1",
         "fs-jetpack": "^5.1.0",
@@ -316,11 +316,11 @@
 
     "@nestjs/cli": ["@nestjs/cli@11.0.21", "", { "dependencies": { "@angular-devkit/core": "19.2.24", "@angular-devkit/schematics": "19.2.24", "@angular-devkit/schematics-cli": "19.2.24", "@inquirer/prompts": "7.10.1", "@nestjs/schematics": "^11.0.1", "ansis": "4.2.0", "chokidar": "4.0.3", "cli-table3": "0.6.5", "commander": "4.1.1", "fork-ts-checker-webpack-plugin": "9.1.0", "glob": "13.0.6", "node-emoji": "1.11.0", "ora": "5.4.1", "tsconfig-paths": "4.2.0", "tsconfig-paths-webpack-plugin": "4.2.0", "typescript": "5.9.3", "webpack": "5.106.0", "webpack-node-externals": "3.0.0" }, "peerDependencies": { "@swc/cli": "^0.1.62 || ^0.3.0 || ^0.4.0 || ^0.5.0 || ^0.6.0 || ^0.7.0 || ^0.8.0", "@swc/core": "^1.3.62" }, "optionalPeers": ["@swc/cli", "@swc/core"], "bin": { "nest": "bin/nest.js" } }, "sha512-F8mV0Sj/zVEouzR3NxBuJy08YHTUOmC5Xdcx3qIIaJWzrm8Vw86CHkhkaPBJ5ewRMHPDCShPmhsfwhpCcjts3A=="],
 
-    "@nestjs/common": ["@nestjs/common@11.1.23", "", { "dependencies": { "file-type": "21.3.4", "iterare": "1.2.1", "load-esm": "1.0.3", "tslib": "2.8.1", "uid": "2.0.2" }, "peerDependencies": { "class-transformer": ">=0.4.1", "class-validator": ">=0.13.2", "reflect-metadata": "^0.1.12 || ^0.2.0", "rxjs": "^7.1.0" }, "optionalPeers": ["class-transformer", "class-validator"] }, "sha512-qKgEqwQXHIVu8TwiISmgbTrGHAFBsseP86KNolBZwAiHQryinJ5FPiDpp0ZJBBryY+WEMnsqaCa4TSxVuQEWug=="],
+    "@nestjs/common": ["@nestjs/common@11.1.24", "", { "dependencies": { "file-type": "21.3.4", "iterare": "1.2.1", "load-esm": "1.0.3", "tslib": "2.8.1", "uid": "2.0.2" }, "peerDependencies": { "class-transformer": ">=0.4.1", "class-validator": ">=0.13.2", "reflect-metadata": "^0.1.12 || ^0.2.0", "rxjs": "^7.1.0" }, "optionalPeers": ["class-transformer", "class-validator"] }, "sha512-9zHxaDDM+oXW9As6UsP5yYB+UqczBmpeSCIFWdPEtEukMnZhxODG1BBjaUcdBB8Sc1uzojSJSJlp3yFp853t1g=="],
 
     "@nestjs/config": ["@nestjs/config@4.0.4", "", { "dependencies": { "dotenv": "17.4.1", "dotenv-expand": "12.0.3", "lodash": "4.18.1" }, "peerDependencies": { "@nestjs/common": "^10.0.0 || ^11.0.0", "rxjs": "^7.1.0" } }, "sha512-CJPjNitr0bAufSEnRe2N+JbnVmMmDoo6hvKCPzXgZoGwJSmp/dZPk9f/RMbuD/+Q1ZJPjwsRpq0vxna++Knwow=="],
 
-    "@nestjs/core": ["@nestjs/core@11.1.23", "", { "dependencies": { "@nuxt/opencollective": "0.4.1", "fast-safe-stringify": "2.1.1", "iterare": "1.2.1", "path-to-regexp": "8.4.2", "tslib": "2.8.1", "uid": "2.0.2" }, "peerDependencies": { "@nestjs/common": "^11.0.0", "@nestjs/microservices": "^11.0.0", "@nestjs/platform-express": "^11.0.0", "@nestjs/websockets": "^11.0.0", "reflect-metadata": "^0.1.12 || ^0.2.0", "rxjs": "^7.1.0" }, "optionalPeers": ["@nestjs/microservices", "@nestjs/platform-express", "@nestjs/websockets"] }, "sha512-Yd+mVFUilw4A6PzV7tyfiW+zrG2wmRXnFZVmNQA+fl1N0k6km4bhhNboxjLu//dzl+XiZI5AsOHHOTegzvOgNQ=="],
+    "@nestjs/core": ["@nestjs/core@11.1.24", "", { "dependencies": { "@nuxt/opencollective": "0.4.1", "fast-safe-stringify": "2.1.1", "iterare": "1.2.1", "path-to-regexp": "8.4.2", "tslib": "2.8.1", "uid": "2.0.2" }, "peerDependencies": { "@nestjs/common": "^11.0.0", "@nestjs/microservices": "^11.0.0", "@nestjs/platform-express": "^11.0.0", "@nestjs/websockets": "^11.0.0", "reflect-metadata": "^0.1.12 || ^0.2.0", "rxjs": "^7.1.0" }, "optionalPeers": ["@nestjs/microservices", "@nestjs/platform-express", "@nestjs/websockets"] }, "sha512-K4bzT+lEdd0Hhcsw3jtk56QAW6s6skK3ViN7hIROSN0kUf4ROwWEAKopJID6yhPQxB45kDtP2wEcjzE8171J3g=="],
 
     "@nestjs/event-emitter": ["@nestjs/event-emitter@3.1.0", "", { "dependencies": { "eventemitter2": "6.4.9" }, "peerDependencies": { "@nestjs/common": "^10.0.0 || ^11.0.0", "@nestjs/core": "^10.0.0 || ^11.0.0" } }, "sha512-DOY/4XBGyIjYyOJKkO6jl1kzFE0ZfX0wV+M2HR5NWymPT9Z0zdCEcZGxTXXkoMRwPtglnvCGJALSjOpXPIcM3g=="],
 
@@ -330,7 +330,7 @@
 
     "@nestjs/passport": ["@nestjs/passport@11.0.5", "", { "peerDependencies": { "@nestjs/common": "^10.0.0 || ^11.0.0", "passport": "^0.5.0 || ^0.6.0 || ^0.7.0" } }, "sha512-ulQX6mbjlws92PIM15Naes4F4p2JoxGnIJuUsdXQPT+Oo2sqQmENEZXM7eYuimocfHnKlcfZOuyzbA33LwUlOQ=="],
 
-    "@nestjs/platform-express": ["@nestjs/platform-express@11.1.23", "", { "dependencies": { "cors": "2.8.6", "express": "5.2.1", "multer": "2.1.1", "path-to-regexp": "8.4.2", "tslib": "2.8.1" }, "peerDependencies": { "@nestjs/common": "^11.0.0", "@nestjs/core": "^11.0.0" } }, "sha512-7TQ9v2Z9lej8btTYK1VUVB3nZr0lXFNFiyI/iOc0jAOg31dHdpAWtnMMm9iUvyAfq/ssw7dsBhjCHOmEJJKr0A=="],
+    "@nestjs/platform-express": ["@nestjs/platform-express@11.1.24", "", { "dependencies": { "cors": "2.8.6", "express": "5.2.1", "multer": "2.1.1", "path-to-regexp": "8.4.2", "tslib": "2.8.1" }, "peerDependencies": { "@nestjs/common": "^11.0.0", "@nestjs/core": "^11.0.0" } }, "sha512-CeMKbRBm05aOBiWhIHWO2xDeHbxynBF9ySQv3gRjObz2N5+uJnYriAYkHvVqvC4JIydmMPmT5VdICFNlNz3qyA=="],
 
     "@nestjs/platform-socket.io": ["@nestjs/platform-socket.io@11.1.24", "", { "dependencies": { "socket.io": "4.8.3", "tslib": "2.8.1" }, "peerDependencies": { "@nestjs/common": "^11.0.0", "@nestjs/websockets": "^11.0.0", "rxjs": "^7.1.0" } }, "sha512-ImdR9G8W5Y2Hhcptdci+tNaG6JV/dzDguFTgtXOL5ie/gD9O9ARw8Cd9RzF2+oteyzQ+1sPK/+wgVOPOyYGVCA=="],
 
@@ -448,15 +448,15 @@
 
     "@rolldown/pluginutils": ["@rolldown/pluginutils@1.0.0-rc.9", "", {}, "sha512-w6oiRWgEBl04QkFZgmW+jnU1EC9b57Oihi2ot3HNWIQRqgHp5PnYDia5iZ5FF7rpa4EQdiqMDXjlqKGXBhsoXw=="],
 
-    "@scalar/client-side-rendering": ["@scalar/client-side-rendering@0.1.11", "", { "dependencies": { "@scalar/schemas": "0.3.1", "@scalar/types": "0.12.1", "@scalar/validation": "0.6.0" } }, "sha512-0Iugq4wtkH8tLMezyabD7VxEXx66KpUxZ2zlw4BCmQKbQbcupnV2KxfgahTk6LuDBMkiUyFPj9YTFeLAAMoYmQ=="],
+    "@scalar/client-side-rendering": ["@scalar/client-side-rendering@0.1.12", "", { "dependencies": { "@scalar/schemas": "0.3.2", "@scalar/types": "0.12.2", "@scalar/validation": "0.6.0" } }, "sha512-prwHK4ozTU268BHZ/5OstoKB23JSidDuvddAOp0bVz9c29ZxsyzzxPtPcVgF7X16LiZnS1OzY030FoDCM+iC9Q=="],
 
     "@scalar/helpers": ["@scalar/helpers@0.8.0", "", {}, "sha512-gmOC6VravNB9VDl6wnt/GOj4K/hn48tj5bpW4AM4MhH8Ubil6uu7g1DSoKHwltu8Ks79KEtR6JmOrROi9R7jaQ=="],
 
-    "@scalar/nestjs-api-reference": ["@scalar/nestjs-api-reference@1.1.18", "", { "dependencies": { "@scalar/client-side-rendering": "0.1.11" } }, "sha512-6Ae076btRVGyZ48wo2abjln3zgXOBcM7X224SYQNO86P2pS2msiZ19/ZN5FTPWmJ1nCGonSskYvlIYyexzz0Bw=="],
+    "@scalar/nestjs-api-reference": ["@scalar/nestjs-api-reference@1.1.19", "", { "dependencies": { "@scalar/client-side-rendering": "0.1.12" } }, "sha512-XHm0Ohhq6N7sSw980DA34gwXxjNoJC+bl8xFw4QNv32gTsEibb8psZbgte0KOwPbD8M0H814VLrfwQNLQQbnfQ=="],
 
-    "@scalar/schemas": ["@scalar/schemas@0.3.1", "", { "dependencies": { "@scalar/helpers": "0.8.0", "@scalar/validation": "0.6.0" } }, "sha512-vTAhka3M9EGVXx909d6MGvekCnUt2Lz/Hz4MIoM7oLP9LxjwPm0ZMX6PWSYtZrxDji9ASqfwd/9jcIKMf7jPlA=="],
+    "@scalar/schemas": ["@scalar/schemas@0.3.2", "", { "dependencies": { "@scalar/helpers": "0.8.0", "@scalar/validation": "0.6.0" } }, "sha512-iadXBgJ02XUU5C5s6/xh/PmGLzUPd7X8upXIvPWBXDcQ4FHACNgkG8PPZ/beYM8UPDDkTUPM3ygEs0G6jKwGjQ=="],
 
-    "@scalar/types": ["@scalar/types@0.12.1", "", { "dependencies": { "@scalar/helpers": "0.8.0", "nanoid": "^5.1.6", "type-fest": "^5.3.1", "zod": "^4.3.5" } }, "sha512-qbUGuoRdzMUEDZmXuES9uZYnOw54wx+UgxE6fOwpaHVTyaCC/jcZultbcTLMiFFmgRinSoZjm/EJtSVtNknD2Q=="],
+    "@scalar/types": ["@scalar/types@0.12.2", "", { "dependencies": { "@scalar/helpers": "0.8.0", "nanoid": "^5.1.6", "type-fest": "^5.3.1", "zod": "^4.3.5" } }, "sha512-EzLkubCb7xioiTm9eYnmn/032akaq4kkrrdclgV2uezwtniR8ErQICjhMl2AjBWL6nstHiFZ9RnPZm2Z2/KM0Q=="],
 
     "@scalar/validation": ["@scalar/validation@0.6.0", "", {}, "sha512-tpmmG+/xRE2Kn9RpflU3AIyZv08v10+E1ZrJCx7z6+/91zHVxy0M73kC1LT4/8PbYNt85ywyC8+n+D99JdMcGA=="],
 
