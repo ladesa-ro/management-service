@@ -31,13 +31,13 @@ export class EnderecoFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
 export class EnderecoInputGraphQlDto {
   static schema = EnderecoInputSchema.domain;
 
-  @Field(() => String, EnderecoFields.cep.gqlMetadata) declare cep: string;
-  @Field(() => String, EnderecoFields.logradouro.gqlMetadata) declare logradouro: string;
-  @Field(() => Int, EnderecoFields.numero.gqlMetadata) declare numero: number;
-  @Field(() => String, EnderecoFields.bairro.gqlMetadata) declare bairro: string;
-  @Field(() => String, EnderecoFields.complemento.gqlMetadata) declare complemento: string | null;
+  @Field(() => String, EnderecoFields.cep.gqlMetadata) cep: string;
+  @Field(() => String, EnderecoFields.logradouro.gqlMetadata) logradouro: string;
+  @Field(() => Int, EnderecoFields.numero.gqlMetadata) numero: number;
+  @Field(() => String, EnderecoFields.bairro.gqlMetadata) bairro: string;
+  @Field(() => String, EnderecoFields.complemento.gqlMetadata) complemento: string | null;
   @Field(() => String, EnderecoFields.pontoReferencia.gqlMetadata)
-  declare pontoReferencia: string | null;
+  pontoReferencia: string | null;
   @Field(() => CidadeFindOneInputGraphQlDto, EnderecoFields.cidade.gqlMetadata)
   cidade: CidadeFindOneInputGraphQlDto;
 }
