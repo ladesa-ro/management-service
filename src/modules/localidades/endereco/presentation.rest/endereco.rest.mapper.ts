@@ -5,12 +5,12 @@ import {
   type EnderecoFindOneQueryResult,
   type EnderecoListQueryResult,
 } from "@/modules/localidades/endereco";
-import { createMapper } from "@/shared/mapping";
+import { createMapper, createListMapper } from "@/shared/mapping";
 import { 
   EnderecoFindOneOutputRestDto, 
+  EnderecoListOutputRestDto,
   type EnderecoInputRestDto,
-  type EnderecoListInputRestDto,
-  type EnderecoListOutputRestDto 
+  type EnderecoListInputRestDto
 } from "./endereco.rest.dto";
 
 // ============================================================================
@@ -76,10 +76,7 @@ export const findOneQueryResultToOutputDto = createMapper<
   dateDeleted: output.dateDeleted,
 }));
 
-export const listQueryResultToListOutputDto = createMapper<
-  EnderecoListQueryResult,
-  EnderecoListOutputRestDto
->((output) => ({
-  meta: output.meta,
-  data: output.data.map(findOneQueryResultToOutputDto.map),
-}));
+export const listQueryResultToListOutputDto = createListMapper(
+  EnderecoListOutputRestDto,
+  findOneQueryResultToOutputDto,
+);
