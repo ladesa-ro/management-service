@@ -11,3 +11,5 @@ export * from "./endereco-list.query";
 export * from "./endereco-list.query.result";
 
 export * from "./endereco-list.query.schemas";
+
+export * from "./endereco-list.query.handler.interface";

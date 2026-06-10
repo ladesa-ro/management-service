@@ -1,10 +1,17 @@
 import * as CidadeRestMapper from "@/modules/localidades/cidade/presentation.rest/cidade.rest.mapper";
 import {
   EnderecoCreateCommand,
+  type EnderecoListQuery,
   type EnderecoFindOneQueryResult,
+  type EnderecoListQueryResult,
 } from "@/modules/localidades/endereco";
-import { createMapper } from "@/shared/mapping";
-import { EnderecoFindOneOutputRestDto, type EnderecoInputRestDto } from "./endereco.rest.dto";
+import { createMapper, createListMapper } from "@/shared/mapping";
+import { 
+  EnderecoFindOneOutputRestDto, 
+  EnderecoListOutputRestDto,
+  type EnderecoInputRestDto,
+  type EnderecoListInputRestDto
+} from "./endereco.rest.dto";
 
 // ============================================================================
 // Externa → Interna (Input: Presentation → Core)
@@ -23,6 +30,29 @@ export const createInputDtoToCreateCommand = createMapper<
   input.pontoReferencia = dto.pontoReferencia ?? null;
   input.cidade = { id: dto.cidade.id };
   return input;
+});
+
+export const updateInputDtoToUpdateCommand = createMapper<{ params: { id: string }; dto: EnderecoInputRestDto }, { id: string; dto: EnderecoInputRestDto }>(
+  ({ params, dto }) => {
+    return { id: params.id, dto };
+  }
+);
+
+export const listInputDtoToListQuery = createMapper<
+  EnderecoListInputRestDto,
+  EnderecoListQuery
+>((dto) => {
+  return {
+    pagination: {
+      page: dto.page,
+      limit: dto.limit,
+    },
+    search: dto.search,
+    sortBy: dto.sortBy,
+    filter: {
+      id: dto["filter.id"],
+    },
+  };
 });
 
 // ============================================================================
@@ -45,3 +75,8 @@ export const findOneQueryResultToOutputDto = createMapper<
   dateUpdated: output.dateUpdated,
   dateDeleted: output.dateDeleted,
 }));
+
+export const listQueryResultToListOutputDto = createListMapper(
+  EnderecoListOutputRestDto,
+  findOneQueryResultToOutputDto,
+);
