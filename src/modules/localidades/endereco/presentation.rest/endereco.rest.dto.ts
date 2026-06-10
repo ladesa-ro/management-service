@@ -18,22 +18,22 @@ import { EntityBaseRestDto, PaginationMetaRestDto } from "@/shared/presentation/
 @ApiSchema({ name: "EnderecoFindOneOutputDto" })
 export class EnderecoFindOneOutputRestDto extends EntityBaseRestDto {
   @ApiProperty({ ...EnderecoFields.cep.swaggerMetadata, example: "76820-123" })
-  declare cep: string;
+  cep: string;
 
   @ApiProperty({ ...EnderecoFields.logradouro.swaggerMetadata, example: "Rua das Flores" })
-  declare logradouro: string;
+  logradouro: string;
 
   @ApiProperty({ ...EnderecoFields.numero.swaggerMetadata, example: 123 })
-  declare numero: number;
+  numero: number;
 
   @ApiProperty({ ...EnderecoFields.bairro.swaggerMetadata, example: "Centro" })
-  declare bairro: string;
+  bairro: string;
 
   @ApiPropertyOptional({ ...EnderecoFields.complemento.swaggerMetadata, example: "Apto 45" })
-  declare complemento: string | null;
+  complemento: string | null;
 
   @ApiPropertyOptional({ ...EnderecoFields.pontoReferencia.swaggerMetadata, example: "Perto do mercado" })
-  declare pontoReferencia: string | null;
+  pontoReferencia: string | null;
 
   @ApiProperty({
     ...EnderecoFields.cidade.swaggerMetadata,
@@ -87,22 +87,22 @@ export class EnderecoInputRestDto {
   static schema = EnderecoInputSchema.presentation;
 
   @ApiProperty({ ...EnderecoFields.cep.swaggerMetadata, example: "76820-123" })
-  declare cep: string;
+  cep: string;
 
   @ApiProperty({ ...EnderecoFields.logradouro.swaggerMetadata, example: "Rua das Flores" })
-  declare logradouro: string;
+  logradouro: string;
 
   @ApiProperty({ ...EnderecoFields.numero.swaggerMetadata, example: 123 })
-  declare numero: number;
+  numero: number;
 
   @ApiProperty({ ...EnderecoFields.bairro.swaggerMetadata, example: "Centro" })
-  declare bairro: string;
+  bairro: string;
 
   @ApiPropertyOptional({ ...EnderecoFields.complemento.swaggerMetadata, example: "Apto 45" })
-  declare complemento: string | null;
+  complemento: string | null;
 
   @ApiPropertyOptional({ ...EnderecoFields.pontoReferencia.swaggerMetadata, example: "Perto do mercado" })
-  declare pontoReferencia: string | null;
+  pontoReferencia: string | null;
 
   @ApiProperty({
     ...EnderecoFields.cidade.swaggerMetadata,
