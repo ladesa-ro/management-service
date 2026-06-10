@@ -6,8 +6,10 @@ import {
 import { EnderecoFields } from "@/modules/localidades/endereco/domain/endereco.fields";
 import { EnderecoInputSchema } from "@/modules/localidades/endereco/domain/endereco.schemas";
 import { EnderecoFindOneInputSchema } from "@/modules/localidades/endereco/domain/queries/endereco-find-one.query.schemas";
+import { EnderecoListQueryFields } from "@/modules/localidades/endereco/domain/queries/endereco-list.query";
+import { EnderecoPaginationInputSchema } from "@/modules/localidades/endereco/domain/queries/endereco-list.query.schemas";
 import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@/shared/presentation/rest";
-import { EntityBaseRestDto } from "@/shared/presentation/rest/dtos";
+import { EntityBaseRestDto, PaginationMetaRestDto } from "@/shared/presentation/rest/dtos";
 
 // ============================================================================
 // FindOne Output
@@ -38,6 +40,42 @@ export class EnderecoFindOneOutputRestDto extends EntityBaseRestDto {
     type: () => CidadeFindOneOutputRestDto,
   })
   cidade: CidadeFindOneOutputRestDto;
+}
+
+// ============================================================================
+// List Input/Output
+// ============================================================================
+
+@ApiSchema({ name: "EnderecoListInputDto" })
+export class EnderecoListInputRestDto {
+  static schema = EnderecoPaginationInputSchema;
+
+  @ApiPropertyOptional(EnderecoListQueryFields.page.swaggerMetadata)
+  page?: number;
+
+  @ApiPropertyOptional(EnderecoListQueryFields.limit.swaggerMetadata)
+  limit?: number;
+
+  @ApiPropertyOptional(EnderecoListQueryFields.search.swaggerMetadata)
+  search?: string;
+
+  @ApiPropertyOptional(EnderecoListQueryFields.sortBy.swaggerMetadata)
+  sortBy?: string[];
+
+  @ApiPropertyOptional(EnderecoListQueryFields.filterId.swaggerMetadata)
+  "filter.id"?: string[];
+}
+
+@ApiSchema({ name: "EnderecoListOutputDto" })
+export class EnderecoListOutputRestDto {
+  @ApiProperty({ ...EnderecoListQueryFields.meta.swaggerMetadata, type: () => PaginationMetaRestDto })
+  meta: PaginationMetaRestDto;
+
+  @ApiProperty({
+    ...EnderecoListQueryFields.data.swaggerMetadata,
+    type: () => [EnderecoFindOneOutputRestDto],
+  })
+  data: EnderecoFindOneOutputRestDto[];
 }
 
 // ============================================================================
