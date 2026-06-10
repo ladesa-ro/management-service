@@ -17,22 +17,22 @@ import { EntityBaseRestDto, PaginationMetaRestDto } from "@/shared/presentation/
 
 @ApiSchema({ name: "EnderecoFindOneOutputDto" })
 export class EnderecoFindOneOutputRestDto extends EntityBaseRestDto {
-  @ApiProperty(EnderecoFields.cep.swaggerMetadata)
+  @ApiProperty({ ...EnderecoFields.cep.swaggerMetadata, example: "76820-123" })
   declare cep: string;
 
-  @ApiProperty(EnderecoFields.logradouro.swaggerMetadata)
+  @ApiProperty({ ...EnderecoFields.logradouro.swaggerMetadata, example: "Rua das Flores" })
   declare logradouro: string;
 
-  @ApiProperty(EnderecoFields.numero.swaggerMetadata)
+  @ApiProperty({ ...EnderecoFields.numero.swaggerMetadata, example: 123 })
   declare numero: number;
 
-  @ApiProperty(EnderecoFields.bairro.swaggerMetadata)
+  @ApiProperty({ ...EnderecoFields.bairro.swaggerMetadata, example: "Centro" })
   declare bairro: string;
 
-  @ApiPropertyOptional(EnderecoFields.complemento.swaggerMetadata)
+  @ApiPropertyOptional({ ...EnderecoFields.complemento.swaggerMetadata, example: "Apto 45" })
   declare complemento: string | null;
 
-  @ApiPropertyOptional(EnderecoFields.pontoReferencia.swaggerMetadata)
+  @ApiPropertyOptional({ ...EnderecoFields.pontoReferencia.swaggerMetadata, example: "Perto do mercado" })
   declare pontoReferencia: string | null;
 
   @ApiProperty({
@@ -86,22 +86,22 @@ export class EnderecoListOutputRestDto {
 export class EnderecoInputRestDto {
   static schema = EnderecoInputSchema.presentation;
 
-  @ApiProperty(EnderecoFields.cep.swaggerMetadata)
+  @ApiProperty({ ...EnderecoFields.cep.swaggerMetadata, example: "76820-123" })
   declare cep: string;
 
-  @ApiProperty(EnderecoFields.logradouro.swaggerMetadata)
+  @ApiProperty({ ...EnderecoFields.logradouro.swaggerMetadata, example: "Rua das Flores" })
   declare logradouro: string;
 
-  @ApiProperty(EnderecoFields.numero.swaggerMetadata)
+  @ApiProperty({ ...EnderecoFields.numero.swaggerMetadata, example: 123 })
   declare numero: number;
 
-  @ApiProperty(EnderecoFields.bairro.swaggerMetadata)
+  @ApiProperty({ ...EnderecoFields.bairro.swaggerMetadata, example: "Centro" })
   declare bairro: string;
 
-  @ApiPropertyOptional(EnderecoFields.complemento.swaggerMetadata)
+  @ApiPropertyOptional({ ...EnderecoFields.complemento.swaggerMetadata, example: "Apto 45" })
   declare complemento: string | null;
 
-  @ApiPropertyOptional(EnderecoFields.pontoReferencia.swaggerMetadata)
+  @ApiPropertyOptional({ ...EnderecoFields.pontoReferencia.swaggerMetadata, example: "Perto do mercado" })
   declare pontoReferencia: string | null;
 
   @ApiProperty({
@@ -119,6 +119,6 @@ export class EnderecoInputRestDto {
 export class EnderecoFindOneInputRestDto {
   static schema = EnderecoFindOneInputSchema;
 
-  @ApiProperty(SharedFields.idUuid.swaggerMetadata)
+  @ApiProperty({ ...SharedFields.idUuid.swaggerMetadata, example: "6917c5ab-40da-4a5d-b0dc-0dff75168593" })
   id: string;
 }
