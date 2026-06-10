@@ -79,6 +79,6 @@ export class CidadeListOutputRestDto {
 export class CidadeFindOneInputRestDto {
   static schema = CidadeFindOneInputSchema;
 
-  @ApiProperty(CidadeFindOneQueryFields.id.swaggerMetadata)
+  @ApiProperty({ ...CidadeFindOneQueryFields.id.swaggerMetadata, example: 1 })
   id: number;
 }
