@@ -27,6 +27,7 @@ import {
 } from "@nestjs/swagger";
 import * as xlsx from "xlsx";
 import { ensureExists } from "@/application/errors";
+import { IIdpUserService } from "@/domain/abstractions/identity-provider";
 import type { IAccessContext } from "@/domain/abstractions";
 import { Dep, IContainer } from "@/domain/dependency-injection";
 import { transactionStorage } from "@/infrastructure.database/typeorm/connection/transaction-storage";
@@ -83,6 +84,7 @@ import {
 import { IUsuarioDisponibilidadeRepository } from "@/modules/acesso/usuario/domain/repositories/usuario-disponibilidade.repository.interface";
 import { Usuario } from "@/modules/acesso/usuario/domain/usuario";
 import { IPerfilDefinirPerfisAtivosCommandHandler } from "@/modules/acesso/usuario/perfil/domain/commands";
+import { IUsuarioRepository } from "@/modules/acesso/usuario/domain/repositories";
 import { ICampusListQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-list.query.handler.interface";
 import { IHorarioConsultaQueryHandler } from "@/modules/calendario/horario-consulta";
 import {
@@ -143,6 +145,10 @@ export class UsuarioRestController {
     private readonly definirPerfisAtivosHandler: IPerfilDefinirPerfisAtivosCommandHandler,
     @Dep(ITurmaListQueryHandler)
     private readonly turmaListHandler: ITurmaListQueryHandler,
+    @Dep(IUsuarioRepository)
+    private readonly usuarioRepository: IUsuarioRepository,
+    @Dep(IIdpUserService)
+    private readonly idpUserService: IIdpUserService,
   ) {}
 
   @Get("/")
@@ -498,7 +504,7 @@ export class UsuarioRestController {
               usuarioId = queryResult.id;
             } catch (_createError) {
               // Criação falhou — pode ser 409 do Keycloak (email já existe no IDP).
-              // Tenta recuperar o usuário já existente antes de desistir.
+              // O usuário existe no IDP mas pode não estar na DB local com esta matrícula.
 
               // Tentativa 1: re-busca pela matrícula (criação parcial na DB local)
               try {
@@ -512,32 +518,54 @@ export class UsuarioRestController {
                 // ignora
               }
 
-              // Tentativa 2: busca pelo email pessoal via listHandler
+              // Tentativa 2: busca pelo email pessoal na DB local
               if (!usuarioId) {
                 try {
-                  const byEmail = await this.listHandler.execute(accessContext, {
-                    search: row.emailPessoal,
-                    page: 1,
-                    limit: 5,
-                  } as any);
-                  const emailMatch = (byEmail?.data || []).find(
-                    (u: any) => (u.email ?? "").toLowerCase() === row.emailPessoal.toLowerCase(),
-                  );
-                  if (emailMatch?.id) {
-                    usuarioId = emailMatch.id;
+                  const byEmail = await this.usuarioRepository.findByEmail(row.emailPessoal);
+                  if (byEmail?.id) {
+                    usuarioId = byEmail.id;
+
+                    // Atualiza a matrícula na DB local para este usuário (que já tinha outro
+                    // cadastro sem matrícula ou com matrícula diferente)
+                    try {
+                      await this.usuarioRepository.update(byEmail.id, {
+                        matricula: row.matricula,
+                      });
+                      // Sincroniza a matrícula no IDP para que o usuário possa se autenticar
+                      await this.idpUserService.syncUser(byEmail.email ?? row.emailPessoal, {
+                        matricula: row.matricula,
+                      });
+                    } catch (_syncErr) {
+                      // Falha na sincronização não impede o vínculo de perfil
+                    }
                   }
                 } catch (_e) {
                   // ignora
                 }
               }
 
-              // Se ainda não encontrou, registra falha
+              // Tentativa 3: usuário existe no IDP (email) mas não na DB local — cria só na DB
               if (!usuarioId) {
-                const msg =
-                  _createError instanceof Error ? _createError.message : String(_createError);
-                errors.push(`Matrícula ${row.matricula}: erro ao criar usuário - ${msg}`);
-                failed += 1;
-                continue;
+                try {
+                  const { id: newId } = await this.usuarioRepository.create({
+                    nome: row.nome,
+                    matricula: row.matricula,
+                    email: row.emailPessoal,
+                    isSuperUser: false,
+                  });
+                  usuarioId = newId;
+
+                  // Atualiza o atributo de matrícula no IDP para o usuário já existente lá
+                  await this.idpUserService.syncUser(row.emailPessoal, {
+                    matricula: row.matricula,
+                  });
+                } catch (fallbackErr) {
+                  const msg =
+                    fallbackErr instanceof Error ? fallbackErr.message : String(fallbackErr);
+                  errors.push(`Matrícula ${row.matricula}: não foi possível recuperar usuário - ${msg}`);
+                  failed += 1;
+                  continue;
+                }
               }
             }
           }
