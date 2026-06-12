@@ -93,6 +93,7 @@ import {
 } from "@/modules/calendario/horario-consulta/presentation.rest";
 import { ITurmaListQueryHandler } from "@/modules/ensino/turma/domain/queries/turma-list.query.handler.interface";
 import { AccessContextHttp } from "@/server/nest/access-context";
+import { NeedsAuth } from "@/server/nest/auth";
 import { parseUsuarioImportCsv } from "../application/helpers/usuario-import-csv.helper";
 import { parseUsuarioImportSuapXls } from "../application/helpers/usuario-import-suap-xls.helper";
 import {
@@ -406,6 +407,7 @@ export class UsuarioRestController {
   }
 
   @Post("/importar/alunos-xls")
+  @NeedsAuth()
   @ApiOperation({
     operationId: "usuarioImportAlunosSuapXls",
     summary: "Importa alunos a partir do relatório XLS do SUAP",
