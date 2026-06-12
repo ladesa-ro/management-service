@@ -32,7 +32,10 @@ export class EnderecoFindOneOutputRestDto extends EntityBaseRestDto {
   @ApiPropertyOptional({ ...EnderecoFields.complemento.swaggerMetadata, example: "Apto 45" })
   complemento: string | null;
 
-  @ApiPropertyOptional({ ...EnderecoFields.pontoReferencia.swaggerMetadata, example: "Perto do mercado" })
+  @ApiPropertyOptional({
+    ...EnderecoFields.pontoReferencia.swaggerMetadata,
+    example: "Perto do mercado",
+  })
   pontoReferencia: string | null;
 
   @ApiProperty({
@@ -68,7 +71,10 @@ export class EnderecoListInputRestDto {
 
 @ApiSchema({ name: "EnderecoListOutputDto" })
 export class EnderecoListOutputRestDto {
-  @ApiProperty({ ...EnderecoListQueryFields.meta.swaggerMetadata, type: () => PaginationMetaRestDto })
+  @ApiProperty({
+    ...EnderecoListQueryFields.meta.swaggerMetadata,
+    type: () => PaginationMetaRestDto,
+  })
   meta: PaginationMetaRestDto;
 
   @ApiProperty({
@@ -101,7 +107,10 @@ export class EnderecoInputRestDto {
   @ApiPropertyOptional({ ...EnderecoFields.complemento.swaggerMetadata, example: "Apto 45" })
   complemento: string | null;
 
-  @ApiPropertyOptional({ ...EnderecoFields.pontoReferencia.swaggerMetadata, example: "Perto do mercado" })
+  @ApiPropertyOptional({
+    ...EnderecoFields.pontoReferencia.swaggerMetadata,
+    example: "Perto do mercado",
+  })
   pontoReferencia: string | null;
 
   @ApiProperty({
@@ -119,6 +128,9 @@ export class EnderecoInputRestDto {
 export class EnderecoFindOneInputRestDto {
   static schema = EnderecoFindOneInputSchema;
 
-  @ApiProperty({ ...SharedFields.idUuid.swaggerMetadata, example: "6917c5ab-40da-4a5d-b0dc-0dff75168593" })
+  @ApiProperty({
+    ...SharedFields.idUuid.swaggerMetadata,
+    example: "6917c5ab-40da-4a5d-b0dc-0dff75168593",
+  })
   id: string;
 }
