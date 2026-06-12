@@ -1,13 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-  Query,
-} from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
 import {
   ApiCreatedResponse,
   ApiForbiddenResponse,
@@ -19,16 +10,12 @@ import {
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { Dep } from "@/domain/dependency-injection";
-import { AccessContextHttp } from "@/server/nest/access-context";
-
-import { Endereco } from "@/modules/localidades/endereco/domain/endereco";
-import {
-  IEnderecoCreateOrUpdateCommandHandler,
-} from "@/modules/localidades/endereco/domain/commands/endereco-create-or-update.command.handler.interface";
+import { IEnderecoCreateOrUpdateCommandHandler } from "@/modules/localidades/endereco/domain/commands/endereco-create-or-update.command.handler.interface";
 import {
   EnderecoDeleteCommandMetadata,
   IEnderecoDeleteCommandHandler,
 } from "@/modules/localidades/endereco/domain/commands/endereco-delete.command.handler.interface";
+import { Endereco } from "@/modules/localidades/endereco/domain/endereco";
 import {
   EnderecoFindOneQueryMetadata,
   IEnderecoFindOneQueryHandler,
@@ -37,6 +24,7 @@ import {
   EnderecoListQueryMetadata,
   IEnderecoListQueryHandler,
 } from "@/modules/localidades/endereco/domain/queries/endereco-list.query.handler.interface";
+import { AccessContextHttp } from "@/server/nest/access-context";
 
 import {
   EnderecoFindOneInputRestDto,
@@ -98,8 +86,11 @@ export class EnderecoRestController {
     @Body() dto: EnderecoInputRestDto,
   ): Promise<EnderecoFindOneOutputRestDto> {
     const command = EnderecoRestMapper.createInputDtoToCreateCommand.map(dto);
-    const { id } = await this.createOrUpdateHandler.execute(accessContext, { id: null, dto: command });
-    
+    const { id } = await this.createOrUpdateHandler.execute(accessContext, {
+      id: null,
+      dto: command,
+    });
+
     const queryResult = await this.findOneHandler.execute(accessContext, { id: String(id) });
     ensureExists(queryResult, Endereco.entityName, String(id));
     return EnderecoRestMapper.findOneQueryResultToOutputDto.map(queryResult);
@@ -117,7 +108,7 @@ export class EnderecoRestController {
   ): Promise<EnderecoFindOneOutputRestDto> {
     const command = EnderecoRestMapper.updateInputDtoToUpdateCommand.map({ params, dto });
     await this.createOrUpdateHandler.execute(accessContext, { id: command.id, dto: command.dto });
-    
+
     const queryResult = await this.findOneHandler.execute(accessContext, { id: command.id });
     ensureExists(queryResult, Endereco.entityName, command.id);
     return EnderecoRestMapper.findOneQueryResultToOutputDto.map(queryResult);

@@ -70,6 +70,6 @@ import { TurmaDiarioConfigurarRestController } from "@/modules/ensino/turma/pres
     { provide: ITurmaFindOneQueryHandler, useClass: TurmaFindOneQueryHandlerImpl },
     { provide: ITurmaGetImagemCapaQueryHandler, useClass: TurmaGetImagemCapaQueryHandlerImpl },
   ],
-  exports: [ITurmaFindOneQueryHandler],
+  exports: [ITurmaFindOneQueryHandler, ITurmaListQueryHandler],
 })
 export class TurmaModule {}
