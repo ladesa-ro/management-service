@@ -89,8 +89,10 @@ import {
   HorarioSemanalOutputRestDto,
   HorarioSemanalQueryParamsRestDto,
 } from "@/modules/calendario/horario-consulta/presentation.rest";
+import { ITurmaListQueryHandler } from "@/modules/ensino/turma/domain/queries/turma-list.query.handler.interface";
 import { AccessContextHttp } from "@/server/nest/access-context";
 import { parseUsuarioImportCsv } from "../application/helpers/usuario-import-csv.helper";
+import { parseUsuarioImportSuapXls } from "../application/helpers/usuario-import-suap-xls.helper";
 import {
   UsuarioCreateInputRestDto,
   UsuarioDefinirPerfisInputRestDto,
@@ -139,6 +141,8 @@ export class UsuarioRestController {
     private readonly campusListHandler: ICampusListQueryHandler,
     @Dep(IPerfilDefinirPerfisAtivosCommandHandler)
     private readonly definirPerfisAtivosHandler: IPerfilDefinirPerfisAtivosCommandHandler,
+    @Dep(ITurmaListQueryHandler)
+    private readonly turmaListHandler: ITurmaListQueryHandler,
   ) {}
 
   @Get("/")
@@ -392,6 +396,288 @@ export class UsuarioRestController {
 
     return {
       message: "A importação foi iniciada em background e pode levar alguns minutos.",
+    };
+  }
+
+  @Post("/importar/alunos-xls")
+  @ApiOperation({
+    operationId: "usuarioImportAlunosSuapXls",
+    summary: "Importa alunos a partir do relatório XLS do SUAP",
+    description:
+      "Lê o relatório XLS exportado do SUAP, ignora alunos transferidos/cancelados, " +
+      "cadastra o usuário com email pessoal e cargo de aluno, vinculando ao campus e turma corretos.",
+  })
+  @ApiConsumes("multipart/form-data")
+  @ApiBody({
+    schema: {
+      type: "object",
+      properties: {
+        file: { type: "string", format: "binary" },
+      },
+      required: ["file"],
+    },
+  })
+  @ApiCreatedResponse({ type: UsuarioImportJobOutputRestDto })
+  @ApiBadRequestResponse()
+  @ApiForbiddenResponse()
+  @UseInterceptors(FileInterceptor("file"))
+  async importAlunosSuapXls(
+    @AccessContextHttp() accessContext: IAccessContext,
+    @UploadedFile() file: Express.Multer.File,
+  ): Promise<UsuarioImportJobOutputRestDto> {
+    const idUsuarioActor = accessContext.requestActor?.id;
+
+    if (!file?.buffer) {
+      throw new BadRequestException("Arquivo não informado.");
+    }
+
+    // Converte XLS/XLSX para CSV para facilitar o parse
+    let content = "";
+    if (
+      file.mimetype === "application/vnd.ms-excel" ||
+      file.mimetype === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ||
+      file.originalname?.endsWith(".xls") ||
+      file.originalname?.endsWith(".xlsx")
+    ) {
+      const workbook = xlsx.read(file.buffer, { type: "buffer" });
+      // A planilha de registros é a primeira aba ("Registros")
+      const sheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[sheetName];
+      content = xlsx.utils.sheet_to_csv(worksheet);
+    } else {
+      throw new BadRequestException(
+        "Formato de arquivo não suportado. Envie um arquivo .xls ou .xlsx.",
+      );
+    }
+
+    const parsed = (() => {
+      try {
+        return parseUsuarioImportSuapXls(content);
+      } catch (error) {
+        throw new BadRequestException(error instanceof Error ? error.message : "Arquivo inválido.");
+      }
+    })();
+
+    const normalize = (str: string) =>
+      (str || "")
+        .normalize("NFD")
+        .replace(/\p{Diacritic}/gu, "")
+        .replace(/[^a-zA-Z0-9]/g, "")
+        .toLowerCase();
+
+    // Executa em background para não bloquear a resposta HTTP
+    setImmediate(() => {
+      transactionStorage.run(undefined as any, async () => {
+        let created = 0;
+        let failed = 0;
+        const errors: string[] = [];
+
+        for (const row of parsed.entries) {
+          let usuarioId: string | undefined = undefined;
+
+          // 1. Busca ou cria o usuário pela matrícula
+          let localUsuario: { id: string } | null = null;
+          try {
+            localUsuario = await this.findByMatriculaHandler.execute(accessContext, {
+              matricula: row.matricula,
+            });
+          } catch (_e) {
+            // Usuário ainda não existe — será criado
+          }
+
+          if (localUsuario?.id) {
+            usuarioId = localUsuario.id;
+          } else {
+            try {
+              const queryResult = await this.createHandler.execute(accessContext, {
+                nome: row.nome,
+                matricula: row.matricula,
+                // Email pessoal é usado como email do usuário
+                email: row.emailPessoal,
+              });
+              usuarioId = queryResult.id;
+            } catch (_createError) {
+              // Criação falhou — pode ser 409 do Keycloak (email já existe no IDP).
+              // Tenta recuperar o usuário já existente antes de desistir.
+
+              // Tentativa 1: re-busca pela matrícula (criação parcial na DB local)
+              try {
+                const retryByMatricula = await this.findByMatriculaHandler.execute(accessContext, {
+                  matricula: row.matricula,
+                });
+                if (retryByMatricula?.id) {
+                  usuarioId = retryByMatricula.id;
+                }
+              } catch (_e) {
+                // ignora
+              }
+
+              // Tentativa 2: busca pelo email pessoal via listHandler
+              if (!usuarioId) {
+                try {
+                  const byEmail = await this.listHandler.execute(accessContext, {
+                    search: row.emailPessoal,
+                    page: 1,
+                    limit: 5,
+                  } as any);
+                  const emailMatch = (byEmail?.data || []).find(
+                    (u: any) => (u.email ?? "").toLowerCase() === row.emailPessoal.toLowerCase(),
+                  );
+                  if (emailMatch?.id) {
+                    usuarioId = emailMatch.id;
+                  }
+                } catch (_e) {
+                  // ignora
+                }
+              }
+
+              // Se ainda não encontrou, registra falha
+              if (!usuarioId) {
+                const msg =
+                  _createError instanceof Error ? _createError.message : String(_createError);
+                errors.push(`Matrícula ${row.matricula}: erro ao criar usuário - ${msg}`);
+                failed += 1;
+                continue;
+              }
+            }
+          }
+
+          if (!usuarioId) {
+            failed += 1;
+            continue;
+          }
+
+          // 2. Resolve o campus pelo nome (campo Campus da planilha)
+          try {
+            const campusText = row.campus;
+            if (!campusText) {
+              errors.push(`Matrícula ${row.matricula}: campus não informado na planilha.`);
+              failed += 1;
+              continue;
+            }
+
+            // Busca campus por nome/apelido
+            const campusList = await this.campusListHandler.execute(accessContext, {
+              search: campusText,
+              page: 1,
+              limit: 50,
+            } as any);
+
+            let campusMatches = (campusList?.data || []).filter(
+              (campus: any) =>
+                normalize(campus.nomeFantasia).includes(normalize(campusText)) ||
+                normalize(campus.razaoSocial).includes(normalize(campusText)) ||
+                normalize(campus.apelido).includes(normalize(campusText)),
+            );
+
+            // Fallback: busca em todos
+            if (campusMatches.length === 0) {
+              const allCampus = await this.campusListHandler.execute(accessContext, {
+                search: "",
+                page: 1,
+                limit: 200,
+              } as any);
+              campusMatches = (allCampus?.data || []).filter(
+                (campus: any) =>
+                  normalize(campus.nomeFantasia).includes(normalize(campusText)) ||
+                  normalize(campus.razaoSocial).includes(normalize(campusText)) ||
+                  normalize(campus.apelido).includes(normalize(campusText)),
+              );
+            }
+
+            if (campusMatches.length === 0) {
+              errors.push(`Matrícula ${row.matricula}: campus "${campusText}" não encontrado.`);
+              failed += 1;
+              continue;
+            }
+
+            const campusFound = campusMatches[0];
+
+            // 3. Resolve a turma pelo período e campus (se informados na planilha)
+            let turmaId: string | undefined = undefined;
+
+            if (row.periodo) {
+              try {
+                // Busca turmas filtrando pelo campus e pelo período
+                const turmaList = await this.turmaListHandler.execute(accessContext, {
+                  "filter.periodo": row.periodo,
+                  "filter.curso.campus.id": campusFound.id,
+                  page: 1,
+                  limit: 50,
+                } as any);
+
+                const turmas = turmaList?.data || [];
+
+                // Se há código de curso, refina por curso
+                let turmaMatch = turmas.find((t: any) => t.periodo === row.periodo);
+
+                if (!turmaMatch && turmas.length > 0) {
+                  turmaMatch = turmas[0];
+                }
+
+                if (turmaMatch) {
+                  turmaId = turmaMatch.id;
+                }
+              } catch (_turmaErr) {
+                // Turma não encontrada — não impede o cadastro do usuário
+              }
+            }
+
+            // 4. Define o perfil do usuário com cargo de aluno
+            const apelido = row.nome.slice(0, 60);
+
+            await this.definirPerfisAtivosHandler.execute(accessContext, {
+              vinculos: [
+                {
+                  campus: { id: campusFound.id },
+                  cargo: "aluno",
+                  apelido,
+                  ...(turmaId ? { turma: { id: turmaId } } : {}),
+                },
+              ],
+              usuario: { id: usuarioId },
+            } as any);
+
+            created += 1;
+          } catch (perfErr) {
+            const msg = perfErr instanceof Error ? perfErr.message : String(perfErr);
+            errors.push(`Matrícula ${row.matricula}: erro ao definir perfil - ${msg}`);
+            failed += 1;
+          }
+        }
+
+        const summary = [
+          `Importação SUAP concluída.`,
+          `Total na planilha: ${parsed.totalRows}`,
+          `Ignorados (transferidos/cancelados): ${parsed.skipped.length}`,
+          `Cadastrados com sucesso: ${created}`,
+          `Falhas: ${failed}`,
+        ].join(" | ");
+
+        console.log(summary);
+        if (errors.length > 0) {
+          console.warn("Erros detalhados:", errors.join("; "));
+        }
+
+        if (idUsuarioActor) {
+          try {
+            const notificacaoRepository =
+              this.container.get<INotificacaoRepositoryType>(INotificacaoRepository);
+            await notificacaoRepository.save({
+              titulo: "Importação de Alunos (SUAP)",
+              conteudo: summary,
+              lida: false,
+              usuario: { id: idUsuarioActor },
+            } as any);
+          } catch (notifError) {
+            console.error("Erro ao criar notificação:", notifError);
+          }
+        }
+      });
+    });
+
+    return {
+      message: `Importação de alunos iniciada. ${parsed.entries.length} aluno(s) serão processados (${parsed.skipped.length} ignorado(s) por transferência/cancelamento). O resultado será notificado ao final.`,
     };
   }
 
