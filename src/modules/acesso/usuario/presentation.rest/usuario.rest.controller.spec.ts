@@ -15,6 +15,9 @@ function createController() {
     }),
   };
   const definirPerfisAtivosHandler = { execute: vi.fn().mockResolvedValue({}) };
+  const turmaListHandler = {
+    execute: vi.fn().mockResolvedValue({ data: [] }),
+  };
 
   const controller = new UsuarioRestController(
     {} as any,
@@ -33,6 +36,7 @@ function createController() {
     {} as any,
     campusListHandler as any,
     definirPerfisAtivosHandler as any,
+    turmaListHandler as any,
   );
 
   return { controller, createHandler, findByMatriculaHandler, definirPerfisAtivosHandler };
