@@ -9,7 +9,4 @@ export const EnderecoDeleteCommandMetadata = createOperationMetadata({
 
 export const IEnderecoDeleteCommandHandler = Symbol("IEnderecoDeleteCommandHandler");
 
-export type IEnderecoDeleteCommandHandler = ICommandHandler<
-  EnderecoDeleteCommand,
-  boolean
->;
+export type IEnderecoDeleteCommandHandler = ICommandHandler<EnderecoDeleteCommand, boolean>;
