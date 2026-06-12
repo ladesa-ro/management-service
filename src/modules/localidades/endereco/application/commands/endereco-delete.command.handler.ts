@@ -18,6 +18,7 @@ export class EnderecoDeleteCommandHandlerImpl implements IEnderecoDeleteCommandH
   async execute(accessContext: IAccessContext | null, command: EnderecoDeleteCommand): Promise<boolean> {
     const exists = await this.repository.exists(command.id);
     ensureExists(exists, Endereco.entityName, command.id);
-    return this.repository.softDeleteById(accessContext, command.id);
+    await this.repository.softDeleteById(command.id);
+    return true;
   }
 }
