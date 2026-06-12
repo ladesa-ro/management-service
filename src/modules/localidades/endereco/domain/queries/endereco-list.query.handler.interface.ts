@@ -10,7 +10,4 @@ export const EnderecoListQueryMetadata = createOperationMetadata({
 
 export const IEnderecoListQueryHandler = Symbol("IEnderecoListQueryHandler");
 
-export type IEnderecoListQueryHandler = IQueryHandler<
-  EnderecoListQuery,
-  EnderecoListQueryResult
->;
+export type IEnderecoListQueryHandler = IQueryHandler<EnderecoListQuery, EnderecoListQueryResult>;
