@@ -27,8 +27,8 @@ import {
 } from "@nestjs/swagger";
 import * as xlsx from "xlsx";
 import { ensureExists } from "@/application/errors";
-import { IIdpUserService } from "@/domain/abstractions/identity-provider";
 import type { IAccessContext } from "@/domain/abstractions";
+import { IIdpUserService } from "@/domain/abstractions/identity-provider";
 import { Dep, IContainer } from "@/domain/dependency-injection";
 import { transactionStorage } from "@/infrastructure.database/typeorm/connection/transaction-storage";
 import {
@@ -81,10 +81,10 @@ import {
   IUsuarioListQueryHandler,
   UsuarioListQueryMetadata,
 } from "@/modules/acesso/usuario/domain/queries/usuario-list.query.handler.interface";
+import { IUsuarioRepository } from "@/modules/acesso/usuario/domain/repositories";
 import { IUsuarioDisponibilidadeRepository } from "@/modules/acesso/usuario/domain/repositories/usuario-disponibilidade.repository.interface";
 import { Usuario } from "@/modules/acesso/usuario/domain/usuario";
 import { IPerfilDefinirPerfisAtivosCommandHandler } from "@/modules/acesso/usuario/perfil/domain/commands";
-import { IUsuarioRepository } from "@/modules/acesso/usuario/domain/repositories";
 import { ICampusListQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-list.query.handler.interface";
 import { IHorarioConsultaQueryHandler } from "@/modules/calendario/horario-consulta";
 import {
@@ -562,7 +562,9 @@ export class UsuarioRestController {
                 } catch (fallbackErr) {
                   const msg =
                     fallbackErr instanceof Error ? fallbackErr.message : String(fallbackErr);
-                  errors.push(`Matrícula ${row.matricula}: não foi possível recuperar usuário - ${msg}`);
+                  errors.push(
+                    `Matrícula ${row.matricula}: não foi possível recuperar usuário - ${msg}`,
+                  );
                   failed += 1;
                   continue;
                 }
