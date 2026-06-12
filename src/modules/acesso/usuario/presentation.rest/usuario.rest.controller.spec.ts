@@ -18,6 +18,14 @@ function createController() {
   const turmaListHandler = {
     execute: vi.fn().mockResolvedValue({ data: [] }),
   };
+  const usuarioRepository = {
+    findByEmail: vi.fn().mockResolvedValue(null),
+    create: vi.fn().mockResolvedValue({ id: createTestId() }),
+    update: vi.fn().mockResolvedValue(undefined),
+  };
+  const idpUserService = {
+    syncUser: vi.fn().mockResolvedValue(undefined),
+  };
 
   const controller = new UsuarioRestController(
     {} as any,
@@ -37,6 +45,8 @@ function createController() {
     campusListHandler as any,
     definirPerfisAtivosHandler as any,
     turmaListHandler as any,
+    usuarioRepository as any,
+    idpUserService as any,
   );
 
   return { controller, createHandler, findByMatriculaHandler, definirPerfisAtivosHandler };
