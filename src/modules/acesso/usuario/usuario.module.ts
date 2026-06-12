@@ -87,6 +87,7 @@ import { CampusModule } from "@/modules/ambientes/campus/campus.module";
 import { ArquivoModule } from "@/modules/armazenamento/arquivo/arquivo.module";
 import { ImagemModule } from "@/modules/armazenamento/imagem/imagem.module";
 import { HorarioConsultaModule } from "@/modules/calendario/horario-consulta/horario-consulta.module";
+import { TurmaModule } from "@/modules/ensino/turma/turma.module";
 
 @Module({
   imports: [
@@ -95,6 +96,7 @@ import { HorarioConsultaModule } from "@/modules/calendario/horario-consulta/hor
     ArquivoModule,
     HorarioConsultaModule,
     CampusModule,
+    TurmaModule,
   ],
   controllers: [
     UsuarioRestController,
