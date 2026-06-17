@@ -239,6 +239,8 @@ function parseStatus(value: string): EstagioStatus | null {
   const normalized = normalizeText(value);
 
   if (!normalized || normalized === "-") return null;
+  if (normalized.includes("disponivel") || normalized.includes("disponível"))
+    return EstagioStatus.DISPONIVEL;
   if (normalized.includes("em andamento")) return EstagioStatus.EM_ANDAMENTO;
   if (normalized.includes("em fase inicial")) return EstagioStatus.EM_FASE_INICIAL;
   if (normalized.includes("rescind")) return EstagioStatus.RESCINDIDO;
@@ -440,6 +442,7 @@ export function resolveEstagioImportStatus(
   entry: EstagioImportCsvEntry,
   hasEstagiario: boolean,
 ): EstagioStatus {
+  if (entry.status === EstagioStatus.DISPONIVEL) return EstagioStatus.DISPONIVEL;
   if (entry.status === EstagioStatus.RESCINDIDO) return EstagioStatus.RESCINDIDO;
   if (entry.status === EstagioStatus.COM_PENDENCIA) return EstagioStatus.COM_PENDENCIA;
   if (entry.status === EstagioStatus.APTO_PARA_ENCERRAMENTO)
