@@ -12,6 +12,7 @@ import {
 } from "./estagio.schemas";
 
 export enum EstagioStatus {
+  DISPONIVEL = "DISPONIVEL",
   EM_FASE_INICIAL = "EM_FASE_INICIAL",
   EM_ANDAMENTO = "EM_ANDAMENTO",
   RESCINDIDO = "RESCINDIDO",

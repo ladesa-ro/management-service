@@ -328,4 +328,17 @@ describe("prepareEstagiarioDataForCreation", () => {
       emailInstitucional: "user@estudante.ifro.edu.br",
     });
   });
+
+  describe("resolveEstagioImportStatus", () => {
+    it("should resolve to DISPONIVEL when status is DISPONIVEL", () => {
+      const entry = { status: EstagioStatus.DISPONIVEL } as never;
+      expect(resolveEstagioImportStatus(entry, false)).toBe(EstagioStatus.DISPONIVEL);
+      expect(resolveEstagioImportStatus(entry, true)).toBe(EstagioStatus.DISPONIVEL);
+    });
+
+    it("should resolve to EM_FASE_INICIAL when status is EM_FASE_INICIAL", () => {
+      const entry = { status: EstagioStatus.EM_FASE_INICIAL } as never;
+      expect(resolveEstagioImportStatus(entry, false)).toBe(EstagioStatus.EM_FASE_INICIAL);
+    });
+  });
 });
