@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
-import { createTestAccessContext, createTestId } from "@/test/helpers";
 import type { EstagiarioFindOneQueryResult } from "@/modules/estagio/estagiario/domain/queries/estagiario-find-one.query.result";
 import type { EstagioFindOneQueryResult } from "@/modules/estagio/estagio/domain/queries/estagio-find-one.query.result";
+import { createTestAccessContext, createTestId } from "@/test/helpers";
 import type { TurmaFindOneQueryResult } from "../../domain/queries/turma-find-one.query.result";
 import { TurmaListEstagiariosQueryHandlerImpl } from "./turma-list-estagiarios.query.handler";
 
@@ -228,9 +228,7 @@ describe("TurmaListEstagiariosQueryHandlerImpl", () => {
     it("deve lançar erro quando a turma não for encontrada", async () => {
       const { handler } = createHandler({ turmaResult: null });
 
-      await expect(
-        handler.execute(accessContext, { id: createTestId() }),
-      ).rejects.toThrow();
+      await expect(handler.execute(accessContext, { id: createTestId() })).rejects.toThrow();
     });
   });
 
