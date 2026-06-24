@@ -1,20 +1,20 @@
 import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
-import { 
+import {
   EnderecoCreateOrUpdateCommandHandlerImpl,
-  EnderecoDeleteCommandHandlerImpl
+  EnderecoDeleteCommandHandlerImpl,
 } from "@/modules/localidades/endereco/application/commands";
-import { 
+import {
   EnderecoFindOneQueryHandlerImpl,
-  EnderecoListQueryHandlerImpl
+  EnderecoListQueryHandlerImpl,
 } from "@/modules/localidades/endereco/application/queries";
-import { 
+import {
   IEnderecoCreateOrUpdateCommandHandler,
-  IEnderecoDeleteCommandHandler
+  IEnderecoDeleteCommandHandler,
 } from "@/modules/localidades/endereco/domain/commands";
-import { 
+import {
   IEnderecoFindOneQueryHandler,
-  IEnderecoListQueryHandler
+  IEnderecoListQueryHandler,
 } from "@/modules/localidades/endereco/domain/queries";
 import { IEnderecoRepository } from "@/modules/localidades/endereco/domain/repositories";
 import { EnderecoTypeOrmRepositoryAdapter } from "@/modules/localidades/endereco/infrastructure.database";
@@ -46,10 +46,10 @@ import { EnderecoRestController } from "@/modules/localidades/endereco/presentat
     { provide: IEnderecoListQueryHandler, useClass: EnderecoListQueryHandlerImpl },
   ],
   exports: [
-    IEnderecoCreateOrUpdateCommandHandler, 
+    IEnderecoCreateOrUpdateCommandHandler,
     IEnderecoDeleteCommandHandler,
     IEnderecoFindOneQueryHandler,
-    IEnderecoListQueryHandler
+    IEnderecoListQueryHandler,
   ],
 })
 export class EnderecoModule {}
