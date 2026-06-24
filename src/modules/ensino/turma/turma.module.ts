@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { forwardRef, Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
 import { AmbienteModule } from "@/modules/ambientes/ambiente/ambiente.module";
 import { ArquivoModule } from "@/modules/armazenamento/arquivo/arquivo.module";
@@ -46,7 +46,7 @@ import { EstagiarioModule } from "@/modules/estagio/estagiario/estagiario.module
 import { EstagioModule } from "@/modules/estagio/estagio/estagio.module";
 
 @Module({
-  imports: [AmbienteModule, CursoModule, ImagemModule, ArquivoModule, HorarioConsultaModule, EstagiarioModule, EstagioModule],
+  imports: [AmbienteModule, CursoModule, ImagemModule, ArquivoModule, HorarioConsultaModule, forwardRef(() => EstagiarioModule), forwardRef(() => EstagioModule)],
   controllers: [TurmaRestController, TurmaDiarioConfigurarRestController],
   providers: [
     NestJsPaginateAdapter,
