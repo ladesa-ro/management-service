@@ -48,6 +48,6 @@ import { EstagioRestController } from "@/modules/estagio/estagio/presentation.re
     { provide: IEstagioListQueryHandler, useClass: EstagioListQueryHandlerImpl },
     { provide: IEstagioFindOneQueryHandler, useClass: EstagioFindOneQueryHandlerImpl },
   ],
-  exports: [IEstagioFindOneQueryHandler],
+  exports: [IEstagioFindOneQueryHandler, IEstagioRepository],
 })
 export class EstagioModule {}
