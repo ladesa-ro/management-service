@@ -1,9 +1,9 @@
+import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { Dep, Impl } from "@/domain/dependency-injection";
-import { ensureExists } from "@/application/errors";
+import { ITurmaListEstagiariosQueryHandler } from "@/modules/ensino/turma/domain/queries/turma-list-estagiarios.query.handler.interface";
 import { IEstagiarioRepository } from "@/modules/estagio/estagiario/domain/repositories";
 import { IEstagioRepository } from "@/modules/estagio/estagio/domain/repositories";
-import { ITurmaListEstagiariosQueryHandler } from "@/modules/ensino/turma/domain/queries/turma-list-estagiarios.query.handler.interface";
 import type {
   TurmaEstagiarioItem,
   TurmaListEstagiariosQuery,
