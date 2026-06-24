@@ -1,4 +1,4 @@
-  import { EstagiarioFindOneOutputRestDto } from "@/modules/estagio/estagiario/presentation.rest/estagiario.rest.dto";
+import { EstagiarioFindOneOutputRestDto } from "@/modules/estagio/estagiario/presentation.rest/estagiario.rest.dto";
 import { EstagioFindOneOutputRestDto } from "@/modules/estagio/estagio/presentation.rest/estagio.rest.dto";
 import { ApiProperty, ApiSchema } from "@/shared/presentation/rest";
 
