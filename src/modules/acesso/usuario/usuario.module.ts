@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { forwardRef, Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
 import { IdentityProviderModule } from "@/infrastructure.identity-provider/identity-provider.module";
 import { UsuarioPermissionCheckerImpl } from "@/modules/acesso/usuario/application/authorization";
@@ -96,7 +96,7 @@ import { TurmaModule } from "@/modules/ensino/turma/turma.module";
     ArquivoModule,
     HorarioConsultaModule,
     CampusModule,
-    TurmaModule,
+    forwardRef(() => TurmaModule),
   ],
   controllers: [
     UsuarioRestController,

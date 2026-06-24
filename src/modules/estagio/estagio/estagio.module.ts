@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { forwardRef, Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
 import { NotificacaoModule } from "@/modules/acesso/notificacao/notificacao.module";
 import { UsuarioModule } from "@/modules/acesso/usuario/usuario.module";
@@ -27,7 +27,7 @@ import { EstagioRestController } from "@/modules/estagio/estagio/presentation.re
 
 @Module({
   imports: [
-    UsuarioModule,
+    forwardRef(() => UsuarioModule),
     // Fornece EstagioNotificacaoPushService e NotificacaoGateway
     NotificacaoModule,
   ],
@@ -48,6 +48,6 @@ import { EstagioRestController } from "@/modules/estagio/estagio/presentation.re
     { provide: IEstagioListQueryHandler, useClass: EstagioListQueryHandlerImpl },
     { provide: IEstagioFindOneQueryHandler, useClass: EstagioFindOneQueryHandlerImpl },
   ],
-  exports: [IEstagioFindOneQueryHandler],
+  exports: [IEstagioFindOneQueryHandler, IEstagioRepository],
 })
 export class EstagioModule {}

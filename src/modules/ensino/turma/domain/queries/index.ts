@@ -15,3 +15,9 @@ export * from "./turma-list.query.handler.interface";
 export * from "./turma-list.query.result";
 
 export * from "./turma-list.query.schemas";
+
+export * from "./turma-list-estagiarios.query";
+
+export * from "./turma-list-estagiarios.query.handler.interface";
+
+export * from "./turma-list-estagiarios.query.result";

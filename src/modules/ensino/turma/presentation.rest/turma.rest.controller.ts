@@ -62,6 +62,10 @@ import {
   ITurmaListQueryHandler,
   TurmaListQueryMetadata,
 } from "@/modules/ensino/turma/domain/queries/turma-list.query.handler.interface";
+import {
+  ITurmaListEstagiariosQueryHandler,
+  TurmaListEstagiariosQueryMetadata,
+} from "@/modules/ensino/turma/domain/queries/turma-list-estagiarios.query.handler.interface";
 import { Turma } from "@/modules/ensino/turma/domain/turma";
 import { AccessContextHttp } from "@/server/nest/access-context";
 import {
@@ -73,6 +77,7 @@ import {
   TurmaUpdateInputRestDto,
 } from "./turma.rest.dto";
 import * as TurmaRestMapper from "./turma.rest.mapper";
+import { TurmaListEstagiariosOutputRestDto } from "./turma-estagiarios.rest.dto";
 
 @ApiTags("turmas")
 @Controller("/turmas")
@@ -94,6 +99,8 @@ export class TurmaRestController {
     private readonly deleteHandler: ITurmaDeleteCommandHandler,
     @Dep(IHorarioConsultaQueryHandler)
     private readonly horarioConsultaHandler: IHorarioConsultaQueryHandler,
+    @Dep(ITurmaListEstagiariosQueryHandler)
+    private readonly listEstagiariosHandler: ITurmaListEstagiariosQueryHandler,
   ) {}
 
   @Get("/")
@@ -150,6 +157,19 @@ export class TurmaRestController {
     const command = TurmaRestMapper.updateInputDtoToUpdateCommand.map({ params, dto });
     const queryResult = await this.updateHandler.execute(accessContext, command);
     return TurmaRestMapper.findOneQueryResultToOutputDto.map(queryResult);
+  }
+
+  @Get("/:id/estagiarios")
+  @ApiOperation(TurmaListEstagiariosQueryMetadata.swaggerMetadata)
+  @ApiOkResponse({ type: TurmaListEstagiariosOutputRestDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async listEstagiarios(
+    @AccessContextHttp() accessContext: IAccessContext,
+    @Param() params: TurmaFindOneInputRestDto,
+  ): Promise<TurmaListEstagiariosOutputRestDto> {
+    const result = await this.listEstagiariosHandler.execute(accessContext, { id: params.id });
+    return result as unknown as TurmaListEstagiariosOutputRestDto;
   }
 
   @Get("/:id/horario")
