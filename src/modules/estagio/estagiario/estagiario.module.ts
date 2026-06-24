@@ -42,6 +42,6 @@ import { EstagiarioRestController } from "@/modules/estagio/estagiario/presentat
     { provide: IEstagiarioListQueryHandler, useClass: EstagiarioListQueryHandlerImpl },
     { provide: IEstagiarioFindOneQueryHandler, useClass: EstagiarioFindOneQueryHandlerImpl },
   ],
-  exports: [IEstagiarioFindOneQueryHandler],
+  exports: [IEstagiarioFindOneQueryHandler, IEstagiarioRepository],
 })
 export class EstagiarioModule {}
