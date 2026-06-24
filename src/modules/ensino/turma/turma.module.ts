@@ -16,6 +16,7 @@ import {
   TurmaFindOneQueryHandlerImpl,
   TurmaGetImagemCapaQueryHandlerImpl,
   TurmaListQueryHandlerImpl,
+  TurmaListEstagiariosQueryHandlerImpl,
 } from "@/modules/ensino/turma/application/queries";
 import { ITurmaPermissionChecker } from "@/modules/ensino/turma/domain/authorization";
 import {
@@ -28,6 +29,7 @@ import {
   ITurmaFindOneQueryHandler,
   ITurmaGetImagemCapaQueryHandler,
   ITurmaListQueryHandler,
+  ITurmaListEstagiariosQueryHandler,
 } from "@/modules/ensino/turma/domain/queries";
 import {
   IDiarioConfigurarRepository,
@@ -40,9 +42,11 @@ import {
 import { TurmaGraphqlResolver } from "@/modules/ensino/turma/presentation.graphql/turma.graphql.resolver";
 import { TurmaRestController } from "@/modules/ensino/turma/presentation.rest/turma.rest.controller";
 import { TurmaDiarioConfigurarRestController } from "@/modules/ensino/turma/presentation.rest/turma-diario-configurar.rest.controller";
+import { EstagiarioModule } from "@/modules/estagio/estagiario/estagiario.module";
+import { EstagioModule } from "@/modules/estagio/estagio/estagio.module";
 
 @Module({
-  imports: [AmbienteModule, CursoModule, ImagemModule, ArquivoModule, HorarioConsultaModule],
+  imports: [AmbienteModule, CursoModule, ImagemModule, ArquivoModule, HorarioConsultaModule, EstagiarioModule, EstagioModule],
   controllers: [TurmaRestController, TurmaDiarioConfigurarRestController],
   providers: [
     NestJsPaginateAdapter,
@@ -69,6 +73,7 @@ import { TurmaDiarioConfigurarRestController } from "@/modules/ensino/turma/pres
     { provide: ITurmaListQueryHandler, useClass: TurmaListQueryHandlerImpl },
     { provide: ITurmaFindOneQueryHandler, useClass: TurmaFindOneQueryHandlerImpl },
     { provide: ITurmaGetImagemCapaQueryHandler, useClass: TurmaGetImagemCapaQueryHandlerImpl },
+    { provide: ITurmaListEstagiariosQueryHandler, useClass: TurmaListEstagiariosQueryHandlerImpl },
   ],
   exports: [ITurmaFindOneQueryHandler, ITurmaListQueryHandler],
 })
