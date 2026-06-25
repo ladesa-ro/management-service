@@ -44,4 +44,8 @@ export class WhatsappNotificationsService {
     if (!phone || phone.length < 4) return "****";
     return `${phone.slice(0, 2)}****${phone.slice(-4)}`;
   }
+
+  async getStatus(): Promise<any> {
+    return this.openWAService.getSessionStatus();
+  }
 }
