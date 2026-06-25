@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, Redirect } from "@nestjs/common";
+import { Body, Controller, Get, HttpCode, HttpException, HttpStatus, Post } from "@nestjs/common";
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { SendWhatsappNotificationDto } from "../dto/send-whatsapp-notification.dto";
 import { WhatsappNotificationResponse } from "../interfaces/whatsapp-notification-response.interface";
@@ -36,12 +36,16 @@ export class WhatsappNotificationsController {
     return this.whatsappNotificationsService.getStatus();
   }
 
-  @Get("whatsapp/login")
-  @ApiOperation({ summary: "Redireciona para a interface de login (QR Code) do OpenWA" })
-  @Redirect()
-  async login() {
-    const openwaUrl = process.env.OPENWA_BASE_URL || "http://localhost:8000";
-    // We return the URL so NestJS can issue a 302 Redirect to the frontend
-    return { url: openwaUrl, statusCode: HttpStatus.FOUND };
+  @Get("whatsapp/qr-code")
+  @ApiOperation({ summary: "Obtém o QR Code (Base64) para login" })
+  async getQrCode() {
+    const qrCode = this.whatsappNotificationsService.getQrCode();
+    if (!qrCode) {
+      throw new HttpException(
+        "Nenhum QR Code disponível. A sessão pode já estar conectada ou ainda inicializando.",
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    return { qrCode };
   }
 }
