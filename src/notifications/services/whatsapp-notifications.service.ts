@@ -7,6 +7,8 @@ import { WhatsappNotificationResponse } from "../interfaces/whatsapp-notificatio
 @Injectable()
 export class WhatsappNotificationsService {
   private readonly logger = new Logger(WhatsappNotificationsService.name);
+  private currentQrCode: string | null = null;
+  private currentStatus: string = "UNINITIALIZED";
 
   constructor(private readonly openWAService: OpenWAService) {}
 
@@ -46,6 +48,32 @@ export class WhatsappNotificationsService {
   }
 
   async getStatus(): Promise<any> {
-    return this.openWAService.getSessionStatus();
+    try {
+      const openWaStatus = await this.openWAService.getSessionStatus();
+      return { apiStatus: openWaStatus, webhookStatus: this.currentStatus };
+    } catch {
+      return { webhookStatus: this.currentStatus };
+    }
+  }
+
+  handleWebhook(payload: any) {
+    this.logger.log(`Received WhatsApp webhook event: ${payload?.event}`);
+
+    if (payload?.event === "qr") {
+      this.currentQrCode = payload.data;
+      this.currentStatus = "WAITING_FOR_SCAN";
+    } else if (payload?.event === "authenticated" || payload?.event === "ready") {
+      this.currentQrCode = null;
+      this.currentStatus = "AUTHENTICATED";
+    } else if (payload?.event === "disconnected") {
+      this.currentStatus = "DISCONNECTED";
+      this.currentQrCode = null;
+    } else if (payload?.event === "state_change") {
+      this.currentStatus = payload.data;
+    }
+  }
+
+  getQrCode(): string | null {
+    return this.currentQrCode;
   }
 }
