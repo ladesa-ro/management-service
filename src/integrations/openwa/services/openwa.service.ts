@@ -1,5 +1,5 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { OpenWAClient } from '../client/openwa.client';
+import { Injectable, Logger } from "@nestjs/common";
+import { OpenWAClient } from "../client/openwa.client";
 
 @Injectable()
 export class OpenWAService {
@@ -9,9 +9,9 @@ export class OpenWAService {
 
   async sendMessage(to: string, text: string): Promise<boolean> {
     this.logger.log(`Attempting to send message to ${to}`);
-    
+
     // Formatting the number to match OpenWA expectations, adding @c.us if missing
-    const formattedTo = to.includes('@c.us') ? to : `${to}@c.us`;
+    const formattedTo = to.includes("@c.us") ? to : `${to}@c.us`;
 
     try {
       const result = await this.openWAClient.sendText({
