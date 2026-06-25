@@ -34,4 +34,8 @@ export const ConfigTokens = {
     QueueTimetableRequest: Symbol("MessageBrokerOptions.QueueTimetableRequest"),
     QueueTimetableResponse: Symbol("MessageBrokerOptions.QueueTimetableResponse"),
   },
+  WhatsAppOptions: {
+    Host: Symbol("WhatsAppOptions.Host"),
+    ApiKey: Symbol("WhatsAppOptions.ApiKey"),
+  },
 } as const;
