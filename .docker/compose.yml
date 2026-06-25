@@ -61,6 +61,28 @@ services:
       - "5672:5672"
       - "15672:15672"
 
+  openwa:
+    container_name: ladesa-openwa-service
+    image: openwa/wa-automate:latest
+    restart: always
+    ports:
+      - "8000:8000"
+    networks:
+      - ladesa-net
+    environment:
+      - PORT=8000
+      - API_KEY=${OPENWA_API_KEY:-dev_key}
+      - WEBHOOK_URL=${OPENWA_WEBHOOK_URL:-http://management-service:3701/api/webhooks/whatsapp}
+      - KEEP_ALIVE=true
+    volumes:
+      - openwa-session-data:/app/session
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/sessionStatus"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
 networks:
   ladesa-net:
 
@@ -68,3 +90,4 @@ volumes:
   management-service-db-data:
   management-service-uploaded-files:
   management-service-shell-history:
+  openwa-session-data:
