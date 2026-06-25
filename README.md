@@ -461,14 +461,17 @@ graph TB
         MS["Management Service\n:3701 (API)\n:9229 (debug)"]
         DB["PostgreSQL 15\n(bitnamilegacy/postgresql:15)\n:5432"]
         RMQ["RabbitMQ 3\n(rabbitmq:3-management-alpine)\n:15672 (UI)"]
+        OWA["OpenWA\n(openwa/wa-automate)\n:8000"]
     end
 
     MS --> DB
     MS --> RMQ
+    MS --> OWA
 
     style MS fill:#4a90d9,stroke:#2c5f8a,color:#fff
     style DB fill:#336791,stroke:#1e3d5c,color:#fff
     style RMQ fill:#ff6600,stroke:#b34700,color:#fff
+    style OWA fill:#25D366,stroke:#128C7E,color:#fff
 ```
 
 | Serviço | Container | Porta | Credenciais |
@@ -476,11 +479,13 @@ graph TB
 | **Management Service** | `ladesa-management-service` | `3701` (API), `9229` (debug) | — |
 | **PostgreSQL 15** | `ladesa-management-service-db` | `5432` | database: `main`, password: `7f22682363b549a389e03b7fe512488b` |
 | **RabbitMQ 3** | `ladesa-rabbitmq` | `5672` (AMQP), `15672` (UI) | admin / admin |
+| **OpenWA** | `ladesa-openwa-service` | `8000` | API Key (ver `.env.example`) |
 
 **Volumes persistentes:**
 - `management-service-db-data` — dados do PostgreSQL (persistem entre restarts)
 - `management-service-uploaded-files` — arquivos enviados
 - `management-service-shell-history` — histórico do shell
+- `openwa-session-data` — dados de sessão e autenticação do WhatsApp
 
 **Rede:** `ladesa-net` (bridge — uma rede virtual interna do Docker que permite que os containers se encontrem pelo nome) — todos os serviços se comunicam por nome de container.
 
@@ -554,6 +559,13 @@ As variáveis são definidas no arquivo `.env`, criado automaticamente a partir 
 | Variável | Valor padrão | Descrição |
 |----------|--------------|-----------|
 | `STORAGE_PATH` | `/container/uploaded` | Diretório onde arquivos enviados são armazenados |
+
+### OpenWA (WhatsApp Automation)
+
+| Variável | Valor padrão | Descrição |
+|----------|--------------|-----------|
+| `OPENWA_HOST` | `http://ladesa-openwa-service:8000` | Host do serviço OpenWA na rede interna |
+| `OPENWA_API_KEY` | `dev_key_here` | Chave de segurança para comunicar com a API do OpenWA |
 
 ### Sobre o prefixo (`API_PREFIX`)
 
