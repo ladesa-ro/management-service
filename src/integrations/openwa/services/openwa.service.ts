@@ -31,4 +31,8 @@ export class OpenWAService {
       throw error;
     }
   }
+
+  async getSessionStatus(): Promise<any> {
+    return this.openWAClient.getSessionStatus();
+  }
 }
