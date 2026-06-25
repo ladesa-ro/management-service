@@ -79,4 +79,20 @@ export class OpenWAClient {
       throw new OpenWASendMessageException("Unknown error occurred");
     }
   }
+
+  async getSessionStatus(): Promise<any> {
+    const url = `${this.baseUrl}/api/sessionStatus`;
+    try {
+      const response = await firstValueFrom(
+        this.httpService.get(url, {
+          headers: { api_key: this.apiKey },
+          timeout: this.defaultTimeout,
+        }),
+      );
+      return response.data;
+    } catch (error: any) {
+      this.logger.error(`Failed to get session status: ${error.message}`);
+      throw new OpenWAConnectionException("Failed to get OpenWA session status");
+    }
+  }
 }
