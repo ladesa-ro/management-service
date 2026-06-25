@@ -4,10 +4,10 @@ import { SendWhatsappNotificationDto } from "../dto/send-whatsapp-notification.d
 import { WhatsappNotificationResponse } from "../interfaces/whatsapp-notification-response.interface";
 import { WhatsappNotificationsService } from "../services/whatsapp-notifications.service";
 
-@ApiTags("Notifications")
+@ApiTags("WhatsApp Notifications")
 @Controller("notifications")
 export class WhatsappNotificationsController {
-  constructor(private readonly whatsappNotificationsService: WhatsappNotificationsService) {}
+  constructor(private readonly whatsappNotificationsService: WhatsappNotificationsService) { }
 
   @Post("whatsapp/send")
   @HttpCode(HttpStatus.OK)
