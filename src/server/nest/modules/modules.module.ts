@@ -31,6 +31,7 @@ import { CidadeModule } from "@/modules/localidades/cidade/cidade.module";
 import { EnderecoModule } from "@/modules/localidades/endereco/endereco.module";
 import { EstadoModule } from "@/modules/localidades/estado/estado.module";
 import { RelatorioModule } from "@/modules/relatorios/relatorio/relatorio.module";
+import { NotificationsModule } from "@/notifications/notifications.module";
 
 @Module({
   imports: [
@@ -66,6 +67,7 @@ import { RelatorioModule } from "@/modules/relatorios/relatorio/relatorio.module
     RelatorioModule,
     GradeHorariaModule,
     TurmaDisponibilidadeModule,
+    NotificationsModule,
   ],
 })
 export class ModulesModule {}
