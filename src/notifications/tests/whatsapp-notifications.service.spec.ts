@@ -1,18 +1,21 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { OpenWAService } from "@/integrations/openwa/services/openwa.service";
+import {
+  IWhatsAppProvider,
+  IWhatsAppProviderToken,
+} from "../interfaces/whatsapp-provider.interface";
 import { WhatsappNotificationsService } from "../services/whatsapp-notifications.service";
 
 describe("WhatsappNotificationsService", () => {
   let service: WhatsappNotificationsService;
-  let openWAService: OpenWAService;
+  let openWAService: IWhatsAppProvider;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         WhatsappNotificationsService,
         {
-          provide: OpenWAService,
+          provide: IWhatsAppProviderToken,
           useValue: {
             sendMessage: vi.fn(),
           },
@@ -21,7 +24,7 @@ describe("WhatsappNotificationsService", () => {
     }).compile();
 
     service = module.get<WhatsappNotificationsService>(WhatsappNotificationsService);
-    openWAService = module.get<OpenWAService>(OpenWAService);
+    openWAService = module.get<IWhatsAppProvider>(IWhatsAppProviderToken);
   });
 
   it("should return success response when openwa succeeds", async () => {
