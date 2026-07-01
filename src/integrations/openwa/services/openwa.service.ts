@@ -19,7 +19,7 @@ export class OpenWAService implements IWhatsAppProvider {
 
     try {
       const result = await this.openWAClient.sendText({
-        a rgs: {
+        args: {
           to: formattedTo,
           text,
         },
