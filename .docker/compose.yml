@@ -78,6 +78,7 @@ services:
       - API_KEY=${OPENWA_API_KEY:-dev_key}
       - WEBHOOK_URL=${OPENWA_WEBHOOK_URL:-http://management-service:3701/api/webhooks/whatsapp}
       - KEEP_ALIVE=true
+      - WA_CUSTOM_USER_AGENT=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36
     volumes:
       - openwa-session-data:/app/session
     healthcheck:
