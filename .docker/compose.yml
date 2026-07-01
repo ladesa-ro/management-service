@@ -1,4 +1,5 @@
-x-podman: # para funcionar com o podman
+x-podman:
+  # para funcionar com o podman
   in_pod: false
 
 services:
@@ -63,8 +64,11 @@ services:
 
   openwa:
     container_name: ladesa-openwa-service
-    image: openwa/wa-automate:latest
+    build:
+      context: ../.docker
+      dockerfile: Containerfile.openwa
     restart: always
+    shm_size: '2gb'
     ports:
       - "8000:8000"
     networks:
@@ -77,7 +81,7 @@ services:
     volumes:
       - openwa-session-data:/app/session
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/api/sessionStatus"]
+      test: [ "CMD", "curl", "-f", "http://localhost:8000/api/sessionStatus" ]
       interval: 30s
       timeout: 10s
       retries: 3
