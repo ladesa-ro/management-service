@@ -327,7 +327,14 @@
         if (message.namespace === "qr") {
           $(`#${message.sessionId} .status-badge`).text('Aguardando Leitura');
           $(`#${message.sessionId} .qr-placeholder`).hide();
-          $(`#${message.sessionId} .qr`).attr('src', message.data).show();
+          
+          let qrSrc = message.data;
+          // Se vier com o prefixo 'qr ', remove-o para o src funcionar corretamente
+          if (typeof qrSrc === 'string' && qrSrc.startsWith('qr ')) {
+            qrSrc = qrSrc.replace(/^qr\s+/, '');
+          }
+          
+          $(`#${message.sessionId} .qr`).attr('src', qrSrc).show();
           $(`#${message.sessionId} .loader`).hide();
           appendLog(message.sessionId, "» Novo QR Code gerado. Escaneie-o com seu WhatsApp.");
         }
