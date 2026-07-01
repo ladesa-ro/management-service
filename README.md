@@ -2573,7 +2573,7 @@ Esse fluxo se repete para todos os módulos. Queries (`FindById`, `FindAll`) seg
 management-service/
 ├── .devcontainer/          # Configuração do Dev Container (VS Code / WebStorm)
 ├── .docker/                # Containerfile e compose.yml
-├── .deploy/                # Scripts e values de deploy (Helm/Kubernetes)
+├── .deploy/                # Configurações de implantação (Helm/Kubernetes e VPS via Docker Compose)
 ├── .github/workflows/      # Pipelines de CI/CD
 ├── src/                    # Código-fonte principal
 │   ├── domain/             # Camada de domínio (entidades, abstrações, erros)
@@ -3937,6 +3937,99 @@ source_patterns:
   - .deploy/**/*
 confidence_scope: Pipeline CI/CD (triggers, etapas build/push/deploy), imagem Docker (target service-runtime, GHCR), concurrency build-deploy-dev
 -->
+
+---
+
+## Implantação em Produção (VPS via Docker Compose)
+
+Para implantar a aplicação de forma rápida e segura em um servidor VPS convencional, o projeto fornece um conjunto de configurações prontas baseadas em **Docker Compose** localizadas em `.deploy/vps/`.
+
+Esta estrutura é **independente e autossuficiente**, o que significa que você só precisa copiar a pasta `.deploy/vps` para a VPS para executar toda a pilha de serviços, puxando a imagem de produção do backend diretamente do registro de contêineres do GitHub (GHCR).
+
+### Estrutura do Deploy VPS
+```
+.deploy/vps/
+├── docker-compose.yml       # Orquestração dos serviços de produção
+├── deploy.sh                # Script utilitário para automação do deploy
+├── .env.example             # Modelo de variáveis de ambiente de produção
+└── openwa/
+    ├── Dockerfile           # Reconstrói a imagem OpenWA com o patch do dashboard
+    └── openwa-dashboard.html # Painel personalizado para pareamento do WhatsApp
+```
+
+### Serviços incluídos
+1. **API Backend (`management-service`)**: Roda a imagem de produção compilada (`service-runtime`) servida na porta interna `3000`. Executa as migrações de banco automaticamente ao iniciar.
+2. **PostgreSQL 15 (`db`)**: Banco de dados persistido via volume do docker. Mantido privado (não exposto diretamente à internet).
+3. **RabbitMQ (`rabbitmq`)**: Broker de mensagens para tarefas assíncronas. Painel de gerenciamento exposto na porta `15672` (vinculado a localhost).
+4. **WhatsApp Service (`openwa`)**: Executa a biblioteca `@open-wa/wa-automate` com suporte a um User-Agent atualizado de Chrome moderno (evitando o erro de navegador não suportado) e o painel customizado exposto na porta `8000` (vinculado a localhost).
+
+---
+
+### ⚠️ Recomendações de Segurança (Secure by Default)
+
+Por padrão, a configuração de deploy na VPS está protegida contra acessos públicos diretos indesejados:
+*   **Portas Locais**: As portas da API (`3000`), OpenWA (`8000`) e painel do RabbitMQ (`15672`) estão vinculadas apenas à interface local **`127.0.0.1`** (localhost). Isso impede que qualquer pessoa acesse estes painéis diretamente pela internet através do IP público da VPS.
+*   **Acesso Seguro**: O acesso externo deve ser configurado por meio de um **Proxy Reverso** com criptografia SSL/TLS (HTTPS) e, no caso do OpenWA, controle de acesso adicional.
+*   **Isolamento de Banco**: O banco de dados PostgreSQL não possui mapeamento de portas externo e roda exclusivamente dentro da rede interna isolada do Docker.
+
+---
+
+### Passo a Passo para Implantação na VPS
+
+1. **Copiar os arquivos de deploy**:
+   Transfira a pasta `.deploy/vps` do seu ambiente de desenvolvimento para a sua VPS. Você pode fazer isso via `rsync`, `scp` ou clonando o repositório na máquina de destino.
+
+2. **Configurar as Variáveis de Ambiente**:
+   Na VPS, acesse a pasta copiada e crie o arquivo ativo:
+   ```bash
+   cp .env.example .env
+   ```
+   Abra o arquivo `.env` e configure todas as credenciais de produção essenciais:
+   - Substitua as senhas padrão em `POSTGRES_PASSWORD` e `RABBITMQ_PASS`.
+   - Modifique a chave de API do openwa em `OPENWA_API_KEY`.
+   - Configure os segredos do Keycloak (`OAUTH2_CLIENT_REGISTRATION_LOGIN_CLIENT_SECRET`, `KC_CLIENT_SECRET`, etc.).
+
+3. **Executar o Script de Deploy**:
+   Dê permissão de execução (caso necessário) e inicie o deploy:
+   ```bash
+   chmod +x deploy.sh
+   ./deploy.sh
+   ```
+   Este script irá:
+   - Validar se o `.env` existe.
+   - Puxar a última imagem de produção do backend (`management-service`).
+   - Construir localmente a imagem do `openwa` aplicando o patch com o painel de WhatsApp atualizado.
+   - Subir todos os serviços em background (`detached`).
+
+---
+
+### Configuração de Proxy Reverso e HTTPS
+
+Para expor os serviços à internet de forma segura sob um domínio (ex: `ladesa.com.br`) e obter certificados SSL automáticos via Let's Encrypt, recomenda-se o uso de um proxy reverso como o **Caddy** ou **Nginx**.
+
+#### Exemplo com Caddy (`Caddyfile`)
+Caddy gerencia os certificados SSL automaticamente e de forma simples:
+
+```caddyfile
+api.ladesa.com.br {
+    # Encaminha as chamadas da API principal
+    reverse_proxy /api/* localhost:3000
+
+    # Encaminha o Playground GraphQL (caso habilitado)
+    reverse_proxy /api/graphql* localhost:3000
+
+    # Painel do WhatsApp (exposto sob o subcaminho /whatsapp)
+    # Acesso via browser: https://api.ladesa.com.br/whatsapp
+    route /whatsapp* {
+        # Opcional: Adicione Basic Auth para proteger o painel de pareamento
+        # basic_auth {
+        #     admin HASH_DE_SENHA_AQUI
+        # }
+        uri strip_prefix /whatsapp
+        reverse_proxy localhost:8000
+    }
+}
+```
 
 ---
 
