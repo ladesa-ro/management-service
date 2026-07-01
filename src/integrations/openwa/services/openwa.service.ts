@@ -1,5 +1,6 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { OpenWAClient } from "../client/openwa.client";
+import { OpenWaSessionStatus } from "../interfaces/openwa-session-status.interface";
 
 @Injectable()
 export class OpenWAService {
@@ -32,7 +33,7 @@ export class OpenWAService {
     }
   }
 
-  async getSessionStatus(): Promise<any> {
+  async getSessionStatus(): Promise<OpenWaSessionStatus> {
     return this.openWAClient.getSessionStatus();
   }
 }
