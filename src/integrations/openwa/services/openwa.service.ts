@@ -1,9 +1,12 @@
 import { Injectable, Logger } from "@nestjs/common";
+import {
+  type IWhatsAppProvider,
+  type IWhatsappSessionStatus,
+} from "@/notifications/interfaces/whatsapp-provider.interface";
 import { OpenWAClient } from "../client/openwa.client";
-import { OpenWaSessionStatus } from "../interfaces/openwa-session-status.interface";
 
 @Injectable()
-export class OpenWAService {
+export class OpenWAService implements IWhatsAppProvider {
   private readonly logger = new Logger(OpenWAService.name);
 
   constructor(private readonly openWAClient: OpenWAClient) {}
@@ -16,7 +19,7 @@ export class OpenWAService {
 
     try {
       const result = await this.openWAClient.sendText({
-        args: {
+        a rgs: {
           to: formattedTo,
           text,
         },
@@ -33,7 +36,7 @@ export class OpenWAService {
     }
   }
 
-  async getSessionStatus(): Promise<OpenWaSessionStatus> {
+  async getSessionStatus(): Promise<IWhatsappSessionStatus> {
     return this.openWAClient.getSessionStatus();
   }
 }
