@@ -9,6 +9,7 @@ import {
   OpenWASendMessageException,
   OpenWATimeoutException,
 } from "../exceptions/openwa.exceptions";
+import { OpenWaSessionStatus } from "../interfaces/openwa-session-status.interface";
 
 @Injectable()
 export class OpenWAClient {
@@ -36,51 +37,39 @@ export class OpenWAClient {
     const url = `${this.baseUrl}/api/sendText`;
     this.logger.debug(`Calling OpenWA API to send message: ${url}`);
 
-    try {
-      const response = await firstValueFrom(
-        this.httpService
-          .post(url, payload, {
-            headers: {
-              "Content-Type": "application/json",
-              api_key: this.apiKey,
-            },
-            timeout: this.defaultTimeout,
-          })
-          .pipe(
-            catchError((error) => {
-              if (error.code === "ECONNABORTED" || error.message?.includes("timeout")) {
-                throw new OpenWATimeoutException();
-              }
-              this.logger.error(`OpenWA Error Response: ${error.message}`);
-              if (error.response) {
-                throw new OpenWASendMessageException(
-                  `OpenWA returned status ${error.response.status}`,
-                );
-              }
-              throw new OpenWAConnectionException(error.message);
-            }),
-          ),
-      );
+    const response = await firstValueFrom(
+      this.httpService
+        .post(url, payload, {
+          headers: {
+            "Content-Type": "application/json",
+            api_key: this.apiKey,
+          },
+          timeout: this.defaultTimeout,
+        })
+        .pipe(
+          catchError((error) => {
+            if (error.code === "ECONNABORTED" || error.message?.includes("timeout")) {
+              throw new OpenWATimeoutException();
+            }
+            this.logger.error(`OpenWA Error Response: ${error.message}`);
+            if (error.response) {
+              throw new OpenWASendMessageException(
+                `OpenWA returned status ${error.response.status}`,
+              );
+            }
+            throw new OpenWAConnectionException(error.message);
+          }),
+        ),
+    );
 
-      if (response.status >= 200 && response.status < 300) {
-        return true;
-      }
-
-      throw new OpenWASendMessageException(`Unexpected status code: ${response.status}`);
-    } catch (error) {
-      if (
-        error instanceof OpenWATimeoutException ||
-        error instanceof OpenWAConnectionException ||
-        error instanceof OpenWASendMessageException
-      ) {
-        throw error;
-      }
-      this.logger.error(`Unknown error during OpenWA call: ${error}`);
-      throw new OpenWASendMessageException("Unknown error occurred");
+    if (response.status >= 200 && response.status < 300) {
+      return true;
     }
+
+    throw new OpenWASendMessageException(`Unexpected status code: ${response.status}`);
   }
 
-  async getSessionStatus(): Promise<any> {
+  async getSessionStatus(): Promise<OpenWaSessionStatus> {
     const url = `${this.baseUrl}/api/sessionStatus`;
     try {
       const response = await firstValueFrom(
