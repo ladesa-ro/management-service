@@ -42,12 +42,23 @@ export class GlobalExceptionFilter implements ExceptionFilter {
 
   private logException(exception: unknown, request: Request | undefined): void {
     const correlationId = request?.correlationId;
+    const errorResponse = buildStandardizedErrorResponse(exception, request?.url);
+    const isClientError = errorResponse.statusCode >= 400 && errorResponse.statusCode < 500;
 
-    this.logger.error(
-      "Unhandled exception",
-      exception instanceof Error ? exception.stack : String(exception),
-      "GlobalExceptionFilter",
-      { path: request?.url, correlationId },
-    );
+    if (isClientError) {
+      this.logger.warn(`Client error: ${errorResponse.message}`, "GlobalExceptionFilter", {
+        path: request?.url,
+        correlationId,
+        code: errorResponse.code,
+        statusCode: errorResponse.statusCode,
+      });
+    } else {
+      this.logger.error(
+        "Unhandled exception",
+        exception instanceof Error ? exception.stack : String(exception),
+        "GlobalExceptionFilter",
+        { path: request?.url, correlationId },
+      );
+    }
   }
 }
