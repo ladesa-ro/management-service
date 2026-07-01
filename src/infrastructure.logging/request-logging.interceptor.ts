@@ -28,7 +28,7 @@ export class RequestLoggingInterceptor implements NestInterceptor {
     private readonly logger: ILoggerPort,
     @Inject(IPerformanceHooksToken)
     private readonly perfHooks: IPerformanceHooks,
-  ) { }
+  ) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
     const isGraphql = context.getType<GqlContextType>() === "graphql";
