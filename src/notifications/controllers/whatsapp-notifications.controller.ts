@@ -39,7 +39,7 @@ export class WhatsappNotificationsController {
   @Get("whatsapp/qr-code")
   @ApiOperation({ summary: "Obtém o QR Code (Base64) para login" })
   async getQrCode() {
-    const qrCode = this.whatsappNotificationsService.getQrCode();
+    const qrCode = await this.whatsappNotificationsService.getQrCode();
     if (!qrCode) {
       throw new HttpException(
         "Nenhum QR Code disponível. A sessão pode já estar conectada ou ainda inicializando.",
