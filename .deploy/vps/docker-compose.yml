@@ -9,7 +9,7 @@ services:
       rabbitmq:
         condition: service_started
     ports:
-      - "${HOST_PORT_API:-3000}:3000"
+      - "${HOST_PORT_API:-127.0.0.1:3000}:3000"
     volumes:
       - uploaded-data:/container/uploaded
     env_file:
@@ -46,7 +46,7 @@ services:
     networks:
       - ladesa-net
     ports:
-      - "${HOST_PORT_RABBITMQ:-15672}:15672"
+      - "${HOST_PORT_RABBITMQ:-127.0.0.1:15672}:15672"
 
   openwa:
     container_name: ladesa-openwa-service
@@ -56,7 +56,7 @@ services:
     restart: always
     shm_size: '2gb'
     ports:
-      - "${HOST_PORT_OPENWA:-8000}:8000"
+      - "${HOST_PORT_OPENWA:-127.0.0.1:8000}:8000"
     networks:
       - ladesa-net
     environment:
