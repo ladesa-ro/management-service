@@ -1,5 +1,6 @@
 import { Body, Controller, HttpCode, HttpStatus, Post } from "@nestjs/common";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
+import { OpenWaWebhookEventDto } from "@/integrations/openwa/dto/openwa-webhook-event.dto";
 import { WhatsappNotificationsService } from "../services/whatsapp-notifications.service";
 
 @ApiTags("WhatsApp Webhooks")
@@ -10,7 +11,7 @@ export class WhatsappWebhooksController {
   @Post("whatsapp")
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: "Recebe os eventos Webhook enviados pelo container do OpenWA" })
-  async handleWebhook(@Body() payload: any) {
+  async handleWebhook(@Body() payload: OpenWaWebhookEventDto) {
     this.whatsappNotificationsService.handleWebhook(payload);
     return { success: true };
   }
