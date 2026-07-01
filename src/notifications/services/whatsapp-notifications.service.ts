@@ -1,9 +1,10 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { v4 as uuidv4 } from "uuid";
+import { OpenWaWebhookEventDto } from "@/integrations/openwa/dto/openwa-webhook-event.dto";
+import { OpenWaSessionStatus } from "@/integrations/openwa/interfaces/openwa-session-status.interface";
 import { OpenWAService } from "@/integrations/openwa/services/openwa.service";
 import { SendWhatsappNotificationDto } from "../dto/send-whatsapp-notification.dto";
 import { WhatsappNotificationResponse } from "../interfaces/whatsapp-notification-response.interface";
-
 @Injectable()
 export class WhatsappNotificationsService {
   private readonly logger = new Logger(WhatsappNotificationsService.name);
@@ -47,7 +48,7 @@ export class WhatsappNotificationsService {
     return `${phone.slice(0, 2)}****${phone.slice(-4)}`;
   }
 
-  async getStatus(): Promise<any> {
+  async getStatus(): Promise<{ apiStatus?: OpenWaSessionStatus; webhookStatus: string }> {
     try {
       const openWaStatus = await this.openWAService.getSessionStatus();
       return { apiStatus: openWaStatus, webhookStatus: this.currentStatus };
@@ -56,7 +57,10 @@ export class WhatsappNotificationsService {
     }
   }
 
-  handleWebhook(payload: any) {
+  // NOTA TÉCNICA: O estado da sessão (currentQrCode, currentStatus) está mantido em memória.
+  // Em um cenário de escalabilidade horizontal (múltiplas instâncias do serviço), isso causará inconsistência.
+  // Considere migrar este estado para um armazenamento compartilhado, como o Redis.
+  handleWebhook(payload: OpenWaWebhookEventDto) {
     this.logger.log(`Received WhatsApp webhook event: ${payload?.event}`);
 
     if (payload?.event === "qr") {
