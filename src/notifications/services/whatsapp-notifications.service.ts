@@ -1,24 +1,28 @@
-import { Injectable, Logger } from "@nestjs/common";
+import { Inject, Injectable, Logger } from "@nestjs/common";
 import { v4 as uuidv4 } from "uuid";
 import { OpenWaWebhookEventDto } from "@/integrations/openwa/dto/openwa-webhook-event.dto";
-import { OpenWaSessionStatus } from "@/integrations/openwa/interfaces/openwa-session-status.interface";
-import { OpenWAService } from "@/integrations/openwa/services/openwa.service";
 import { SendWhatsappNotificationDto } from "../dto/send-whatsapp-notification.dto";
 import { WhatsappNotificationResponse } from "../interfaces/whatsapp-notification-response.interface";
+import {
+  type IWhatsAppProvider,
+  IWhatsAppProviderToken,
+  type IWhatsappSessionStatus,
+} from "../interfaces/whatsapp-provider.interface";
+
 @Injectable()
 export class WhatsappNotificationsService {
   private readonly logger = new Logger(WhatsappNotificationsService.name);
-  private currentQrCode: string | null = null;
-  private currentStatus: string = "UNINITIALIZED";
 
-  constructor(private readonly openWAService: OpenWAService) {}
+  constructor(
+    @Inject(IWhatsAppProviderToken) private readonly whatsappProvider: IWhatsAppProvider,
+  ) {}
 
   async sendNotification(dto: SendWhatsappNotificationDto): Promise<WhatsappNotificationResponse> {
     const { phone, message } = dto;
     this.logger.log(`Iniciando envio de notificação para: ${this.maskPhone(phone)}`);
 
     try {
-      const success = await this.openWAService.sendMessage(phone, message);
+      const success = await this.whatsappProvider.sendMessage(phone, message);
 
       if (success) {
         this.logger.log(`Notificação enviada com sucesso para: ${this.maskPhone(phone)}`);
@@ -29,7 +33,7 @@ export class WhatsappNotificationsService {
         };
       }
 
-      throw new Error("Falha ao processar o envio através do OpenWA.");
+      throw new Error("Falha ao processar o envio através do Provedor de WhatsApp.");
     } catch (error: any) {
       this.logger.error(
         `Erro ao enviar notificação para ${this.maskPhone(phone)}: ${error?.message || error}`,
@@ -48,36 +52,27 @@ export class WhatsappNotificationsService {
     return `${phone.slice(0, 2)}****${phone.slice(-4)}`;
   }
 
-  async getStatus(): Promise<{ apiStatus?: OpenWaSessionStatus; webhookStatus: string }> {
+  async getStatus(): Promise<{ apiStatus?: IWhatsappSessionStatus; webhookStatus: string }> {
     try {
-      const openWaStatus = await this.openWAService.getSessionStatus();
-      return { apiStatus: openWaStatus, webhookStatus: this.currentStatus };
+      const apiStatus = await this.whatsappProvider.getSessionStatus();
+      return { apiStatus, webhookStatus: "FETCHED_FROM_API" };
     } catch {
-      return { webhookStatus: this.currentStatus };
+      return { webhookStatus: "DISCONNECTED" };
     }
   }
 
-  // NOTA TÉCNICA: O estado da sessão (currentQrCode, currentStatus) está mantido em memória.
-  // Em um cenário de escalabilidade horizontal (múltiplas instâncias do serviço), isso causará inconsistência.
-  // Considere migrar este estado para um armazenamento compartilhado, como o Redis.
   handleWebhook(payload: OpenWaWebhookEventDto) {
+    // O webhook pode ser mantido apenas para logs ou dispatche de eventos,
+    // mas não deve ser a Single Source of Truth para o estado da conexão.
     this.logger.log(`Received WhatsApp webhook event: ${payload?.event}`);
-
-    if (payload?.event === "qr") {
-      this.currentQrCode = payload.data;
-      this.currentStatus = "WAITING_FOR_SCAN";
-    } else if (payload?.event === "authenticated" || payload?.event === "ready") {
-      this.currentQrCode = null;
-      this.currentStatus = "AUTHENTICATED";
-    } else if (payload?.event === "disconnected") {
-      this.currentStatus = "DISCONNECTED";
-      this.currentQrCode = null;
-    } else if (payload?.event === "state_change") {
-      this.currentStatus = payload.data;
-    }
   }
 
-  getQrCode(): string | null {
-    return this.currentQrCode;
+  async getQrCode(): Promise<string | null> {
+    try {
+      const status = await this.whatsappProvider.getSessionStatus();
+      return status?.qrCode || null;
+    } catch {
+      return null;
+    }
   }
 }
