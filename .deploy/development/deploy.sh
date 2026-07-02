@@ -1,26 +1,24 @@
 #!/usr/bin/env bash
-set -e
 
-# Altera para o diretório do script
-cd "$(dirname "$0")"
+set -xe;
 
-# Garante que o arquivo .env existe
-if [ ! -f .env ]; then
-  echo "❌ Arquivo .env não encontrado!"
-  echo "Criando um novo arquivo .env a partir de .env.example..."
-  cp .env.example .env
-  echo "⚠️ Por favor, edite o arquivo .env com suas configurações/senhas e execute novamente."
-  exit 1
-fi
+K8S_NAMESPACE=ladesa-ro-development
+K8S_DEPLOYMENT=ladesa-ro-api
 
-echo "🚀 Baixando as últimas imagens de contêiner..."
-docker compose pull
+helm upgrade -i ${K8S_DEPLOYMENT} \
+  --repo https://stakater.github.io/stakater-charts \
+  application \
+  --version 6.0.2 \
+  --namespace=${K8S_NAMESPACE} \
+  -f ./values.yml \
+;
 
-echo "📦 Construindo a imagem customizada do OpenWA..."
-docker compose build openwa
+kubectl \
+  rollout restart \
+  --namespace ${K8S_NAMESPACE} \
+  deployment.apps/${K8S_DEPLOYMENT};
 
-echo "🆙 Iniciando os serviços na VPS..."
-docker compose up -d --remove-orphans
-
-echo "✅ Serviços iniciados com sucesso!"
-echo "Use 'docker compose logs -f' para acompanhar a execução."
+kubectl rollout status \
+  deployment.apps/${K8S_DEPLOYMENT} \
+  --namespace ${K8S_NAMESPACE} \
+  --timeout=720s;
