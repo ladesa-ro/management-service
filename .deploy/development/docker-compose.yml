@@ -82,8 +82,8 @@ services:
       - ladesa-net
     environment:
       - PORT=8000
-      - API_KEY=${OPENWA_API_KEY:-dev_key}
-      - WEBHOOK_URL=${OPENWA_WEBHOOK_URL:-http://management-service:3000/api/v1/webhooks/whatsapp}
+      - API_KEY=${OPENWA_API_KEY}
+      - WEBHOOK_URL=${OPENWA_WEBHOOK_URL:-http://management-service:3000/api/v1/webhooks/whatsapp?token=dev_key}
       - KEEP_ALIVE=true
       - WA_CUSTOM_USER_AGENT=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36
     volumes:
