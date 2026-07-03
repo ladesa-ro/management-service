@@ -70,13 +70,13 @@ services:
     restart: always
     shm_size: '2gb'
     ports:
-      - "8000:8000"
+      - "127.0.0.1:8000:8000"
     networks:
       - ladesa-net
     environment:
       - PORT=8000
       - API_KEY=${OPENWA_API_KEY:-dev_key}
-      - WEBHOOK_URL=${OPENWA_WEBHOOK_URL:-http://management-service:3701/api/webhooks/whatsapp}
+      - WEBHOOK_URL=${OPENWA_WEBHOOK_URL:-http://management-service:3701/api/webhooks/whatsapp?token=dev_key}
       - KEEP_ALIVE=true
       - WA_CUSTOM_USER_AGENT=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36
     volumes:
