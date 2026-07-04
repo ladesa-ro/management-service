@@ -38,5 +38,6 @@ export const ConfigTokens = {
     BaseUrl: Symbol("WhatsAppOptions.BaseUrl"),
     ApiKey: Symbol("WhatsAppOptions.ApiKey"),
     Timeout: Symbol("WhatsAppOptions.Timeout"),
+    Session: Symbol("WhatsAppOptions.Session"),
   },
 } as const;

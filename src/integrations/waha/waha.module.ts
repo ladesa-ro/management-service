@@ -2,8 +2,8 @@ import { HttpModule } from "@nestjs/axios";
 import { Module } from "@nestjs/common";
 import { AppConfigModule } from "@/infrastructure.config";
 import { IWhatsAppProviderToken } from "@/notifications/interfaces/whatsapp-provider.interface";
-import { OpenWAClient } from "./client/openwa.client";
-import { OpenWAService } from "./services/openwa.service";
+import { WahaClient } from "./client/waha.client";
+import { WahaService } from "./services/waha.service";
 
 @Module({
   imports: [
@@ -14,12 +14,12 @@ import { OpenWAService } from "./services/openwa.service";
     AppConfigModule,
   ],
   providers: [
-    OpenWAClient,
+    WahaClient,
     {
       provide: IWhatsAppProviderToken,
-      useClass: OpenWAService,
+      useClass: WahaService,
     },
   ],
   exports: [IWhatsAppProviderToken],
 })
-export class OpenWAModule {}
+export class WahaModule {}

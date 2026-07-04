@@ -20,6 +20,7 @@ services:
     depends_on:
       - db
       - rabbitmq
+      - waha
     networks:
       - ladesa-net
     ports:
@@ -62,27 +63,31 @@ services:
       - "5672:5672"
       - "15672:15672"
 
-  openwa:
-    container_name: ladesa-openwa-service
-    build:
-      context: ../.docker
-      dockerfile: Containerfile.openwa
-    restart: always
-    shm_size: '2gb'
+  waha:
+    container_name: ladesa-waha-service
+    # Imagem oficial do WAHA (core, gratuita, 1 sessão).
+    # Para múltiplas sessões, substituir por: devlikeapro/waha-plus
+    image: devlikeapro/waha:latest
+    restart: unless-stopped
     ports:
-      - "127.0.0.1:8000:8000"
+      - "127.0.0.1:3000:3000"
     networks:
       - ladesa-net
     environment:
-      - PORT=8000
-      - API_KEY=${OPENWA_API_KEY:-dev_key}
-      - WEBHOOK_URL=${OPENWA_WEBHOOK_URL:-http://management-service:3701/api/webhooks/whatsapp?token=dev_key}
-      - KEEP_ALIVE=true
-      - WA_CUSTOM_USER_AGENT=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36
+      # Chave de API para autenticação (header X-Api-Key)
+      - WHATSAPP_API_KEY=${WAHA_API_KEY:-dev_key}
+      # URL do webhook para onde o WAHA enviará eventos (message, session.status)
+      - WHATSAPP_HOOK_URL=${WAHA_WEBHOOK_URL:-http://ladesa-management-service:3701/api/webhooks/whatsapp}
+      # Eventos que serão enviados ao webhook
+      - WHATSAPP_HOOK_EVENTS=message,session.status,state.change
+      # Credenciais do dashboard/Swagger UI (basic auth)
+      - WAHA_DASHBOARD_USERNAME=${WAHA_USERNAME:-ladesa}
+      - WAHA_DASHBOARD_PASSWORD=${WAHA_PASSWORD:-changeme}
     volumes:
-      - openwa-session-data:/app/session
+      # Persistência das sessões autenticadas do WhatsApp
+      - waha-session-data:/app/.sessions
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8000/api/sessionStatus" ]
+      test: [ "CMD", "curl", "-f", "http://localhost:3000/api/health" ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -95,4 +100,4 @@ volumes:
   management-service-db-data:
   management-service-uploaded-files:
   management-service-shell-history:
-  openwa-session-data:
+  waha-session-data:

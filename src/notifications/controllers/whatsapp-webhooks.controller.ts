@@ -11,7 +11,7 @@ import {
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { IConfigService } from "@/infrastructure.config";
 import { ConfigTokens } from "@/infrastructure.config/config-tokens";
-import { OpenWaWebhookEventDto } from "@/integrations/openwa/dto/openwa-webhook-event.dto";
+import { WahaWebhookEventDto } from "@/integrations/waha/dto/waha-webhook-event.dto";
 import { WhatsappNotificationsService } from "../services/whatsapp-notifications.service";
 
 @ApiTags("WhatsApp Webhooks")
@@ -24,8 +24,8 @@ export class WhatsappWebhooksController {
 
   @Post("whatsapp")
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: "Recebe os eventos Webhook enviados pelo container do OpenWA" })
-  async handleWebhook(@Body() payload: OpenWaWebhookEventDto, @Query("token") token?: string) {
+  @ApiOperation({ summary: "Recebe os eventos Webhook enviados pelo container do WAHA" })
+  async handleWebhook(@Body() payload: WahaWebhookEventDto, @Query("token") token?: string) {
     const expectedToken = this.appConfigService.get<string>(ConfigTokens.WhatsAppOptions.ApiKey);
 
     if (expectedToken && token !== expectedToken) {

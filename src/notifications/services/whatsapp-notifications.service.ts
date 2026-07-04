@@ -1,6 +1,6 @@
 import { Inject, Injectable, Logger } from "@nestjs/common";
 import { v4 as uuidv4 } from "uuid";
-import { OpenWaWebhookEventDto } from "@/integrations/openwa/dto/openwa-webhook-event.dto";
+import { WahaWebhookEventDto } from "@/integrations/waha/dto/waha-webhook-event.dto";
 import { SendWhatsappNotificationDto } from "../dto/send-whatsapp-notification.dto";
 import { WhatsappNotificationResponse } from "../interfaces/whatsapp-notification-response.interface";
 import {
@@ -61,16 +61,29 @@ export class WhatsappNotificationsService {
     }
   }
 
-  handleWebhook(payload: OpenWaWebhookEventDto) {
-    // O webhook pode ser mantido apenas para logs ou dispatche de eventos,
-    // mas não deve ser a Single Source of Truth para o estado da conexão.
-    this.logger.log(`Received WhatsApp webhook event: ${payload?.event}`);
+  handleWebhook(payload: WahaWebhookEventDto) {
+    // O webhook é utilizado para logging e despacho de eventos.
+    // Não é a fonte de verdade sobre o estado da conexão — use getSessionStatus() para isso.
+    this.logger.log(
+      `Received WhatsApp webhook event: ${payload?.event} [session=${payload?.session}]`,
+    );
   }
 
   async getQrCode(): Promise<string | null> {
     try {
+      // getQrCode pode não estar disponível em todas as implementações de IWhatsAppProvider.
+      // O cast é seguro aqui pois WahaService implementa esse método.
+      const provider = this.whatsappProvider as IWhatsAppProvider & {
+        getQrCode?: () => Promise<string | null>;
+      };
+
+      if (typeof provider.getQrCode === "function") {
+        return provider.getQrCode();
+      }
+
+      // Fallback: tentar extrair do status da sessão
       const status = await this.whatsappProvider.getSessionStatus();
-      return status?.qrCode || null;
+      return (status as { qrCode?: string })?.qrCode ?? null;
     } catch {
       return null;
     }

@@ -8,7 +8,7 @@ import { WhatsappNotificationsService } from "../services/whatsapp-notifications
 
 describe("WhatsappNotificationsService", () => {
   let service: WhatsappNotificationsService;
-  let openWAService: IWhatsAppProvider;
+  let whatsappProvider: IWhatsAppProvider;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -24,11 +24,11 @@ describe("WhatsappNotificationsService", () => {
     }).compile();
 
     service = module.get<WhatsappNotificationsService>(WhatsappNotificationsService);
-    openWAService = module.get<IWhatsAppProvider>(IWhatsAppProviderToken);
+    whatsappProvider = module.get<IWhatsAppProvider>(IWhatsAppProviderToken);
   });
 
-  it("should return success response when openwa succeeds", async () => {
-    vi.spyOn(openWAService, "sendMessage").mockResolvedValue(true);
+  it("should return success response when provider succeeds", async () => {
+    vi.spyOn(whatsappProvider, "sendMessage").mockResolvedValue(true);
 
     const result = await service.sendNotification({ phone: "5511999999999", message: "test" });
 
@@ -37,8 +37,8 @@ describe("WhatsappNotificationsService", () => {
     expect(result.timestamp).toBeDefined();
   });
 
-  it("should return failure response when openwa fails", async () => {
-    vi.spyOn(openWAService, "sendMessage").mockRejectedValue(new Error("Network error"));
+  it("should return failure response when provider fails", async () => {
+    vi.spyOn(whatsappProvider, "sendMessage").mockRejectedValue(new Error("Network error"));
 
     const result = await service.sendNotification({ phone: "5511999999999", message: "test" });
 

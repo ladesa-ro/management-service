@@ -2,7 +2,7 @@ import { UnauthorizedException } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { IConfigService } from "@/infrastructure.config";
-import { OpenWaWebhookEventDto } from "@/integrations/openwa/dto/openwa-webhook-event.dto";
+import { WahaWebhookEventDto } from "@/integrations/waha/dto/waha-webhook-event.dto";
 import { WhatsappWebhooksController } from "../controllers/whatsapp-webhooks.controller";
 import { WhatsappNotificationsService } from "../services/whatsapp-notifications.service";
 
@@ -35,9 +35,10 @@ describe("WhatsappWebhooksController", () => {
     configService = module.get<IConfigService>(IConfigService);
   });
 
-  const mockPayload: OpenWaWebhookEventDto = {
-    event: "connection",
-    data: "ready",
+  const mockPayload: WahaWebhookEventDto = {
+    event: "session.status",
+    session: "default",
+    payload: { status: "WORKING" },
   };
 
   it("should process webhook when token is correct", async () => {

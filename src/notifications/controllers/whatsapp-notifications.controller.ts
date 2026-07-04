@@ -11,7 +11,7 @@ export class WhatsappNotificationsController {
 
   @Post("whatsapp/send")
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: "Envia uma mensagem WhatsApp via OpenWA" })
+  @ApiOperation({ summary: "Envia uma mensagem WhatsApp via WAHA" })
   @ApiBody({ type: SendWhatsappNotificationDto })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -31,7 +31,7 @@ export class WhatsappNotificationsController {
   }
 
   @Get("whatsapp/status")
-  @ApiOperation({ summary: "Obtém o status da sessão do WhatsApp (OpenWA)" })
+  @ApiOperation({ summary: "Obtém o status da sessão do WhatsApp (WAHA)" })
   async getStatus() {
     return this.whatsappNotificationsService.getStatus();
   }

@@ -37,7 +37,8 @@ export const ConfigTokensMap = new Map<symbol, string>([
     ConfigTokens.MessageBrokerOptions.QueueTimetableResponse,
     EnvKeys.MESSAGE_BROKER_QUEUE_TIMETABLE_RESPONSE,
   ],
-  [ConfigTokens.WhatsAppOptions.BaseUrl, EnvKeys.OPENWA_BASE_URL],
-  [ConfigTokens.WhatsAppOptions.ApiKey, EnvKeys.OPENWA_API_KEY],
-  [ConfigTokens.WhatsAppOptions.Timeout, EnvKeys.OPENWA_TIMEOUT],
+  [ConfigTokens.WhatsAppOptions.BaseUrl, EnvKeys.WAHA_BASE_URL],
+  [ConfigTokens.WhatsAppOptions.ApiKey, EnvKeys.WAHA_API_KEY],
+  [ConfigTokens.WhatsAppOptions.Timeout, EnvKeys.WAHA_TIMEOUT],
+  [ConfigTokens.WhatsAppOptions.Session, EnvKeys.WAHA_SESSION],
 ]);
