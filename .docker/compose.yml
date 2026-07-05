@@ -83,11 +83,13 @@ services:
       # Credenciais do dashboard/Swagger UI (basic auth)
       - WAHA_DASHBOARD_USERNAME=${WAHA_USERNAME:-ladesa}
       - WAHA_DASHBOARD_PASSWORD=${WAHA_PASSWORD:-changeme}
+      - WHATSAPP_SWAGGER_USERNAME=${WAHA_USERNAME:-ladesa}
+      - WHATSAPP_SWAGGER_PASSWORD=${WAHA_PASSWORD:-changeme}
     volumes:
       # Persistência das sessões autenticadas do WhatsApp
       - waha-session-data:/app/.sessions
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:3000/api/health" ]
+      test: [ "CMD", "curl", "-f", "http://localhost:3000/ping" ]
       interval: 30s
       timeout: 10s
       retries: 3
