@@ -2,6 +2,7 @@ import { Body, Controller, Get, HttpCode, HttpException, HttpStatus, Post } from
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { NeedsAuth } from "@/server/nest/auth";
 import { SendWhatsappNotificationDto } from "../dto/send-whatsapp-notification.dto";
+import { WhatsappPairingCodeDto } from "../dto/whatsapp-pairing-code.dto";
 import { WhatsappNotificationResponse } from "../interfaces/whatsapp-notification-response.interface";
 import { WhatsappNotificationsService } from "../services/whatsapp-notifications.service";
 
@@ -38,16 +39,18 @@ export class WhatsappNotificationsController {
     return this.whatsappNotificationsService.getStatus();
   }
 
-  @Get("whatsapp/qr-code")
-  @ApiOperation({ summary: "Obtém o QR Code (Base64) para login" })
-  async getQrCode() {
-    const qrCode = await this.whatsappNotificationsService.getQrCode();
-    if (!qrCode) {
+  @Post("whatsapp/pairing-code")
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: "Obtém o código de pareamento para login" })
+  @ApiBody({ type: WhatsappPairingCodeDto })
+  async getPairingCode(@Body() payload: WhatsappPairingCodeDto) {
+    const code = await this.whatsappNotificationsService.getPairingCode(payload.phone);
+    if (!code) {
       throw new HttpException(
-        "Nenhum QR Code disponível. A sessão pode já estar conectada ou ainda inicializando.",
-        HttpStatus.NOT_FOUND,
+        "Não foi possível gerar o código de pareamento. A sessão pode já estar conectada ou inicializando.",
+        HttpStatus.BAD_REQUEST,
       );
     }
-    return { qrCode };
+    return { code };
   }
 }
