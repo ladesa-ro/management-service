@@ -39,4 +39,9 @@ export class WahaService implements IWhatsAppProvider {
   async getQrCode(): Promise<string | null> {
     return this.wahaClient.getQrCode();
   }
+
+  async getPairingCode(phone: string): Promise<string> {
+    const cleanPhone = phone.replace(/\D/g, "");
+    return this.wahaClient.getPairingCode(cleanPhone);
+  }
 }
