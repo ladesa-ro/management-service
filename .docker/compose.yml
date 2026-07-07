@@ -77,7 +77,7 @@ services:
       # Chave de API para autenticação (header X-Api-Key)
       - WHATSAPP_API_KEY=${WAHA_API_KEY:-dev_key}
       # URL do webhook para onde o WAHA enviará eventos (message, session.status)
-      - WHATSAPP_HOOK_URL=${WAHA_WEBHOOK_URL:-http://ladesa-management-service:3701/api/webhooks/whatsapp}
+      - WHATSAPP_HOOK_URL=${WAHA_WEBHOOK_URL:-http://ladesa-management-service:3701/api/webhooks/whatsapp?token=${WAHA_API_KEY:-dev_key}}
       # Eventos que serão enviados ao webhook
       - WHATSAPP_HOOK_EVENTS=message,session.status,state.change
       # Credenciais do dashboard/Swagger UI (basic auth)
