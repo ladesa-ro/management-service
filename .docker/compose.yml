@@ -81,9 +81,9 @@ services:
       # Eventos que serão enviados ao webhook
       - WHATSAPP_HOOK_EVENTS=message,session.status,state.change
       # Credenciais do dashboard/Swagger UI (basic auth)
-      - WAHA_DASHBOARD_USERNAME=${WAHA_USERNAME:-ladesa}
+      - WAHA_DASHBOARD_USERNAME=${WAHA_USERNAME:-${WAHA_USER:-ladesa}}
       - WAHA_DASHBOARD_PASSWORD=${WAHA_PASSWORD:-changeme}
-      - WHATSAPP_SWAGGER_USERNAME=${WAHA_USERNAME:-ladesa}
+      - WHATSAPP_SWAGGER_USERNAME=${WAHA_USERNAME:-${WAHA_USER:-ladesa}}
       - WHATSAPP_SWAGGER_PASSWORD=${WAHA_PASSWORD:-changeme}
     volumes:
       # Persistência das sessões autenticadas do WhatsApp
