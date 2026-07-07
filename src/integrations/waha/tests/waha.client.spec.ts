@@ -101,7 +101,7 @@ describe("WahaClient", () => {
 
       expect(result).toEqual(mockStatus);
       expect(httpService.get).toHaveBeenCalledWith(
-        "http://localhost:3000/api/default/status",
+        "http://localhost:3000/api/sessions/default",
         expect.any(Object),
       );
     });
