@@ -118,7 +118,7 @@ describe("WahaClient", () => {
   describe("getQrCode", () => {
     it("should return QR code value when available", async () => {
       vi.spyOn(httpService, "get").mockReturnValue(
-        of({ status: 200, data: { value: "base64-qr-string" } }) as any,
+        of({ status: 200, data: { mimetype: "image/png", data: "base64-qr-string" } }) as any,
       );
 
       const result = await client.getQrCode();
@@ -134,6 +134,31 @@ describe("WahaClient", () => {
       const result = await client.getQrCode();
 
       expect(result).toBeNull();
+    });
+  });
+
+  describe("getPairingCode", () => {
+    it("should return pairing code successfully", async () => {
+      vi.spyOn(httpService, "post").mockReturnValue(
+        of({ status: 200, data: { code: "ABCD-EFGH" } }) as any,
+      );
+
+      const result = await client.getPairingCode("5511999999999");
+
+      expect(result).toBe("ABCD-EFGH");
+      expect(httpService.post).toHaveBeenCalledWith(
+        "http://localhost:3000/api/default/auth/request-code",
+        { phoneNumber: "5511999999999" },
+        expect.any(Object),
+      );
+    });
+
+    it("should throw error on failure", async () => {
+      vi.spyOn(httpService, "post").mockReturnValue(
+        throwError(() => new Error("Request failed")) as any,
+      );
+
+      await expect(client.getPairingCode("5511999999999")).rejects.toThrow();
     });
   });
 });
