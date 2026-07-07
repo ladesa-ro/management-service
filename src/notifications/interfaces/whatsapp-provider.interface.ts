@@ -17,4 +17,9 @@ export interface IWhatsAppProvider {
    * Retorna o status atual da sessão do WhatsApp (Conectado, QRCode, etc).
    */
   getSessionStatus(): Promise<IWhatsappSessionStatus>;
+
+  /**
+   * Retorna o código de pareamento (Pairing Code) para autenticação por número de telefone.
+   */
+  getPairingCode?(phone: string): Promise<string>;
 }

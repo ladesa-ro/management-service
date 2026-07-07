@@ -17,6 +17,7 @@ describe("WahaService", () => {
             sendText: vi.fn(),
             getSessionStatus: vi.fn(),
             getQrCode: vi.fn(),
+            getPairingCode: vi.fn(),
           },
         },
       ],
@@ -85,6 +86,17 @@ describe("WahaService", () => {
       const result = await service.getQrCode();
 
       expect(result).toBeNull();
+    });
+  });
+
+  describe("getPairingCode", () => {
+    it("should clean phone and delegate to client", async () => {
+      vi.spyOn(client, "getPairingCode").mockResolvedValue("ABCD-EFGH");
+
+      const result = await service.getPairingCode("(55) 11 99999-9999");
+
+      expect(result).toBe("ABCD-EFGH");
+      expect(client.getPairingCode).toHaveBeenCalledWith("5511999999999");
     });
   });
 });

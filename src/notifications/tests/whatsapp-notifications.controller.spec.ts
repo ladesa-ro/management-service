@@ -15,6 +15,7 @@ describe("WhatsappNotificationsController", () => {
           provide: WhatsappNotificationsService,
           useValue: {
             sendNotification: vi.fn(),
+            getPairingCode: vi.fn(),
           },
         },
       ],
@@ -33,5 +34,24 @@ describe("WhatsappNotificationsController", () => {
 
     expect(result).toEqual(mockResponse);
     expect(service.sendNotification).toHaveBeenCalledWith(payload);
+  });
+
+  describe("getPairingCode", () => {
+    it("should call service and return pairing code", async () => {
+      vi.spyOn(service, "getPairingCode").mockResolvedValue("ABCD-EFGH");
+
+      const payload = { phone: "5511999999999" };
+      const result = await controller.getPairingCode(payload);
+
+      expect(result).toEqual({ code: "ABCD-EFGH" });
+      expect(service.getPairingCode).toHaveBeenCalledWith("5511999999999");
+    });
+
+    it("should throw HttpException when service returns null", async () => {
+      vi.spyOn(service, "getPairingCode").mockResolvedValue(null);
+
+      const payload = { phone: "5511999999999" };
+      await expect(controller.getPairingCode(payload)).rejects.toThrow();
+    });
   });
 });

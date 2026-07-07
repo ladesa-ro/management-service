@@ -18,6 +18,7 @@ describe("WhatsappNotificationsService", () => {
           provide: IWhatsAppProviderToken,
           useValue: {
             sendMessage: vi.fn(),
+            getPairingCode: vi.fn(),
           },
         },
       ],
@@ -44,5 +45,25 @@ describe("WhatsappNotificationsService", () => {
 
     expect(result.success).toBe(false);
     expect(result.error).toBe("Failed to send message");
+  });
+
+  describe("getPairingCode", () => {
+    it("should return pairing code from provider", async () => {
+      const mockCode = "ABCD-EFGH";
+      vi.spyOn(whatsappProvider, "getPairingCode" as any).mockResolvedValue(mockCode);
+
+      const result = await service.getPairingCode("5511999999999");
+
+      expect(result).toBe(mockCode);
+      expect(whatsappProvider.getPairingCode).toHaveBeenCalledWith("5511999999999");
+    });
+
+    it("should return null on failure", async () => {
+      vi.spyOn(whatsappProvider, "getPairingCode" as any).mockRejectedValue(new Error("API Error"));
+
+      const result = await service.getPairingCode("5511999999999");
+
+      expect(result).toBeNull();
+    });
   });
 });

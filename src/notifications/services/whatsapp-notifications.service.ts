@@ -88,4 +88,21 @@ export class WhatsappNotificationsService {
       return null;
     }
   }
+
+  async getPairingCode(phone: string): Promise<string | null> {
+    try {
+      const provider = this.whatsappProvider as IWhatsAppProvider & {
+        getPairingCode?: (phone: string) => Promise<string>;
+      };
+
+      if (typeof provider.getPairingCode === "function") {
+        const cleanPhone = phone.replace(/\D/g, "");
+        return await provider.getPairingCode(cleanPhone);
+      }
+      return null;
+    } catch (error) {
+      this.logger.error(`Erro ao obter pairing code para ${this.maskPhone(phone)}: ${error}`);
+      return null;
+    }
+  }
 }
