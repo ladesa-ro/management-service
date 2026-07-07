@@ -81,7 +81,7 @@ services:
       - ladesa-net
     environment:
       - WHATSAPP_API_KEY=${WAHA_API_KEY:-dev_key}
-      - WHATSAPP_HOOK_URL=${WAHA_WEBHOOK_URL:-http://management-service:3000/api/v1/webhooks/whatsapp}
+      - WHATSAPP_HOOK_URL=${WAHA_WEBHOOK_URL:-http://management-service:3000/api/v1/webhooks/whatsapp?token=${WAHA_API_KEY}}
       - WHATSAPP_HOOK_EVENTS=message,session.status,state.change
       - WAHA_DASHBOARD_USERNAME=${WAHA_USERNAME:-${WAHA_USER:-ladesa}}
       - WAHA_DASHBOARD_PASSWORD=${WAHA_PASSWORD:-changeme}
