@@ -1,11 +1,13 @@
 import { Body, Controller, Get, HttpCode, HttpException, HttpStatus, Post } from "@nestjs/common";
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { NeedsAuth } from "@/server/nest/auth";
 import { SendWhatsappNotificationDto } from "../dto/send-whatsapp-notification.dto";
 import { WhatsappNotificationResponse } from "../interfaces/whatsapp-notification-response.interface";
 import { WhatsappNotificationsService } from "../services/whatsapp-notifications.service";
 
 @ApiTags("WhatsApp Notifications")
 @Controller("notifications")
+@NeedsAuth()
 export class WhatsappNotificationsController {
   constructor(private readonly whatsappNotificationsService: WhatsappNotificationsService) {}
 
