@@ -122,18 +122,70 @@ export class WahaClient {
     const url = `${this.baseUrl}/api/${this.session}/auth/qr`;
     try {
       const response = await firstValueFrom(
-        this.httpService.get<{ value: string }>(url, {
-          headers: this.authHeaders,
+        this.httpService.get<{ mimetype: string; data: string }>(url, {
+          headers: {
+            ...this.authHeaders,
+            Accept: "application/json",
+          },
           timeout: this.defaultTimeout,
         }),
       );
-      return response.data?.value ?? null;
+      return response.data?.data ?? null;
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : String(error);
       this.logger.warn(
         `Could not fetch QR code (session may already be authenticated): ${message}`,
       );
       return null;
+    }
+  }
+
+  /**
+   * Solicita um código de pareamento (Pairing Code) para autenticação por número de telefone.
+   * @see https://waha.devlike.pro/docs/overview/sessions/#pairing-code
+   */
+  async getPairingCode(phone: string): Promise<string> {
+    const url = `${this.baseUrl}/api/${this.session}/auth/request-code`;
+    const payload = {
+      phoneNumber: phone,
+    };
+
+    try {
+      const response = await firstValueFrom(
+        this.httpService
+          .post<{ code: string }>(url, payload, {
+            headers: this.authHeaders,
+            timeout: this.defaultTimeout,
+          })
+          .pipe(
+            catchError(
+              (error: { code?: string; message?: string; response?: { status: number } }) => {
+                if (error.code === "ECONNABORTED" || error.message?.includes("timeout")) {
+                  throw new WahaTimeoutException();
+                }
+                this.logger.error(`Failed to request pairing code: ${error.message}`);
+                if (error.response) {
+                  throw new WahaSendMessageException(
+                    `WAHA returned status ${error.response.status} when requesting pairing code`,
+                  );
+                }
+                throw new WahaConnectionException(error.message);
+              },
+            ),
+          ),
+      );
+
+      if (response.status >= 200 && response.status < 300) {
+        if (!response.data?.code) {
+          throw new WahaSendMessageException("WAHA did not return a pairing code");
+        }
+        return response.data.code;
+      }
+
+      throw new WahaSendMessageException(`Unexpected status code: ${response.status}`);
+    } catch (error) {
+      this.logger.error(`Failed to request pairing code: ${error}`);
+      throw error;
     }
   }
 }
