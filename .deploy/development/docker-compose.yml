@@ -32,9 +32,11 @@ services:
       - MESSAGE_BROKER_URL
       - MESSAGE_BROKER_QUEUE_TIMETABLE_REQUEST
       - MESSAGE_BROKER_QUEUE_TIMETABLE_RESPONSE
-      - OPENWA_BASE_URL=${OPENWA_HOST:-http://openwa:8000}
-      - OPENWA_API_KEY
-      - OPENWA_TIMEOUT
+      - WAHA_BASE_URL=${WAHA_HOST:-http://waha:3000}
+      - WAHA_API_KEY
+      - WAHA_TIMEOUT
+      - WAHA_SESSION
+      - WAHA_WEBHOOK_URL
     networks:
       - ladesa-net
 
@@ -69,27 +71,26 @@ services:
     ports:
       - "${HOST_PORT_RABBITMQ:-127.0.0.1:15672}:15672"
 
-  openwa:
-    container_name: ladesa-openwa-service
-    build:
-      context: ./openwa
-      dockerfile: Dockerfile
-    restart: always
-    shm_size: '2gb'
+  waha:
+    container_name: ladesa-waha-service
+    image: devlikeapro/waha:latest
+    restart: unless-stopped
     ports:
-      - "${HOST_PORT_OPENWA:-127.0.0.1:8000}:8000"
+      - "${HOST_PORT_WAHA:-127.0.0.1:3000}:3000"
     networks:
       - ladesa-net
     environment:
-      - PORT=8000
-      - API_KEY=${OPENWA_API_KEY}
-      - WEBHOOK_URL=${OPENWA_WEBHOOK_URL:-http://management-service:3000/api/v1/webhooks/whatsapp?token=dev_key}
-      - KEEP_ALIVE=true
-      - WA_CUSTOM_USER_AGENT=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36
+      - WHATSAPP_API_KEY=${WAHA_API_KEY:-dev_key}
+      - WHATSAPP_HOOK_URL=${WAHA_WEBHOOK_URL:-http://management-service:3000/api/v1/webhooks/whatsapp}
+      - WHATSAPP_HOOK_EVENTS=message,session.status,state.change
+      - WAHA_DASHBOARD_USERNAME=${WAHA_USERNAME:-${WAHA_USER:-ladesa}}
+      - WAHA_DASHBOARD_PASSWORD=${WAHA_PASSWORD:-changeme}
+      - WHATSAPP_SWAGGER_USERNAME=${WAHA_USERNAME:-${WAHA_USER:-ladesa}}
+      - WHATSAPP_SWAGGER_PASSWORD=${WAHA_PASSWORD:-changeme}
     volumes:
-      - openwa-session-data:/app/session
+      - waha-session-data:/app/.sessions
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8000/api/sessionStatus" ]
+      test: [ "CMD", "curl", "-f", "http://localhost:3000/ping" ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -99,7 +100,7 @@ volumes:
   db-data:
   uploaded-data:
   rabbitmq-data:
-  openwa-session-data:
+  waha-session-data:
 
 networks:
   ladesa-net:
