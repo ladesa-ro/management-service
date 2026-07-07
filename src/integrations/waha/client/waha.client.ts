@@ -97,7 +97,7 @@ export class WahaClient {
    * @see https://waha.devlike.pro/docs/overview/sessions/
    */
   async getSessionStatus(): Promise<WahaSessionStatus> {
-    const url = `${this.baseUrl}/api/${this.session}/status`;
+    const url = `${this.baseUrl}/api/sessions/${this.session}`;
     try {
       const response = await firstValueFrom(
         this.httpService.get<WahaSessionStatus>(url, {
