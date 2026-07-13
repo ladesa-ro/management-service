@@ -1,0 +1,109 @@
+applicationName: ladesa-ro-waha
+
+deployment:
+  enabled: true
+  replicas: 1
+
+  reloadOnChange: false
+  annotations:
+    secrets.infisical.com/auto-reload: "true"
+
+  image:
+    repository: devlikeapro/waha
+    tag: latest
+    pullPolicy: Always
+
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+
+  resources:
+    requests:
+      cpu: "50m"
+      memory: "250Mi"
+    limits:
+      memory: "1Gi"
+      cpu: "1"
+
+  containerSecurityContext:
+    runAsNonRoot: false
+    readOnlyRootFilesystem: false
+
+  ports:
+    - containerPort: 3000
+      name: http-c
+
+  env:
+    WHATSAPP_API_KEY:
+      valueFrom:
+        secretKeyRef:
+          name: ladesa-ro-api-config
+          key: WAHA_API_KEY
+    WHATSAPP_HOOK_URL:
+      valueFrom:
+        secretKeyRef:
+          name: ladesa-ro-api-config
+          key: WAHA_WEBHOOK_URL
+    WHATSAPP_HOOK_EVENTS:
+      value: "message,session.status,state.change"
+    WAHA_DASHBOARD_USERNAME:
+      valueFrom:
+        secretKeyRef:
+          name: ladesa-ro-api-config
+          key: WAHA_USERNAME
+    WAHA_DASHBOARD_PASSWORD:
+      valueFrom:
+        secretKeyRef:
+          name: ladesa-ro-api-config
+          key: WAHA_PASSWORD
+    WHATSAPP_SWAGGER_USERNAME:
+      valueFrom:
+        secretKeyRef:
+          name: ladesa-ro-api-config
+          key: WAHA_USERNAME
+    WHATSAPP_SWAGGER_PASSWORD:
+      valueFrom:
+        secretKeyRef:
+          name: ladesa-ro-api-config
+          key: WAHA_PASSWORD
+
+  volumes:
+    waha-session-data:
+      emptyDir: {}
+
+  volumeMounts:
+    waha-session-data:
+      mountPath: /app/.sessions
+
+  readinessProbe:
+    enabled: true
+    httpGet:
+      path: /ping
+      port: http-c
+    initialDelaySeconds: 15
+    periodSeconds: 10
+
+  livenessProbe:
+    enabled: true
+    httpGet:
+      path: /ping
+      port: http-c
+    initialDelaySeconds: 20
+    periodSeconds: 15
+
+  startupProbe:
+    enabled: true
+    httpGet:
+      path: /ping
+      port: http-c
+    failureThreshold: 30
+    periodSeconds: 10
+
+service:
+  enabled: true
+  type: ClusterIP
+  ports:
+    - name: http-s
+      port: 3000
+      targetPort: http-c
