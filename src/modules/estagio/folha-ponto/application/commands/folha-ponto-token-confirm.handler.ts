@@ -1,6 +1,6 @@
 import { ConflictException, Injectable, Logger, NotFoundException } from "@nestjs/common";
-import { DataSource } from "typeorm";
 import { Dep } from "@/domain/dependency-injection";
+import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import { FolhaPonto } from "../../domain/folha-ponto";
 import { FolhaPontoToken, FolhaPontoTokenTipo } from "../../domain/folha-ponto-token";
 import { IFolhaPontoRepository, IFolhaPontoTokenRepository } from "../../domain/repositories";
@@ -18,7 +18,7 @@ export class FolhaPontoTokenConfirmHandler {
   constructor(
     @Dep(IFolhaPontoRepository) private readonly repository: IFolhaPontoRepository,
     @Dep(IFolhaPontoTokenRepository) private readonly tokenRepository: IFolhaPontoTokenRepository,
-    private readonly dataSource: DataSource,
+    @Dep(IAppTypeormConnection) private readonly dataSource: IAppTypeormConnection,
   ) {}
 
   /**
