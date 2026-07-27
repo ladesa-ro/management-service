@@ -1,6 +1,7 @@
 import { Module } from "@nestjs/common";
 import { ScheduleModule } from "@nestjs/schedule";
 import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
+import { MessageBrokerModule } from "@/infrastructure.message-broker/message-broker.module";
 import { WahaModule } from "@/integrations/waha/waha.module";
 import { NotificacaoModule } from "@/modules/acesso/notificacao/notificacao.module";
 import { EstagioModule } from "@/modules/estagio/estagio/estagio.module";
@@ -42,6 +43,7 @@ import { FolhaPontoTokenRestController } from "./presentation.rest";
     NotificacaoModule, // WebSocket push (se necessário no futuro)
     WahaModule, // IWhatsAppProvider (se usado diretamente)
     NotificationsModule, // WhatsappNotificationsService
+    MessageBrokerModule, // MessageBrokerContainerService
   ],
   controllers: [FolhaPontoTokenRestController],
   providers: [
