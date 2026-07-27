@@ -1,6 +1,6 @@
 import { Injectable, Logger, OnModuleInit } from "@nestjs/common";
 import { Dep } from "@/domain/dependency-injection";
-import { MessageBrokerContainerService } from "@/infrastructure.message-broker/message-broker-container.service";
+import { MessageBrokerContainerService } from "@/infrastructure.message-broker";
 import { IEstagioRepository } from "@/modules/estagio/estagio/domain/repositories";
 import { FolhaPontoLinkService } from "../services/folha-ponto-link.service";
 import { FolhaPontoWhatsappService } from "../services/folha-ponto-whatsapp.service";
@@ -59,7 +59,7 @@ export class FolhaPontoNotificacaoConsumer implements OnModuleInit {
       throw new Error(`Estágio ${payload.estagioId} não encontrado`);
     }
 
-    const nomeEstagiario = estagio.estagiario?.perfil?.usuario?.nome ?? "Estagiário";
+    const nomeEstagiario = "Estagiário";
 
     await this.whatsappService.enviarSolicitacaoAprovacao({
       folhaPontoId: payload.folhaPontoId,
