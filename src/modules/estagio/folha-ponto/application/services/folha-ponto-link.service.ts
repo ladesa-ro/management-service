@@ -1,12 +1,12 @@
-import { Injectable } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
+import { Inject, Injectable } from "@nestjs/common";
+import { IConfigService } from "@/infrastructure.config";
 import { EnvKeys } from "@/infrastructure.config/env-keys";
 
 @Injectable()
 export class FolhaPontoLinkService {
   private readonly baseUrl: string;
 
-  constructor(private readonly configService: ConfigService) {
+  constructor(@Inject(IConfigService) private readonly configService: IConfigService) {
     this.baseUrl =
       this.configService.get<string>(EnvKeys.APP_PUBLIC_BASE_URL) ?? "http://localhost:3000";
   }
