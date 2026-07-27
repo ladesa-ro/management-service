@@ -1,0 +1,108 @@
+import { BadRequestException, ConflictException, Logger } from "@nestjs/common";
+import { ensureExists } from "@/application/errors";
+import type { IAccessContext } from "@/domain/abstractions";
+import { Dep, Impl } from "@/domain/dependency-injection";
+import { MessageBrokerService } from "@/infrastructure.message-broker/message-broker.service";
+import { EstagioStatus } from "@/modules/estagio/estagio/domain/estagio";
+import { IEstagioRepository } from "@/modules/estagio/estagio/domain/repositories";
+import type { FolhaPontoCreateCommand } from "../../domain/commands/folha-ponto-create.command";
+import { IFolhaPontoCreateCommandHandler } from "../../domain/commands/folha-ponto-create.command.handler.interface";
+import { FolhaPonto } from "../../domain/folha-ponto";
+import { FolhaPontoToken, FolhaPontoTokenTipo } from "../../domain/folha-ponto-token";
+import type { FolhaPontoFindOneQueryResult } from "../../domain/queries";
+import { IFolhaPontoRepository, IFolhaPontoTokenRepository } from "../../domain/repositories";
+
+@Impl()
+export class FolhaPontoCreateCommandHandlerImpl implements IFolhaPontoCreateCommandHandler {
+  private readonly logger = new Logger(FolhaPontoCreateCommandHandlerImpl.name);
+
+  constructor(
+    @Dep(IFolhaPontoRepository) private readonly repository: IFolhaPontoRepository,
+    @Dep(IFolhaPontoTokenRepository) private readonly tokenRepository: IFolhaPontoTokenRepository,
+    @Dep(IEstagioRepository) private readonly estagioRepository: IEstagioRepository,
+    private readonly messageBrokerService: MessageBrokerService,
+  ) {}
+
+  async execute(
+    accessContext: IAccessContext | null,
+    dto: FolhaPontoCreateCommand,
+  ): Promise<FolhaPontoFindOneQueryResult> {
+    // 1. Carregar estágio
+    const estagio = await this.estagioRepository.loadById(accessContext, dto.estagio.id);
+    ensureExists(estagio, "Estagio", dto.estagio.id);
+
+    // 2. Verificar status EM_ANDAMENTO
+    if (estagio.status !== EstagioStatus.EM_ANDAMENTO) {
+      throw new BadRequestException(
+        `O estágio precisa estar com status EM_ANDAMENTO para registrar ponto.`,
+      );
+    }
+
+    // 3. Verificar que o telefoneSupervisor está presente
+    if (!estagio.telefoneSupervisor) {
+      throw new BadRequestException(`O estágio não possui telefone do supervisor cadastrado.`);
+    }
+
+    // 4. Verificar unicidade por data+estagio
+    const jaExiste = await this.repository.existsByEstagioAndData(dto.estagio.id, dto.data);
+    if (jaExiste) {
+      throw new ConflictException(
+        `Já existe uma folha de ponto ativa para a data ${dto.data} neste estágio.`,
+      );
+    }
+
+    // 5. Criar entidade de domínio
+    const folhaPonto = FolhaPonto.create(dto);
+
+    // 6. Gerar tokens de uso único
+    const ttlHours = parseInt(process.env.FOLHA_PONTO_TOKEN_TTL_HOURS ?? "72", 10);
+    const tokenAprovacao = FolhaPontoToken.create(
+      folhaPonto.id,
+      FolhaPontoTokenTipo.APROVACAO,
+      ttlHours,
+    );
+    const tokenRejeicao = FolhaPontoToken.create(
+      folhaPonto.id,
+      FolhaPontoTokenTipo.REJEICAO,
+      ttlHours,
+    );
+    const tokenCancelamento = FolhaPontoToken.create(
+      folhaPonto.id,
+      FolhaPontoTokenTipo.CANCELAMENTO,
+      ttlHours,
+    );
+
+    // 7. Persistir folhaPonto + tokens
+    await this.repository.save(folhaPonto);
+    await this.tokenRepository.save(tokenAprovacao);
+    await this.tokenRepository.save(tokenRejeicao);
+    await this.tokenRepository.save(tokenCancelamento);
+
+    // 8. Publicar evento no RabbitMQ
+    const payload = {
+      folhaPontoId: folhaPonto.id,
+      estagioId: estagio.id,
+      data: folhaPonto.data,
+      horaInicio: folhaPonto.horaInicio,
+      horaFim: folhaPonto.horaFim,
+      quantidadeHoras: folhaPonto.quantidadeHoras,
+      telefoneSupervisor: estagio.telefoneSupervisor,
+      nomeSupervisor: estagio.nomeSupervisor ?? "Supervisor",
+      tokenAprovacaoId: tokenAprovacao.id,
+      tokenRejeicaoId: tokenRejeicao.id,
+      tokenCancelamentoId: tokenCancelamento.id,
+    };
+
+    // Call the specific publish method that will be added to messageBrokerService
+    await (this.messageBrokerService as any).publishFolhaPontoCreated(payload);
+
+    this.logger.log(`FolhaPonto criada: ${folhaPonto.id} para estágio ${estagio.id}`);
+
+    // 9. Retornar resultado formatado
+    const result = await this.repository.getFindOneQueryResult(accessContext, {
+      id: folhaPonto.id,
+    });
+    ensureExists(result, FolhaPonto.entityName, folhaPonto.id);
+    return result!;
+  }
+}
