@@ -1,4 +1,4 @@
-import type { IFindOneQuery } from "@/domain/abstractions";
+import type { FindOneQuery } from "@/domain/abstractions";
 import { createOperationMetadata } from "@/domain/abstractions";
 
 export const FolhaPontoFindOneQueryMetadata = createOperationMetadata({
@@ -6,4 +6,4 @@ export const FolhaPontoFindOneQueryMetadata = createOperationMetadata({
   summary: "Busca uma folha de ponto pelo ID",
 });
 
-export type FolhaPontoFindOneQuery = IFindOneQuery;
+export type FolhaPontoFindOneQuery = FindOneQuery;
