@@ -9,5 +9,6 @@ import { WhatsappNotificationsService } from "./services/whatsapp-notifications.
   imports: [WahaModule, AppConfigModule],
   controllers: [WhatsappNotificationsController, WhatsappWebhooksController],
   providers: [WhatsappNotificationsService],
+  exports: [WhatsappNotificationsService],
 })
 export class NotificationsModule {}
