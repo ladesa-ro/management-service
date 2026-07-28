@@ -41,4 +41,5 @@ export const ConfigTokensMap = new Map<symbol, string>([
   [ConfigTokens.WhatsAppOptions.ApiKey, EnvKeys.WAHA_API_KEY],
   [ConfigTokens.WhatsAppOptions.Timeout, EnvKeys.WAHA_TIMEOUT],
   [ConfigTokens.WhatsAppOptions.Session, EnvKeys.WAHA_SESSION],
+  [ConfigTokens.WhatsAppOptions.WebhookHmacKey, EnvKeys.WAHA_WEBHOOK_HMAC_KEY],
 ]);
