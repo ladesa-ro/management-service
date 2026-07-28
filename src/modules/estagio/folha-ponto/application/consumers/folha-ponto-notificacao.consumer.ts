@@ -31,6 +31,10 @@ export class FolhaPontoNotificacaoConsumer implements OnModuleInit {
   ) {}
 
   async onModuleInit(): Promise<void> {
+    this.tentarRegistrarConsumer();
+  }
+
+  private async tentarRegistrarConsumer(tentativa = 1): Promise<void> {
     try {
       const broker = await this.messageBrokerContainer.getBroker();
 
@@ -49,7 +53,12 @@ export class FolhaPontoNotificacaoConsumer implements OnModuleInit {
 
       this.logger.log("Consumer folha_ponto.notificacao.whatsapp inicializado com sucesso.");
     } catch (error) {
-      this.logger.warn(`Message broker indisponível — consumer não registrado: ${error}`);
+      if (tentativa <= 30) {
+        this.logger.debug(`Broker ainda não disponível. Retentando em 2s (tentativa ${tentativa})...`);
+        setTimeout(() => this.tentarRegistrarConsumer(tentativa + 1), 2000);
+      } else {
+        this.logger.error(`Message broker indisponível após 30 tentativas — consumer não registrado: ${error}`);
+      }
     }
   }
 
