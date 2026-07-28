@@ -3,9 +3,11 @@ import { ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import type { Request } from "express";
 import { IConfigService } from "@/infrastructure.config";
 import { EnvKeys } from "@/infrastructure.config/env-keys";
+import { Public } from "@/server/nest/auth";
 import { FolhaPontoTokenConfirmHandler } from "../application/commands/folha-ponto-token-confirm.handler";
 
 @ApiTags("folha-ponto-tokens")
+@Public()
 @Controller("/folha-ponto/tokens")
 export class FolhaPontoTokenRestController {
   private readonly frontendBaseUrl: string;
