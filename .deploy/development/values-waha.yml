@@ -10,8 +10,14 @@ deployment:
 
   image:
     repository: devlikeapro/waha
-    tag: latest
-    pullPolicy: Always
+    # Versão fixada via digest para garantir imutabilidade total.
+    # Tag 'latest' é mantida apenas para legibilidade; o digest prevalece.
+    # Digest do índice multi-arch (linux/amd64): sha256:8481bb26b03be008a57d4a688dbce572dbcceb50fe9525ee72a33e7f73d206a1
+    # Para atualizar: execute `docker buildx imagetools inspect devlikeapro/waha:latest`
+    # e atualize o digest abaixo + abra PR documentando a razão da atualização.
+    tag: "latest@sha256:dc134637dfa0bd65202010a65e4ff8176101791699176c75bb37d5aa9daf487c"
+    # IfNotPresent: usa a imagem já presente no node se o digest bater.
+    pullPolicy: IfNotPresent
 
   strategy:
     rollingUpdate:
@@ -47,6 +53,18 @@ deployment:
           key: WAHA_WEBHOOK_URL
     WHATSAPP_HOOK_EVENTS:
       value: "message,session.status,state.change"
+    # HMAC: o WAHA assina o payload com essa chave e envia a assinatura no header
+    # X-Webhook-Hmac. O backend valida a assinatura sem expor a chave na URL.
+    # Gerar com: openssl rand -hex 32
+    WHATSAPP_HOOK_HMAC_KEY:
+      valueFrom:
+        secretKeyRef:
+          name: ladesa-ro-api-config
+          key: WAHA_WEBHOOK_HMAC_KEY
+    # Exclui /ping e /health da exigência de API key.
+    # Sem isso, as probes (readiness/liveness/startup) recebem 401 e o pod nunca fica Ready.
+    WAHA_API_KEY_EXCLUDE_PATH:
+      value: "ping,health"
     WAHA_DASHBOARD_USERNAME:
       valueFrom:
         secretKeyRef:
@@ -70,7 +88,12 @@ deployment:
 
   volumes:
     waha-session-data:
-      emptyDir: {}
+      # PVC para persistência das sessões entre reinicializações, rollouts e node drains.
+      # O PVC deve ser criado no cluster antes do deploy:
+      #   kubectl apply -f pvc-waha-sessions.yml -n ladesa-ro-development
+      # Requer RWO (ReadWriteOnce) pois o WAHA opera em replica única.
+      persistentVolumeClaim:
+        claimName: ladesa-ro-waha-sessions-pvc
 
   volumeMounts:
     waha-session-data:
