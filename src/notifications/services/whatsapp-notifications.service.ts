@@ -1,5 +1,4 @@
-import { Inject, Injectable, Logger } from "@nestjs/common";
-import { v4 as uuidv4 } from "uuid";
+import { Inject, Injectable, Logger, ServiceUnavailableException } from "@nestjs/common";
 import { WahaWebhookEventDto } from "@/integrations/waha/dto/waha-webhook-event.dto";
 import { SendWhatsappNotificationDto } from "../dto/send-whatsapp-notification.dto";
 import { WhatsappNotificationResponse } from "../interfaces/whatsapp-notification-response.interface";
@@ -13,96 +12,25 @@ import {
 export class WhatsappNotificationsService {
   private readonly logger = new Logger(WhatsappNotificationsService.name);
 
-  constructor(
-    @Inject(IWhatsAppProviderToken) private readonly whatsappProvider: IWhatsAppProvider,
-  ) {}
+  constructor(@Inject(IWhatsAppProviderToken) readonly _whatsappProvider: IWhatsAppProvider) {}
 
   async sendNotification(dto: SendWhatsappNotificationDto): Promise<WhatsappNotificationResponse> {
-    const { phone, message } = dto;
-    this.logger.log(`Iniciando envio de notificação para: ${this.maskPhone(phone)}`);
-
-    try {
-      const success = await this.whatsappProvider.sendMessage(phone, message);
-
-      if (success) {
-        this.logger.log(`Notificação enviada com sucesso para: ${this.maskPhone(phone)}`);
-        return {
-          success: true,
-          messageId: uuidv4(),
-          timestamp: new Date().toISOString(),
-        };
-      }
-
-      throw new Error("Falha ao processar o envio através do Provedor de WhatsApp.");
-    } catch (error: any) {
-      this.logger.error(
-        `Erro ao enviar notificação para ${this.maskPhone(phone)}: ${error?.message || error}`,
-      );
-
-      return {
-        success: false,
-        timestamp: new Date().toISOString(),
-        error: "Failed to send message",
-      };
-    }
-  }
-
-  private maskPhone(phone: string): string {
-    if (!phone || phone.length < 4) return "****";
-    return `${phone.slice(0, 2)}****${phone.slice(-4)}`;
+    throw new ServiceUnavailableException("Integração com WhatsApp temporariamente desabilitada.");
   }
 
   async getStatus(): Promise<{ apiStatus?: IWhatsappSessionStatus; webhookStatus: string }> {
-    try {
-      const apiStatus = await this.whatsappProvider.getSessionStatus();
-      return { apiStatus, webhookStatus: "FETCHED_FROM_API" };
-    } catch {
-      return { webhookStatus: "DISCONNECTED" };
-    }
+    throw new ServiceUnavailableException("Integração com WhatsApp temporariamente desabilitada.");
   }
 
   handleWebhook(payload: WahaWebhookEventDto) {
-    // O webhook é utilizado para logging e despacho de eventos.
-    // Não é a fonte de verdade sobre o estado da conexão — use getSessionStatus() para isso.
-    this.logger.log(
-      `Received WhatsApp webhook event: ${payload?.event} [session=${payload?.session}]`,
-    );
+    this.logger.warn("Webhook recebido, mas a integração com WhatsApp está desabilitada.");
   }
 
   async getQrCode(): Promise<string | null> {
-    try {
-      // getQrCode pode não estar disponível em todas as implementações de IWhatsAppProvider.
-      // O cast é seguro aqui pois WahaService implementa esse método.
-      const provider = this.whatsappProvider as IWhatsAppProvider & {
-        getQrCode?: () => Promise<string | null>;
-      };
-
-      if (typeof provider.getQrCode === "function") {
-        return provider.getQrCode();
-      }
-
-      // Fallback: tentar extrair do status da sessão
-      const status = await this.whatsappProvider.getSessionStatus();
-      return (status as { qrCode?: string })?.qrCode ?? null;
-    } catch {
-      return null;
-    }
+    throw new ServiceUnavailableException("Integração com WhatsApp temporariamente desabilitada.");
   }
 
   async getPairingCode(phone: string): Promise<string | null> {
-    try {
-      const provider = this.whatsappProvider as IWhatsAppProvider & {
-        getPairingCode?: (phone: string) => Promise<string>;
-      };
-
-      if (typeof provider.getPairingCode === "function") {
-        const cleanPhone = phone.replace(/\D/g, "");
-        return await provider.getPairingCode(cleanPhone);
-      }
-      return null;
-    } catch (error) {
-      this.logger.error(`Erro ao obter pairing code para ${this.maskPhone(phone)}: ${error}`);
-      return null;
-    }
+    throw new ServiceUnavailableException("Integração com WhatsApp temporariamente desabilitada.");
   }
 }
