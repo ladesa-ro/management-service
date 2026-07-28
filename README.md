@@ -461,17 +461,17 @@ graph TB
         MS["Management Service\n:3701 (API)\n:9229 (debug)"]
         DB["PostgreSQL 15\n(bitnamilegacy/postgresql:15)\n:5432"]
         RMQ["RabbitMQ 3\n(rabbitmq:3-management-alpine)\n:15672 (UI)"]
-        OWA["OpenWA\n(openwa/wa-automate)\n:8000"]
+        WAHA["WAHA\n(devlikeapro/waha)\n:3000"]
     end
 
     MS --> DB
     MS --> RMQ
-    MS --> OWA
+    MS --> WAHA
 
     style MS fill:#4a90d9,stroke:#2c5f8a,color:#fff
     style DB fill:#336791,stroke:#1e3d5c,color:#fff
     style RMQ fill:#ff6600,stroke:#b34700,color:#fff
-    style OWA fill:#25D366,stroke:#128C7E,color:#fff
+    style WAHA fill:#25D366,stroke:#128C7E,color:#fff
 ```
 
 | Serviço | Container | Porta | Credenciais |
@@ -479,13 +479,13 @@ graph TB
 | **Management Service** | `ladesa-management-service` | `3701` (API), `9229` (debug) | — |
 | **PostgreSQL 15** | `ladesa-management-service-db` | `5432` | database: `main`, password: `7f22682363b549a389e03b7fe512488b` |
 | **RabbitMQ 3** | `ladesa-rabbitmq` | `5672` (AMQP), `15672` (UI) | admin / admin |
-| **OpenWA** | `ladesa-openwa-service` | `8000` | API Key (ver `.env.example`) |
+| **WAHA** | `ladesa-waha-service` | `3000` | API Key (ver `.env.example`) |
 
 **Volumes persistentes:**
 - `management-service-db-data` — dados do PostgreSQL (persistem entre restarts)
 - `management-service-uploaded-files` — arquivos enviados
 - `management-service-shell-history` — histórico do shell
-- `openwa-session-data` — dados de sessão e autenticação do WhatsApp
+- `waha-session-data` — dados de sessão e autenticação do WhatsApp
 
 **Rede:** `ladesa-net` (bridge — uma rede virtual interna do Docker que permite que os containers se encontrem pelo nome) — todos os serviços se comunicam por nome de container.
 
@@ -560,12 +560,15 @@ As variáveis são definidas no arquivo `.env`, criado automaticamente a partir 
 |----------|--------------|-----------|
 | `STORAGE_PATH` | `/container/uploaded` | Diretório onde arquivos enviados são armazenados |
 
-### OpenWA (WhatsApp Automation)
+### WAHA (WhatsApp HTTP API)
 
 | Variável | Valor padrão | Descrição |
 |----------|--------------|-----------|
-| `OPENWA_HOST` | `http://ladesa-openwa-service:8000` | Host do serviço OpenWA na rede interna |
-| `OPENWA_API_KEY` | `dev_key_here` | Chave de segurança para comunicar com a API do OpenWA |
+| `WAHA_BASE_URL` | `http://ladesa-waha-service:3000` | Host do serviço WAHA na rede interna |
+| `WAHA_API_KEY` | `dev.WAHA_API_KEY` | Chave de segurança para comunicar com a API do WAHA |
+| `WAHA_TIMEOUT` | `10000` | Timeout das requisições ao WAHA |
+| `WAHA_SESSION` | `default` | Nome da sessão no WAHA |
+| `WAHA_WEBHOOK_URL` | `http://ladesa-management-service:3701/api/webhooks/whatsapp` | URL de retorno para eventos |
 
 ### Sobre o prefixo (`API_PREFIX`)
 
@@ -3940,95 +3943,61 @@ confidence_scope: Pipeline CI/CD (triggers, etapas build/push/deploy), imagem Do
 
 ---
 
-## Implantação em Produção (VPS via Docker Compose)
+## Implantação em Ambiente Kubernetes (via Helm)
 
-Para implantar a aplicação de forma rápida e segura em um servidor VPS convencional, o projeto fornece um conjunto de configurações prontas baseadas em **Docker Compose** localizadas em `.deploy/vps/`.
+O projeto fornece um conjunto de configurações prontas baseadas em **Helm** localizadas em `.deploy/development/`.
 
-Esta estrutura é **independente e autossuficiente**, o que significa que você só precisa copiar a pasta `.deploy/vps` para a VPS para executar toda a pilha de serviços, puxando a imagem de produção do backend diretamente do registro de contêineres do GitHub (GHCR).
+Esta estrutura é projetada para ser implantada em um cluster Kubernetes, executando toda a pilha de serviços.
 
-### Estrutura do Deploy VPS
+### Estrutura do Deploy
 ```
-.deploy/vps/
-├── docker-compose.yml       # Orquestração dos serviços de produção
+.deploy/development/
+├── docker-compose.yml       # Stack local para testes (legado/dev)
 ├── deploy.sh                # Script utilitário para automação do deploy
-├── .env.example             # Modelo de variáveis de ambiente de produção
-└── openwa/
-    ├── Dockerfile           # Reconstrói a imagem OpenWA com o patch do dashboard
-    └── openwa-dashboard.html # Painel personalizado para pareamento do WhatsApp
+├── values.yml               # Configurações do Helm para a API
+└── values-waha.yml          # Configurações do Helm para o WAHA
 ```
 
 ### Serviços incluídos
-1. **API Backend (`management-service`)**: Roda a imagem de produção compilada (`service-runtime`) servida na porta interna `3000`. Executa as migrações de banco automaticamente ao iniciar.
-2. **PostgreSQL 15 (`db`)**: Banco de dados persistido via volume do docker. Mantido privado (não exposto diretamente à internet).
-3. **RabbitMQ (`rabbitmq`)**: Broker de mensagens para tarefas assíncronas. Painel de gerenciamento exposto na porta `15672` (vinculado a localhost).
-4. **WhatsApp Service (`openwa`)**: Executa a biblioteca `@open-wa/wa-automate` com suporte a um User-Agent atualizado de Chrome moderno (evitando o erro de navegador não suportado) e o painel customizado exposto na porta `8000` (vinculado a localhost).
+1. **API Backend (`management-service`)**: Roda a imagem compilada (`service-runtime`).
+2. **WhatsApp Service (`waha`)**: Implanta o serviço WAHA no namespace configurado.
 
 ---
 
-### ⚠️ Recomendações de Segurança (Secure by Default)
+### Passo a Passo para Implantação (Desenvolvimento)
 
-Por padrão, a configuração de deploy na VPS está protegida contra acessos públicos diretos indesejados:
-*   **Portas Locais**: As portas da API (`3000`), OpenWA (`8000`) e painel do RabbitMQ (`15672`) estão vinculadas apenas à interface local **`127.0.0.1`** (localhost). Isso impede que qualquer pessoa acesse estes painéis diretamente pela internet através do IP público da VPS.
-*   **Acesso Seguro**: O acesso externo deve ser configurado por meio de um **Proxy Reverso** com criptografia SSL/TLS (HTTPS) e, no caso do OpenWA, controle de acesso adicional.
-*   **Isolamento de Banco**: O banco de dados PostgreSQL não possui mapeamento de portas externo e roda exclusivamente dentro da rede interna isolada do Docker.
-
----
-
-### Passo a Passo para Implantação na VPS
-
-1. **Copiar os arquivos de deploy**:
-   Transfira a pasta `.deploy/vps` do seu ambiente de desenvolvimento para a sua VPS. Você pode fazer isso via `rsync`, `scp` ou clonando o repositório na máquina de destino.
-
-2. **Configurar as Variáveis de Ambiente**:
-   Na VPS, acesse a pasta copiada e crie o arquivo ativo:
+1. **Acessar a pasta de deploy**:
    ```bash
-   cp .env.example .env
+   cd .deploy/development/
    ```
-   Abra o arquivo `.env` e configure todas as credenciais de produção essenciais:
-   - Substitua as senhas padrão em `POSTGRES_PASSWORD` e `RABBITMQ_PASS`.
-   - Modifique a chave de API do openwa em `OPENWA_API_KEY`.
-   - Configure os segredos do Keycloak (`OAUTH2_CLIENT_REGISTRATION_LOGIN_CLIENT_SECRET`, `KC_CLIENT_SECRET`, etc.).
 
-3. **Executar o Script de Deploy**:
-   Dê permissão de execução (caso necessário) e inicie o deploy:
+2. **Executar o Script de Deploy**:
+   O script utiliza o `helm upgrade` para instalar ou atualizar a API e o WAHA no namespace Kubernetes configurado:
    ```bash
    chmod +x deploy.sh
    ./deploy.sh
    ```
-   Este script irá:
-   - Validar se o `.env` existe.
-   - Puxar a última imagem de produção do backend (`management-service`).
-   - Construir localmente a imagem do `openwa` aplicando o patch com o painel de WhatsApp atualizado.
-   - Subir todos os serviços em background (`detached`).
+   O script aplicará as configurações definidas no `values.yml` e `values-waha.yml` (que preveem o uso de Infisical para gestão de segredos) e aguardará o rollout dos serviços.
 
 ---
 
 ### Configuração de Proxy Reverso e HTTPS
 
-Para expor os serviços à internet de forma segura sob um domínio (ex: `ladesa.com.br`) e obter certificados SSL automáticos via Let's Encrypt, recomenda-se o uso de um proxy reverso como o **Caddy** ou **Nginx**.
+Para expor os serviços à internet de forma segura sob um domínio (ex: `dev.ladesa.com.br`) e obter certificados SSL automáticos via Let's Encrypt, o projeto utiliza **Ingress** do Kubernetes em conjunto com o `cert-manager`.
 
-#### Exemplo com Caddy (`Caddyfile`)
-Caddy gerencia os certificados SSL automaticamente e de forma simples:
+Isso já vem pré-configurado no arquivo `values.yml` (e no Helm chart correspondente):
 
-```caddyfile
-api.ladesa.com.br {
-    # Encaminha as chamadas da API principal
-    reverse_proxy /api/* localhost:3000
-
-    # Encaminha o Playground GraphQL (caso habilitado)
-    reverse_proxy /api/graphql* localhost:3000
-
-    # Painel do WhatsApp (exposto sob o subcaminho /whatsapp)
-    # Acesso via browser: https://api.ladesa.com.br/whatsapp
-    route /whatsapp* {
-        # Opcional: Adicione Basic Auth para proteger o painel de pareamento
-        # basic_auth {
-        #     admin HASH_DE_SENHA_AQUI
-        # }
-        uri strip_prefix /whatsapp
-        reverse_proxy localhost:8000
-    }
-}
+```yaml
+ingress:
+  enabled: true
+  annotations:
+    cert-manager.io/cluster-issuer: ladesa-ro-issuer-production
+  hosts:
+    - host: dev.ladesa.com.br
+      paths:
+        - path: /api/v1
+          pathType: ImplementationSpecific
+          servicePort: http-s
 ```
 
 ---
