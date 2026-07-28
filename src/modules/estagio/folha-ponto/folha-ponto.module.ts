@@ -34,7 +34,7 @@ import {
 } from "./infrastructure.database";
 // Resolvers & Controllers
 import { FolhaPontoGraphqlResolver } from "./presentation.graphql";
-import { FolhaPontoTokenRestController } from "./presentation.rest";
+import { FolhaPontoRestController, FolhaPontoTokenRestController } from "./presentation.rest";
 
 @Module({
   imports: [
@@ -45,7 +45,7 @@ import { FolhaPontoTokenRestController } from "./presentation.rest";
     NotificationsModule, // WhatsappNotificationsService
     MessageBrokerModule, // MessageBrokerContainerService
   ],
-  controllers: [FolhaPontoTokenRestController],
+  controllers: [FolhaPontoTokenRestController, FolhaPontoRestController],
   providers: [
     NestJsPaginateAdapter,
 
