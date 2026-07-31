@@ -1,8 +1,9 @@
-import { BadRequestException, ConflictException, Logger } from "@nestjs/common";
+import { BadRequestException, ConflictException, ForbiddenException, Logger } from "@nestjs/common";
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { Dep, Impl } from "@/domain/dependency-injection";
 import { MessageBrokerService } from "@/infrastructure.message-broker/message-broker.service";
+import { IEstagiarioRepository } from "@/modules/estagio/estagiario/domain/repositories";
 import { EstagioStatus } from "@/modules/estagio/estagio/domain/estagio";
 import { IEstagioRepository } from "@/modules/estagio/estagio/domain/repositories";
 import type { FolhaPontoCreateCommand } from "../../domain/commands/folha-ponto-create.command";
@@ -20,6 +21,7 @@ export class FolhaPontoCreateCommandHandlerImpl implements IFolhaPontoCreateComm
     @Dep(IFolhaPontoRepository) private readonly repository: IFolhaPontoRepository,
     @Dep(IFolhaPontoTokenRepository) private readonly tokenRepository: IFolhaPontoTokenRepository,
     @Dep(IEstagioRepository) private readonly estagioRepository: IEstagioRepository,
+    @Dep(IEstagiarioRepository) private readonly estagiarioRepository: IEstagiarioRepository,
     private readonly messageBrokerService: MessageBrokerService,
   ) {}
 
@@ -41,6 +43,23 @@ export class FolhaPontoCreateCommandHandlerImpl implements IFolhaPontoCreateComm
     // 3. Verificar que o telefoneSupervisor está presente
     if (!estagio.telefoneSupervisor) {
       throw new BadRequestException(`O estágio não possui telefone do supervisor cadastrado.`);
+    }
+
+    // 4. Verificar autorização
+    if (!accessContext?.requestActor?.isSuperUser) {
+      if (!estagio.estagiario?.id) {
+        throw new ForbiddenException(`Estágio não possui estagiário associado.`);
+      }
+      const estagiarioResult = await this.estagiarioRepository.getFindOneQueryResult(
+        accessContext,
+        { id: estagio.estagiario.id },
+      );
+      const usuarioId = estagiarioResult?.perfil?.usuario?.id;
+      if (usuarioId !== accessContext?.requestActor?.id) {
+        throw new ForbiddenException(
+          `Apenas o estagiário associado ou um administrador pode solicitar folha de ponto.`,
+        );
+      }
     }
 
     // 4. Verificar unicidade por data+estagio
