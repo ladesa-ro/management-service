@@ -54,10 +54,14 @@ export class FolhaPontoNotificacaoConsumer implements OnModuleInit {
       this.logger.log("Consumer folha_ponto.notificacao.whatsapp inicializado com sucesso.");
     } catch (error) {
       if (tentativa <= 30) {
-        this.logger.debug(`Broker ainda não disponível. Retentando em 2s (tentativa ${tentativa})...`);
+        this.logger.debug(
+          `Broker ainda não disponível. Retentando em 2s (tentativa ${tentativa})...`,
+        );
         setTimeout(() => this.tentarRegistrarConsumer(tentativa + 1), 2000);
       } else {
-        this.logger.error(`Message broker indisponível após 30 tentativas — consumer não registrado: ${error}`);
+        this.logger.error(
+          `Message broker indisponível após 30 tentativas — consumer não registrado: ${error}`,
+        );
       }
     }
   }
