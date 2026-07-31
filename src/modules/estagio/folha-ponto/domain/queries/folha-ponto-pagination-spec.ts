@@ -5,6 +5,7 @@ export const folhaPontoPaginationSpec: IPaginationSpec = {
   filterableColumns: {
     status: [PaginationFilter.EQ, PaginationFilter.IN],
     "estagio.id": [PaginationFilter.EQ],
+    "estagio.estagiario.perfil.usuario.id": [PaginationFilter.EQ],
   },
   searchableColumns: ["observacoes", "status"],
   sortableColumns: ["data", "status", "quantidadeHoras", "dateCreated"],
