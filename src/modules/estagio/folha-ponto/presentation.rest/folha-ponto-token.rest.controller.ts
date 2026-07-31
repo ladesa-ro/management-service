@@ -1,5 +1,17 @@
-import { Controller, Get, HttpCode, Inject, Param, Post, Redirect, Req } from "@nestjs/common";
+import {
+  Controller,
+  Get,
+  HttpCode,
+  Inject,
+  Param,
+  ParseUUIDPipe,
+  Post,
+  Redirect,
+  Req,
+  UseGuards,
+} from "@nestjs/common";
 import { ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
+import { Throttle, ThrottlerGuard } from "@nestjs/throttler";
 import type { Request } from "express";
 import { IConfigService } from "@/infrastructure.config";
 import { EnvKeys } from "@/infrastructure.config/env-keys";
@@ -8,6 +20,7 @@ import { FolhaPontoTokenConfirmHandler } from "../application/commands/folha-pon
 
 @ApiTags("folha-ponto-tokens")
 @Public()
+@UseGuards(ThrottlerGuard)
 @Controller("/folha-ponto/tokens")
 export class FolhaPontoTokenRestController {
   private readonly frontendBaseUrl: string;
@@ -32,7 +45,10 @@ export class FolhaPontoTokenRestController {
     summary: "Valida token e redireciona para confirmação",
   })
   @ApiOkResponse({ description: "Redirect para o frontend de confirmação" })
-  async validar(@Param("tokenId") tokenId: string): Promise<{ url: string; statusCode: number }> {
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
+  async validar(
+    @Param("tokenId", new ParseUUIDPipe()) tokenId: string,
+  ): Promise<{ url: string; statusCode: number }> {
     try {
       // Valida sem consumir o token
       const { token, folhaPonto } = await this.confirmHandler.validar(tokenId);
@@ -63,8 +79,9 @@ export class FolhaPontoTokenRestController {
     summary: "Confirma aprovação/rejeição/cancelamento da folha de ponto",
   })
   @ApiOkResponse({ description: "Ação confirmada com sucesso" })
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
   async confirmar(
-    @Param("tokenId") tokenId: string,
+    @Param("tokenId", new ParseUUIDPipe()) tokenId: string,
     @Req() req: Request,
   ): Promise<{ sucesso: boolean; acao: string; folhaPontoId: string }> {
     const ip = (req.ip as string) ?? null;
