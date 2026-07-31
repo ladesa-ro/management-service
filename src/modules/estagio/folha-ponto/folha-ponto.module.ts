@@ -4,6 +4,7 @@ import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adap
 import { MessageBrokerModule } from "@/infrastructure.message-broker/message-broker.module";
 import { WahaModule } from "@/integrations/waha/waha.module";
 import { NotificacaoModule } from "@/modules/acesso/notificacao/notificacao.module";
+import { EstagiarioModule } from "@/modules/estagio/estagiario/estagiario.module";
 import { EstagioModule } from "@/modules/estagio/estagio/estagio.module";
 import { NotificationsModule } from "@/notifications/notifications.module";
 // Application Handlers
@@ -40,6 +41,7 @@ import { FolhaPontoRestController, FolhaPontoTokenRestController } from "./prese
   imports: [
     ScheduleModule.forRoot(), // para o CronJob
     EstagioModule, // acesso ao IEstagioRepository
+    EstagiarioModule, // acesso ao IEstagiarioRepository
     NotificacaoModule, // WebSocket push (se necessário no futuro)
     WahaModule, // IWhatsAppProvider (se usado diretamente)
     NotificationsModule, // WhatsappNotificationsService
