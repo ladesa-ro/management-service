@@ -57,7 +57,7 @@ export class FolhaPontoRestController {
   ): Promise<FolhaPontoListOutputRestDto> {
     const query = FolhaPontoRestMapper.listInputDtoToListQuery.map(dto);
     const queryResult = await this.listHandler.execute(accessContext, query);
-    return FolhaPontoRestMapper.listQueryResultToListOutputDto(queryResult);
+    return FolhaPontoRestMapper.listQueryResultToListOutputDto(queryResult as any);
   }
 
   @Get("/:id")
