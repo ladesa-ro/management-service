@@ -1,10 +1,13 @@
-import { ApiProperty, ApiPropertyOptional, ApiSchema, TransformToArray } from "@/shared/presentation/rest";
+import {
+  ApiProperty,
+  ApiPropertyOptional,
+  ApiSchema,
+  TransformToArray,
+} from "@/shared/presentation/rest";
 import { PaginatedFilterByIdRestDto, PaginationMetaRestDto } from "@/shared/presentation/rest/dtos";
 import type { FolhaPontoCreateCommand } from "../domain/commands/folha-ponto-create.command";
 import { FolhaPontoStatus } from "../domain/folha-ponto";
 import { FolhaPontoFields } from "../domain/folha-ponto.fields";
-import type { FolhaPontoFindOneQueryResult } from "../domain/queries";
-import { FolhaPontoListQuery } from "../domain/queries";
 
 // ==========================================
 // DTOs de Entrada (Inputs/Args)
@@ -17,7 +20,10 @@ export class FolhaPontoEstagioRefInputRestDto {
 
 @ApiSchema({ name: "FolhaPontoCreateInputRestDto" })
 export class FolhaPontoCreateInputRestDto implements FolhaPontoCreateCommand {
-  @ApiProperty({ type: () => FolhaPontoEstagioRefInputRestDto, description: "Referência ao estágio" })
+  @ApiProperty({
+    type: () => FolhaPontoEstagioRefInputRestDto,
+    description: "Referência ao estágio",
+  })
   estagio!: FolhaPontoEstagioRefInputRestDto;
 
   @ApiProperty(FolhaPontoFields.data.swaggerMetadata)
