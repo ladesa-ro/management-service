@@ -1,6 +1,7 @@
 import { createListMapper, createMapper, createPaginatedInputMapper, into } from "@/shared/mapping";
 import type { FolhaPontoCreateCommand } from "../domain/commands/folha-ponto-create.command";
-import type { FolhaPontoFindOneQueryResult, FolhaPontoListQueryResult } from "../domain/queries";
+import { FolhaPontoStatus } from "../domain/folha-ponto";
+import type { FolhaPontoFindOneQueryResult } from "../domain/queries";
 import { FolhaPontoListQuery } from "../domain/queries";
 import {
   FolhaPontoCreateInputRestDto,
@@ -33,7 +34,7 @@ export const findOneQueryResultToOutputDto = createMapper<
   horaFim: output.horaFim,
   quantidadeHoras: output.quantidadeHoras,
   observacoes: output.observacoes,
-  status: output.status,
+  status: output.status as FolhaPontoStatus,
   dataSolicitacao: output.dataSolicitacao,
   dataAprovacao: output.dataAprovacao,
   dataRejeicao: output.dataRejeicao,
@@ -43,13 +44,18 @@ export const listInputDtoToListQuery = createPaginatedInputMapper<
   FolhaPontoListInputRestDto,
   FolhaPontoListQuery
 >(FolhaPontoListQuery, (dto, query) => {
-  into(query).field("filter.id").from(dto);
-  into(query).field("filter.status").from(dto);
-  into(query).field("filter.estagio.id").from(dto);
+  into(query)
+    .field("filter.id" as any)
+    .from(dto);
+  into(query)
+    .field("filter.status" as any)
+    .from(dto);
+  into(query)
+    .field("filter.estagio.id" as any)
+    .from(dto);
 });
 
 export const listQueryResultToListOutputDto = createListMapper(
   FolhaPontoListOutputRestDto,
   findOneQueryResultToOutputDto,
 );
-
