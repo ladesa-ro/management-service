@@ -1,5 +1,6 @@
 import { Module } from "@nestjs/common";
 import { APP_FILTER, APP_INTERCEPTOR } from "@nestjs/core";
+import { ThrottlerModule } from "@nestjs/throttler";
 import { ContainerModule } from "@/infrastructure.dependency-injection";
 import { LoggingModule, RequestLoggingInterceptor } from "@/infrastructure.logging";
 import { InfrastructureModule } from "@/infrastructure.module";
@@ -17,6 +18,12 @@ import { ResilienceModule } from "@/shared/resilience";
 
 @Module({
   imports: [
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000,
+        limit: 20,
+      },
+    ]),
     ResilienceModule,
     LoggingModule,
     ModulesModule,
