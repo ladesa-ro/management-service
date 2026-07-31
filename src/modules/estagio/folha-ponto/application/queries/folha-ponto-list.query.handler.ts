@@ -16,6 +16,13 @@ export class FolhaPontoListQueryHandlerImpl implements IFolhaPontoListQueryHandl
     accessContext: IAccessContext | null,
     dto: FolhaPontoListQuery,
   ): Promise<FolhaPontoListQueryResult> {
+    if (accessContext?.requestActor && !accessContext.requestActor.isSuperUser) {
+      dto = {
+        ...dto,
+        "filter.estagio.estagiario.perfil.usuario.id": accessContext.requestActor.id,
+      } as unknown as FolhaPontoListQuery;
+    }
+
     return this.repository.getFindAllQueryResult(accessContext, dto);
   }
 }
