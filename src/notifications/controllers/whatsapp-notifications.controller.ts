@@ -36,8 +36,7 @@ export class WhatsappNotificationsController {
   async sendWhatsAppMessage(
     @Body() payload: SendWhatsappNotificationDto,
   ): Promise<WhatsappNotificationResponse> {
-    throw new HttpException("Rota temporariamente desabilitada", HttpStatus.SERVICE_UNAVAILABLE);
-    // return this.whatsappNotificationsService.sendNotification(payload);
+    return this.whatsappNotificationsService.sendNotification(payload);
   }
 
   @Get("whatsapp/status")
