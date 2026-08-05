@@ -54,7 +54,15 @@ export class FolhaPontoTokenRestController {
       const { token, folhaPonto } = await this.confirmHandler.validar(tokenId);
 
       // Redireciona para o frontend com os dados relevantes
-      const redirectUrl = `${this.frontendBaseUrl}/folha-ponto/confirmar?token=${tokenId}&tipo=${token.tipo}&data=${folhaPonto.data}&inicio=${folhaPonto.horaInicio}&fim=${folhaPonto.horaFim}&horas=${folhaPonto.quantidadeHoras}`;
+      const params = new URLSearchParams({
+        token: tokenId,
+        tipo: token.tipo,
+        data: folhaPonto.data,
+        inicio: folhaPonto.horaInicio,
+        fim: folhaPonto.horaFim,
+        horas: String(folhaPonto.quantidadeHoras),
+      });
+      const redirectUrl = `${this.frontendBaseUrl}/folha-ponto/confirmar?${params.toString()}`;
       return { url: redirectUrl, statusCode: 302 };
     } catch (error: any) {
       // Redireciona para página de erro no frontend
