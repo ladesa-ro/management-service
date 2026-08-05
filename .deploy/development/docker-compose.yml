@@ -76,7 +76,7 @@ services:
     image: devlikeapro/waha:latest
     restart: unless-stopped
     ports:
-      - "${HOST_PORT_WAHA:-127.0.0.1:3000}:3000"
+      - "${HOST_PORT_WAHA:-127.0.0.1:3001}:3000"
     networks:
       - ladesa-net
     environment:
