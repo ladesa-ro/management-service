@@ -63,7 +63,7 @@ deployment:
           key: WAHA_WEBHOOK_HMAC_KEY
     # Exclui /ping e /health da exigência de API key.
     # Sem isso, as probes (readiness/liveness/startup) recebem 401 e o pod nunca fica Ready.
-    WAHA_API_KEY_EXCLUDE_PATH:
+    WHATSAPP_API_KEY_EXCLUDE_PATH:
       value: "ping,health"
     WAHA_DASHBOARD_USERNAME:
       valueFrom:

@@ -86,7 +86,7 @@ services:
       # Eventos que serão enviados ao webhook
       - WHATSAPP_HOOK_EVENTS=message,session.status,state.change
       # Exclui /ping e /health da exigência de API key para que o healthcheck funcione.
-      - WAHA_API_KEY_EXCLUDE_PATH=ping,health
+      - WHATSAPP_API_KEY_EXCLUDE_PATH=ping,health
       # Credenciais do dashboard/Swagger UI (basic auth)
       - WAHA_DASHBOARD_USERNAME=${WAHA_USERNAME:-${WAHA_USER:-ladesa}}
       - WAHA_DASHBOARD_PASSWORD=${WAHA_PASSWORD:-changeme}

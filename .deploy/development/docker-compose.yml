@@ -89,7 +89,7 @@ services:
       - WHATSAPP_HOOK_HMAC_KEY=${WAHA_WEBHOOK_HMAC_KEY}
       - WHATSAPP_HOOK_EVENTS=message,session.status,state.change
       # Exclui /ping e /health da exigência de API key para que o healthcheck funcione.
-      - WAHA_API_KEY_EXCLUDE_PATH=ping,health
+      - WHATSAPP_API_KEY_EXCLUDE_PATH=ping,health
       - WAHA_DASHBOARD_USERNAME=${WAHA_USERNAME:-${WAHA_USER:-ladesa}}
       - WAHA_DASHBOARD_PASSWORD=${WAHA_PASSWORD:-changeme}
       - WHATSAPP_SWAGGER_USERNAME=${WAHA_USERNAME:-${WAHA_USER:-ladesa}}
