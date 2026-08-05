@@ -15,6 +15,7 @@ import {
   ILoggerPort as ILoggerPortToken,
   IPerformanceHooks as IPerformanceHooksToken,
 } from "@/domain/abstractions/logging";
+import { buildStandardizedErrorResponse } from "@/server/nest/filters/error-response.mapper";
 
 /**
  * Interceptor que loga requests HTTP e mede tempo de execução
@@ -56,7 +57,23 @@ export class RequestLoggingInterceptor implements NestInterceptor {
         },
         error: (err) => {
           checkpoint.end();
-          this.logger.error(`✗ ${method} ${url}`, err?.stack, "HTTP", { correlationId });
+          const errorResponse = buildStandardizedErrorResponse(err, url);
+          const isClientError = errorResponse.statusCode >= 400 && errorResponse.statusCode < 500;
+
+          if (isClientError) {
+            this.logger.warn(
+              `✗ ${method} ${url} - ${errorResponse.statusCode} Client Error`,
+              "HTTP",
+              { correlationId },
+            );
+          } else {
+            this.logger.error(
+              `✗ ${method} ${url}`,
+              err instanceof Error ? err.stack : String(err),
+              "HTTP",
+              { correlationId },
+            );
+          }
         },
       }),
     );

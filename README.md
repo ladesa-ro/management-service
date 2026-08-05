@@ -461,14 +461,17 @@ graph TB
         MS["Management Service\n:3701 (API)\n:9229 (debug)"]
         DB["PostgreSQL 15\n(bitnamilegacy/postgresql:15)\n:5432"]
         RMQ["RabbitMQ 3\n(rabbitmq:3-management-alpine)\n:15672 (UI)"]
+        WAHA["WAHA\n(devlikeapro/waha)\n:3000"]
     end
 
     MS --> DB
     MS --> RMQ
+    MS --> WAHA
 
     style MS fill:#4a90d9,stroke:#2c5f8a,color:#fff
     style DB fill:#336791,stroke:#1e3d5c,color:#fff
     style RMQ fill:#ff6600,stroke:#b34700,color:#fff
+    style WAHA fill:#25D366,stroke:#128C7E,color:#fff
 ```
 
 | Serviço | Container | Porta | Credenciais |
@@ -476,11 +479,13 @@ graph TB
 | **Management Service** | `ladesa-management-service` | `3701` (API), `9229` (debug) | — |
 | **PostgreSQL 15** | `ladesa-management-service-db` | `5432` | database: `main`, password: `7f22682363b549a389e03b7fe512488b` |
 | **RabbitMQ 3** | `ladesa-rabbitmq` | `5672` (AMQP), `15672` (UI) | admin / admin |
+| **WAHA** | `ladesa-waha-service` | `3000` | API Key (ver `.env.example`) |
 
 **Volumes persistentes:**
 - `management-service-db-data` — dados do PostgreSQL (persistem entre restarts)
 - `management-service-uploaded-files` — arquivos enviados
 - `management-service-shell-history` — histórico do shell
+- `waha-session-data` — dados de sessão e autenticação do WhatsApp
 
 **Rede:** `ladesa-net` (bridge — uma rede virtual interna do Docker que permite que os containers se encontrem pelo nome) — todos os serviços se comunicam por nome de container.
 
@@ -554,6 +559,16 @@ As variáveis são definidas no arquivo `.env`, criado automaticamente a partir 
 | Variável | Valor padrão | Descrição |
 |----------|--------------|-----------|
 | `STORAGE_PATH` | `/container/uploaded` | Diretório onde arquivos enviados são armazenados |
+
+### WAHA (WhatsApp HTTP API)
+
+| Variável | Valor padrão | Descrição |
+|----------|--------------|-----------|
+| `WAHA_BASE_URL` | `http://ladesa-waha-service:3000` | Host do serviço WAHA na rede interna |
+| `WAHA_API_KEY` | `dev.WAHA_API_KEY` | Chave de segurança para comunicar com a API do WAHA |
+| `WAHA_TIMEOUT` | `10000` | Timeout das requisições ao WAHA |
+| `WAHA_SESSION` | `default` | Nome da sessão no WAHA |
+| `WAHA_WEBHOOK_URL` | `http://ladesa-management-service:3701/api/webhooks/whatsapp` | URL de retorno para eventos |
 
 ### Sobre o prefixo (`API_PREFIX`)
 
@@ -2561,7 +2576,7 @@ Esse fluxo se repete para todos os módulos. Queries (`FindById`, `FindAll`) seg
 management-service/
 ├── .devcontainer/          # Configuração do Dev Container (VS Code / WebStorm)
 ├── .docker/                # Containerfile e compose.yml
-├── .deploy/                # Scripts e values de deploy (Helm/Kubernetes)
+├── .deploy/                # Configurações de implantação (Helm/Kubernetes e VPS via Docker Compose)
 ├── .github/workflows/      # Pipelines de CI/CD
 ├── src/                    # Código-fonte principal
 │   ├── domain/             # Camada de domínio (entidades, abstrações, erros)
@@ -3925,6 +3940,65 @@ source_patterns:
   - .deploy/**/*
 confidence_scope: Pipeline CI/CD (triggers, etapas build/push/deploy), imagem Docker (target service-runtime, GHCR), concurrency build-deploy-dev
 -->
+
+---
+
+## Implantação em Ambiente Kubernetes (via Helm)
+
+O projeto fornece um conjunto de configurações prontas baseadas em **Helm** localizadas em `.deploy/development/`.
+
+Esta estrutura é projetada para ser implantada em um cluster Kubernetes, executando toda a pilha de serviços.
+
+### Estrutura do Deploy
+```
+.deploy/development/
+├── docker-compose.yml       # Stack local para testes (legado/dev)
+├── deploy.sh                # Script utilitário para automação do deploy
+├── values.yml               # Configurações do Helm para a API
+└── values-waha.yml          # Configurações do Helm para o WAHA
+```
+
+### Serviços incluídos
+1. **API Backend (`management-service`)**: Roda a imagem compilada (`service-runtime`).
+2. **WhatsApp Service (`waha`)**: Implanta o serviço WAHA no namespace configurado.
+
+---
+
+### Passo a Passo para Implantação (Desenvolvimento)
+
+1. **Acessar a pasta de deploy**:
+   ```bash
+   cd .deploy/development/
+   ```
+
+2. **Executar o Script de Deploy**:
+   O script utiliza o `helm upgrade` para instalar ou atualizar a API e o WAHA no namespace Kubernetes configurado:
+   ```bash
+   chmod +x deploy.sh
+   ./deploy.sh
+   ```
+   O script aplicará as configurações definidas no `values.yml` e `values-waha.yml` (que preveem o uso de Infisical para gestão de segredos) e aguardará o rollout dos serviços.
+
+---
+
+### Configuração de Proxy Reverso e HTTPS
+
+Para expor os serviços à internet de forma segura sob um domínio (ex: `dev.ladesa.com.br`) e obter certificados SSL automáticos via Let's Encrypt, o projeto utiliza **Ingress** do Kubernetes em conjunto com o `cert-manager`.
+
+Isso já vem pré-configurado no arquivo `values.yml` (e no Helm chart correspondente):
+
+```yaml
+ingress:
+  enabled: true
+  annotations:
+    cert-manager.io/cluster-issuer: ladesa-ro-issuer-production
+  hosts:
+    - host: dev.ladesa.com.br
+      paths:
+        - path: /api/v1
+          pathType: ImplementationSpecific
+          servicePort: http-s
+```
 
 ---
 

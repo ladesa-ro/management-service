@@ -1,4 +1,5 @@
-x-podman: # para funcionar com o podman
+x-podman:
+  # para funcionar com o podman
   in_pod: false
 
 services:
@@ -19,6 +20,7 @@ services:
     depends_on:
       - db
       - rabbitmq
+      - waha
     networks:
       - ladesa-net
     ports:
@@ -61,6 +63,46 @@ services:
       - "5672:5672"
       - "15672:15672"
 
+  waha:
+    container_name: ladesa-waha-service
+    # Imagem fixada via digest para imutabilidade. Para atualizar:
+    #   docker buildx imagetools inspect devlikeapro/waha:latest
+    # Copie o digest e abra PR documentando a razão da atualização.
+    # linux/amd64: sha256:8481bb26b03be008a57d4a688dbce572dbcceb50fe9525ee72a33e7f73d206a1
+    image: devlikeapro/waha@sha256:dc134637dfa0bd65202010a65e4ff8176101791699176c75bb37d5aa9daf487c
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3000:3000"
+    networks:
+      - ladesa-net
+    environment:
+      # Chave de API para autenticação (header X-Api-Key)
+      - WHATSAPP_API_KEY=${WAHA_API_KEY:-dev_key}
+      # URL do webhook para onde o WAHA enviará eventos (message, session.status)
+      - WHATSAPP_HOOK_URL=${WAHA_WEBHOOK_URL:-http://ladesa-management-service:3701/api/webhooks/whatsapp}
+      # Chave HMAC: o WAHA assina o payload e envia X-Webhook-Hmac; o backend valida.
+      # Gerar em prod com: openssl rand -hex 32
+      - WHATSAPP_HOOK_HMAC_KEY=${WAHA_WEBHOOK_HMAC_KEY:-dev.WAHA_WEBHOOK_HMAC_KEY}
+      # Eventos que serão enviados ao webhook
+      - WHATSAPP_HOOK_EVENTS=message,session.status,state.change
+      # Exclui /ping e /health da exigência de API key para que o healthcheck funcione.
+      - WAHA_API_KEY_EXCLUDE_PATH=ping,health
+      # Credenciais do dashboard/Swagger UI (basic auth)
+      - WAHA_DASHBOARD_USERNAME=${WAHA_USERNAME:-${WAHA_USER:-ladesa}}
+      - WAHA_DASHBOARD_PASSWORD=${WAHA_PASSWORD:-changeme}
+      - WHATSAPP_SWAGGER_USERNAME=${WAHA_USERNAME:-${WAHA_USER:-ladesa}}
+      - WHATSAPP_SWAGGER_PASSWORD=${WAHA_PASSWORD:-changeme}
+    volumes:
+      # Persistência das sessões autenticadas do WhatsApp
+      - waha-session-data:/app/.sessions
+    healthcheck:
+      # /ping é excluído da API key via WAHA_API_KEY_EXCLUDE_PATH acima.
+      test: [ "CMD", "curl", "-f", "http://localhost:3000/ping" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
 networks:
   ladesa-net:
 
@@ -68,3 +110,4 @@ volumes:
   management-service-db-data:
   management-service-uploaded-files:
   management-service-shell-history:
+  waha-session-data:
