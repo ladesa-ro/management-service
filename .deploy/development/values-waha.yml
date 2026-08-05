@@ -20,9 +20,7 @@ deployment:
     pullPolicy: IfNotPresent
 
   strategy:
-    rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 0
+    type: Recreate
 
   resources:
     requests:
