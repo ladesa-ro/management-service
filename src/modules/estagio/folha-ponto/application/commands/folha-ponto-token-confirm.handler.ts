@@ -33,9 +33,9 @@ export class FolhaPontoTokenConfirmHandler {
       // 1. Pessimistic Lock no token para evitar duplo-clique
       const tokenEntity = await manager.getRepository(FolhaPontoTokenTypeormEntity).findOne({
         where: { id: tokenId },
+        relations: { folhaPonto: true },
         lock: { mode: "pessimistic_write" },
       });
-
       if (!tokenEntity) {
         throw new NotFoundException("Token não encontrado.");
       }
