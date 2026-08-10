@@ -19,6 +19,6 @@ export class FolhaPontoGraphqlMapper {
     dataRejeicao: result.dataRejeicao,
     dateCreated: new Date(result.dateCreated),
     dateUpdated: new Date(result.dateUpdated),
-    dateDeleted: null,
+    dateDeleted: result.dateDeleted ? new Date(result.dateDeleted) : null,
   });
 }
