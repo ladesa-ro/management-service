@@ -39,7 +39,6 @@ import { FolhaPontoRestController, FolhaPontoTokenRestController } from "./prese
 
 @Module({
   imports: [
-    ScheduleModule.forRoot(), // para o CronJob
     EstagioModule, // acesso ao IEstagioRepository
     EstagiarioModule, // acesso ao IEstagiarioRepository
     NotificacaoModule, // WebSocket push (se necessário no futuro)
