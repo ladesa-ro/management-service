@@ -6,6 +6,9 @@ K8S_NAMESPACE=ladesa-ro-development
 K8S_DEPLOYMENT=ladesa-ro-api
 K8S_DEPLOYMENT_WAHA=ladesa-ro-waha
 
+# Criar PersistentVolumeClaim do WAHA
+kubectl apply -f ./pvc-waha-sessions.yml --namespace=${K8S_NAMESPACE};
+
 # Deploy do WAHA (WhatsApp HTTP API)
 helm upgrade -i ${K8S_DEPLOYMENT_WAHA} \
   --repo https://stakater.github.io/stakater-charts \

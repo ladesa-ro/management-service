@@ -1,10 +1,25 @@
-import { UnauthorizedException } from "@nestjs/common";
+import * as crypto from "node:crypto";
+
+import { ServiceUnavailableException, UnauthorizedException } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { IConfigService } from "@/infrastructure.config";
+import { ConfigTokens } from "@/infrastructure.config/config-tokens";
 import { WahaWebhookEventDto } from "@/integrations/waha/dto/waha-webhook-event.dto";
 import { WhatsappWebhooksController } from "../controllers/whatsapp-webhooks.controller";
 import { WhatsappNotificationsService } from "../services/whatsapp-notifications.service";
+
+const HMAC_SECRET = "test-hmac-secret-32-chars-minimum!!";
+
+const mockPayload: WahaWebhookEventDto = {
+  event: "session.status",
+  session: "default",
+  payload: { status: "WORKING" },
+};
+
+function signPayload(payload: WahaWebhookEventDto, key: string): string {
+  return crypto.createHmac("sha512", key).update(JSON.stringify(payload)).digest("hex");
+}
 
 describe("WhatsappWebhooksController", () => {
   let controller: WhatsappWebhooksController;
@@ -35,45 +50,82 @@ describe("WhatsappWebhooksController", () => {
     configService = module.get<IConfigService>(IConfigService);
   });
 
-  const mockPayload: WahaWebhookEventDto = {
-    event: "session.status",
-    session: "default",
-    payload: { status: "WORKING" },
-  };
+  describe("quando WAHA_WEBHOOK_HMAC_KEY está configurada (comportamento normal)", () => {
+    beforeEach(() => {
+      vi.spyOn(configService, "get").mockImplementation((token) => {
+        if (token === ConfigTokens.WhatsAppOptions.WebhookHmacKey) return HMAC_SECRET;
+        return undefined;
+      });
+    });
 
-  it("should process webhook when token is correct", async () => {
-    vi.spyOn(configService, "get").mockReturnValue("correct-token");
+    it("deve processar o webhook quando a assinatura HMAC é válida", () => {
+      const validHmac = signPayload(mockPayload, HMAC_SECRET);
 
-    const result = await controller.handleWebhook(mockPayload, "correct-token");
+      const result = controller.handleWebhook(mockPayload, validHmac);
 
-    expect(result).toEqual({ success: true });
-    expect(service.handleWebhook).toHaveBeenCalledWith(mockPayload);
+      expect(result).toEqual({ success: true });
+      expect(service.handleWebhook).toHaveBeenCalledWith(mockPayload);
+    });
+
+    it("deve lançar UnauthorizedException quando a assinatura HMAC é inválida", () => {
+      const wrongHmac = signPayload(mockPayload, "wrong-secret");
+
+      expect(() => controller.handleWebhook(mockPayload, wrongHmac)).toThrow(UnauthorizedException);
+      expect(service.handleWebhook).not.toHaveBeenCalled();
+    });
+
+    it("deve lançar UnauthorizedException quando o header X-Webhook-Hmac está ausente", () => {
+      expect(() => controller.handleWebhook(mockPayload, undefined)).toThrow(UnauthorizedException);
+      expect(service.handleWebhook).not.toHaveBeenCalled();
+    });
+
+    it("deve lançar UnauthorizedException quando o header está vazio", () => {
+      expect(() => controller.handleWebhook(mockPayload, "")).toThrow(UnauthorizedException);
+      expect(service.handleWebhook).not.toHaveBeenCalled();
+    });
+
+    it("deve lançar UnauthorizedException quando o payload foi adulterado após assinatura", () => {
+      const originalPayload: WahaWebhookEventDto = {
+        event: "session.status",
+        session: "default",
+        payload: { status: "WORKING" },
+      };
+      const validHmac = signPayload(originalPayload, HMAC_SECRET);
+
+      // Payload adulterado — HMAC original não bate mais
+      const tamperedPayload: WahaWebhookEventDto = {
+        ...originalPayload,
+        payload: { status: "FAILED" },
+      };
+
+      expect(() => controller.handleWebhook(tamperedPayload, validHmac)).toThrow(
+        UnauthorizedException,
+      );
+      expect(service.handleWebhook).not.toHaveBeenCalled();
+    });
   });
 
-  it("should throw UnauthorizedException when token is incorrect", async () => {
-    vi.spyOn(configService, "get").mockReturnValue("correct-token");
+  describe("FAIL-CLOSED — quando WAHA_WEBHOOK_HMAC_KEY NÃO está configurada no servidor", () => {
+    beforeEach(() => {
+      vi.spyOn(configService, "get").mockReturnValue(undefined);
+    });
 
-    await expect(controller.handleWebhook(mockPayload, "incorrect-token")).rejects.toThrow(
-      UnauthorizedException,
-    );
+    it("deve lançar ServiceUnavailableException mesmo com HMAC válido — servidor mal configurado", () => {
+      // Sem chave configurada no servidor, não é possível validar nenhuma assinatura.
+      // O endpoint deve fechar em vez de aceitar chamadas não autenticáveis.
+      const anyHmac = signPayload(mockPayload, "qualquer-coisa");
 
-    expect(service.handleWebhook).not.toHaveBeenCalled();
-  });
+      expect(() => controller.handleWebhook(mockPayload, anyHmac)).toThrow(
+        ServiceUnavailableException,
+      );
+      expect(service.handleWebhook).not.toHaveBeenCalled();
+    });
 
-  it("should throw UnauthorizedException when token is missing and expectedToken is set", async () => {
-    vi.spyOn(configService, "get").mockReturnValue("correct-token");
-
-    await expect(controller.handleWebhook(mockPayload)).rejects.toThrow(UnauthorizedException);
-
-    expect(service.handleWebhook).not.toHaveBeenCalled();
-  });
-
-  it("should process webhook when expectedToken is not configured", async () => {
-    vi.spyOn(configService, "get").mockReturnValue(undefined);
-
-    const result = await controller.handleWebhook(mockPayload, "any-token");
-
-    expect(result).toEqual({ success: true });
-    expect(service.handleWebhook).toHaveBeenCalledWith(mockPayload);
+    it("deve lançar ServiceUnavailableException quando o header está ausente e chave não configurada", () => {
+      expect(() => controller.handleWebhook(mockPayload, undefined)).toThrow(
+        ServiceUnavailableException,
+      );
+      expect(service.handleWebhook).not.toHaveBeenCalled();
+    });
   });
 });

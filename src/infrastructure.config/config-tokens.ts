@@ -39,5 +39,6 @@ export const ConfigTokens = {
     ApiKey: Symbol("WhatsAppOptions.ApiKey"),
     Timeout: Symbol("WhatsAppOptions.Timeout"),
     Session: Symbol("WhatsAppOptions.Session"),
+    WebhookHmacKey: Symbol("WhatsAppOptions.WebhookHmacKey"),
   },
 } as const;

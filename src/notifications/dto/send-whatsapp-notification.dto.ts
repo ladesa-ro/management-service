@@ -15,12 +15,15 @@ export class SendWhatsappNotificationDto {
   @ApiProperty({
     description: "Telefone do destinatário em formato internacional",
     example: "5511999999999",
+    pattern: "^[1-9][0-9]{10,14}$",
   })
   phone: string;
 
   @ApiProperty({
     description: "Mensagem a ser enviada",
     example: "Sua solicitação foi aprovada.",
+    minLength: 1,
+    maxLength: 4096,
   })
   message: string;
 }

@@ -3,6 +3,7 @@ import { ApiBody, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { NeedsAuth } from "@/server/nest/auth";
 import { SendWhatsappNotificationDto } from "../dto/send-whatsapp-notification.dto";
 import { WhatsappPairingCodeDto } from "../dto/whatsapp-pairing-code.dto";
+import { WhatsappStatusResponseDto } from "../dto/whatsapp-status-response.dto";
 import { WhatsappNotificationResponse } from "../interfaces/whatsapp-notification-response.interface";
 import { WhatsappNotificationsService } from "../services/whatsapp-notifications.service";
 
@@ -27,6 +28,11 @@ export class WhatsappNotificationsController {
       },
     },
   })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: "Payload inválido (ex: telefone ou mensagem fora do padrão)",
+  })
+  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: "Não autorizado" })
   async sendWhatsAppMessage(
     @Body() payload: SendWhatsappNotificationDto,
   ): Promise<WhatsappNotificationResponse> {
@@ -35,7 +41,13 @@ export class WhatsappNotificationsController {
 
   @Get("whatsapp/status")
   @ApiOperation({ summary: "Obtém o status da sessão do WhatsApp (WAHA)" })
-  async getStatus() {
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: WhatsappStatusResponseDto,
+    description: "Status da sessão retornado com sucesso",
+  })
+  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: "Não autorizado" })
+  async getStatus(): Promise<WhatsappStatusResponseDto> {
     return this.whatsappNotificationsService.getStatus();
   }
 
@@ -43,6 +55,16 @@ export class WhatsappNotificationsController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: "Obtém o código de pareamento para login" })
   @ApiBody({ type: WhatsappPairingCodeDto })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: "Código gerado com sucesso",
+    schema: { example: { code: "123456" } },
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: "Falha na geração (ex: sessão já conectada ou número inválido)",
+  })
+  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: "Não autorizado" })
   async getPairingCode(@Body() payload: WhatsappPairingCodeDto) {
     const code = await this.whatsappNotificationsService.getPairingCode(payload.phone);
     if (!code) {

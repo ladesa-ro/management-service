@@ -34,10 +34,9 @@ export class WhatsappNotificationsService {
       }
 
       throw new Error("Falha ao processar o envio através do Provedor de WhatsApp.");
-    } catch (error: any) {
-      this.logger.error(
-        `Erro ao enviar notificação para ${this.maskPhone(phone)}: ${error?.message || error}`,
-      );
+    } catch (error: unknown) {
+      const message_ = error instanceof Error ? error.message : String(error);
+      this.logger.error(`Erro ao enviar notificação para ${this.maskPhone(phone)}: ${message_}`);
 
       return {
         success: false,
@@ -61,7 +60,7 @@ export class WhatsappNotificationsService {
     }
   }
 
-  handleWebhook(payload: WahaWebhookEventDto) {
+  handleWebhook(payload: WahaWebhookEventDto): void {
     // O webhook é utilizado para logging e despacho de eventos.
     // Não é a fonte de verdade sobre o estado da conexão — use getSessionStatus() para isso.
     this.logger.log(
@@ -71,19 +70,7 @@ export class WhatsappNotificationsService {
 
   async getQrCode(): Promise<string | null> {
     try {
-      // getQrCode pode não estar disponível em todas as implementações de IWhatsAppProvider.
-      // O cast é seguro aqui pois WahaService implementa esse método.
-      const provider = this.whatsappProvider as IWhatsAppProvider & {
-        getQrCode?: () => Promise<string | null>;
-      };
-
-      if (typeof provider.getQrCode === "function") {
-        return provider.getQrCode();
-      }
-
-      // Fallback: tentar extrair do status da sessão
-      const status = await this.whatsappProvider.getSessionStatus();
-      return (status as { qrCode?: string })?.qrCode ?? null;
+      return (await this.whatsappProvider.getQrCode?.()) ?? null;
     } catch {
       return null;
     }
@@ -91,15 +78,8 @@ export class WhatsappNotificationsService {
 
   async getPairingCode(phone: string): Promise<string | null> {
     try {
-      const provider = this.whatsappProvider as IWhatsAppProvider & {
-        getPairingCode?: (phone: string) => Promise<string>;
-      };
-
-      if (typeof provider.getPairingCode === "function") {
-        const cleanPhone = phone.replace(/\D/g, "");
-        return await provider.getPairingCode(cleanPhone);
-      }
-      return null;
+      const cleanPhone = phone.replace(/\D/g, "");
+      return (await this.whatsappProvider.getPairingCode?.(cleanPhone)) ?? null;
     } catch (error) {
       this.logger.error(`Erro ao obter pairing code para ${this.maskPhone(phone)}: ${error}`);
       return null;

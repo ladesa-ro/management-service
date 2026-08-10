@@ -11,6 +11,7 @@ export class WhatsappPairingCodeDto {
   @ApiProperty({
     description: "Telefone do destinatário em formato internacional",
     example: "5511999999999",
+    pattern: "^[1-9][0-9]{10,14}$",
   })
   phone: string;
 }

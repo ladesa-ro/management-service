@@ -22,4 +22,10 @@ export interface IWhatsAppProvider {
    * Retorna o código de pareamento (Pairing Code) para autenticação por número de telefone.
    */
   getPairingCode?(phone: string): Promise<string>;
+
+  /**
+   * Retorna o QR Code da sessão atual em formato base64.
+   * Disponível apenas quando o status da sessão é SCAN_QR_CODE.
+   */
+  getQrCode?(): Promise<string | null>;
 }
