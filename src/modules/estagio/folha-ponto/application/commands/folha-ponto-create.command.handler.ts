@@ -113,7 +113,7 @@ export class FolhaPontoCreateCommandHandlerImpl implements IFolhaPontoCreateComm
     };
 
     // Call the specific publish method that will be added to messageBrokerService
-    await (this.messageBrokerService as any).publishFolhaPontoCreated(payload);
+    await this.messageBrokerService.publishFolhaPontoCreated(payload);
 
     this.logger.log(`FolhaPonto criada: ${folhaPonto.id} para estágio ${estagio.id}`);
 
