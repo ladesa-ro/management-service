@@ -119,6 +119,10 @@ export class MessageBrokerContainerService implements OnModuleInit {
                 durable: true,
               },
             },
+            {
+              name: "folha_ponto.notificacao.whatsapp",
+              options: { durable: true },
+            },
           ],
           subscriptions: {
             [options.queueTimetableResponse]: {
@@ -129,10 +133,19 @@ export class MessageBrokerContainerService implements OnModuleInit {
                 noAck: false,
               },
             },
+            "folha_ponto.notificacao.whatsapp": {
+              queue: "folha_ponto.notificacao.whatsapp",
+              prefetch: 10,
+              contentType: "application/json",
+              options: { noAck: false },
+            },
           },
           publications: {
             [options.queueTimetableRequest]: {
               queue: options.queueTimetableRequest,
+            },
+            "folha_ponto.notificacao.whatsapp": {
+              queue: "folha_ponto.notificacao.whatsapp",
             },
           },
         },

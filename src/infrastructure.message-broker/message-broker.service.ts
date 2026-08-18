@@ -25,6 +25,14 @@ export class MessageBrokerService implements IMessageBrokerService {
     await broker.publish(queueRequest, JSON.stringify(request));
   }
 
+  async publishFolhaPontoCreated(payload: any): Promise<void> {
+    const broker = await this.messageBrokerContainerService.getBroker();
+    this.logger.log(
+      `Publicando notificação WhatsApp na queue folha_ponto.notificacao.whatsapp para FolhaPonto ${payload.folhaPontoId}`,
+    );
+    await broker.publish("folha_ponto.notificacao.whatsapp", JSON.stringify(payload));
+  }
+
   async publishTimetableRequest<TRequest, TResponse>(
     request: TRequest,
     timeoutMs = 60000,
