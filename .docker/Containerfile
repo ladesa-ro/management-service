@@ -87,7 +87,7 @@ if [ -n "$ZSH_VERSION" ]; then\n\
 elif [ -n "$BASH_VERSION" ]; then\n\
     HISTFILE="$_histdir/.bash_history"\n\
 fi\n\
-
+\n\
 export HISTFILE\n\
 unset _histdir\n' > /root/.profile
 
@@ -172,4 +172,4 @@ COPY --from=service-build --chown=1000:1000 /ladesa/management-service/src /lade
 
 WORKDIR "/ladesa/management-service/src"
 
-CMD bun run migration:run && bun run start
+CMD ["sh", "-c", "bun run migration:run && bun run start"]
