@@ -25,11 +25,21 @@ describe("WhatsappNotificationsController", () => {
     service = module.get<WhatsappNotificationsService>(WhatsappNotificationsService);
   });
 
-  it("should throw HttpException because route is temporarily disabled", async () => {
-    const payload = { phone: "5511999999999", message: "hello" };
-    await expect(controller.sendWhatsAppMessage(payload)).rejects.toThrow(
-      "Rota temporariamente desabilitada",
-    );
+  describe("sendWhatsAppMessage", () => {
+    it("should call service and return notification response", async () => {
+      const mockResponse = {
+        success: true,
+        messageId: "123",
+        timestamp: "2026-01-01T12:00:00Z",
+      };
+      vi.spyOn(service, "sendNotification").mockResolvedValue(mockResponse);
+
+      const payload = { phone: "5511999999999", message: "hello" };
+      const result = await controller.sendWhatsAppMessage(payload);
+
+      expect(result).toEqual(mockResponse);
+      expect(service.sendNotification).toHaveBeenCalledWith(payload);
+    });
   });
 
   describe("getPairingCode", () => {

@@ -31,6 +31,7 @@ export class FolhaPontoTokenRestController {
   ) {
     this.frontendBaseUrl =
       this.configService.get<string>(EnvKeys.APP_PUBLIC_BASE_URL) ?? "http://localhost:3000";
+  }
 
   /**
    * Valida o token e redireciona para a página de confirmação no frontend.
