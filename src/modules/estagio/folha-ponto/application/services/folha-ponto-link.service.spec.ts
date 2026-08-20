@@ -71,14 +71,60 @@ describe("FolhaPontoLinkService", () => {
     );
   });
 
-  it("deve utilizar a URL e prefixo de desenvolvimento por padrão", () => {
+  it("deve utilizar a URL e prefixo de desenvolvimento por padrão em ambiente local", () => {
     const mockConfigService = {
-      get: () => undefined,
+      get: (key: any) => {
+        if (key === EnvKeys.NODE_ENV || key === ConfigTokens.RuntimeOptions.NodeEnv)
+          return "development";
+        return undefined;
+      },
     };
 
     const service = new FolhaPontoLinkService(mockConfigService as any);
     const link = service.gerarLink("test-uuid-5678");
 
     expect(link).toBe("http://localhost:3701/api/folha-ponto/tokens/test-uuid-5678/confirmar");
+  });
+
+  it("deve utilizar a origem de KC_PASSWORD_RESET_REDIRECT_URI se APP_PUBLIC_BASE_URL não for fornecida", () => {
+    const mockConfigService = {
+      get: (key: any) => {
+        if (
+          key === EnvKeys.KC_PASSWORD_RESET_REDIRECT_URI ||
+          key === ConfigTokens.AuthOptions.Keycloak.PasswordResetRedirectUri
+        )
+          return "https://dev.ladesa.com.br/auth/reset";
+        if (key === EnvKeys.API_PREFIX || key === ConfigTokens.RuntimeOptions.ApiPrefix)
+          return "/api/v1/";
+        return undefined;
+      },
+    };
+
+    const service = new FolhaPontoLinkService(mockConfigService as any);
+    const link = service.gerarLink("test-uuid-9999");
+
+    expect(link).toBe(
+      "https://dev.ladesa.com.br/api/v1/folha-ponto/tokens/test-uuid-9999/confirmar",
+    );
+  });
+
+  it("NUNCA deve retornar localhost em ambiente de produção (NODE_ENV=production) mesmo sem APP_PUBLIC_BASE_URL", () => {
+    const mockConfigService = {
+      get: (key: any) => {
+        if (key === EnvKeys.NODE_ENV || key === ConfigTokens.RuntimeOptions.NodeEnv)
+          return "production";
+        if (key === EnvKeys.API_PREFIX || key === ConfigTokens.RuntimeOptions.ApiPrefix)
+          return "/api/v1/";
+        return undefined;
+      },
+    };
+
+    const service = new FolhaPontoLinkService(mockConfigService as any);
+    const link = service.gerarLink("test-uuid-prod");
+
+    expect(link).not.toContain("localhost");
+    expect(link).toBe(
+      "https://dev.ladesa.com.br/api/v1/folha-ponto/tokens/test-uuid-prod/confirmar",
+    );
   });
 });
