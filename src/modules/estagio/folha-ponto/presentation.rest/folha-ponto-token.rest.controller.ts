@@ -30,8 +30,9 @@ export class FolhaPontoTokenRestController {
     @Inject(IConfigService) private readonly configService: IConfigService,
   ) {
     const rawUrl = this.configService.get<string>(EnvKeys.APP_PUBLIC_BASE_URL);
-    this.frontendBaseUrl =
+    const base =
       rawUrl && rawUrl.trim() !== "" ? rawUrl.replace(/\/+$/, "") : "http://localhost:3701";
+    this.frontendBaseUrl = base.replace(/\/api(\/v\d+)?$/, "");
   }
 
   /**
