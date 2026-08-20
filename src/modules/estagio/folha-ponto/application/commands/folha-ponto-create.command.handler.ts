@@ -97,7 +97,19 @@ export class FolhaPontoCreateCommandHandlerImpl implements IFolhaPontoCreateComm
     await this.tokenRepository.save(tokenRejeicao);
     await this.tokenRepository.save(tokenCancelamento);
 
-    // 8. Publicar evento no RabbitMQ
+    // 8. Obter nome do estagiário para notificação
+    let nomeEstagiario = "Estagiário";
+    if (estagio.estagiario?.id) {
+      const estagiarioResult = await this.estagiarioRepository.getFindOneQueryResult(
+        accessContext,
+        { id: estagio.estagiario.id },
+      );
+      if (estagiarioResult?.perfil?.usuario?.nome) {
+        nomeEstagiario = estagiarioResult.perfil.usuario.nome;
+      }
+    }
+
+    // 9. Publicar evento no RabbitMQ
     const payload = {
       folhaPontoId: folhaPonto.id,
       estagioId: estagio.id,
@@ -107,6 +119,7 @@ export class FolhaPontoCreateCommandHandlerImpl implements IFolhaPontoCreateComm
       quantidadeHoras: folhaPonto.quantidadeHoras,
       telefoneSupervisor: estagio.telefoneSupervisor,
       nomeSupervisor: estagio.nomeSupervisor ?? "Supervisor",
+      nomeEstagiario,
       tokenAprovacaoId: tokenAprovacao.id,
       tokenRejeicaoId: tokenRejeicao.id,
       tokenCancelamentoId: tokenCancelamento.id,
