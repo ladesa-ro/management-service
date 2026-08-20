@@ -29,8 +29,9 @@ export class FolhaPontoTokenRestController {
     private readonly confirmHandler: FolhaPontoTokenConfirmHandler,
     @Inject(IConfigService) private readonly configService: IConfigService,
   ) {
+    const rawUrl = this.configService.get<string>(EnvKeys.APP_PUBLIC_BASE_URL);
     this.frontendBaseUrl =
-      this.configService.get<string>(EnvKeys.APP_PUBLIC_BASE_URL) ?? "http://localhost:3000";
+      rawUrl && rawUrl.trim() !== "" ? rawUrl.replace(/\/+$/, "") : "http://localhost:3701";
   }
 
   /**
