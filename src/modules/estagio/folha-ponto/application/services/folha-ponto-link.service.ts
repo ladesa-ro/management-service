@@ -7,8 +7,9 @@ export class FolhaPontoLinkService {
   private readonly baseUrl: string;
 
   constructor(@Inject(IConfigService) private readonly configService: IConfigService) {
+    const rawUrl = this.configService.get<string>(EnvKeys.APP_PUBLIC_BASE_URL);
     this.baseUrl =
-      this.configService.get<string>(EnvKeys.APP_PUBLIC_BASE_URL) ?? "http://localhost:3000";
+      rawUrl && rawUrl.trim() !== "" ? rawUrl.replace(/\/+$/, "") : "http://localhost:3701";
   }
 
   gerarLink(tokenId: string): string {
