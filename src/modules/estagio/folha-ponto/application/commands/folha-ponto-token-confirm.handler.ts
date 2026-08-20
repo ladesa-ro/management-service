@@ -28,7 +28,7 @@ export class FolhaPontoTokenConfirmHandler {
     tokenId: string,
     ip: string | null,
     userAgent: string | null,
-  ): Promise<{ acao: FolhaPontoTokenTipo; folhaPontoId: string }> {
+  ): Promise<{ acao: FolhaPontoTokenTipo; folhaPontoId: string; folhaPonto: FolhaPonto }> {
     return this.dataSource.transaction(async (manager) => {
       // 1. Pessimistic Lock no token para evitar duplo-clique
       const tokenEntity = await manager.getRepository(FolhaPontoTokenTypeormEntity).findOne({
@@ -80,7 +80,7 @@ export class FolhaPontoTokenConfirmHandler {
       await this.tokenRepository.invalidateAllExcept(folhaPonto.id, token.id);
 
       this.logger.log(`Token ${token.tipo} confirmado. FolhaPonto: ${folhaPonto.id}`);
-      return { acao: token.tipo, folhaPontoId: folhaPonto.id };
+      return { acao: token.tipo, folhaPontoId: folhaPonto.id, folhaPonto };
     });
   }
 
