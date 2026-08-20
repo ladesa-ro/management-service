@@ -13,10 +13,10 @@ import {
 import { ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { Throttle, ThrottlerGuard } from "@nestjs/throttler";
 import type { Request } from "express";
-import { ConfigTokens, IConfigService } from "@/infrastructure.config";
-import { EnvKeys } from "@/infrastructure.config/env-keys";
+import { IConfigService } from "@/infrastructure.config";
 import { Public } from "@/server/nest/auth";
 import { FolhaPontoTokenConfirmHandler } from "../application/commands/folha-ponto-token-confirm.handler";
+import { resolvePublicBaseUrl } from "../application/services/folha-ponto-link.service";
 
 @ApiTags("folha-ponto-tokens")
 @Public()
@@ -29,11 +29,7 @@ export class FolhaPontoTokenRestController {
     private readonly confirmHandler: FolhaPontoTokenConfirmHandler,
     @Inject(IConfigService) private readonly configService: IConfigService,
   ) {
-    const rawUrl =
-      this.configService.get<string>(ConfigTokens.RuntimeOptions.AppPublicBaseUrl) ??
-      this.configService.get<string>(EnvKeys.APP_PUBLIC_BASE_URL);
-    const base =
-      rawUrl && rawUrl.trim() !== "" ? rawUrl.replace(/\/+$/, "") : "http://localhost:3701";
+    const base = resolvePublicBaseUrl(this.configService);
     this.frontendBaseUrl = base.replace(/\/api(\/v\d+)?$/, "");
   }
 
