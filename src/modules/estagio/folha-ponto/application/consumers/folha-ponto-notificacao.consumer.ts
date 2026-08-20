@@ -1,6 +1,7 @@
 import { Injectable, Logger, OnModuleInit } from "@nestjs/common";
 import { Dep } from "@/domain/dependency-injection";
 import { MessageBrokerContainerService } from "@/infrastructure.message-broker";
+import { IEstagiarioRepository } from "@/modules/estagio/estagiario/domain/repositories";
 import { IEstagioRepository } from "@/modules/estagio/estagio/domain/repositories";
 import { FolhaPontoLinkService } from "../services/folha-ponto-link.service";
 import { FolhaPontoWhatsappService } from "../services/folha-ponto-whatsapp.service";
@@ -14,6 +15,7 @@ export interface FolhaPontoCreatedEventPayload {
   quantidadeHoras: number;
   telefoneSupervisor: string;
   nomeSupervisor: string;
+  nomeEstagiario?: string;
   tokenAprovacaoId: string;
   tokenRejeicaoId: string;
   tokenCancelamentoId: string;
@@ -28,6 +30,7 @@ export class FolhaPontoNotificacaoConsumer implements OnModuleInit {
     private readonly whatsappService: FolhaPontoWhatsappService,
     private readonly linkService: FolhaPontoLinkService,
     @Dep(IEstagioRepository) private readonly estagioRepository: IEstagioRepository,
+    @Dep(IEstagiarioRepository) private readonly estagiarioRepository: IEstagiarioRepository,
   ) {}
 
   async onModuleInit(): Promise<void> {
@@ -72,7 +75,18 @@ export class FolhaPontoNotificacaoConsumer implements OnModuleInit {
       throw new Error(`Estágio ${payload.estagioId} não encontrado`);
     }
 
-    const nomeEstagiario = "Estagiário";
+    let nomeEstagiario = payload.nomeEstagiario;
+
+    if (!nomeEstagiario && estagio.estagiario?.id) {
+      const estagiarioResult = await this.estagiarioRepository.getFindOneQueryResult(null, {
+        id: estagio.estagiario.id,
+      });
+      nomeEstagiario = estagiarioResult?.perfil?.usuario?.nome ?? undefined;
+    }
+
+    if (!nomeEstagiario) {
+      nomeEstagiario = "Estagiário";
+    }
 
     await this.whatsappService.enviarSolicitacaoAprovacao({
       folhaPontoId: payload.folhaPontoId,
