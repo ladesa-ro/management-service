@@ -30,10 +30,11 @@ export class FolhaPontoTokenConfirmHandler {
     userAgent: string | null,
   ): Promise<{ acao: FolhaPontoTokenTipo; folhaPontoId: string; folhaPonto: FolhaPonto }> {
     return this.dataSource.transaction(async (manager) => {
-      // 1. Pessimistic Lock no token para evitar duplo-clique
+      // 1. Pessimistic Lock no token para evitar duplo-clique.
+      // IMPORTANTE: não carregar relations junto com o lock — o PostgreSQL não aceita
+      // FOR UPDATE em outer joins ("cannot be applied to the nullable side of an outer join").
       const tokenEntity = await manager.getRepository(FolhaPontoTokenTypeormEntity).findOne({
         where: { id: tokenId },
-        relations: { folhaPonto: true },
         lock: { mode: "pessimistic_write" },
       });
       if (!tokenEntity) {
