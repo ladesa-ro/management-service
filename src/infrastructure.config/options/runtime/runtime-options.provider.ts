@@ -49,6 +49,9 @@ export const RuntimeOptionsProvider: Provider = {
       configService.get<string>(ConfigTokens.RuntimeOptions.EnableMockAccessToken) ?? "false";
     const enableMockAccessToken = nodeEnv !== "production" && enableMockAccessTokenRaw === "true";
 
+    const appPublicBaseUrl =
+      configService.get<string>(ConfigTokens.RuntimeOptions.AppPublicBaseUrl) ?? null;
+
     return {
       version: configService.get<string>(ConfigTokens.RuntimeOptions.ApiVersion) ?? pkg.version,
       port,
@@ -59,6 +62,7 @@ export const RuntimeOptionsProvider: Provider = {
       swaggerServers,
       storagePath,
       enableMockAccessToken,
+      appPublicBaseUrl,
     };
   },
   inject: [IConfigServiceToken],
