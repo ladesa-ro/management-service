@@ -7,6 +7,7 @@ import {
   Param,
   Patch,
   Post,
+  Put,
   Query,
   UploadedFile,
   UseInterceptors,
@@ -720,6 +721,30 @@ export class EstagioRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async update(
+    @AccessContextHttp() accessContext: IAccessContext,
+    @Param() params: EstagioFindOneInputRestDto,
+    @Body() dto: EstagioUpdateInputRestDto,
+  ): Promise<EstagioFindOneOutputRestDto> {
+    const updateHandler = this.container.get<IEstagioUpdateCommandHandler>(
+      IEstagioUpdateCommandHandler,
+    );
+    const command = EstagioRestMapper.updateInputDtoToUpdateCommand.map(dto);
+    const queryResult = await updateHandler.execute(accessContext, { id: params.id, ...command });
+    return EstagioRestMapper.findOneQueryResultToOutputDto.map(queryResult);
+  }
+
+  @Put("/:id")
+  @ApiOperation({
+    operationId: "estagioReplace",
+    summary: "Substitui completamente um estágio",
+    description:
+      "Substitui todos os campos do estágio identificado pelo ID. Semântica idempotente (PUT): campos não enviados são tratados como ausentes/nulos.",
+  })
+  @ApiBody({ type: EstagioUpdateInputRestDto })
+  @ApiOkResponse({ type: EstagioFindOneOutputRestDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async replace(
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: EstagioFindOneInputRestDto,
     @Body() dto: EstagioUpdateInputRestDto,
