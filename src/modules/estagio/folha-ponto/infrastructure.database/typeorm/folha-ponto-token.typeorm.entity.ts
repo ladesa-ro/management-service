@@ -10,6 +10,11 @@ export class FolhaPontoTokenTypeormEntity {
   @JoinColumn({ name: "id_folha_ponto_fk" })
   folhaPonto!: Relation<FolhaPontoTypeormEntity>;
 
+  // Coluna FK acessível diretamente — usada quando a relation não é carregada
+  // (ex: queries com pessimistic lock que não permitem outer join + FOR UPDATE)
+  @Column({ name: "id_folha_ponto_fk", nullable: true })
+  folhaPontoId!: string;
+
   @Column({ name: "tipo", type: "varchar", length: 20 })
   tipo!: string;
 

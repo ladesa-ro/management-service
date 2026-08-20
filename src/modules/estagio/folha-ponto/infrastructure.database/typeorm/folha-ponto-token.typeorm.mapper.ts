@@ -19,7 +19,7 @@ export const FolhaPontoTokenTypeormMapper = {
   entityToDomain: createMapper<FolhaPontoTokenTypeormEntity, FolhaPontoToken>((entity) => {
     return FolhaPontoToken.load({
       id: entity.id,
-      folhaPonto: { id: entity.folhaPonto?.id || entity["id_folha_ponto_fk"] },
+      folhaPonto: { id: entity.folhaPonto?.id ?? entity.folhaPontoId },
       tipo: entity.tipo as any,
       expiresAt: entity.expiresAt,
       usedAt: entity.usedAt,
