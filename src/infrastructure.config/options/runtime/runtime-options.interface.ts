@@ -10,4 +10,5 @@ export interface IRuntimeOptions {
   swaggerServers: string[] | null;
   storagePath: string;
   enableMockAccessToken: boolean;
+  appPublicBaseUrl: string | null;
 }

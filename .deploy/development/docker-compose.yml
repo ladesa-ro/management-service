@@ -16,6 +16,7 @@ services:
       - PORT=${PORT:-3000}
       - NODE_ENV=${NODE_ENV:-production}
       - API_PREFIX=${API_PREFIX:-/api/v1/}
+      - APP_PUBLIC_BASE_URL=${APP_PUBLIC_BASE_URL:-https://dev.ladesa.com.br}
       - STORAGE_PATH=${STORAGE_PATH:-/container/uploaded}
       - DB_CONNECTION=${DB_CONNECTION:-postgres}
       - DATABASE_URL

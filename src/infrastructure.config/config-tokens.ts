@@ -14,6 +14,7 @@ export const ConfigTokens = {
     StoragePath: Symbol("RuntimeOptions.StoragePath"),
     ApiVersion: Symbol("RuntimeOptions.ApiVersion"),
     EnableMockAccessToken: Symbol("RuntimeOptions.EnableMockAccessToken"),
+    AppPublicBaseUrl: Symbol("RuntimeOptions.AppPublicBaseUrl"),
   },
   AuthOptions: {
     Oidc: {

@@ -1,8 +1,27 @@
 import { describe, expect, it } from "vitest";
+import { ConfigTokens } from "@/infrastructure.config";
 import { EnvKeys } from "@/infrastructure.config/env-keys";
 import { FolhaPontoLinkService } from "./folha-ponto-link.service";
 
 describe("FolhaPontoLinkService", () => {
+  it("deve buscar URL base via ConfigTokens quando disponível", () => {
+    const mockConfigService = {
+      get: (token: any) => {
+        if (token === ConfigTokens.RuntimeOptions.AppPublicBaseUrl)
+          return "https://dev.ladesa.com.br";
+        if (token === ConfigTokens.RuntimeOptions.ApiPrefix) return "/api/v1/";
+        return null;
+      },
+    };
+
+    const service = new FolhaPontoLinkService(mockConfigService as any);
+    const link = service.gerarLink("test-uuid-1234");
+
+    expect(link).toBe(
+      "https://dev.ladesa.com.br/api/v1/folha-ponto/tokens/test-uuid-1234/confirmar",
+    );
+  });
+
   it("deve incluir o API_PREFIX padrão quando APP_PUBLIC_BASE_URL é apenas o domínio", () => {
     const mockConfigService = {
       get: (key: string) => {
