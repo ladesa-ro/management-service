@@ -83,12 +83,18 @@ services:
     networks:
       - ladesa-net
     environment:
+      # --- DEFINIÇÃO DO ENGINE ---
+      - WHATSAPP_DEFAULT_ENGINE=GOWS
+      # --- GARANTIR A RESILIÊNCIA DA SESSÃO ---
+      - WHATSAPP_RESTART_ALL_SESSIONS=True
+      - WAHA_AUTO_START_DELAY_SECONDS=5
+      # --- CONFIGURAÇÕES DO WAHA ---
       - WHATSAPP_API_KEY=${WAHA_API_KEY:-dev_key}
       - WHATSAPP_HOOK_URL=${WAHA_WEBHOOK_URL:-http://management-service:3000/api/v1/webhooks/whatsapp}
-      # Chave HMAC: o WAHA assina o payload e envia X-Webhook-Hmac; o backend valida.
+      # ---  Chave HMAC: o WAHA assina o payload e envia X-Webhook-Hmac; o backend valida. ---
       - WHATSAPP_HOOK_HMAC_KEY=${WAHA_WEBHOOK_HMAC_KEY}
       - WHATSAPP_HOOK_EVENTS=message,session.status,state.change
-      # Exclui /ping e /health da exigência de API key para que o healthcheck funcione.
+      # ---  Exclui /ping e /health da exigência de API key para que o healthcheck funcione. ---
       - WHATSAPP_API_KEY_EXCLUDE_PATH=ping,health
       - WAHA_DASHBOARD_USERNAME=${WAHA_USERNAME:-${WAHA_USER:-ladesa}}
       - WAHA_DASHBOARD_PASSWORD=${WAHA_PASSWORD:-changeme}
@@ -98,7 +104,7 @@ services:
       - waha-session-data:/app/.sessions
     healthcheck:
       # /ping é excluído da API key via WAHA_API_KEY_EXCLUDE_PATH acima.
-      test: [ "CMD", "curl", "-f", "http://localhost:3000/ping" ]
+      test: ["CMD", "curl", "-f", "http://localhost:3000/ping"]
       interval: 30s
       timeout: 10s
       retries: 3
