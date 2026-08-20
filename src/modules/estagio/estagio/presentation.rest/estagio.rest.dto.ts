@@ -32,6 +32,18 @@ export class EstagioCursoRefInputRestDto {
   id!: string;
 }
 
+@ApiSchema({ name: "EstagioEstagiarioRefInputDto" })
+export class EstagioEstagiarioRefInputRestDto {
+  @ApiProperty(EstagioCreateCommandFields.estagiario.swaggerMetadata)
+  id!: string;
+}
+
+@ApiSchema({ name: "EstagioUsuarioOrientadorRefInputDto" })
+export class EstagioUsuarioOrientadorRefInputRestDto {
+  @ApiProperty(EstagioCreateCommandFields.usuarioOrientador.swaggerMetadata)
+  id!: string;
+}
+
 @ApiSchema({ name: "HorarioEstagioInputDto" })
 export class HorarioEstagioInputRestDto {
   @ApiProperty(HorarioEstagioFields.diaSemana.swaggerMetadata)
@@ -60,11 +72,17 @@ export class EstagioCreateInputRestDto {
   @ApiProperty(EstagioCreateCommandFields.empresa.swaggerMetadata)
   empresa!: EstagioEmpresaRefInputRestDto;
 
-  @ApiPropertyOptional(EstagioCreateCommandFields.estagiario.swaggerMetadata)
-  estagiario?: string | null;
+  @ApiPropertyOptional({
+    ...EstagioCreateCommandFields.estagiario.swaggerMetadata,
+    type: () => EstagioEstagiarioRefInputRestDto,
+  })
+  estagiario?: EstagioEstagiarioRefInputRestDto | null;
 
-  @ApiPropertyOptional(EstagioCreateCommandFields.usuarioOrientador.swaggerMetadata)
-  usuarioOrientador?: string;
+  @ApiPropertyOptional({
+    ...EstagioCreateCommandFields.usuarioOrientador.swaggerMetadata,
+    type: () => EstagioUsuarioOrientadorRefInputRestDto,
+  })
+  usuarioOrientador?: EstagioUsuarioOrientadorRefInputRestDto | null;
 
   @ApiProperty(EstagioCreateCommandFields.cargaHoraria.swaggerMetadata)
   cargaHoraria!: number;
@@ -113,11 +131,17 @@ export class EstagioUpdateInputRestDto {
   @ApiPropertyOptional(EstagioUpdateCommandFields.empresa.swaggerMetadata)
   empresa?: EstagioEmpresaRefInputRestDto;
 
-  @ApiPropertyOptional(EstagioUpdateCommandFields.estagiario.swaggerMetadata)
-  estagiario?: string | null;
+  @ApiPropertyOptional({
+    ...EstagioUpdateCommandFields.estagiario.swaggerMetadata,
+    type: () => EstagioEstagiarioRefInputRestDto,
+  })
+  estagiario?: EstagioEstagiarioRefInputRestDto | null;
 
-  @ApiPropertyOptional(EstagioUpdateCommandFields.usuarioOrientador.swaggerMetadata)
-  usuarioOrientador?: string;
+  @ApiPropertyOptional({
+    ...EstagioUpdateCommandFields.usuarioOrientador.swaggerMetadata,
+    type: () => EstagioUsuarioOrientadorRefInputRestDto,
+  })
+  usuarioOrientador?: EstagioUsuarioOrientadorRefInputRestDto | null;
 
   @ApiPropertyOptional(EstagioUpdateCommandFields.cargaHoraria.swaggerMetadata)
   cargaHoraria?: number;
