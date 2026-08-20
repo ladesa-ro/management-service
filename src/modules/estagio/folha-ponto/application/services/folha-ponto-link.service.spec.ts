@@ -1,3 +1,4 @@
+import { InternalServerErrorException } from "@nestjs/common";
 import { describe, expect, it } from "vitest";
 import { ConfigTokens } from "@/infrastructure.config";
 import { EnvKeys } from "@/infrastructure.config/env-keys";
@@ -71,21 +72,6 @@ describe("FolhaPontoLinkService", () => {
     );
   });
 
-  it("deve utilizar a URL e prefixo de desenvolvimento por padrão em ambiente local", () => {
-    const mockConfigService = {
-      get: (key: any) => {
-        if (key === EnvKeys.NODE_ENV || key === ConfigTokens.RuntimeOptions.NodeEnv)
-          return "development";
-        return undefined;
-      },
-    };
-
-    const service = new FolhaPontoLinkService(mockConfigService as any);
-    const link = service.gerarLink("test-uuid-5678");
-
-    expect(link).toBe("http://localhost:3701/api/folha-ponto/tokens/test-uuid-5678/confirmar");
-  });
-
   it("deve utilizar a origem de KC_PASSWORD_RESET_REDIRECT_URI se APP_PUBLIC_BASE_URL não for fornecida", () => {
     const mockConfigService = {
       get: (key: any) => {
@@ -103,28 +89,33 @@ describe("FolhaPontoLinkService", () => {
     const service = new FolhaPontoLinkService(mockConfigService as any);
     const link = service.gerarLink("test-uuid-9999");
 
+    expect(link).not.toContain("localhost");
     expect(link).toBe(
       "https://dev.ladesa.com.br/api/v1/folha-ponto/tokens/test-uuid-9999/confirmar",
     );
   });
 
-  it("NUNCA deve retornar localhost em ambiente de produção (NODE_ENV=production) mesmo sem APP_PUBLIC_BASE_URL", () => {
-    const mockConfigService = {
-      get: (key: any) => {
-        if (key === EnvKeys.NODE_ENV || key === ConfigTokens.RuntimeOptions.NodeEnv)
-          return "production";
-        if (key === EnvKeys.API_PREFIX || key === ConfigTokens.RuntimeOptions.ApiPrefix)
-          return "/api/v1/";
-        return undefined;
-      },
-    };
+  it("DEVE lançar InternalServerErrorException em qualquer ambiente quando nenhuma URL pública está configurada (fail-fast)", () => {
+    // Garante que localhost nunca apareça em links gerados sob qualquer circunstância.
+    // Se APP_PUBLIC_BASE_URL e KC_PASSWORD_RESET_REDIRECT_URI não estiverem definidas,
+    // a aplicação falha na inicialização ao invés de gerar links inválidos.
+    const ambientes = ["development", "production", "staging", "test", ""];
 
-    const service = new FolhaPontoLinkService(mockConfigService as any);
-    const link = service.gerarLink("test-uuid-prod");
+    for (const nodeEnv of ambientes) {
+      const mockConfigService = {
+        get: (key: any) => {
+          if (key === EnvKeys.NODE_ENV || key === ConfigTokens.RuntimeOptions.NodeEnv)
+            return nodeEnv || undefined;
+          if (key === EnvKeys.API_PREFIX || key === ConfigTokens.RuntimeOptions.ApiPrefix)
+            return "/api/v1/";
+          return undefined;
+        },
+      };
 
-    expect(link).not.toContain("localhost");
-    expect(link).toBe(
-      "https://dev.ladesa.com.br/api/v1/folha-ponto/tokens/test-uuid-prod/confirmar",
-    );
+      expect(
+        () => new FolhaPontoLinkService(mockConfigService as any),
+        `Esperava InternalServerErrorException para NODE_ENV="${nodeEnv}"`,
+      ).toThrow(InternalServerErrorException);
+    }
   });
 });
