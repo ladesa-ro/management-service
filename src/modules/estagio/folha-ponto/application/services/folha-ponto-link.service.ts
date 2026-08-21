@@ -97,4 +97,12 @@ export class FolhaPontoLinkService {
 
     return `${cleanBase}${this.apiPrefix}folha-ponto/tokens/${tokenId}/confirmar`;
   }
+
+  /**
+   * Generate a public link without the API prefix, intended for external channels (e.g., WhatsApp).
+   */
+  gerarLinkPublic(tokenId: string): string {
+    const cleanBase = this.baseUrl.replace(/\\+$/, "");
+    return `${cleanBase}/folha-ponto/tokens/${tokenId}/confirmar`;
+  }
 }
