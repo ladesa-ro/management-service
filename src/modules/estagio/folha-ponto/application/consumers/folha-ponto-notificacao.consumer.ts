@@ -96,9 +96,9 @@ export class FolhaPontoNotificacaoConsumer implements OnModuleInit {
       horaInicio: payload.horaInicio,
       horaFim: payload.horaFim,
       quantidadeHoras: payload.quantidadeHoras,
-      linkAprovar: this.linkService.gerarLink(payload.tokenAprovacaoId),
-      linkRejeitar: this.linkService.gerarLink(payload.tokenRejeicaoId),
-      linkCancelar: this.linkService.gerarLink(payload.tokenCancelamentoId),
+      linkAprovar: this.linkService.gerarLinkPublic(payload.tokenAprovacaoId),
+      linkRejeitar: this.linkService.gerarLinkPublic(payload.tokenRejeicaoId),
+      linkCancelar: this.linkService.gerarLinkPublic(payload.tokenCancelamentoId),
     });
   }
 }
