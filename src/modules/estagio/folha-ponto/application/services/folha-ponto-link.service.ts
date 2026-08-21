@@ -100,11 +100,11 @@ export class FolhaPontoLinkService {
 
   /**
    * Generate a public link without the API prefix, intended for external channels (e.g., WhatsApp).
-   * Points to the front-end route: /folha-ponto/tokens/:tokenId/confirmar
    */
   gerarLinkPublic(tokenId: string): string {
+    // Ensure the base URL does not contain the API prefix (e.g., /api/v1)
     const rawBase = this.baseUrl.replace(/\/+$/, "");
-    const cleaned = rawBase.replace(/\/api\/v1\/?$/, "").replace(/\/api\/?$/, "");
+    const cleaned = rawBase.replace(/\/api\/v1\/?$/, "");
     return `${cleaned}/folha-ponto/tokens/${tokenId}/confirmar`;
   }
 }

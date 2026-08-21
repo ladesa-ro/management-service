@@ -1,6 +1,7 @@
 import {
   Controller,
   Get,
+  Header,
   HttpCode,
   Inject,
   Param,
@@ -239,39 +240,18 @@ export class FolhaPontoTokenRestController {
    */
   @Get("/:tokenId/confirmar")
   @HttpCode(200)
+  @Header("Content-Type", "text/html; charset=utf-8")
+  @Header("Cache-Control", "no-store")
   @ApiOperation({
     operationId: "folhaPontoTokenExibirConfirmacao",
     summary: "Exibe tela de confirmação da folha de ponto para o supervisor",
   })
-  @ApiOkResponse({
-    description: "Página HTML com botão para confirmar ação ou objeto JSON de validação",
-  })
+  @ApiOkResponse({ description: "Página HTML com botão para confirmar ação" })
   @Throttle({ default: { limit: 10, ttl: 60000 } })
-  async exibirConfirmacao(
-    @Param("tokenId", new ParseUUIDPipe()) tokenId: string,
-    @Req() req?: Request,
-    @Res({ passthrough: true }) res?: Response,
-  ): Promise<any> {
-    const isJson = req?.headers?.accept?.includes("application/json") ?? false;
-
+  async exibirConfirmacao(@Param("tokenId", new ParseUUIDPipe()) tokenId: string): Promise<string> {
     try {
       const { token, folhaPonto } = await this.confirmHandler.validar(tokenId);
 
-      if (isJson) {
-        return {
-          valido: true,
-          tipo: token.tipo,
-          folhaPonto: {
-            data: folhaPonto.data,
-            horaInicio: folhaPonto.horaInicio,
-            horaFim: folhaPonto.horaFim,
-            quantidadeHoras: folhaPonto.quantidadeHoras,
-          },
-        };
-      }
-
-      res?.setHeader?.("Content-Type", "text/html; charset=utf-8");
-      res?.setHeader?.("Cache-Control", "no-store");
       const cfg = TELAS_SOLICITACAO[token.tipo];
       return renderizarPagina({
         ...cfg,
@@ -281,12 +261,6 @@ export class FolhaPontoTokenRestController {
         quantidadeHoras: folhaPonto.quantidadeHoras,
       });
     } catch (error: any) {
-      if (isJson) {
-        throw error;
-      }
-
-      res?.setHeader?.("Content-Type", "text/html; charset=utf-8");
-      res?.setHeader?.("Cache-Control", "no-store");
       const mensagem: string = error?.message ?? "Ocorreu um erro ao processar este link.";
       return renderizarPagina({ ...PAGINA_ERRO, descricao: mensagem });
     }

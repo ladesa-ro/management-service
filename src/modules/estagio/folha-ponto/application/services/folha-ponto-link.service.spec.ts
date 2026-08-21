@@ -118,19 +118,4 @@ describe("FolhaPontoLinkService", () => {
       ).toThrow(InternalServerErrorException);
     }
   });
-
-  it("gerarLinkPublic deve retornar a rota pública limpa do Front-End sem o API_PREFIX", () => {
-    const mockConfigService = {
-      get: (key: string) => {
-        if (key === EnvKeys.APP_PUBLIC_BASE_URL) return "https://dev.ladesa.com.br";
-        if (key === EnvKeys.API_PREFIX) return "/api/v1/";
-        return null;
-      },
-    };
-
-    const service = new FolhaPontoLinkService(mockConfigService as any);
-    const link = service.gerarLinkPublic("test-uuid-1234");
-
-    expect(link).toBe("https://dev.ladesa.com.br/folha-ponto/tokens/test-uuid-1234/confirmar");
-  });
 });
