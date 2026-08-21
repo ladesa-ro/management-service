@@ -19,6 +19,11 @@ export class FolhaPontoTypeormEntity {
   @JoinColumn({ name: "id_estagio_fk" })
   estagio!: Relation<EstagioTypeormEntity>;
 
+  // Coluna FK acessível diretamente — usada quando a relation não é carregada
+  // (ex: queries com pessimistic lock que não usam outer join)
+  @Column({ name: "id_estagio_fk", nullable: true })
+  estagioId!: string;
+
   @Column({ name: "data", type: "date" })
   data!: string;
 
