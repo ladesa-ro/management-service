@@ -20,6 +20,7 @@ export const FolhaPontoTypeormMapper = {
     const entity = new FolhaPontoTypeormEntity();
     entity.id = domain.id;
     entity.estagio = { id: domain.estagio.id } as any;
+    entity.estagioId = domain.estagio.id;
     entity.data = domain.data;
     entity.horaInicio = domain.horaInicio;
     entity.horaFim = domain.horaFim;
@@ -38,7 +39,7 @@ export const FolhaPontoTypeormMapper = {
   entityToDomain: createMapper<FolhaPontoTypeormEntity, FolhaPonto>((entity) => {
     return FolhaPonto.load({
       id: entity.id,
-      estagio: { id: entity.estagio?.id || entity["id_estagio_fk"] },
+      estagio: { id: entity.estagio?.id ?? entity.estagioId },
       data: formatDate(entity.data) as string,
       horaInicio: formatTime(entity.horaInicio) as string,
       horaFim: formatTime(entity.horaFim) as string,
@@ -58,7 +59,7 @@ export const FolhaPontoTypeormMapper = {
     (entity) => {
       return {
         id: entity.id,
-        estagio: { id: entity.estagio?.id || entity["id_estagio_fk"] },
+        estagio: { id: entity.estagio?.id ?? entity.estagioId },
         data: formatDate(entity.data) as string,
         horaInicio: formatTime(entity.horaInicio) as string,
         horaFim: formatTime(entity.horaFim) as string,
