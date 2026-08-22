@@ -1,6 +1,6 @@
 # Desenvolvimento
 
-**TLDR**: três modos, três vozes (Aprender impessoal, Arquitetura fatual, Operação imperativa), a mesma linha editorial já validada em [infrastructure](https://github.com/ladesa-ro/infrastructure), importada aqui com uma única mudança deliberada: a regra de comentário em código segue o `AGENTS.md` deste repositório (comentário de "por quê" é permitido, trivial não), não a proibição total da infrastructure. Padrão estrutural repetido (TLDR, tabela de navegação, "Pra ir além", cheatsheet, diagrama mermaid do tipo certo pro conteúdo certo), qualidade de código via Biome e Nx, testes via Vitest, Conventional Commits só no título. Os gates de CI que a infrastructure já tem pra `docs/` (link quebrado, caractere fora do teclado, `mkdocs build --strict`) ainda não estão configurados aqui, ver [Pendências](pendencias.md).
+**TLDR**: três modos, três vozes (Aprender impessoal, Arquitetura fatual, Operação imperativa). A regra de comentário em código segue o `AGENTS.md` deste repositório (comentário de "por quê" é permitido, trivial não). Padrão estrutural repetido (TLDR, tabela de navegação, "Pra ir além", cheatsheet, diagrama mermaid do tipo certo pro conteúdo certo), qualidade de código via Biome e Nx, testes via Vitest, Conventional Commits só no título. Nenhum gate de CI pra `docs/` (link quebrado, caractere fora do teclado, `mkdocs build --strict` como check de PR) está configurado ainda, ver [Pendências](pendencias.md).
 
 | Termo | Vá pra |
 |---|---|
@@ -8,10 +8,10 @@
 | Regras de redação adotadas | [Linha editorial](#linha-editorial) |
 | TLDR, tabela de navegação, "Pra ir além", cheatsheet, admonition | [Seções especiais](#secoes-especiais-padrao-estrutural-repetido-de-proposito) |
 | Qual diagrama mermaid pra qual conteúdo | [Diagramas](#diagramas-qual-tipo-mermaid-pra-qual-proposito) |
-| Por que a regra de comentário diverge da infrastructure, de propósito | [Comentários em código](#comentarios-em-codigo) |
+| Por que comentário de "por quê" é permitido, trivial não | [Comentários em código](#comentarios-em-codigo) |
 | Biome, typecheck via Nx, o que falta virar gate de CI | [Qualidade de código](#qualidade-de-codigo) |
 | Vitest, cobertura, e2e, o que falta virar gate de CI | [Testes](#testes) |
-| Gates de qualidade de documentação que a infrastructure tem e este repositório ainda não | [Qualidade da documentação](#qualidade-da-documentacao) |
+| Link quebrado, caractere fora do teclado, o que falta virar gate de CI | [Qualidade da documentação](#qualidade-da-documentacao) |
 | CODEOWNERS e cooldown do Dependabot | [Donos de código e atualização de dependências](#donos-de-codigo-e-atualizacao-de-dependencias) |
 | Convenção de commit | [Commits](#commits) |
 
@@ -25,7 +25,7 @@ As três trilhas ([Aprender](../aprender/index.md), [Arquitetura](../arquitetura
 
 **Operação é tutorial e how-to guide**: segunda pessoa, voz ativa, modo imperativo ("rode o comando", "suba o container"), assumindo que quem lê já sabe o básico (isso está no Aprender) e só precisa do passo concreto.
 
-Misturar um modo com outro é o erro mais comum que Diátaxis nomeia, e é exatamente o estado atual do `README.md` deste repositório: uma página só, com setup, decisão arquitetural e conceito geral misturados na mesma prosa. Corrigir isso é o objetivo da próxima leva de migração, ver [Arquitetura](../arquitetura/index.md).
+Misturar um modo com outro é o erro mais comum que Diátaxis nomeia: uma página de Aprender que menciona um fato real deste serviço, ou uma página de Operação que para pra explicar teoria em vez de instruir, confunde as duas pessoas que estavam lendo por motivos diferentes.
 
 ```mermaid
 flowchart TB
@@ -38,7 +38,7 @@ flowchart TB
 
 ## Linha editorial
 
-As regras abaixo são as mesmas já consolidadas em [infrastructure, Linha editorial](https://github.com/ladesa-ro/infrastructure/blob/main/docs/operacao/desenvolvimento.md#linha-editorial), importadas aqui sem alteração: leitura de sete style guides de documentação técnica mais a norma internacional de linguagem clara **ISO 24495-1** (ver [Normas de redação técnica](../aprender/normas-de-redacao-tecnica.md)). O detalhe completo de cada guia (Google, Microsoft, GitHub, GitLab, Red Hat, MDN, Docker) e o porquê de cada adoção ou rejeição vive naquele repositório, não duplicado aqui linha por linha: reproduzir a tabela inteira de novo criaria duas fontes da mesma decisão editorial, divergentes assim que uma mudar sem a outra. O que fica registrado aqui é o resumo operacional, suficiente pra escrever uma página nova sem abrir outro repositório:
+As regras abaixo vêm de leitura de sete style guides de documentação técnica mais a norma internacional de linguagem clara **ISO 24495-1** (ver [Normas de redação técnica](../aprender/normas-de-redacao-tecnica.md)). O detalhe completo de cada guia (Google, Microsoft, GitHub, GitLab, Red Hat, MDN, Docker), com a regra exata de cada um e o porquê de cada adoção ou rejeição, está registrado em [infrastructure, Linha editorial](https://github.com/ladesa-ro/infrastructure/blob/main/docs/operacao/desenvolvimento.md#linha-editorial), não duplicado aqui linha por linha: reproduzir a tabela inteira de novo criaria duas fontes da mesma decisão editorial, divergentes assim que uma mudar sem a outra. O que fica registrado aqui é o resumo operacional, suficiente pra escrever uma página nova sem abrir outro repositório:
 
 **Adotado, resumo:**
 
@@ -57,7 +57,7 @@ Ver o histórico completo de "considerado e descartado" (contração, vírgula d
 
 ## Seções especiais: padrão estrutural repetido de propósito
 
-**TLDR**: TLDR, tabela "Termo \| Vá pra", "Pra ir além" e "Cheatsheet" não são um capricho de formatação, cada um implementa um princípio de escrita técnica com nome e referência própria, e aparecem nesta ordem, sempre que cabem, em praticamente toda página deste site. Mesma prática de [infrastructure](https://github.com/ladesa-ro/infrastructure), importada sem alteração.
+**TLDR**: TLDR, tabela "Termo \| Vá pra", "Pra ir além" e "Cheatsheet" não são um capricho de formatação, cada um implementa um princípio de escrita técnica com nome e referência própria, e aparecem nesta ordem, sempre que cabem, em praticamente toda página deste site.
 
 - **TLDR** (1-3 frases, logo abaixo do título): aplica **BLUF** (*Bottom Line Up Front*), a informação mais importante primeiro, detalhe depois.
 - **Tabela "Termo \| Vá pra"** (logo após o TLDR): *findability* de segundo nível, organizada pelo que quem lê já tem na cabeça antes de saber qual seção responde, não pela ordem em que o conteúdo foi escrito.
@@ -75,7 +75,7 @@ flowchart TD
 
 ### Admonition: reservado pra passo de alto risco
 
-O tema Material do mkdocs habilita a extensão `admonition` (ver `mkdocs.yml`, `markdown_extensions`), que renderiza blocos `!!! nota`/`!!! aviso`/`!!! perigo` com destaque visual. Mesma decisão da infrastructure: reservado pra sinalizar especificamente um passo de alto risco (`git reset --hard`, remoção de dado real, migração de banco irreversível), não pra nota genérica, que continua em texto corrido normal, pra não diluir o sinal com uso demais. Nenhuma página deste `docs/` usa a sintaxe ainda, porque nenhuma página de Operação com passo de alto risco foi migrada ainda, ver [Pendências](pendencias.md).
+O tema Material do mkdocs habilita a extensão `admonition` (ver `mkdocs.yml`, `markdown_extensions`), que renderiza blocos `!!! nota`/`!!! aviso`/`!!! perigo` com destaque visual. Reservado pra sinalizar especificamente um passo de alto risco (`git reset --hard`, remoção de dado real, migração de banco irreversível), não pra nota genérica, que continua em texto corrido normal, pra não diluir o sinal com uso demais. Nenhuma página deste `docs/` usa a sintaxe ainda, porque nenhuma página de Operação com passo de alto risco foi migrada ainda, ver [Pendências](pendencias.md).
 
 ```
 !!! warning "Título curto"
@@ -84,7 +84,7 @@ O tema Material do mkdocs habilita a extensão `admonition` (ver `mkdocs.yml`, `
 
 ## Diagramas: qual tipo mermaid pra qual propósito
 
-**TLDR**: [mermaid](https://mermaid.js.org) é a única ferramenta de diagrama adotada neste site, mesma decisão e mesmo motivo da infrastructure: texto puro versionável no mesmo PR do conteúdo que descreve (**Diagrams as Code**, ver [Documentação como código](../aprender/documentacao-como-codigo.md)). Nenhum PNG ou export binário de ferramenta gráfica entra em `docs/`.
+**TLDR**: [mermaid](https://mermaid.js.org) é a única ferramenta de diagrama adotada neste site: texto puro versionável no mesmo PR do conteúdo que descreve (**Diagrams as Code**, ver [Documentação como código](../aprender/documentacao-como-codigo.md)). Nenhum PNG ou export binário de ferramenta gráfica entra em `docs/`.
 
 | Tipo mermaid | Quando usar |
 |---|---|
@@ -147,7 +147,7 @@ docker run --rm -it -p 8000:8000 -v "$PWD":/docs squidfunk/mkdocs-material:9.7.7
 
 ## Bypass e afrouxamento de CI
 
-**TLDR**: mesma regra da infrastructure, todo `continue-on-error` ou qualquer outra forma de afrouxar um gate de CI entra em [Pendências](pendencias.md) junto com a justificativa, no mesmo commit que introduz o afrouxamento, não depois.
+**TLDR**: todo `continue-on-error` ou qualquer outra forma de afrouxar um gate de CI entra em [Pendências](pendencias.md) junto com a justificativa, no mesmo commit que introduz o afrouxamento, não depois.
 
 Regra ainda mais simples de seguir aqui do que na infrastructure hoje: nenhum gate de qualidade de código ou de documentação está sequer ligado em CI neste repositório (ver [Qualidade de código](#qualidade-de-codigo) e [Qualidade da documentação](#qualidade-da-documentacao) acima), então não existe hoje nenhum afrouxamento a registrar, só a ausência do gate em si, já registrada em [Pendências](pendencias.md).
 
@@ -161,6 +161,6 @@ Regra ainda mais simples de seguir aqui do que na infrastructure hoje: nenhum ga
 
 ## Commits
 
-**TLDR**: [Conventional Commits](https://www.conventionalcommits.org) só no título, sem corpo, sem `Co-Authored-By`, mesma convenção da infrastructure. Nenhum workflow de `commit-lint` verifica isso automaticamente neste repositório hoje.
+**TLDR**: [Conventional Commits](https://www.conventionalcommits.org) só no título, sem corpo, sem `Co-Authored-By`. Nenhum workflow de `commit-lint` verifica isso automaticamente neste repositório hoje.
 
 Título no formato `tipo(escopo): assunto`, tipos permitidos `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, sem linha de corpo, sem `Co-Authored-By` em nenhum lugar da mensagem. A infrastructure enforça isso via `commit-lint.yml` (`scripts/lint-commit-messages.sh`, não bloqueante ainda). Este repositório não tem workflow equivalente, a convenção é seguida por prática direta, não por gate automático, ver [Pendências](pendencias.md).

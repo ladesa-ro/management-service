@@ -9,6 +9,6 @@
 2. Abra um Pull Request normal, seguindo [Contribuindo](contribuindo.md).
 3. Depois do merge em `main`, o Argo CD detecta a mudança e aplica sozinho (`automated: { prune: true, selfHeal: true }`), sem precisar rodar comando nenhum manualmente.
 
-Pra acompanhar o resultado, seria preciso acesso ao Argo CD do cluster (fora do escopo deste repositório, ver [infrastructure](https://github.com/ladesa-ro/infrastructure)).
+Pra acompanhar o resultado, é preciso acesso ao [Argo CD](https://ladesa-ro.github.io/infrastructure/aprender/argocd/) do cluster, fora do escopo deste repositório.
 
 O build e push da imagem continuam automáticos a cada push em `main` que toque `src/`, ver [CI/CD e deploy](../arquitetura/ci-cd-e-deploy.md#pipeline-de-cicd), mas isso é independente do deploy: trocar a imagem publicada não aplica nada no cluster sozinho, quem aplica é sempre o Argo CD reconciliando `gitops/`.

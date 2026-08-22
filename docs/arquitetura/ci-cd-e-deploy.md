@@ -82,7 +82,7 @@ ingress:
 
 ## Publicação de docs/ no GitHub Pages
 
-`.github/workflows/docs.yml`, mesmo padrão da [infrastructure](https://github.com/ladesa-ro/infrastructure/blob/main/.github/workflows/docs.yml): builda com `mkdocs build --strict --site-dir _site` e publica via `actions/upload-pages-artifact` + `actions/deploy-pages`. Gatilho: push em `main` tocando `docs/`, `mkdocs.yml` ou `requirements-docs.txt`, mais dispatch manual. `concurrency: pages` garante uma publicação por vez.
+`.github/workflows/docs.yml` builda com `mkdocs build --strict --site-dir _site` e publica via `actions/upload-pages-artifact` + `actions/deploy-pages`. Gatilho: push em `main` tocando `docs/`, `mkdocs.yml` ou `requirements-docs.txt`, mais dispatch manual. `concurrency: pages` garante uma publicação por vez. Se este workflow divergir do esperado, [o mesmo workflow na infrastructure](https://github.com/ladesa-ro/infrastructure/blob/main/.github/workflows/docs.yml) serve de referência pra comparar.
 
 ```mermaid
 flowchart LR
