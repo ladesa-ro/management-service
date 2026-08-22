@@ -1,11 +1,3 @@
-.github/**/* @ladesa-ro/security
-.docker/**/* @ladesa-ro/security @ladesa-ro/devops
-.deploy/**/* @ladesa-ro/security @ladesa-ro/devops
-.devcontainer/**/* @ladesa-ro/security @ladesa-ro/devops
-CODEOWNERS  @ladesa-ro/security
-**/package.json @ladesa-ro/security
-**/bun.lock @ladesa-ro/security
-**/bunfig.toml @ladesa-ro/security
-**/.containerignore @ladesa-ro/security @ladesa-ro/devops
-**/*.sh  @ladesa-ro/security
-Makefile @ladesa-ro/security @ladesa-ro/devops
+.github/**/*    @ladesa-ro/devops @ladesa-ro/security
+gitops/**/*     @ladesa-ro/devops @ladesa-ro/security
+CODEOWNERS      @ladesa-ro/security

@@ -1,4 +1,4 @@
-name: "[DEV] Build, Push & Deploy"
+name: "[DEV] Build & Push"
 
 on:
   workflow_dispatch:
@@ -6,8 +6,7 @@ on:
     branches:
       - main
     paths:
-      - .github/workflows/build-deploy.dev.yml
-      - .deploy/**/*
+      - .github/workflows/build-push.dev.yml
       - src/**/*
       - .docker/**/*
 
@@ -63,21 +62,3 @@ jobs:
           cache-to: |
             type=gha,scope=management-service-dev,mode=max
             type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_BASENAME }}/management-service:cache-development,mode=max
-
-  cd:
-    name: "CD: Deploy"
-    runs-on: dev-deploy
-    permissions:
-      contents: read
-    needs: [ ci ]
-    environment:
-      name: development
-      url: ${{ vars.DEPLOY_URL }}
-    steps:
-      - name: "[CD] Checkout do código-fonte"
-        uses: actions/checkout@v6.0.2
-
-      - name: "[CD] Implantação"
-        shell: bash
-        working-directory: ./.deploy/development/
-        run: bash ./deploy.sh

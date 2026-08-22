@@ -1,0 +1,9 @@
+apiVersion: v2
+name: waha
+description: Componente waha do management-service do Ladesa
+type: application
+version: 0.1.0
+dependencies:
+  - name: application
+    version: 6.0.2
+    repository: https://stakater.github.io/stakater-charts

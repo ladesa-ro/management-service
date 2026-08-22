@@ -1,0 +1,102 @@
+application:
+  applicationName: ladesa-ro-waha
+  deployment:
+    annotations:
+      secrets.infisical.com/auto-reload: 'true'
+    containerSecurityContext:
+      readOnlyRootFilesystem: false
+      runAsNonRoot: false
+    enabled: true
+    env:
+      WAHA_DASHBOARD_PASSWORD:
+        valueFrom:
+          secretKeyRef:
+            key: WAHA_PASSWORD
+            name: ladesa-ro-api-config
+      WAHA_DASHBOARD_USERNAME:
+        valueFrom:
+          secretKeyRef:
+            key: WAHA_USERNAME
+            name: ladesa-ro-api-config
+      WHATSAPP_API_KEY:
+        valueFrom:
+          secretKeyRef:
+            key: WAHA_API_KEY
+            name: ladesa-ro-api-config
+      WHATSAPP_API_KEY_EXCLUDE_PATH:
+        value: ping,health
+      WHATSAPP_HOOK_EVENTS:
+        value: message,session.status,state.change
+      WHATSAPP_HOOK_HMAC_KEY:
+        valueFrom:
+          secretKeyRef:
+            key: WAHA_WEBHOOK_HMAC_KEY
+            name: ladesa-ro-api-config
+      WHATSAPP_HOOK_URL:
+        valueFrom:
+          secretKeyRef:
+            key: WAHA_WEBHOOK_URL
+            name: ladesa-ro-api-config
+      WHATSAPP_SWAGGER_PASSWORD:
+        valueFrom:
+          secretKeyRef:
+            key: WAHA_PASSWORD
+            name: ladesa-ro-api-config
+      WHATSAPP_SWAGGER_USERNAME:
+        valueFrom:
+          secretKeyRef:
+            key: WAHA_USERNAME
+            name: ladesa-ro-api-config
+    image:
+      pullPolicy: IfNotPresent
+      repository: devlikeapro/waha
+      tag: latest@sha256:dc134637dfa0bd65202010a65e4ff8176101791699176c75bb37d5aa9daf487c
+    livenessProbe:
+      enabled: true
+      httpGet:
+        path: /ping
+        port: http-c
+      initialDelaySeconds: 20
+      periodSeconds: 15
+    ports:
+    - containerPort: 3000
+      name: http-c
+    readinessProbe:
+      enabled: true
+      httpGet:
+        path: /ping
+        port: http-c
+      initialDelaySeconds: 15
+      periodSeconds: 10
+    reloadOnChange: false
+    replicas: 1
+    resources:
+      limits:
+        cpu: '1'
+        memory: 1Gi
+      requests:
+        cpu: 50m
+        memory: 250Mi
+    startupProbe:
+      enabled: true
+      failureThreshold: 30
+      httpGet:
+        path: /ping
+        port: http-c
+      periodSeconds: 10
+    strategy:
+      type: Recreate
+    volumeMounts:
+      waha-session-data:
+        mountPath: /app/.sessions
+    volumes:
+      waha-session-data:
+        persistentVolumeClaim:
+          claimName: ladesa-ro-waha-sessions-pvc
+  service:
+    enabled: true
+    ports:
+    - name: http-s
+      port: 3000
+      targetPort: http-c
+    type: ClusterIP

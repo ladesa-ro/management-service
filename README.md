@@ -4296,3 +4296,33 @@ confidence_scope: Versões de todas as tecnologias listadas na tabela de stack (
 
 [action-build-deploy-dev-src]: https://img.shields.io/github/actions/workflow/status/ladesa-ro/management-service/build-deploy.dev.yml?style=flat&logo=github&logoColor=white&label=Deploy&branch=main&labelColor=18181B
 [action-build-deploy-dev-href]: https://github.com/ladesa-ro/management-service/actions/workflows/build-deploy.dev.yml?query=branch%3Amain
+
+## Implantação (GitOps)
+
+A implantação é declarada em `gitops/` e reconciliada pelo [Argo CD](https://github.com/ladesa-ro/infrastructure), não por comando imperativo no fim do build.
+
+```
+gitops/
+  envs/development/applications/
+    api.yaml                     Application da API
+    waha.yaml                    Application do WAHA
+  apps/
+    api/                         chart Helm local da API
+    waha/                        chart Helm local do WAHA
+```
+
+São duas `Application` e não uma porque são dois releases Helm distintos, cada um com o seu nome. Uma `Application` do Argo CD renderiza um chart com um nome de release, e o chart `application` do Stakater declara uma aplicação por release. Como efeito colateral bom, os dois ficam independentes: se um degradar, o outro segue reconciliando.
+
+Trocar configuração é editar o `values-development.yaml` do componente e abrir um pull request, com revisão e histórico.
+
+### Volumes não são declarados aqui, ainda
+
+Os dois `PersistentVolumeClaim`, o de uploads da API e o de sessões do WAHA, não pertencem a nenhum release e continuam fora da declaração. É deliberado: spec de PVC é largamente imutável, então declarar um que divirja do que existe vira erro de sincronização, e traria para o git um caminho até a exclusão de dado que não tem backup. Trazê-los para cá é um passo próprio, com verificação própria.
+
+O volume de sessões do WAHA guarda a autenticação do WhatsApp. Perder aquele volume significa reautenticar por leitura de QR code.
+
+### Segredos
+
+Nenhum segredo vive aqui. Os dois componentes consomem Secrets do Kubernetes por referência, e esses Secrets são produzidos a partir do [Infisical](https://infisical.ladesa.com.br). Trocar uma senha é trocar no Infisical.
+
+Os arquivos de `gitops/` não levam comentário, porque comentário envelhece sem que ninguém perceba. O contexto fica aqui e na documentação de arquitetura do `infrastructure`.
