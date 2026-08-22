@@ -10,6 +10,8 @@ export const CalendarioAgendamentoCancelarOcorrenciaCommandFields = {
  * exceção com status INATIVO para a data indicada. A série raiz não é alterada.
  */
 export class CalendarioAgendamentoCancelarOcorrenciaCommand {
+  ifMatch?: string;
+
   dataOcorrencia!: string;
   motivo?: string | null;
 }

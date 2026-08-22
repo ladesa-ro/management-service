@@ -226,6 +226,57 @@ describe("CalendarioAgendamento (domain entity)", () => {
     });
   });
 
+  describe("adicionarDataAvulsa", () => {
+    it("should create an independent entity referencing the origin series with a null dataOcorrenciaReferenciada", () => {
+      const serie = CalendarioAgendamento.create({
+        ...validCreateInput,
+        repeticao: "FREQ=WEEKLY;BYDAY=TU;COUNT=10",
+      });
+
+      const avulsa = CalendarioAgendamento.adicionarDataAvulsa(serie, "2026-03-14", {
+        horarioInicio: "09:00:00",
+      });
+
+      expect(avulsa.id).not.toBe(serie.id);
+      expect(avulsa.identificadorExterno).not.toBe(serie.identificadorExterno);
+      expect(avulsa.identificadorExternoSerieOrigem).toBe(serie.identificadorExterno);
+      expect(avulsa.dataOcorrenciaReferenciada).toBeNull();
+      expect(avulsa.dataInicio).toBe("2026-03-14");
+      expect(avulsa.dataFim).toBe("2026-03-14");
+      expect(avulsa.horarioInicio).toBe("09:00:00");
+      expect(avulsa.repeticao).toBeNull();
+    });
+
+    it("should inherit fields not overridden from the origin series", () => {
+      const serie = CalendarioAgendamento.create({
+        ...validCreateInput,
+        repeticao: "FREQ=WEEKLY;BYDAY=TU;COUNT=10",
+      });
+
+      const avulsa = CalendarioAgendamento.adicionarDataAvulsa(serie, "2026-03-14", {});
+
+      expect(avulsa.tipo).toBe(serie.tipo);
+      expect(avulsa.horarioInicio).toBe(serie.horarioInicio);
+      expect(avulsa.horarioFim).toBe(serie.horarioFim);
+      expect(avulsa.status).toBe(serie.status);
+      expect(avulsa.turmas).toBe(serie.turmas);
+    });
+
+    it("should not alter the origin series", () => {
+      const serie = CalendarioAgendamento.create({
+        ...validCreateInput,
+        repeticao: "FREQ=WEEKLY;BYDAY=TU;COUNT=10",
+      });
+      const dataInicioOriginal = serie.dataInicio;
+      const repeticaoOriginal = serie.repeticao;
+
+      CalendarioAgendamento.adicionarDataAvulsa(serie, "2026-03-14", {});
+
+      expect(serie.dataInicio).toBe(dataInicioOriginal);
+      expect(serie.repeticao).toBe(repeticaoOriginal);
+    });
+  });
+
   describe("close", () => {
     it("should set validTo and update dateUpdated", () => {
       const entity = CalendarioAgendamento.load({

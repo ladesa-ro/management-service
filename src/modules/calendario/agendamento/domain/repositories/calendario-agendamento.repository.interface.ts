@@ -81,6 +81,13 @@ export interface ICalendarioAgendamentoRepository {
   // Read side — usado por query handlers
   // ==========================================
 
+  /**
+   * Verifica se já existe algum agendamento (qualquer versão) com este
+   * identificador externo. Usado pela importação de .ics para idempotência
+   * por UID: um VEVENT cujo UID já existe como identificadorExterno é pulado.
+   */
+  existsByIdentificadorExterno(identificadorExterno: string): Promise<boolean>;
+
   /** Retorna um registro hidratado com junções para exibição. */
   getFindOneQueryResult(
     accessContext: IAccessContext | null,

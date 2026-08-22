@@ -280,6 +280,24 @@ export class CalendarioAgendamento implements IVersioned {
   }
 
   /**
+   * Adiciona uma data avulsa à série: uma ocorrência extra que a RRULE não
+   * geraria, com identidade própria. Equivalente ao RDATE do iCalendar (RFC
+   * 5545). Reaproveita o mesmo mecanismo de `criarExcecao`, mas com
+   * `dataOcorrenciaReferenciada` nula — nula significa "adição": a ocorrência
+   * não substitui nem cancela nenhuma data que a regra geraria, então a
+   * expansão de RRULE não a suprime. A série raiz não é alterada.
+   */
+  static adicionarDataAvulsa(
+    serieOrigem: CalendarioAgendamento,
+    dataOcorrencia: string,
+    dados: unknown,
+  ): CalendarioAgendamento {
+    const instance = CalendarioAgendamento.criarExcecao(serieOrigem, dataOcorrencia, dados);
+    instance.dataOcorrenciaReferenciada = null;
+    return instance;
+  }
+
+  /**
    * Encerra esta versao (seta valid_to e ativo implicitamente via status).
    */
   close(): void {

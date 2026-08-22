@@ -25,6 +25,8 @@ export const CalendarioAgendamentoEditarOcorrenciaCommandFields = {
  * os da série raiz. A série raiz não é alterada.
  */
 export class CalendarioAgendamentoEditarOcorrenciaCommand {
+  ifMatch?: string;
+
   dataOcorrencia!: string;
   diaInteiro?: boolean;
   horarioInicio?: string;

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Headers, Param, Patch, Post, Query } from "@nestjs/common";
 import {
   ApiCreatedResponse,
   ApiForbiddenResponse,
@@ -13,6 +13,10 @@ import { Dep } from "@/domain/dependency-injection";
 import { AccessContextHttp } from "@/server/nest/access-context";
 import { CalendarioAgendamento } from "../domain/calendario-agendamento";
 import type { CalendarioAgendamentoStatus } from "../domain/calendario-agendamento.types";
+import {
+  CalendarioAgendamentoAdicionarDataAvulsaCommandMetadata,
+  ICalendarioAgendamentoAdicionarDataAvulsaCommandHandler,
+} from "../domain/commands/calendario-agendamento-adicionar-data-avulsa.command.handler.interface";
 import {
   CalendarioAgendamentoCancelarOcorrenciaCommandMetadata,
   ICalendarioAgendamentoCancelarOcorrenciaCommandHandler,
@@ -38,6 +42,10 @@ import {
   ICalendarioAgendamentoEditarSerieCommandHandler,
 } from "../domain/commands/calendario-agendamento-editar-serie.command.handler.interface";
 import {
+  CalendarioAgendamentoImportarIcsCommandMetadata,
+  ICalendarioAgendamentoImportarIcsCommandHandler,
+} from "../domain/commands/calendario-agendamento-importar-ics.command.handler.interface";
+import {
   CalendarioAgendamentoUpdateCommandMetadata,
   ICalendarioAgendamentoUpdateCommandHandler,
 } from "../domain/commands/calendario-agendamento-update.command.handler.interface";
@@ -58,6 +66,7 @@ import {
   ICalendarioAgendamentoListQueryHandler,
 } from "../domain/queries/calendario-agendamento-list.query.handler.interface";
 import {
+  CalendarioAgendamentoAdicionarDataAvulsaInputRestDto,
   CalendarioAgendamentoCancelarOcorrenciaInputRestDto,
   CalendarioAgendamentoCreateInputRestDto,
   CalendarioAgendamentoDesvincularTurmaParamsRestDto,
@@ -65,6 +74,8 @@ import {
   CalendarioAgendamentoEditarSerieInputRestDto,
   CalendarioAgendamentoFindOneOutputRestDto,
   CalendarioAgendamentoFindOneParamsRestDto,
+  CalendarioAgendamentoImportarIcsInputRestDto,
+  CalendarioAgendamentoImportarIcsOutputRestDto,
   CalendarioAgendamentoLinhaDoTempoOutputRestDto,
   CalendarioAgendamentoLinhaDoTempoParamsRestDto,
   CalendarioAgendamentoListInputRestDto,
@@ -100,6 +111,10 @@ export class CalendarioAgendamentoRestController {
     private readonly cancelarOcorrenciaHandler: ICalendarioAgendamentoCancelarOcorrenciaCommandHandler,
     @Dep(ICalendarioAgendamentoEditarSerieCommandHandler)
     private readonly editarSerieHandler: ICalendarioAgendamentoEditarSerieCommandHandler,
+    @Dep(ICalendarioAgendamentoAdicionarDataAvulsaCommandHandler)
+    private readonly adicionarDataAvulsaHandler: ICalendarioAgendamentoAdicionarDataAvulsaCommandHandler,
+    @Dep(ICalendarioAgendamentoImportarIcsCommandHandler)
+    private readonly importarIcsHandler: ICalendarioAgendamentoImportarIcsCommandHandler,
   ) {}
 
   @Get("/")
@@ -167,11 +182,13 @@ export class CalendarioAgendamentoRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: CalendarioAgendamentoFindOneParamsRestDto,
     @Body() dto: CalendarioAgendamentoUpdateInputRestDto,
+    @Headers("if-match") ifMatch?: string,
   ): Promise<CalendarioAgendamentoFindOneOutputRestDto> {
     const command = CalendarioAgendamentoRestMapper.updateInputDtoToUpdateCommand.map({
       params,
       dto,
     });
+    command.ifMatch = ifMatch;
     const queryResult = await this.updateHandler.execute(accessContext, command);
     return CalendarioAgendamentoRestMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
@@ -229,11 +246,13 @@ export class CalendarioAgendamentoRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: CalendarioAgendamentoFindOneParamsRestDto,
     @Body() dto: CalendarioAgendamentoEditarOcorrenciaInputRestDto,
+    @Headers("if-match") ifMatch?: string,
   ): Promise<CalendarioAgendamentoFindOneOutputRestDto> {
     const command = CalendarioAgendamentoRestMapper.editarOcorrenciaInputDtoToCommand.map({
       params,
       dto,
     });
+    command.ifMatch = ifMatch;
     const queryResult = await this.editarOcorrenciaHandler.execute(accessContext, command);
     return CalendarioAgendamentoRestMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
@@ -247,11 +266,13 @@ export class CalendarioAgendamentoRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: CalendarioAgendamentoFindOneParamsRestDto,
     @Body() dto: CalendarioAgendamentoCancelarOcorrenciaInputRestDto,
+    @Headers("if-match") ifMatch?: string,
   ): Promise<CalendarioAgendamentoFindOneOutputRestDto> {
     const command = CalendarioAgendamentoRestMapper.cancelarOcorrenciaInputDtoToCommand.map({
       params,
       dto,
     });
+    command.ifMatch = ifMatch;
     const queryResult = await this.cancelarOcorrenciaHandler.execute(accessContext, command);
     return CalendarioAgendamentoRestMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
@@ -265,12 +286,45 @@ export class CalendarioAgendamentoRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: CalendarioAgendamentoFindOneParamsRestDto,
     @Body() dto: CalendarioAgendamentoEditarSerieInputRestDto,
+    @Headers("if-match") ifMatch?: string,
   ): Promise<CalendarioAgendamentoFindOneOutputRestDto> {
     const command = CalendarioAgendamentoRestMapper.editarSerieInputDtoToCommand.map({
       params,
       dto,
     });
+    command.ifMatch = ifMatch;
     const queryResult = await this.editarSerieHandler.execute(accessContext, command);
     return CalendarioAgendamentoRestMapper.findOneQueryResultToOutputDto.map(queryResult);
+  }
+
+  @Post("/:id/adicionar-data-avulsa")
+  @ApiOperation(CalendarioAgendamentoAdicionarDataAvulsaCommandMetadata.swaggerMetadata)
+  @ApiCreatedResponse({ type: CalendarioAgendamentoFindOneOutputRestDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async adicionarDataAvulsa(
+    @AccessContextHttp() accessContext: IAccessContext,
+    @Param() params: CalendarioAgendamentoFindOneParamsRestDto,
+    @Body() dto: CalendarioAgendamentoAdicionarDataAvulsaInputRestDto,
+  ): Promise<CalendarioAgendamentoFindOneOutputRestDto> {
+    const command = CalendarioAgendamentoRestMapper.adicionarDataAvulsaInputDtoToCommand.map({
+      params,
+      dto,
+    });
+    const queryResult = await this.adicionarDataAvulsaHandler.execute(accessContext, command);
+    return CalendarioAgendamentoRestMapper.findOneQueryResultToOutputDto.map(queryResult);
+  }
+
+  @Post("/importar-ics")
+  @ApiOperation(CalendarioAgendamentoImportarIcsCommandMetadata.swaggerMetadata)
+  @ApiCreatedResponse({ type: CalendarioAgendamentoImportarIcsOutputRestDto })
+  @ApiForbiddenResponse()
+  async importarIcs(
+    @AccessContextHttp() accessContext: IAccessContext,
+    @Body() dto: CalendarioAgendamentoImportarIcsInputRestDto,
+  ): Promise<CalendarioAgendamentoImportarIcsOutputRestDto> {
+    const command = CalendarioAgendamentoRestMapper.importarIcsInputDtoToCommand.map(dto);
+    const result = await this.importarIcsHandler.execute(accessContext, command);
+    return CalendarioAgendamentoRestMapper.importarIcsResultToOutputDto.map(result);
   }
 }

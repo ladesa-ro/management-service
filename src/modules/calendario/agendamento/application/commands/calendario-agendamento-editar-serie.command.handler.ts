@@ -1,5 +1,5 @@
 import { BadRequestException } from "@nestjs/common";
-import { ensureActiveEntity, ensureExists } from "@/application/errors";
+import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { Dep, Impl } from "@/domain/dependency-injection";
 import { CalendarioColecaoSyncService } from "@/modules/calendario/colecao/application/calendario-colecao-sync.service";
@@ -12,12 +12,10 @@ import { ICalendarioAgendamentoEditarSerieCommandHandler } from "../../domain/co
 import type { CalendarioAgendamentoFindOneQuery } from "../../domain/queries/calendario-agendamento-find-one.query";
 import type { CalendarioAgendamentoFindOneQueryResult } from "../../domain/queries/calendario-agendamento-find-one.query.result";
 import { ICalendarioAgendamentoRepository } from "../../domain/repositories/calendario-agendamento.repository.interface";
+import { CalendarioAgendamentoConflitoService } from "../calendario-agendamento-conflito.service";
+import { normalizeDate } from "./calendario-agendamento-data.util";
+import { ensureIfMatch } from "./calendario-agendamento-precondition.util";
 import { dividirRegraRecorrencia } from "./calendario-agendamento-rrule-split.util";
-
-// Data-only (AAAA-MM-DD) como meia-noite UTC, mesma normalização usada na expansão de RRULE
-function normalizeDate(dateStr: string): Date {
-  return new Date(dateStr.includes("T") ? dateStr : `${dateStr}T00:00:00Z`);
-}
 
 @Impl()
 export class CalendarioAgendamentoEditarSerieCommandHandlerImpl
@@ -30,6 +28,8 @@ export class CalendarioAgendamentoEditarSerieCommandHandlerImpl
     private readonly permissionChecker: ICalendarioAgendamentoPermissionChecker,
     @Dep(CalendarioColecaoSyncService)
     private readonly colecaoSyncService: CalendarioColecaoSyncService,
+    @Dep(CalendarioAgendamentoConflitoService)
+    private readonly conflitoService: CalendarioAgendamentoConflitoService,
   ) {}
 
   async execute(
@@ -40,7 +40,7 @@ export class CalendarioAgendamentoEditarSerieCommandHandlerImpl
 
     const serieOrigem = await this.repository.loadById(accessContext, dto.id);
     ensureExists(serieOrigem, CalendarioAgendamento.entityName, dto.id);
-    ensureActiveEntity(serieOrigem, CalendarioAgendamento.entityName, dto.id);
+    ensureIfMatch(serieOrigem, dto.ifMatch, dto.id);
 
     if (!serieOrigem.repeticao) {
       throw new BadRequestException("Só é possível editar a série de um agendamento recorrente.");
@@ -62,7 +62,7 @@ export class CalendarioAgendamentoEditarSerieCommandHandlerImpl
     const effectivePerfis = dto.perfis ?? serieOrigem.perfis;
     const effectiveAmbientes = dto.ambientes ?? serieOrigem.ambientes;
 
-    await this.ensureSemConflito({
+    await this.conflitoService.ensureSemConflito(accessContext, {
       dataInicio: dto.dataInicio ?? serieOrigem.dataInicio,
       dataFim: dto.dataFim !== undefined ? dto.dataFim : serieOrigem.dataFim,
       horarioInicio: dto.horarioInicio ?? serieOrigem.horarioInicio,
@@ -137,7 +137,7 @@ export class CalendarioAgendamentoEditarSerieCommandHandlerImpl
     const novoHorarioInicio = dto.horarioInicio ?? serieOrigem.horarioInicio;
     const novoHorarioFim = dto.horarioFim ?? serieOrigem.horarioFim;
 
-    await this.ensureSemConflito({
+    await this.conflitoService.ensureSemConflito(accessContext, {
       dataInicio: dto.dataOcorrencia,
       dataFim: novaDataFim,
       horarioInicio: novoHorarioInicio,
@@ -204,35 +204,5 @@ export class CalendarioAgendamentoEditarSerieCommandHandlerImpl
     ensureExists(result, CalendarioAgendamento.entityName, novaSerie.id);
 
     return result;
-  }
-
-  private async ensureSemConflito(params: {
-    dataInicio: string;
-    dataFim: string | null;
-    horarioInicio: string;
-    horarioFim: string;
-    turmaIds: string[];
-    perfilIds: string[];
-    ambienteIds: string[];
-    excludeIdentificadorExterno: string;
-  }): Promise<void> {
-    if (
-      params.turmaIds.length === 0 &&
-      params.perfilIds.length === 0 &&
-      params.ambienteIds.length === 0
-    ) {
-      return;
-    }
-
-    const conflicts = await this.repository.findConflicting(params);
-
-    if (conflicts.length > 0) {
-      const descricoes = conflicts.map(
-        (c) => `${c.recurso} (${c.recursoId}) no agendamento ${c.identificadorExterno}`,
-      );
-      throw new BadRequestException(
-        `Conflito de horário detectado. Os seguintes recursos já possuem agendamento no mesmo período: ${descricoes.join("; ")}.`,
-      );
-    }
   }
 }

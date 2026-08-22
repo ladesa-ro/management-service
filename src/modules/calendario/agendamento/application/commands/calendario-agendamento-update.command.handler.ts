@@ -1,5 +1,5 @@
 import { BadRequestException } from "@nestjs/common";
-import { ensureActiveEntity, ensureExists } from "@/application/errors";
+import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { Dep, Impl } from "@/domain/dependency-injection";
 import { IAmbienteFindOneQueryHandler } from "@/modules/ambientes/ambiente/domain/queries/ambiente-find-one.query.handler.interface";
@@ -12,6 +12,8 @@ import { ICalendarioAgendamentoUpdateCommandHandler } from "../../domain/command
 import type { CalendarioAgendamentoFindOneQuery } from "../../domain/queries/calendario-agendamento-find-one.query";
 import type { CalendarioAgendamentoFindOneQueryResult } from "../../domain/queries/calendario-agendamento-find-one.query.result";
 import { ICalendarioAgendamentoRepository } from "../../domain/repositories/calendario-agendamento.repository.interface";
+import { CalendarioAgendamentoConflitoService } from "../calendario-agendamento-conflito.service";
+import { ensureIfMatch } from "./calendario-agendamento-precondition.util";
 
 // Janelas de horário conhecidas para os nomes de turno mais comuns em pt-BR.
 // `Turma.periodo` é texto livre (sem enum) — só validamos quando o valor bate
@@ -56,6 +58,8 @@ export class CalendarioAgendamentoUpdateCommandHandlerImpl
     private readonly ambienteFindOneHandler: IAmbienteFindOneQueryHandler,
     @Dep(CalendarioColecaoSyncService)
     private readonly colecaoSyncService: CalendarioColecaoSyncService,
+    @Dep(CalendarioAgendamentoConflitoService)
+    private readonly conflitoService: CalendarioAgendamentoConflitoService,
   ) {}
 
   async execute(
@@ -66,7 +70,7 @@ export class CalendarioAgendamentoUpdateCommandHandlerImpl
 
     const domain = await this.repository.loadById(accessContext, dto.id);
     ensureExists(domain, CalendarioAgendamento.entityName, dto.id);
-    ensureActiveEntity(domain, CalendarioAgendamento.entityName, dto.id);
+    ensureIfMatch(domain, dto.ifMatch, dto.id);
 
     // Detectar se ha campos de metadata (nome/cor)
     const hasMetadataChanges = dto.nome !== undefined || dto.cor !== undefined;
@@ -125,7 +129,7 @@ export class CalendarioAgendamentoUpdateCommandHandlerImpl
       effectiveHorarioFim &&
       (turmaIds.length > 0 || perfilIds.length > 0 || ambienteIds.length > 0)
     ) {
-      const conflicts = await this.repository.findConflicting({
+      await this.conflitoService.ensureSemConflito(accessContext, {
         dataInicio: effectiveDataInicio,
         dataFim: effectiveDataFim,
         horarioInicio: effectiveHorarioInicio,
@@ -135,15 +139,6 @@ export class CalendarioAgendamentoUpdateCommandHandlerImpl
         ambienteIds,
         excludeIdentificadorExterno: domain.identificadorExterno,
       });
-
-      if (conflicts.length > 0) {
-        const descricoes = conflicts.map(
-          (c) => `${c.recurso} (${c.recursoId}) no agendamento ${c.identificadorExterno}`,
-        );
-        throw new BadRequestException(
-          `Conflito de horário detectado. Os seguintes recursos já possuem agendamento no mesmo período: ${descricoes.join("; ")}.`,
-        );
-      }
     }
 
     // Validar se a soma do numero estimado de alunos das turmas cabe na capacidade

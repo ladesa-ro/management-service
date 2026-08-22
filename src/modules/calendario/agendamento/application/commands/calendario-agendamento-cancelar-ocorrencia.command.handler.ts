@@ -1,5 +1,5 @@
 import { BadRequestException } from "@nestjs/common";
-import { ensureActiveEntity, ensureExists } from "@/application/errors";
+import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { Dep, Impl } from "@/domain/dependency-injection";
 import { CalendarioColecaoSyncService } from "@/modules/calendario/colecao/application/calendario-colecao-sync.service";
@@ -11,6 +11,7 @@ import { ICalendarioAgendamentoCancelarOcorrenciaCommandHandler } from "../../do
 import type { CalendarioAgendamentoFindOneQuery } from "../../domain/queries/calendario-agendamento-find-one.query";
 import type { CalendarioAgendamentoFindOneQueryResult } from "../../domain/queries/calendario-agendamento-find-one.query.result";
 import { ICalendarioAgendamentoRepository } from "../../domain/repositories/calendario-agendamento.repository.interface";
+import { ensureIfMatch } from "./calendario-agendamento-precondition.util";
 
 @Impl()
 export class CalendarioAgendamentoCancelarOcorrenciaCommandHandlerImpl
@@ -33,7 +34,7 @@ export class CalendarioAgendamentoCancelarOcorrenciaCommandHandlerImpl
 
     const serieOrigem = await this.repository.loadById(accessContext, dto.id);
     ensureExists(serieOrigem, CalendarioAgendamento.entityName, dto.id);
-    ensureActiveEntity(serieOrigem, CalendarioAgendamento.entityName, dto.id);
+    ensureIfMatch(serieOrigem, dto.ifMatch, dto.id);
 
     if (!serieOrigem.repeticao) {
       throw new BadRequestException(

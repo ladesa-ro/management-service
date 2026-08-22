@@ -9,6 +9,7 @@ import {
   createTestId,
 } from "@/test/helpers";
 import { CalendarioAgendamentoTipo } from "../../domain/calendario-agendamento.types";
+import { CalendarioAgendamentoConflitoService } from "../calendario-agendamento-conflito.service";
 import { CalendarioAgendamentoCreateCommandHandlerImpl } from "./calendario-agendamento-create.command.handler";
 
 function createMockTurmaFindOneHandler() {
@@ -17,6 +18,22 @@ function createMockTurmaFindOneHandler() {
 
 function createMockAmbienteFindOneHandler() {
   return { execute: vi.fn().mockResolvedValue(null) };
+}
+
+function createMockPerfilFindOneHandler() {
+  return { execute: vi.fn().mockResolvedValue(null) };
+}
+
+function createMockPerfilFindAllActiveHandler() {
+  return { execute: vi.fn().mockResolvedValue([]) };
+}
+
+function createConflitoService(repository: object) {
+  return new CalendarioAgendamentoConflitoService(
+    repository as any,
+    createMockPerfilFindOneHandler() as any,
+    createMockPerfilFindAllActiveHandler() as any,
+  );
 }
 
 function createValidDto() {
@@ -43,6 +60,7 @@ describe("CalendarioAgendamentoCreateCommandHandler", () => {
       turmaFindOneHandler?: object;
       ambienteFindOneHandler?: object;
       colecaoSyncService?: object;
+      conflitoService?: object;
     } = {},
   ) {
     const repository = overrides.repository ?? createMockAgendamentoRepository();
@@ -51,6 +69,7 @@ describe("CalendarioAgendamentoCreateCommandHandler", () => {
     const ambienteFindOneHandler =
       overrides.ambienteFindOneHandler ?? createMockAmbienteFindOneHandler();
     const colecaoSyncService = overrides.colecaoSyncService ?? createMockColecaoSyncService();
+    const conflitoService = overrides.conflitoService ?? createConflitoService(repository);
 
     const handler = new CalendarioAgendamentoCreateCommandHandlerImpl(
       repository as any,
@@ -58,6 +77,7 @@ describe("CalendarioAgendamentoCreateCommandHandler", () => {
       turmaFindOneHandler as any,
       ambienteFindOneHandler as any,
       colecaoSyncService as any,
+      conflitoService as any,
     );
 
     return {
@@ -67,6 +87,7 @@ describe("CalendarioAgendamentoCreateCommandHandler", () => {
       turmaFindOneHandler,
       ambienteFindOneHandler,
       colecaoSyncService,
+      conflitoService,
     };
   }
 

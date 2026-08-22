@@ -12,6 +12,7 @@ import type { CalendarioAgendamentoCreateCommand } from "../../domain/commands/c
 import { ICalendarioAgendamentoCreateCommandHandler } from "../../domain/commands/calendario-agendamento-create.command.handler.interface";
 import type { CalendarioAgendamentoFindOneQueryResult } from "../../domain/queries/calendario-agendamento-find-one.query.result";
 import { ICalendarioAgendamentoRepository } from "../../domain/repositories/calendario-agendamento.repository.interface";
+import { CalendarioAgendamentoConflitoService } from "../calendario-agendamento-conflito.service";
 
 // Janelas de horário conhecidas para os nomes de turno mais comuns em pt-BR.
 // `Turma.periodo` é texto livre (sem enum) — só validamos quando o valor bate
@@ -56,6 +57,8 @@ export class CalendarioAgendamentoCreateCommandHandlerImpl
     private readonly ambienteFindOneHandler: IAmbienteFindOneQueryHandler,
     @Dep(CalendarioColecaoSyncService)
     private readonly colecaoSyncService: CalendarioColecaoSyncService,
+    @Dep(CalendarioAgendamentoConflitoService)
+    private readonly conflitoService: CalendarioAgendamentoConflitoService,
   ) {}
 
   async execute(
@@ -83,7 +86,7 @@ export class CalendarioAgendamentoCreateCommandHandlerImpl
       effectiveHorarioFim &&
       (turmaIds.length > 0 || perfilIds.length > 0 || ambienteIds.length > 0)
     ) {
-      const conflicts = await this.repository.findConflicting({
+      await this.conflitoService.ensureSemConflito(accessContext, {
         dataInicio: dto.dataInicio,
         dataFim: dto.dataFim ?? null,
         horarioInicio: effectiveHorarioInicio,
@@ -92,15 +95,6 @@ export class CalendarioAgendamentoCreateCommandHandlerImpl
         perfilIds,
         ambienteIds,
       });
-
-      if (conflicts.length > 0) {
-        const descricoes = conflicts.map(
-          (c) => `${c.recurso} (${c.recursoId}) no agendamento ${c.identificadorExterno}`,
-        );
-        throw new BadRequestException(
-          `Conflito de horário detectado. Os seguintes recursos já possuem agendamento no mesmo período: ${descricoes.join("; ")}.`,
-        );
-      }
     }
 
     // Validar se a soma do numero estimado de alunos das turmas cabe na capacidade

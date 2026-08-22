@@ -137,6 +137,37 @@ describe("CalendarioAgendamentoExportarIcsQueryHandlerImpl", () => {
     expect(ics).toContain(`UID:${sharedId}-20260303T140000@ladesa\r\n`);
   });
 
+  it("should export a standalone RDATE occurrence (avulsa) as its own VEVENT", async () => {
+    // A consulta de ocorrências já resolve datas avulsas (RDATE) como agendamentos
+    // isolados (repeticao null, identificadorExternoSerieOrigem apontando pra série,
+    // dataOcorrenciaReferenciada nula) — para o export, uma avulsa é indistinguível
+    // de um agendamento pontual comum: cada ocorrência já vira um VEVENT próprio.
+    const consultaOcorrenciasHandler = createMockConsultaOcorrenciasHandler();
+    const visibilidadeService = createMockVisibilidadeService();
+    const handler = createHandler(consultaOcorrenciasHandler, visibilidadeService);
+
+    const serieIdentificadorExterno = createTestId();
+    const avulsa = createMockAgendamento({
+      nome: "Aula extra de sábado",
+      dataInicio: "2026-03-14T00:00:00.000Z",
+      dataFim: "2026-03-14T00:00:00.000Z",
+      horarioInicio: "09:00:00",
+      horarioFim: "10:00:00",
+      repeticao: null,
+      identificadorExternoSerieOrigem: serieIdentificadorExterno,
+      dataOcorrenciaReferenciada: null,
+    });
+
+    (consultaOcorrenciasHandler.execute as ReturnType<typeof vi.fn>).mockResolvedValue([avulsa]);
+
+    const ics = await handler.execute(null, createQuery());
+
+    expect(ics).toContain("BEGIN:VEVENT\r\n");
+    expect(ics).toContain("DTSTART:20260314T090000\r\n");
+    expect(ics).toContain("DTEND:20260314T100000\r\n");
+    expect(ics).toContain("SUMMARY:Aula extra de sábado\r\n");
+  });
+
   it("should return a valid empty calendar when there are no occurrences", async () => {
     const consultaOcorrenciasHandler = createMockConsultaOcorrenciasHandler();
     const visibilidadeService = createMockVisibilidadeService();

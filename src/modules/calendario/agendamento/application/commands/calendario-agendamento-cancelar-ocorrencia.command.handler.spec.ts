@@ -1,6 +1,9 @@
 import { BadRequestException } from "@nestjs/common";
 import { describe, expect, it } from "vitest";
-import { ResourceNotFoundError } from "@/application/errors/application.error";
+import {
+  PreconditionFailedError,
+  ResourceNotFoundError,
+} from "@/application/errors/application.error";
 import {
   createMockAgendamentoRepository,
   createMockColecaoSyncService,
@@ -180,6 +183,62 @@ describe("CalendarioAgendamentoCancelarOcorrenciaCommandHandler", () => {
       });
 
       expect(colecaoSyncService.registrarMudanca).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("escrita condicional (If-Match)", () => {
+    it("should proceed when ifMatch matches the current version", async () => {
+      const serie = criarSerieRecorrente();
+
+      const repository = createMockAgendamentoRepository();
+      repository.loadById.mockResolvedValue(serie);
+      repository.getFindOneQueryResult.mockResolvedValue({ id: "cancelamento-id" });
+
+      const { handler } = createHandler({ repository });
+
+      const result = await handler.execute(createTestAccessContext(), {
+        id: serie.id,
+        dataOcorrencia: "2026-03-09",
+        ifMatch: String(serie.version),
+      });
+
+      expect(result).toEqual({ id: "cancelamento-id" });
+    });
+
+    it("should reject with PreconditionFailedError (412) when ifMatch is stale", async () => {
+      const serie = criarSerieRecorrente();
+
+      const repository = createMockAgendamentoRepository();
+      repository.loadById.mockResolvedValue(serie);
+
+      const { handler } = createHandler({ repository });
+
+      await expect(
+        handler.execute(createTestAccessContext(), {
+          id: serie.id,
+          dataOcorrencia: "2026-03-09",
+          ifMatch: String(serie.version + 1),
+        }),
+      ).rejects.toThrow(PreconditionFailedError);
+
+      expect(repository.save).not.toHaveBeenCalled();
+    });
+
+    it("should proceed as before (regressão) when ifMatch is not provided", async () => {
+      const serie = criarSerieRecorrente();
+
+      const repository = createMockAgendamentoRepository();
+      repository.loadById.mockResolvedValue(serie);
+      repository.getFindOneQueryResult.mockResolvedValue({ id: "cancelamento-id" });
+
+      const { handler } = createHandler({ repository });
+
+      const result = await handler.execute(createTestAccessContext(), {
+        id: serie.id,
+        dataOcorrencia: "2026-03-09",
+      });
+
+      expect(result).toEqual({ id: "cancelamento-id" });
     });
   });
 });

@@ -1,6 +1,9 @@
 import { BadRequestException } from "@nestjs/common";
 import { describe, expect, it, vi } from "vitest";
-import { ResourceNotFoundError } from "@/application/errors/application.error";
+import {
+  PreconditionFailedError,
+  ResourceNotFoundError,
+} from "@/application/errors/application.error";
 import {
   createMockAgendamentoRepository,
   createMockColecaoSyncService,
@@ -10,6 +13,7 @@ import {
 } from "@/test/helpers";
 import { CalendarioAgendamento } from "../../domain/calendario-agendamento";
 import { CalendarioAgendamentoTipo } from "../../domain/calendario-agendamento.types";
+import { CalendarioAgendamentoConflitoService } from "../calendario-agendamento-conflito.service";
 import { CalendarioAgendamentoUpdateCommandHandlerImpl } from "./calendario-agendamento-update.command.handler";
 
 function createActiveDomain(overrides: Record<string, unknown> = {}): CalendarioAgendamento {
@@ -31,6 +35,22 @@ function createMockAmbienteFindOneHandler() {
   return { execute: vi.fn().mockResolvedValue(null) };
 }
 
+function createMockPerfilFindOneHandler() {
+  return { execute: vi.fn().mockResolvedValue(null) };
+}
+
+function createMockPerfilFindAllActiveHandler() {
+  return { execute: vi.fn().mockResolvedValue([]) };
+}
+
+function createConflitoService(repository: object) {
+  return new CalendarioAgendamentoConflitoService(
+    repository as any,
+    createMockPerfilFindOneHandler() as any,
+    createMockPerfilFindAllActiveHandler() as any,
+  );
+}
+
 describe("CalendarioAgendamentoUpdateCommandHandler", () => {
   function createHandler(
     overrides: {
@@ -39,6 +59,7 @@ describe("CalendarioAgendamentoUpdateCommandHandler", () => {
       turmaFindOneHandler?: object;
       ambienteFindOneHandler?: object;
       colecaoSyncService?: object;
+      conflitoService?: object;
     } = {},
   ) {
     const repository = overrides.repository ?? createMockAgendamentoRepository();
@@ -47,6 +68,7 @@ describe("CalendarioAgendamentoUpdateCommandHandler", () => {
     const ambienteFindOneHandler =
       overrides.ambienteFindOneHandler ?? createMockAmbienteFindOneHandler();
     const colecaoSyncService = overrides.colecaoSyncService ?? createMockColecaoSyncService();
+    const conflitoService = overrides.conflitoService ?? createConflitoService(repository);
 
     const handler = new CalendarioAgendamentoUpdateCommandHandlerImpl(
       repository as any,
@@ -54,6 +76,7 @@ describe("CalendarioAgendamentoUpdateCommandHandler", () => {
       turmaFindOneHandler as any,
       ambienteFindOneHandler as any,
       colecaoSyncService as any,
+      conflitoService as any,
     );
 
     return {
@@ -63,6 +86,7 @@ describe("CalendarioAgendamentoUpdateCommandHandler", () => {
       turmaFindOneHandler,
       ambienteFindOneHandler,
       colecaoSyncService,
+      conflitoService,
     };
   }
 
@@ -406,6 +430,96 @@ describe("CalendarioAgendamentoUpdateCommandHandler", () => {
       await handler.execute(accessContext, { id: domain.id, nome: "Só metadata" });
 
       expect(colecaoSyncService.registrarMudanca).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("escrita condicional (If-Match)", () => {
+    it("should proceed when ifMatch matches the current version", async () => {
+      const domain = createActiveDomain();
+      const expectedResult = { id: domain.id };
+
+      const repository = createMockAgendamentoRepository();
+      repository.loadById.mockResolvedValue(domain);
+      repository.getFindOneQueryResult.mockResolvedValue(expectedResult);
+
+      const { handler } = createHandler({ repository });
+      const accessContext = createTestAccessContext();
+
+      const result = await handler.execute(accessContext, {
+        id: domain.id,
+        motivo: "Reagendamento",
+        ifMatch: String(domain.version),
+      });
+
+      expect(result).toEqual(expectedResult);
+    });
+
+    it("should reject with PreconditionFailedError (412) when ifMatch is stale", async () => {
+      const domain = createActiveDomain();
+
+      const repository = createMockAgendamentoRepository();
+      repository.loadById.mockResolvedValue(domain);
+      repository.getFindOneQueryResult.mockResolvedValue({ id: domain.id });
+
+      const { handler } = createHandler({ repository });
+      const accessContext = createTestAccessContext();
+
+      await expect(
+        handler.execute(accessContext, {
+          id: domain.id,
+          motivo: "Reagendamento",
+          ifMatch: String(domain.version + 1),
+        }),
+      ).rejects.toThrow(PreconditionFailedError);
+
+      expect(repository.saveNewVersion).not.toHaveBeenCalled();
+    });
+
+    it("should proceed as before (regressão) when ifMatch is not provided", async () => {
+      const domain = createActiveDomain();
+      const expectedResult = { id: domain.id };
+
+      const repository = createMockAgendamentoRepository();
+      repository.loadById.mockResolvedValue(domain);
+      repository.getFindOneQueryResult.mockResolvedValue(expectedResult);
+
+      const { handler } = createHandler({ repository });
+      const accessContext = createTestAccessContext();
+
+      const result = await handler.execute(accessContext, {
+        id: domain.id,
+        motivo: "Reagendamento",
+      });
+
+      expect(result).toEqual(expectedResult);
+    });
+
+    it("cenário de corrida real: carrega versão N, outro escreve (vira N+1), primeiro tenta escrever com N e é rejeitado com 412", async () => {
+      const domain = createActiveDomain();
+      const versaoLidaPeloPrimeiroCliente = String(domain.version);
+
+      // Simula "outro escreve": o segundo cliente promoveu uma nova versão,
+      // exatamente como saveNewVersion faz — fecha a versão que ambos leram.
+      // O primeiro cliente, ao tentar salvar em seguida, carrega essa mesma
+      // linha já fechada (loadById busca pelo id da linha, não pela mais
+      // recente do identificadorExterno).
+      domain.close();
+
+      const repository = createMockAgendamentoRepository();
+      repository.loadById.mockResolvedValue(domain);
+
+      const { handler } = createHandler({ repository });
+      const accessContext = createTestAccessContext();
+
+      await expect(
+        handler.execute(accessContext, {
+          id: domain.id,
+          motivo: "Reagendamento",
+          ifMatch: versaoLidaPeloPrimeiroCliente,
+        }),
+      ).rejects.toThrow(PreconditionFailedError);
+
+      expect(repository.saveNewVersion).not.toHaveBeenCalled();
     });
   });
 });

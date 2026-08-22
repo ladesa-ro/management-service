@@ -304,6 +304,78 @@ export class CalendarioAgendamentoEditarOcorrenciaInputRestDto {
 }
 
 // ============================================================================
+// Adicionar Data Avulsa Input (RDATE)
+// ============================================================================
+
+@ApiSchema({ name: "CalendarioAgendamentoAdicionarDataAvulsaInputDto" })
+export class CalendarioAgendamentoAdicionarDataAvulsaInputRestDto {
+  @ApiProperty(CalendarioAgendamentoFields.dataOcorrencia.swaggerMetadata)
+  dataOcorrencia: string;
+
+  @ApiPropertyOptional(CalendarioEventoFields.diaInteiro.swaggerMetadata) diaInteiro?: boolean;
+  @ApiPropertyOptional(CalendarioEventoFields.horarioInicio.swaggerMetadata) horarioInicio?: string;
+  @ApiPropertyOptional(CalendarioEventoFields.horarioFim.swaggerMetadata) horarioFim?: string;
+
+  @ApiPropertyOptional({
+    ...CalendarioEventoFields.status.swaggerMetadata,
+    enum: ["ATIVO", "INATIVO", "RASCUNHO"],
+    description: "Status desta ocorrência avulsa (ATIVO, INATIVO, RASCUNHO)",
+  })
+  status?: string;
+
+  @ApiPropertyOptional(CalendarioAgendamentoFields.campus.swaggerMetadata)
+  campus?: CalendarioAgendamentoCampusRefInputRestDto;
+
+  @ApiPropertyOptional(CalendarioAgendamentoFields.colecao.swaggerMetadata)
+  colecao?: CalendarioAgendamentoColecaoRefInputRestDto;
+
+  @ApiPropertyOptional(CalendarioAgendamentoFields.motivo.swaggerMetadata)
+  motivo?: string;
+
+  @ApiPropertyOptional({
+    ...CalendarioEventoFields.turmas.swaggerMetadata,
+    type: () => [TurmaFindOneInputRestDto],
+  })
+  turmas?: TurmaFindOneInputRestDto[];
+
+  @ApiPropertyOptional({
+    ...CalendarioEventoFields.perfis.swaggerMetadata,
+    type: () => [PerfilFindOneInputRestDto],
+  })
+  perfis?: PerfilFindOneInputRestDto[];
+
+  @ApiPropertyOptional({
+    ...CalendarioEventoFields.calendariosLetivos.swaggerMetadata,
+    type: () => [CalendarioLetivoFindOneInputRestDto],
+  })
+  calendariosLetivos?: CalendarioLetivoFindOneInputRestDto[];
+
+  @ApiPropertyOptional({
+    ...CalendarioEventoFields.ofertasFormacao.swaggerMetadata,
+    type: () => [OfertaFormacaoFindOneInputRestDto],
+  })
+  ofertasFormacao?: OfertaFormacaoFindOneInputRestDto[];
+
+  @ApiPropertyOptional({
+    ...CalendarioEventoFields.modalidades.swaggerMetadata,
+    type: () => [ModalidadeFindOneInputRestDto],
+  })
+  modalidades?: ModalidadeFindOneInputRestDto[];
+
+  @ApiPropertyOptional({
+    ...CalendarioEventoFields.ambientes.swaggerMetadata,
+    type: () => [AmbienteFindOneInputRestDto],
+  })
+  ambientes?: AmbienteFindOneInputRestDto[];
+
+  @ApiPropertyOptional({
+    ...CalendarioEventoFields.diarios.swaggerMetadata,
+    type: () => [DiarioFindOneInputRestDto],
+  })
+  diarios?: DiarioFindOneInputRestDto[];
+}
+
+// ============================================================================
 // Cancelar Ocorrência Input (EXDATE)
 // ============================================================================
 
@@ -388,6 +460,57 @@ export class CalendarioAgendamentoEditarSerieInputRestDto {
     type: () => [DiarioFindOneInputRestDto],
   })
   diarios?: DiarioFindOneInputRestDto[];
+}
+
+// ============================================================================
+// Importar ICS Input/Output
+// ============================================================================
+
+@ApiSchema({ name: "CalendarioAgendamentoImportarIcsInputDto" })
+export class CalendarioAgendamentoImportarIcsInputRestDto {
+  @ApiProperty({
+    type: "string",
+    description: "Conteúdo do arquivo .ics (RFC 5545) a importar",
+  })
+  conteudo: string;
+
+  @ApiPropertyOptional(CalendarioAgendamentoFields.campus.swaggerMetadata)
+  campus?: CalendarioAgendamentoCampusRefInputRestDto;
+
+  @ApiPropertyOptional(CalendarioAgendamentoFields.colecao.swaggerMetadata)
+  colecao?: CalendarioAgendamentoColecaoRefInputRestDto;
+}
+
+@ApiSchema({ name: "CalendarioAgendamentoImportarIcsRejeitadoDto" })
+export class CalendarioAgendamentoImportarIcsRejeitadoRestDto {
+  @ApiProperty({ description: "Posição (1-based) do VEVENT rejeitado no arquivo" })
+  index: number;
+
+  @ApiPropertyOptional({ description: "UID do VEVENT rejeitado, quando presente no arquivo" })
+  uid: string | null;
+
+  @ApiProperty({ description: "Motivo pelo qual o VEVENT foi rejeitado" })
+  motivo: string;
+}
+
+@ApiSchema({ name: "CalendarioAgendamentoImportarIcsOutputDto" })
+export class CalendarioAgendamentoImportarIcsOutputRestDto {
+  @ApiProperty({ description: "Quantidade de agendamentos criados" })
+  criados: number;
+
+  @ApiProperty({
+    description: "Quantidade de VEVENTs pulados por já existir um agendamento com o mesmo UID",
+  })
+  puladosPorUidDuplicado: number;
+
+  @ApiProperty({
+    description: "VEVENTs rejeitados durante o parse ou a criação, com o motivo de cada um",
+    type: () => [CalendarioAgendamentoImportarIcsRejeitadoRestDto],
+  })
+  rejeitados: CalendarioAgendamentoImportarIcsRejeitadoRestDto[];
+
+  @ApiProperty({ description: "Ids dos agendamentos criados", type: [String] })
+  idsCriados: string[];
 }
 
 // ============================================================================

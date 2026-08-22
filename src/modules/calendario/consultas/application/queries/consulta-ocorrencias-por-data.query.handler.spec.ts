@@ -341,6 +341,84 @@ describe("ConsultaOcorrenciasPorDataQueryHandlerImpl", () => {
   });
 
   // ==========================================
+  // Recurrence additions (RDATE)
+  // ==========================================
+
+  describe("recurrence additions (RDATE)", () => {
+    it("should include a standalone avulsa occurrence alongside the expanded series", async () => {
+      const repository = createMockRepository();
+      const handler = createHandler(repository);
+
+      const serie = createMockAgendamento({
+        dataInicio: "2026-03-03", // terça-feira
+        dataFim: "2026-03-03",
+        repeticao: "FREQ=WEEKLY;BYDAY=TU;COUNT=3",
+      });
+
+      // Sábado avulso: não é gerado pela regra semanal de terça, e não referencia
+      // nenhuma ocorrência da série (dataOcorrenciaReferenciada nula) — é uma adição, não uma substituição.
+      const avulsa = createMockAgendamento({
+        dataInicio: "2026-03-14",
+        dataFim: "2026-03-14",
+        repeticao: null,
+        identificadorExternoSerieOrigem: serie.identificadorExterno,
+        dataOcorrenciaReferenciada: null,
+      });
+
+      (repository.findByDateRange as ReturnType<typeof vi.fn>).mockResolvedValue([
+        serie,
+        avulsa,
+      ]);
+      (repository.findExcecoesPorSeries as ReturnType<typeof vi.fn>).mockResolvedValue([]);
+
+      const result = await handler.execute(null, createQuery());
+
+      const dates = result.map((r) => new Date(r.dataInicio).toISOString().slice(0, 10));
+
+      // 3 ocorrências da regra (terças) + 1 avulsa (sábado)
+      expect(result).toHaveLength(4);
+      expect(dates).toContain("2026-03-03");
+      expect(dates).toContain("2026-03-10");
+      expect(dates).toContain("2026-03-17");
+      expect(dates).toContain("2026-03-14");
+    });
+
+    it("should not suppress the avulsa occurrence even when the series has unrelated exceptions", async () => {
+      const repository = createMockRepository();
+      const handler = createHandler(repository);
+
+      const serie = createMockAgendamento({
+        dataInicio: "2026-03-03",
+        dataFim: "2026-03-03",
+        repeticao: "FREQ=WEEKLY;BYDAY=TU;COUNT=2",
+      });
+
+      const avulsa = createMockAgendamento({
+        dataInicio: "2026-03-14",
+        dataFim: "2026-03-14",
+        repeticao: null,
+        identificadorExternoSerieOrigem: serie.identificadorExterno,
+        dataOcorrenciaReferenciada: null,
+      });
+
+      (repository.findByDateRange as ReturnType<typeof vi.fn>).mockResolvedValue([
+        serie,
+        avulsa,
+      ]);
+      // findExcecoesPorSeries só devolve exceções com dataOcorrenciaReferenciada
+      // preenchida — a avulsa nunca aparece aqui, pois a query no repositorio
+      // real filtra por essa coluna.
+      (repository.findExcecoesPorSeries as ReturnType<typeof vi.fn>).mockResolvedValue([]);
+
+      const result = await handler.execute(null, createQuery());
+
+      const dates = result.map((r) => new Date(r.dataInicio).toISOString().slice(0, 10));
+
+      expect(dates).toContain("2026-03-14");
+    });
+  });
+
+  // ==========================================
   // Edge cases
   // ==========================================
 

@@ -56,6 +56,7 @@ export function createMockAgendamentoRepository() {
     getLinhaDoTempo: vi.fn().mockResolvedValue([]),
     findExcecoesPorSeries: vi.fn().mockResolvedValue([]),
     reatribuirExcecoesParaNovaSerie: vi.fn().mockResolvedValue(undefined),
+    existsByIdentificadorExterno: vi.fn().mockResolvedValue(false),
   };
 }
 

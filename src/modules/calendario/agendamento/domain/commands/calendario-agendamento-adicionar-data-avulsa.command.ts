@@ -1,16 +1,12 @@
 import type { ObjectUuidRef } from "@/domain/abstractions";
 import { CalendarioAgendamentoFields } from "../calendario-agendamento.fields";
-import type { CalendarioAgendamentoEscopoEdicaoSerie } from "../calendario-agendamento.types";
+import type { CalendarioAgendamentoStatus } from "../calendario-agendamento.types";
 
-export const CalendarioAgendamentoEditarSerieCommandFields = {
+export const CalendarioAgendamentoAdicionarDataAvulsaCommandFields = {
   dataOcorrencia: CalendarioAgendamentoFields.dataOcorrencia,
-  escopo: CalendarioAgendamentoFields.escopo,
-  dataInicio: CalendarioAgendamentoFields.dataInicio,
-  dataFim: CalendarioAgendamentoFields.dataFim,
   diaInteiro: CalendarioAgendamentoFields.diaInteiro,
   horarioInicio: CalendarioAgendamentoFields.horarioInicio,
   horarioFim: CalendarioAgendamentoFields.horarioFim,
-  repeticao: CalendarioAgendamentoFields.repeticao,
   campus: CalendarioAgendamentoFields.campus,
   colecao: CalendarioAgendamentoFields.colecao,
   motivo: CalendarioAgendamentoFields.motivo,
@@ -24,28 +20,16 @@ export const CalendarioAgendamentoEditarSerieCommandFields = {
 };
 
 /**
- * Edita uma série recorrente a partir de uma data de referência, com dois
- * alcances possíveis:
- * - TODAS: aplica as mudanças à série inteira (nova versão da raiz).
- * - ESTA_E_SEGUINTES: encerra a regra original antes da data de referência e
- *   nasce uma nova série independente, a partir dela, com as mudanças aplicadas.
- *
- * Exceções e cancelamentos já registrados para datas anteriores permanecem
- * válidos em ambos os casos; para ESTA_E_SEGUINTES, os que caem a partir da
- * data de referência são reatribuídos à nova série.
+ * Adiciona uma data avulsa a uma série recorrente (RDATE): cria uma
+ * ocorrência extra na data indicada, que a RRULE da série não geraria. A
+ * série raiz não é alterada.
  */
-export class CalendarioAgendamentoEditarSerieCommand {
-  ifMatch?: string;
-
+export class CalendarioAgendamentoAdicionarDataAvulsaCommand {
   dataOcorrencia!: string;
-  escopo!: CalendarioAgendamentoEscopoEdicaoSerie;
-
-  dataInicio?: string;
-  dataFim?: string | null;
   diaInteiro?: boolean;
   horarioInicio?: string;
   horarioFim?: string;
-  repeticao?: string | null;
+  status?: CalendarioAgendamentoStatus;
   campus?: ObjectUuidRef | null;
   colecao?: ObjectUuidRef | null;
   motivo?: string | null;

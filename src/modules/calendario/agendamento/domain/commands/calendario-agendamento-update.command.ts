@@ -24,6 +24,8 @@ export const CalendarioAgendamentoUpdateCommandFields = {
 };
 
 export class CalendarioAgendamentoUpdateCommand {
+  ifMatch?: string;
+
   tipo?: CalendarioAgendamentoTipo;
   nome?: string | null;
   dataInicio?: string;

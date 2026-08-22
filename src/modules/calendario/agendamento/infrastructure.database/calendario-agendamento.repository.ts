@@ -1,4 +1,5 @@
 import type { FindOptionsWhere, ObjectLiteral, SelectQueryBuilder } from "typeorm";
+import { PreconditionFailedError } from "@/application/errors";
 import type { IPaginationCriteria } from "@/application/pagination";
 import type { IAccessContext } from "@/domain/abstractions";
 import { Dep, Impl } from "@/domain/dependency-injection";
@@ -144,12 +145,25 @@ export class CalendarioAgendamentoTypeOrmRepositoryAdapter
     await this.appTypeormConnection.transaction(async (manager) => {
       const repo = manager.getRepository(CalendarioAgendamentoEntity);
 
-      // Lock the old version row to prevent concurrent updates
-      await repo
-        .createQueryBuilder()
+      // Trava a linha da versão antiga e lê o estado dela sob o lock: só
+      // serializar não basta, porque a transação que espera pelo lock precisa
+      // saber se a versão que ela carregou antes do lock ainda é a vigente.
+      const travada = await repo
+        .createQueryBuilder("ca")
         .setLock("pessimistic_write")
-        .where("id = :id", { id: closedVersion.id })
+        .where("ca.id = :id", { id: closedVersion.id })
         .getOne();
+
+      // Outra transação já fechou esta versão enquanto esperávamos o lock:
+      // seguir daqui criaria uma segunda versão-filha da mesma linha, em
+      // silêncio, e a escrita mais lenta sobrescreveria a mais rápida.
+      if (travada && travada.validTo !== null) {
+        throw new PreconditionFailedError(
+          "O agendamento foi alterado por outra operação enquanto esta era processada. Recarregue e tente de novo.",
+          "CalendarioAgendamento",
+          closedVersion.id,
+        );
+      }
 
       // Close old version
       await repo.update(closedVersion.id, {
@@ -243,6 +257,12 @@ export class CalendarioAgendamentoTypeOrmRepositoryAdapter
   // ============================================================================
   // Read side
   // ============================================================================
+
+  async existsByIdentificadorExterno(identificadorExterno: string): Promise<boolean> {
+    const repo = this.appTypeormConnection.getRepository(CalendarioAgendamentoEntity);
+    const count = await repo.count({ where: { identificadorExterno } });
+    return count > 0;
+  }
 
   async getFindAllQueryResult(
     _accessContext: IAccessContext | null,
@@ -1106,12 +1126,18 @@ export class CalendarioAgendamentoTypeOrmRepositoryAdapter
   }): Promise<void> {
     const repo = this.appTypeormConnection.getRepository(CalendarioAgendamentoEntity);
 
+    // Exceções (RECURRENCE-ID/EXDATE) usam data_ocorrencia_referenciada; datas
+    // avulsas (RDATE) não referenciam ocorrência nenhuma da regra, então caem
+    // no segundo braço, comparando pela própria data_inicio.
     await repo
       .createQueryBuilder()
       .update(CalendarioAgendamentoEntity)
       .set({ identificadorExternoSerieOrigem: params.paraIdentificadorExterno })
       .where("identificador_externo_serie_origem = :de", { de: params.deIdentificadorExterno })
-      .andWhere("data_ocorrencia_referenciada >= :aPartirDe", { aPartirDe: params.aPartirDe })
+      .andWhere(
+        "(data_ocorrencia_referenciada >= :aPartirDe OR (data_ocorrencia_referenciada IS NULL AND data_inicio >= :aPartirDe))",
+        { aPartirDe: params.aPartirDe },
+      )
       .execute();
   }
 }

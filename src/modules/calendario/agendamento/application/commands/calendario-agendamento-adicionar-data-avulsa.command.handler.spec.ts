@@ -1,9 +1,6 @@
 import { BadRequestException } from "@nestjs/common";
 import { describe, expect, it, vi } from "vitest";
-import {
-  PreconditionFailedError,
-  ResourceNotFoundError,
-} from "@/application/errors/application.error";
+import { ResourceNotFoundError } from "@/application/errors/application.error";
 import {
   createMockAgendamentoRepository,
   createMockColecaoSyncService,
@@ -14,82 +11,74 @@ import {
 import { CalendarioAgendamento } from "../../domain/calendario-agendamento";
 import { CalendarioAgendamentoTipo } from "../../domain/calendario-agendamento.types";
 import { CalendarioAgendamentoConflitoService } from "../calendario-agendamento-conflito.service";
-import { CalendarioAgendamentoEditarOcorrenciaCommandHandlerImpl } from "./calendario-agendamento-editar-ocorrencia.command.handler";
+import { CalendarioAgendamentoAdicionarDataAvulsaCommandHandlerImpl } from "./calendario-agendamento-adicionar-data-avulsa.command.handler";
+
+function createConflitoService(repository: object) {
+  return new CalendarioAgendamentoConflitoService(
+    repository as never,
+    { execute: vi.fn().mockResolvedValue(null) } as never,
+    { execute: vi.fn().mockResolvedValue([]) } as never,
+  );
+}
 
 function criarSerieRecorrente(overrides: Record<string, unknown> = {}) {
   return CalendarioAgendamento.create({
     tipo: CalendarioAgendamentoTipo.AULA,
-    dataInicio: "2026-03-02",
+    dataInicio: "2026-03-03", // terça-feira
     diaInteiro: false,
     horarioInicio: "08:00:00",
     horarioFim: "09:00:00",
-    repeticao: "FREQ=WEEKLY;COUNT=10",
+    repeticao: "FREQ=WEEKLY;BYDAY=TU;COUNT=10",
     turmas: [{ id: createTestId() }],
     ...overrides,
   });
 }
 
-function createMockPerfilFindOneHandler() {
-  return { execute: vi.fn().mockResolvedValue(null) };
-}
-
-function createMockPerfilFindAllActiveHandler() {
-  return { execute: vi.fn().mockResolvedValue([]) };
-}
-
-function createConflitoService(repository: object) {
-  return new CalendarioAgendamentoConflitoService(
-    repository as any,
-    createMockPerfilFindOneHandler() as any,
-    createMockPerfilFindAllActiveHandler() as any,
-  );
-}
-
-describe("CalendarioAgendamentoEditarOcorrenciaCommandHandler", () => {
+describe("CalendarioAgendamentoAdicionarDataAvulsaCommandHandler", () => {
   function createHandler(
     overrides: {
       repository?: object;
       permissionChecker?: object;
       colecaoSyncService?: object;
-      conflitoService?: object;
     } = {},
   ) {
     const repository = overrides.repository ?? createMockAgendamentoRepository();
     const permissionChecker = overrides.permissionChecker ?? createMockPermissionChecker();
     const colecaoSyncService = overrides.colecaoSyncService ?? createMockColecaoSyncService();
-    const conflitoService = overrides.conflitoService ?? createConflitoService(repository);
 
-    const handler = new CalendarioAgendamentoEditarOcorrenciaCommandHandlerImpl(
+    const handler = new CalendarioAgendamentoAdicionarDataAvulsaCommandHandlerImpl(
       repository as any,
       permissionChecker as any,
       colecaoSyncService as any,
-      conflitoService as any,
+      createConflitoService(repository) as any,
     );
 
-    return { handler, repository, permissionChecker, colecaoSyncService, conflitoService };
+    return { handler, repository, permissionChecker, colecaoSyncService };
   }
 
-  it("should create an exception referencing the origin series", async () => {
+  it("should create an addition referencing the origin series with dataOcorrenciaReferenciada null", async () => {
     const serie = criarSerieRecorrente();
 
     const repository = createMockAgendamentoRepository();
     repository.loadById.mockResolvedValue(serie);
-    repository.getFindOneQueryResult.mockResolvedValue({ id: "excecao-id" });
+    repository.getFindOneQueryResult.mockResolvedValue({ id: "avulsa-id" });
 
     const { handler } = createHandler({ repository });
 
+    // sábado — a regra é toda terça, então essa data não é gerada pela RRULE
     const result = await handler.execute(createTestAccessContext(), {
       id: serie.id,
-      dataOcorrencia: "2026-03-09",
+      dataOcorrencia: "2026-03-14",
       horarioInicio: "10:00:00",
     });
 
-    expect(result).toEqual({ id: "excecao-id" });
+    expect(result).toEqual({ id: "avulsa-id" });
     expect(repository.save).toHaveBeenCalledOnce();
 
     const salvo = repository.save.mock.calls[0][0] as CalendarioAgendamento;
     expect(salvo.identificadorExternoSerieOrigem).toBe(serie.identificadorExterno);
-    expect(salvo.dataOcorrenciaReferenciada).toBe("2026-03-09");
+    expect(salvo.dataOcorrenciaReferenciada).toBeNull();
+    expect(salvo.dataInicio).toBe("2026-03-14");
     expect(salvo.horarioInicio).toBe("10:00:00");
     expect(salvo.repeticao).toBeNull();
   });
@@ -109,9 +98,28 @@ describe("CalendarioAgendamentoEditarOcorrenciaCommandHandler", () => {
     await expect(
       handler.execute(createTestAccessContext(), {
         id: serie.id,
-        dataOcorrencia: "2026-03-09",
+        dataOcorrencia: "2026-03-14",
       }),
     ).rejects.toThrow(BadRequestException);
+  });
+
+  it("should reject a date already generated by the RRULE", async () => {
+    const serie = criarSerieRecorrente();
+
+    const repository = createMockAgendamentoRepository();
+    repository.loadById.mockResolvedValue(serie);
+
+    const { handler } = createHandler({ repository });
+
+    // 2026-03-10 é uma terça-feira dentro do alcance da regra semanal
+    await expect(
+      handler.execute(createTestAccessContext(), {
+        id: serie.id,
+        dataOcorrencia: "2026-03-10",
+      }),
+    ).rejects.toThrow(BadRequestException);
+
+    expect(repository.save).not.toHaveBeenCalled();
   });
 
   it("should exclude the origin series from the conflict check", async () => {
@@ -119,13 +127,13 @@ describe("CalendarioAgendamentoEditarOcorrenciaCommandHandler", () => {
 
     const repository = createMockAgendamentoRepository();
     repository.loadById.mockResolvedValue(serie);
-    repository.getFindOneQueryResult.mockResolvedValue({ id: "excecao-id" });
+    repository.getFindOneQueryResult.mockResolvedValue({ id: "avulsa-id" });
 
     const { handler } = createHandler({ repository });
 
     await handler.execute(createTestAccessContext(), {
       id: serie.id,
-      dataOcorrencia: "2026-03-09",
+      dataOcorrencia: "2026-03-14",
     });
 
     expect(repository.findConflicting).toHaveBeenCalledWith(
@@ -147,7 +155,7 @@ describe("CalendarioAgendamentoEditarOcorrenciaCommandHandler", () => {
     await expect(
       handler.execute(createTestAccessContext(), {
         id: serie.id,
-        dataOcorrencia: "2026-03-09",
+        dataOcorrencia: "2026-03-14",
       }),
     ).rejects.toThrow(BadRequestException);
   });
@@ -161,7 +169,7 @@ describe("CalendarioAgendamentoEditarOcorrenciaCommandHandler", () => {
     await expect(
       handler.execute(createTestAccessContext(), {
         id: createTestId(),
-        dataOcorrencia: "2026-03-09",
+        dataOcorrencia: "2026-03-14",
       }),
     ).rejects.toThrow();
   });
@@ -178,146 +186,51 @@ describe("CalendarioAgendamentoEditarOcorrenciaCommandHandler", () => {
     await expect(
       handler.execute(createTestAccessContext(), {
         id: serie.id,
-        dataOcorrencia: "2026-03-09",
+        dataOcorrencia: "2026-03-14",
       }),
     ).rejects.toThrow(ResourceNotFoundError);
   });
 
-  it("should inherit colecao from the origin series when dto does not provide colecao", async () => {
-    const serie = criarSerieRecorrente({ colecao: { id: createTestId() } });
-
-    const repository = createMockAgendamentoRepository();
-    repository.loadById.mockResolvedValue(serie);
-    repository.getFindOneQueryResult.mockResolvedValue({ id: "excecao-id" });
-
-    const { handler } = createHandler({ repository });
-
-    await handler.execute(createTestAccessContext(), {
-      id: serie.id,
-      dataOcorrencia: "2026-03-09",
-    });
-
-    const salvo = repository.save.mock.calls[0][0] as CalendarioAgendamento;
-    expect(salvo.colecao).toEqual(serie.colecao);
-  });
-
-  it("should not override colecao when dto explicitly provides another colecao", async () => {
-    const serie = criarSerieRecorrente({ colecao: { id: createTestId() } });
-    const colecaoExplicita = { id: createTestId() };
-
-    const repository = createMockAgendamentoRepository();
-    repository.loadById.mockResolvedValue(serie);
-    repository.getFindOneQueryResult.mockResolvedValue({ id: "excecao-id" });
-
-    const { handler } = createHandler({ repository });
-
-    await handler.execute(createTestAccessContext(), {
-      id: serie.id,
-      dataOcorrencia: "2026-03-09",
-      colecao: colecaoExplicita,
-    });
-
-    const salvo = repository.save.mock.calls[0][0] as CalendarioAgendamento;
-    expect(salvo.colecao).toEqual(colecaoExplicita);
-    expect(salvo.colecao).not.toEqual(serie.colecao);
-  });
-
   describe("colecao sync hook", () => {
-    it("should register a sync change when the exception has a colecao", async () => {
+    it("should register a sync change when the addition has a colecao", async () => {
       const colecaoId = createTestId();
       const serie = criarSerieRecorrente({ colecao: { id: colecaoId } });
 
       const repository = createMockAgendamentoRepository();
       repository.loadById.mockResolvedValue(serie);
-      repository.getFindOneQueryResult.mockResolvedValue({ id: "excecao-id" });
+      repository.getFindOneQueryResult.mockResolvedValue({ id: "avulsa-id" });
 
       const colecaoSyncService = createMockColecaoSyncService();
       const { handler } = createHandler({ repository, colecaoSyncService });
 
       await handler.execute(createTestAccessContext(), {
         id: serie.id,
-        dataOcorrencia: "2026-03-09",
+        dataOcorrencia: "2026-03-14",
       });
 
       expect(colecaoSyncService.registrarMudanca).toHaveBeenCalledWith({
         colecaoId,
         agendamentoId: expect.any(String),
-        tipoOperacao: "editar-ocorrencia",
+        tipoOperacao: "adicionar-data-avulsa",
       });
     });
 
-    it("should not register a sync change when the exception has no colecao", async () => {
+    it("should not register a sync change when the addition has no colecao", async () => {
       const serie = criarSerieRecorrente();
 
       const repository = createMockAgendamentoRepository();
       repository.loadById.mockResolvedValue(serie);
-      repository.getFindOneQueryResult.mockResolvedValue({ id: "excecao-id" });
+      repository.getFindOneQueryResult.mockResolvedValue({ id: "avulsa-id" });
 
       const colecaoSyncService = createMockColecaoSyncService();
       const { handler } = createHandler({ repository, colecaoSyncService });
 
       await handler.execute(createTestAccessContext(), {
         id: serie.id,
-        dataOcorrencia: "2026-03-09",
+        dataOcorrencia: "2026-03-14",
       });
 
       expect(colecaoSyncService.registrarMudanca).not.toHaveBeenCalled();
-    });
-  });
-
-  describe("escrita condicional (If-Match)", () => {
-    it("should proceed when ifMatch matches the current version", async () => {
-      const serie = criarSerieRecorrente();
-
-      const repository = createMockAgendamentoRepository();
-      repository.loadById.mockResolvedValue(serie);
-      repository.getFindOneQueryResult.mockResolvedValue({ id: "excecao-id" });
-
-      const { handler } = createHandler({ repository });
-
-      const result = await handler.execute(createTestAccessContext(), {
-        id: serie.id,
-        dataOcorrencia: "2026-03-09",
-        ifMatch: String(serie.version),
-      });
-
-      expect(result).toEqual({ id: "excecao-id" });
-    });
-
-    it("should reject with PreconditionFailedError (412) when ifMatch is stale", async () => {
-      const serie = criarSerieRecorrente();
-
-      const repository = createMockAgendamentoRepository();
-      repository.loadById.mockResolvedValue(serie);
-
-      const { handler } = createHandler({ repository });
-
-      await expect(
-        handler.execute(createTestAccessContext(), {
-          id: serie.id,
-          dataOcorrencia: "2026-03-09",
-          ifMatch: String(serie.version + 1),
-        }),
-      ).rejects.toThrow(PreconditionFailedError);
-
-      expect(repository.save).not.toHaveBeenCalled();
-    });
-
-    it("should proceed as before (regressão) when ifMatch is not provided", async () => {
-      const serie = criarSerieRecorrente();
-
-      const repository = createMockAgendamentoRepository();
-      repository.loadById.mockResolvedValue(serie);
-      repository.getFindOneQueryResult.mockResolvedValue({ id: "excecao-id" });
-
-      const { handler } = createHandler({ repository });
-
-      const result = await handler.execute(createTestAccessContext(), {
-        id: serie.id,
-        dataOcorrencia: "2026-03-09",
-      });
-
-      expect(result).toEqual({ id: "excecao-id" });
     });
   });
 });

@@ -1,5 +1,6 @@
 import { BadRequestException } from "@nestjs/common";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+import { PreconditionFailedError } from "@/application/errors/application.error";
 import {
   createMockAgendamentoRepository,
   createMockColecaoSyncService,
@@ -12,6 +13,7 @@ import {
   CalendarioAgendamentoEscopoEdicaoSerie,
   CalendarioAgendamentoTipo,
 } from "../../domain/calendario-agendamento.types";
+import { CalendarioAgendamentoConflitoService } from "../calendario-agendamento-conflito.service";
 import { CalendarioAgendamentoEditarSerieCommandHandlerImpl } from "./calendario-agendamento-editar-serie.command.handler";
 
 function criarSerieRecorrente(overrides: Record<string, unknown> = {}) {
@@ -28,25 +30,44 @@ function criarSerieRecorrente(overrides: Record<string, unknown> = {}) {
   });
 }
 
+function createMockPerfilFindOneHandler() {
+  return { execute: vi.fn().mockResolvedValue(null) };
+}
+
+function createMockPerfilFindAllActiveHandler() {
+  return { execute: vi.fn().mockResolvedValue([]) };
+}
+
+function createConflitoService(repository: object) {
+  return new CalendarioAgendamentoConflitoService(
+    repository as any,
+    createMockPerfilFindOneHandler() as any,
+    createMockPerfilFindAllActiveHandler() as any,
+  );
+}
+
 describe("CalendarioAgendamentoEditarSerieCommandHandler", () => {
   function createHandler(
     overrides: {
       repository?: object;
       permissionChecker?: object;
       colecaoSyncService?: object;
+      conflitoService?: object;
     } = {},
   ) {
     const repository = overrides.repository ?? createMockAgendamentoRepository();
     const permissionChecker = overrides.permissionChecker ?? createMockPermissionChecker();
     const colecaoSyncService = overrides.colecaoSyncService ?? createMockColecaoSyncService();
+    const conflitoService = overrides.conflitoService ?? createConflitoService(repository);
 
     const handler = new CalendarioAgendamentoEditarSerieCommandHandlerImpl(
       repository as any,
       permissionChecker as any,
       colecaoSyncService as any,
+      conflitoService as any,
     );
 
-    return { handler, repository, permissionChecker, colecaoSyncService };
+    return { handler, repository, permissionChecker, colecaoSyncService, conflitoService };
   }
 
   it("should throw when the target agendamento is not recurring", async () => {
@@ -379,6 +400,65 @@ describe("CalendarioAgendamentoEditarSerieCommandHandler", () => {
       });
 
       expect(colecaoSyncService.registrarMudanca).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("escrita condicional (If-Match)", () => {
+    it("should proceed when ifMatch matches the current version", async () => {
+      const serie = criarSerieRecorrente();
+
+      const repository = createMockAgendamentoRepository();
+      repository.loadById.mockResolvedValue(serie);
+      repository.getFindOneQueryResult.mockResolvedValue({ id: "nova-versao-id" });
+
+      const { handler } = createHandler({ repository });
+
+      const result = await handler.execute(createTestAccessContext(), {
+        id: serie.id,
+        dataOcorrencia: "2026-03-06",
+        escopo: CalendarioAgendamentoEscopoEdicaoSerie.TODAS,
+        ifMatch: String(serie.version),
+      });
+
+      expect(result).toEqual({ id: "nova-versao-id" });
+    });
+
+    it("should reject with PreconditionFailedError (412) when ifMatch is stale", async () => {
+      const serie = criarSerieRecorrente();
+
+      const repository = createMockAgendamentoRepository();
+      repository.loadById.mockResolvedValue(serie);
+
+      const { handler } = createHandler({ repository });
+
+      await expect(
+        handler.execute(createTestAccessContext(), {
+          id: serie.id,
+          dataOcorrencia: "2026-03-06",
+          escopo: CalendarioAgendamentoEscopoEdicaoSerie.TODAS,
+          ifMatch: String(serie.version + 1),
+        }),
+      ).rejects.toThrow(PreconditionFailedError);
+
+      expect(repository.saveNewVersion).not.toHaveBeenCalled();
+    });
+
+    it("should proceed as before (regressão) when ifMatch is not provided", async () => {
+      const serie = criarSerieRecorrente();
+
+      const repository = createMockAgendamentoRepository();
+      repository.loadById.mockResolvedValue(serie);
+      repository.getFindOneQueryResult.mockResolvedValue({ id: "nova-versao-id" });
+
+      const { handler } = createHandler({ repository });
+
+      const result = await handler.execute(createTestAccessContext(), {
+        id: serie.id,
+        dataOcorrencia: "2026-03-06",
+        escopo: CalendarioAgendamentoEscopoEdicaoSerie.TODAS,
+      });
+
+      expect(result).toEqual({ id: "nova-versao-id" });
     });
   });
 });
