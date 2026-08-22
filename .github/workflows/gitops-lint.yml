@@ -19,7 +19,6 @@ jobs:
   chart:
     name: "Renderizar e conferir o chart"
     runs-on: ubuntu-latest
-    continue-on-error: true
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -34,10 +33,12 @@ jobs:
       - name: "Conferir dependência, lint e render"
         run: |
           set -euo pipefail
+          helm repo add stakater https://stakater.github.io/stakater-charts
+          helm repo update
           for chart in gitops/apps/*; do
             helm dependency build "$chart"
             helm lint "$chart" -f "$chart/values-development.yaml"
-            helm template "$(basename "$chart")" "$chart" -f "$chart/values-development.yaml" > /tmp/render.yaml
+            helm template "$(basename "$chart")" "$chart" -f "$chart/values-development.yaml" >> /tmp/render.yaml
           done
 
       - name: "Exigir que toda imagem tenha tag ou digest"
