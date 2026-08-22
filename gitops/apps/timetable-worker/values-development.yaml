@@ -7,10 +7,12 @@ application:
       readOnlyRootFilesystem: false
       runAsNonRoot: false
     enabled: true
-    envFrom:
-      timetable-worker-config:
-        name: ladesa-ro-timetable-worker-config
-        type: secret
+    env:
+      QUEUE_DATABASE_URL:
+        valueFrom:
+          secretKeyRef:
+            key: DATABASE_URL
+            name: ladesa-ro-api-config
     image:
       pullPolicy: Always
       repository: ghcr.io/ladesa-ro/management-service/timetable-worker

@@ -26,8 +26,16 @@ function inteiro(nome: string, padrao: number): number {
   return numero;
 }
 
+// A fila vive num schema (`bullmq`) do próprio banco da aplicação, então
+// DATABASE_URL é o padrão sensato quando QUEUE_DATABASE_URL não é declarada.
+// `||` e não `??`: variável declarada com valor vazio precisa cair no fallback
+// igual a variável ausente.
+function urlDoBanco(): string {
+  return process.env.QUEUE_DATABASE_URL || obrigatorio("DATABASE_URL");
+}
+
 export const config = {
-  bancoUrl: obrigatorio("QUEUE_DATABASE_URL"),
+  bancoUrl: urlDoBanco(),
   schema: process.env.QUEUE_SCHEMA ?? "bullmq",
   fila: process.env.QUEUE_TIMETABLE_GENERATE ?? "timetable-generate",
   binario: process.env.TIMETABLE_WORKER_BINARY ?? "/opt/ladesa/ladesa-timetable-generator",
