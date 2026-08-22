@@ -5,7 +5,7 @@
 | Termo | Vá pra |
 |---|---|
 | Por que NestJS sobre Bun, não Express/Fastify/Node puro | [ADR-002: NestJS + Bun](#adr-002-nestjs-e-bun) |
-| Por que RabbitMQ entre este serviço e o timetable-generator | [ADR-006: RabbitMQ](#adr-006-rabbitmq) |
+| Por que RabbitMQ entre este serviço e o timetable-generator (superado, ver [Message broker](message-broker.md)) | [ADR-006: RabbitMQ](#adr-006-rabbitmq) |
 | Por que JSONB pra guardar requisição e resposta do solver | [ADR-007: JSONB no contrato do solver](#adr-007-jsonb-no-contrato-do-solver) |
 
 ## ADR-002: NestJS e Bun
@@ -22,7 +22,7 @@
 
 ## ADR-006: RabbitMQ
 
-**Status**: aceito.
+**Status**: superado. O serviço migrou de RabbitMQ/Rascal para BullMQ sobre o backend PostgreSQL nativo dele, sem Redis — ver [Message broker](message-broker.md) para o desenho atual. Registro abaixo preservado como histórico da decisão original, não como estado do sistema.
 
 **Contexto**: a geração de horário é uma operação computacionalmente intensiva, o solver pode levar de segundos a minutos conforme a complexidade. O usuário não deve ficar bloqueado esperando o resultado. O timetable-generator (C#) precisa ser desacoplado do management-service (TypeScript).
 
