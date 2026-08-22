@@ -29,7 +29,7 @@ O workflow **não aplica nada no cluster**, diferente de antes. Nenhum step de l
 
 ## Deploy via GitOps
 
-O deploy deixou de ser um script imperativo (`helm upgrade` rodado por um runner de CI) e virou declaração reconciliada pelo [Argo CD](https://github.com/ladesa-ro/infrastructure). A estrutura fica em `gitops/`:
+O deploy deixou de ser um script imperativo (`helm upgrade` rodado por um runner de CI) e virou declaração reconciliada pelo [Argo CD](https://ladesa-ro.github.io/infrastructure/aprender/argocd/) (conceito e o padrão app-of-apps explicados na documentação da infrastructure, aqui só o fato deste serviço). A estrutura fica em `gitops/`:
 
 ```
 gitops/
@@ -60,9 +60,9 @@ spec:
 
 `automated: { prune: true, selfHeal: true }` significa que o Argo CD aplica qualquer mudança em `gitops/apps/api/values-development.yaml` sozinho, assim que o PR é mergeado em `main`, sem step de CI/CD nenhum disparando o deploy. Trocar configuração é editar o `values-development.yaml` do componente e abrir um pull request, com revisão e histórico, ver [Deploy](../operacao/deploy.md).
 
-Os dois `PersistentVolumeClaim` (upload da API, sessão do WAHA) não fazem parte de nenhum release Helm e continuam fora de `gitops/`, deliberadamente: spec de PVC é largamente imutável, declarar um que divirja do que já existe no cluster viraria erro de sincronização. Segredo nenhum vive em `gitops/`, os dois componentes consomem `Secret` do Kubernetes por referência, produzido a partir do [Infisical](https://infisical.ladesa.com.br).
+Os dois `PersistentVolumeClaim` (upload da API, sessão do WAHA) não fazem parte de nenhum release Helm e continuam fora de `gitops/`, deliberadamente: spec de PVC é largamente imutável, declarar um que divirja do que já existe no cluster viraria erro de sincronização. Segredo nenhum vive em `gitops/`, os dois componentes consomem `Secret` do Kubernetes por referência, produzido a partir do [Infisical](https://ladesa-ro.github.io/infrastructure/aprender/infisical/) (o operador que sincroniza o segredo pro cluster está documentado lá, não aqui).
 
-HTTPS é obtido via `cert-manager` e `Ingress`, pré-configurado em `values-development.yaml` de cada componente:
+HTTPS é obtido via [`cert-manager`](https://ladesa-ro.github.io/infrastructure/aprender/tls-automatico/) e `Ingress`, pré-configurado em `values-development.yaml` de cada componente:
 
 ```yaml
 ingress:
@@ -78,7 +78,7 @@ ingress:
 
 ## GitOps Lint
 
-`.github/workflows/gitops-lint.yml` roda em todo PR que toque `gitops/`, e também no push em `main`. Pra cada chart em `gitops/apps/*`: `helm dependency build`, `helm lint` contra o `values-development.yaml`, e `helm template` renderizando o manifesto final. Um step adicional falha o build se algum manifesto renderizado tiver imagem sem tag nem digest (`image: repositorio` sem `:tag` no final), a mesma checagem de supply chain que a [infrastructure](https://github.com/ladesa-ro/infrastructure) já aplica em outro contexto.
+`.github/workflows/gitops-lint.yml` roda em todo PR que toque `gitops/`, e também no push em `main`. Pra cada chart em `gitops/apps/*`: `helm dependency build`, `helm lint` contra o `values-development.yaml`, e `helm template` renderizando o manifesto final. Um step adicional falha o build se algum manifesto renderizado tiver imagem sem tag nem digest (`image: repositorio` sem `:tag` no final), a mesma prática de [supply chain](https://ladesa-ro.github.io/infrastructure/aprender/supply-chain-e-sbom/) que a infrastructure documenta pro cluster inteiro.
 
 ## Publicação de docs/ no GitHub Pages
 

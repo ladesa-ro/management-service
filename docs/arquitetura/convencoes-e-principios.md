@@ -49,7 +49,7 @@
 - **Composition over Inheritance**: DTOs usam `Mixin()`/`ts-mixer`, não herança em cadeia.
 - **KISS**: a solução mais simples que resolve o problema é a melhor.
 - **YAGNI**: não implementar o que ninguém pediu, não adicionar parâmetro "por precaução".
-- **DRY**: eliminar redundância lógica real. Três linhas parecidas que representam conceitos distintos não são duplicação, não crie abstração prematura pra unificá-las.
+- **DRY**: eliminar redundância lógica real. Três linhas parecidas que representam conceitos distintos não são duplicação, e não justificam abstração prematura pra unificá-las.
 - **SSOT**: cada dado ou regra tem uma origem autoritativa única. Schema Zod fica no domínio e é reutilizado na apresentação, metadado de campo é definido uma vez em `QueryFields` e consumido por REST e GraphQL.
 
 ## Arquitetura e organização

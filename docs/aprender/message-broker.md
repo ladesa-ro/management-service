@@ -1,16 +1,10 @@
 # Message broker
 
-**TLDR**: um message broker é um intermediário de mensagens assíncronas entre serviços, o equivalente a uma caixa postal, o serviço que envia e o que recebe não precisam estar online ao mesmo tempo.
+**TLDR**: o conceito geral de message broker, e a comparação entre RabbitMQ/Kafka/NATS, já está explicado em detalhe na documentação da [infrastructure](https://ladesa-ro.github.io/infrastructure/aprender/mensageria/). Esta página cobre só um ângulo que aquela não cobre: os dois padrões de uso, RPC e fire-and-forget.
 
-Um **message broker** desacopla quem produz uma mensagem de quem consome. O produtor deposita a mensagem numa fila, o consumidor retira quando estiver pronto para processá-la.
+## RPC vs. fire-and-forget
 
-```mermaid
-flowchart LR
-    P["Produtor"] -- "publica" --> Q["Fila"]
-    Q -- "entrega" --> C["Consumidor"]
-```
-
-Dois padrões comuns de uso:
+Dois padrões comuns de uso de um message broker, independente de qual ferramenta (RabbitMQ, Kafka, NATS):
 
 - **RPC** (request/response): o produtor publica uma mensagem de requisição numa fila e espera uma resposta numa fila separada, geralmente com timeout.
 - **Fire-and-forget**: o produtor publica e segue em frente, sem esperar confirmação nem resposta.
@@ -26,8 +20,8 @@ flowchart TD
     end
 ```
 
-O ganho principal de um message broker é **resiliência a indisponibilidade temporária**: se o consumidor está fora do ar, a mensagem espera na fila em vez de se perder, e é entregue quando o consumidor volta. O trade-off é consistência eventual em vez de imediata, e a necessidade de operar mais um componente de infraestrutura.
+RPC serve quando quem publica precisa do resultado antes de continuar. Fire-and-forget serve quando o produtor só precisa garantir que a mensagem foi entregue, sem depender do resultado do processamento pra seguir em frente.
 
 ## Pra ir além
 
-O [tutorial oficial do RabbitMQ](https://www.rabbitmq.com/tutorials) cobre os padrões de troca de mensagem (fila simples, publish/subscribe, roteamento, RPC) com exemplo executável em várias linguagens, sem depender de nenhum framework de aplicação específico.
+[Mensageria e streaming](https://ladesa-ro.github.io/infrastructure/aprender/mensageria/), na documentação da infrastructure, cobre o conceito geral de message broker e compara RabbitMQ, Kafka e NATS. O [tutorial oficial do RabbitMQ](https://www.rabbitmq.com/tutorials) cobre os padrões de troca de mensagem com exemplo executável em várias linguagens.
