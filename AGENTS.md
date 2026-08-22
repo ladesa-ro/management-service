@@ -1,8 +1,8 @@
-# AGENTS.md — Instruções para Agentes de IA
+# AGENTS.md: instruções para agentes de IA
 
 Este arquivo contém diretrizes operacionais para qualquer agente de IA que atue neste repositório (por exemplo: Codex, Claude, Gemini, ChatGPT ou similares). Ele define padrões obrigatórios de comportamento, qualidade técnica e governança de mudanças.
 
-A documentação detalhada permanece segmentada dentro do diretório `.claude/docs/` (ou equivalente), devendo ser consultada conforme o contexto da tarefa.
+A documentação detalhada vive em [`docs/`](docs/index.md), organizada em três trilhas (Aprender, Arquitetura, Operação, ver [Diátaxis](docs/aprender/diataxis.md)), e deve ser consultada conforme o contexto da tarefa. Os arquivos em `.claude/docs/` foram migrados pra lá e hoje só apontam pro destino certo.
 
 ---
 
@@ -18,14 +18,9 @@ A documentação detalhada permanece segmentada dentro do diretório `.claude/do
 
 ## Governança de documentação
 
-### README.md
+### README.md e docs/
 
-O `README.md` é considerado documento de entrada do projeto e deve permanecer:
-
-* Completo
-* Atualizado
-* Executável (passo a passo funcional)
-* Consistente com o estado atual do código
+O `README.md` é um resumo curto (visão geral, quick start, link pra documentação completa), não o documento de entrada detalhado. Ele **não** deve crescer de volta pra conter passo a passo, variável de ambiente ou explicação de arquitetura, isso pertence a [`docs/`](docs/index.md).
 
 Qualquer mudança que impacte:
 
@@ -38,12 +33,12 @@ Qualquer mudança que impacte:
 * Integrações
 * Fluxos operacionais
 
-**deve obrigatoriamente atualizar o README.md.**
+**deve atualizar a página certa de `docs/`**, seguindo o modo Diátaxis correspondente (ver [Estrutura de conteúdo](docs/operacao/desenvolvimento.md#estrutura-de-conteudo-modo-e-voz-por-secao)): fato novo sobre este serviço vai pra [Arquitetura](docs/arquitetura/index.md), passo executável novo vai pra [Operação](docs/operacao/index.md). Só atualize o `README.md` se a mudança afetar o resumo em si (nova tecnologia central, novo link de ambiente público).
 
-O conteúdo deve atender simultaneamente dois perfis:
+O conteúdo de `docs/` deve atender simultaneamente dois perfis:
 
-1. Desenvolvedor iniciante — precisa de contexto e instruções passo a passo
-2. Desenvolvedor experiente — precisa de detalhes técnicos objetivos
+1. Desenvolvedor iniciante: precisa de contexto e instruções passo a passo
+2. Desenvolvedor experiente: precisa de detalhes técnicos objetivos
 
 ---
 
@@ -196,7 +191,7 @@ Aplicável a:
 Exceção:
 
 ```text
-GraphQL DTO → Date
+GraphQL DTO -> Date
 ```
 
 Conversão ocorre apenas no mapper de apresentação.

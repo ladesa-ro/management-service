@@ -1,0 +1,84 @@
+---
+site_name: management-service
+site_description: Serviço de gestão do Ladesa, arquitetura hexagonal com DDD, TypeScript, Bun, GraphQL e TypeORM
+site_url: https://ladesa-ro.github.io/management-service/
+repo_url: https://github.com/ladesa-ro/management-service
+repo_name: ladesa-ro/management-service
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  language: pt-BR
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Tema escuro
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Tema claro
+  features:
+    - navigation.top
+    - content.code.copy
+    - content.action.edit
+
+markdown_extensions:
+  - tables
+  - admonition
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - toc:
+      permalink: true
+  - pymdownx.highlight
+  - pymdownx.snippets:
+      base_path: docs
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+
+nav:
+  - Início: index.md
+  - Aprender:
+      - Visão geral: aprender/index.md
+      - Arquitetura hexagonal, DDD e CQRS: aprender/arquitetura-hexagonal.md
+      - NestJS: aprender/nestjs.md
+      - ORM, migrações e transações: aprender/orm-e-banco-de-dados.md
+      - Autenticação (JWT, JWKS, OAuth2): aprender/autenticacao.md
+      - REST, GraphQL e DTO: aprender/graphql-e-rest.md
+      - Message broker: aprender/message-broker.md
+      - Containers e Docker: aprender/containers.md
+      - Diátaxis: aprender/diataxis.md
+      - Normas de redação técnica: aprender/normas-de-redacao-tecnica.md
+      - Documentação como código: aprender/documentacao-como-codigo.md
+  - Arquitetura:
+      - Visão geral: arquitetura/index.md
+      - Camadas e estrutura: arquitetura/camadas-e-estrutura.md
+      - Padrões de código: arquitetura/padroes-de-codigo.md
+      - Mapeamento entre camadas: arquitetura/mapeamento-entre-camadas.md
+      - Decisões arquiteturais: arquitetura/decisoes-arquiteturais.md
+      - Decisões de arquitetura da plataforma: arquitetura/decisoes-de-plataforma.md
+      - Convenções e princípios: arquitetura/convencoes-e-principios.md
+      - Autenticação e autorização: arquitetura/autenticacao-e-autorizacao.md
+      - Banco de dados e transações: arquitetura/banco-de-dados-e-transacoes.md
+      - APIs REST e GraphQL: arquitetura/apis-rest-e-graphql.md
+      - Message broker: arquitetura/message-broker.md
+      - WebSockets e notificações: arquitetura/websockets-e-notificacoes.md
+      - Testes: arquitetura/testes.md
+      - CI/CD e deploy: arquitetura/ci-cd-e-deploy.md
+      - Stack tecnológico: arquitetura/stack-tecnologico.md
+      - Diagrama de entidades: arquitetura/diagrama-de-entidades.md
+  - Operação:
+      - Visão geral: operacao/index.md
+      - Comece por aqui: operacao/comecando.md
+      - Contribuindo: operacao/contribuindo.md
+      - Scripts disponíveis: operacao/scripts.md
+      - Deploy em desenvolvimento: operacao/deploy.md
+      - Dicas e troubleshooting: operacao/troubleshooting.md
+      - Segurança: operacao/seguranca.md
+      - Desenvolvimento: operacao/desenvolvimento.md
+      - Pendências: operacao/pendencias.md
