@@ -1,6 +1,7 @@
 import { Injectable, Logger, OnModuleInit } from "@nestjs/common";
 import { Dep } from "@/domain/dependency-injection";
 import { MessageBrokerContainerService } from "@/infrastructure.message-broker";
+import { IEstagiarioRepository } from "@/modules/estagio/estagiario/domain/repositories";
 import { IEstagioRepository } from "@/modules/estagio/estagio/domain/repositories";
 import { FolhaPontoLinkService } from "../services/folha-ponto-link.service";
 import { FolhaPontoWhatsappService } from "../services/folha-ponto-whatsapp.service";
@@ -14,6 +15,7 @@ export interface FolhaPontoCreatedEventPayload {
   quantidadeHoras: number;
   telefoneSupervisor: string;
   nomeSupervisor: string;
+  nomeEstagiario?: string;
   tokenAprovacaoId: string;
   tokenRejeicaoId: string;
   tokenCancelamentoId: string;
@@ -28,6 +30,7 @@ export class FolhaPontoNotificacaoConsumer implements OnModuleInit {
     private readonly whatsappService: FolhaPontoWhatsappService,
     private readonly linkService: FolhaPontoLinkService,
     @Dep(IEstagioRepository) private readonly estagioRepository: IEstagioRepository,
+    @Dep(IEstagiarioRepository) private readonly estagiarioRepository: IEstagiarioRepository,
   ) {}
 
   async onModuleInit(): Promise<void> {
@@ -72,7 +75,18 @@ export class FolhaPontoNotificacaoConsumer implements OnModuleInit {
       throw new Error(`Estágio ${payload.estagioId} não encontrado`);
     }
 
-    const nomeEstagiario = "Estagiário";
+    let nomeEstagiario = payload.nomeEstagiario;
+
+    if (!nomeEstagiario && estagio.estagiario?.id) {
+      const estagiarioResult = await this.estagiarioRepository.getFindOneQueryResult(null, {
+        id: estagio.estagiario.id,
+      });
+      nomeEstagiario = estagiarioResult?.perfil?.usuario?.nome ?? undefined;
+    }
+
+    if (!nomeEstagiario) {
+      nomeEstagiario = "Estagiário";
+    }
 
     await this.whatsappService.enviarSolicitacaoAprovacao({
       folhaPontoId: payload.folhaPontoId,
@@ -82,9 +96,9 @@ export class FolhaPontoNotificacaoConsumer implements OnModuleInit {
       horaInicio: payload.horaInicio,
       horaFim: payload.horaFim,
       quantidadeHoras: payload.quantidadeHoras,
-      linkAprovar: this.linkService.gerarLink(payload.tokenAprovacaoId),
-      linkRejeitar: this.linkService.gerarLink(payload.tokenRejeicaoId),
-      linkCancelar: this.linkService.gerarLink(payload.tokenCancelamentoId),
+      linkAprovar: this.linkService.gerarLinkPublic(payload.tokenAprovacaoId),
+      linkRejeitar: this.linkService.gerarLinkPublic(payload.tokenRejeicaoId),
+      linkCancelar: this.linkService.gerarLinkPublic(payload.tokenCancelamentoId),
     });
   }
 }

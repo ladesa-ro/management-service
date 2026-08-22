@@ -1,9 +1,13 @@
 import { ConflictException, Injectable, Logger, NotFoundException } from "@nestjs/common";
+import { IsNull, Not } from "typeorm";
 import { Dep } from "@/domain/dependency-injection";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
+import { getNowISO } from "@/utils/date";
 import { FolhaPonto } from "../../domain/folha-ponto";
 import { FolhaPontoToken, FolhaPontoTokenTipo } from "../../domain/folha-ponto-token";
 import { IFolhaPontoRepository, IFolhaPontoTokenRepository } from "../../domain/repositories";
+import { FolhaPontoTypeormEntity } from "../../infrastructure.database/typeorm/folha-ponto.typeorm.entity";
+import { FolhaPontoTypeormMapper } from "../../infrastructure.database/typeorm/folha-ponto.typeorm.mapper";
 import { FolhaPontoTokenTypeormEntity } from "../../infrastructure.database/typeorm/folha-ponto-token.typeorm.entity";
 import { FolhaPontoTokenTypeormMapper } from "../../infrastructure.database/typeorm/folha-ponto-token.typeorm.mapper";
 
@@ -23,17 +27,23 @@ export class FolhaPontoTokenConfirmHandler {
 
   /**
    * Confirma a ação validando o token. Usa Pessimistic Lock na transação.
+   * TODAS as operações de leitura e escrita usam o EntityManager da transação
+   * para evitar deadlocks com conexões separadas do pool.
    */
   async confirmar(
     tokenId: string,
     ip: string | null,
     userAgent: string | null,
-  ): Promise<{ acao: FolhaPontoTokenTipo; folhaPontoId: string }> {
+  ): Promise<{ acao: FolhaPontoTokenTipo; folhaPontoId: string; folhaPonto: FolhaPonto }> {
     return this.dataSource.transaction(async (manager) => {
-      // 1. Pessimistic Lock no token para evitar duplo-clique
-      const tokenEntity = await manager.getRepository(FolhaPontoTokenTypeormEntity).findOne({
+      const tokenRepo = manager.getRepository(FolhaPontoTokenTypeormEntity);
+      const folhaPontoRepo = manager.getRepository(FolhaPontoTypeormEntity);
+
+      // 1. Pessimistic Lock no token para evitar duplo-clique.
+      // IMPORTANTE: não carregar relations junto com o lock — o PostgreSQL não aceita
+      // FOR UPDATE em outer joins ("cannot be applied to the nullable side of an outer join").
+      const tokenEntity = await tokenRepo.findOne({
         where: { id: tokenId },
-        relations: { folhaPonto: true },
         lock: { mode: "pessimistic_write" },
       });
       if (!tokenEntity) {
@@ -53,10 +63,15 @@ export class FolhaPontoTokenConfirmHandler {
         throw new ConflictException("Este link expirou e não pode mais ser utilizado.");
       }
 
-      const folhaPonto = await this.repository.loadById(null, token.folhaPonto.id);
-      if (!folhaPonto) {
+      const folhaPontoEntity = await folhaPontoRepo.findOne({
+        where: { id: token.folhaPonto.id, dateDeleted: IsNull() },
+        lock: { mode: "pessimistic_write" },
+      });
+      if (!folhaPontoEntity) {
         throw new NotFoundException("Folha de ponto não encontrada.");
       }
+
+      const folhaPonto = FolhaPontoTypeormMapper.entityToDomain.map(folhaPontoEntity);
 
       // 2. Aplicar ação no domínio da FolhaPonto
       switch (token.tipo) {
@@ -74,13 +89,33 @@ export class FolhaPontoTokenConfirmHandler {
       // 3. Marcar token como consumido
       token.use(ip, userAgent);
 
-      // 4. Salvar tudo
-      await this.repository.save(folhaPonto);
-      await this.tokenRepository.saveUsed(token);
-      await this.tokenRepository.invalidateAllExcept(folhaPonto.id, token.id);
+      // 4. Salvar tudo USANDO O MESMO MANAGER DA TRANSAÇÃO (evita deadlock com conexões externas)
+      const folhaPontoPersistence = FolhaPontoTypeormMapper.domainToPersistence.map(folhaPonto);
+      await folhaPontoRepo.save(folhaPontoPersistence);
+
+      await tokenRepo.update(
+        { id: token.id },
+        {
+          usedAt: token.usedAt,
+          ipAddress: token.ipAddress,
+          userAgent: token.userAgent,
+        },
+      );
+
+      await tokenRepo.update(
+        {
+          folhaPontoId: folhaPonto.id,
+          id: Not(token.id),
+          usedAt: IsNull(),
+        },
+        {
+          usedAt: getNowISO(),
+          userAgent: "System Cascade Invalidation",
+        },
+      );
 
       this.logger.log(`Token ${token.tipo} confirmado. FolhaPonto: ${folhaPonto.id}`);
-      return { acao: token.tipo, folhaPontoId: folhaPonto.id };
+      return { acao: token.tipo, folhaPontoId: folhaPonto.id, folhaPonto };
     });
   }
 
