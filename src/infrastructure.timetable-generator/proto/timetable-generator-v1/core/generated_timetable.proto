@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package ladesa.timetable_generator.v1.core;
+option csharp_namespace = "Ladesa.TimetableGenerator.v1.Protobuf";
+
+import "core/timetable_grid.proto";
+
+message GeneratedTimetable {
+  TimetableGrid timetable = 1;
+  int32 score = 2;
+}

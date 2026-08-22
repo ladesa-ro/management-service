@@ -64,7 +64,7 @@ Clean Architecture (domínio não depende de framework), Hexagonal/Ports & Adapt
 - **Law of Demeter**: handler injeta repositório, não a connection do TypeORM. Controller injeta handler, não repositório.
 - **Idempotency**: leitura é naturalmente idempotente, escrita deve considerar se repetir a mesma operação produz o mesmo efeito.
 - **Immutability**: entidade muda só via `update()`, configuração é imutável.
-- **Graceful Degradation**: quando um serviço externo falha (Keycloak, RabbitMQ), degradar de forma controlada, não crashar silenciosamente, ver [Banco de dados e transações](banco-de-dados-e-transacoes.md#resiliencia-e-tolerancia-a-falhas).
+- **Graceful Degradation**: quando um serviço externo falha (Keycloak, fila BullMQ), degradar de forma controlada, não crashar silenciosamente, ver [Banco de dados e transações](banco-de-dados-e-transacoes.md#resiliencia-e-tolerancia-a-falhas).
 
 ## Clean Code
 

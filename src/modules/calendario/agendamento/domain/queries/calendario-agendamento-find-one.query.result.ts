@@ -1,3 +1,4 @@
+import type { ObjectUuidRef } from "@/domain/abstractions";
 import { EntityQueryResult, SharedFields } from "@/domain/abstractions";
 import { PerfilFindOneQueryResult } from "@/modules/acesso/usuario/perfil/domain/queries/perfil-find-one.query.result";
 import { AmbienteFindOneQueryResult } from "@/modules/ambientes/ambiente/domain/queries/ambiente-find-one.query.result";
@@ -30,6 +31,21 @@ export class CalendarioAgendamentoFindOneQueryResult extends EntityQueryResult {
   repeticao!: string | null;
   status!: CalendarioAgendamentoStatus | null;
   version!: number;
+
+  campus!: ObjectUuidRef | null;
+  colecao!: ObjectUuidRef | null;
+  autorId!: string | null;
+  motivo!: string | null;
+
+  identificadorExternoSerieOrigem!: string | null;
+  dataOcorrenciaReferenciada!: string | null;
+
+  /**
+   * true quando o requisitante só tem papel OCUPACAO na coleção deste agendamento:
+   * nome, motivo, autor e as listas de turmas/perfis/etc vêm vazios de propósito.
+   * Sempre false para agendamentos sem coleção (comportamento de sempre).
+   */
+  detalhesOcultos!: boolean;
 
   turmas!: TurmaFindOneQueryResult[];
   perfis!: PerfilFindOneQueryResult[];

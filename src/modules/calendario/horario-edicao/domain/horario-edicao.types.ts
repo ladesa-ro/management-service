@@ -24,5 +24,7 @@ export interface IHorarioEdicaoMudanca {
   calendarioAgendamento: { id: string } | null;
   tipoOperacao: HorarioEdicaoMudancaTipoOperacao;
   dados: Record<string, unknown>;
+  /** Estado antes da mudança — nulo para CRIAR, preenchido para MOVER/REMOVER. */
+  dadosAnteriores: Record<string, unknown> | null;
   dateCreated: string;
 }

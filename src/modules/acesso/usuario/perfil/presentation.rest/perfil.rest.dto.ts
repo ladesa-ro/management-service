@@ -40,6 +40,9 @@ export class PerfilFindOneOutputRestDto extends EntityBaseRestDto {
     type: () => UsuarioFindOneOutputRestDto,
   })
   usuario: UsuarioFindOneOutputRestDto;
+
+  @ApiPropertyOptional(PerfilFindOneQueryResultFields.cargaMaximaSemanal.swaggerMetadata)
+  cargaMaximaSemanal: number | null;
 }
 
 // ============================================================================

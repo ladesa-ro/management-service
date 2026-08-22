@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package ladesa.timetable_generator.v1.service;
+option csharp_namespace = "Ladesa.TimetableGenerator.v1.Protobuf";
+
+import "core/generate_request.proto";
+import "core/generated_timetable.proto";
+
+message ServiceGenerateResponseResultSuccess {
+  string request_id = 1;
+  core.GenerateRequest generate_request = 2;
+  repeated core.GeneratedTimetable generated_timetables = 3;
+}

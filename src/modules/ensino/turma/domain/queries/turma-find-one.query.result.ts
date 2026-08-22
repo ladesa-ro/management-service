@@ -15,4 +15,5 @@ export class TurmaFindOneQueryResult extends EntityQueryResult {
   ambientePadraoAula!: AmbienteFindOneQueryResult | null;
   curso!: CursoFindOneQueryResult;
   imagemCapa!: ImagemFindOneQueryResult | null;
+  numeroEstimadoAlunos!: number | null;
 }

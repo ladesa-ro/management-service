@@ -21,7 +21,35 @@ export class ConsultaOcorrenciasPorDataQueryHandlerImpl
   ): Promise<CalendarioAgendamentoFindOneQueryResult[]> {
     const agendamentos = await this.repository.findByDateRange(query);
 
-    return this.expandOccurrences(agendamentos, query.dateStart, query.dateEnd);
+    const identificadoresSerieOrigem = agendamentos
+      .filter((agendamento) => agendamento.repeticao)
+      .map((agendamento) => agendamento.identificadorExterno);
+
+    const excecoes = await this.repository.findExcecoesPorSeries({
+      identificadoresSerieOrigem,
+      dateStart: query.dateStart,
+      dateEnd: query.dateEnd,
+    });
+
+    const datasSuprimidasPorSerie = new Map<string, Set<string>>();
+    for (const excecao of excecoes) {
+      const datas = datasSuprimidasPorSerie.get(excecao.identificadorExternoSerieOrigem);
+      if (datas) {
+        datas.add(excecao.dataOcorrenciaReferenciada);
+      } else {
+        datasSuprimidasPorSerie.set(
+          excecao.identificadorExternoSerieOrigem,
+          new Set([excecao.dataOcorrenciaReferenciada]),
+        );
+      }
+    }
+
+    return this.expandOccurrences(
+      agendamentos,
+      query.dateStart,
+      query.dateEnd,
+      datasSuprimidasPorSerie,
+    );
   }
 
   // Ensure date-only strings get explicit midnight UTC to avoid timezone issues
@@ -30,10 +58,16 @@ export class ConsultaOcorrenciasPorDataQueryHandlerImpl
     return new Date(dateStr + "T00:00:00Z");
   }
 
+  // Data-only (YYYY-MM-DD) para comparar ocorrências expandidas contra `data_ocorrencia_referenciada`
+  private formatDateOnly(date: Date): string {
+    return date.toISOString().slice(0, 10);
+  }
+
   private expandOccurrences(
     agendamentos: CalendarioAgendamentoFindOneQueryResult[],
     rangeStart: string,
     rangeEnd: string,
+    datasSuprimidasPorSerie: Map<string, Set<string>>,
   ): CalendarioAgendamentoFindOneQueryResult[] {
     const results: CalendarioAgendamentoFindOneQueryResult[] = [];
 
@@ -46,7 +80,14 @@ export class ConsultaOcorrenciasPorDataQueryHandlerImpl
         continue;
       }
 
-      const expanded = this.expandSingleAgendamento(agendamento, rangeStartDate, rangeEndDate);
+      const datasSuprimidas = datasSuprimidasPorSerie.get(agendamento.identificadorExterno) ?? null;
+
+      const expanded = this.expandSingleAgendamento(
+        agendamento,
+        rangeStartDate,
+        rangeEndDate,
+        datasSuprimidas,
+      );
       results.push(...expanded);
     }
 
@@ -57,6 +98,7 @@ export class ConsultaOcorrenciasPorDataQueryHandlerImpl
     agendamento: CalendarioAgendamentoFindOneQueryResult,
     rangeStart: Date,
     rangeEnd: Date,
+    datasSuprimidas: Set<string> | null,
   ): CalendarioAgendamentoFindOneQueryResult[] {
     const occurrences: CalendarioAgendamentoFindOneQueryResult[] = [];
 
@@ -81,6 +123,10 @@ export class ConsultaOcorrenciasPorDataQueryHandlerImpl
       const limitedDates = dates.slice(0, MAX_OCCURRENCES_PER_AGENDAMENTO);
 
       for (const occurrenceDate of limitedDates) {
+        if (datasSuprimidas?.has(this.formatDateOnly(occurrenceDate))) {
+          continue;
+        }
+
         // Shallow copy is safe here: query results are read-only DTOs with only primitive/array fields
         const occurrence = Object.assign(
           Object.create(Object.getPrototypeOf(agendamento)),

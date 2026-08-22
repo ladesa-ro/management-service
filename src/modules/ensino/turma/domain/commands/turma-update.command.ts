@@ -7,6 +7,7 @@ export const TurmaUpdateCommandFields = {
   nome: TurmaFields.nome,
   curso: TurmaFields.curso,
   ambientePadraoAula: TurmaFields.ambientePadraoAula,
+  numeroEstimadoAlunos: TurmaFields.numeroEstimadoAlunos,
 };
 
 export class TurmaUpdateCommand {
@@ -14,4 +15,5 @@ export class TurmaUpdateCommand {
   nome?: string | null;
   curso?: CursoInputRef;
   ambientePadraoAula?: AmbienteInputRef | null;
+  numeroEstimadoAlunos?: number | null;
 }

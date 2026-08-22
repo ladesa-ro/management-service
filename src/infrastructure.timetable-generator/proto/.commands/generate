@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+cd "$(dirname "$0")/.."
+
+docker build -q -t ladesa-timetable-generator-proto-codegen -f Dockerfile.codegen .
+
+rm -rf generated generated-csharp
+mkdir -p generated generated-csharp
+
+docker run --rm \
+  -v "$(pwd):/workspace" \
+  -u "$(id -u):$(id -g)" \
+  ladesa-timetable-generator-proto-codegen \
+  'protoc \
+    --proto_path=timetable-generator-v1 \
+    --plugin=protoc-gen-ts_proto=$(npm root -g)/ts-proto/protoc-gen-ts_proto \
+    --ts_proto_out=generated \
+    --ts_proto_opt=esModuleInterop=true,outputServices=false,useOptionals=messages \
+    --csharp_out=generated-csharp \
+    $(find timetable-generator-v1 -name "*.proto")'
+
+echo "gerado em generated (TypeScript) e generated-csharp (C#)"

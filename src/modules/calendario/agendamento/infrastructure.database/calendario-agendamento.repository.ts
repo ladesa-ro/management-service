@@ -1,4 +1,5 @@
 import type { FindOptionsWhere, ObjectLiteral, SelectQueryBuilder } from "typeorm";
+import { PreconditionFailedError } from "@/application/errors";
 import type { IPaginationCriteria } from "@/application/pagination";
 import type { IAccessContext } from "@/domain/abstractions";
 import { Dep, Impl } from "@/domain/dependency-injection";
@@ -24,6 +25,7 @@ import {
   type ICalendarioAgendamentoMetadata,
 } from "../domain/calendario-agendamento-metadata";
 import { CalendarioAgendamentoFindOneQueryResult } from "../domain/queries/calendario-agendamento-find-one.query.result";
+import type { ICalendarioAgendamentoLinhaDoTempoEntrada } from "../domain/queries/calendario-agendamento-linha-do-tempo.query.result";
 import type { CalendarioAgendamentoListQuery } from "../domain/queries/calendario-agendamento-list.query";
 import { calendarioAgendamentoPaginationSpec } from "../domain/queries/calendario-agendamento-list.query.handler.interface";
 import type { CalendarioAgendamentoListQueryResult } from "../domain/queries/calendario-agendamento-list.query.result";
@@ -116,7 +118,10 @@ export class CalendarioAgendamentoTypeOrmRepositoryAdapter
     const where: Record<string, unknown> = { id };
     if (tipo !== undefined) where.tipo = tipo;
 
-    const entity = await repo.findOneBy(where as FindOptionsWhere<CalendarioAgendamentoEntity>);
+    const entity = await repo.findOne({
+      where: where as FindOptionsWhere<CalendarioAgendamentoEntity>,
+      relations: { campus: true, colecao: true, autor: true },
+    });
     if (!entity) return null;
 
     const junctionRefs = await this.findJunctionRefs(id);
@@ -140,12 +145,25 @@ export class CalendarioAgendamentoTypeOrmRepositoryAdapter
     await this.appTypeormConnection.transaction(async (manager) => {
       const repo = manager.getRepository(CalendarioAgendamentoEntity);
 
-      // Lock the old version row to prevent concurrent updates
-      await repo
-        .createQueryBuilder()
+      // Trava a linha da versão antiga e lê o estado dela sob o lock: só
+      // serializar não basta, porque a transação que espera pelo lock precisa
+      // saber se a versão que ela carregou antes do lock ainda é a vigente.
+      const travada = await repo
+        .createQueryBuilder("ca")
         .setLock("pessimistic_write")
-        .where("id = :id", { id: closedVersion.id })
+        .where("ca.id = :id", { id: closedVersion.id })
         .getOne();
+
+      // Outra transação já fechou esta versão enquanto esperávamos o lock:
+      // seguir daqui criaria uma segunda versão-filha da mesma linha, em
+      // silêncio, e a escrita mais lenta sobrescreveria a mais rápida.
+      if (travada && travada.validTo !== null) {
+        throw new PreconditionFailedError(
+          "O agendamento foi alterado por outra operação enquanto esta era processada. Recarregue e tente de novo.",
+          "CalendarioAgendamento",
+          closedVersion.id,
+        );
+      }
 
       // Close old version
       await repo.update(closedVersion.id, {
@@ -240,12 +258,22 @@ export class CalendarioAgendamentoTypeOrmRepositoryAdapter
   // Read side
   // ============================================================================
 
+  async existsByIdentificadorExterno(identificadorExterno: string): Promise<boolean> {
+    const repo = this.appTypeormConnection.getRepository(CalendarioAgendamentoEntity);
+    const count = await repo.count({ where: { identificadorExterno } });
+    return count > 0;
+  }
+
   async getFindAllQueryResult(
     _accessContext: IAccessContext | null,
     dto: CalendarioAgendamentoListQuery | null = null,
   ): Promise<CalendarioAgendamentoListQueryResult> {
     const repo = this.appTypeormConnection.getRepository(CalendarioAgendamentoEntity);
-    const qb = repo.createQueryBuilder("ca");
+    const qb = repo
+      .createQueryBuilder("ca")
+      .leftJoinAndSelect("ca.campus", "campus")
+      .leftJoinAndSelect("ca.colecao", "colecao")
+      .leftJoinAndSelect("ca.autor", "autor");
 
     // Por padrao, retornar somente registros ativos (valid_to IS NULL e status != INATIVO)
     qb.andWhere("ca.valid_to IS NULL");
@@ -362,7 +390,10 @@ export class CalendarioAgendamentoTypeOrmRepositoryAdapter
     const where: Record<string, unknown> = { id };
     if (tipo !== undefined) where.tipo = tipo;
 
-    const entity = await repo.findOneBy(where as FindOptionsWhere<CalendarioAgendamentoEntity>);
+    const entity = await repo.findOne({
+      where: where as FindOptionsWhere<CalendarioAgendamentoEntity>,
+      relations: { campus: true, colecao: true, autor: true },
+    });
     if (!entity) return null;
 
     const [junctions, metadata] = await Promise.all([
@@ -371,6 +402,33 @@ export class CalendarioAgendamentoTypeOrmRepositoryAdapter
     ]);
 
     return this.toQueryResult(entity, junctions, metadata);
+  }
+
+  async findByColecaoId(colecaoId: string): Promise<CalendarioAgendamentoFindOneQueryResult[]> {
+    const repo = this.appTypeormConnection.getRepository(CalendarioAgendamentoEntity);
+
+    const qb = repo
+      .createQueryBuilder("ca")
+      .leftJoinAndSelect("ca.campus", "campus")
+      .leftJoinAndSelect("ca.colecao", "colecao")
+      .leftJoinAndSelect("ca.autor", "autor")
+      .where("colecao.id = :colecaoId", { colecaoId })
+      .andWhere("ca.valid_to IS NULL")
+      .andWhere("ca.status != :inativo", { inativo: CalendarioAgendamentoStatus.INATIVO })
+      .orderBy("ca.date_updated", "DESC");
+
+    const entities = await qb.getMany();
+    const results: CalendarioAgendamentoFindOneQueryResult[] = [];
+
+    for (const entity of entities) {
+      const [junctions, metadata] = await Promise.all([
+        this.findJunctionEntities(entity.id),
+        this.findMetadataByIdentificadorExterno(entity.identificadorExterno),
+      ]);
+      results.push(this.toQueryResult(entity, junctions, metadata));
+    }
+
+    return results;
   }
 
   async findByDateRange(query: {
@@ -385,6 +443,9 @@ export class CalendarioAgendamentoTypeOrmRepositoryAdapter
 
     const qb = repo
       .createQueryBuilder("ca")
+      .leftJoinAndSelect("ca.campus", "campus")
+      .leftJoinAndSelect("ca.colecao", "colecao")
+      .leftJoinAndSelect("ca.autor", "autor")
       .where("ca.data_inicio <= :dateEnd", { dateEnd: query.dateEnd })
       .andWhere("(ca.data_fim IS NULL OR ca.data_fim >= :dateStart)", {
         dateStart: query.dateStart,
@@ -618,6 +679,18 @@ export class CalendarioAgendamentoTypeOrmRepositoryAdapter
       horarioInicio: aggregate.horarioInicio,
       horarioFim: aggregate.horarioFim,
       repeticao: aggregate.repeticao,
+      campus: aggregate.campus
+        ? ({ id: aggregate.campus.id } as CalendarioAgendamentoEntity["campus"])
+        : null,
+      colecao: aggregate.colecao
+        ? ({ id: aggregate.colecao.id } as CalendarioAgendamentoEntity["colecao"])
+        : null,
+      autor: aggregate.autorId
+        ? ({ id: aggregate.autorId } as CalendarioAgendamentoEntity["autor"])
+        : null,
+      motivo: aggregate.motivo,
+      identificadorExternoSerieOrigem: aggregate.identificadorExternoSerieOrigem,
+      dataOcorrenciaReferenciada: aggregate.dataOcorrenciaReferenciada,
       // nome e cor vivem na tabela metadata — coluna principal mantida para backcompat
       nome: null,
       cor: null,
@@ -647,6 +720,15 @@ export class CalendarioAgendamentoTypeOrmRepositoryAdapter
       horarioFim: entity.horarioFim,
       repeticao: entity.repeticao,
       status: entity.status,
+
+      campus: entity.campus ? { id: entity.campus.id } : null,
+      colecao: entity.colecao ? { id: entity.colecao.id } : null,
+      autorId: entity.autor ? entity.autor.id : null,
+      motivo: entity.motivo,
+      identificadorExternoSerieOrigem: entity.identificadorExternoSerieOrigem,
+      dataOcorrenciaReferenciada: entity.dataOcorrenciaReferenciada
+        ? this.dateToString(entity.dataOcorrenciaReferenciada)
+        : null,
 
       turmas: junctionRefs.turmas,
       perfis: junctionRefs.perfis,
@@ -687,6 +769,16 @@ export class CalendarioAgendamentoTypeOrmRepositoryAdapter
     result.repeticao = entity.repeticao;
     result.status = entity.status;
     result.version = entity.version;
+
+    result.campus = entity.campus ? { id: entity.campus.id } : null;
+    result.colecao = entity.colecao ? { id: entity.colecao.id } : null;
+    result.autorId = entity.autor ? entity.autor.id : null;
+    result.motivo = entity.motivo;
+    result.identificadorExternoSerieOrigem = entity.identificadorExternoSerieOrigem;
+    result.dataOcorrenciaReferenciada = entity.dataOcorrenciaReferenciada
+      ? this.dateToString(entity.dataOcorrenciaReferenciada)
+      : null;
+    result.detalhesOcultos = false;
 
     // Hidratar relacoes usando TypeORM mappers delegados dos modulos (padrao do projeto)
     result.turmas = junctions.turmas.map((j) =>
@@ -943,6 +1035,110 @@ export class CalendarioAgendamentoTypeOrmRepositoryAdapter
       createSet(CalendarioAgendamentoAmbienteEntity, aggregate.ambientes, "ambiente"),
       createSet(CalendarioAgendamentoDiarioEntity, aggregate.diarios, "diario"),
     ]);
+  }
+
+  async getLinhaDoTempo(
+    identificadorExterno: string,
+  ): Promise<ICalendarioAgendamentoLinhaDoTempoEntrada[]> {
+    const repo = this.appTypeormConnection.getRepository(CalendarioAgendamentoEntity);
+
+    const entidades = await repo.find({
+      where: { identificadorExterno },
+      relations: { autor: true },
+      order: { version: "ASC" },
+    });
+
+    const CAMPOS_COMPARAVEIS: (keyof CalendarioAgendamentoEntity)[] = [
+      "dataInicio",
+      "dataFim",
+      "diaInteiro",
+      "horarioInicio",
+      "horarioFim",
+      "repeticao",
+      "status",
+      "motivo",
+    ];
+
+    const entradas: ICalendarioAgendamentoLinhaDoTempoEntrada[] = [];
+
+    for (let i = 0; i < entidades.length; i++) {
+      const atual = entidades[i]!;
+      const anterior = i > 0 ? entidades[i - 1] : null;
+
+      const mudancas = anterior
+        ? CAMPOS_COMPARAVEIS.filter(
+            (campo) => String(atual[campo]) !== String(anterior[campo]),
+          ).map((campo) => ({
+            campo,
+            de: anterior[campo],
+            para: atual[campo],
+          }))
+        : [];
+
+      entradas.push({
+        id: atual.id,
+        version: atual.version,
+        autorId: atual.autor?.id ?? null,
+        autorNome: atual.autor?.nome ?? null,
+        motivo: atual.motivo,
+        validFrom: dateToISO(atual.validFrom),
+        validTo: dateToISONullable(atual.validTo),
+        mudancas,
+      });
+    }
+
+    return entradas;
+  }
+
+  async findExcecoesPorSeries(params: {
+    identificadoresSerieOrigem: string[];
+    dateStart: string;
+    dateEnd: string;
+  }): Promise<{ identificadorExternoSerieOrigem: string; dataOcorrenciaReferenciada: string }[]> {
+    if (params.identificadoresSerieOrigem.length === 0) {
+      return [];
+    }
+
+    const repo = this.appTypeormConnection.getRepository(CalendarioAgendamentoEntity);
+
+    const entidades = await repo
+      .createQueryBuilder("ca")
+      .where("ca.identificador_externo_serie_origem IN (:...ids)", {
+        ids: params.identificadoresSerieOrigem,
+      })
+      .andWhere("ca.data_ocorrencia_referenciada BETWEEN :dateStart AND :dateEnd", {
+        dateStart: params.dateStart,
+        dateEnd: params.dateEnd,
+      })
+      .andWhere("ca.valid_to IS NULL")
+      .getMany();
+
+    return entidades.map((entidade) => ({
+      identificadorExternoSerieOrigem: entidade.identificadorExternoSerieOrigem!,
+      dataOcorrenciaReferenciada: this.dateToString(entidade.dataOcorrenciaReferenciada!),
+    }));
+  }
+
+  async reatribuirExcecoesParaNovaSerie(params: {
+    deIdentificadorExterno: string;
+    paraIdentificadorExterno: string;
+    aPartirDe: string;
+  }): Promise<void> {
+    const repo = this.appTypeormConnection.getRepository(CalendarioAgendamentoEntity);
+
+    // Exceções (RECURRENCE-ID/EXDATE) usam data_ocorrencia_referenciada; datas
+    // avulsas (RDATE) não referenciam ocorrência nenhuma da regra, então caem
+    // no segundo braço, comparando pela própria data_inicio.
+    await repo
+      .createQueryBuilder()
+      .update(CalendarioAgendamentoEntity)
+      .set({ identificadorExternoSerieOrigem: params.paraIdentificadorExterno })
+      .where("identificador_externo_serie_origem = :de", { de: params.deIdentificadorExterno })
+      .andWhere(
+        "(data_ocorrencia_referenciada >= :aPartirDe OR (data_ocorrencia_referenciada IS NULL AND data_inicio >= :aPartirDe))",
+        { aPartirDe: params.aPartirDe },
+      )
+      .execute();
   }
 }
 

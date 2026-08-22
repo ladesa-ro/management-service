@@ -15,6 +15,7 @@ export class Perfil {
   cargo!: string;
   campus!: { id: string };
   usuario!: { id: string };
+  cargaMaximaSemanal!: number | null;
   dateCreated!: ScalarDateTimeString;
   dateUpdated!: ScalarDateTimeString;
   dateDeleted!: ScalarDateTimeString | null;
@@ -29,6 +30,7 @@ export class Perfil {
     instance.id = generateUuidV7();
     instance.cargo = parsed.cargo;
     instance.ativo = true;
+    instance.cargaMaximaSemanal = parsed.cargaMaximaSemanal ?? null;
     instance.dateCreated = getNowISO();
     instance.dateUpdated = getNowISO();
     instance.dateDeleted = null;
@@ -46,6 +48,7 @@ export class Perfil {
     instance.cargo = parsed.cargo;
     instance.campus = parsed.campus;
     instance.usuario = parsed.usuario;
+    instance.cargaMaximaSemanal = parsed.cargaMaximaSemanal;
     instance.dateCreated = parsed.dateCreated;
     instance.dateUpdated = parsed.dateUpdated;
     instance.dateDeleted = parsed.dateDeleted;
@@ -58,6 +61,9 @@ export class Perfil {
 
     if (parsed.ativo !== undefined) this.ativo = parsed.ativo;
     if (parsed.cargo !== undefined) this.cargo = parsed.cargo;
+    if (parsed.cargaMaximaSemanal !== undefined) {
+      this.cargaMaximaSemanal = parsed.cargaMaximaSemanal ?? null;
+    }
 
     this.dateUpdated = getNowISO();
 

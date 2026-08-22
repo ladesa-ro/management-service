@@ -19,3 +19,8 @@ export const HorarioEdicaoCancelarCommandMetadata = createOperationMetadata({
   operationId: "horarioEdicaoCancelar",
   summary: "Cancela e descarta sessao de edicao",
 });
+
+export const HorarioEdicaoDesfazerMudancaCommandMetadata = createOperationMetadata({
+  operationId: "horarioEdicaoDesfazerMudanca",
+  summary: "Desfaz uma mudanca pendente da sessao de edicao",
+});

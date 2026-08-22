@@ -15,7 +15,7 @@
 | Autenticação | [Keycloak](https://www.keycloak.org/) + OAuth2/OIDC | Admin Client 26.5 |
 | JWT/JWKS | jsonwebtoken + jwks-rsa | 9.0.3 / 4.0.1 |
 | Passport | `@nestjs/passport` | 11.0.5 |
-| Message broker | [RabbitMQ](https://www.rabbitmq.com/) via [Rascal](https://github.com/guidesmiths/rascal) | 3-management / 21.0.1 |
+| Message broker | [BullMQ](https://docs.bullmq.io/) sobre PostgreSQL (`createPostgresBackend`) | 6.2.0 |
 | Processamento de imagem | [Sharp](https://sharp.pixelplumbing.com/) | 0.34.5 |
 | Paginação | [nestjs-paginate](https://github.com/ppetzold/nestjs-paginate) | 12.9.0 |
 | Eventos | `@nestjs/event-emitter` | 3.0.1 |

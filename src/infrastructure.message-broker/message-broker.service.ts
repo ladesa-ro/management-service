@@ -1,99 +1,79 @@
-import { Logger } from "@nestjs/common";
-import type { SubscriberSessionAsPromised } from "rascal";
 import { ServiceUnavailableError } from "@/application/errors";
-import { IMessageBrokerService } from "@/domain/abstractions/message-broker";
+import { ILoggerPort } from "@/domain/abstractions";
+import type { IMessageBrokerService, IQueueService } from "@/domain/abstractions/message-broker";
+import { IQueueService as IQueueServiceToken } from "@/domain/abstractions/message-broker";
 import { Dep, Impl } from "@/domain/dependency-injection";
-import type { IMessageBrokerOptions } from "@/infrastructure.config/options/message-broker/message-broker-options.interface";
-import { IMessageBrokerOptions as IMessageBrokerOptionsToken } from "@/infrastructure.config/options/message-broker/message-broker-options.interface";
-import { MessageBrokerContainerService } from "./message-broker-container.service";
+import type { IQueueOptions } from "@/infrastructure.config/options/queue/queue-options.interface";
+import { IQueueOptions as IQueueOptionsToken } from "@/infrastructure.config/options/queue/queue-options.interface";
 
 @Impl()
 export class MessageBrokerService implements IMessageBrokerService {
-  private readonly logger = new Logger(MessageBrokerService.name);
-
   constructor(
-    private messageBrokerContainerService: MessageBrokerContainerService,
-    @Dep(IMessageBrokerOptionsToken)
-    private readonly messageBrokerOptions: IMessageBrokerOptions | null,
+    @Dep(IQueueServiceToken)
+    private readonly queueService: IQueueService,
+    @Dep(IQueueOptionsToken)
+    private readonly opcoes: IQueueOptions | null,
+    @Dep(ILoggerPort)
+    private readonly logger: ILoggerPort,
   ) {}
-
-  async publishTimetableRequestFireAndForget<TRequest>(request: TRequest): Promise<void> {
-    const broker = await this.messageBrokerContainerService.getBroker();
-    const options = this.#ensureOptions();
-    const queueRequest = options.queueTimetableRequest;
-    this.logger.log(`Publicando mensagem fire-and-forget na queue ${queueRequest}`);
-    await broker.publish(queueRequest, JSON.stringify(request));
-  }
-
-  async publishFolhaPontoCreated(payload: any): Promise<void> {
-    const broker = await this.messageBrokerContainerService.getBroker();
-    this.logger.log(
-      `Publicando notificação WhatsApp na queue folha_ponto.notificacao.whatsapp para FolhaPonto ${payload.folhaPontoId}`,
-    );
-    await broker.publish("folha_ponto.notificacao.whatsapp", JSON.stringify(payload));
-  }
 
   async publishTimetableRequest<TRequest, TResponse>(
     request: TRequest,
     timeoutMs = 60000,
   ): Promise<TResponse> {
-    const broker = await this.messageBrokerContainerService.getBroker();
-    const options = this.#ensureOptions();
-    const queueRequest = options.queueTimetableRequest;
-    const queueResponse = options.queueTimetableResponse;
-
-    return new Promise<TResponse>((resolve, reject) => {
-      let subscription: SubscriberSessionAsPromised | undefined;
-
-      const timeout = setTimeout(() => {
-        subscription?.cancel();
-        reject(new Error(`Timeout aguardando resposta da queue ${queueResponse}`));
-      }, timeoutMs);
-
-      broker
-        .subscribe(queueResponse)
-        .then((sub) => {
-          subscription = sub;
-
-          sub.on("message", (_message, content, ackOrNoAck) => {
-            clearTimeout(timeout);
-            ackOrNoAck();
-            sub.cancel();
-
-            try {
-              const response = (
-                typeof content === "string" ? JSON.parse(content) : content
-              ) as TResponse;
-
-              this.logger.log(`Resposta recebida da queue ${queueResponse}`);
-              resolve(response);
-            } catch (e) {
-              reject(new Error("Erro ao parsear resposta JSON: " + e));
-            }
-          });
-
-          sub.on("error", (err) => {
-            clearTimeout(timeout);
-            sub.cancel();
-            reject(err);
-          });
-
-          this.logger.log(`Publicando mensagem na queue ${queueRequest}`);
-          return broker.publish(queueRequest, JSON.stringify(request));
-        })
-        .catch((err) => {
-          clearTimeout(timeout);
-          subscription?.cancel();
-          reject(err);
-        });
-    });
+    const fila = this.#exigirOpcoes().queueTimetableGenerate;
+    this.logger.log(`Enfileirando pedido de horário na fila ${fila}`, "MessageBroker");
+    return this.#comTimeoutLocal(
+      this.queueService.request<TRequest, TResponse>(fila, request, timeoutMs),
+      timeoutMs,
+      `Timeout aguardando resposta da fila ${fila}`,
+    );
   }
 
-  #ensureOptions(): IMessageBrokerOptions {
-    if (!this.messageBrokerOptions) {
-      throw new ServiceUnavailableError(undefined, "message-broker");
+  async publishTimetableRequestFireAndForget<TRequest>(
+    request: TRequest,
+    jobId?: string,
+  ): Promise<string> {
+    const fila = this.#exigirOpcoes().queueTimetableGenerate;
+    const enfileirado = await this.queueService.enqueue(fila, request, { jobId });
+    this.logger.log(
+      `Pedido de horário enfileirado na fila ${fila}, job ${enfileirado}`,
+      "MessageBroker",
+    );
+    return enfileirado;
+  }
+
+  async publishFolhaPontoCreated<TPayload>(payload: TPayload): Promise<string> {
+    const fila = this.#exigirOpcoes().queueFolhaPontoWhatsapp;
+    const jobId = await this.queueService.enqueue(fila, payload);
+    this.logger.log(
+      `Notificação de folha de ponto enfileirada na fila ${fila}, job ${jobId}`,
+      "MessageBroker",
+    );
+    return jobId;
+  }
+
+  #exigirOpcoes(): IQueueOptions {
+    if (!this.opcoes) {
+      throw new ServiceUnavailableError(undefined, "queue");
     }
 
-    return this.messageBrokerOptions;
+    return this.opcoes;
+  }
+
+  #comTimeoutLocal<T>(promise: Promise<T>, timeoutMs: number, mensagem: string): Promise<T> {
+    return new Promise<T>((resolve, reject) => {
+      const timer = setTimeout(() => reject(new Error(mensagem)), timeoutMs);
+      promise.then(
+        (value) => {
+          clearTimeout(timer);
+          resolve(value);
+        },
+        (error) => {
+          clearTimeout(timer);
+          reject(error);
+        },
+      );
+    });
   }
 }

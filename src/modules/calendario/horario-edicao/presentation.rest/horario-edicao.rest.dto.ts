@@ -6,6 +6,14 @@ export class HorarioEdicaoSessaoParamsRestDto {
   sessaoId!: string;
 }
 
+export class HorarioEdicaoMudancaParamsRestDto {
+  @ApiProperty()
+  sessaoId!: string;
+
+  @ApiProperty()
+  mudancaId!: string;
+}
+
 export class HorarioEdicaoMudancaInputRestDto {
   @ApiPropertyOptional()
   calendarioAgendamentoId?: string;
@@ -50,6 +58,39 @@ export class HorarioEdicaoMudancaOutputRestDto {
   @ApiProperty()
   dados!: Record<string, unknown>;
 
+  @ApiPropertyOptional({
+    description: "Estado antes desta mudança — nulo para CRIAR",
+  })
+  dadosAnteriores!: Record<string, unknown> | null;
+
   @ApiProperty()
   dateCreated!: string;
+}
+
+export class HorarioEdicaoDiferencaEntradaOutputRestDto {
+  @ApiProperty({ enum: HorarioEdicaoMudancaTipoOperacao })
+  tipoOperacao!: "CRIAR" | "MOVER" | "REMOVER";
+
+  @ApiPropertyOptional()
+  calendarioAgendamentoId!: string | null;
+
+  @ApiPropertyOptional()
+  antes!: Record<string, unknown> | null;
+
+  @ApiPropertyOptional()
+  depois!: Record<string, unknown> | null;
+}
+
+export class HorarioEdicaoSessaoDiferencaOutputRestDto {
+  @ApiProperty()
+  sessaoId!: string;
+
+  @ApiProperty({ type: [HorarioEdicaoDiferencaEntradaOutputRestDto] })
+  entram!: HorarioEdicaoDiferencaEntradaOutputRestDto[];
+
+  @ApiProperty({ type: [HorarioEdicaoDiferencaEntradaOutputRestDto] })
+  saem!: HorarioEdicaoDiferencaEntradaOutputRestDto[];
+
+  @ApiProperty({ type: [HorarioEdicaoDiferencaEntradaOutputRestDto] })
+  mudam!: HorarioEdicaoDiferencaEntradaOutputRestDto[];
 }

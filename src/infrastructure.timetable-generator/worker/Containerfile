@@ -1,0 +1,44 @@
+ARG SDK_IMAGEM=mcr.microsoft.com/dotnet/sdk@sha256:35048e3a81e6a07c316e7bbbd80d80d2ba705fe5f23a8ed42b6638c8f4c20d30
+ARG BUN_IMAGEM=docker.io/oven/bun:1.2-slim
+ARG ALVO_RUNTIME=linux-x64
+
+FROM ${SDK_IMAGEM} AS gerador
+
+ARG ALVO_RUNTIME
+
+ENV DOTNET_CLI_TELEMETRY_OPTOUT=1 \
+    DOTNET_NOLOGO=1 \
+    DOTNET_gcServer=0 \
+    DOTNET_EnableWriteXorExecute=0 \
+    DOTNET_PROCESSOR_COUNT=2
+
+WORKDIR /origem
+
+COPY core/ core/
+COPY proto/generated-csharp/ proto/generated-csharp/
+
+RUN dotnet publish core/presentation.console/Ladesa.TimetableGenerator.Console.csproj \
+      --configuration Release --runtime ${ALVO_RUNTIME} --self-contained true \
+      --output /publicado -m:1 -p:UseSharedCompilation=false
+
+FROM ${BUN_IMAGEM} AS dependencias
+
+WORKDIR /worker
+
+COPY worker/package.json worker/bun.lock ./
+
+RUN bun install --frozen-lockfile --production
+
+FROM ${BUN_IMAGEM} AS runtime
+
+ENV TIMETABLE_WORKER_BINARY=/opt/ladesa/ladesa-timetable-generator
+
+WORKDIR /worker
+
+COPY --from=dependencias /worker/node_modules ./node_modules
+COPY worker/ ./
+COPY --from=gerador /publicado /opt/ladesa
+
+USER bun
+
+ENTRYPOINT ["bun", "run", "index.ts"]

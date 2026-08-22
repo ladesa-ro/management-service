@@ -11,6 +11,9 @@ export class PerfilEntity {
   @Column({ name: "ativo", type: "boolean" })
   ativo!: boolean;
 
+  @Column({ name: "carga_maxima_semanal", type: "integer", nullable: true })
+  cargaMaximaSemanal!: number | null;
+
   @ManyToOne(
     () => CargoEntity,
     (cargo) => cargo.perfis,

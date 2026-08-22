@@ -1,7 +1,10 @@
 import { BadRequestException } from "@nestjs/common";
-import { ensureActiveEntity, ensureExists } from "@/application/errors";
+import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { Dep, Impl } from "@/domain/dependency-injection";
+import { IAmbienteFindOneQueryHandler } from "@/modules/ambientes/ambiente/domain/queries/ambiente-find-one.query.handler.interface";
+import { CalendarioColecaoSyncService } from "@/modules/calendario/colecao/application/calendario-colecao-sync.service";
+import { ITurmaFindOneQueryHandler } from "@/modules/ensino/turma/domain/queries/turma-find-one.query.handler.interface";
 import { ICalendarioAgendamentoPermissionChecker } from "../../domain/authorization";
 import { CalendarioAgendamento } from "../../domain/calendario-agendamento";
 import type { CalendarioAgendamentoUpdateCommand } from "../../domain/commands/calendario-agendamento-update.command";
@@ -9,6 +12,36 @@ import { ICalendarioAgendamentoUpdateCommandHandler } from "../../domain/command
 import type { CalendarioAgendamentoFindOneQuery } from "../../domain/queries/calendario-agendamento-find-one.query";
 import type { CalendarioAgendamentoFindOneQueryResult } from "../../domain/queries/calendario-agendamento-find-one.query.result";
 import { ICalendarioAgendamentoRepository } from "../../domain/repositories/calendario-agendamento.repository.interface";
+import { CalendarioAgendamentoConflitoService } from "../calendario-agendamento-conflito.service";
+import { ensureIfMatch } from "./calendario-agendamento-precondition.util";
+
+// Janelas de horário conhecidas para os nomes de turno mais comuns em pt-BR.
+// `Turma.periodo` é texto livre (sem enum) — só validamos quando o valor bate
+// com um destes padrões; "integral"/"diurno" cobrem o dia inteiro e por isso
+// não entram na lista (nada a validar).
+const TURNOS_CONHECIDOS: Array<{ padroes: string[]; inicio: string; fim: string; label: string }> =
+  [
+    { padroes: ["matutino", "manha"], inicio: "06:00:00", fim: "12:00:00", label: "06:00–12:00" },
+    { padroes: ["vespertino", "tarde"], inicio: "12:00:00", fim: "18:00:00", label: "12:00–18:00" },
+    { padroes: ["noturno", "noite"], inicio: "18:00:00", fim: "23:59:59", label: "18:00–23:59" },
+  ];
+
+function normalizarPeriodo(periodo: string): string {
+  return periodo
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .trim();
+}
+
+function getJanelaTurno(periodo: string) {
+  const normalizado = normalizarPeriodo(periodo);
+  return (
+    TURNOS_CONHECIDOS.find((turno) =>
+      turno.padroes.some((padrao) => normalizado.includes(padrao)),
+    ) ?? null
+  );
+}
 
 @Impl()
 export class CalendarioAgendamentoUpdateCommandHandlerImpl
@@ -19,6 +52,14 @@ export class CalendarioAgendamentoUpdateCommandHandlerImpl
     private readonly repository: ICalendarioAgendamentoRepository,
     @Dep(ICalendarioAgendamentoPermissionChecker)
     private readonly permissionChecker: ICalendarioAgendamentoPermissionChecker,
+    @Dep(ITurmaFindOneQueryHandler)
+    private readonly turmaFindOneHandler: ITurmaFindOneQueryHandler,
+    @Dep(IAmbienteFindOneQueryHandler)
+    private readonly ambienteFindOneHandler: IAmbienteFindOneQueryHandler,
+    @Dep(CalendarioColecaoSyncService)
+    private readonly colecaoSyncService: CalendarioColecaoSyncService,
+    @Dep(CalendarioAgendamentoConflitoService)
+    private readonly conflitoService: CalendarioAgendamentoConflitoService,
   ) {}
 
   async execute(
@@ -29,7 +70,7 @@ export class CalendarioAgendamentoUpdateCommandHandlerImpl
 
     const domain = await this.repository.loadById(accessContext, dto.id);
     ensureExists(domain, CalendarioAgendamento.entityName, dto.id);
-    ensureActiveEntity(domain, CalendarioAgendamento.entityName, dto.id);
+    ensureIfMatch(domain, dto.ifMatch, dto.id);
 
     // Detectar se ha campos de metadata (nome/cor)
     const hasMetadataChanges = dto.nome !== undefined || dto.cor !== undefined;
@@ -48,7 +89,10 @@ export class CalendarioAgendamentoUpdateCommandHandlerImpl
       dto.ofertasFormacao !== undefined ||
       dto.modalidades !== undefined ||
       dto.ambientes !== undefined ||
-      dto.diarios !== undefined;
+      dto.diarios !== undefined ||
+      dto.campus !== undefined ||
+      dto.colecao !== undefined ||
+      dto.motivo !== undefined;
 
     // Atualizar metadata (nome/cor) sem gerar nova versao
     if (hasMetadataChanges) {
@@ -85,7 +129,7 @@ export class CalendarioAgendamentoUpdateCommandHandlerImpl
       effectiveHorarioFim &&
       (turmaIds.length > 0 || perfilIds.length > 0 || ambienteIds.length > 0)
     ) {
-      const conflicts = await this.repository.findConflicting({
+      await this.conflitoService.ensureSemConflito(accessContext, {
         dataInicio: effectiveDataInicio,
         dataFim: effectiveDataFim,
         horarioInicio: effectiveHorarioInicio,
@@ -95,14 +139,67 @@ export class CalendarioAgendamentoUpdateCommandHandlerImpl
         ambienteIds,
         excludeIdentificadorExterno: domain.identificadorExterno,
       });
+    }
 
-      if (conflicts.length > 0) {
-        const descricoes = conflicts.map(
-          (c) => `${c.recurso} (${c.recursoId}) no agendamento ${c.identificadorExterno}`,
-        );
-        throw new BadRequestException(
-          `Conflito de horário detectado. Os seguintes recursos já possuem agendamento no mesmo período: ${descricoes.join("; ")}.`,
-        );
+    // Validar se a soma do numero estimado de alunos das turmas cabe na capacidade
+    // do(s) ambiente(s) agendado(s). Pula silenciosamente quando falta dado de
+    // qualquer um dos dois lados — mesma filosofia da checagem de turno abaixo.
+    if (ambienteIds.length > 0 && turmaIds.length > 0) {
+      let somaAlunosEstimados = 0;
+      let temNumeroEstimadoAlunos = false;
+
+      for (const turmaId of turmaIds) {
+        const turma = await this.turmaFindOneHandler.execute(accessContext, { id: turmaId });
+        if (turma?.numeroEstimadoAlunos != null) {
+          somaAlunosEstimados += turma.numeroEstimadoAlunos;
+          temNumeroEstimadoAlunos = true;
+        }
+      }
+
+      if (temNumeroEstimadoAlunos) {
+        const capacidadeExcedida: string[] = [];
+
+        for (const ambienteId of ambienteIds) {
+          const ambiente = await this.ambienteFindOneHandler.execute(accessContext, {
+            id: ambienteId,
+          });
+          if (ambiente?.capacidade != null && somaAlunosEstimados > ambiente.capacidade) {
+            capacidadeExcedida.push(
+              `O ambiente ${ambiente.nome} tem capacidade para ${ambiente.capacidade} aluno(s), mas o total estimado de alunos é ${somaAlunosEstimados}`,
+            );
+          }
+        }
+
+        if (capacidadeExcedida.length > 0) {
+          throw new BadRequestException(
+            `Capacidade do ambiente excedida. ${capacidadeExcedida.join("; ")}.`,
+          );
+        }
+      }
+    }
+
+    // Verificar se o horário efetivo do agendamento cabe dentro do turno da(s) turma(s)
+    if (effectiveHorarioInicio && effectiveHorarioFim && turmaIds.length > 0) {
+      const foraDoTurno: string[] = [];
+
+      for (const turmaId of turmaIds) {
+        const turma = await this.turmaFindOneHandler.execute(accessContext, { id: turmaId });
+        if (!turma) continue;
+
+        const janela = getJanelaTurno(turma.periodo);
+        // Período sem correspondência conhecida: campo é texto livre, então a ausência
+        // de match não pode bloquear um uso legítimo — pulamos silenciosamente.
+        if (!janela) continue;
+
+        if (effectiveHorarioFim <= janela.inicio || effectiveHorarioInicio >= janela.fim) {
+          foraDoTurno.push(
+            `A turma ${turma.nome ?? turma.id} é do turno ${turma.periodo} (${janela.label}), mas o agendamento é de ${effectiveHorarioInicio} a ${effectiveHorarioFim}`,
+          );
+        }
+      }
+
+      if (foraDoTurno.length > 0) {
+        throw new BadRequestException(`Horário fora do turno da turma. ${foraDoTurno.join("; ")}.`);
       }
     }
 
@@ -125,10 +222,22 @@ export class CalendarioAgendamentoUpdateCommandHandlerImpl
         modalidades: dto.modalidades,
         ambientes: dto.ambientes,
         diarios: dto.diarios,
+        campus: dto.campus,
+        colecao: dto.colecao,
+        motivo: dto.motivo,
+        autorId: accessContext?.requestActor?.id ?? null,
       });
 
       await this.repository.saveNewVersion(domain, newVersion);
       resultId = newVersion.id;
+
+      if (newVersion.colecao) {
+        await this.colecaoSyncService.registrarMudanca({
+          colecaoId: newVersion.colecao.id,
+          agendamentoId: newVersion.id,
+          tipoOperacao: "update",
+        });
+      }
     }
 
     const result = await this.repository.getFindOneQueryResult(accessContext, resultId);

@@ -6,5 +6,10 @@ export interface IMessageBrokerService {
     timeoutMs?: number,
   ): Promise<TResponse>;
 
-  publishTimetableRequestFireAndForget<TRequest>(request: TRequest): Promise<void>;
+  publishTimetableRequestFireAndForget<TRequest>(
+    request: TRequest,
+    jobId?: string,
+  ): Promise<string>;
+
+  publishFolhaPontoCreated<TPayload>(payload: TPayload): Promise<string>;
 }

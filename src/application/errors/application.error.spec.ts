@@ -4,6 +4,7 @@ import {
   ConflictError,
   ForbiddenError,
   InternalError,
+  PreconditionFailedError,
   ResourceNotFoundError,
   ServiceUnavailableError,
   UnauthorizedError,
@@ -197,6 +198,39 @@ describe("ValidationError", () => {
 
   it("is an instance of Error", () => {
     const error = new ValidationError([]);
+    expect(error).toBeInstanceOf(Error);
+  });
+});
+
+describe("PreconditionFailedError", () => {
+  it("sets code to PRECONDITION_FAILED", () => {
+    const error = new PreconditionFailedError("If-Match não corresponde à versão atual.");
+    expect(error.code).toBe(ApplicationErrorCode.PRECONDITION_FAILED);
+  });
+
+  it("uses provided message", () => {
+    const error = new PreconditionFailedError("If-Match não corresponde à versão atual.");
+    expect(error.message).toBe("If-Match não corresponde à versão atual.");
+  });
+
+  it("resource and identifier are undefined when not provided", () => {
+    const error = new PreconditionFailedError("Conflito de versão.");
+    expect(error.resource).toBeUndefined();
+    expect(error.identifier).toBeUndefined();
+  });
+
+  it("exposes resource and identifier when provided", () => {
+    const error = new PreconditionFailedError(
+      "Conflito de versão.",
+      "CalendarioAgendamento",
+      "abc-123",
+    );
+    expect(error.resource).toBe("CalendarioAgendamento");
+    expect(error.identifier).toBe("abc-123");
+  });
+
+  it("is an instance of Error", () => {
+    const error = new PreconditionFailedError("Conflito de versão.");
     expect(error).toBeInstanceOf(Error);
   });
 });

@@ -1,3 +1,4 @@
+import type { ObjectUuidRef } from "@/domain/abstractions";
 import { EntityQueryResult, SharedFields } from "@/domain/abstractions";
 import { CampusFindOneQueryResult } from "@/modules/ambientes/campus";
 import { ImagemFindOneQueryResult } from "@/modules/armazenamento/imagem";
@@ -28,5 +29,6 @@ export class CursoFindOneQueryResult extends EntityQueryResult {
   campus!: CampusFindOneQueryResult | null;
   ofertaFormacao!: OfertaFormacaoFindOneQueryResult | null;
   imagemCapa!: ImagemFindOneQueryResult | null;
+  colecaoPadrao!: ObjectUuidRef | null;
   periodos!: CursoPeriodoQueryResult[];
 }

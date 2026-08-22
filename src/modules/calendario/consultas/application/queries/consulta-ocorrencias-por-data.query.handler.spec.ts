@@ -36,6 +36,7 @@ function createMockAgendamento(
 function createMockRepository() {
   return {
     findByDateRange: vi.fn(),
+    findExcecoesPorSeries: vi.fn().mockResolvedValue([]),
   } as unknown as ICalendarioAgendamentoRepository;
 }
 
@@ -65,7 +66,7 @@ describe("ConsultaOcorrenciasPorDataQueryHandlerImpl", () => {
 
       const agendamento = createMockAgendamento({ repeticao: null });
 
-      vi.mocked(repository.findByDateRange).mockResolvedValue([agendamento]);
+      (repository.findByDateRange as ReturnType<typeof vi.fn>).mockResolvedValue([agendamento]);
 
       const result = await handler.execute(null, createQuery());
 
@@ -86,7 +87,10 @@ describe("ConsultaOcorrenciasPorDataQueryHandlerImpl", () => {
         repeticao: null,
       });
 
-      vi.mocked(repository.findByDateRange).mockResolvedValue([agendamento1, agendamento2]);
+      (repository.findByDateRange as ReturnType<typeof vi.fn>).mockResolvedValue([
+        agendamento1,
+        agendamento2,
+      ]);
 
       const result = await handler.execute(null, createQuery());
 
@@ -111,7 +115,7 @@ describe("ConsultaOcorrenciasPorDataQueryHandlerImpl", () => {
         repeticao: "FREQ=DAILY;COUNT=5",
       });
 
-      vi.mocked(repository.findByDateRange).mockResolvedValue([agendamento]);
+      (repository.findByDateRange as ReturnType<typeof vi.fn>).mockResolvedValue([agendamento]);
 
       const result = await handler.execute(null, createQuery());
 
@@ -137,7 +141,7 @@ describe("ConsultaOcorrenciasPorDataQueryHandlerImpl", () => {
         repeticao: "FREQ=WEEKLY;BYDAY=MO,WE,FR;COUNT=6",
       });
 
-      vi.mocked(repository.findByDateRange).mockResolvedValue([agendamento]);
+      (repository.findByDateRange as ReturnType<typeof vi.fn>).mockResolvedValue([agendamento]);
 
       const result = await handler.execute(null, createQuery());
 
@@ -167,7 +171,7 @@ describe("ConsultaOcorrenciasPorDataQueryHandlerImpl", () => {
         repeticao: "FREQ=WEEKLY;COUNT=3",
       });
 
-      vi.mocked(repository.findByDateRange).mockResolvedValue([agendamento]);
+      (repository.findByDateRange as ReturnType<typeof vi.fn>).mockResolvedValue([agendamento]);
 
       const result = await handler.execute(null, createQuery());
 
@@ -204,7 +208,7 @@ describe("ConsultaOcorrenciasPorDataQueryHandlerImpl", () => {
         repeticao: "FREQ=DAILY;COUNT=3",
       });
 
-      vi.mocked(repository.findByDateRange).mockResolvedValue([agendamento]);
+      (repository.findByDateRange as ReturnType<typeof vi.fn>).mockResolvedValue([agendamento]);
 
       const result = await handler.execute(null, createQuery());
 
@@ -234,7 +238,7 @@ describe("ConsultaOcorrenciasPorDataQueryHandlerImpl", () => {
         repeticao: "FREQ=DAILY;COUNT=10",
       });
 
-      vi.mocked(repository.findByDateRange).mockResolvedValue([agendamento]);
+      (repository.findByDateRange as ReturnType<typeof vi.fn>).mockResolvedValue([agendamento]);
 
       const query = createQuery({
         dateStart: "2026-03-01",
@@ -256,6 +260,165 @@ describe("ConsultaOcorrenciasPorDataQueryHandlerImpl", () => {
   });
 
   // ==========================================
+  // Recurrence exceptions (RECURRENCE-ID / EXDATE)
+  // ==========================================
+
+  describe("recurrence exceptions", () => {
+    it("should suppress an occurrence date that has a matching exception", async () => {
+      const repository = createMockRepository();
+      const handler = createHandler(repository);
+
+      const agendamento = createMockAgendamento({
+        dataInicio: "2026-03-02",
+        dataFim: "2026-03-02",
+        repeticao: "FREQ=DAILY;COUNT=5",
+      });
+
+      (repository.findByDateRange as ReturnType<typeof vi.fn>).mockResolvedValue([agendamento]);
+      (repository.findExcecoesPorSeries as ReturnType<typeof vi.fn>).mockResolvedValue([
+        {
+          identificadorExternoSerieOrigem: agendamento.identificadorExterno,
+          dataOcorrenciaReferenciada: "2026-03-04",
+        },
+      ]);
+
+      const result = await handler.execute(null, createQuery());
+
+      expect(result).toHaveLength(4);
+
+      const dates = result.map((r) => new Date(r.dataInicio).toISOString().slice(0, 10));
+
+      expect(dates).not.toContain("2026-03-04");
+      expect(dates).toContain("2026-03-02");
+      expect(dates).toContain("2026-03-03");
+      expect(dates).toContain("2026-03-05");
+      expect(dates).toContain("2026-03-06");
+    });
+
+    it("should only suppress dates for the matching series, not unrelated ones", async () => {
+      const repository = createMockRepository();
+      const handler = createHandler(repository);
+
+      const agendamento = createMockAgendamento({
+        dataInicio: "2026-03-02",
+        dataFim: "2026-03-02",
+        repeticao: "FREQ=DAILY;COUNT=3",
+      });
+
+      (repository.findByDateRange as ReturnType<typeof vi.fn>).mockResolvedValue([agendamento]);
+      (repository.findExcecoesPorSeries as ReturnType<typeof vi.fn>).mockResolvedValue([
+        {
+          identificadorExternoSerieOrigem: createTestId(),
+          dataOcorrenciaReferenciada: "2026-03-03",
+        },
+      ]);
+
+      const result = await handler.execute(null, createQuery());
+
+      expect(result).toHaveLength(3);
+    });
+
+    it("should call findExcecoesPorSeries only with identificadores of recurring series", async () => {
+      const repository = createMockRepository();
+      const handler = createHandler(repository);
+
+      const recorrente = createMockAgendamento({ repeticao: "FREQ=DAILY;COUNT=2" });
+      const pontual = createMockAgendamento({ repeticao: null });
+
+      (repository.findByDateRange as ReturnType<typeof vi.fn>).mockResolvedValue([
+        recorrente,
+        pontual,
+      ]);
+
+      await handler.execute(null, createQuery());
+
+      expect(repository.findExcecoesPorSeries).toHaveBeenCalledWith({
+        identificadoresSerieOrigem: [recorrente.identificadorExterno],
+        dateStart: "2026-03-01",
+        dateEnd: "2026-03-31",
+      });
+    });
+  });
+
+  // ==========================================
+  // Recurrence additions (RDATE)
+  // ==========================================
+
+  describe("recurrence additions (RDATE)", () => {
+    it("should include a standalone avulsa occurrence alongside the expanded series", async () => {
+      const repository = createMockRepository();
+      const handler = createHandler(repository);
+
+      const serie = createMockAgendamento({
+        dataInicio: "2026-03-03", // terça-feira
+        dataFim: "2026-03-03",
+        repeticao: "FREQ=WEEKLY;BYDAY=TU;COUNT=3",
+      });
+
+      // Sábado avulso: não é gerado pela regra semanal de terça, e não referencia
+      // nenhuma ocorrência da série (dataOcorrenciaReferenciada nula) — é uma adição, não uma substituição.
+      const avulsa = createMockAgendamento({
+        dataInicio: "2026-03-14",
+        dataFim: "2026-03-14",
+        repeticao: null,
+        identificadorExternoSerieOrigem: serie.identificadorExterno,
+        dataOcorrenciaReferenciada: null,
+      });
+
+      (repository.findByDateRange as ReturnType<typeof vi.fn>).mockResolvedValue([
+        serie,
+        avulsa,
+      ]);
+      (repository.findExcecoesPorSeries as ReturnType<typeof vi.fn>).mockResolvedValue([]);
+
+      const result = await handler.execute(null, createQuery());
+
+      const dates = result.map((r) => new Date(r.dataInicio).toISOString().slice(0, 10));
+
+      // 3 ocorrências da regra (terças) + 1 avulsa (sábado)
+      expect(result).toHaveLength(4);
+      expect(dates).toContain("2026-03-03");
+      expect(dates).toContain("2026-03-10");
+      expect(dates).toContain("2026-03-17");
+      expect(dates).toContain("2026-03-14");
+    });
+
+    it("should not suppress the avulsa occurrence even when the series has unrelated exceptions", async () => {
+      const repository = createMockRepository();
+      const handler = createHandler(repository);
+
+      const serie = createMockAgendamento({
+        dataInicio: "2026-03-03",
+        dataFim: "2026-03-03",
+        repeticao: "FREQ=WEEKLY;BYDAY=TU;COUNT=2",
+      });
+
+      const avulsa = createMockAgendamento({
+        dataInicio: "2026-03-14",
+        dataFim: "2026-03-14",
+        repeticao: null,
+        identificadorExternoSerieOrigem: serie.identificadorExterno,
+        dataOcorrenciaReferenciada: null,
+      });
+
+      (repository.findByDateRange as ReturnType<typeof vi.fn>).mockResolvedValue([
+        serie,
+        avulsa,
+      ]);
+      // findExcecoesPorSeries só devolve exceções com dataOcorrenciaReferenciada
+      // preenchida — a avulsa nunca aparece aqui, pois a query no repositorio
+      // real filtra por essa coluna.
+      (repository.findExcecoesPorSeries as ReturnType<typeof vi.fn>).mockResolvedValue([]);
+
+      const result = await handler.execute(null, createQuery());
+
+      const dates = result.map((r) => new Date(r.dataInicio).toISOString().slice(0, 10));
+
+      expect(dates).toContain("2026-03-14");
+    });
+  });
+
+  // ==========================================
   // Edge cases
   // ==========================================
 
@@ -270,7 +433,7 @@ describe("ConsultaOcorrenciasPorDataQueryHandlerImpl", () => {
         repeticao: "INVALID_RRULE_STRING",
       });
 
-      vi.mocked(repository.findByDateRange).mockResolvedValue([agendamento]);
+      (repository.findByDateRange as ReturnType<typeof vi.fn>).mockResolvedValue([agendamento]);
 
       const result = await handler.execute(null, createQuery());
 
@@ -288,7 +451,7 @@ describe("ConsultaOcorrenciasPorDataQueryHandlerImpl", () => {
         repeticao: "FREQ=DAILY;COUNT=3",
       });
 
-      vi.mocked(repository.findByDateRange).mockResolvedValue([agendamento]);
+      (repository.findByDateRange as ReturnType<typeof vi.fn>).mockResolvedValue([agendamento]);
 
       const result = await handler.execute(null, createQuery());
 
@@ -303,7 +466,7 @@ describe("ConsultaOcorrenciasPorDataQueryHandlerImpl", () => {
       const repository = createMockRepository();
       const handler = createHandler(repository);
 
-      vi.mocked(repository.findByDateRange).mockResolvedValue([]);
+      (repository.findByDateRange as ReturnType<typeof vi.fn>).mockResolvedValue([]);
 
       const result = await handler.execute(null, createQuery());
 
@@ -321,7 +484,7 @@ describe("ConsultaOcorrenciasPorDataQueryHandlerImpl", () => {
       const repository = createMockRepository();
       const handler = createHandler(repository);
 
-      vi.mocked(repository.findByDateRange).mockResolvedValue([]);
+      (repository.findByDateRange as ReturnType<typeof vi.fn>).mockResolvedValue([]);
 
       const query = createQuery({
         dateStart: "2026-04-01",

@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package ladesa.timetable_generator.v1.core;
+option csharp_namespace = "Ladesa.TimetableGenerator.v1.Protobuf";
+
+import "core/time_slot.proto";
+
+message TimetableGridSchedule {
+  string date = 1; // date-time
+  string diary_id = 2;
+  string teacher_id = 3;
+  string group_id = 4;
+  TimeSlot time_slot = 5;
+
+  optional string room_id = 6;
+}

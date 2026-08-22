@@ -6,13 +6,12 @@ import { zodValidate } from "@/shared/validation/index";
 import { getNowISO } from "@/utils/date";
 import {
   CalendarioAgendamentoCreateSchema,
+  CalendarioAgendamentoExcecaoSchema,
   CalendarioAgendamentoReviseSchema,
   CalendarioAgendamentoSchema,
 } from "./calendario-agendamento.schemas";
-import type {
-  CalendarioAgendamentoStatus,
-  CalendarioAgendamentoTipo,
-} from "./calendario-agendamento.types";
+import type { CalendarioAgendamentoTipo } from "./calendario-agendamento.types";
+import { CalendarioAgendamentoStatus } from "./calendario-agendamento.types";
 
 export type ICalendarioAgendamento = z.infer<typeof CalendarioAgendamentoSchema>;
 
@@ -29,6 +28,14 @@ export class CalendarioAgendamento implements IVersioned {
   horarioFim!: string;
   repeticao!: string | null;
   status!: CalendarioAgendamentoStatus | null;
+
+  campus!: ObjectUuidRef | null;
+  colecao!: ObjectUuidRef | null;
+  autorId!: IdUuid | null;
+  motivo!: string | null;
+
+  identificadorExternoSerieOrigem!: IdUuid | null;
+  dataOcorrenciaReferenciada!: string | null;
 
   turmas!: ObjectUuidRef[];
   perfis!: ObjectUuidRef[];
@@ -69,6 +76,13 @@ export class CalendarioAgendamento implements IVersioned {
     instance.repeticao = parsed.repeticao ?? null;
     instance.status = parsed.status ?? null;
 
+    instance.campus = parsed.campus ?? null;
+    instance.colecao = parsed.colecao ?? null;
+    instance.autorId = parsed.autorId ?? null;
+    instance.motivo = parsed.motivo ?? null;
+    instance.identificadorExternoSerieOrigem = null;
+    instance.dataOcorrenciaReferenciada = null;
+
     instance.turmas = parsed.turmas ?? [];
     instance.perfis = parsed.perfis ?? [];
     instance.calendariosLetivos = parsed.calendariosLetivos ?? [];
@@ -108,6 +122,13 @@ export class CalendarioAgendamento implements IVersioned {
     instance.horarioFim = parsed.horarioFim;
     instance.repeticao = parsed.repeticao;
     instance.status = parsed.status;
+
+    instance.campus = parsed.campus;
+    instance.colecao = parsed.colecao;
+    instance.autorId = parsed.autorId;
+    instance.motivo = parsed.motivo;
+    instance.identificadorExternoSerieOrigem = parsed.identificadorExternoSerieOrigem;
+    instance.dataOcorrenciaReferenciada = parsed.dataOcorrenciaReferenciada;
 
     instance.turmas = parsed.turmas;
     instance.perfis = parsed.perfis;
@@ -154,6 +175,13 @@ export class CalendarioAgendamento implements IVersioned {
     instance.repeticao = parsed.repeticao !== undefined ? parsed.repeticao : previous.repeticao;
     instance.status = parsed.status !== undefined ? parsed.status : previous.status;
 
+    instance.campus = parsed.campus !== undefined ? parsed.campus : previous.campus;
+    instance.colecao = parsed.colecao !== undefined ? parsed.colecao : previous.colecao;
+    instance.autorId = parsed.autorId !== undefined ? parsed.autorId : previous.autorId;
+    instance.motivo = parsed.motivo !== undefined ? parsed.motivo : previous.motivo;
+    instance.identificadorExternoSerieOrigem = previous.identificadorExternoSerieOrigem;
+    instance.dataOcorrenciaReferenciada = previous.dataOcorrenciaReferenciada;
+
     instance.turmas = parsed.turmas ?? previous.turmas;
     instance.perfis = parsed.perfis ?? previous.perfis;
     instance.calendariosLetivos = parsed.calendariosLetivos ?? previous.calendariosLetivos;
@@ -171,6 +199,101 @@ export class CalendarioAgendamento implements IVersioned {
     instance.dateUpdated = getNowISO();
     instance.dateDeleted = null;
 
+    return instance;
+  }
+
+  /**
+   * Cria uma exceção de ocorrência: um agendamento novo, com identidade própria,
+   * que substitui a data indicada dentro da série raiz. Equivalente ao par
+   * UID + RECURRENCE-ID do iCalendar (RFC 5545). A série raiz não é alterada.
+   */
+  static criarExcecao(
+    serieOrigem: CalendarioAgendamento,
+    dataOcorrencia: string,
+    dados: unknown,
+  ): CalendarioAgendamento {
+    const parsed = zodValidate(
+      CalendarioAgendamento.entityName,
+      CalendarioAgendamentoExcecaoSchema,
+      dados,
+    );
+
+    const instance = new CalendarioAgendamento();
+
+    instance.id = generateUuidV7();
+    instance.identificadorExterno = generateUuidV7();
+    instance.tipo = serieOrigem.tipo;
+
+    instance.dataInicio = dataOcorrencia;
+    instance.dataFim = dataOcorrencia;
+    instance.diaInteiro = parsed.diaInteiro ?? serieOrigem.diaInteiro;
+    instance.horarioInicio = parsed.horarioInicio ?? serieOrigem.horarioInicio;
+    instance.horarioFim = parsed.horarioFim ?? serieOrigem.horarioFim;
+    instance.repeticao = null;
+    instance.status = parsed.status ?? serieOrigem.status;
+
+    instance.campus = parsed.campus !== undefined ? parsed.campus : serieOrigem.campus;
+    instance.colecao = parsed.colecao !== undefined ? parsed.colecao : serieOrigem.colecao;
+    instance.autorId = parsed.autorId ?? null;
+    instance.motivo = parsed.motivo ?? null;
+
+    instance.identificadorExternoSerieOrigem = serieOrigem.identificadorExterno;
+    instance.dataOcorrenciaReferenciada = dataOcorrencia;
+
+    instance.turmas = parsed.turmas ?? serieOrigem.turmas;
+    instance.perfis = parsed.perfis ?? serieOrigem.perfis;
+    instance.calendariosLetivos = parsed.calendariosLetivos ?? serieOrigem.calendariosLetivos;
+    instance.ofertasFormacao = parsed.ofertasFormacao ?? serieOrigem.ofertasFormacao;
+    instance.modalidades = parsed.modalidades ?? serieOrigem.modalidades;
+    instance.ambientes = parsed.ambientes ?? serieOrigem.ambientes;
+    instance.diarios = parsed.diarios ?? serieOrigem.diarios;
+
+    instance.version = 1;
+    instance.previousVersionId = null;
+    instance.validFrom = getNowISO();
+    instance.validTo = null;
+
+    instance.dateCreated = getNowISO();
+    instance.dateUpdated = getNowISO();
+    instance.dateDeleted = null;
+
+    return instance;
+  }
+
+  /**
+   * Cancela uma ocorrência específica da série, sem apagar as demais.
+   * Equivalente ao EXDATE do iCalendar (RFC 5545): a exceção nasce com
+   * status INATIVO, então a expansão de recorrência a pula e nenhuma
+   * consulta de conflito a enxerga.
+   */
+  static cancelarOcorrencia(
+    serieOrigem: CalendarioAgendamento,
+    dataOcorrencia: string,
+    autorId: IdUuid | null = null,
+    motivo: string | null = null,
+  ): CalendarioAgendamento {
+    return CalendarioAgendamento.criarExcecao(serieOrigem, dataOcorrencia, {
+      status: CalendarioAgendamentoStatus.INATIVO,
+      autorId,
+      motivo,
+    });
+  }
+
+  /**
+   * Adiciona uma data avulsa à série: uma ocorrência extra que a RRULE não
+   * geraria, com identidade própria. Equivalente ao RDATE do iCalendar (RFC
+   * 5545). Reaproveita o mesmo mecanismo de `criarExcecao`, mas com
+   * `dataOcorrenciaReferenciada` nula — nula significa "adição": a ocorrência
+   * não substitui nem cancela nenhuma data que a regra geraria, então a
+   * expansão de RRULE não a suprime. A série raiz não é alterada.
+   */
+  static adicionarDataAvulsa(
+    serieOrigem: CalendarioAgendamento,
+    dataOcorrencia: string,
+    dados: unknown,
+  ): CalendarioAgendamento {
+    const instance = CalendarioAgendamento.criarExcecao(serieOrigem, dataOcorrencia, dados);
+    instance.dataOcorrenciaReferenciada = null;
     return instance;
   }
 

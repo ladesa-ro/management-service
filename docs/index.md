@@ -12,7 +12,7 @@ flowchart TB
 
 ## [Aprender](aprender/index.md) (explicação)
 
-Arquitetura hexagonal, DDD, CQRS, NestJS, ORM e transação, autenticação (JWT/JWKS/OAuth2), REST/GraphQL/DTO, message broker, containers: o que cada peça é e faz, de forma geral, sem depender de nenhuma decisão deste serviço.
+Arquitetura hexagonal, DDD, CQRS, NestJS, ORM e transação, autenticação (JWT/JWKS/OAuth2), REST/GraphQL/DTO, message broker, calendário e timetabling, regulação acadêmica brasileira, containers: o que cada peça é e faz, de forma geral, sem depender de nenhuma decisão deste serviço.
 
 ## [Arquitetura](arquitetura/index.md) (referência)
 

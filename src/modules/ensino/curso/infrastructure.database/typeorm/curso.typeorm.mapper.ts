@@ -51,6 +51,7 @@ export const entityToDomain = createMapper<CursoEntity, ICurso>((e) => ({
   campus: pickId(e.campus),
   ofertaFormacao: pickId(e.ofertaFormacao),
   imagemCapa: pickId(e.imagemCapa),
+  colecaoPadrao: e.colecaoPadrao ? pickId(e.colecaoPadrao) : null,
   dateCreated: e.dateCreated,
   dateUpdated: e.dateUpdated,
   dateDeleted: e.dateDeleted,
@@ -67,6 +68,7 @@ export const entityToFindOneQueryResult = createMapper<CursoEntity, CursoFindOne
       ? OfertaFormacaoTypeormMapper.entityToFindOneQueryResult.map(e.ofertaFormacao)
       : null,
     imagemCapa: e.imagemCapa,
+    colecaoPadrao: e.colecaoPadrao ? pickId(e.colecaoPadrao) : null,
     periodos: groupPeriodoDisciplinas(e.periodoDisciplinas),
     dateCreated: e.dateCreated,
     dateUpdated: e.dateUpdated,
@@ -86,6 +88,7 @@ export const domainToPersistence = createMapper<ICurso, DeepPartial<CursoEntity>
   campus: d.campus,
   ofertaFormacao: d.ofertaFormacao,
   imagemCapa: d.imagemCapa ? pickId(d.imagemCapa) : null,
+  colecaoPadrao: d.colecaoPadrao ? pickId(d.colecaoPadrao) : null,
   dateCreated: d.dateCreated,
   dateUpdated: d.dateUpdated,
   dateDeleted: d.dateDeleted,

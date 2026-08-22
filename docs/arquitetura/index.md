@@ -10,12 +10,12 @@ O **management-service** é a API REST/GraphQL de gerenciamento acadêmico do ec
 | Entidade, schema, repositório, handler, mapper, com exemplo real | [Padrões de código](padroes-de-codigo.md) |
 | O padrão de mapeamento entre camadas em detalhe (`into`, `createMapper`) | [Mapeamento entre camadas](mapeamento-entre-camadas.md) |
 | Decisões que já foram tomadas e não devem ser reabertas sem justificativa nova | [Decisões arquiteturais](decisoes-arquiteturais.md) |
-| Por que NestJS+Bun, RabbitMQ, JSONB no contrato do solver | [Decisões de arquitetura da plataforma](decisoes-de-plataforma.md) |
+| Por que NestJS+Bun, JSONB no contrato do solver, e o ADR de mensageria superado | [Decisões de arquitetura da plataforma](decisoes-de-plataforma.md) |
 | Nomenclatura de arquivo, formatação, e os princípios de engenharia adotados | [Convenções e princípios](convencoes-e-principios.md) |
 | Keycloak, JWT mock, fluxo de autorização | [Autenticação e autorização](autenticacao-e-autorizacao.md) |
 | TypeORM, migrações, triggers, transação automática | [Banco de dados e transações](banco-de-dados-e-transacoes.md) |
 | Pipeline HTTP real, GraphQL code-first, paginação, erro | [APIs REST e GraphQL](apis-rest-e-graphql.md) |
-| RabbitMQ via Rascal, filas de geração de horário | [Message broker](message-broker.md) |
+| BullMQ sobre PostgreSQL, filas de geração de horário | [Message broker](message-broker.md) |
 | Socket.IO, notificações de estágio em tempo real | [WebSockets e notificações](websockets-e-notificacoes.md) |
 | Vitest, tipos de teste, helpers disponíveis | [Testes](testes.md) |
 | Pipeline de CI/CD, deploy via GitOps e Argo CD | [CI/CD e deploy](ci-cd-e-deploy.md) |
@@ -26,5 +26,5 @@ O **management-service** é a API REST/GraphQL de gerenciamento acadêmico do ec
 flowchart TB
     Apresentacao["Apresentação\nREST + GraphQL"] --> Aplicacao["Aplicação\ncommand/query handlers"]
     Aplicacao --> Dominio["Domínio\nentidades, contratos"]
-    Infraestrutura["Infraestrutura\nTypeORM, Keycloak, RabbitMQ"] -- "implementa contratos de" --> Dominio
+    Infraestrutura["Infraestrutura\nTypeORM, Keycloak, BullMQ"] -- "implementa contratos de" --> Dominio
 ```

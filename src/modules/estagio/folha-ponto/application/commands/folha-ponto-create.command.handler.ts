@@ -1,8 +1,11 @@
 import { BadRequestException, ConflictException, ForbiddenException, Logger } from "@nestjs/common";
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
+import {
+  type IMessageBrokerService,
+  IMessageBrokerService as IMessageBrokerServiceToken,
+} from "@/domain/abstractions/message-broker";
 import { Dep, Impl } from "@/domain/dependency-injection";
-import { MessageBrokerService } from "@/infrastructure.message-broker/message-broker.service";
 import { IEstagiarioRepository } from "@/modules/estagio/estagiario/domain/repositories";
 import { EstagioStatus } from "@/modules/estagio/estagio/domain/estagio";
 import { IEstagioRepository } from "@/modules/estagio/estagio/domain/repositories";
@@ -22,7 +25,8 @@ export class FolhaPontoCreateCommandHandlerImpl implements IFolhaPontoCreateComm
     @Dep(IFolhaPontoTokenRepository) private readonly tokenRepository: IFolhaPontoTokenRepository,
     @Dep(IEstagioRepository) private readonly estagioRepository: IEstagioRepository,
     @Dep(IEstagiarioRepository) private readonly estagiarioRepository: IEstagiarioRepository,
-    private readonly messageBrokerService: MessageBrokerService,
+    @Dep(IMessageBrokerServiceToken)
+    private readonly messageBrokerService: IMessageBrokerService,
   ) {}
 
   async execute(
@@ -125,7 +129,6 @@ export class FolhaPontoCreateCommandHandlerImpl implements IFolhaPontoCreateComm
       tokenCancelamentoId: tokenCancelamento.id,
     };
 
-    // Call the specific publish method that will be added to messageBrokerService
     await this.messageBrokerService.publishFolhaPontoCreated(payload);
 
     this.logger.log(`FolhaPonto criada: ${folhaPonto.id} para estágio ${estagio.id}`);

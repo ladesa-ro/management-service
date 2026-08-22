@@ -19,6 +19,24 @@ export class GerarHorarioCreateInputRestDto {
   @ApiPropertyOptional(GerarHorarioFields.calendarioLetivoIds.swaggerMetadata)
   calendarioLetivoIds?: string[];
 
+  @ApiPropertyOptional(GerarHorarioFields.boostSameDayOfWeekAndTimeSlot.swaggerMetadata)
+  boostSameDayOfWeekAndTimeSlot?: number;
+
+  @ApiPropertyOptional(GerarHorarioFields.boostSameDayOfWeekOnly.swaggerMetadata)
+  boostSameDayOfWeekOnly?: number;
+
+  @ApiPropertyOptional(GerarHorarioFields.boostSameTimeSlotOnly.swaggerMetadata)
+  boostSameTimeSlotOnly?: number;
+
+  @ApiPropertyOptional(GerarHorarioFields.boostLesserDistanceFromDayOfWeek.swaggerMetadata)
+  boostLesserDistanceFromDayOfWeek?: number;
+
+  @ApiPropertyOptional(GerarHorarioFields.boostLesserDistanceFromTimeSlot.swaggerMetadata)
+  boostLesserDistanceFromTimeSlot?: number;
+
+  @ApiPropertyOptional(GerarHorarioFields.enabledConstraints.swaggerMetadata)
+  enabledConstraints?: string[] | null;
+
   @ApiPropertyOptional(GerarHorarioFields.duracao.swaggerMetadata)
   duracao?: string;
 }
@@ -55,6 +73,12 @@ export class GerarHorarioFindOneOutputRestDto {
 
   @ApiPropertyOptional(GerarHorarioFields.respostaGerador.swaggerMetadata)
   respostaGerador: Record<string, unknown> | null;
+
+  @ApiPropertyOptional({
+    description:
+      "Sessão de edição aberta com a grade aceita como proposta, preenchida só na resposta de POST /:id/aceitar",
+  })
+  sessaoEdicaoId?: string;
 
   @ApiProperty(GerarHorarioFields.dateCreated.swaggerMetadata)
   dateCreated: string;

@@ -26,6 +26,10 @@ export const CursoImagemCapaRefSchema = createSchema((standard) =>
   ObjectIdUuidFactoryNullable.create(standard).optional(),
 );
 
+export const CursoColecaoPadraoRefSchema = createSchema((standard) =>
+  ObjectIdUuidFactoryNullable.create(standard).optional(),
+);
+
 // ============================================================================
 // Schemas de período-disciplina (para input de create/update)
 // ============================================================================
@@ -53,6 +57,7 @@ export const CursoSchema = z
     campus: ObjectIdUuidFactory.domain,
     ofertaFormacao: ObjectIdUuidFactory.domain,
     imagemCapa: ObjectIdUuidFactoryNullable.domain,
+    colecaoPadrao: ObjectIdUuidFactoryNullable.domain,
   })
   .extend(datedSchema.shape);
 
@@ -63,6 +68,7 @@ export const CursoCreateSchema = createSchema((standard) =>
     quantidadePeriodos: CursoFields.quantidadePeriodos.create(standard),
     campus: CursoCampusRefSchema.create(standard),
     ofertaFormacao: CursoOfertaFormacaoRefSchema.create(standard),
+    colecaoPadrao: CursoColecaoPadraoRefSchema.create(standard),
     periodos: z.array(CursoPeriodoItemSchema).optional(),
   }),
 );
@@ -74,6 +80,7 @@ export const CursoUpdateSchema = createSchema((standard) =>
     quantidadePeriodos: CursoFields.quantidadePeriodos.create(standard).optional(),
     campus: CursoCampusRefSchema.create(standard).optional(),
     ofertaFormacao: CursoOfertaFormacaoRefSchema.create(standard).optional(),
+    colecaoPadrao: CursoColecaoPadraoRefSchema.create(standard),
     periodos: z.array(CursoPeriodoItemSchema).optional(),
   }),
 );

@@ -15,6 +15,7 @@ export class Turma {
   curso!: { id: string };
   ambientePadraoAula!: { id: string } | null;
   imagemCapa!: { id: string } | null;
+  numeroEstimadoAlunos!: number | null;
   dateCreated!: ScalarDateTimeString;
   dateUpdated!: ScalarDateTimeString;
   dateDeleted!: ScalarDateTimeString | null;
@@ -31,6 +32,7 @@ export class Turma {
     instance.curso = parsed.curso;
     instance.ambientePadraoAula = parsed.ambientePadraoAula ?? null;
     instance.imagemCapa = null;
+    instance.numeroEstimadoAlunos = parsed.numeroEstimadoAlunos ?? null;
     instance.dateCreated = getNowISO();
     instance.dateUpdated = getNowISO();
     instance.dateDeleted = null;
@@ -48,6 +50,7 @@ export class Turma {
     instance.curso = parsed.curso;
     instance.ambientePadraoAula = parsed.ambientePadraoAula;
     instance.imagemCapa = parsed.imagemCapa;
+    instance.numeroEstimadoAlunos = parsed.numeroEstimadoAlunos;
     instance.dateCreated = parsed.dateCreated;
     instance.dateUpdated = parsed.dateUpdated;
     instance.dateDeleted = parsed.dateDeleted;
@@ -62,6 +65,8 @@ export class Turma {
     if (parsed.curso !== undefined) this.curso = parsed.curso;
     if (parsed.ambientePadraoAula !== undefined)
       this.ambientePadraoAula = parsed.ambientePadraoAula ?? null;
+    if (parsed.numeroEstimadoAlunos !== undefined)
+      this.numeroEstimadoAlunos = parsed.numeroEstimadoAlunos ?? null;
 
     this.dateUpdated = getNowISO();
 

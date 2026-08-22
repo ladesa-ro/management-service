@@ -9,6 +9,7 @@ export const TurmaCreateCommandFields = {
   curso: TurmaFields.curso,
   ambientePadraoAula: TurmaFields.ambientePadraoAula,
   imagemCapa: TurmaFields.imagemCapa,
+  numeroEstimadoAlunos: TurmaFields.numeroEstimadoAlunos,
 };
 
 export class TurmaCreateCommand {
@@ -17,4 +18,5 @@ export class TurmaCreateCommand {
   curso!: CursoInputRef;
   ambientePadraoAula?: AmbienteInputRef | null;
   imagemCapa?: ImagemInputRef | null;
+  numeroEstimadoAlunos?: number | null;
 }

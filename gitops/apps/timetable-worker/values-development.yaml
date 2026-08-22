@@ -1,0 +1,33 @@
+application:
+  applicationName: ladesa-ro-timetable-worker
+  deployment:
+    annotations:
+      secrets.infisical.com/auto-reload: 'true'
+    containerSecurityContext:
+      readOnlyRootFilesystem: false
+      runAsNonRoot: false
+    enabled: true
+    envFrom:
+      timetable-worker-config:
+        name: ladesa-ro-timetable-worker-config
+        type: secret
+    image:
+      pullPolicy: Always
+      repository: ghcr.io/ladesa-ro/management-service/timetable-worker
+      tag: development
+    replicas: 1
+    resources:
+      limits:
+        cpu: '2'
+        memory: 1Gi
+      requests:
+        cpu: 100m
+        memory: 256Mi
+    strategy:
+      rollingUpdate:
+        maxSurge: 1
+        maxUnavailable: 0
+  service:
+    enabled: false
+  ingress:
+    enabled: false

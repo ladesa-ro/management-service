@@ -170,6 +170,24 @@ export class DiarioProfessorTypeOrmRepositoryAdapter implements IDiarioProfessor
       .execute();
   }
 
+  async findAllActiveByPerfilId(
+    perfilId: string,
+  ): Promise<Array<{ diarioId: string; cargaHoraria: number }>> {
+    const rows = await this.appTypeormConnection
+      .getRepository(DiarioProfessorEntity)
+      .createQueryBuilder("diario_professor")
+      .innerJoin("diario_professor.diario", "diario")
+      .innerJoin("diario.disciplina", "disciplina")
+      .select("diario.id", "diarioId")
+      .addSelect("disciplina.cargaHoraria", "cargaHoraria")
+      .where("diario_professor.id_perfil_fk = :perfilId", { perfilId })
+      .andWhere("diario_professor.situacao = true")
+      .andWhere("diario_professor.date_deleted IS NULL")
+      .getRawMany<{ diarioId: string; cargaHoraria: number }>();
+
+    return rows;
+  }
+
   async bulkCreate(
     entries: Array<{ situacao: boolean; diarioId: string; perfilId: string }>,
   ): Promise<void> {
