@@ -1,0 +1,9 @@
+apiVersion: v2
+name: api
+description: Componente api do management-service do Ladesa
+type: application
+version: 0.1.0
+dependencies:
+  - name: application
+    version: 6.0.2
+    repository: https://stakater.github.io/stakater-charts
