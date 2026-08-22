@@ -1,0 +1,14 @@
+{
+  "name": "@ladesa-ro/timetable-generator-worker",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "index.ts",
+  "scripts": {
+    "start": "bun run index.ts"
+  },
+  "dependencies": {
+    "bullmq": "^6.2.0",
+    "pg": "^8.21.0"
+  }
+}

@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package ladesa.timetable_generator.v1.core;
+option csharp_namespace = "Ladesa.TimetableGenerator.v1.Protobuf";
+
+message Diary {
+  string id = 1;
+
+  string group_id = 2;
+  string teacher_id = 3;
+  string subject_id = 4;
+  
+  int32 week_limit = 5;
+  int32 remaining = 6;
+
+  optional string room_id = 7;
+}

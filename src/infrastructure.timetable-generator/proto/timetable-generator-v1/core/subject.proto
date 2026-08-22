@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package ladesa.timetable_generator.v1.core;
+option csharp_namespace = "Ladesa.TimetableGenerator.v1.Protobuf";
+
+message Subject {
+  string id = 1;
+  string name = 2;
+}

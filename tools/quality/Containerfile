@@ -1,0 +1,51 @@
+FROM debian:bookworm-slim
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends ca-certificates curl git xz-utils \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /opt/quality-tools
+RUN curl -fsSL https://github.com/cashapp/hermit/releases/download/stable/install.sh | /bin/bash \
+    && export PATH="/root/bin:${PATH}" \
+    && hermit init . \
+    && bin/hermit install node-24.15.0 python3-3.14.3 gitleaks-8.30.1
+
+ENV PATH="/opt/quality-tools/bin:${PATH}"
+
+RUN set -eu; \
+    arch="$(uname -m)"; \
+    case "$arch" in \
+      x86_64) trivy_arch=64bit; osv_arch=amd64 ;; \
+      aarch64|arm64) trivy_arch=ARM64; osv_arch=arm64 ;; \
+      *) echo "unsupported arch: $arch" >&2; exit 1 ;; \
+    esac; \
+    curl -fsSL -o /tmp/trivy.tar.gz "https://github.com/aquasecurity/trivy/releases/download/v0.74.0/trivy_0.74.0_Linux-${trivy_arch}.tar.gz"; \
+    if [ "$trivy_arch" = "64bit" ]; then \
+      echo "2ae6fe3ee734b7fdf11335663e18c75ea12dccc76062f09f164a3b0f8be4371a  /tmp/trivy.tar.gz" | sha256sum -c -; \
+    else \
+      echo "b94ce1976bbf3c15b514b605ee88be7c6d94a29be2302847ff01cb794d47aad5  /tmp/trivy.tar.gz" | sha256sum -c -; \
+    fi; \
+    tar -xzf /tmp/trivy.tar.gz -C /opt/quality-tools/bin trivy; \
+    rm /tmp/trivy.tar.gz; \
+    curl -fsSL -o /opt/quality-tools/bin/osv-scanner "https://github.com/google/osv-scanner/releases/download/v2.5.0/osv-scanner_linux_${osv_arch}"; \
+    if [ "$osv_arch" = "amd64" ]; then \
+      echo "edcfc41d257db36148f065055655fe3fcfc434b0b423ea67468a84c207524e0c  /opt/quality-tools/bin/osv-scanner" | sha256sum -c -; \
+    else \
+      echo "fe152e1a546af223e6c557cc3111a8bb3e5dc02fcbf7dbe95d26567c0f0041f2  /opt/quality-tools/bin/osv-scanner" | sha256sum -c -; \
+    fi; \
+    chmod +x /opt/quality-tools/bin/osv-scanner
+
+RUN pip install --no-cache-dir --break-system-packages \
+      lizard==1.23.0 semgrep==1.173.0 ast-grep-cli==0.40.0 \
+    && py_scripts="$(python3 -c 'import sysconfig; print(sysconfig.get_path("scripts"))')" \
+    && ln -sf "$py_scripts/lizard" /opt/quality-tools/bin/lizard \
+    && ln -sf "$py_scripts/semgrep" /opt/quality-tools/bin/semgrep \
+    && ln -sf "$py_scripts/ast-grep" /opt/quality-tools/bin/ast-grep \
+    && npm install --global --no-fund --no-audit jscpd@5.0.12 \
+    && ln -sf /opt/quality-tools/.hermit/node/bin/jscpd /opt/quality-tools/bin/jscpd
+
+RUN gitleaks version && trivy --version && osv-scanner --version \
+    && lizard --version && semgrep --version && jscpd --version && ast-grep --version
+
+WORKDIR /repo
+ENTRYPOINT []

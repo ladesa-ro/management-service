@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package ladesa.timetable_generator.v1.service;
+option csharp_namespace = "Ladesa.TimetableGenerator.v1.Protobuf";
+
+message ServiceGenerateResponseResultError {
+  string error_code = 1;
+  string error_message = 2;
+  optional string additional_info = 3;
+}

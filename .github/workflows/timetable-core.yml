@@ -1,0 +1,49 @@
+name: "Timetable Core"
+
+on:
+  pull_request:
+    paths:
+      - src/infrastructure.timetable-generator/**
+      - .github/workflows/timetable-core.yml
+  push:
+    branches:
+      - main
+    paths:
+      - src/infrastructure.timetable-generator/**
+      - .github/workflows/timetable-core.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  core:
+    name: "Compilar e testar o core"
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+
+      - name: "Compilar e testar em container"
+        working-directory: src/infrastructure.timetable-generator/core
+        run: docker buildx bake --file docker-bake.hcl test
+
+      - name: "Publicar o console self-contained"
+        working-directory: src/infrastructure.timetable-generator/core
+        run: docker buildx bake --file docker-bake.hcl publicar
+
+      - name: "Conferir que o console responde a uma requisição real"
+        working-directory: src/infrastructure.timetable-generator
+        run: |
+          set -euo pipefail
+          docker build -q -f worker/Containerfile -t timetable-worker:ci .
+          docker run --rm -i --entrypoint /opt/ladesa/ladesa-timetable-generator \
+            timetable-worker:ci < core/exemplo-request.json > /tmp/resposta.json
+          if ! grep -q '"isSuccessful": true' /tmp/resposta.json; then
+            echo "::error::o console não devolveu isSuccessful true"
+            cat /tmp/resposta.json
+            exit 1
+          fi
+          echo "o console respondeu com sucesso"

@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package ladesa.timetable_generator.v1.core;
+option csharp_namespace = "Ladesa.TimetableGenerator.v1.Protobuf";
+
+enum ConstraintKind {
+  GroupOneScheduleAtSameTime = 0;
+  TeacherOneScheduleAtSameTime = 1;
+  DiaryLimitSchedulesInOneWeek = 2;
+  DiaryLimitRemaining = 3;
+  TeacherLunch = 4;
+  GroupLunch = 5;
+  TeacherNoOppositeTurns = 6;
+  Teacher12Hours = 7;
+  GroupNoOverlappingTimeSlots = 8;
+  TeacherNoOverlappingTimeSlots = 9;
+  RoomOneScheduleAtSameTime = 10;
+}
+
+message ConstraintKindList {
+  repeated ConstraintKind kinds = 1;
+}
