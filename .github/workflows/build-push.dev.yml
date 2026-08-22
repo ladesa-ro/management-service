@@ -62,3 +62,18 @@ jobs:
           cache-to: |
             type=gha,scope=management-service-dev,mode=max
             type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_BASENAME }}/management-service:cache-development,mode=max
+
+      - name: "[CI] Construção e publicação da imagem do timetable-worker"
+        uses: docker/build-push-action@f9f3042f7e2789586610d6e8b85c8f03e5195baf
+        with:
+          context: ./src/infrastructure.timetable-generator/
+          file: ./src/infrastructure.timetable-generator/worker/Containerfile
+          target: runtime
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_BASENAME }}/timetable-worker:development
+          cache-from: |
+            type=gha,scope=timetable-worker-dev
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_BASENAME }}/timetable-worker:cache-development
+          cache-to: |
+            type=gha,scope=timetable-worker-dev,mode=max
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_BASENAME }}/timetable-worker:cache-development,mode=max
