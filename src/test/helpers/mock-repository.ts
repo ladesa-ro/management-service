@@ -52,6 +52,21 @@ export function createMockAgendamentoRepository() {
     loadMetadata: vi.fn().mockResolvedValue(null),
     saveNewVersion: vi.fn().mockResolvedValue(undefined),
     findByDateRange: vi.fn().mockResolvedValue([]),
+    findByColecaoId: vi.fn().mockResolvedValue([]),
+    getLinhaDoTempo: vi.fn().mockResolvedValue([]),
+    findExcecoesPorSeries: vi.fn().mockResolvedValue([]),
+    reatribuirExcecoesParaNovaSerie: vi.fn().mockResolvedValue(undefined),
+  };
+}
+
+/**
+ * Creates a mock CalendarioColecaoSyncService (sync-token + push WS de calendário).
+ */
+
+export function createMockColecaoSyncService() {
+  return {
+    registrarMudanca: vi.fn().mockResolvedValue(1),
+    obterSyncTokenAtual: vi.fn().mockResolvedValue(0),
   };
 }
 
@@ -65,5 +80,6 @@ export function createMockPermissionChecker() {
     ensureCanRead: vi.fn().mockResolvedValue(undefined),
     ensureCanUpdate: vi.fn().mockResolvedValue(undefined),
     ensureCanDelete: vi.fn().mockResolvedValue(undefined),
+    ensureCanCancelarPropria: vi.fn().mockResolvedValue(undefined),
   };
 }

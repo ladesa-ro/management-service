@@ -31,6 +31,23 @@ export const CalendarioAgendamentoFields = {
   repeticao: createFieldMetadata({
     description: "Regra de repeticao (iCalendar RRULE)",
   }),
+  campus: createFieldMetadata({
+    description: "Campus do agendamento. Derivado do ambiente ou da turma quando não informado",
+  }),
+  colecao: createFieldMetadata({
+    description: "Coleção do calendário à qual este agendamento pertence",
+  }),
+  motivo: createFieldMetadata({
+    description: "Motivo do agendamento ou da alteração, para histórico e auditoria",
+  }),
+  dataOcorrencia: createFieldMetadata({
+    description: "Data da ocorrência da série a editar ou cancelar (formato AAAA-MM-DD)",
+    schema: createSchema(() => z.string().min(1)),
+  }),
+  escopo: createFieldMetadata({
+    description:
+      "Alcance da edição de série: ESTA_E_SEGUINTES corta a série na data e cria outra; TODAS altera a série inteira",
+  }),
   turmas: createFieldMetadata({
     description: "Turmas participantes",
   }),

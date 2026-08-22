@@ -8,7 +8,7 @@ import {
   WebSocketServer,
 } from "@nestjs/websockets";
 import type { Server, Socket } from "socket.io";
-import type { EstagioNotificacaoPayload, EstagioWsRoom } from "../domain/estagio-notificacao.types";
+import { isCalendarioWsRoom } from "../domain/calendario-ws-room.types";
 import {
   ESTAGIO_WS_EVENT,
   ESTAGIO_WS_JOIN_ROOM,
@@ -17,12 +17,12 @@ import {
 } from "../domain/estagio-notificacao.types";
 
 /**
- * Gateway WebSocket para notificações do módulo de Estágio.
+ * Gateway WebSocket de notificações — Estágio e Calendário.
  *
  * Usa Socket.IO com rooms para que cada cliente receba apenas
  * as notificações dos contextos em que está inscrito.
  *
- * Rooms disponíveis:
+ * Rooms fixas (Estágio):
  *  - estagio:status      — mudanças de status
  *  - estagio:prazos      — alertas de prazo
  *  - estagio:documentos  — documentos e seguros
@@ -30,6 +30,9 @@ import {
  *  - estagio:importacao  — jobs de importação CSV
  *  - estagio:aprovacoes  — fluxo de aprovação
  *  - estagio:alertas     — alertas gerais
+ *
+ * Rooms dinâmicas (Calendário):
+ *  - calendario:{colecaoId} — mudanças de sincronização de uma coleção
  */
 @WebSocketGateway({
   cors: { origin: "*" },
@@ -40,6 +43,11 @@ export class NotificacaoGateway implements OnGatewayConnection, OnGatewayDisconn
   private readonly server!: Server;
 
   private readonly validRooms = new Set<string>(Object.values(ESTAGIO_WS_ROOMS));
+
+  /** Aceita as rooms fixas de Estágio e o padrão `calendario:{uuid}`. */
+  private isValidRoom(roomId: string): boolean {
+    return this.validRooms.has(roomId) || isCalendarioWsRoom(roomId);
+  }
 
   handleConnection(client: Socket) {
     console.log(`[WS] cliente conectado: ${client.id}`);
@@ -58,7 +66,7 @@ export class NotificacaoGateway implements OnGatewayConnection, OnGatewayDisconn
     @ConnectedSocket() client: Socket,
     @MessageBody() roomId: string,
   ): { event: string; data: { room: string; joined: boolean } } {
-    if (!this.validRooms.has(roomId)) {
+    if (!this.isValidRoom(roomId)) {
       return { event: "error", data: { room: roomId, joined: false } };
     }
 
@@ -84,9 +92,10 @@ export class NotificacaoGateway implements OnGatewayConnection, OnGatewayDisconn
 
   /**
    * Emite uma notificação para todos os clientes inscritos no room especificado.
-   * Chamado internamente pelo NotificacaoPushService.
+   * Genérico no payload: usado tanto pelo push de Estágio (rooms fixas) quanto
+   * pelo hook de sincronização de Calendário (rooms `calendario:{colecaoId}`).
    */
-  emitToRoom(room: EstagioWsRoom, payload: EstagioNotificacaoPayload): void {
+  emitToRoom<T extends object>(room: string, payload: T): void {
     this.server.to(room).emit(ESTAGIO_WS_EVENT, payload);
   }
 
@@ -94,7 +103,7 @@ export class NotificacaoGateway implements OnGatewayConnection, OnGatewayDisconn
    * Emite uma notificação para um cliente específico (ex: importação).
    * Permite notificar apenas o usuário que disparou a ação.
    */
-  emitToSocket(socketId: string, payload: EstagioNotificacaoPayload): void {
+  emitToSocket<T extends object>(socketId: string, payload: T): void {
     this.server.to(socketId).emit(ESTAGIO_WS_EVENT, payload);
   }
 }

@@ -1,4 +1,7 @@
-import { Column, Entity, PrimaryColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, type Relation } from "typeorm";
+import { UsuarioEntity } from "@/modules/acesso/usuario/infrastructure.database/typeorm/usuario.typeorm.entity";
+import { CampusEntity } from "@/modules/ambientes/campus/infrastructure.database/typeorm/campus.typeorm.entity";
+import { CalendarioColecaoEntity } from "@/modules/calendario/colecao/infrastructure.database/typeorm/calendario-colecao.typeorm.entity";
 import {
   CalendarioAgendamentoStatus,
   CalendarioAgendamentoTipo,
@@ -34,6 +37,27 @@ export class CalendarioAgendamentoEntity {
 
   @Column({ name: "repeticao", type: "text", nullable: true })
   repeticao!: string | null;
+
+  @ManyToOne(() => CampusEntity, { nullable: true })
+  @JoinColumn({ name: "id_campus_fk" })
+  campus!: Relation<CampusEntity> | null;
+
+  @ManyToOne(() => CalendarioColecaoEntity, { nullable: true })
+  @JoinColumn({ name: "id_colecao_fk" })
+  colecao!: Relation<CalendarioColecaoEntity> | null;
+
+  @ManyToOne(() => UsuarioEntity, { nullable: true })
+  @JoinColumn({ name: "id_autor_fk" })
+  autor!: Relation<UsuarioEntity> | null;
+
+  @Column({ name: "motivo", type: "text", nullable: true })
+  motivo!: string | null;
+
+  @Column({ name: "identificador_externo_serie_origem", type: "uuid", nullable: true })
+  identificadorExternoSerieOrigem!: string | null;
+
+  @Column({ name: "data_ocorrencia_referenciada", type: "date", nullable: true })
+  dataOcorrenciaReferenciada!: string | null;
 
   // nome e cor permanecem na entity para leitura/backcompat, mas a fonte de verdade eh a tabela metadata
   @Column({ name: "nome", type: "text", nullable: true })

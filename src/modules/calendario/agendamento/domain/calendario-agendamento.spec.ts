@@ -26,6 +26,14 @@ describe("CalendarioAgendamento (domain entity)", () => {
     repeticao: null,
     status: CalendarioAgendamentoStatus.ATIVO,
 
+    campus: null,
+    colecao: null,
+    autorId: null,
+    motivo: null,
+
+    identificadorExternoSerieOrigem: null,
+    dataOcorrenciaReferenciada: null,
+
     turmas: [],
     perfis: [],
     calendariosLetivos: [],
@@ -118,6 +126,103 @@ describe("CalendarioAgendamento (domain entity)", () => {
       const newVersion = CalendarioAgendamento.createNewVersion(previous, {});
 
       expect(newVersion.previousVersionId).toBe(previous.id);
+    });
+  });
+
+  describe("criarExcecao", () => {
+    const criarSerie = () =>
+      CalendarioAgendamento.create({
+        ...validCreateInput,
+        repeticao: "FREQ=WEEKLY;COUNT=10",
+      });
+
+    it("should create an independent entity referencing the origin series", () => {
+      const serie = criarSerie();
+
+      const excecao = CalendarioAgendamento.criarExcecao(serie, "2026-03-22", {
+        horarioInicio: "10:00:00",
+      });
+
+      expect(excecao.id).not.toBe(serie.id);
+      expect(excecao.identificadorExterno).not.toBe(serie.identificadorExterno);
+      expect(excecao.identificadorExternoSerieOrigem).toBe(serie.identificadorExterno);
+      expect(excecao.dataOcorrenciaReferenciada).toBe("2026-03-22");
+      expect(excecao.dataInicio).toBe("2026-03-22");
+      expect(excecao.dataFim).toBe("2026-03-22");
+      expect(excecao.horarioInicio).toBe("10:00:00");
+      expect(excecao.repeticao).toBeNull();
+    });
+
+    it("should inherit fields not overridden from the origin series", () => {
+      const serie = criarSerie();
+
+      const excecao = CalendarioAgendamento.criarExcecao(serie, "2026-03-22", {});
+
+      expect(excecao.tipo).toBe(serie.tipo);
+      expect(excecao.horarioInicio).toBe(serie.horarioInicio);
+      expect(excecao.horarioFim).toBe(serie.horarioFim);
+      expect(excecao.status).toBe(serie.status);
+      expect(excecao.turmas).toBe(serie.turmas);
+    });
+
+    it("should inherit colecao from the origin series when dado.colecao is undefined", () => {
+      const serie = CalendarioAgendamento.create({
+        ...validCreateInput,
+        repeticao: "FREQ=WEEKLY;COUNT=10",
+        colecao: { id: createTestId() },
+      });
+
+      const excecao = CalendarioAgendamento.criarExcecao(serie, "2026-03-22", {});
+
+      expect(excecao.colecao).toEqual(serie.colecao);
+    });
+
+    it("should not override colecao when dado explicitly provides another colecao", () => {
+      const serie = CalendarioAgendamento.create({
+        ...validCreateInput,
+        repeticao: "FREQ=WEEKLY;COUNT=10",
+        colecao: { id: createTestId() },
+      });
+      const colecaoExplicita = { id: createTestId() };
+
+      const excecao = CalendarioAgendamento.criarExcecao(serie, "2026-03-22", {
+        colecao: colecaoExplicita,
+      });
+
+      expect(excecao.colecao).toEqual(colecaoExplicita);
+      expect(excecao.colecao).not.toEqual(serie.colecao);
+    });
+
+    it("should not alter the origin series", () => {
+      const serie = criarSerie();
+      const dataInicioOriginal = serie.dataInicio;
+      const repeticaoOriginal = serie.repeticao;
+
+      CalendarioAgendamento.criarExcecao(serie, "2026-03-22", { horarioInicio: "10:00:00" });
+
+      expect(serie.dataInicio).toBe(dataInicioOriginal);
+      expect(serie.repeticao).toBe(repeticaoOriginal);
+    });
+  });
+
+  describe("cancelarOcorrencia", () => {
+    it("should create an INATIVO exception for the given date", () => {
+      const serie = CalendarioAgendamento.create({
+        ...validCreateInput,
+        repeticao: "FREQ=WEEKLY;COUNT=10",
+      });
+
+      const cancelamento = CalendarioAgendamento.cancelarOcorrencia(
+        serie,
+        "2026-03-22",
+        createTestId(),
+        "Feriado local",
+      );
+
+      expect(cancelamento.status).toBe(CalendarioAgendamentoStatus.INATIVO);
+      expect(cancelamento.identificadorExternoSerieOrigem).toBe(serie.identificadorExterno);
+      expect(cancelamento.dataOcorrenciaReferenciada).toBe("2026-03-22");
+      expect(cancelamento.motivo).toBe("Feriado local");
     });
   });
 
