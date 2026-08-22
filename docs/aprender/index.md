@@ -20,7 +20,3 @@ flowchart LR
     Aprender[Aprender: explicação geral] --> Arquitetura[Arquitetura: referência deste serviço]
     Arquitetura --> Operacao[Operação: tutorial e how-to guide]
 ```
-
-## Como esta seção foi montada
-
-As sete primeiras páginas acima vieram da migração do `README.md` deste repositório (4298 linhas, antes desta iniciativa): cada trecho que explicava um conceito de forma genérica, sem depender de nenhuma decisão real deste serviço, foi reescrito em terceira pessoa impessoal e movido pra cá. O que sobrou no `README.md`, fato específico deste serviço (qual ORM, qual framework de autenticação, como os módulos estão organizados), foi pra [Arquitetura](../arquitetura/index.md). O passo a passo de setup e contribuição foi pra [Operação](../operacao/index.md).

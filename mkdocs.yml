@@ -43,6 +43,18 @@ markdown_extensions:
 
 nav:
   - Início: index.md
+  - Aprender:
+      - Visão geral: aprender/index.md
+      - Arquitetura hexagonal, DDD e CQRS: aprender/arquitetura-hexagonal.md
+      - NestJS: aprender/nestjs.md
+      - ORM, migrações e transações: aprender/orm-e-banco-de-dados.md
+      - Autenticação (JWT, JWKS, OAuth2): aprender/autenticacao.md
+      - REST, GraphQL e DTO: aprender/graphql-e-rest.md
+      - Message broker: aprender/message-broker.md
+      - Containers e Docker: aprender/containers.md
+      - Diátaxis: aprender/diataxis.md
+      - Normas de redação técnica: aprender/normas-de-redacao-tecnica.md
+      - Documentação como código: aprender/documentacao-como-codigo.md
   - Arquitetura:
       - Visão geral: arquitetura/index.md
       - Camadas e estrutura: arquitetura/camadas-e-estrutura.md
@@ -70,15 +82,3 @@ nav:
       - Segurança: operacao/seguranca.md
       - Desenvolvimento: operacao/desenvolvimento.md
       - Pendências: operacao/pendencias.md
-  - Aprender:
-      - Visão geral: aprender/index.md
-      - Arquitetura hexagonal, DDD e CQRS: aprender/arquitetura-hexagonal.md
-      - NestJS: aprender/nestjs.md
-      - ORM, migrações e transações: aprender/orm-e-banco-de-dados.md
-      - Autenticação (JWT, JWKS, OAuth2): aprender/autenticacao.md
-      - REST, GraphQL e DTO: aprender/graphql-e-rest.md
-      - Message broker: aprender/message-broker.md
-      - Containers e Docker: aprender/containers.md
-      - Diátaxis: aprender/diataxis.md
-      - Normas de redação técnica: aprender/normas-de-redacao-tecnica.md
-      - Documentação como código: aprender/documentacao-como-codigo.md
