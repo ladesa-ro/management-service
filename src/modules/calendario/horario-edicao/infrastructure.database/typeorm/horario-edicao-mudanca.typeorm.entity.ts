@@ -27,6 +27,14 @@ export class HorarioEdicaoMudancaEntity {
   @Column({ name: "dados", type: "jsonb", nullable: false })
   dados!: Record<string, unknown>;
 
+  /**
+   * Estado do agendamento antes desta mudança ser aplicada — nulo para CRIAR
+   * (não havia "antes"). É o que sustenta desfazer uma mudança específica sem
+   * reverter a sessão inteira.
+   */
+  @Column({ name: "dados_anteriores", type: "jsonb", nullable: true })
+  dadosAnteriores!: Record<string, unknown> | null;
+
   @Column({ name: "date_created", type: "timestamptz", nullable: false })
   dateCreated!: string;
 }

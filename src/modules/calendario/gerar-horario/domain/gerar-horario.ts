@@ -71,6 +71,28 @@ export class GerarHorario {
     this.requisicaoGerador = requisicao;
   }
 
+  markAsSucesso(resposta: Record<string, unknown>): void {
+    if (this.status !== GerarHorarioStatus.PENDENTE) {
+      throw ValidationError.fromField(
+        "status",
+        `Solicitacao ${this.id} nao pode concluir no status ${this.status}. Status esperado: PENDENTE.`,
+      );
+    }
+    this.status = GerarHorarioStatus.SUCESSO;
+    this.respostaGerador = resposta;
+  }
+
+  markAsErro(resposta: Record<string, unknown>): void {
+    if (this.status !== GerarHorarioStatus.PENDENTE) {
+      throw ValidationError.fromField(
+        "status",
+        `Solicitacao ${this.id} nao pode falhar no status ${this.status}. Status esperado: PENDENTE.`,
+      );
+    }
+    this.status = GerarHorarioStatus.ERRO;
+    this.respostaGerador = resposta;
+  }
+
   aceitar(): void {
     if (this.status !== GerarHorarioStatus.SUCESSO) {
       throw ValidationError.fromField(
