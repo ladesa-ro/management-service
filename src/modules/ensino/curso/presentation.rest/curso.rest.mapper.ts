@@ -50,6 +50,7 @@ export const createInputDtoToCreateCommand = createMapper<
   input.quantidadePeriodos = dto.quantidadePeriodos;
   input.campus = { id: dto.campus.id };
   input.ofertaFormacao = { id: dto.ofertaFormacao.id };
+  input.colecaoPadrao = dto.colecaoPadrao ? { id: dto.colecaoPadrao.id } : null;
   input.periodos = dto.periodos;
   return input;
 });
@@ -64,6 +65,7 @@ export const updateInputDtoToUpdateCommand = createMapper<
   quantidadePeriodos: dto.quantidadePeriodos,
   campus: dto.campus ? { id: dto.campus.id } : undefined,
   ofertaFormacao: dto.ofertaFormacao ? { id: dto.ofertaFormacao.id } : undefined,
+  colecaoPadrao: dto.colecaoPadrao !== undefined ? (dto.colecaoPadrao ? { id: dto.colecaoPadrao.id } : null) : undefined,
   periodos: dto.periodos,
 }));
 
@@ -84,6 +86,7 @@ export const findOneQueryResultToOutputDto = createMapper<
     output.ofertaFormacao,
   ),
   imagemCapa: output.imagemCapa ? BlocoRestMapper.toImagemOutput(output.imagemCapa) : null,
+  colecaoPadrao: output.colecaoPadrao,
   periodos: output.periodos ?? [],
   dateCreated: output.dateCreated,
   dateUpdated: output.dateUpdated,

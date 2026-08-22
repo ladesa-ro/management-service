@@ -39,6 +39,7 @@ export class CursoUpdateCommandHandlerImpl implements ICursoUpdateCommandHandler
       quantidadePeriodos: dto.quantidadePeriodos,
       campus: dto.campus,
       ofertaFormacao: dto.ofertaFormacao,
+      colecaoPadrao: dto.colecaoPadrao,
     });
     const updateData: Partial<PersistInput<ICurso>> = { ...domain };
 

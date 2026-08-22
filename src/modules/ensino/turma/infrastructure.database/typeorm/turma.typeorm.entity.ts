@@ -23,6 +23,9 @@ export class TurmaEntity {
   @Column({ name: "nome", type: "text", nullable: true })
   nome!: string | null;
 
+  @Column({ name: "numero_estimado_alunos", type: "integer", nullable: true })
+  numeroEstimadoAlunos!: number | null;
+
   @ManyToOne(() => AmbienteEntity)
   @JoinColumn({ name: "id_ambiente_padrao_aula_fk" })
   ambientePadraoAula!: Relation<AmbienteEntity> | null;

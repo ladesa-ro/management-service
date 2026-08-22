@@ -39,6 +39,7 @@ export const TurmaSchema = z
     curso: ObjectIdUuidFactory.domain.loose(),
     ambientePadraoAula: ObjectIdUuidFactoryNullable.domain,
     imagemCapa: ObjectIdUuidFactoryNullable.domain,
+    numeroEstimadoAlunos: z.number().int().nullable(),
   })
   .extend(datedSchema.shape);
 
@@ -48,6 +49,7 @@ export const TurmaCreateSchema = createSchema((standard) =>
     nome: TurmaFields.nome.create(standard),
     curso: TurmaCursoRefSchema.create(standard),
     ambientePadraoAula: TurmaAmbientePadraoAulaRefSchema.create(standard),
+    numeroEstimadoAlunos: TurmaFields.numeroEstimadoAlunos.create(standard),
   }),
 );
 
@@ -57,5 +59,6 @@ export const TurmaUpdateSchema = createSchema((standard) =>
     nome: TurmaFields.nome.create(standard),
     curso: TurmaCursoRefSchema.create(standard).optional(),
     ambientePadraoAula: TurmaAmbientePadraoAulaRefSchema.create(standard),
+    numeroEstimadoAlunos: TurmaFields.numeroEstimadoAlunos.create(standard),
   }),
 );

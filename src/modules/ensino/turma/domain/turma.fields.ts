@@ -7,7 +7,7 @@
  * @see createFieldMetadata (domain/abstractions/fields/field-metadata.ts)
  */
 import { z } from "zod";
-import { createFieldMetadata, createSchema } from "@/domain/abstractions";
+import { createFieldMetadata, createSchema, safeInt } from "@/domain/abstractions";
 
 export const TurmaFields = {
   periodo: createFieldMetadata({
@@ -28,6 +28,16 @@ export const TurmaFields = {
   }),
   imagemCapa: createFieldMetadata({
     description: "Imagem de capa da turma",
+    nullable: true,
+  }),
+  numeroEstimadoAlunos: createFieldMetadata({
+    description:
+      "Número estimado de alunos da turma, usado para validar a capacidade dos ambientes agendados — nulo significa não informado",
+    schema: createSchema((standard) =>
+      safeInt(standard, (s) => s.min(1, "numeroEstimadoAlunos deve ser no mínimo 1"))
+        .nullable()
+        .optional(),
+    ),
     nullable: true,
   }),
 };

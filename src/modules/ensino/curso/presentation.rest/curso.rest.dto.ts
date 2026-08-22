@@ -53,6 +53,9 @@ export class CursoFindOneOutputRestDto extends EntityBaseRestDto {
   })
   imagemCapa: ImagemFindOneOutputRestDto | null;
 
+  @ApiPropertyOptional(CursoFindOneQueryResultFields.colecaoPadrao.swaggerMetadata)
+  colecaoPadrao: { id: string } | null;
+
   @ApiProperty({ type: () => [CursoPeriodoDisciplinaOutputPeriodoRestDto] })
   periodos: CursoPeriodoDisciplinaOutputPeriodoRestDto[];
 }
@@ -124,6 +127,9 @@ export class CursoCreateInputRestDto {
   @ApiProperty(CursoCreateCommandFields.ofertaFormacao.swaggerMetadata)
   ofertaFormacao: { id: string };
 
+  @ApiPropertyOptional(CursoCreateCommandFields.colecaoPadrao.swaggerMetadata)
+  colecaoPadrao?: { id: string } | null;
+
   @ApiPropertyOptional({ type: () => [CursoPeriodoDisciplinaPeriodoItemRestDto] })
   periodos?: CursoPeriodoDisciplinaPeriodoItemRestDto[];
 }
@@ -146,6 +152,9 @@ export class CursoUpdateInputRestDto {
 
   @ApiPropertyOptional(CursoUpdateCommandFields.ofertaFormacao.swaggerMetadata)
   ofertaFormacao?: { id: string };
+
+  @ApiPropertyOptional(CursoUpdateCommandFields.colecaoPadrao.swaggerMetadata)
+  colecaoPadrao?: { id: string } | null;
 
   @ApiPropertyOptional({ type: () => [CursoPeriodoDisciplinaPeriodoItemRestDto] })
   periodos?: CursoPeriodoDisciplinaPeriodoItemRestDto[];

@@ -18,6 +18,7 @@ export class Curso {
   campus!: { id: string };
   ofertaFormacao!: { id: string };
   imagemCapa!: { id: string } | null;
+  colecaoPadrao!: { id: string } | null;
   dateCreated!: ScalarDateTimeString;
   dateUpdated!: ScalarDateTimeString;
   dateDeleted!: ScalarDateTimeString | null;
@@ -36,6 +37,7 @@ export class Curso {
     instance.campus = parsed.campus;
     instance.ofertaFormacao = parsed.ofertaFormacao;
     instance.imagemCapa = null;
+    instance.colecaoPadrao = parsed.colecaoPadrao ?? null;
     instance.dateCreated = getNowISO();
     instance.dateUpdated = getNowISO();
     instance.dateDeleted = null;
@@ -55,6 +57,7 @@ export class Curso {
     instance.campus = parsed.campus;
     instance.ofertaFormacao = parsed.ofertaFormacao;
     instance.imagemCapa = parsed.imagemCapa;
+    instance.colecaoPadrao = parsed.colecaoPadrao;
     instance.dateCreated = parsed.dateCreated;
     instance.dateUpdated = parsed.dateUpdated;
     instance.dateDeleted = parsed.dateDeleted;
@@ -69,6 +72,7 @@ export class Curso {
     if (parsed.nomeAbreviado !== undefined) this.nomeAbreviado = parsed.nomeAbreviado;
     if (parsed.quantidadePeriodos !== undefined)
       this.quantidadePeriodos = parsed.quantidadePeriodos;
+    if (parsed.colecaoPadrao !== undefined) this.colecaoPadrao = parsed.colecaoPadrao ?? null;
 
     if (parsed.campus !== undefined && parsed.campus.id !== this.campus.id) {
       throw new BusinessRuleViolationError(
