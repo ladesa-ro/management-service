@@ -19,7 +19,6 @@ services:
       - infinity
     depends_on:
       - db
-      - rabbitmq
       - waha
     networks:
       - ladesa-net
@@ -50,18 +49,6 @@ services:
     environment:
       POSTGRESQL_DATABASE: main
       POSTGRESQL_PASSWORD: 7f22682363b549a389e03b7fe512488b
-
-  rabbitmq:
-    container_name: ladesa-rabbitmq
-    image: docker.io/rabbitmq:3-management-alpine
-    environment:
-      RABBITMQ_DEFAULT_USER: admin
-      RABBITMQ_DEFAULT_PASS: admin
-    networks:
-      - ladesa-net
-    ports:
-      - "5672:5672"
-      - "15672:15672"
 
   waha:
     container_name: ladesa-waha-service

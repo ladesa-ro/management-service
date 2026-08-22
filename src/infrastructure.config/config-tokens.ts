@@ -30,10 +30,11 @@ export const ConfigTokens = {
       PasswordResetRedirectUri: Symbol("AuthOptions.Keycloak.PasswordResetRedirectUri"),
     },
   },
-  MessageBrokerOptions: {
-    Url: Symbol("MessageBrokerOptions.Url"),
-    QueueTimetableRequest: Symbol("MessageBrokerOptions.QueueTimetableRequest"),
-    QueueTimetableResponse: Symbol("MessageBrokerOptions.QueueTimetableResponse"),
+  QueueOptions: {
+    Url: Symbol("QueueOptions.Url"),
+    Schema: Symbol("QueueOptions.Schema"),
+    QueueTimetableGenerate: Symbol("QueueOptions.QueueTimetableGenerate"),
+    QueueFolhaPontoWhatsapp: Symbol("QueueOptions.QueueFolhaPontoWhatsapp"),
   },
   WhatsAppOptions: {
     BaseUrl: Symbol("WhatsAppOptions.BaseUrl"),
