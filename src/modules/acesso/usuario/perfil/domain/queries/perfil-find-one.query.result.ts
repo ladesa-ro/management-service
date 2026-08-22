@@ -14,4 +14,5 @@ export class PerfilFindOneQueryResult extends EntityQueryResult {
   cargo!: CargoNestedQueryResult | null;
   campus!: CampusFindOneQueryResult;
   usuario!: UsuarioFindOneQueryResult;
+  cargaMaximaSemanal!: number | null;
 }

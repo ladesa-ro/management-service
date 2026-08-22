@@ -7,7 +7,7 @@
  * @see createFieldMetadata (domain/abstractions/fields/field-metadata.ts)
  */
 import { z } from "zod";
-import { createFieldMetadata, createSchema } from "@/domain/abstractions";
+import { createFieldMetadata, createSchema, safeInt } from "@/domain/abstractions";
 
 export const PerfilFields = {
   ativo: createFieldMetadata({
@@ -23,5 +23,14 @@ export const PerfilFields = {
   }),
   usuario: createFieldMetadata({
     description: "Usuario associado ao vinculo",
+  }),
+  cargaMaximaSemanal: createFieldMetadata({
+    description: "Carga horária semanal máxima do professor, em horas — nulo significa sem limite",
+    schema: createSchema((standard) =>
+      safeInt(standard, (s) => s.min(1, "cargaMaximaSemanal deve ser no mínimo 1"))
+        .nullable()
+        .optional(),
+    ),
+    nullable: true,
   }),
 };

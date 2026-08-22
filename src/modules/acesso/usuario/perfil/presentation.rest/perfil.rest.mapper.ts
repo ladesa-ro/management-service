@@ -52,6 +52,7 @@ export const findOneQueryResultToOutputDto = createMapper<
   dto.cargo = getCargoNome(output);
   dto.campus = CampusRestMapper.findOneQueryResultToOutputDto.map(output.campus);
   dto.usuario = UsuarioRestMapper.findOneQueryResultToOutputDto.map(output.usuario);
+  dto.cargaMaximaSemanal = output.cargaMaximaSemanal;
   dto.dateCreated = output.dateCreated;
   dto.dateUpdated = output.dateUpdated;
   dto.dateDeleted = output.dateDeleted;
