@@ -3,7 +3,9 @@ import { rrulestr } from "rrule";
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { Dep, Impl } from "@/domain/dependency-injection";
+import { IAmbienteFindOneQueryHandler } from "@/modules/ambientes/ambiente/domain/queries/ambiente-find-one.query.handler.interface";
 import { CalendarioColecaoSyncService } from "@/modules/calendario/colecao/application/calendario-colecao-sync.service";
+import { ITurmaFindOneQueryHandler } from "@/modules/ensino/turma/domain/queries/turma-find-one.query.handler.interface";
 import { ICalendarioAgendamentoPermissionChecker } from "../../domain/authorization";
 import { CalendarioAgendamento } from "../../domain/calendario-agendamento";
 import { CalendarioAgendamentoMetadata } from "../../domain/calendario-agendamento-metadata";
@@ -13,6 +15,7 @@ import type { CalendarioAgendamentoFindOneQuery } from "../../domain/queries/cal
 import type { CalendarioAgendamentoFindOneQueryResult } from "../../domain/queries/calendario-agendamento-find-one.query.result";
 import { ICalendarioAgendamentoRepository } from "../../domain/repositories/calendario-agendamento.repository.interface";
 import { CalendarioAgendamentoConflitoService } from "../calendario-agendamento-conflito.service";
+import { ensureCapacidadeETurno } from "./calendario-agendamento-capacidade-turno.util";
 import { normalizeDate } from "./calendario-agendamento-data.util";
 import { ensureIfMatch } from "./calendario-agendamento-precondition.util";
 
@@ -25,6 +28,10 @@ export class CalendarioAgendamentoAdicionarDataAvulsaCommandHandlerImpl
     private readonly repository: ICalendarioAgendamentoRepository,
     @Dep(ICalendarioAgendamentoPermissionChecker)
     private readonly permissionChecker: ICalendarioAgendamentoPermissionChecker,
+    @Dep(ITurmaFindOneQueryHandler)
+    private readonly turmaFindOneHandler: ITurmaFindOneQueryHandler,
+    @Dep(IAmbienteFindOneQueryHandler)
+    private readonly ambienteFindOneHandler: IAmbienteFindOneQueryHandler,
     @Dep(CalendarioColecaoSyncService)
     private readonly colecaoSyncService: CalendarioColecaoSyncService,
     @Dep(CalendarioAgendamentoConflitoService)
@@ -76,6 +83,15 @@ export class CalendarioAgendamentoAdicionarDataAvulsaCommandHandlerImpl
         excludeIdentificadorExterno: serieOrigem.identificadorExterno,
       });
     }
+
+    await ensureCapacidadeETurno(accessContext, {
+      turmaIds,
+      ambienteIds,
+      horarioInicio: avulsa.horarioInicio,
+      horarioFim: avulsa.horarioFim,
+      turmaFindOneHandler: this.turmaFindOneHandler,
+      ambienteFindOneHandler: this.ambienteFindOneHandler,
+    });
 
     await this.repository.save(avulsa);
 
