@@ -12,26 +12,27 @@ ENV DOTNET_CLI_TELEMETRY_OPTOUT=1 \
 
 WORKDIR /origem
 
-COPY global.json ./
-COPY domain/*.csproj domain/
-COPY messages/*.csproj messages/
-COPY application/*.csproj application/
-COPY infrastructure.solver/*.csproj infrastructure.solver/
-COPY test.solver/*.csproj test.solver/
+COPY core/global.json ./
+COPY core/domain/*.csproj core/domain/
+COPY core/messages/*.csproj core/messages/
+COPY core/application/*.csproj core/application/
+COPY core/infrastructure.solver/*.csproj core/infrastructure.solver/
+COPY core/test.solver/*.csproj core/test.solver/
+COPY proto/generated-csharp/ proto/generated-csharp/
 
-RUN dotnet restore test.solver/Ladesa.TimetableGenerator.Infrastructure.Solver.Test.csproj
+RUN dotnet restore core/test.solver/Ladesa.TimetableGenerator.Infrastructure.Solver.Test.csproj
 
 FROM restore AS build
 
-COPY . .
+COPY core/ core/
 
-RUN dotnet build infrastructure.solver/Ladesa.TimetableGenerator.Infrastructure.Solver.csproj \
+RUN dotnet build core/infrastructure.solver/Ladesa.TimetableGenerator.Infrastructure.Solver.csproj \
       --configuration Release --no-restore -m:1 \
       -p:UseSharedCompilation=false
 
 FROM build AS test
 
-RUN dotnet test test.solver/Ladesa.TimetableGenerator.Infrastructure.Solver.Test.csproj \
+RUN dotnet test core/test.solver/Ladesa.TimetableGenerator.Infrastructure.Solver.Test.csproj \
       --configuration Release --no-restore -m:1 \
       -p:UseSharedCompilation=false \
       --logger "console;verbosity=normal"
@@ -40,6 +41,6 @@ FROM build AS publicar
 
 ARG ALVO_RUNTIME=linux-x64
 
-RUN dotnet publish presentation.console/Ladesa.TimetableGenerator.Console.csproj \
+RUN dotnet publish core/presentation.console/Ladesa.TimetableGenerator.Console.csproj \
       --configuration Release --runtime ${ALVO_RUNTIME} --self-contained true \
       --output /publicado -m:1 -p:UseSharedCompilation=false

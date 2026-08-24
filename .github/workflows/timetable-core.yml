@@ -28,11 +28,11 @@ jobs:
 
       - name: "Compilar e testar em container"
         working-directory: src/infrastructure.timetable-generator/core
-        run: docker buildx bake --file docker-bake.hcl test
+        run: docker buildx bake --allow=fs.read=.. --file docker-bake.hcl test
 
       - name: "Publicar o console self-contained"
         working-directory: src/infrastructure.timetable-generator/core
-        run: docker buildx bake --file docker-bake.hcl publicar
+        run: docker buildx bake --allow=fs.read=.. --file docker-bake.hcl publicar
 
       - name: "Conferir que o console responde a uma requisição real"
         working-directory: src/infrastructure.timetable-generator

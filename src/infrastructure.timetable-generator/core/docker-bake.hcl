@@ -7,8 +7,8 @@ group "default" {
 }
 
 target "base" {
-  context    = "."
-  dockerfile = "Containerfile"
+  context    = ".."
+  dockerfile = "core/Containerfile"
   args = {
     SDK_IMAGEM = SDK_IMAGEM
   }
