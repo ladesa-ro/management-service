@@ -12,7 +12,7 @@ public class AvailabilityRuleUnavailability_Additional_Tests
     [Test]
     public void Weekly_Without_BYDAY_ShouldDefaultTo_DateStart_DayOfWeek()
     {
-        var dateStart = new DateTime(2025, 10, 27, 8, 0, 0); // Monday 08:00
+        var dateStart = new DateTime(2025, 10, 27, 8, 0, 0);
         var rule = new AvailabilityRuleUnavailability(
             RRule: "FREQ=WEEKLY",
             DateStart: dateStart,

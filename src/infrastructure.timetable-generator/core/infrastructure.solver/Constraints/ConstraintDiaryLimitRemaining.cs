@@ -4,9 +4,6 @@ using Ladesa.TimetableGenerator.Infrastructure.Solver.Generator;
 
 namespace Ladesa.TimetableGenerator.Infrastructure.Solver.Constraints;
 
-/// <summary>
-///     CONSTRAINT: Diary - limit how many schedules can be in total.
-/// </summary>
 internal class ConstraintDiaryLimitRemaining : IConstraint
 {
     public void Apply(GenerationContext context)

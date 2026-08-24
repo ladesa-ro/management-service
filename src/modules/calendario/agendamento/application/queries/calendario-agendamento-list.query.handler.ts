@@ -23,10 +23,6 @@ export class CalendarioAgendamentoListQueryHandlerImpl
   ): Promise<CalendarioAgendamentoListQueryResult> {
     const resultado = await this.repository.getFindAllQueryResult(accessContext, dto);
 
-    // Filtra/redige depois da paginação: meta.totalItems pode contar itens que
-    // somem de `data` por falta de acesso. Mesma limitação de escala já
-    // registrada para a listagem de Coleção — aceitável até o volume real
-    // pedir filtro no nível da query.
     resultado.data = await this.visibilidadeService.aplicarVisibilidadeMuitos(
       accessContext,
       resultado.data,

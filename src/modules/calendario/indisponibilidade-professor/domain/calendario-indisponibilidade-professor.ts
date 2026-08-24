@@ -24,12 +24,6 @@ export interface ICalendarioIndisponibilidadeProfessorCreate {
   motivo?: string | null;
 }
 
-/**
- * Regra semanal (dia_semana definido, data nula) OU exceção pontual (data definida,
- * dia_semana nulo) de indisponibilidade de um professor. Não possui update(): uma
- * indisponibilidade é criada ou apagada, nunca editada em vigor — se a regra precisa
- * mudar, apaga-se e cria-se outra.
- */
 export class CalendarioIndisponibilidadeProfessor {
   static readonly entityName = "CalendarioIndisponibilidadeProfessor";
 

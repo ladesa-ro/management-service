@@ -18,10 +18,6 @@ import {
   type CalendarioColecaoAcessoParentParamsRestDto,
 } from "./calendario-colecao-acesso.rest.dto";
 
-// ============================================================================
-// Externa -> Interna (Input: Presentation -> Core)
-// ============================================================================
-
 export const findOneParamsInputDtoToFindOneQuery = createMapper<
   CalendarioColecaoAcessoFindOneParamsRestDto,
   CalendarioColecaoAcessoFindOneQuery
@@ -61,10 +57,6 @@ export const listInputDtoToListQuery = createMapper<
   query["filter.colecao.id"] = [params.colecaoId];
   return query;
 });
-
-// ============================================================================
-// Interna -> Externa (Output: Core -> Presentation)
-// ============================================================================
 
 export const findOneQueryResultToOutputDto = createMapper<
   CalendarioColecaoAcessoFindOneQueryResult,

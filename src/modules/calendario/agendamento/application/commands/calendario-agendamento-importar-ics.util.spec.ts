@@ -247,7 +247,7 @@ describe("parseIcs", () => {
 
       expect(eventos).toHaveLength(1);
       expect(eventos[0]!.summary).toBe("Com data");
-      expect(eventos[0]!.index).toBe(2); // segundo VEVENT do arquivo, o primeiro foi rejeitado
+      expect(eventos[0]!.index).toBe(2);
       expect(rejeitados).toHaveLength(1);
       expect(rejeitados[0]!.index).toBe(1);
       expect(rejeitados[0]!.uid).toBe("sem-dtstart@teste");

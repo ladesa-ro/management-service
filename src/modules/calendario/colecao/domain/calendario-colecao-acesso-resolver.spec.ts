@@ -37,10 +37,6 @@ describe("resolverPapelEfetivo (domain, pure function)", () => {
     camposAtivosDoUsuario: [campusAtivo],
   };
 
-  // ==========================================================================
-  // Casos base: superuser, dono, nenhuma concessão
-  // ==========================================================================
-
   it("returns EDITOR immediately for a superuser, regardless of everything else", () => {
     const result = resolverPapelEfetivo({
       ...baseParams,
@@ -72,10 +68,6 @@ describe("resolverPapelEfetivo (domain, pure function)", () => {
     expect(result).toBeNull();
   });
 
-  // ==========================================================================
-  // Escopo USUARIO — cada papel
-  // ==========================================================================
-
   describe("escopo USUARIO", () => {
     for (const papel of ["OCUPACAO", "LEITOR", "EDITOR"] as const) {
       it(`grants ${papel} when there is a matching USUARIO-scoped acesso`, () => {
@@ -95,10 +87,6 @@ describe("resolverPapelEfetivo (domain, pure function)", () => {
       expect(result).toBeNull();
     });
   });
-
-  // ==========================================================================
-  // Escopo CAMPUS — cada papel
-  // ==========================================================================
 
   describe("escopo CAMPUS", () => {
     for (const papel of ["OCUPACAO", "LEITOR", "EDITOR"] as const) {
@@ -129,10 +117,6 @@ describe("resolverPapelEfetivo (domain, pure function)", () => {
     });
   });
 
-  // ==========================================================================
-  // Escopo PUBLICO — cada papel
-  // ==========================================================================
-
   describe("escopo PUBLICO", () => {
     for (const papel of ["OCUPACAO", "LEITOR", "EDITOR"] as const) {
       it(`grants ${papel} to anyone via a PUBLICO acesso`, () => {
@@ -144,10 +128,6 @@ describe("resolverPapelEfetivo (domain, pure function)", () => {
       });
     }
   });
-
-  // ==========================================================================
-  // Combinações — o papel mais permissivo vence
-  // ==========================================================================
 
   describe("most permissive wins across simultaneous grants", () => {
     it("USUARIO=OCUPACAO + CAMPUS=LEITOR + PUBLICO=EDITOR -> EDITOR", () => {
@@ -215,10 +195,6 @@ describe("resolverPapelEfetivo (domain, pure function)", () => {
       expect(result).toBe("LEITOR");
     });
   });
-
-  // ==========================================================================
-  // Superuser sempre EDITOR, mesmo com concessões mais restritivas presentes
-  // ==========================================================================
 
   it("superuser ignores every other grant and stays EDITOR", () => {
     const result = resolverPapelEfetivo({

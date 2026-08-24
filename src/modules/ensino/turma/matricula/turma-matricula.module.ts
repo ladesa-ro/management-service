@@ -26,7 +26,6 @@ import { TurmaMatriculaRestController } from "./presentation.rest/turma-matricul
       useClass: TurmaMatriculaTypeOrmRepositoryAdapter,
     },
 
-    // Commands
     {
       provide: ITurmaMatriculaVincularCommandHandler,
       useClass: TurmaMatriculaVincularCommandHandlerImpl,
@@ -36,7 +35,6 @@ import { TurmaMatriculaRestController } from "./presentation.rest/turma-matricul
       useClass: TurmaMatriculaDesvincularCommandHandlerImpl,
     },
 
-    // Queries
     {
       provide: ITurmaMatriculaListQueryHandler,
       useClass: TurmaMatriculaListQueryHandlerImpl,

@@ -11,19 +11,11 @@ import { TurmaMatriculaVincularCommandFields } from "../domain/commands/turma-ma
 import { TurmaMatriculaFindOneQueryResultFields } from "../domain/queries/turma-matricula-find-one.query.result";
 import { TurmaMatriculaListQueryFields } from "../domain/queries/turma-matricula-list.query";
 
-// ============================================================================
-// Referencia simples { id } — reusada em input/output
-// ============================================================================
-
 @ApiSchema({ name: "TurmaMatriculaObjectRefDto" })
 export class TurmaMatriculaObjectRefRestDto {
   @ApiProperty({ type: "string", format: "uuid" })
   id: string;
 }
-
-// ============================================================================
-// FindOne Output
-// ============================================================================
 
 @ApiSchema({ name: "TurmaMatriculaFindOneOutputDto" })
 export class TurmaMatriculaFindOneOutputRestDto extends EntityBaseRestDto {
@@ -39,10 +31,6 @@ export class TurmaMatriculaFindOneOutputRestDto extends EntityBaseRestDto {
   })
   perfil: TurmaMatriculaObjectRefRestDto;
 }
-
-// ============================================================================
-// List Input/Output
-// ============================================================================
 
 @ApiSchema({ name: "TurmaMatriculaListInputDto" })
 export class TurmaMatriculaListInputRestDto extends PaginatedFilterByIdRestDto {
@@ -72,10 +60,6 @@ export class TurmaMatriculaListOutputRestDto {
   data: TurmaMatriculaFindOneOutputRestDto[];
 }
 
-// ============================================================================
-// Vincular (Create) Input
-// ============================================================================
-
 @ApiSchema({ name: "TurmaMatriculaVincularInputDto" })
 export class TurmaMatriculaVincularInputRestDto {
   static schema = TurmaMatriculaCreateSchema.presentation;
@@ -92,10 +76,6 @@ export class TurmaMatriculaVincularInputRestDto {
   })
   perfil: TurmaMatriculaObjectRefRestDto;
 }
-
-// ============================================================================
-// Path params
-// ============================================================================
 
 @ApiSchema({ name: "TurmaMatriculaFindOneParamsDto" })
 export class TurmaMatriculaFindOneParamsRestDto {

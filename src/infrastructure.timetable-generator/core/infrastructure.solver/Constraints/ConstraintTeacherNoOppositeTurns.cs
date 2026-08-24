@@ -4,27 +4,16 @@ using Ladesa.TimetableGenerator.Infrastructure.Solver.Generator;
 
 namespace Ladesa.TimetableGenerator.Infrastructure.Solver.Constraints;
 
-/// <summary>
-///     CONSTRAINT: Teacher - no opposite turns on the same day.
-///     Allowed combinations: none, morning only, afternoon only, night only,
-///     morning+afternoon, afternoon+night. (Morning+night is forbidden.)
-/// </summary>
 internal class ConstraintTeacherNoOppositeTurns : IConstraint
 {
-    /// <summary>
-    ///     Allowed shift combinations per teacher per day: [morning, afternoon, night].
-    ///     The only forbidden combination is morning + night (without afternoon),
-    ///     as this would require opposite turns on the same day.
-    /// </summary>
     private static readonly long[,] AllowedShiftArrangements =
     {
-        { 0, 0, 0 }, // no classes
-        { 1, 0, 0 }, // morning only
-        { 0, 1, 0 }, // afternoon only
-        { 0, 0, 1 }, // night only
-        { 1, 1, 0 }, // morning + afternoon (consecutive)
-        { 0, 1, 1 }, // afternoon + night (consecutive)
-        // { 1, 0, 1 } is intentionally excluded: morning + night (opposite turns)
+        { 0, 0, 0 },
+        { 1, 0, 0 },
+        { 0, 1, 0 },
+        { 0, 0, 1 },
+        { 1, 1, 0 },
+        { 0, 1, 1 },
     };
 
     public void Apply(GenerationContext context)

@@ -32,8 +32,6 @@ export class CalendarioAgendamentoLinhaDoTempoQueryHandlerImpl
 
     const visibilidade = await this.visibilidadeService.resolver(accessContext, colecaoId);
 
-    // sem acesso é tratado como não encontrado, não como erro de permissão —
-    // mesmo critério do find-one, pra não confirmar a existência do registro.
     if (!this.visibilidadeService.temAlgumAcesso(visibilidade)) {
       return null;
     }

@@ -32,7 +32,7 @@ function createMockAmbienteFindOneHandler() {
 function criarSerieRecorrente(overrides: Record<string, unknown> = {}) {
   return CalendarioAgendamento.create({
     tipo: CalendarioAgendamentoTipo.AULA,
-    dataInicio: "2026-03-03", // terça-feira
+    dataInicio: "2026-03-03",
     diaInteiro: false,
     horarioInicio: "08:00:00",
     horarioFim: "09:00:00",
@@ -87,7 +87,6 @@ describe("CalendarioAgendamentoAdicionarDataAvulsaCommandHandler", () => {
 
     const { handler } = createHandler({ repository });
 
-    // sábado — a regra é toda terça, então essa data não é gerada pela RRULE
     const result = await handler.execute(createTestAccessContext(), {
       id: serie.id,
       dataOcorrencia: "2026-03-14",
@@ -133,7 +132,6 @@ describe("CalendarioAgendamentoAdicionarDataAvulsaCommandHandler", () => {
 
     const { handler } = createHandler({ repository });
 
-    // 2026-03-10 é uma terça-feira dentro do alcance da regra semanal
     await expect(
       handler.execute(createTestAccessContext(), {
         id: serie.id,

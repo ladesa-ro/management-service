@@ -29,7 +29,6 @@ export class CalendarioAgendamentoPermissionCheckerImpl
   ): Promise<void> {
     const colecaoId = payload.dto.colecao?.id ?? null;
 
-    // Sem coleção: comportamento de sempre, ninguém é bloqueado.
     if (colecaoId === null) return;
 
     const visibilidade = await this.visibilidadeService.resolver(accessContext, colecaoId);
@@ -58,8 +57,6 @@ export class CalendarioAgendamentoPermissionCheckerImpl
   ): Promise<void> {
     const agendamento = await this.repository.loadById(accessContext, agendamentoId);
 
-    // Não encontrado: deixa o command handler lançar o ResourceNotFoundError
-    // dele, mais específico que um 403 genérico aqui.
     if (!agendamento) return;
 
     const colecaoId = agendamento.colecao?.id ?? null;
@@ -90,8 +87,6 @@ export class CalendarioAgendamentoPermissionCheckerImpl
   ): Promise<void> {
     const agendamento = await this.repository.loadById(accessContext, id);
 
-    // Não encontrado: deixa o command handler lançar o ResourceNotFoundError
-    // dele, mais específico que um 403 genérico aqui.
     if (!agendamento) return;
 
     const colecaoIdAtual = agendamento.colecao?.id ?? null;
@@ -104,9 +99,6 @@ export class CalendarioAgendamentoPermissionCheckerImpl
       this.ensurePodeEditar(visibilidadeAtual);
     }
 
-    // A operação também tenta mover o agendamento para outra coleção: exige
-    // EDITOR na coleção de destino também, senão seria possível "roubar" um
-    // agendamento pra dentro de uma coleção alheia sem ter acesso a ela.
     if (payload.dto.colecao !== undefined) {
       const novoColecaoId = payload.dto.colecao?.id ?? null;
 

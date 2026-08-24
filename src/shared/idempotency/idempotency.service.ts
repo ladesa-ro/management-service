@@ -34,10 +34,6 @@ export class IdempotencyService implements IIdempotencyService {
 
     const existing = await this.repository.findByChaveAndComando(idempotencyKey, comando);
     if (existing) {
-      // O resultado gravado é o JSON devolvido pela primeira execução — não é
-      // reconstruído como entidade de domínio (constructor privado, sem
-      // Class.load aqui) porque o único uso dele é ser devolvido como
-      // resposta, nunca ter seus métodos chamados de novo.
       return existing.resultado as T;
     }
 
@@ -52,11 +48,6 @@ export class IdempotencyService implements IIdempotencyService {
         dateCreated: getNowISO(),
       });
     } catch (error) {
-      // Duas chamadas concorrentes com a mesma Idempotency-Key passaram pelo
-      // check acima antes de qualquer uma gravar — a segunda perde a corrida
-      // pela constraint única (chave, comando). Em vez de propagar o erro cru,
-      // devolve o resultado que a primeira já gravou, honrando a garantia de
-      // idempotência mesmo sob concorrência.
       if (isUniqueViolation(error)) {
         const concorrente = await this.repository.findByChaveAndComando(idempotencyKey, comando);
         if (concorrente) {

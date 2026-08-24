@@ -102,11 +102,6 @@ export class HorarioEdicaoRestController {
     return dto;
   }
 
-  /**
-   * Snapshot dos campos que uma mudança MOVER/REMOVER pode alterar — mesmo
-   * conjunto de campos que HorarioEdicaoApplicatorTypeOrmAdapter lê/escreve
-   * para esses dois tipos de operação.
-   */
   private async capturarEstadoAtual(
     calendarioAgendamentoId: string,
   ): Promise<Record<string, unknown> | null> {
@@ -168,10 +163,6 @@ export class HorarioEdicaoRestController {
       );
     }
 
-    // MOVER/REMOVER agem sobre um agendamento que já existe: captura o estado
-    // dele agora, antes de qualquer coisa ser aplicada de verdade (aplicar só
-    // acontece em /salvar) — é o que sustenta desfazer esta mudança específica
-    // depois. CRIAR não tem "antes".
     const dadosAnteriores = dto.calendarioAgendamentoId
       ? await this.capturarEstadoAtual(dto.calendarioAgendamentoId)
       : null;

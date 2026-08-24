@@ -138,10 +138,6 @@ describe("CalendarioAgendamentoExportarIcsQueryHandlerImpl", () => {
   });
 
   it("should export a standalone RDATE occurrence (avulsa) as its own VEVENT", async () => {
-    // A consulta de ocorrências já resolve datas avulsas (RDATE) como agendamentos
-    // isolados (repeticao null, identificadorExternoSerieOrigem apontando pra série,
-    // dataOcorrenciaReferenciada nula) — para o export, uma avulsa é indistinguível
-    // de um agendamento pontual comum: cada ocorrência já vira um VEVENT próprio.
     const consultaOcorrenciasHandler = createMockConsultaOcorrenciasHandler();
     const visibilidadeService = createMockVisibilidadeService();
     const handler = createHandler(consultaOcorrenciasHandler, visibilidadeService);

@@ -15,10 +15,6 @@ import {
   type CalendarioIndisponibilidadeAmbientePorPeriodoQueryRestDto,
 } from "./calendario-indisponibilidade-ambiente.rest.dto";
 
-// ============================================================================
-// Externa -> Interna (Input: Presentation -> Core)
-// ============================================================================
-
 export const findOneInputDtoToFindOneQuery = createMapper<
   CalendarioIndisponibilidadeAmbienteFindOneInputRestDto,
   CalendarioIndisponibilidadeAmbienteFindOneQuery
@@ -58,10 +54,6 @@ export const porPeriodoInputDtoToQuery = createMapper<
   dateStart: dto.dateStart,
   dateEnd: dto.dateEnd,
 }));
-
-// ============================================================================
-// Interna -> Externa (Output: Core -> Presentation)
-// ============================================================================
 
 export const findOneQueryResultToOutputDto = createMapper<
   CalendarioIndisponibilidadeAmbienteFindOneQueryResult,

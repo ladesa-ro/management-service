@@ -3,9 +3,6 @@ using Ladesa.TimetableGenerator.Infrastructure.Solver.Generator;
 
 namespace Ladesa.TimetableGenerator.Infrastructure.Solver.Constraints;
 
-/// <summary>
-///     CONSTRAINT: Teacher - no more than 12 hours in a day.
-/// </summary>
 internal class ConstraintTeacher12Hours : IConstraint
 {
     private static readonly TimeSpan MaxDailyWorkDuration = new(12, 0, 0);

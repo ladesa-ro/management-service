@@ -139,7 +139,6 @@ describe("DiarioProfessorBulkReplaceCommandHandler", () => {
     const perfilId = createTestId();
 
     const repository = createMockDiarioProfessorRepository();
-    // O unico vinculo ativo existente do perfil eh no MESMO diario sendo substituido.
     repository.findAllActiveByPerfilId.mockResolvedValue([{ diarioId, cargaHoraria: 10 }]);
 
     const perfilFindOneHandler = createMockPerfilFindOneHandler();
@@ -155,8 +154,6 @@ describe("DiarioProfessorBulkReplaceCommandHandler", () => {
       professores: [{ perfilId, situacao: true }],
     };
 
-    // Se o vinculo existente no MESMO diario fosse contado junto com o novo,
-    // o total seria 20h e excederia o limite de 10h. Nao deve lancar.
     await expect(handler.execute(accessContext, dto)).resolves.toBeDefined();
     expect(repository.softDeleteByDiarioId).toHaveBeenCalledWith(diarioId);
     expect(repository.bulkCreate).toHaveBeenCalled();

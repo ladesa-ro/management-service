@@ -13,7 +13,7 @@ public class Generator_CoreFunctionality_Tests
     [Test]
     public void Single_Lesson_With_Minimal_Setup()
     {
-        var date = new DateOnly(2025, 10, 27); // Monday
+        var date = new DateOnly(2025, 10, 27);
         var timeSlot = new TimeSlot("08:00:00", "08:50:00");
 
         var group = new Group("turma:1", new Availability([]));
@@ -41,7 +41,7 @@ public class Generator_CoreFunctionality_Tests
     [Test]
     public void Multiple_Time_Slots_Same_Day_Respecting_WeekLimit()
     {
-        var date = new DateOnly(2025, 10, 27); // Monday
+        var date = new DateOnly(2025, 10, 27);
         var slots = new[]
         {
             new TimeSlot("08:00:00", "08:50:00"),
@@ -72,8 +72,8 @@ public class Generator_CoreFunctionality_Tests
     [Test]
     public void Lessons_Over_Multiple_Days_Within_One_Week()
     {
-        var dateStart = new DateOnly(2025, 10, 27); // Monday
-        var dateEnd = new DateOnly(2025, 10, 31); // Friday
+        var dateStart = new DateOnly(2025, 10, 27);
+        var dateEnd = new DateOnly(2025, 10, 31);
         var timeSlot = new TimeSlot("08:00:00", "08:50:00");
 
         var group = new Group("turma:1", new Availability([]));
@@ -90,7 +90,6 @@ public class Generator_CoreFunctionality_Tests
         var distinctDates = result.Timetable.Schedules.Select(s => s.Date).Distinct().Count();
         Assert.That(distinctDates, Is.EqualTo(3), "Schedules should be on different days.");
 
-        // Verify all in the same week
         var culture = CultureInfo.InvariantCulture;
         var weekRule = CalendarWeekRule.FirstDay;
         var firstDayOfWeek = DayOfWeek.Monday;
@@ -106,7 +105,7 @@ public class Generator_CoreFunctionality_Tests
     [Test]
     public void Adjacent_Time_Slots_Same_Day()
     {
-        var date = new DateOnly(2025, 10, 27); // Monday
+        var date = new DateOnly(2025, 10, 27);
         var slots = new[]
         {
             new TimeSlot("08:00:00", "08:50:00"),
@@ -136,8 +135,8 @@ public class Generator_CoreFunctionality_Tests
     [Test]
     public void Diary_With_WeekLimit_Greater_Than_Available_Days()
     {
-        var dateStart = new DateOnly(2025, 10, 27); // Monday
-        var dateEnd = new DateOnly(2025, 10, 31); // Friday, 5 days
+        var dateStart = new DateOnly(2025, 10, 27);
+        var dateEnd = new DateOnly(2025, 10, 31);
         var timeSlot = new TimeSlot("08:00:00", "08:50:00");
 
         var group = new Group("turma:1", new Availability([]));
@@ -158,8 +157,8 @@ public class Generator_CoreFunctionality_Tests
     [Test]
     public void Full_Booking_All_Slots_Filled()
     {
-        var dateStart = new DateOnly(2025, 10, 27); // Monday
-        var dateEnd = new DateOnly(2025, 10, 31); // Friday, 5 days
+        var dateStart = new DateOnly(2025, 10, 27);
+        var dateEnd = new DateOnly(2025, 10, 31);
         var timeSlot = new TimeSlot("08:00:00", "08:50:00");
 
         var group = new Group("turma:1", new Availability([]));
@@ -180,8 +179,8 @@ public class Generator_CoreFunctionality_Tests
     [Test]
     public void Long_Date_Range_Month_Plus_Respecting_Weekly_Limits()
     {
-        var dateStart = new DateOnly(2025, 10, 1); // Wednesday
-        var dateEnd = new DateOnly(2025, 10, 31); // Friday, 31 days
+        var dateStart = new DateOnly(2025, 10, 1);
+        var dateEnd = new DateOnly(2025, 10, 31);
         var timeSlot = new TimeSlot("08:00:00", "08:50:00");
 
         var group = new Group("turma:1", new Availability([]));
@@ -195,7 +194,6 @@ public class Generator_CoreFunctionality_Tests
         Assert.That(result, Is.Not.Null, "Should generate at least one timetable.");
         Assert.That(result!.Timetable.Schedules, Has.Length.EqualTo(10), "Should generate exactly 10 schedules (2 per week over 5 weeks).");
 
-        // Verify weekly limits
         var culture = CultureInfo.InvariantCulture;
         var weekRule = CalendarWeekRule.FirstDay;
         var firstDayOfWeek = DayOfWeek.Monday;

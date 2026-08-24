@@ -69,8 +69,6 @@ export class CalendarioAgendamentoCreateCommandHandlerImpl
       });
     }
 
-    // Herdar a coleção padrão do curso da primeira turma vinculada quando o dto não
-    // traz colecaoId explícito. A escolha explícita do chamador sempre prevalece.
     let effectiveColecao = dto.colecao;
     if (effectiveColecao === undefined && turmaIds.length > 0) {
       const primeiraTurma = await this.turmaFindOneHandler.execute(accessContext, {

@@ -19,11 +19,6 @@ export const CalendarioAgendamentoAdicionarDataAvulsaCommandFields = {
   diarios: CalendarioAgendamentoFields.diarios,
 };
 
-/**
- * Adiciona uma data avulsa a uma série recorrente (RDATE): cria uma
- * ocorrência extra na data indicada, que a RRULE da série não geraria. A
- * série raiz não é alterada.
- */
 export class CalendarioAgendamentoAdicionarDataAvulsaCommand {
   ifMatch?: string;
 

@@ -8,7 +8,6 @@ function toDateOnly(dates: Date[]): string[] {
 
 describe("dividirRegraRecorrencia", () => {
   it("should truncate the old rule to end the day before the cut date (COUNT-based)", () => {
-    // Monday 2026-03-02, daily, 10 occurrences: 03-02 .. 03-11
     const dtstart = new Date("2026-03-02T00:00:00Z");
     const dataCorte = new Date("2026-03-06T00:00:00Z");
 
@@ -25,7 +24,6 @@ describe("dividirRegraRecorrencia", () => {
 
     const { regraNova } = dividirRegraRecorrencia("FREQ=DAILY;COUNT=10", dtstart, dataCorte);
 
-    // A partir do corte, a nova série usa a data de corte como seu próprio dtstart
     const datasNovas = toDateOnly(rrulestr(regraNova, { dtstart: dataCorte }).all());
 
     expect(datasNovas).toEqual([

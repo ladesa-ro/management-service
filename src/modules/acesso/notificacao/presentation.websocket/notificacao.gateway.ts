@@ -17,12 +17,12 @@ import {
 } from "../domain/estagio-notificacao.types";
 
 /**
- * Gateway WebSocket de notificações — Estágio e Calendário.
+ * Gateway WebSocket para notificações do módulo de Estágio.
  *
  * Usa Socket.IO com rooms para que cada cliente receba apenas
  * as notificações dos contextos em que está inscrito.
  *
- * Rooms fixas (Estágio):
+ * Rooms disponíveis:
  *  - estagio:status      — mudanças de status
  *  - estagio:prazos      — alertas de prazo
  *  - estagio:documentos  — documentos e seguros
@@ -30,9 +30,6 @@ import {
  *  - estagio:importacao  — jobs de importação CSV
  *  - estagio:aprovacoes  — fluxo de aprovação
  *  - estagio:alertas     — alertas gerais
- *
- * Rooms dinâmicas (Calendário):
- *  - calendario:{colecaoId} — mudanças de sincronização de uma coleção
  */
 @WebSocketGateway({
   cors: { origin: "*" },
@@ -44,7 +41,6 @@ export class NotificacaoGateway implements OnGatewayConnection, OnGatewayDisconn
 
   private readonly validRooms = new Set<string>(Object.values(ESTAGIO_WS_ROOMS));
 
-  /** Aceita as rooms fixas de Estágio e o padrão `calendario:{uuid}`. */
   private isValidRoom(roomId: string): boolean {
     return this.validRooms.has(roomId) || isCalendarioWsRoom(roomId);
   }
@@ -92,8 +88,7 @@ export class NotificacaoGateway implements OnGatewayConnection, OnGatewayDisconn
 
   /**
    * Emite uma notificação para todos os clientes inscritos no room especificado.
-   * Genérico no payload: usado tanto pelo push de Estágio (rooms fixas) quanto
-   * pelo hook de sincronização de Calendário (rooms `calendario:{colecaoId}`).
+   * Chamado internamente pelo NotificacaoPushService.
    */
   emitToRoom<T extends object>(room: string, payload: T): void {
     this.server.to(room).emit(ESTAGIO_WS_EVENT, payload);

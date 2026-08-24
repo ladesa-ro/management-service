@@ -23,17 +23,6 @@ export const CalendarioAgendamentoEditarSerieCommandFields = {
   diarios: CalendarioAgendamentoFields.diarios,
 };
 
-/**
- * Edita uma série recorrente a partir de uma data de referência, com dois
- * alcances possíveis:
- * - TODAS: aplica as mudanças à série inteira (nova versão da raiz).
- * - ESTA_E_SEGUINTES: encerra a regra original antes da data de referência e
- *   nasce uma nova série independente, a partir dela, com as mudanças aplicadas.
- *
- * Exceções e cancelamentos já registrados para datas anteriores permanecem
- * válidos em ambos os casos; para ESTA_E_SEGUINTES, os que caem a partir da
- * data de referência são reatribuídos à nova série.
- */
 export class CalendarioAgendamentoEditarSerieCommand {
   ifMatch?: string;
 

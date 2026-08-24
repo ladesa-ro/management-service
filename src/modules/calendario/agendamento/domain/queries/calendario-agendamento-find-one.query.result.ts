@@ -40,11 +40,6 @@ export class CalendarioAgendamentoFindOneQueryResult extends EntityQueryResult {
   identificadorExternoSerieOrigem!: string | null;
   dataOcorrenciaReferenciada!: string | null;
 
-  /**
-   * true quando o requisitante só tem papel OCUPACAO na coleção deste agendamento:
-   * nome, motivo, autor e as listas de turmas/perfis/etc vêm vazios de propósito.
-   * Sempre false para agendamentos sem coleção (comportamento de sempre).
-   */
   detalhesOcultos!: boolean;
 
   turmas!: TurmaFindOneQueryResult[];

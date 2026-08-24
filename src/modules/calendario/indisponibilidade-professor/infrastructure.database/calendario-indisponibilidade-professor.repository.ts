@@ -46,7 +46,6 @@ const calendarioIndisponibilidadeProfessorPaginateConfig =
     calendarioIndisponibilidadeProfessorRelations,
   );
 
-/** Relations para o write side (loadById) — o mínimo para reconstituir o aggregate. */
 const writeRelations = {
   perfil: true,
 } as const;
@@ -60,10 +59,6 @@ export class CalendarioIndisponibilidadeProfessorTypeOrmRepositoryAdapter
     private readonly appTypeormConnection: IAppTypeormConnection,
     private readonly paginationAdapter: NestJsPaginateAdapter,
   ) {}
-
-  // ==========================================
-  // Write side
-  // ==========================================
 
   async loadById(
     _accessContext: IAccessContext | null,
@@ -108,10 +103,6 @@ export class CalendarioIndisponibilidadeProfessorTypeOrmRepositoryAdapter
       id,
     );
   }
-
-  // ==========================================
-  // Read side
-  // ==========================================
 
   getFindOneQueryResult(
     accessContext: IAccessContext | null,

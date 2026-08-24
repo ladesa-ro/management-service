@@ -58,8 +58,6 @@ export class CreateTableCalendarioColecaoAcesso1783000000004 implements Migratio
       }),
     );
 
-    // Garante unicidade: apenas 1 concessão ATIVA por (colecao, usuario) quando escopo=USUARIO.
-    // Uma concessão revogada (soft-deleted) não bloqueia uma nova concessão ao mesmo alvo.
     await queryRunner.createIndex(
       "calendario_colecao_acesso",
       new TableIndex({
@@ -70,7 +68,6 @@ export class CreateTableCalendarioColecaoAcesso1783000000004 implements Migratio
       }),
     );
 
-    // Garante unicidade: apenas 1 concessão ATIVA por (colecao, campus) quando escopo=CAMPUS.
     await queryRunner.createIndex(
       "calendario_colecao_acesso",
       new TableIndex({
@@ -81,7 +78,6 @@ export class CreateTableCalendarioColecaoAcesso1783000000004 implements Migratio
       }),
     );
 
-    // Garante unicidade: apenas 1 concessão ATIVA por colecao quando escopo=PUBLICO.
     await queryRunner.createIndex(
       "calendario_colecao_acesso",
       new TableIndex({

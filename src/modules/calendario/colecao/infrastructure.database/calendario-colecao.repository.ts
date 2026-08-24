@@ -40,7 +40,6 @@ const calendarioColecaoPaginateConfig = buildTypeOrmPaginateConfig<CalendarioCol
   calendarioColecaoRelations,
 );
 
-/** Relations para o write side (loadById) — o mínimo para reconstituir o aggregate. */
 const writeRelations = {
   dono: true,
   campus: true,
@@ -53,10 +52,6 @@ export class CalendarioColecaoTypeOrmRepositoryAdapter implements ICalendarioCol
     private readonly appTypeormConnection: IAppTypeormConnection,
     private readonly paginationAdapter: NestJsPaginateAdapter,
   ) {}
-
-  // ==========================================
-  // Write side
-  // ==========================================
 
   async loadById(
     _accessContext: IAccessContext | null,
@@ -88,10 +83,6 @@ export class CalendarioColecaoTypeOrmRepositoryAdapter implements ICalendarioCol
       id,
     );
   }
-
-  // ==========================================
-  // Read side
-  // ==========================================
 
   getFindOneQueryResult(accessContext: IAccessContext | null, dto: CalendarioColecaoFindOneQuery) {
     return typeormFindById<

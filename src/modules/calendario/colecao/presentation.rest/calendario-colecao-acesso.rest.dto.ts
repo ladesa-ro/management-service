@@ -27,10 +27,6 @@ import { CalendarioColecaoAcessoConcederCommandFields } from "../domain/commands
 import { CalendarioColecaoAcessoFindOneQueryResultFields } from "../domain/queries/calendario-colecao-acesso-find-one.query.result";
 import { CalendarioColecaoAcessoListQueryFields } from "../domain/queries/calendario-colecao-acesso-list.query";
 
-// ============================================================================
-// FindOne Output
-// ============================================================================
-
 @ApiSchema({ name: "CalendarioColecaoAcessoFindOneOutputDto" })
 export class CalendarioColecaoAcessoFindOneOutputRestDto extends EntityBaseRestDto {
   @ApiProperty({ type: "string", format: "uuid", description: "ID da coleção" })
@@ -61,10 +57,6 @@ export class CalendarioColecaoAcessoFindOneOutputRestDto extends EntityBaseRestD
   papel: string;
 }
 
-// ============================================================================
-// List Input/Output
-// ============================================================================
-
 @ApiSchema({ name: "CalendarioColecaoAcessoListInputDto" })
 export class CalendarioColecaoAcessoListInputRestDto extends PaginatedFilterByIdRestDto {
   static schema = CalendarioColecaoAcessoPaginationInputSchema;
@@ -88,10 +80,6 @@ export class CalendarioColecaoAcessoListOutputRestDto {
   })
   data: CalendarioColecaoAcessoFindOneOutputRestDto[];
 }
-
-// ============================================================================
-// Conceder (Create) Input
-// ============================================================================
 
 @ApiSchema({ name: "CalendarioColecaoAcessoConcederInputDto" })
 export class CalendarioColecaoAcessoConcederInputRestDto {
@@ -121,10 +109,6 @@ export class CalendarioColecaoAcessoConcederInputRestDto {
   })
   papel: string;
 }
-
-// ============================================================================
-// Path params
-// ============================================================================
 
 @ApiSchema({ name: "CalendarioColecaoAcessoParentParamsDto" })
 export class CalendarioColecaoAcessoParentParamsRestDto {

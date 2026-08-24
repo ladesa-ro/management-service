@@ -58,7 +58,6 @@ export class ConsultaOcorrenciasPorDataQueryHandlerImpl
     return new Date(dateStr + "T00:00:00Z");
   }
 
-  // Data-only (YYYY-MM-DD) para comparar ocorrências expandidas contra `data_ocorrencia_referenciada`
   private formatDateOnly(date: Date): string {
     return date.toISOString().slice(0, 10);
   }

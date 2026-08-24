@@ -21,10 +21,6 @@ import { CalendarioSolicitacaoMudancaRecusarCommandFields } from "../domain/comm
 import { CalendarioSolicitacaoMudancaFindOneQueryResultFields } from "../domain/queries/calendario-solicitacao-mudanca-find-one.query.result";
 import { CalendarioSolicitacaoMudancaListQueryFields } from "../domain/queries/calendario-solicitacao-mudanca-list.query";
 
-// ============================================================================
-// FindOne Output
-// ============================================================================
-
 @ApiSchema({ name: "CalendarioSolicitacaoMudancaFindOneOutputDto" })
 export class CalendarioSolicitacaoMudancaFindOneOutputRestDto extends EntityBaseRestDto {
   @ApiProperty({
@@ -67,10 +63,6 @@ export class CalendarioSolicitacaoMudancaFindOneOutputRestDto extends EntityBase
   sessaoEdicaoId: string | null;
 }
 
-// ============================================================================
-// List Input/Output
-// ============================================================================
-
 @ApiSchema({ name: "CalendarioSolicitacaoMudancaListInputDto" })
 export class CalendarioSolicitacaoMudancaListInputRestDto extends PaginatedFilterByIdRestDto {
   static schema = CalendarioSolicitacaoMudancaPaginationInputSchema;
@@ -105,10 +97,6 @@ export class CalendarioSolicitacaoMudancaListOutputRestDto {
   data: CalendarioSolicitacaoMudancaFindOneOutputRestDto[];
 }
 
-// ============================================================================
-// Create Input
-// ============================================================================
-
 @ApiSchema({ name: "CalendarioSolicitacaoMudancaCreateInputDto" })
 export class CalendarioSolicitacaoMudancaCreateInputRestDto {
   static schema = CalendarioSolicitacaoMudancaCreateSchema.presentation;
@@ -131,10 +119,6 @@ export class CalendarioSolicitacaoMudancaCreateInputRestDto {
   justificativa: string;
 }
 
-// ============================================================================
-// Recusar Input
-// ============================================================================
-
 @ApiSchema({ name: "CalendarioSolicitacaoMudancaRecusarInputDto" })
 export class CalendarioSolicitacaoMudancaRecusarInputRestDto {
   static schema = CalendarioSolicitacaoMudancaRecusarSchema.presentation;
@@ -144,10 +128,6 @@ export class CalendarioSolicitacaoMudancaRecusarInputRestDto {
   )
   motivoRecusa?: string;
 }
-
-// ============================================================================
-// FindOne Input (for path params)
-// ============================================================================
 
 @ApiSchema({ name: "CalendarioSolicitacaoMudancaFindOneInputDto" })
 export class CalendarioSolicitacaoMudancaFindOneInputRestDto {

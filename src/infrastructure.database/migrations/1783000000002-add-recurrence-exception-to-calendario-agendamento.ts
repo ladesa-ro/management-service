@@ -4,10 +4,6 @@ export class AddRecurrenceExceptionToCalendarioAgendamento1783000000002
   implements MigrationInterface
 {
   public async up(queryRunner: QueryRunner): Promise<void> {
-    // Sem FK real de propósito: referencia o identificador_externo da série raiz,
-    // que é estável entre versões, não o id de uma linha específica (mesma lógica
-    // de previous_version_id, que também é uuid solto). Ver docs/analise-calendario.md,
-    // Recorte 2.
     await queryRunner.addColumn(
       "calendario_agendamento",
       new TableColumn({

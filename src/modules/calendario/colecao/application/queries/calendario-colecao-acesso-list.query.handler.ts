@@ -20,9 +20,6 @@ export class CalendarioColecaoAcessoListQueryHandlerImpl
     accessContext: IAccessContext | null,
     dto: CalendarioColecaoAcessoListQuery | null,
   ): Promise<CalendarioColecaoAcessoListQueryResult> {
-    // Sem filtro de ACL ainda — quem pode listar acessos de uma coleção é decidido
-    // pelo permission checker (noop hoje); a filtragem por colecaoId já ocorre via
-    // filter.colecao.id, injetado pelo controller a partir do path param.
     return this.repository.getFindAllQueryResult(accessContext, dto);
   }
 }

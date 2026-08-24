@@ -45,10 +45,6 @@ export class HorarioEdicaoSessaoDesfazerMudancaCommandHandlerImpl
       );
     }
 
-    // CRIAR, MOVER e REMOVER ainda nao foram aplicados a calendario_agendamento
-    // nesta fase (isso so acontece em /publicar), entao desfazer e sempre so
-    // descartar a proposta pendente; reverter uma mudanca ja publicada usando
-    // dadosAnteriores e um caso mais complexo, fora do escopo deste comando.
     await this.mudancaRepository.deleteById(mudanca.id);
 
     sessao.dateUpdated = getNowISO();

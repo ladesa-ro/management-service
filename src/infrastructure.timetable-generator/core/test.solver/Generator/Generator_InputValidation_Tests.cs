@@ -13,7 +13,7 @@ public class Generator_InputValidation_Tests
     [Test]
     public void No_Time_Slots_Provided()
     {
-        var date = new DateOnly(2025, 10, 27); // Monday
+        var date = new DateOnly(2025, 10, 27);
         var group = new Group("turma:1", new Availability([]));
         var teacher = new Teacher("prof:1", new Availability([]));
         var diary = new Diary("diario:1", group.Id, teacher.Id, "disc:1", 1, 1);
@@ -29,7 +29,7 @@ public class Generator_InputValidation_Tests
     [Test]
     public void No_Groups_Provided()
     {
-        var date = new DateOnly(2025, 10, 27); // Monday
+        var date = new DateOnly(2025, 10, 27);
         var timeSlot = new TimeSlot("08:00:00", "08:50:00");
         var teacher = new Teacher("prof:1", new Availability([]));
         var diary = new Diary("diario:1", "nonexistent-turma", teacher.Id, "disc:1", 1, 1);
@@ -43,7 +43,7 @@ public class Generator_InputValidation_Tests
     [Test]
     public void No_Teachers_Provided()
     {
-        var date = new DateOnly(2025, 10, 27); // Monday
+        var date = new DateOnly(2025, 10, 27);
         var timeSlot = new TimeSlot("08:00:00", "08:50:00");
         var group = new Group("turma:1", new Availability([]));
         var diary = new Diary("diario:1", group.Id, "nonexistent-prof", "disc:1", 1, 1);
@@ -57,7 +57,7 @@ public class Generator_InputValidation_Tests
     [Test]
     public void Diary_With_Non_Existent_Group_And_Teacher()
     {
-        var date = new DateOnly(2025, 10, 27); // Monday
+        var date = new DateOnly(2025, 10, 27);
         var timeSlot = new TimeSlot("08:00:00", "08:50:00");
         var group = new Group("turma:1", new Availability([]));
         var teacher = new Teacher("prof:1", new Availability([]));
@@ -72,7 +72,7 @@ public class Generator_InputValidation_Tests
     [Test]
     public void Invalid_RRULE_In_Unavailability()
     {
-        var date = new DateOnly(2025, 10, 27); // Monday
+        var date = new DateOnly(2025, 10, 27);
         var timeSlot = new TimeSlot("08:00:00", "08:50:00");
 
         var group = new Group("turma:1", new Availability([]));
@@ -95,7 +95,7 @@ public class Generator_InputValidation_Tests
     public void DateStart_After_DateEnd_In_Request()
     {
         var dateStart = new DateOnly(2025, 10, 28);
-        var dateEnd = new DateOnly(2025, 10, 27); // End before start
+        var dateEnd = new DateOnly(2025, 10, 27);
         var timeSlot = new TimeSlot("08:00:00", "08:50:00");
         var group = new Group("turma:1", new Availability([]));
         var teacher = new Teacher("prof:1", new Availability([]));
@@ -112,7 +112,7 @@ public class Generator_InputValidation_Tests
     [Test]
     public void No_Diaries_Provided()
     {
-        var date = new DateOnly(2025, 10, 27); // Monday
+        var date = new DateOnly(2025, 10, 27);
         var timeSlot = new TimeSlot("08:00:00", "08:50:00");
         var group = new Group("turma:1", new Availability([]));
         var teacher = new Teacher("prof:1", new Availability([]));
@@ -128,8 +128,8 @@ public class Generator_InputValidation_Tests
     [Test]
     public void Time_Slots_With_Invalid_Times_Start_After_End()
     {
-        var date = new DateOnly(2025, 10, 27); // Monday
-        var invalidTimeSlot = new TimeSlot("09:00:00", "08:00:00"); // Start after end
+        var date = new DateOnly(2025, 10, 27);
+        var invalidTimeSlot = new TimeSlot("09:00:00", "08:00:00");
         var group = new Group("turma:1", new Availability([]));
         var teacher = new Teacher("prof:1", new Availability([]));
         var diary = new Diary("diario:1", group.Id, teacher.Id, "disc:1", 1, 1);
@@ -141,7 +141,7 @@ public class Generator_InputValidation_Tests
     [Test]
     public void Empty_Request_Minimal_Fields()
     {
-        var date = new DateOnly(2025, 10, 27); // Monday
+        var date = new DateOnly(2025, 10, 27);
 
         var request = new GenerateRequest(date, date, [], [], [], []);
 
@@ -161,8 +161,8 @@ public class Generator_InputValidation_Tests
     [Test]
     public void Time_Slot_Spanning_Midnight()
     {
-        var date = new DateOnly(2025, 10, 27); // Monday
-        var spanningTimeSlot = new TimeSlot("23:00:00", "01:00:00"); // Spans midnight
+        var date = new DateOnly(2025, 10, 27);
+        var spanningTimeSlot = new TimeSlot("23:00:00", "01:00:00");
         var group = new Group("turma:1", new Availability([]));
         var teacher = new Teacher("prof:1", new Availability([]));
         var diary = new Diary("diario:1", group.Id, teacher.Id, "disc:1", 1, 1);
@@ -174,8 +174,8 @@ public class Generator_InputValidation_Tests
     [Test]
     public void Zero_Duration_Time_Slot()
     {
-        var date = new DateOnly(2025, 10, 27); // Monday
-        var zeroDurationSlot = new TimeSlot("08:00:00", "08:00:00"); // Start equals end
+        var date = new DateOnly(2025, 10, 27);
+        var zeroDurationSlot = new TimeSlot("08:00:00", "08:00:00");
         var group = new Group("turma:1", new Availability([]));
         var teacher = new Teacher("prof:1", new Availability([]));
         var diary = new Diary("diario:1", group.Id, teacher.Id, "disc:1", 1, 1);
@@ -187,10 +187,10 @@ public class Generator_InputValidation_Tests
     [Test]
     public void Duplicate_IDs_In_Entities()
     {
-        var date = new DateOnly(2025, 10, 27); // Monday
+        var date = new DateOnly(2025, 10, 27);
         var timeSlot = new TimeSlot("08:00:00", "08:50:00");
         var group1 = new Group("turma:1", new Availability([]));
-        var group2 = new Group("turma:1", new Availability([])); // Duplicate ID
+        var group2 = new Group("turma:1", new Availability([]));
         var teacher = new Teacher("prof:1", new Availability([]));
         var diary = new Diary("diario:1", group1.Id, teacher.Id, "disc:1", 1, 1);
 

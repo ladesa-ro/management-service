@@ -1,11 +1,3 @@
-/**
- * Resolvedor de papel efetivo (ACL) de um usuário sobre uma Coleção de calendário.
- *
- * Função pura, sem I/O — recebe dados já carregados (dono, concessões ativas,
- * perfis ativos do usuário) e devolve o papel mais permissivo aplicável.
- * O loader (application/calendario-colecao-acesso-resolver.service.ts) é quem
- * busca esses dados e chama esta função.
- */
 
 export type PapelEfetivo = "EDITOR" | "LEITOR" | "OCUPACAO" | null;
 

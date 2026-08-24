@@ -168,10 +168,6 @@ export const CalendarioAgendamentoReviseSchema = z
   );
 
 // ============================================================================
-// Excecao — cria uma ocorrencia isolada (RECURRENCE-ID) a partir da serie raiz.
-// Todos os campos sao opcionais: o que nao vier eh herdado da serie no momento
-// da chamada, em application/commands.
-// ============================================================================
 
 export const CalendarioAgendamentoExcecaoSchema = z.object({
   diaInteiro: z.boolean().optional(),
@@ -193,7 +189,6 @@ export const CalendarioAgendamentoExcecaoSchema = z.object({
   diarios: objectIdUuidArraySchema.optional(),
 });
 
-// ============================================================================
 // Metadata — campos nao-versionados (tabela separada)
 // ============================================================================
 

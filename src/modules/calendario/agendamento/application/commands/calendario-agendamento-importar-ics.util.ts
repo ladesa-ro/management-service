@@ -1,15 +1,6 @@
 import { rrulestr } from "rrule";
 
-/**
- * Espelha, na direção contrária, o que `calendario-agendamento-exportar-ics.query.handler.ts`
- * já faz: parseia o texto de um .ics (RFC 5545) em VEVENTs. Sem dependência
- * nova — RFC 5545 é texto simples, e o único ponto que se beneficia de uma
- * lib é a validação de RRULE, para a qual reaproveitamos `rrule` (já usada
- * na expansão de ocorrências).
- */
-
 export interface IIcsVeventParseado {
-  /** Posição (1-based) deste VEVENT no arquivo original — usada para reportar rejeições que só acontecem depois do parse (ex: falha ao salvar). */
   index: number;
   uid: string | null;
   summary: string | null;
@@ -20,7 +11,6 @@ export interface IIcsVeventParseado {
   horarioFim: string;
   diaInteiro: boolean;
   rrule: string | null;
-  /** Datas (RFC 5545 EXDATE) excluídas da série — ocorrências que a RRULE geraria mas o calendário de origem cancelou explicitamente. */
   exdates: string[];
 }
 
@@ -111,9 +101,6 @@ export function parseIcs(conteudo: string): IIcsParseResult {
   return { eventos, rejeitados };
 }
 
-// Desdobra linhas quebradas em 75 octetos (RFC 5545 §3.1): uma linha de
-// continuação começa com um espaço ou tab, que deve ser removido ao juntar
-// de volta à linha lógica anterior.
 function unfoldLines(conteudo: string): string[] {
   const linhasFisicas = conteudo.split(/\r\n|\r|\n/);
   const linhasLogicas: string[] = [];
@@ -212,10 +199,6 @@ function parseVevent(linhasDoEvento: string[]): Omit<IIcsVeventParseado, "index"
   };
 }
 
-// EXDATE pode se repetir em várias linhas e cada valor pode trazer múltiplas
-// datas separadas por vírgula (RFC 5545 §3.8.5.1) — por isso a extração varre
-// as linhas brutas em vez de reaproveitar o Map de props, que só guarda a
-// última ocorrência de cada nome de propriedade.
 function extrairExdates(linhasDoEvento: string[]): string[] {
   const datas: string[] = [];
 
@@ -232,9 +215,6 @@ function extrairExdates(linhasDoEvento: string[]): string[] {
   return datas;
 }
 
-// Aceita AAAAMMDD (VALUE=DATE, dia inteiro) ou AAAAMMDDTHHMMSS[Z]. O "Z" (UTC)
-// é apenas descartado — o resto do domínio já trata datas/horários como
-// string local, sem conversão de fuso (mesma convenção usada na exportação).
 function parseIcsDate(value: string, params: string): IIcsDataHora | null {
   const match = value.match(/^(\d{4})(\d{2})(\d{2})(?:T(\d{2})(\d{2})(\d{2})Z?)?$/);
   if (!match) return null;
@@ -250,8 +230,6 @@ function parseIcsDate(value: string, params: string): IIcsDataHora | null {
   return { data, horario: `${hora}:${minuto}:${segundo}`, diaInteiro: false };
 }
 
-// Inverso de `escaparTexto` em calendario-agendamento-exportar-ics.query.handler.ts:
-// varredura em uma passada para não reprocessar sequências já desescapadas.
 function unescapeTexto(valor: string): string {
   let resultado = "";
 

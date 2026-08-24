@@ -135,11 +135,6 @@ export class GoneError extends ApplicationError {
   }
 }
 
-/**
- * Escrita condicional (If-Match) rejeitada: a versão informada pelo cliente
- * não corresponde à versão atual do recurso no servidor.
- */
-
 export class PreconditionFailedError extends ApplicationError {
   readonly code = ApplicationErrorCode.PRECONDITION_FAILED;
 

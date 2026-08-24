@@ -58,10 +58,6 @@ export class ConsultaOcorrenciasOutputRestDto {
   ocorrencias: CalendarioAgendamentoFindOneOutputRestDto[];
 }
 
-// ============================================================================
-// Ocupação sem detalhe — Query Input
-// ============================================================================
-
 const CalendarioOcupacaoSemDetalheQuerySchema = z.object({
   campus: z.uuid(),
   dateStart: z.string().min(1),
@@ -81,10 +77,6 @@ export class CalendarioOcupacaoSemDetalheQueryRestDto {
   @ApiProperty({ description: "Data fim do período (YYYY-MM-DD)", type: "string" })
   dateEnd: string;
 }
-
-// ============================================================================
-// Ocupação sem detalhe — Output
-// ============================================================================
 
 @ApiSchema({ name: "CalendarioOcupacaoSemDetalheItemDto" })
 export class CalendarioOcupacaoSemDetalheItemRestDto {
@@ -112,10 +104,6 @@ export class CalendarioOcupacaoSemDetalheOutputRestDto {
   })
   ocupacoes: CalendarioOcupacaoSemDetalheItemRestDto[];
 }
-
-// ============================================================================
-// Exportar ICS — Query Input
-// ============================================================================
 
 const CalendarioAgendamentoExportarIcsQuerySchema = z.object({
   dateStart: z.string().min(1),
@@ -156,10 +144,6 @@ export class CalendarioAgendamentoExportarIcsQueryRestDto {
   tipo?: string;
 }
 
-// ============================================================================
-// Mudanças desde (sincronização de coleção) — Query Input
-// ============================================================================
-
 const CalendarioColecaoMudancasDesdeQuerySchema = z.object({
   colecaoId: z.uuid(),
   desde: z.coerce.number().int().min(0),
@@ -178,10 +162,6 @@ export class CalendarioColecaoMudancasDesdeQueryRestDto {
   })
   desde: number;
 }
-
-// ============================================================================
-// Mudanças desde (sincronização de coleção) — Output
-// ============================================================================
 
 @ApiSchema({ name: "CalendarioColecaoMudancasDesdeOutputDto" })
 export class CalendarioColecaoMudancasDesdeOutputRestDto {

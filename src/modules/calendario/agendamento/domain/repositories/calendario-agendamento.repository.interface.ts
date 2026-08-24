@@ -81,11 +81,6 @@ export interface ICalendarioAgendamentoRepository {
   // Read side — usado por query handlers
   // ==========================================
 
-  /**
-   * Verifica se já existe algum agendamento (qualquer versão) com este
-   * identificador externo. Usado pela importação de .ics para idempotência
-   * por UID: um VEVENT cujo UID já existe como identificadorExterno é pulado.
-   */
   existsByIdentificadorExterno(identificadorExterno: string): Promise<boolean>;
 
   /** Retorna um registro hidratado com junções para exibição. */
@@ -117,13 +112,6 @@ export interface ICalendarioAgendamentoRepository {
     excludeIdentificadorExterno?: string;
   }): Promise<{ id: string; identificadorExterno: string; recurso: string; recursoId: string }[]>;
 
-  /**
-   * Snapshot dos agendamentos ativos (versão corrente, não INATIVO) vinculados
-   * a uma coleção. Usado pela consulta de sincronização
-   * (`calendario-colecao-mudancas-desde`) como aproximação conservadora de
-   * "o que mudou": sem tabela de auditoria por trás do `sync_token`, devolve
-   * o estado atual completo em vez de um diff exato.
-   */
   findByColecaoId(colecaoId: string): Promise<CalendarioAgendamentoFindOneQueryResult[]>;
 
   /** Busca agendamentos que se sobrepõem a um período, com filtros opcionais. */
@@ -136,32 +124,17 @@ export interface ICalendarioAgendamentoRepository {
     tipo?: CalendarioAgendamentoTipo;
   }): Promise<CalendarioAgendamentoFindOneQueryResult[]>;
 
-  /**
-   * Histórico completo de versões de um agendamento, mais antiga primeiro,
-   * com o diff campo a campo entre cada versão e a anterior.
-   */
   getLinhaDoTempo(identificadorExterno: string): Promise<{
     colecaoId: string | null;
     versoes: ICalendarioAgendamentoLinhaDoTempoEntrada[];
   }>;
 
-  /**
-   * Exceções (RECURRENCE-ID) e cancelamentos (EXDATE) registrados para as séries
-   * indicadas, com data de ocorrência dentro do período. Usado para suprimir/substituir
-   * datas durante a expansão de RRULE — inclui status INATIVO, que findByDateRange
-   * filtra por padrão.
-   */
   findExcecoesPorSeries(params: {
     identificadoresSerieOrigem: string[];
     dateStart: string;
     dateEnd: string;
   }): Promise<{ identificadorExternoSerieOrigem: string; dataOcorrenciaReferenciada: string }[]>;
 
-  /**
-   * Reatribui exceções/cancelamentos de uma série para outra a partir de uma data
-   * (inclusive). Usado ao dividir uma série em "esta e seguintes": as exceções que
-   * caem na parte nova passam a referenciar a nova série, não a original truncada.
-   */
   reatribuirExcecoesParaNovaSerie(params: {
     deIdentificadorExterno: string;
     paraIdentificadorExterno: string;

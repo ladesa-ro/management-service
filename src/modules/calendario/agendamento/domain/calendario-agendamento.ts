@@ -202,11 +202,6 @@ export class CalendarioAgendamento implements IVersioned {
     return instance;
   }
 
-  /**
-   * Cria uma exceção de ocorrência: um agendamento novo, com identidade própria,
-   * que substitui a data indicada dentro da série raiz. Equivalente ao par
-   * UID + RECURRENCE-ID do iCalendar (RFC 5545). A série raiz não é alterada.
-   */
   static criarExcecao(
     serieOrigem: CalendarioAgendamento,
     dataOcorrencia: string,
@@ -260,12 +255,6 @@ export class CalendarioAgendamento implements IVersioned {
     return instance;
   }
 
-  /**
-   * Cancela uma ocorrência específica da série, sem apagar as demais.
-   * Equivalente ao EXDATE do iCalendar (RFC 5545): a exceção nasce com
-   * status INATIVO, então a expansão de recorrência a pula e nenhuma
-   * consulta de conflito a enxerga.
-   */
   static cancelarOcorrencia(
     serieOrigem: CalendarioAgendamento,
     dataOcorrencia: string,
@@ -279,14 +268,6 @@ export class CalendarioAgendamento implements IVersioned {
     });
   }
 
-  /**
-   * Adiciona uma data avulsa à série: uma ocorrência extra que a RRULE não
-   * geraria, com identidade própria. Equivalente ao RDATE do iCalendar (RFC
-   * 5545). Reaproveita o mesmo mecanismo de `criarExcecao`, mas com
-   * `dataOcorrenciaReferenciada` nula — nula significa "adição": a ocorrência
-   * não substitui nem cancela nenhuma data que a regra geraria, então a
-   * expansão de RRULE não a suprime. A série raiz não é alterada.
-   */
   static adicionarDataAvulsa(
     serieOrigem: CalendarioAgendamento,
     dataOcorrencia: string,

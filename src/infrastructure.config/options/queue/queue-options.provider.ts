@@ -8,11 +8,6 @@ import { IQueueOptions as IQueueOptionsToken } from "./queue-options.interface";
 export const QueueOptionsProvider: Provider = {
   provide: IQueueOptionsToken,
   useFactory: (configService: IConfigService): IQueueOptions | null => {
-    // A fila vive num schema (`bullmq`) do próprio banco da aplicação, então o
-    // padrão sensato é reaproveitar DATABASE_URL. QUEUE_DATABASE_URL só precisa
-    // ser declarada quando a fila for de fato apontada pra outro Postgres.
-    // `||` e não `??`: variável declarada com valor vazio precisa cair no
-    // fallback igual a variável ausente.
     const url =
       configService.get<string>(ConfigTokens.QueueOptions.Url) ||
       configService.get<string>(ConfigTokens.DatabaseOptions.Url);

@@ -1,6 +1,3 @@
-/**
- * Calendario Colecao Acesso — definicao dos campos (FieldMetadata) da entidade.
- */
 import { z } from "zod";
 import { createFieldMetadata, createSchema } from "@/domain/abstractions";
 

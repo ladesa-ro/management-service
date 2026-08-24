@@ -53,8 +53,6 @@ describe("ensureIfMatch", () => {
     const agendamento = criarAgendamento();
     const versaoLidaPeloPrimeiroCliente = String(agendamento.version);
 
-    // "outro escreve": fecha a versão que ambos os clientes leram, como
-    // saveNewVersion faz ao promover uma nova versão.
     agendamento.close();
 
     expect(() =>

@@ -60,10 +60,6 @@ export function createMockAgendamentoRepository() {
   };
 }
 
-/**
- * Creates a mock CalendarioColecaoSyncService (sync-token + push WS de calendário).
- */
-
 export function createMockColecaoSyncService() {
   return {
     registrarMudanca: vi.fn().mockResolvedValue(1),

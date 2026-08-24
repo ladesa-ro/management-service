@@ -34,10 +34,6 @@ export class CalendarioAgendamentoExportarIcsQueryHandlerImpl
       tipo: query.tipo,
     });
 
-    // A consulta reaproveitada não aplica ACL de coleção (é reaproveitada também
-    // por /ocupacao, que por desenho nunca aplica ACL) — aplicamos aqui, na borda
-    // que efetivamente expõe nome/motivo do agendamento, para não vazar dado que
-    // o resto do sistema esconde de quem só tem papel OCUPACAO na coleção.
     const visiveis = await this.visibilidadeService.aplicarVisibilidadeMuitos(
       accessContext,
       ocorrencias,

@@ -14,7 +14,7 @@ public class Generator_AvailabilityRules_Tests
     [Test]
     public void Teacher_Unavailable_On_Specific_Day()
     {
-        var date = new DateOnly(2025, 10, 27); // Monday
+        var date = new DateOnly(2025, 10, 27);
         var timeSlot = new TimeSlot("08:00:00", "08:50:00");
 
         var group = new Group("turma:1", new Availability([]));
@@ -38,7 +38,7 @@ public class Generator_AvailabilityRules_Tests
     [Test]
     public void Group_Unavailable_On_Specific_Time_Slot()
     {
-        var date = new DateOnly(2025, 10, 27); // Monday
+        var date = new DateOnly(2025, 10, 27);
         var timeSlot = new TimeSlot("08:00:00", "08:50:00");
 
         var group = new Group("turma:1", new Availability([
@@ -62,7 +62,7 @@ public class Generator_AvailabilityRules_Tests
     [Test]
     public void Partial_Unavailability_Overlapping_Time_Slot()
     {
-        var date = new DateOnly(2025, 10, 27); // Monday
+        var date = new DateOnly(2025, 10, 27);
         var timeSlot = new TimeSlot("08:00:00", "09:00:00");
 
         var group = new Group("turma:1", new Availability([]));
@@ -86,8 +86,8 @@ public class Generator_AvailabilityRules_Tests
     [Test]
     public void Unavailability_Recurring_Weekly()
     {
-        var dateStart = new DateOnly(2025, 10, 27); // Monday
-        var dateEnd = new DateOnly(2025, 10, 31); // Friday
+        var dateStart = new DateOnly(2025, 10, 27);
+        var dateEnd = new DateOnly(2025, 10, 31);
         var timeSlot = new TimeSlot("08:00:00", "08:50:00");
 
         var group = new Group("turma:1", new Availability([]));
@@ -118,12 +118,12 @@ public class Generator_AvailabilityRules_Tests
     [Test]
     public void Unavailability_For_Specific_Date_Range()
     {
-        var dateStart = new DateOnly(2025, 10, 27); // Monday
-        var dateEnd = new DateOnly(2025, 10, 31); // Friday
+        var dateStart = new DateOnly(2025, 10, 27);
+        var dateEnd = new DateOnly(2025, 10, 31);
         var timeSlot = new TimeSlot("08:00:00", "08:50:00");
 
-        var unavailableStart = dateStart.AddDays(2).ToDateTime(new TimeOnly(0, 0, 0)); // Wednesday
-        var unavailableEnd = dateEnd.ToDateTime(new TimeOnly(23, 59, 59)); // Friday
+        var unavailableStart = dateStart.AddDays(2).ToDateTime(new TimeOnly(0, 0, 0));
+        var unavailableEnd = dateEnd.ToDateTime(new TimeOnly(23, 59, 59));
 
         var group = new Group("turma:1", new Availability([]));
         var teacher = new Teacher("prof:1", new Availability([
@@ -143,17 +143,17 @@ public class Generator_AvailabilityRules_Tests
         Assert.That(result!.Timetable.Schedules, Has.Length.EqualTo(2), "Should generate schedules only outside unavailability (Mon, Tue).");
 
         var scheduledDates = result.Timetable.Schedules.Select(s => s.Date).ToList();
-        Assert.That(scheduledDates, Does.Contain(dateStart)); // Mon
-        Assert.That(scheduledDates, Does.Contain(dateStart.AddDays(1))); // Tue
-        Assert.That(scheduledDates, Does.Not.Contain(dateStart.AddDays(2))); // Wed
-        Assert.That(scheduledDates, Does.Not.Contain(dateStart.AddDays(3))); // Thu
-        Assert.That(scheduledDates, Does.Not.Contain(dateStart.AddDays(4))); // Fri
+        Assert.That(scheduledDates, Does.Contain(dateStart));
+        Assert.That(scheduledDates, Does.Contain(dateStart.AddDays(1)));
+        Assert.That(scheduledDates, Does.Not.Contain(dateStart.AddDays(2)));
+        Assert.That(scheduledDates, Does.Not.Contain(dateStart.AddDays(3)));
+        Assert.That(scheduledDates, Does.Not.Contain(dateStart.AddDays(4)));
     }
 
     [Test]
     public void Empty_Availability_Rules()
     {
-        var date = new DateOnly(2025, 10, 27); // Monday
+        var date = new DateOnly(2025, 10, 27);
         var timeSlot = new TimeSlot("08:00:00", "08:50:00");
 
         var group = new Group("turma:1", new Availability([]));
@@ -171,7 +171,7 @@ public class Generator_AvailabilityRules_Tests
     [Test]
     public void Group_And_Teacher_Both_Unavailable()
     {
-        var date = new DateOnly(2025, 10, 27); // Monday
+        var date = new DateOnly(2025, 10, 27);
         var timeSlot = new TimeSlot("08:00:00", "08:50:00");
 
         var group = new Group("turma:1", new Availability([
@@ -201,11 +201,11 @@ public class Generator_AvailabilityRules_Tests
     [Test]
     public void Unavailability_Overlapping_Partial_Week()
     {
-        var dateStart = new DateOnly(2025, 10, 27); // Monday
-        var dateEnd = new DateOnly(2025, 10, 31); // Friday
+        var dateStart = new DateOnly(2025, 10, 27);
+        var dateEnd = new DateOnly(2025, 10, 31);
         var timeSlot = new TimeSlot("08:00:00", "08:50:00");
 
-        var unavailableDate = new DateOnly(2025, 11, 1); // Saturday, outside range
+        var unavailableDate = new DateOnly(2025, 11, 1);
         var group = new Group("turma:1", new Availability([]));
         var teacher = new Teacher("prof:1", new Availability([
             new AvailabilityRuleUnavailability(
@@ -227,17 +227,17 @@ public class Generator_AvailabilityRules_Tests
     [Test]
     public void Multiple_Unavailability_Rules_Per_Entity()
     {
-        var date = new DateOnly(2025, 10, 27); // Monday
+        var date = new DateOnly(2025, 10, 27);
         var timeSlot = new TimeSlot("08:00:00", "08:50:00");
 
         var group = new Group("turma:1", new Availability([]));
         var teacher = new Teacher("prof:1", new Availability([
-            new AvailabilityRuleUnavailability( // Day-specific
+            new AvailabilityRuleUnavailability(
                 "FREQ=DAILY;BYDAY=MO",
                 date.ToDateTime(new TimeOnly(0, 0, 0)),
                 date.ToDateTime(new TimeOnly(23, 59, 59))
             ),
-            new AvailabilityRuleUnavailability( // Time-specific
+            new AvailabilityRuleUnavailability(
                 "FREQ=DAILY",
                 date.ToDateTime(new TimeOnly(8, 0, 0)),
                 date.ToDateTime(new TimeOnly(9, 0, 0))
@@ -256,9 +256,9 @@ public class Generator_AvailabilityRules_Tests
     [Test]
     public void RRULE_With_Interval_Every_Other_Week()
     {
-        var dateStart = new DateOnly(2025, 10, 27); // Monday, week 1
-        var dateMid = new DateOnly(2025, 11, 3); // Next Monday, week 2
-        var dateEnd = new DateOnly(2025, 11, 10); // Following Monday, week 3
+        var dateStart = new DateOnly(2025, 10, 27);
+        var dateMid = new DateOnly(2025, 11, 3);
+        var dateEnd = new DateOnly(2025, 11, 10);
         var timeSlot = new TimeSlot("08:00:00", "08:50:00");
 
         var group = new Group("turma:1", new Availability([]));
@@ -286,7 +286,7 @@ public class Generator_AvailabilityRules_Tests
     [Test]
     public void Unavailability_With_Exact_Time_Match()
     {
-        var date = new DateOnly(2025, 10, 27); // Monday
+        var date = new DateOnly(2025, 10, 27);
         var timeSlot = new TimeSlot("08:00:00", "08:50:00");
 
         var group = new Group("turma:1", new Availability([]));
@@ -310,8 +310,8 @@ public class Generator_AvailabilityRules_Tests
     [Test]
     public void RRULE_With_Count_Limit()
     {
-        var dateStart = new DateOnly(2025, 10, 27); // Monday 1
-        var dateEnd = new DateOnly(2025, 11, 17); // Monday 4 (4 weeks later)
+        var dateStart = new DateOnly(2025, 10, 27);
+        var dateEnd = new DateOnly(2025, 11, 17);
         var timeSlot = new TimeSlot("08:00:00", "08:50:00");
 
         var group = new Group("turma:1", new Availability([]));
@@ -329,23 +329,22 @@ public class Generator_AvailabilityRules_Tests
         var result = GeneratorFactory.CreateDefault().GenerateTimetables(request, new IcalAvailabilityEvaluator()).FirstOrDefault();
 
         Assert.That(result, Is.Not.Null, "Should generate at least one timetable.");
-        // Other weekdays remain valid unless explicitly made unavailable.
         Assert.That(result!.Timetable.Schedules.Length, Is.LessThanOrEqualTo(4));
 
         var scheduledDates = result.Timetable.Schedules.Select(s => s.Date).ToList();
-        Assert.That(scheduledDates, Does.Not.Contain(dateStart)); // Unavailable Monday 1
-        Assert.That(scheduledDates, Does.Not.Contain(dateStart.AddDays(7))); // Unavailable Monday 2
-        Assert.That(scheduledDates, Does.Not.Contain(dateStart.AddDays(14))); // Unavailable Monday 3
+        Assert.That(scheduledDates, Does.Not.Contain(dateStart));
+        Assert.That(scheduledDates, Does.Not.Contain(dateStart.AddDays(7)));
+        Assert.That(scheduledDates, Does.Not.Contain(dateStart.AddDays(14)));
     }
 
     [Test]
     public void Unavailability_DateStart_After_Request_DateEnd()
     {
-        var dateStart = new DateOnly(2025, 10, 27); // Monday
-        var dateEnd = new DateOnly(2025, 10, 31); // Friday
+        var dateStart = new DateOnly(2025, 10, 27);
+        var dateEnd = new DateOnly(2025, 10, 31);
         var timeSlot = new TimeSlot("08:00:00", "08:50:00");
 
-        var unavailableStart = dateEnd.AddDays(1).ToDateTime(new TimeOnly(0, 0, 0)); // Saturday after range
+        var unavailableStart = dateEnd.AddDays(1).ToDateTime(new TimeOnly(0, 0, 0));
 
         var group = new Group("turma:1", new Availability([]));
         var teacher = new Teacher("prof:1", new Availability([
@@ -368,7 +367,7 @@ public class Generator_AvailabilityRules_Tests
     [Test]
     public void Group_Unavailability_Overriding_Teacher_Availability()
     {
-        var date = new DateOnly(2025, 10, 27); // Monday
+        var date = new DateOnly(2025, 10, 27);
         var timeSlot = new TimeSlot("08:00:00", "08:50:00");
 
         var group = new Group("turma:1", new Availability([
@@ -378,7 +377,7 @@ public class Generator_AvailabilityRules_Tests
                 date.ToDateTime(new TimeOnly(23, 59, 59))
             )
         ]));
-        var teacher = new Teacher("prof:1", new Availability([])); // Teacher available
+        var teacher = new Teacher("prof:1", new Availability([]));
         var diary = new Diary("diario:1", group.Id, teacher.Id, "disc:1", 1, 1);
 
         var request = new GenerateRequest(date, date, [group], [teacher], [diary], [timeSlot]);

@@ -3,9 +3,6 @@ using Ladesa.TimetableGenerator.Infrastructure.Solver.Generator;
 
 namespace Ladesa.TimetableGenerator.Infrastructure.Solver.Constraints;
 
-/// <summary>
-///     CONSTRAINT: Teacher - no schedules in lunchtime - at least 01:30
-/// </summary>
 internal class ConstraintTeacherLunch : IConstraint
 {
     public void Apply(GenerationContext context)

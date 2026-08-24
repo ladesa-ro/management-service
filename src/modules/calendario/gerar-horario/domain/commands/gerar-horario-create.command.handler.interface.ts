@@ -16,7 +16,6 @@ export interface IGerarHorarioCreateCommand {
 
   enabledConstraints?: string[] | null;
 
-  /** Header `Idempotency-Key`, opcional — sem ele o comando roda sem proteção contra reenvio. */
   idempotencyKey?: string;
 }
 

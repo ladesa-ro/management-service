@@ -13,7 +13,7 @@ public class Generator_ConflictResolution_Tests
     [Test]
     public void Multiple_Diaries_For_Same_Group_And_Teacher()
     {
-        var date = new DateOnly(2025, 10, 27); // Monday
+        var date = new DateOnly(2025, 10, 27);
         var timeSlot = new TimeSlot("08:00:00", "08:50:00");
 
         var group = new Group("turma:1", new Availability([]));
@@ -35,7 +35,7 @@ public class Generator_ConflictResolution_Tests
     [Test]
     public void Conflicting_Schedules_Between_Two_Diaries()
     {
-        var date = new DateOnly(2025, 10, 27); // Monday
+        var date = new DateOnly(2025, 10, 27);
         var timeSlot = new TimeSlot("08:00:00", "08:50:00");
 
         var group1 = new Group("turma:1", new Availability([]));
@@ -55,11 +55,11 @@ public class Generator_ConflictResolution_Tests
     [Test]
     public void Overlapping_Time_Slots()
     {
-        var date = new DateOnly(2025, 10, 27); // Monday
+        var date = new DateOnly(2025, 10, 27);
         var slots = new[]
         {
             new TimeSlot("08:00:00", "09:00:00"),
-            new TimeSlot("08:30:00", "09:30:00") // Overlapping
+            new TimeSlot("08:30:00", "09:30:00")
         };
 
         var group = new Group("turma:1", new Availability([]));
@@ -77,13 +77,13 @@ public class Generator_ConflictResolution_Tests
     [Test]
     public void Multiple_Teachers_For_One_Diary()
     {
-        var date = new DateOnly(2025, 10, 27); // Monday
+        var date = new DateOnly(2025, 10, 27);
         var timeSlot = new TimeSlot("08:00:00", "08:50:00");
 
         var group = new Group("turma:1", new Availability([]));
         var teacher1 = new Teacher("prof:1", new Availability([]));
         var teacher2 = new Teacher("prof:2", new Availability([]));
-        var diary = new Diary("diario:1", group.Id, teacher1.Id, "disc:1", 1, 1); // References teacher1
+        var diary = new Diary("diario:1", group.Id, teacher1.Id, "disc:1", 1, 1);
 
         var request = new GenerateRequest(date, date, [group], [teacher1, teacher2], [diary], [timeSlot]);
 
@@ -97,13 +97,13 @@ public class Generator_ConflictResolution_Tests
     [Test]
     public void Multiple_Groups_For_One_Diary()
     {
-        var date = new DateOnly(2025, 10, 27); // Monday
+        var date = new DateOnly(2025, 10, 27);
         var timeSlot = new TimeSlot("08:00:00", "08:50:00");
 
         var group1 = new Group("turma:1", new Availability([]));
         var group2 = new Group("turma:2", new Availability([]));
         var teacher = new Teacher("prof:1", new Availability([]));
-        var diary = new Diary("diario:1", group1.Id, teacher.Id, "disc:1", 1, 1); // References group1
+        var diary = new Diary("diario:1", group1.Id, teacher.Id, "disc:1", 1, 1);
 
         var request = new GenerateRequest(date, date, [group1, group2], [teacher], [diary], [timeSlot]);
 
@@ -117,7 +117,7 @@ public class Generator_ConflictResolution_Tests
     [Test]
     public void Priority_Or_Ordering_Of_Diaries()
     {
-        var date = new DateOnly(2025, 10, 27); // Monday
+        var date = new DateOnly(2025, 10, 27);
         var timeSlot = new TimeSlot("08:00:00", "08:50:00");
 
         var group = new Group("turma:1", new Availability([]));
@@ -137,9 +137,9 @@ public class Generator_ConflictResolution_Tests
     [Test]
     public void Duplicate_Time_Slots()
     {
-        var date = new DateOnly(2025, 10, 27); // Monday
+        var date = new DateOnly(2025, 10, 27);
         var timeSlot = new TimeSlot("08:00:00", "08:50:00");
-        var slots = new[] { timeSlot, timeSlot }; // Duplicates
+        var slots = new[] { timeSlot, timeSlot };
 
         var group = new Group("turma:1", new Availability([]));
         var teacher = new Teacher("prof:1", new Availability([]));
@@ -156,7 +156,7 @@ public class Generator_ConflictResolution_Tests
     [Test]
     public void Teacher_Shared_Across_Multiple_Groups()
     {
-        var date = new DateOnly(2025, 10, 27); // Monday
+        var date = new DateOnly(2025, 10, 27);
         var slots = new[]
         {
             new TimeSlot("08:00:00", "08:50:00"),
@@ -182,7 +182,7 @@ public class Generator_ConflictResolution_Tests
     [Test]
     public void Group_Shared_Across_Multiple_Teachers()
     {
-        var date = new DateOnly(2025, 10, 27); // Monday
+        var date = new DateOnly(2025, 10, 27);
         var slots = new[]
         {
             new TimeSlot("08:00:00", "08:50:00"),
@@ -208,7 +208,7 @@ public class Generator_ConflictResolution_Tests
     [Test]
     public void Partial_Booking_Due_To_Conflicts()
     {
-        var date = new DateOnly(2025, 10, 27); // Monday
+        var date = new DateOnly(2025, 10, 27);
         var slots = new[]
         {
             new TimeSlot("08:00:00", "08:50:00"),
@@ -237,7 +237,7 @@ public class Generator_ConflictResolution_Tests
     [Test]
     public void Diary_With_SubjectId_Variation()
     {
-        var date = new DateOnly(2025, 10, 27); // Monday
+        var date = new DateOnly(2025, 10, 27);
         var slots = new[]
         {
             new TimeSlot("08:00:00", "08:50:00"),
@@ -247,7 +247,7 @@ public class Generator_ConflictResolution_Tests
         var group = new Group("turma:1", new Availability([]));
         var teacher = new Teacher("prof:1", new Availability([]));
         var diary1 = new Diary("diario:1", group.Id, teacher.Id, "disc:1", 1, 1);
-        var diary2 = new Diary("diario:2", group.Id, teacher.Id, "disc:2", 1, 1); // Different subject
+        var diary2 = new Diary("diario:2", group.Id, teacher.Id, "disc:2", 1, 1);
 
         var request = new GenerateRequest(date, date, [group], [teacher], [diary1, diary2], slots);
 

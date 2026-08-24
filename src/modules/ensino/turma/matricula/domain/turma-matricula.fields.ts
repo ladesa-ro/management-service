@@ -1,6 +1,3 @@
-/**
- * TurmaMatricula — definicao dos campos (FieldMetadata) da entidade.
- */
 import { createFieldMetadata } from "@/domain/abstractions";
 
 export const TurmaMatriculaFields = {

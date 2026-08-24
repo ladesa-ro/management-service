@@ -4,10 +4,6 @@ using LinearExpr = Google.OrTools.Sat.LinearExpr;
 
 namespace Ladesa.TimetableGenerator.Infrastructure.Solver.Generator;
 
-/// <summary>
-///     Configures the objective function for the CP solver to maximize
-///     schedule quality based on preferences and continuity with previous timetables.
-/// </summary>
 internal class TimetableOptimizer : ITimetableOptimizer
 {
     public void OptimizeResult(

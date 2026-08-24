@@ -3,17 +3,6 @@ import { Dep, Impl } from "@/domain/dependency-injection";
 import { CalendarioColecaoAcessoResolverService } from "@/modules/calendario/colecao/application/calendario-colecao-acesso-resolver.service";
 import type { CalendarioAgendamentoFindOneQueryResult } from "../../domain/queries/calendario-agendamento-find-one.query.result";
 
-/**
- * Visibilidade efetiva de um agendamento para o requisitante.
- *
- * - SEM_RESTRICAO: agendamento sem coleção — comportamento de sempre, sem ACL.
- * - EDITOR/LEITOR/OCUPACAO: papel resolvido via ColecaoAcesso.
- * - SEM_ACESSO: agendamento tem coleção, mas nenhuma concessão alcança o requisitante.
- *
- * Única peça que sabe traduzir "colecaoId de um agendamento" em papel efetivo —
- * o permission checker (escrita) e os handlers de leitura consomem esta mesma
- * peça para nunca divergir sobre o que cada papel significa.
- */
 export type CalendarioAgendamentoVisibilidade =
   | "SEM_RESTRICAO"
   | "EDITOR"
@@ -58,12 +47,6 @@ export class CalendarioAgendamentoVisibilidadeService {
     return visibilidade !== "SEM_ACESSO";
   }
 
-  /**
-   * Aplica visibilidade a um único resultado. Retorna null quando o requisitante
-   * não tem acesso algum (o chamador deve tratar como "não encontrado", não
-   * como um erro de permissão — evita confirmar a existência do registro pra
-   * quem não pode vê-lo).
-   */
   async aplicarVisibilidadeUm(
     accessContext: IAccessContext | null,
     resultado: CalendarioAgendamentoFindOneQueryResult,
@@ -74,12 +57,6 @@ export class CalendarioAgendamentoVisibilidadeService {
     return this.aplicarARaw(resultado, visibilidade);
   }
 
-  /**
-   * Aplica visibilidade a uma lista, removendo os itens sem acesso e reduzindo
-   * os de papel OCUPACAO. Resolve o papel uma vez por coleção distinta presente
-   * na lista, não uma vez por item, para não multiplicar consultas num resultado
-   * com muitas ocorrências da mesma coleção.
-   */
   async aplicarVisibilidadeMuitos(
     accessContext: IAccessContext | null,
     resultados: CalendarioAgendamentoFindOneQueryResult[],
@@ -126,8 +103,6 @@ export class CalendarioAgendamentoVisibilidadeService {
       return resultado;
     }
 
-    // OCUPACAO: mesmo shape, campos sensíveis zerados — quem só sabe que o
-    // horário está ocupado não precisa (nem deve) ver o que é o evento.
     return {
       ...resultado,
       nome: null,

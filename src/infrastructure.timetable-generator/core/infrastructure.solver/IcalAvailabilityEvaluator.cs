@@ -6,9 +6,6 @@ using Ladesa.TimetableGenerator.Domain.Models;
 
 namespace Ladesa.TimetableGenerator.Infrastructure.Solver;
 
-/// <summary>
-///     Evaluates availability rules using Ical.Net for recurrence pattern processing.
-/// </summary>
 public class IcalAvailabilityEvaluator : IAvailabilityEvaluator
 {
     private static readonly RecurrencePatternSerializer RecurrencePatternSerializer = new();

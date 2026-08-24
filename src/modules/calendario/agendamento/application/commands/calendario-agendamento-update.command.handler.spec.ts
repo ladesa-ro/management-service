@@ -498,11 +498,6 @@ describe("CalendarioAgendamentoUpdateCommandHandler", () => {
       const domain = createActiveDomain();
       const versaoLidaPeloPrimeiroCliente = String(domain.version);
 
-      // Simula "outro escreve": o segundo cliente promoveu uma nova versão,
-      // exatamente como saveNewVersion faz — fecha a versão que ambos leram.
-      // O primeiro cliente, ao tentar salvar em seguida, carrega essa mesma
-      // linha já fechada (loadById busca pelo id da linha, não pela mais
-      // recente do identificadorExterno).
       domain.close();
 
       const repository = createMockAgendamentoRepository();

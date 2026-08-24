@@ -225,20 +225,17 @@ describe("CalendarioAgendamentoEditarSerieCommandHandler", () => {
 
       expect(result).toEqual({ id: "nova-serie-id" });
 
-      // Série antiga truncada via nova versão
       expect(repository.saveNewVersion).toHaveBeenCalledOnce();
       const antigaTruncada = repository.saveNewVersion.mock.calls[0][1] as CalendarioAgendamento;
       expect(antigaTruncada.identificadorExterno).toBe(serie.identificadorExterno);
       expect(antigaTruncada.repeticao).toContain("UNTIL=20260305");
 
-      // Nova série, independente, a partir da data de corte
       expect(repository.save).toHaveBeenCalledOnce();
       const novaSerie = repository.save.mock.calls[0][0] as CalendarioAgendamento;
       expect(novaSerie.identificadorExterno).not.toBe(serie.identificadorExterno);
       expect(novaSerie.dataInicio).toBe("2026-03-06");
       expect(novaSerie.horarioInicio).toBe("10:00:00");
 
-      // Exceções futuras reatribuídas para a nova série
       expect(repository.reatribuirExcecoesParaNovaSerie).toHaveBeenCalledWith({
         deIdentificadorExterno: serie.identificadorExterno,
         paraIdentificadorExterno: novaSerie.identificadorExterno,

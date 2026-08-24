@@ -19,11 +19,6 @@ export const CalendarioAgendamentoEditarOcorrenciaCommandFields = {
   diarios: CalendarioAgendamentoFields.diarios,
 };
 
-/**
- * Cria uma exceção de ocorrência (RECURRENCE-ID): a data indicada passa a ser
- * atendida por um agendamento independente, com os campos informados sobrepondo
- * os da série raiz. A série raiz não é alterada.
- */
 export class CalendarioAgendamentoEditarOcorrenciaCommand {
   ifMatch?: string;
 

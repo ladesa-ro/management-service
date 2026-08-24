@@ -145,18 +145,12 @@ export class CalendarioAgendamentoTypeOrmRepositoryAdapter
     await this.appTypeormConnection.transaction(async (manager) => {
       const repo = manager.getRepository(CalendarioAgendamentoEntity);
 
-      // Trava a linha da versão antiga e lê o estado dela sob o lock: só
-      // serializar não basta, porque a transação que espera pelo lock precisa
-      // saber se a versão que ela carregou antes do lock ainda é a vigente.
       const travada = await repo
         .createQueryBuilder("ca")
         .setLock("pessimistic_write")
         .where("ca.id = :id", { id: closedVersion.id })
         .getOne();
 
-      // Outra transação já fechou esta versão enquanto esperávamos o lock:
-      // seguir daqui criaria uma segunda versão-filha da mesma linha, em
-      // silêncio, e a escrita mais lenta sobrescreveria a mais rápida.
       if (travada && travada.validTo !== null) {
         throw new PreconditionFailedError(
           "O agendamento foi alterado por outra operação enquanto esta era processada. Recarregue e tente de novo.",
@@ -1130,9 +1124,6 @@ export class CalendarioAgendamentoTypeOrmRepositoryAdapter
   }): Promise<void> {
     const repo = this.appTypeormConnection.getRepository(CalendarioAgendamentoEntity);
 
-    // Exceções (RECURRENCE-ID/EXDATE) usam data_ocorrencia_referenciada; datas
-    // avulsas (RDATE) não referenciam ocorrência nenhuma da regra, então caem
-    // no segundo braço, comparando pela própria data_inicio.
     await repo
       .createQueryBuilder()
       .update(CalendarioAgendamentoEntity)

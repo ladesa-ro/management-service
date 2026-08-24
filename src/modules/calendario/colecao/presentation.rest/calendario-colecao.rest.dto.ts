@@ -27,10 +27,6 @@ import { CalendarioColecaoTransferirDonoCommandFields } from "../domain/commands
 import { CalendarioColecaoFindOneQueryResultFields } from "../domain/queries/calendario-colecao-find-one.query.result";
 import { CalendarioColecaoListQueryFields } from "../domain/queries/calendario-colecao-list.query";
 
-// ============================================================================
-// FindOne Output
-// ============================================================================
-
 @ApiSchema({ name: "CalendarioColecaoFindOneOutputDto" })
 export class CalendarioColecaoFindOneOutputRestDto extends EntityBaseRestDto {
   @ApiProperty({
@@ -59,10 +55,6 @@ export class CalendarioColecaoFindOneOutputRestDto extends EntityBaseRestDto {
   visibilidade: string;
 }
 
-// ============================================================================
-// List Input/Output
-// ============================================================================
-
 @ApiSchema({ name: "CalendarioColecaoListInputDto" })
 export class CalendarioColecaoListInputRestDto extends PaginatedFilterByIdRestDto {
   static schema = CalendarioColecaoPaginationInputSchema;
@@ -90,10 +82,6 @@ export class CalendarioColecaoListOutputRestDto {
   })
   data: CalendarioColecaoFindOneOutputRestDto[];
 }
-
-// ============================================================================
-// Create/Update Input
-// ============================================================================
 
 @ApiSchema({ name: "CalendarioColecaoCreateInputDto" })
 export class CalendarioColecaoCreateInputRestDto {
@@ -125,10 +113,6 @@ export class CalendarioColecaoUpdateInputRestDto extends PartialType(
   static schema = CalendarioColecaoUpdateSchema.presentation;
 }
 
-// ============================================================================
-// Transferir dono Input
-// ============================================================================
-
 @ApiSchema({ name: "CalendarioColecaoTransferirDonoInputDto" })
 export class CalendarioColecaoTransferirDonoInputRestDto {
   static schema = CalendarioColecaoTransferirDonoSchema.presentation;
@@ -136,10 +120,6 @@ export class CalendarioColecaoTransferirDonoInputRestDto {
   @ApiProperty(CalendarioColecaoTransferirDonoCommandFields.novoDonoId.swaggerMetadata)
   novoDonoId: string;
 }
-
-// ============================================================================
-// FindOne Input (for path params)
-// ============================================================================
 
 @ApiSchema({ name: "CalendarioColecaoFindOneInputDto" })
 export class CalendarioColecaoFindOneInputRestDto {

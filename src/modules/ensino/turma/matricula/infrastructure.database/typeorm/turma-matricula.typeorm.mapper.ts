@@ -4,10 +4,6 @@ import type { TurmaMatriculaFindOneQueryResult } from "../../domain/queries/turm
 import type { ITurmaMatricula } from "../../domain/turma-matricula";
 import type { TurmaMatriculaEntity } from "./turma-matricula.typeorm.entity";
 
-// ============================================================================
-// Persistência → Domínio (TypeORM Entity → Domain / Query Result)
-// ============================================================================
-
 export const entityToDomain = createMapper<TurmaMatriculaEntity, ITurmaMatricula>((e) => ({
   id: e.id,
   turma: pickId(e.turma),
@@ -28,10 +24,6 @@ export const entityToFindOneQueryResult = createMapper<
   dateUpdated: e.dateUpdated,
   dateDeleted: e.dateDeleted,
 }));
-
-// ============================================================================
-// Domínio → Persistência (Domain → TypeORM Entity)
-// ============================================================================
 
 export const domainToPersistence = createMapper<
   ITurmaMatricula,

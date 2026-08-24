@@ -32,9 +32,6 @@ export class CreateTableTurmaMatricula1783000000014 implements MigrationInterfac
       }),
     );
 
-    // Garante unicidade: apenas 1 matricula ATIVA por (turma, perfil). Uma
-    // matricula desvinculada (soft-deleted) nao bloqueia uma nova matricula
-    // do mesmo perfil na mesma turma (ex: reingresso).
     await queryRunner.createIndex(
       "turma_matricula",
       new TableIndex({

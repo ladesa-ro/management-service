@@ -20,15 +20,12 @@ public class AvailabilityRuleUnavailabilityDetailedTests
 
         var date = DateOnly.FromDateTime(dateTime: unavailability.DateStart);
 
-        // Within the period
         var slotInside = new TimeSlot(Start: "08:00", End: "10:00");
         Assert.That(actual: _evaluator.IsAvailable(unavailability, date, slotInside), expression: Is.False);
 
-        // Before the period
         var slotBefore = new TimeSlot(Start: "00:00", End: "00:30");
         Assert.That(actual: _evaluator.IsAvailable(unavailability, date, slotBefore), expression: Is.False);
 
-        // After the period
         var slotAfter = new TimeSlot(Start: "23:00", End: "23:59");
         Assert.That(actual: _evaluator.IsAvailable(unavailability, date, slotAfter), expression: Is.False);
     }
@@ -62,8 +59,8 @@ public class AvailabilityRuleUnavailabilityDetailedTests
             DateEnd: new DateTime(year: 2025, month: 10, day: 22, hour: 18, minute: 0, second: 0)
         );
 
-        var wednesday = new DateOnly(year: 2025, month: 10, day: 22); // Wednesday
-        var thursday = new DateOnly(year: 2025, month: 10, day: 23); // Thursday
+        var wednesday = new DateOnly(year: 2025, month: 10, day: 22);
+        var thursday = new DateOnly(year: 2025, month: 10, day: 23);
 
         Assert.Multiple(testDelegate: () =>
         {
@@ -150,13 +147,11 @@ public class AvailabilityRuleUnavailabilityDetailedTests
         });
     }
 
-    // Additional 20 test cases below
-
     [Test]
     public void SingleEvent_ShouldBlockOnlyOnStartDate()
     {
         var unavailability = new AvailabilityRuleUnavailability(
-            RRule: "", // Assuming empty RRULE means single event
+            RRule: "",
             DateStart: new DateTime(year: 2025, month: 10, day: 20, hour: 9, minute: 0, second: 0),
             DateEnd: new DateTime(year: 2025, month: 10, day: 20, hour: 12, minute: 0, second: 0)
         );
@@ -202,7 +197,7 @@ public class AvailabilityRuleUnavailabilityDetailedTests
     }
 
     [Test]
-    public void SlotTouchingStart_EndsAtStart_ShouldBeAvailable() // Assuming no overlap if ends exactly at start
+    public void SlotTouchingStart_EndsAtStart_ShouldBeAvailable()
     {
         var unavailability = new AvailabilityRuleUnavailability(
             RRule: "FREQ=DAILY",
@@ -217,7 +212,7 @@ public class AvailabilityRuleUnavailabilityDetailedTests
     }
 
     [Test]
-    public void SlotTouchingEnd_StartsAtEnd_ShouldBeAvailable() // Assuming no overlap if starts exactly at end
+    public void SlotTouchingEnd_StartsAtEnd_ShouldBeAvailable()
     {
         var unavailability = new AvailabilityRuleUnavailability(
             RRule: "FREQ=DAILY",
@@ -236,7 +231,7 @@ public class AvailabilityRuleUnavailabilityDetailedTests
     {
         var unavailability = new AvailabilityRuleUnavailability(
             RRule: "FREQ=WEEKLY;BYDAY=MO,WE,FR",
-            DateStart: new DateTime(year: 2025, month: 10, day: 20, hour: 13, minute: 0, second: 0), // Monday
+            DateStart: new DateTime(year: 2025, month: 10, day: 20, hour: 13, minute: 0, second: 0),
             DateEnd: new DateTime(year: 2025, month: 10, day: 20, hour: 15, minute: 0, second: 0)
         );
 
@@ -257,7 +252,7 @@ public class AvailabilityRuleUnavailabilityDetailedTests
     {
         var unavailability = new AvailabilityRuleUnavailability(
             RRule: "FREQ=MONTHLY;BYDAY=TU;BYSETPOS=2",
-            DateStart: new DateTime(year: 2025, month: 10, day: 14, hour: 9, minute: 0, second: 0), // Second Tuesday in Oct 2025
+            DateStart: new DateTime(year: 2025, month: 10, day: 14, hour: 9, minute: 0, second: 0),
             DateEnd: new DateTime(year: 2025, month: 10, day: 14, hour: 11, minute: 0, second: 0)
         );
 
@@ -341,15 +336,14 @@ public class AvailabilityRuleUnavailabilityDetailedTests
     {
         var unavailability = new AvailabilityRuleUnavailability(
             RRule: "FREQ=WEEKLY;INTERVAL=2",
-            DateStart: new DateTime(year: 2025, month: 10, day: 20, hour: 9, minute: 0, second: 0), // Monday
+            DateStart: new DateTime(year: 2025, month: 10, day: 20, hour: 9, minute: 0, second: 0),
             DateEnd: new DateTime(year: 2025, month: 10, day: 20, hour: 11, minute: 0, second: 0)
         );
 
-
-        var week1 = new DateOnly(year: 2025, month: 10, day: 20);  // Monday, occurrence 1
-        var week2 = new DateOnly(year: 2025, month: 10, day: 27);  // Monday, 1 week later (skipped by INTERVAL=2)
-        var week3 = new DateOnly(year: 2025, month: 11, day: 3);   // Monday, 2 weeks later (occurrence 2)
-        var between = new DateOnly(year: 2025, month: 10, day: 24); // Friday, non-occurrence
+        var week1 = new DateOnly(year: 2025, month: 10, day: 20);
+        var week2 = new DateOnly(year: 2025, month: 10, day: 27);
+        var week3 = new DateOnly(year: 2025, month: 11, day: 3);
+        var between = new DateOnly(year: 2025, month: 10, day: 24);
 
         Assert.Multiple(testDelegate: () =>
         {
@@ -449,8 +443,8 @@ public class AvailabilityRuleUnavailabilityDetailedTests
             DateEnd: new DateTime(year: 2025, month: 10, day: 20, hour: 11, minute: 0, second: 0)
         );
 
-        var beforeUntil = new DateOnly(year: 2025, month: 10, day: 27); // Next Monday
-        var afterUntil = new DateOnly(year: 2025, month: 11, day: 4); // Monday after Until
+        var beforeUntil = new DateOnly(year: 2025, month: 10, day: 27);
+        var afterUntil = new DateOnly(year: 2025, month: 11, day: 4);
 
         Assert.Multiple(testDelegate: () =>
         {
@@ -463,7 +457,7 @@ public class AvailabilityRuleUnavailabilityDetailedTests
     public void EventWithNullEndOnSingleDay_ShouldBlockFromStartToEndOfDay()
     {
         var unavailability = new AvailabilityRuleUnavailability(
-            RRule: "", // Single event
+            RRule: "",
             DateStart: new DateTime(year: 2025, month: 10, day: 20, hour: 13, minute: 0, second: 0),
             DateEnd: null
         );
@@ -483,7 +477,7 @@ public class AvailabilityRuleUnavailabilityDetailedTests
     {
         var unavailability = new AvailabilityRuleUnavailability(
             RRule: "FREQ=MONTHLY;BYDAY=WE;BYSETPOS=3",
-            DateStart: new DateTime(year: 2025, month: 10, day: 15, hour: 10, minute: 0, second: 0), // Third Wednesday in Oct 2025
+            DateStart: new DateTime(year: 2025, month: 10, day: 15, hour: 10, minute: 0, second: 0),
             DateEnd: new DateTime(year: 2025, month: 10, day: 15, hour: 12, minute: 0, second: 0)
         );
 

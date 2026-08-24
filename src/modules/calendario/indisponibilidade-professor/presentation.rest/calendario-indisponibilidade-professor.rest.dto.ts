@@ -21,10 +21,6 @@ import { CalendarioIndisponibilidadeProfessorCreateCommandFields } from "../doma
 import { CalendarioIndisponibilidadeProfessorFindOneQueryResultFields } from "../domain/queries/calendario-indisponibilidade-professor-find-one.query.result";
 import { CalendarioIndisponibilidadeProfessorListQueryFields } from "../domain/queries/calendario-indisponibilidade-professor-list.query";
 
-// ============================================================================
-// FindOne Output
-// ============================================================================
-
 @ApiSchema({ name: "CalendarioIndisponibilidadeProfessorFindOneOutputDto" })
 export class CalendarioIndisponibilidadeProfessorFindOneOutputRestDto extends EntityBaseRestDto {
   @ApiProperty({
@@ -62,10 +58,6 @@ export class CalendarioIndisponibilidadeProfessorFindOneOutputRestDto extends En
   motivo: string | null;
 }
 
-// ============================================================================
-// List Input/Output
-// ============================================================================
-
 @ApiSchema({ name: "CalendarioIndisponibilidadeProfessorListInputDto" })
 export class CalendarioIndisponibilidadeProfessorListInputRestDto extends PaginatedFilterByIdRestDto {
   static schema = CalendarioIndisponibilidadeProfessorPaginationInputSchema;
@@ -97,10 +89,6 @@ export class CalendarioIndisponibilidadeProfessorListOutputRestDto {
   })
   data: CalendarioIndisponibilidadeProfessorFindOneOutputRestDto[];
 }
-
-// ============================================================================
-// Create Input
-// ============================================================================
 
 @ApiSchema({ name: "CalendarioIndisponibilidadeProfessorCreateInputDto" })
 export class CalendarioIndisponibilidadeProfessorCreateInputRestDto {
@@ -138,10 +126,6 @@ export class CalendarioIndisponibilidadeProfessorCreateInputRestDto {
   motivo?: string | null;
 }
 
-// ============================================================================
-// FindOne Input (for path params)
-// ============================================================================
-
 @ApiSchema({ name: "CalendarioIndisponibilidadeProfessorFindOneInputDto" })
 export class CalendarioIndisponibilidadeProfessorFindOneInputRestDto {
   static schema = CalendarioIndisponibilidadeProfessorFindOneInputSchema;
@@ -149,10 +133,6 @@ export class CalendarioIndisponibilidadeProfessorFindOneInputRestDto {
   @ApiProperty(CalendarioIndisponibilidadeProfessorFindOneQueryResultFields.id.swaggerMetadata)
   id: string;
 }
-
-// ============================================================================
-// Por Período — Query Input
-// ============================================================================
 
 const CalendarioIndisponibilidadeProfessorPorPeriodoQuerySchema = z.object({
   perfilId: z.string().uuid(),

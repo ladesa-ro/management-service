@@ -6,21 +6,6 @@ import type { CalendarioColecaoMudancasDesdeQuery } from "../../domain/queries/c
 import { ICalendarioColecaoMudancasDesdeQueryHandler } from "../../domain/queries/calendario-colecao-mudancas-desde.query.handler.interface";
 import type { CalendarioColecaoMudancasDesdeQueryResult } from "../../domain/queries/calendario-colecao-mudancas-desde.query.result";
 
-/**
- * Consulta de sincronização (RFC 6578-like) para `calendario_colecao`.
- *
- * Não existe tabela de auditoria por trás do `sync_token`, então esta consulta
- * NÃO devolve um diff exato de "quais agendamentos mudaram entre o token X e
- * o atual" — isso exigiria registrar, a cada `registrarMudanca`, qual
- * agendamento mudou e em qual token, o que é escopo novo (tabela nova) fora
- * do que foi pedido.
- *
- * Aproximação adotada: se `desde` já bate com o token atual, nada mudou,
- * devolve lista vazia. Caso contrário, devolve o snapshot completo dos
- * agendamentos ativos da coleção — o cliente reconcilia por cima do que já
- * tem localmente. Correto, porém conservador (pode devolver agendamentos que
- * na prática não mudaram desde o `desde` informado).
- */
 @DeclareImplementation()
 export class CalendarioColecaoMudancasDesdeQueryHandlerImpl
   implements ICalendarioColecaoMudancasDesdeQueryHandler

@@ -56,15 +56,6 @@ export interface IDiarioProfessorRepository {
     DiarioProfessorListQueryResult
   >;
 
-  // ==========================================
-  // Operações de domínio específicas
-  // ==========================================
-
-  /**
-   * Retorna, para cada diário ao qual o perfil está ativamente vinculado
-   * (situacao=true, não soft-deletado), o id do diário e a carga horária
-   * da disciplina correspondente.
-   */
   findAllActiveByPerfilId(
     perfilId: string,
   ): Promise<Array<{ diarioId: string; cargaHoraria: number }>>;

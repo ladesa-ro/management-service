@@ -11,10 +11,6 @@ import {
   type TurmaMatriculaVincularInputRestDto,
 } from "./turma-matricula.rest.dto";
 
-// ============================================================================
-// Externa -> Interna (Input: Presentation -> Core)
-// ============================================================================
-
 export const findOneParamsInputDtoToFindOneQuery = createMapper<
   TurmaMatriculaFindOneParamsRestDto,
   TurmaMatriculaFindOneQuery
@@ -48,10 +44,6 @@ export const listInputDtoToListQuery = createMapper<
   query["filter.perfil.id"] = dto["filter.perfil.id"];
   return query;
 });
-
-// ============================================================================
-// Interna -> Externa (Output: Core -> Presentation)
-// ============================================================================
 
 export const findOneQueryResultToOutputDto = createMapper<
   TurmaMatriculaFindOneQueryResult,

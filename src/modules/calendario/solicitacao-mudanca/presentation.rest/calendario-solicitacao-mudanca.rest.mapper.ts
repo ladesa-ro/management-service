@@ -15,10 +15,6 @@ import {
   type CalendarioSolicitacaoMudancaRecusarInputRestDto,
 } from "./calendario-solicitacao-mudanca.rest.dto";
 
-// ============================================================================
-// Externa -> Interna (Input: Presentation -> Core)
-// ============================================================================
-
 export const findOneInputDtoToFindOneQuery = createMapper<
   CalendarioSolicitacaoMudancaFindOneInputRestDto,
   CalendarioSolicitacaoMudancaFindOneQuery
@@ -60,10 +56,6 @@ export const recusarInputDtoToRecusarCommand = createMapper<
   id: params.id,
   motivoRecusa: dto.motivoRecusa ?? undefined,
 }));
-
-// ============================================================================
-// Interna -> Externa (Output: Core -> Presentation)
-// ============================================================================
 
 export const findOneQueryResultToOutputDto = createMapper<
   CalendarioSolicitacaoMudancaFindOneQueryResult,

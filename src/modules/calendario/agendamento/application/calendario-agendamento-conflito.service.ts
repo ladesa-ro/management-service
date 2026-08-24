@@ -15,16 +15,6 @@ interface IExpansaoPerfis {
   infoPorPerfilId: Map<string, IPerfilConflitoInfo>;
 }
 
-/**
- * Verificação de conflito de horário compartilhada pelos pontos de escrita de
- * `calendario_agendamento` (create, update, editar-ocorrencia, editar-serie).
- *
- * `Perfil` é uma linha por campus — um mesmo `usuario` pode ter perfil de
- * professor no campus A e outro no campus B (jornada "professor em dois
- * campi"). Antes de checar colisão, expande os `perfilIds` recebidos para
- * incluir todos os perfis ativos dos mesmos usuários, para que o mesmo
- * professor não seja agendado em dois campi no mesmo horário sem detecção.
- */
 @Impl()
 export class CalendarioAgendamentoConflitoService {
   constructor(

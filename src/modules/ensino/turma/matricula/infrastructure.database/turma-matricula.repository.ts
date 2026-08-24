@@ -42,10 +42,6 @@ export class TurmaMatriculaTypeOrmRepositoryAdapter implements ITurmaMatriculaRe
     private readonly paginationAdapter: NestJsPaginateAdapter,
   ) {}
 
-  // ==========================================
-  // Write side
-  // ==========================================
-
   async loadById(
     _accessContext: IAccessContext | null,
     id: string,
@@ -90,10 +86,6 @@ export class TurmaMatriculaTypeOrmRepositoryAdapter implements ITurmaMatriculaRe
 
     return count > 0;
   }
-
-  // ==========================================
-  // Read side
-  // ==========================================
 
   getFindOneQueryResult(
     accessContext: IAccessContext | null,

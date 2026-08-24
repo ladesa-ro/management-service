@@ -44,9 +44,6 @@ export class GerarHorarioAceitarCommandHandlerImpl implements IGerarHorarioAceit
     domain.aceitar();
     await this.gerarHorarioRepository.save(domain);
 
-    // Abre a sessão de edição que materializa a grade aceita: uma mudança CRIAR
-    // por aula, ainda como proposta — nada em calendario_agendamento existe até
-    // a sessão ser publicada (horario-edicao-sessao-publicar).
     const sessao = await this.sessaoRepository.save({
       id: generateUuidV7(),
       status: HorarioEdicaoSessaoStatus.ABERTA,
@@ -86,13 +83,6 @@ export class GerarHorarioAceitarCommandHandlerImpl implements IGerarHorarioAceit
     return { gerarHorario: domain, sessaoEdicaoId: sessao.id };
   }
 
-  /**
-   * `respostaGerador` é o `ServiceGenerateResponse` do gerador C#, serializado
-   * via Google.Protobuf.JsonFormatter (mapeamento JSON canônico do proto3,
-   * camelCase) — ver infrastructure.timetable-generator/core/presentation.console/Program.cs
-   * e worker/index.ts, que só repassa `JSON.parse(stdout)` sem transformação.
-   * `.Take(1)` no gerador garante no máximo uma grade em generatedTimetables.
-   */
   private extrairSchedules(
     respostaGerador: Record<string, unknown> | null,
   ): TimetableGridSchedule[] {

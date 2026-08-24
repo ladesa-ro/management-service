@@ -1,9 +1,5 @@
 namespace Ladesa.TimetableGenerator.Domain.Models;
 
-/// <summary>
-///     Generates all possible schedule combinations from the request,
-///     with optional availability filtering.
-/// </summary>
 public class ScheduleCombinationGenerator : IScheduleCombinationGenerator
 {
     internal static IEnumerable<GenerationScheduleCombination> GetAllPossibleCombinations(

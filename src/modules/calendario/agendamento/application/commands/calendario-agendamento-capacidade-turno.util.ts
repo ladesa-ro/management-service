@@ -3,10 +3,6 @@ import type { IAccessContext } from "@/domain/abstractions";
 import type { IAmbienteFindOneQueryHandler } from "@/modules/ambientes/ambiente/domain/queries/ambiente-find-one.query.handler.interface";
 import type { ITurmaFindOneQueryHandler } from "@/modules/ensino/turma/domain/queries/turma-find-one.query.handler.interface";
 
-// Janelas de horário conhecidas para os nomes de turno mais comuns em pt-BR.
-// `Turma.periodo` é texto livre (sem enum) — só validamos quando o valor bate
-// com um destes padrões; "integral"/"diurno" cobrem o dia inteiro e por isso
-// não entram na lista (nada a validar).
 const TURNOS_CONHECIDOS: Array<{ padroes: string[]; inicio: string; fim: string; label: string }> =
   [
     { padroes: ["matutino", "manha"], inicio: "06:00:00", fim: "12:00:00", label: "06:00–12:00" },
@@ -31,13 +27,6 @@ function getJanelaTurno(periodo: string) {
   );
 }
 
-/**
- * Capacidade do ambiente e turno da turma: as duas validações que `create` e
- * `update` já aplicavam, extraídas para reuso nos demais pontos de escrita de
- * agendamento (editar-ocorrência, editar-série, adicionar-data-avulsa), que
- * podem alterar turma/ambiente/horário de uma ocorrência sem passar por
- * nenhum dos dois.
- */
 export async function ensureCapacidadeETurno(
   accessContext: IAccessContext | null,
   params: {
@@ -58,9 +47,6 @@ export async function ensureCapacidadeETurno(
     ambienteFindOneHandler,
   } = params;
 
-  // Validar se a soma do numero estimado de alunos das turmas cabe na capacidade
-  // do(s) ambiente(s) agendado(s). Pula silenciosamente quando falta dado de
-  // qualquer um dos dois lados — mesma filosofia da checagem de turno abaixo.
   if (ambienteIds.length > 0 && turmaIds.length > 0) {
     let somaAlunosEstimados = 0;
     let temNumeroEstimadoAlunos = false;
@@ -93,7 +79,6 @@ export async function ensureCapacidadeETurno(
     }
   }
 
-  // Verificar se o horário efetivo do agendamento cabe dentro do turno da(s) turma(s)
   if (horarioInicio && horarioFim && turmaIds.length > 0) {
     const foraDoTurno: string[] = [];
 
@@ -102,8 +87,6 @@ export async function ensureCapacidadeETurno(
       if (!turma) continue;
 
       const janela = getJanelaTurno(turma.periodo);
-      // Período sem correspondência conhecida: campo é texto livre, então a ausência
-      // de match não pode bloquear um uso legítimo — pulamos silenciosamente.
       if (!janela) continue;
 
       if (horarioFim <= janela.inicio || horarioInicio >= janela.fim) {

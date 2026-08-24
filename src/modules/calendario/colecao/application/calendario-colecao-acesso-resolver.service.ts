@@ -11,15 +11,6 @@ import {
   ICalendarioColecaoRepository,
 } from "../domain/repositories";
 
-/**
- * Loader do resolvedor de papel efetivo (ACL) — busca os dados necessários
- * (dono da coleção, concessões ativas, perfis ativos do usuário) e delega a
- * decisão para a função pura `resolverPapelEfetivo`.
- *
- * Ainda não é consumido por nenhum permission checker — será injetado no
- * checkpoint em que a autorização de calendario_agendamento passar a ser real.
- */
-
 @Impl()
 export class CalendarioColecaoAcessoResolverService {
   constructor(

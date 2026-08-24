@@ -15,10 +15,6 @@ export const IGerarHorarioAceitarCommandHandler = Symbol("IGerarHorarioAceitarCo
 
 export interface IGerarHorarioAceitarResult {
   gerarHorario: GerarHorario;
-  /**
-   * Sessão de edição aberta com uma mudança CRIAR por aula da grade aceita —
-   * nada em calendario_agendamento existe ainda até a sessão ser publicada.
-   */
   sessaoEdicaoId: string;
 }
 

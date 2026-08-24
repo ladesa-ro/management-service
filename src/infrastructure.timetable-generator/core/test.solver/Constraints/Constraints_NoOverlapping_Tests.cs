@@ -11,10 +11,9 @@ public class Constraints_NoOverlapping_Tests
     [Test]
     public void Teacher_NoOverlapping_MinuteOverlap_Disallowed()
     {
-        // Arrange
         var date = new DateOnly(2025, 10, 27);
         var slot1 = Builders.Slot("08:00:00", "09:00:00");
-        var slot2 = Builders.Slot("08:30:00", "09:30:00"); // overlaps 30 minutes with slot1
+        var slot2 = Builders.Slot("08:30:00", "09:30:00");
 
         var g1 = Builders.Group("group:1");
         var g2 = Builders.Group("group:2");
@@ -32,20 +31,17 @@ public class Constraints_NoOverlapping_Tests
             timeSlots: [slot1, slot2]
         );
 
-        // Act
         var result = GeneratorFactory.CreateDefault().GenerateTimetables(request, new IcalAvailabilityEvaluator()).First();
 
-        // Assert: Because of teacher overlap constraint, only one schedule across the two diaries should be chosen
         Assert.That(result.Timetable.Schedules.Length, Is.EqualTo(1));
     }
 
     [Test]
     public void Group_NoOverlapping_MinuteOverlap_Disallowed()
     {
-        // Arrange
         var date = new DateOnly(2025, 10, 27);
         var slot1 = Builders.Slot("08:00:00", "09:00:00");
-        var slot2 = Builders.Slot("08:30:00", "09:30:00"); // overlaps 30 minutes with slot1
+        var slot2 = Builders.Slot("08:30:00", "09:30:00");
 
         var g1 = Builders.Group("group:1");
         var t1 = Builders.Teacher("teacher:1");
@@ -63,20 +59,17 @@ public class Constraints_NoOverlapping_Tests
             timeSlots: [slot1, slot2]
         );
 
-        // Act
         var result = GeneratorFactory.CreateDefault().GenerateTimetables(request, new IcalAvailabilityEvaluator()).First();
 
-        // Assert: Because of group overlap constraint, only one schedule for the same group should be chosen
         Assert.That(result.Timetable.Schedules.Length, Is.EqualTo(1));
     }
 
     [Test]
     public void Group_TouchingBoundaries_ShouldBeAllowed()
     {
-        // Arrange
         var date = new DateOnly(2025, 10, 27);
         var slot1 = Builders.Slot("08:00:00", "09:00:00");
-        var slot2 = Builders.Slot("09:00:00", "10:00:00"); // touches boundary, no overlap
+        var slot2 = Builders.Slot("09:00:00", "10:00:00");
 
         var g1 = Builders.Group("group:1");
         var t1 = Builders.Teacher("teacher:1");
@@ -94,21 +87,18 @@ public class Constraints_NoOverlapping_Tests
             timeSlots: [slot1, slot2]
         );
 
-        // Act
         var result = GeneratorFactory.CreateDefault().GenerateTimetables(request, new IcalAvailabilityEvaluator()).First();
 
-        // Assert: Adjacent slots do not count as overlap; should allow two schedules
         Assert.That(result.Timetable.Schedules.Length, Is.EqualTo(2));
     }
 
     [Test]
     public void Teacher_Overlap_DifferentDays_ShouldBeAllowed()
     {
-        // Arrange
-        var start = new DateOnly(2025, 10, 27); // Monday
-        var end = new DateOnly(2025, 10, 28);   // Tuesday
+        var start = new DateOnly(2025, 10, 27);
+        var end = new DateOnly(2025, 10, 28);
         var slot1 = Builders.Slot("08:00:00", "09:00:00");
-        var slot2 = Builders.Slot("08:30:00", "09:30:00"); // overlapping window but on different days
+        var slot2 = Builders.Slot("08:30:00", "09:30:00");
 
         var g1 = Builders.Group("group:1");
         var g2 = Builders.Group("group:2");
@@ -126,10 +116,8 @@ public class Constraints_NoOverlapping_Tests
             timeSlots: [slot1, slot2]
         );
 
-        // Act
         var result = GeneratorFactory.CreateDefault().GenerateTimetables(request, new IcalAvailabilityEvaluator()).First();
 
-        // Assert: Overlap constraint is per-day; across different days, both should schedule
         Assert.That(result.Timetable.Schedules.Length, Is.EqualTo(2));
         Assert.That(result.Timetable.Schedules.Select(s => s.Date).Distinct().Count(), Is.EqualTo(2));
     }

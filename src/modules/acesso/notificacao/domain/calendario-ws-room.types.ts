@@ -1,11 +1,3 @@
-/**
- * Rooms WebSocket dinâmicas do calendário — uma por `calendario_colecao`.
- *
- * Diferente das rooms fixas de Estágio (`ESTAGIO_WS_ROOMS`), aqui a room é
- * derivada do id da coleção, então não dá pra listar um `Set` fixo de valores
- * válidos: o gateway usa `isCalendarioWsRoom` para validar o formato
- * (`calendario:{uuid}`) em vez de checar contra uma lista.
- */
 
 const CALENDARIO_WS_ROOM_PREFIX = "calendario:";
 

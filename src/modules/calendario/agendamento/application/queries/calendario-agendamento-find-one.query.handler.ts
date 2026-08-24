@@ -24,9 +24,6 @@ export class CalendarioAgendamentoFindOneQueryHandlerImpl
     const resultado = await this.repository.getFindOneQueryResult(accessContext, query.id);
     if (!resultado) return null;
 
-    // null aqui significa "sem acesso" — tratado como não encontrado, não como
-    // erro de permissão, pra não confirmar a existência do registro pra quem
-    // não pode vê-lo.
     return this.visibilidadeService.aplicarVisibilidadeUm(accessContext, resultado);
   }
 }

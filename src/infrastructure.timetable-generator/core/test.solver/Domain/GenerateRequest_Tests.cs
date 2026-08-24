@@ -45,7 +45,7 @@ public class GenerateRequest_Tests
     {
         var date = new DateOnly(2025, 10, 27);
         var g1 = Builders.Group("group:1");
-        var g2 = Builders.Group("group:1"); // duplicate id
+        var g2 = Builders.Group("group:1");
 
         Assert.Throws<Ladesa.TimetableGenerator.Domain.Models.GeneratorValidationException>(() => Builders.Request(
             start: date,
@@ -62,7 +62,7 @@ public class GenerateRequest_Tests
     {
         var date = new DateOnly(2025, 10, 27);
         var t1 = Builders.Teacher("teacher:1");
-        var t2 = Builders.Teacher("teacher:1"); // duplicate id
+        var t2 = Builders.Teacher("teacher:1");
 
         Assert.Throws<Ladesa.TimetableGenerator.Domain.Models.GeneratorValidationException>(() => Builders.Request(
             start: date,
@@ -81,7 +81,7 @@ public class GenerateRequest_Tests
         var g = Builders.Group();
         var t = Builders.Teacher();
         var d1 = Builders.Diary("diary:1", g.Id, t.Id);
-        var d2 = Builders.Diary("diary:1", g.Id, t.Id); // duplicate id
+        var d2 = Builders.Diary("diary:1", g.Id, t.Id);
 
         Assert.Throws<Ladesa.TimetableGenerator.Domain.Models.GeneratorValidationException>(() => Builders.Request(
             start: date,

@@ -38,10 +38,6 @@ import { PaginatedFilterByIdRestDto, PaginationMetaRestDto } from "@/shared/pres
 import { CalendarioAgendamentoListQueryFields } from "../domain/queries/calendario-agendamento-list.query";
 import { CalendarioAgendamentoPaginationInputSchema } from "../domain/queries/calendario-agendamento-list.query.schemas";
 
-// ============================================================================
-// Refs de campo unico (nao-array)
-// ============================================================================
-
 @ApiSchema({ name: "CalendarioAgendamentoCampusRefInputDto" })
 export class CalendarioAgendamentoCampusRefInputRestDto {
   @ApiProperty(CalendarioAgendamentoFields.campus.swaggerMetadata)
@@ -232,8 +228,6 @@ export class CalendarioAgendamentoUpdateStatusInputRestDto {
 }
 
 // ============================================================================
-// Editar Ocorrência Input (RECURRENCE-ID)
-// ============================================================================
 
 @ApiSchema({ name: "CalendarioAgendamentoEditarOcorrenciaInputDto" })
 export class CalendarioAgendamentoEditarOcorrenciaInputRestDto {
@@ -303,10 +297,6 @@ export class CalendarioAgendamentoEditarOcorrenciaInputRestDto {
   diarios?: DiarioFindOneInputRestDto[];
 }
 
-// ============================================================================
-// Adicionar Data Avulsa Input (RDATE)
-// ============================================================================
-
 @ApiSchema({ name: "CalendarioAgendamentoAdicionarDataAvulsaInputDto" })
 export class CalendarioAgendamentoAdicionarDataAvulsaInputRestDto {
   @ApiProperty(CalendarioAgendamentoFields.dataOcorrencia.swaggerMetadata)
@@ -375,10 +365,6 @@ export class CalendarioAgendamentoAdicionarDataAvulsaInputRestDto {
   diarios?: DiarioFindOneInputRestDto[];
 }
 
-// ============================================================================
-// Cancelar Ocorrência Input (EXDATE)
-// ============================================================================
-
 @ApiSchema({ name: "CalendarioAgendamentoCancelarOcorrenciaInputDto" })
 export class CalendarioAgendamentoCancelarOcorrenciaInputRestDto {
   @ApiProperty(CalendarioAgendamentoFields.dataOcorrencia.swaggerMetadata)
@@ -387,10 +373,6 @@ export class CalendarioAgendamentoCancelarOcorrenciaInputRestDto {
   @ApiPropertyOptional(CalendarioAgendamentoFields.motivo.swaggerMetadata)
   motivo?: string;
 }
-
-// ============================================================================
-// Editar Série Input
-// ============================================================================
 
 @ApiSchema({ name: "CalendarioAgendamentoEditarSerieInputDto" })
 export class CalendarioAgendamentoEditarSerieInputRestDto {
@@ -462,10 +444,6 @@ export class CalendarioAgendamentoEditarSerieInputRestDto {
   diarios?: DiarioFindOneInputRestDto[];
 }
 
-// ============================================================================
-// Importar ICS Input/Output
-// ============================================================================
-
 @ApiSchema({ name: "CalendarioAgendamentoImportarIcsInputDto" })
 export class CalendarioAgendamentoImportarIcsInputRestDto {
   @ApiProperty({
@@ -513,7 +491,6 @@ export class CalendarioAgendamentoImportarIcsOutputRestDto {
   idsCriados: string[];
 }
 
-// ============================================================================
 // Params
 // ============================================================================
 

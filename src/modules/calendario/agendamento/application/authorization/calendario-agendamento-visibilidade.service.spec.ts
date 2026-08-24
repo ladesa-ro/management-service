@@ -171,7 +171,6 @@ describe("CalendarioAgendamentoVisibilidadeService", () => {
       expect(aplicado?.modalidades).toEqual([]);
       expect(aplicado?.diarios).toEqual([]);
       expect(aplicado?.detalhesOcultos).toBe(true);
-      // horário e ambiente sobrevivem — é o que sustenta "sei que está ocupado"
       expect(aplicado?.dataInicio).toBe(resultado.dataInicio);
       expect(aplicado?.horarioInicio).toBe(resultado.horarioInicio);
       expect(aplicado?.horarioFim).toBe(resultado.horarioFim);

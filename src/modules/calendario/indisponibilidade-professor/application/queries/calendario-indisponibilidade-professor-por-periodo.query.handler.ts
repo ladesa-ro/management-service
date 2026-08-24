@@ -25,11 +25,6 @@ export class CalendarioIndisponibilidadeProfessorPorPeriodoQueryHandlerImpl
     return todas.filter((item) => this.aplicavelNoPeriodo(item, query));
   }
 
-  /**
-   * Regra semanal (diaSemana definido) sempre se aplica, independente do período
-   * consultado — não é limitada por data. Exceção pontual (data definida) só se
-   * aplica quando a data cai dentro de [dateStart, dateEnd].
-   */
   private aplicavelNoPeriodo(
     item: CalendarioIndisponibilidadeProfessorFindOneQueryResult,
     query: CalendarioIndisponibilidadeProfessorPorPeriodoQuery,

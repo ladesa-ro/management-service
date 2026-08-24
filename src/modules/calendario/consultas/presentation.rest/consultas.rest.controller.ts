@@ -64,15 +64,6 @@ export class ConsultasRestController {
       tipo,
     });
 
-    // Filtrado aqui, na borda REST, e não dentro do query handler: o mesmo
-    // handler é reaproveitado sem filtro por /calendario/consultas/ocupacao
-    // (checkpoint 4), que por desenho nunca aplica ACL de coleção.
-    //
-    // Exceção: quando a consulta já está restrita a uma turma (queryParams.turma)
-    // e o requisitante tem matrícula ativa nela, ele está pedindo a própria grade
-    // de horário — liberamos sem checar ACL de coleção, mesmo que o agendamento
-    // pertença a uma coleção sem concessão explícita a ele. Não afeta quem não é
-    // aluno da turma filtrada, nem consultas sem filtro de turma.
     const alunoDaTurmaFiltrada =
       queryParams.turma !== undefined && accessContext.requestActor
         ? await this.turmaMatriculaRepository.existsActiveForUsuarioInTurma(

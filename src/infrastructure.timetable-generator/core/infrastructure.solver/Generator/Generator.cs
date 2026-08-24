@@ -5,10 +5,6 @@ using Ladesa.TimetableGenerator.Infrastructure.Solver.Constraints;
 
 namespace Ladesa.TimetableGenerator.Infrastructure.Solver.Generator;
 
-/// <summary>
-///     Main entry point for timetable generation. Orchestrates validation,
-///     constraint application, optimization, and solution streaming.
-/// </summary>
 public class Generator : IGenerator
 {
     private static readonly Dictionary<ConstraintKind, Func<IConstraint>> ConstraintFactories = new()
@@ -43,10 +39,6 @@ public class Generator : IGenerator
         _solverOptions = solverOptions;
     }
 
-    /// <summary>
-    ///     Generates timetable solutions for the given request, iteratively improving
-    ///     quality. Yields results as they are found by the solver.
-    /// </summary>
     public IEnumerable<GeneratedTimetable> GenerateTimetables(
         GenerateRequest request,
         IAvailabilityEvaluator availabilityEvaluator)
@@ -76,9 +68,6 @@ public class Generator : IGenerator
         solverTask.GetAwaiter().GetResult();
     }
 
-    /// <summary>
-    ///     Generates all possible schedule combinations, filtering by availability.
-    /// </summary>
     public IEnumerable<GenerationScheduleCombination> GetAllCombinationsWithAvailability(
         GenerateRequest generateRequest,
         IAvailabilityEvaluator availabilityEvaluator)

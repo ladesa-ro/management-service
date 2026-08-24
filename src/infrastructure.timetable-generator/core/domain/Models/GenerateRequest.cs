@@ -51,7 +51,6 @@ public record GenerateRequest
         this.FixedSchedules = FixedSchedules ?? Array.Empty<TimetableGridSchedule>();
         this.NonSchoolDates = NonSchoolDates is null ? [] : [.. NonSchoolDates];
         this.ShiftSettings = ShiftSettings ?? Models.ShiftSettings.Default;
-        // Validate time slots: must be strictly increasing within the day (no zero-length, no spanning midnight)
         foreach (var slot in this.TimeSlots)
         {
             var start = TimeSpan.Parse(slot.Start);

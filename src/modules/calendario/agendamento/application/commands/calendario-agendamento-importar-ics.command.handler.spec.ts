@@ -173,7 +173,7 @@ describe("CalendarioAgendamentoImportarIcsCommandHandler", () => {
       const { handler } = createHandler({ repository });
 
       const result = await handler.execute(createTestAccessContext(), {
-        conteudo: icsComUmEvento(), // UID:evento-simples@teste — not a UUID
+        conteudo: icsComUmEvento(),
       });
 
       expect(repository.existsByIdentificadorExterno).not.toHaveBeenCalled();

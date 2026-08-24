@@ -24,12 +24,6 @@ export interface ICalendarioIndisponibilidadeAmbienteCreate {
   motivo?: string | null;
 }
 
-/**
- * Regra semanal (dia_semana definido, data nula) OU exceção pontual (data definida,
- * dia_semana nulo) de indisponibilidade de um ambiente. Não possui update(): uma
- * indisponibilidade é criada ou apagada, nunca editada em vigor — se a regra precisa
- * mudar, apaga-se e cria-se outra.
- */
 export class CalendarioIndisponibilidadeAmbiente {
   static readonly entityName = "CalendarioIndisponibilidadeAmbiente";
 

@@ -6,10 +6,6 @@ import type { CalendarioIndisponibilidadeAmbienteFindOneQueryResult } from "@/mo
 import { createMapper, pickId } from "@/shared/mapping";
 import type { CalendarioIndisponibilidadeAmbienteEntity } from "./calendario-indisponibilidade-ambiente.typeorm.entity";
 
-// ============================================================================
-// Persistência → Domínio (TypeORM Entity → Domain / Query Result)
-// ============================================================================
-
 export const entityToDomain = createMapper<
   CalendarioIndisponibilidadeAmbienteEntity,
   ICalendarioIndisponibilidadeAmbiente
@@ -43,10 +39,6 @@ export const entityToFindOneQueryResult = createMapper<
   dateUpdated: e.dateUpdated,
   dateDeleted: e.dateDeleted,
 }));
-
-// ============================================================================
-// Domínio → Persistência (Domain → TypeORM Entity)
-// ============================================================================
 
 export const domainToPersistence = createMapper<
   ICalendarioIndisponibilidadeAmbiente,

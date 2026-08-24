@@ -38,8 +38,6 @@ export class CreateTableIdempotencyRecord1783000000013 implements MigrationInter
       }),
     );
 
-    // Escopo da chave é por comando: a mesma chave enviada pelo cliente só
-    // colide com uma execução anterior do mesmo tipo de comando.
     await queryRunner.createIndex(
       "idempotency_record",
       new TableIndex({
@@ -49,8 +47,6 @@ export class CreateTableIdempotencyRecord1783000000013 implements MigrationInter
       }),
     );
 
-    // Sem trigger de date_updated — registros são imutáveis após criados,
-    // a primeira execução grava o resultado e nenhum campo muda depois disso.
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {

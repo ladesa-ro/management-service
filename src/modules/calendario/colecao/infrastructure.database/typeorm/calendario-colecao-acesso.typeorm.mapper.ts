@@ -10,10 +10,6 @@ import type { CalendarioColecaoAcessoFindOneQueryResult } from "@/modules/calend
 import { createMapper, pickId } from "@/shared/mapping";
 import type { CalendarioColecaoAcessoEntity } from "./calendario-colecao-acesso.typeorm.entity";
 
-// ============================================================================
-// Persistência → Domínio (TypeORM Entity → Domain / Query Result)
-// ============================================================================
-
 export const entityToDomain = createMapper<CalendarioColecaoAcessoEntity, ICalendarioColecaoAcesso>(
   (e) => ({
     id: e.id,
@@ -42,10 +38,6 @@ export const entityToFindOneQueryResult = createMapper<
   dateUpdated: e.dateUpdated,
   dateDeleted: e.dateDeleted,
 }));
-
-// ============================================================================
-// Domínio → Persistência (Domain → TypeORM Entity)
-// ============================================================================
 
 export const domainToPersistence = createMapper<
   ICalendarioColecaoAcesso,

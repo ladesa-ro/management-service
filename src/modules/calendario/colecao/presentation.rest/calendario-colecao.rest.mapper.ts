@@ -18,10 +18,6 @@ import {
   type CalendarioColecaoUpdateInputRestDto,
 } from "./calendario-colecao.rest.dto";
 
-// ============================================================================
-// Externa -> Interna (Input: Presentation -> Core)
-// ============================================================================
-
 export const findOneInputDtoToFindOneQuery = createMapper<
   CalendarioColecaoFindOneInputRestDto,
   CalendarioColecaoFindOneQuery
@@ -70,10 +66,6 @@ export const transferirDonoInputDtoToTransferirDonoCommand = createMapper<
   id: params.id,
   novoDonoId: dto.novoDonoId,
 }));
-
-// ============================================================================
-// Interna -> Externa (Output: Core -> Presentation)
-// ============================================================================
 
 export const findOneQueryResultToOutputDto = createMapper<
   CalendarioColecaoFindOneQueryResult,

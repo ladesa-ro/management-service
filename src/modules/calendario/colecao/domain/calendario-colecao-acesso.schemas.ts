@@ -1,6 +1,3 @@
-/**
- * Calendario Colecao Acesso — schemas zod para a entidade e suas operacoes.
- */
 import { z } from "zod";
 import {
   createSchema,
@@ -14,11 +11,6 @@ import {
   CalendarioColecaoAcessoPapelSchema,
 } from "./calendario-colecao-acesso.fields";
 import { CalendarioColecaoAcessoEscopo } from "./calendario-colecao-acesso.types";
-
-// ============================================================================
-// Regra: o alvo (usuario/campus) preenchido deve corresponder exatamente ao
-// escopo — redundante de propósito com o CHECK da migração.
-// ============================================================================
 
 function escopoAlvoConsistente(data: { escopo?: string; usuario?: unknown; campus?: unknown }) {
   const temUsuario = data.usuario !== undefined && data.usuario !== null;
@@ -36,10 +28,6 @@ const ESCOPO_ALVO_INCONSISTENTE_MESSAGE = {
   path: ["escopo"],
 };
 
-// ============================================================================
-// Schema completo do aggregate (para load)
-// ============================================================================
-
 export const CalendarioColecaoAcessoSchema = z
   .object({
     id: uuidSchema,
@@ -52,17 +40,9 @@ export const CalendarioColecaoAcessoSchema = z
   .extend(datedSchema.shape)
   .refine(escopoAlvoConsistente, ESCOPO_ALVO_INCONSISTENTE_MESSAGE);
 
-// ============================================================================
-// Create
-// ============================================================================
-
 export const CalendarioColecaoAcessoCreateSchema = createSchema((standard) =>
   z
     .object({
-      // Opcional de propósito: nunca vem do corpo da requisição REST — a application
-      // layer sempre injeta o id da coleção (obtido do path param) antes de chamar
-      // CalendarioColecaoAcesso.create(). Presente aqui só para o zodValidate interno
-      // não rejeitar a chave quando o handler a envia.
       colecao: ObjectIdUuidFactory.create(standard).optional(),
       escopo: CalendarioColecaoAcessoFields.escopo.create(standard),
       usuario: ObjectIdUuidFactoryNullable.create(standard).optional(),
@@ -72,5 +52,3 @@ export const CalendarioColecaoAcessoCreateSchema = createSchema((standard) =>
     .refine(escopoAlvoConsistente, ESCOPO_ALVO_INCONSISTENTE_MESSAGE),
 );
 
-// Sem schema de update de propósito: uma concessão é criada ou revogada, nunca
-// editada — trocar o papel exige revogar e conceder novamente (ver AGENTS/checkpoint).
