@@ -11,5 +11,6 @@ export interface ICalendarioAgendamentoLinhaDoTempoEntrada {
 
 export class CalendarioAgendamentoLinhaDoTempoQueryResult {
   identificadorExterno!: string;
+  colecaoId!: string | null;
   versoes!: ICalendarioAgendamentoLinhaDoTempoEntrada[];
 }

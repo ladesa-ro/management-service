@@ -1037,14 +1037,15 @@ export class CalendarioAgendamentoTypeOrmRepositoryAdapter
     ]);
   }
 
-  async getLinhaDoTempo(
-    identificadorExterno: string,
-  ): Promise<ICalendarioAgendamentoLinhaDoTempoEntrada[]> {
+  async getLinhaDoTempo(identificadorExterno: string): Promise<{
+    colecaoId: string | null;
+    versoes: ICalendarioAgendamentoLinhaDoTempoEntrada[];
+  }> {
     const repo = this.appTypeormConnection.getRepository(CalendarioAgendamentoEntity);
 
     const entidades = await repo.find({
       where: { identificadorExterno },
-      relations: { autor: true },
+      relations: { autor: true, colecao: true },
       order: { version: "ASC" },
     });
 
@@ -1087,7 +1088,10 @@ export class CalendarioAgendamentoTypeOrmRepositoryAdapter
       });
     }
 
-    return entradas;
+    const versaoAtual = entidades.find((entidade) => entidade.validTo === null);
+    const colecaoId = (versaoAtual ?? entidades.at(-1))?.colecao?.id ?? null;
+
+    return { colecaoId, versoes: entradas };
   }
 
   async findExcecoesPorSeries(params: {

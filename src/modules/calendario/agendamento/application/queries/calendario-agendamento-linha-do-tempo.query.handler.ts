@@ -1,9 +1,11 @@
+import { ForbiddenException } from "@nestjs/common";
 import type { IAccessContext } from "@/domain/abstractions";
 import { Dep, Impl } from "@/domain/dependency-injection";
 import type { CalendarioAgendamentoLinhaDoTempoQuery } from "../../domain/queries/calendario-agendamento-linha-do-tempo.query";
 import { ICalendarioAgendamentoLinhaDoTempoQueryHandler } from "../../domain/queries/calendario-agendamento-linha-do-tempo.query.handler.interface";
 import { CalendarioAgendamentoLinhaDoTempoQueryResult } from "../../domain/queries/calendario-agendamento-linha-do-tempo.query.result";
 import { ICalendarioAgendamentoRepository } from "../../domain/repositories/calendario-agendamento.repository.interface";
+import { CalendarioAgendamentoVisibilidadeService } from "../authorization/calendario-agendamento-visibilidade.service";
 
 @Impl()
 export class CalendarioAgendamentoLinhaDoTempoQueryHandlerImpl
@@ -12,20 +14,39 @@ export class CalendarioAgendamentoLinhaDoTempoQueryHandlerImpl
   constructor(
     @Dep(ICalendarioAgendamentoRepository)
     private readonly repository: ICalendarioAgendamentoRepository,
+    @Dep(CalendarioAgendamentoVisibilidadeService)
+    private readonly visibilidadeService: CalendarioAgendamentoVisibilidadeService,
   ) {}
 
   async execute(
-    _accessContext: IAccessContext | null,
+    accessContext: IAccessContext | null,
     query: CalendarioAgendamentoLinhaDoTempoQuery,
   ): Promise<CalendarioAgendamentoLinhaDoTempoQueryResult | null> {
-    const versoes = await this.repository.getLinhaDoTempo(query.identificadorExterno);
+    const { colecaoId, versoes } = await this.repository.getLinhaDoTempo(
+      query.identificadorExterno,
+    );
 
     if (versoes.length === 0) {
       return null;
     }
 
+    const visibilidade = await this.visibilidadeService.resolver(accessContext, colecaoId);
+
+    // sem acesso é tratado como não encontrado, não como erro de permissão —
+    // mesmo critério do find-one, pra não confirmar a existência do registro.
+    if (!this.visibilidadeService.temAlgumAcesso(visibilidade)) {
+      return null;
+    }
+
+    if (!this.visibilidadeService.podeVerDetalhes(visibilidade)) {
+      throw new ForbiddenException(
+        "Linha do tempo expõe motivo e histórico completo; papel OCUPACAO não tem acesso a este nível de detalhe.",
+      );
+    }
+
     const result = new CalendarioAgendamentoLinhaDoTempoQueryResult();
     result.identificadorExterno = query.identificadorExterno;
+    result.colecaoId = colecaoId;
     result.versoes = versoes;
     return result;
   }

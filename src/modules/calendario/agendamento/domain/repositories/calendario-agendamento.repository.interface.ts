@@ -140,9 +140,10 @@ export interface ICalendarioAgendamentoRepository {
    * Histórico completo de versões de um agendamento, mais antiga primeiro,
    * com o diff campo a campo entre cada versão e a anterior.
    */
-  getLinhaDoTempo(
-    identificadorExterno: string,
-  ): Promise<ICalendarioAgendamentoLinhaDoTempoEntrada[]>;
+  getLinhaDoTempo(identificadorExterno: string): Promise<{
+    colecaoId: string | null;
+    versoes: ICalendarioAgendamentoLinhaDoTempoEntrada[];
+  }>;
 
   /**
    * Exceções (RECURRENCE-ID) e cancelamentos (EXDATE) registrados para as séries

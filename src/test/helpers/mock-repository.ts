@@ -53,7 +53,7 @@ export function createMockAgendamentoRepository() {
     saveNewVersion: vi.fn().mockResolvedValue(undefined),
     findByDateRange: vi.fn().mockResolvedValue([]),
     findByColecaoId: vi.fn().mockResolvedValue([]),
-    getLinhaDoTempo: vi.fn().mockResolvedValue([]),
+    getLinhaDoTempo: vi.fn().mockResolvedValue({ colecaoId: null, versoes: [] }),
     findExcecoesPorSeries: vi.fn().mockResolvedValue([]),
     reatribuirExcecoesParaNovaSerie: vi.fn().mockResolvedValue(undefined),
     existsByIdentificadorExterno: vi.fn().mockResolvedValue(false),
