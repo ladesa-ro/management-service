@@ -174,6 +174,7 @@ export class BullMqQueueService implements IQueueService, OnModuleInit, OnModule
       connection: {
         connectionString: opcoes.url,
         schema: opcoes.schema,
+        migrate: true,
       },
     };
   }
