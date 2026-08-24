@@ -1,9 +1,10 @@
+export { CalendarioAgendamentoAdicionarDataAvulsaCommandHandlerImpl } from "./calendario-agendamento-adicionar-data-avulsa.command.handler";
+export { CalendarioAgendamentoCancelarOcorrenciaCommandHandlerImpl } from "./calendario-agendamento-cancelar-ocorrencia.command.handler";
 export { CalendarioAgendamentoCreateCommandHandlerImpl } from "./calendario-agendamento-create.command.handler";
-
 export { CalendarioAgendamentoDeleteCommandHandlerImpl } from "./calendario-agendamento-delete.command.handler";
-
 export { CalendarioAgendamentoDesvincularTurmaCommandHandlerImpl } from "./calendario-agendamento-desvincular-turma.command.handler";
-
+export { CalendarioAgendamentoEditarOcorrenciaCommandHandlerImpl } from "./calendario-agendamento-editar-ocorrencia.command.handler";
+export { CalendarioAgendamentoEditarSerieCommandHandlerImpl } from "./calendario-agendamento-editar-serie.command.handler";
+export { CalendarioAgendamentoImportarIcsCommandHandlerImpl } from "./calendario-agendamento-importar-ics.command.handler";
 export { CalendarioAgendamentoUpdateCommandHandlerImpl } from "./calendario-agendamento-update.command.handler";
-
 export { CalendarioAgendamentoUpdateStatusCommandHandlerImpl } from "./calendario-agendamento-update-status.command.handler";

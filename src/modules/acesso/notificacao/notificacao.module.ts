@@ -34,7 +34,6 @@ import { NotificacaoGateway } from "./presentation.websocket/notificacao.gateway
     // Cron jobs de alertas
     EstagioAlertaCronService,
   ],
-  // Exporta o push service para que o EstagioModule possa injetá-lo
-  exports: [EstagioNotificacaoPushService],
+  exports: [EstagioNotificacaoPushService, INotificacaoRepository, NotificacaoGateway],
 })
 export class NotificacaoModule {}

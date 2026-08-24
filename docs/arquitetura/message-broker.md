@@ -1,25 +1,30 @@
 # Message broker
 
-**TLDR**: RabbitMQ via biblioteca Rascal v21, usado hoje só pra geração assíncrona de horário (timetable), com dois padrões implementados, RPC e fire-and-forget. O conceito geral de message broker está em [Message broker](../aprender/message-broker.md).
+**TLDR**: [BullMQ](https://docs.bullmq.io/) sobre o backend PostgreSQL nativo dele (`createPostgresBackend`, sem Redis), usado pra geração assíncrona de horário (timetable) e pra notificação de folha de ponto via WhatsApp. Dois padrões implementados sobre a mesma fila, RPC e fire-and-forget. O conceito geral de message broker está em [Message broker](../aprender/message-broker.md). Isso substitui o RabbitMQ/Rascal descrito no [ADR-006](decisoes-de-plataforma.md#adr-006-rabbitmq), hoje superado.
 
 ```mermaid
 sequenceDiagram
     participant MS as Management Service
-    participant RMQ as RabbitMQ
+    participant Q as BullMQ (PostgreSQL)
     participant TG as Timetable Generator
 
-    MS->>RMQ: publica requisição (fila request)
-    RMQ->>TG: entrega mensagem
+    MS->>Q: enqueue/request (fila timetable-generate)
+    Q->>TG: worker consome o job
     TG->>TG: processa geração de horário
-    TG->>RMQ: publica resultado (fila response)
-    RMQ->>MS: entrega resposta
+    TG->>Q: publica resultado
+    Q->>MS: waitUntilFinished resolve (RPC) ou onCompleted (fire-and-forget)
 ```
 
-A interface `IMessageBrokerService` (`src/domain/abstractions/message-broker/`) implementa dois padrões: **RPC** (`publishTimetableRequest`, publica e espera resposta com timeout de 60s) e **fire-and-forget** (`publishTimetableRequestFireAndForget`, publica sem esperar).
+Duas interfaces, em camadas diferentes:
+
+- **`IQueueService`** (`src/domain/abstractions/message-broker/`), a porta genérica de fila: `enqueue`, `request` (enqueue + espera o resultado), `onCompleted`/`onFailed`, `process` (registra um worker) e `isAvailable()`. Implementada por `BullMqQueueService` (`src/infrastructure.message-broker/bullmq-queue.service.ts`), sobre `bullmq` com `createPostgresBackend` — mesma biblioteca de sempre, backend Postgres em vez de Redis, então não precisa de mais um serviço de infraestrutura só pra fila.
+- **`IMessageBrokerService`**, a porta específica do domínio: `publishTimetableRequest` (**RPC**, espera resposta com timeout de 60s), `publishTimetableRequestFireAndForget` (**fire-and-forget**, não espera) e `publishFolhaPontoCreated` (fire-and-forget). Implementada por `MessageBrokerService`, que só traduz essas três chamadas de domínio em `IQueueService.request`/`.enqueue`.
 
 | Variável | Padrão | Propósito |
 |---|---|---|
-| `MESSAGE_BROKER_QUEUE_TIMETABLE_REQUEST` | `dev.timetable_generate.request` | Fila de requisição de geração de horário |
-| `MESSAGE_BROKER_QUEUE_TIMETABLE_RESPONSE` | `dev.timetable_generate.response` | Fila de resposta |
+| `QUEUE_DATABASE_URL` | — | Connection string do Postgres usado como backend da fila. Sem ela, `IQueueOptions` resolve `null` e todo publish lança `ServiceUnavailableError` — degradação explícita, não silenciosa |
+| `QUEUE_SCHEMA` | `bullmq` | Schema Postgres onde o BullMQ cria suas tabelas |
+| `QUEUE_TIMETABLE_GENERATE` | `timetable-generate` | Fila de geração de horário, usada nos dois padrões (RPC e fire-and-forget) |
+| `QUEUE_FOLHA_PONTO_WHATSAPP` | `folha-ponto-notificacao-whatsapp` | Fila de notificação de folha de ponto |
 
-A UI de gerenciamento do RabbitMQ fica em `http://localhost:15672` (usuário `admin`, senha `admin` em desenvolvimento). [Rascal](https://github.com/guidesmiths/rascal) é um wrapper sobre AMQP que adiciona gerenciamento de conexão, retry e configuração declarativa por cima do protocolo cru. Por que RabbitMQ e não HTTP síncrono, Kafka ou Redis Pub/Sub, ver [ADR-006](decisoes-de-plataforma.md#adr-006-rabbitmq).
+Quem consome (`process`) roda em `src/modules/estagio/folha-ponto/application/consumers/` e no worker do timetable-generator — ver [infrastructure.timetable-generator](https://github.com/ladesa-ro/management-service/tree/main/src/infrastructure.timetable-generator) no próprio monorepo.

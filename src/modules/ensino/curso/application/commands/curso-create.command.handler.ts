@@ -55,6 +55,7 @@ export class CursoCreateCommandHandlerImpl implements ICursoCreateCommandHandler
       quantidadePeriodos: dto.quantidadePeriodos,
       campus: { id: campus.id },
       ofertaFormacao: { id: ofertaFormacao.id },
+      colecaoPadrao: dto.colecaoPadrao ?? null,
     });
 
     const { id } = await this.repository.create({

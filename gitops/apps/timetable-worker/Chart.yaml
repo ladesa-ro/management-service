@@ -1,0 +1,9 @@
+apiVersion: v2
+name: timetable-worker
+description: Worker que consome a fila de geracao de horario e executa o gerador
+type: application
+version: 0.1.0
+dependencies:
+  - name: application
+    version: 6.0.2
+    repository: https://stakater.github.io/stakater-charts

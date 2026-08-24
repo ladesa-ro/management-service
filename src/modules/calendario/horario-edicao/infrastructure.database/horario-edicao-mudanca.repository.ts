@@ -17,11 +17,21 @@ export class HorarioEdicaoMudancaTypeOrmRepositoryAdapter
     return repo.save(entity);
   }
 
+  async findById(id: string): Promise<HorarioEdicaoMudancaEntity | null> {
+    const repo = this.appTypeormConnection.getRepository(HorarioEdicaoMudancaEntity);
+    return repo.findOne({ where: { id } });
+  }
+
   async findBySessaoId(sessaoId: string): Promise<HorarioEdicaoMudancaEntity[]> {
     const repo = this.appTypeormConnection.getRepository(HorarioEdicaoMudancaEntity);
     return repo.find({
       where: { sessao: { id: sessaoId } },
       order: { dateCreated: "ASC" },
     });
+  }
+
+  async deleteById(id: string): Promise<void> {
+    const repo = this.appTypeormConnection.getRepository(HorarioEdicaoMudancaEntity);
+    await repo.delete({ id });
   }
 }

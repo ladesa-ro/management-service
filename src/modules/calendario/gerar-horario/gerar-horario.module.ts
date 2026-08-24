@@ -17,11 +17,16 @@ import { IGerarHorarioFindOneQueryHandler } from "@/modules/calendario/gerar-hor
 import { IGerarHorarioRepository } from "@/modules/calendario/gerar-horario/domain/repositories";
 import { GerarHorarioTypeOrmRepositoryAdapter } from "@/modules/calendario/gerar-horario/infrastructure.database";
 import { GerarHorarioRestController } from "@/modules/calendario/gerar-horario/presentation.rest";
+import { HorarioEdicaoModule } from "@/modules/calendario/horario-edicao/horario-edicao.module";
+import { GerarHorarioResultadoConsumer } from "./application/consumers";
+import { GerarHorarioRequestBuilder } from "./application/services/gerar-horario-request.builder";
 
 @Module({
-  imports: [MessageBrokerModule],
+  imports: [MessageBrokerModule, HorarioEdicaoModule],
   controllers: [GerarHorarioRestController],
   providers: [
+    GerarHorarioRequestBuilder,
+    GerarHorarioResultadoConsumer,
     // Repositories
     {
       provide: IGerarHorarioRepository,

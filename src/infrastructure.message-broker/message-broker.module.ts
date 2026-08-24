@@ -1,24 +1,21 @@
 import { Module } from "@nestjs/common";
-import { IMessageBrokerService } from "@/domain/abstractions/message-broker";
+import { IMessageBrokerService, IQueueService } from "@/domain/abstractions/message-broker";
+import { BullMqQueueService } from "./bullmq-queue.service";
 import { MessageBrokerService } from "./message-broker.service";
-import { MessageBrokerContainerService } from "./message-broker-container.service";
-import { MessageBrokerSubscribeService } from "./message-broker-subscribe.service";
 
 @Module({
   providers: [
-    MessageBrokerContainerService,
-    MessageBrokerSubscribeService,
+    BullMqQueueService,
+    {
+      provide: IQueueService,
+      useExisting: BullMqQueueService,
+    },
     MessageBrokerService,
     {
       provide: IMessageBrokerService,
       useExisting: MessageBrokerService,
     },
   ],
-  exports: [
-    MessageBrokerService,
-    MessageBrokerContainerService,
-    MessageBrokerSubscribeService,
-    IMessageBrokerService,
-  ],
+  exports: [MessageBrokerService, IMessageBrokerService, IQueueService],
 })
 export class MessageBrokerModule {}

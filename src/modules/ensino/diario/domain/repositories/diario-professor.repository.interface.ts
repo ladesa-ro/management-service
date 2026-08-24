@@ -55,4 +55,8 @@ export interface IDiarioProfessorRepository {
     DiarioProfessorListQuery,
     DiarioProfessorListQueryResult
   >;
+
+  findAllActiveByPerfilId(
+    perfilId: string,
+  ): Promise<Array<{ diarioId: string; cargaHoraria: number }>>;
 }

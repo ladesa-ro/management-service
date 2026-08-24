@@ -1,7 +1,9 @@
-import { BadRequestException } from "@nestjs/common";
-import { ensureActiveEntity, ensureExists } from "@/application/errors";
+import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { Dep, Impl } from "@/domain/dependency-injection";
+import { IAmbienteFindOneQueryHandler } from "@/modules/ambientes/ambiente/domain/queries/ambiente-find-one.query.handler.interface";
+import { CalendarioColecaoSyncService } from "@/modules/calendario/colecao/application/calendario-colecao-sync.service";
+import { ITurmaFindOneQueryHandler } from "@/modules/ensino/turma/domain/queries/turma-find-one.query.handler.interface";
 import { ICalendarioAgendamentoPermissionChecker } from "../../domain/authorization";
 import { CalendarioAgendamento } from "../../domain/calendario-agendamento";
 import type { CalendarioAgendamentoUpdateCommand } from "../../domain/commands/calendario-agendamento-update.command";
@@ -9,6 +11,9 @@ import { ICalendarioAgendamentoUpdateCommandHandler } from "../../domain/command
 import type { CalendarioAgendamentoFindOneQuery } from "../../domain/queries/calendario-agendamento-find-one.query";
 import type { CalendarioAgendamentoFindOneQueryResult } from "../../domain/queries/calendario-agendamento-find-one.query.result";
 import { ICalendarioAgendamentoRepository } from "../../domain/repositories/calendario-agendamento.repository.interface";
+import { CalendarioAgendamentoConflitoService } from "../calendario-agendamento-conflito.service";
+import { ensureCapacidadeETurno } from "./calendario-agendamento-capacidade-turno.util";
+import { ensureIfMatch } from "./calendario-agendamento-precondition.util";
 
 @Impl()
 export class CalendarioAgendamentoUpdateCommandHandlerImpl
@@ -19,6 +24,14 @@ export class CalendarioAgendamentoUpdateCommandHandlerImpl
     private readonly repository: ICalendarioAgendamentoRepository,
     @Dep(ICalendarioAgendamentoPermissionChecker)
     private readonly permissionChecker: ICalendarioAgendamentoPermissionChecker,
+    @Dep(ITurmaFindOneQueryHandler)
+    private readonly turmaFindOneHandler: ITurmaFindOneQueryHandler,
+    @Dep(IAmbienteFindOneQueryHandler)
+    private readonly ambienteFindOneHandler: IAmbienteFindOneQueryHandler,
+    @Dep(CalendarioColecaoSyncService)
+    private readonly colecaoSyncService: CalendarioColecaoSyncService,
+    @Dep(CalendarioAgendamentoConflitoService)
+    private readonly conflitoService: CalendarioAgendamentoConflitoService,
   ) {}
 
   async execute(
@@ -29,7 +42,7 @@ export class CalendarioAgendamentoUpdateCommandHandlerImpl
 
     const domain = await this.repository.loadById(accessContext, dto.id);
     ensureExists(domain, CalendarioAgendamento.entityName, dto.id);
-    ensureActiveEntity(domain, CalendarioAgendamento.entityName, dto.id);
+    ensureIfMatch(domain, dto.ifMatch, dto.id);
 
     // Detectar se ha campos de metadata (nome/cor)
     const hasMetadataChanges = dto.nome !== undefined || dto.cor !== undefined;
@@ -48,7 +61,10 @@ export class CalendarioAgendamentoUpdateCommandHandlerImpl
       dto.ofertasFormacao !== undefined ||
       dto.modalidades !== undefined ||
       dto.ambientes !== undefined ||
-      dto.diarios !== undefined;
+      dto.diarios !== undefined ||
+      dto.campus !== undefined ||
+      dto.colecao !== undefined ||
+      dto.motivo !== undefined;
 
     // Atualizar metadata (nome/cor) sem gerar nova versao
     if (hasMetadataChanges) {
@@ -85,7 +101,7 @@ export class CalendarioAgendamentoUpdateCommandHandlerImpl
       effectiveHorarioFim &&
       (turmaIds.length > 0 || perfilIds.length > 0 || ambienteIds.length > 0)
     ) {
-      const conflicts = await this.repository.findConflicting({
+      await this.conflitoService.ensureSemConflito(accessContext, {
         dataInicio: effectiveDataInicio,
         dataFim: effectiveDataFim,
         horarioInicio: effectiveHorarioInicio,
@@ -95,16 +111,16 @@ export class CalendarioAgendamentoUpdateCommandHandlerImpl
         ambienteIds,
         excludeIdentificadorExterno: domain.identificadorExterno,
       });
-
-      if (conflicts.length > 0) {
-        const descricoes = conflicts.map(
-          (c) => `${c.recurso} (${c.recursoId}) no agendamento ${c.identificadorExterno}`,
-        );
-        throw new BadRequestException(
-          `Conflito de horário detectado. Os seguintes recursos já possuem agendamento no mesmo período: ${descricoes.join("; ")}.`,
-        );
-      }
     }
+
+    await ensureCapacidadeETurno(accessContext, {
+      turmaIds,
+      ambienteIds,
+      horarioInicio: effectiveHorarioInicio,
+      horarioFim: effectiveHorarioFim,
+      turmaFindOneHandler: this.turmaFindOneHandler,
+      ambienteFindOneHandler: this.ambienteFindOneHandler,
+    });
 
     // Criar nova versao se campos versionados foram alterados
     let resultId = dto.id;
@@ -125,10 +141,22 @@ export class CalendarioAgendamentoUpdateCommandHandlerImpl
         modalidades: dto.modalidades,
         ambientes: dto.ambientes,
         diarios: dto.diarios,
+        campus: dto.campus,
+        colecao: dto.colecao,
+        motivo: dto.motivo,
+        autorId: accessContext?.requestActor?.id ?? null,
       });
 
       await this.repository.saveNewVersion(domain, newVersion);
       resultId = newVersion.id;
+
+      if (newVersion.colecao) {
+        await this.colecaoSyncService.registrarMudanca({
+          colecaoId: newVersion.colecao.id,
+          agendamentoId: newVersion.id,
+          tipoOperacao: "update",
+        });
+      }
     }
 
     const result = await this.repository.getFindOneQueryResult(accessContext, resultId);

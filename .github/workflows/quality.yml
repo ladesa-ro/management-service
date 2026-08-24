@@ -1,0 +1,86 @@
+name: "Quality"
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  gates:
+    name: "Gates de qualidade"
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: "Construir a imagem das ferramentas"
+        run: docker build -t quality-tools -f tools/quality/Containerfile tools/quality
+
+      - name: "Exigir que toda ferramenta execute"
+        run: |
+          set -euo pipefail
+          docker run --rm -v "$PWD:/repo" -w /repo quality-tools sh -c '
+            gitleaks version && trivy --version && osv-scanner --version \
+              && lizard --version && semgrep --version && jscpd --version && ast-grep --version'
+
+      - name: "gitleaks: segredo versionado"
+        continue-on-error: true
+        run: |
+          docker run --rm -v "$PWD:/repo" -w /repo quality-tools \
+            gitleaks detect --source . --redact --no-banner
+
+      - name: "osv-scanner: dependência vulnerável"
+        continue-on-error: true
+        run: |
+          docker run --rm -v "$PWD:/repo" -w /repo quality-tools \
+            osv-scanner scan source --recursive .
+
+      - name: "trivy: configuração insegura"
+        continue-on-error: true
+        run: |
+          docker run --rm -v "$PWD:/repo" -w /repo quality-tools \
+            trivy fs --scanners misconfig --severity HIGH,CRITICAL --exit-code 1 .
+
+      - name: "semgrep: padrão inseguro no código"
+        continue-on-error: true
+        run: |
+          docker run --rm -v "$PWD:/repo" -w /repo quality-tools \
+            semgrep scan --config auto --error --metrics off --quiet src
+
+      - name: "lizard: complexidade ciclomática"
+        continue-on-error: true
+        run: |
+          docker run --rm -v "$PWD:/repo" -w /repo quality-tools \
+            lizard src --CCN 15 --length 120 --arguments 6 --warnings_only \
+              --exclude "*/node_modules/*" --exclude "*/generated/*" --exclude "*.spec.ts"
+
+      - name: "jscpd: código duplicado"
+        continue-on-error: true
+        run: |
+          docker run --rm -v "$PWD:/repo" -w /repo quality-tools \
+            jscpd src --min-lines 12 --threshold 3 --reporters consoleFull \
+              --ignore "**/node_modules/**,**/generated/**,**/generated-csharp/**"
+
+      - name: "ast-grep: comentário em YAML"
+        continue-on-error: true
+        run: |
+          docker run --rm -v "$PWD:/repo" -w /repo quality-tools \
+            ast-grep scan --config tools/quality/ast-grep/sgconfig.yml
+
+      - name: "sem travessão na documentação"
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          if grep -rnP '[\x{2014}\x{2013}\x{2192}\x{2190}\x{21D2}\x{21D0}\x{2026}]' --include='*.md' . ; then
+            echo "::error::há caractere Unicode banido na documentação"
+            exit 1
+          fi
+          echo "nenhum caractere banido"

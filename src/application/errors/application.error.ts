@@ -11,6 +11,7 @@ export enum ApplicationErrorCode {
   VALIDATION = "APP.VALIDATION",
   CONFLICT = "APP.CONFLICT",
   GONE = "APP.GONE",
+  PRECONDITION_FAILED = "APP.PRECONDITION_FAILED",
   INTERNAL = "APP.INTERNAL",
   SERVICE_UNAVAILABLE = "APP.SERVICE_UNAVAILABLE",
 }
@@ -131,6 +132,18 @@ export class GoneError extends ApplicationError {
   ) {
     const idPart = identifier !== undefined ? ` com identificador "${identifier}"` : "";
     super(`${resource}${idPart} não está mais ativo(a).`);
+  }
+}
+
+export class PreconditionFailedError extends ApplicationError {
+  readonly code = ApplicationErrorCode.PRECONDITION_FAILED;
+
+  constructor(
+    message: string,
+    readonly resource?: string,
+    readonly identifier?: string | number,
+  ) {
+    super(message);
   }
 }
 

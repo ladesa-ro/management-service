@@ -9,6 +9,7 @@ import {
 } from "typeorm";
 import { CampusEntity } from "@/modules/ambientes/campus/infrastructure.database/typeorm/campus.typeorm.entity";
 import { ImagemEntity } from "@/modules/armazenamento/imagem/infrastructure.database/typeorm/imagem.typeorm.entity";
+import { CalendarioColecaoEntity } from "@/modules/calendario/colecao/infrastructure.database/typeorm/calendario-colecao.typeorm.entity";
 import { OfertaFormacaoEntity } from "@/modules/ensino/oferta-formacao/infrastructure.database/typeorm/oferta-formacao.typeorm.entity";
 import { TurmaEntity } from "@/modules/ensino/turma/infrastructure.database/typeorm/turma.typeorm.entity";
 import { CursoPeriodoDisciplinaEntity } from "./curso-periodo-disciplina.typeorm.entity";
@@ -38,6 +39,10 @@ export class CursoEntity {
   @ManyToOne(() => ImagemEntity)
   @JoinColumn({ name: "id_imagem_capa_fk" })
   imagemCapa!: Relation<ImagemEntity> | null;
+
+  @ManyToOne(() => CalendarioColecaoEntity, { nullable: true })
+  @JoinColumn({ name: "id_colecao_padrao_fk" })
+  colecaoPadrao!: Relation<CalendarioColecaoEntity> | null;
 
   @OneToMany(
     () => TurmaEntity,

@@ -27,9 +27,33 @@ export const GerarHorarioSchema = z.object({
 // Create
 // ============================================================================
 
+export const ConstraintKindValues = [
+  "GroupOneScheduleAtSameTime",
+  "TeacherOneScheduleAtSameTime",
+  "DiaryLimitSchedulesInOneWeek",
+  "DiaryLimitRemaining",
+  "TeacherLunch",
+  "GroupLunch",
+  "TeacherNoOppositeTurns",
+  "Teacher12Hours",
+  "GroupNoOverlappingTimeSlots",
+  "TeacherNoOverlappingTimeSlots",
+  "RoomOneScheduleAtSameTime",
+] as const;
+
+const boostSchema = z.number().int().min(0).max(1000);
+
 export const GerarHorarioCreateSchema = z.object({
   dataInicio: z.string().min(1),
   dataTermino: z.string().nullable().optional(),
   calendarioLetivoIds: z.array(uuidSchema).optional().default([]),
   ofertaFormacaoIds: z.array(uuidSchema).optional().default([]),
+
+  boostSameDayOfWeekAndTimeSlot: boostSchema.optional().default(0),
+  boostSameDayOfWeekOnly: boostSchema.optional().default(0),
+  boostSameTimeSlotOnly: boostSchema.optional().default(0),
+  boostLesserDistanceFromDayOfWeek: boostSchema.optional().default(0),
+  boostLesserDistanceFromTimeSlot: boostSchema.optional().default(0),
+
+  enabledConstraints: z.array(z.enum(ConstraintKindValues)).nullable().optional(),
 });

@@ -41,7 +41,7 @@ Dois caminhos, escolha o que preferir.
 just up
 ```
 
-Esse único comando copia os `.env` a partir dos exemplos, builda a imagem se necessário, sobe os três containers (aplicação, PostgreSQL, RabbitMQ), instala dependências (`bun install`) e abre um shell `zsh` dentro do container. Uma vez dentro:
+Esse único comando copia os `.env` a partir dos exemplos, builda a imagem se necessário, sobe os containers (aplicação, PostgreSQL, WAHA), instala dependências (`bun install`) e abre um shell `zsh` dentro do container. Uma vez dentro:
 
 ```bash
 bun run dev
@@ -102,7 +102,6 @@ As URLs usam o prefixo padrão `/api/`. Se `API_PREFIX` mudar no `.env`, as URLs
 ```mermaid
 flowchart TB
     MS["management-service\n:3701 API, :9229 debug"] --> DB["PostgreSQL 15\n:5432"]
-    MS --> RMQ["RabbitMQ 3\n:15672 UI"]
     MS --> WAHA["WAHA\n:3000"]
 ```
 
@@ -110,8 +109,9 @@ flowchart TB
 |---|---|---|---|
 | management-service | `ladesa-management-service` | `3701` (API), `9229` (debug) | sem credencial |
 | PostgreSQL 15 | `ladesa-management-service-db` | `5432` | database `main` |
-| RabbitMQ 3 | `ladesa-rabbitmq` | `5672` (AMQP), `15672` (UI) | `admin`/`admin` |
 | WAHA | `ladesa-waha-service` | `3000` | API key em `.env.example` |
+
+A fila (BullMQ, ver [Message broker](../arquitetura/message-broker.md)) roda sobre o mesmo PostgreSQL acima, schema `bullmq` — não é um container à parte.
 
 Rede `ladesa-net` (bridge), todos os serviços se comunicam por nome de container. Volumes persistentes: dado do PostgreSQL, arquivo enviado, histórico do shell, sessão do WhatsApp.
 

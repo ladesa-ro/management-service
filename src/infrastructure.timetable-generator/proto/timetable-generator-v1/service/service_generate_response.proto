@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package ladesa.timetable_generator.v1.service;
+option csharp_namespace = "Ladesa.TimetableGenerator.v1.Protobuf";
+
+import "service/service_generate_response_result_success.proto";
+import "service/service_generate_response_result_error.proto";
+
+message ServiceGenerateResponse {
+  string request_id = 1;
+  bool is_successful = 2;
+  
+  oneof result {
+    ServiceGenerateResponseResultSuccess result_success = 3;
+    ServiceGenerateResponseResultError result_error = 4;
+  }
+
+  string date_time_issued = 5;
+}

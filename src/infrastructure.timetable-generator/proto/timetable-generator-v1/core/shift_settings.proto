@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package ladesa.timetable_generator.v1.core;
+option csharp_namespace = "Ladesa.TimetableGenerator.v1.Protobuf";
+
+import "core/time_slot.proto";
+
+message ShiftSettings {
+  TimeSlot morning = 1;
+  TimeSlot afternoon = 2;
+  TimeSlot night = 3;
+  TimeSlot lunch_buffer_before = 4;
+  TimeSlot lunch_buffer_after = 5;
+}

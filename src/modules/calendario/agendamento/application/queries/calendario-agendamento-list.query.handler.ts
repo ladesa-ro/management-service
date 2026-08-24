@@ -4,6 +4,7 @@ import type { CalendarioAgendamentoListQuery } from "../../domain/queries/calend
 import { ICalendarioAgendamentoListQueryHandler } from "../../domain/queries/calendario-agendamento-list.query.handler.interface";
 import type { CalendarioAgendamentoListQueryResult } from "../../domain/queries/calendario-agendamento-list.query.result";
 import { ICalendarioAgendamentoRepository } from "../../domain/repositories/calendario-agendamento.repository.interface";
+import { CalendarioAgendamentoVisibilidadeService } from "../authorization/calendario-agendamento-visibilidade.service";
 
 @Impl()
 export class CalendarioAgendamentoListQueryHandlerImpl
@@ -12,12 +13,21 @@ export class CalendarioAgendamentoListQueryHandlerImpl
   constructor(
     @Dep(ICalendarioAgendamentoRepository)
     private readonly repository: ICalendarioAgendamentoRepository,
+    @Dep(CalendarioAgendamentoVisibilidadeService)
+    private readonly visibilidadeService: CalendarioAgendamentoVisibilidadeService,
   ) {}
 
   async execute(
     accessContext: IAccessContext | null,
     dto: CalendarioAgendamentoListQuery | null,
   ): Promise<CalendarioAgendamentoListQueryResult> {
-    return this.repository.getFindAllQueryResult(accessContext, dto);
+    const resultado = await this.repository.getFindAllQueryResult(accessContext, dto);
+
+    resultado.data = await this.visibilidadeService.aplicarVisibilidadeMuitos(
+      accessContext,
+      resultado.data,
+    );
+
+    return resultado;
   }
 }

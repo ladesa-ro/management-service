@@ -7,6 +7,16 @@ export interface IGerarHorarioCreateCommand {
   dataTermino?: string;
   ofertaFormacaoIds?: string[];
   calendarioLetivoIds?: string[];
+
+  boostSameDayOfWeekAndTimeSlot?: number;
+  boostSameDayOfWeekOnly?: number;
+  boostSameTimeSlotOnly?: number;
+  boostLesserDistanceFromDayOfWeek?: number;
+  boostLesserDistanceFromTimeSlot?: number;
+
+  enabledConstraints?: string[] | null;
+
+  idempotencyKey?: string;
 }
 
 export const GerarHorarioCreateCommandMetadata = createOperationMetadata({

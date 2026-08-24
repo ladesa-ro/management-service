@@ -10,3 +10,8 @@ export enum CalendarioAgendamentoStatus {
   ATIVO = "ATIVO",
   INATIVO = "INATIVO",
 }
+
+export enum CalendarioAgendamentoEscopoEdicaoSerie {
+  ESTA_E_SEGUINTES = "ESTA_E_SEGUINTES",
+  TODAS = "TODAS",
+}

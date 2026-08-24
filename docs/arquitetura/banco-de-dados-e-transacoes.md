@@ -77,7 +77,7 @@ flowchart TD
 
 ## Resiliência e tolerância a falhas
 
-A aplicação sobe e opera mesmo com dependência externa (banco, RabbitMQ, Keycloak) indisponível ou não configurada:
+A aplicação sobe e opera mesmo com dependência externa (banco, fila BullMQ, Keycloak) indisponível ou não configurada:
 
 - **Bootstrap tolerante**: dependência não configurada (variável de ambiente ausente) é marcada `unavailable` sem tentativa de conexão. Configurada mas indisponível, a aplicação tenta reconectar em background.
 - **Reconexão automática**: conexão persistente usa retry com backoff exponencial e jitter (`src/shared/resilience/retry-with-backoff.ts`), indefinidamente até sucesso ou encerramento do processo.

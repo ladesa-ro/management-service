@@ -51,6 +51,7 @@ const turmaRelations = {
         },
       },
     },
+    colecaoPadrao: true,
   },
   ambientePadraoAula: {
     bloco: {

@@ -8,7 +8,7 @@ import {
   WebSocketServer,
 } from "@nestjs/websockets";
 import type { Server, Socket } from "socket.io";
-import type { EstagioNotificacaoPayload, EstagioWsRoom } from "../domain/estagio-notificacao.types";
+import { isCalendarioWsRoom } from "../domain/calendario-ws-room.types";
 import {
   ESTAGIO_WS_EVENT,
   ESTAGIO_WS_JOIN_ROOM,
@@ -41,6 +41,10 @@ export class NotificacaoGateway implements OnGatewayConnection, OnGatewayDisconn
 
   private readonly validRooms = new Set<string>(Object.values(ESTAGIO_WS_ROOMS));
 
+  private isValidRoom(roomId: string): boolean {
+    return this.validRooms.has(roomId) || isCalendarioWsRoom(roomId);
+  }
+
   handleConnection(client: Socket) {
     console.log(`[WS] cliente conectado: ${client.id}`);
   }
@@ -58,7 +62,7 @@ export class NotificacaoGateway implements OnGatewayConnection, OnGatewayDisconn
     @ConnectedSocket() client: Socket,
     @MessageBody() roomId: string,
   ): { event: string; data: { room: string; joined: boolean } } {
-    if (!this.validRooms.has(roomId)) {
+    if (!this.isValidRoom(roomId)) {
       return { event: "error", data: { room: roomId, joined: false } };
     }
 
@@ -86,7 +90,7 @@ export class NotificacaoGateway implements OnGatewayConnection, OnGatewayDisconn
    * Emite uma notificação para todos os clientes inscritos no room especificado.
    * Chamado internamente pelo NotificacaoPushService.
    */
-  emitToRoom(room: EstagioWsRoom, payload: EstagioNotificacaoPayload): void {
+  emitToRoom<T extends object>(room: string, payload: T): void {
     this.server.to(room).emit(ESTAGIO_WS_EVENT, payload);
   }
 
@@ -94,7 +98,7 @@ export class NotificacaoGateway implements OnGatewayConnection, OnGatewayDisconn
    * Emite uma notificação para um cliente específico (ex: importação).
    * Permite notificar apenas o usuário que disparou a ação.
    */
-  emitToSocket(socketId: string, payload: EstagioNotificacaoPayload): void {
+  emitToSocket<T extends object>(socketId: string, payload: T): void {
     this.server.to(socketId).emit(ESTAGIO_WS_EVENT, payload);
   }
 }

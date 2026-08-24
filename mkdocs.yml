@@ -51,6 +51,8 @@ nav:
       - Autenticação (JWT, JWKS, OAuth2): aprender/autenticacao.md
       - REST, GraphQL e DTO: aprender/graphql-e-rest.md
       - Message broker: aprender/message-broker.md
+      - Calendário e timetabling: aprender/calendario-e-timetabling.md
+      - Regulação acadêmica brasileira: aprender/regulacao-academica-brasileira.md
       - Containers e Docker: aprender/containers.md
       - Diátaxis: aprender/diataxis.md
       - Normas de redação técnica: aprender/normas-de-redacao-tecnica.md

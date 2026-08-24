@@ -3,6 +3,7 @@ import type { CalendarioAgendamento } from "../calendario-agendamento";
 import type { CalendarioAgendamentoTipo } from "../calendario-agendamento.types";
 import type { CalendarioAgendamentoMetadata } from "../calendario-agendamento-metadata";
 import type { CalendarioAgendamentoFindOneQueryResult } from "../queries/calendario-agendamento-find-one.query.result";
+import type { ICalendarioAgendamentoLinhaDoTempoEntrada } from "../queries/calendario-agendamento-linha-do-tempo.query.result";
 import type { CalendarioAgendamentoListQuery } from "../queries/calendario-agendamento-list.query";
 import type { CalendarioAgendamentoListQueryResult } from "../queries/calendario-agendamento-list.query.result";
 
@@ -80,6 +81,8 @@ export interface ICalendarioAgendamentoRepository {
   // Read side — usado por query handlers
   // ==========================================
 
+  existsByIdentificadorExterno(identificadorExterno: string): Promise<boolean>;
+
   /** Retorna um registro hidratado com junções para exibição. */
   getFindOneQueryResult(
     accessContext: IAccessContext | null,
@@ -109,6 +112,8 @@ export interface ICalendarioAgendamentoRepository {
     excludeIdentificadorExterno?: string;
   }): Promise<{ id: string; identificadorExterno: string; recurso: string; recursoId: string }[]>;
 
+  findByColecaoId(colecaoId: string): Promise<CalendarioAgendamentoFindOneQueryResult[]>;
+
   /** Busca agendamentos que se sobrepõem a um período, com filtros opcionais. */
   findByDateRange(query: {
     dateStart: string;
@@ -118,4 +123,21 @@ export interface ICalendarioAgendamentoRepository {
     professor?: string;
     tipo?: CalendarioAgendamentoTipo;
   }): Promise<CalendarioAgendamentoFindOneQueryResult[]>;
+
+  getLinhaDoTempo(identificadorExterno: string): Promise<{
+    colecaoId: string | null;
+    versoes: ICalendarioAgendamentoLinhaDoTempoEntrada[];
+  }>;
+
+  findExcecoesPorSeries(params: {
+    identificadoresSerieOrigem: string[];
+    dateStart: string;
+    dateEnd: string;
+  }): Promise<{ identificadorExternoSerieOrigem: string; dataOcorrenciaReferenciada: string }[]>;
+
+  reatribuirExcecoesParaNovaSerie(params: {
+    deIdentificadorExterno: string;
+    paraIdentificadorExterno: string;
+    aPartirDe: string;
+  }): Promise<void>;
 }

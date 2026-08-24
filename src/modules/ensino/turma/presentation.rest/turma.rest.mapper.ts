@@ -66,6 +66,7 @@ export const createInputDtoToCreateCommand = createMapper<
   nome: dto.nome ?? null,
   curso: { id: dto.curso.id },
   ambientePadraoAula: dto.ambientePadraoAula ? { id: dto.ambientePadraoAula.id } : null,
+  numeroEstimadoAlunos: dto.numeroEstimadoAlunos ?? null,
 }));
 
 export const updateInputDtoToUpdateCommand = createMapper<
@@ -82,6 +83,8 @@ export const updateInputDtoToUpdateCommand = createMapper<
         ? { id: dto.ambientePadraoAula.id }
         : null
       : undefined,
+  numeroEstimadoAlunos:
+    dto.numeroEstimadoAlunos !== undefined ? (dto.numeroEstimadoAlunos ?? null) : undefined,
 }));
 
 // ============================================================================
@@ -100,6 +103,7 @@ export const findOneQueryResultToOutputDto = createMapper<
     output.ambientePadraoAula,
   ),
   imagemCapa: output.imagemCapa ? BlocoRestMapper.toImagemOutput(output.imagemCapa) : null,
+  numeroEstimadoAlunos: output.numeroEstimadoAlunos,
   dateCreated: output.dateCreated,
   dateUpdated: output.dateUpdated,
   dateDeleted: output.dateDeleted,

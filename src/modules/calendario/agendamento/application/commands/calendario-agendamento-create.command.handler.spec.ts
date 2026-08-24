@@ -1,14 +1,40 @@
 import { BadRequestException } from "@nestjs/common";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { ResourceNotFoundError } from "@/application/errors/application.error";
 import {
   createMockAgendamentoRepository,
+  createMockColecaoSyncService,
   createMockPermissionChecker,
   createTestAccessContext,
   createTestId,
 } from "@/test/helpers";
 import { CalendarioAgendamentoTipo } from "../../domain/calendario-agendamento.types";
+import { CalendarioAgendamentoConflitoService } from "../calendario-agendamento-conflito.service";
 import { CalendarioAgendamentoCreateCommandHandlerImpl } from "./calendario-agendamento-create.command.handler";
+
+function createMockTurmaFindOneHandler() {
+  return { execute: vi.fn().mockResolvedValue(null) };
+}
+
+function createMockAmbienteFindOneHandler() {
+  return { execute: vi.fn().mockResolvedValue(null) };
+}
+
+function createMockPerfilFindOneHandler() {
+  return { execute: vi.fn().mockResolvedValue(null) };
+}
+
+function createMockPerfilFindAllActiveHandler() {
+  return { execute: vi.fn().mockResolvedValue([]) };
+}
+
+function createConflitoService(repository: object) {
+  return new CalendarioAgendamentoConflitoService(
+    repository as any,
+    createMockPerfilFindOneHandler() as any,
+    createMockPerfilFindAllActiveHandler() as any,
+  );
+}
 
 function createValidDto() {
   return {
@@ -27,16 +53,42 @@ function createValidDto() {
 }
 
 describe("CalendarioAgendamentoCreateCommandHandler", () => {
-  function createHandler(overrides: { repository?: object; permissionChecker?: object } = {}) {
+  function createHandler(
+    overrides: {
+      repository?: object;
+      permissionChecker?: object;
+      turmaFindOneHandler?: object;
+      ambienteFindOneHandler?: object;
+      colecaoSyncService?: object;
+      conflitoService?: object;
+    } = {},
+  ) {
     const repository = overrides.repository ?? createMockAgendamentoRepository();
     const permissionChecker = overrides.permissionChecker ?? createMockPermissionChecker();
+    const turmaFindOneHandler = overrides.turmaFindOneHandler ?? createMockTurmaFindOneHandler();
+    const ambienteFindOneHandler =
+      overrides.ambienteFindOneHandler ?? createMockAmbienteFindOneHandler();
+    const colecaoSyncService = overrides.colecaoSyncService ?? createMockColecaoSyncService();
+    const conflitoService = overrides.conflitoService ?? createConflitoService(repository);
 
     const handler = new CalendarioAgendamentoCreateCommandHandlerImpl(
       repository as any,
       permissionChecker as any,
+      turmaFindOneHandler as any,
+      ambienteFindOneHandler as any,
+      colecaoSyncService as any,
+      conflitoService as any,
     );
 
-    return { handler, repository, permissionChecker };
+    return {
+      handler,
+      repository,
+      permissionChecker,
+      turmaFindOneHandler,
+      ambienteFindOneHandler,
+      colecaoSyncService,
+      conflitoService,
+    };
   }
 
   it("should create agendamento and return result from repository", async () => {
@@ -149,5 +201,328 @@ describe("CalendarioAgendamentoCreateCommandHandler", () => {
     await expect(handler.execute(accessContext, createValidDto())).rejects.toThrow(
       ResourceNotFoundError,
     );
+  });
+
+  it("should throw BadRequestException when horario falls outside a recognized turno's window", async () => {
+    const turmaId = createTestId();
+    const repository = createMockAgendamentoRepository();
+    repository.getFindOneQueryResult.mockResolvedValue({ id: createTestId() });
+
+    const turmaFindOneHandler = createMockTurmaFindOneHandler();
+    turmaFindOneHandler.execute.mockResolvedValue({
+      id: turmaId,
+      nome: "Turma A",
+      periodo: "Matutino",
+    });
+
+    const { handler } = createHandler({ repository, turmaFindOneHandler });
+    const accessContext = createTestAccessContext();
+    const dto = {
+      ...createValidDto(),
+      turmas: [{ id: turmaId }],
+      horarioInicio: "19:00:00",
+      horarioFim: "20:00:00",
+    };
+
+    await expect(handler.execute(accessContext, dto)).rejects.toThrow(BadRequestException);
+  });
+
+  it("should pass silently when periodo does not match any known turno pattern", async () => {
+    const turmaId = createTestId();
+    const repository = createMockAgendamentoRepository();
+    repository.getFindOneQueryResult.mockResolvedValue({ id: createTestId() });
+
+    const turmaFindOneHandler = createMockTurmaFindOneHandler();
+    turmaFindOneHandler.execute.mockResolvedValue({
+      id: turmaId,
+      nome: "Turma B",
+      periodo: "Turno Especial XYZ",
+    });
+
+    const { handler } = createHandler({ repository, turmaFindOneHandler });
+    const accessContext = createTestAccessContext();
+    const dto = {
+      ...createValidDto(),
+      turmas: [{ id: turmaId }],
+      horarioInicio: "19:00:00",
+      horarioFim: "20:00:00",
+    };
+
+    await expect(handler.execute(accessContext, dto)).resolves.toBeDefined();
+  });
+
+  it("should pass when horario falls inside the recognized turno's window", async () => {
+    const turmaId = createTestId();
+    const repository = createMockAgendamentoRepository();
+    repository.getFindOneQueryResult.mockResolvedValue({ id: createTestId() });
+
+    const turmaFindOneHandler = createMockTurmaFindOneHandler();
+    turmaFindOneHandler.execute.mockResolvedValue({
+      id: turmaId,
+      nome: "Turma C",
+      periodo: "Noturno",
+    });
+
+    const { handler } = createHandler({ repository, turmaFindOneHandler });
+    const accessContext = createTestAccessContext();
+    const dto = {
+      ...createValidDto(),
+      turmas: [{ id: turmaId }],
+      horarioInicio: "19:00:00",
+      horarioFim: "20:00:00",
+    };
+
+    await expect(handler.execute(accessContext, dto)).resolves.toBeDefined();
+  });
+
+  describe("validação de capacidade do ambiente", () => {
+    it("should throw BadRequestException when sum of numeroEstimadoAlunos exceeds ambiente capacidade", async () => {
+      const turmaId = createTestId();
+      const ambienteId = createTestId();
+      const repository = createMockAgendamentoRepository();
+      repository.getFindOneQueryResult.mockResolvedValue({ id: createTestId() });
+
+      const turmaFindOneHandler = createMockTurmaFindOneHandler();
+      turmaFindOneHandler.execute.mockResolvedValue({
+        id: turmaId,
+        nome: "Turma A",
+        periodo: "Integral",
+        numeroEstimadoAlunos: 40,
+      });
+
+      const ambienteFindOneHandler = createMockAmbienteFindOneHandler();
+      ambienteFindOneHandler.execute.mockResolvedValue({
+        id: ambienteId,
+        nome: "Laboratório 1",
+        capacidade: 30,
+      });
+
+      const { handler } = createHandler({ repository, turmaFindOneHandler, ambienteFindOneHandler });
+      const accessContext = createTestAccessContext();
+      const dto = {
+        ...createValidDto(),
+        turmas: [{ id: turmaId }],
+        ambientes: [{ id: ambienteId }],
+      };
+
+      await expect(handler.execute(accessContext, dto)).rejects.toThrow(BadRequestException);
+    });
+
+    it("should pass when sum of numeroEstimadoAlunos does not exceed ambiente capacidade", async () => {
+      const turmaId = createTestId();
+      const ambienteId = createTestId();
+      const repository = createMockAgendamentoRepository();
+      repository.getFindOneQueryResult.mockResolvedValue({ id: createTestId() });
+
+      const turmaFindOneHandler = createMockTurmaFindOneHandler();
+      turmaFindOneHandler.execute.mockResolvedValue({
+        id: turmaId,
+        nome: "Turma A",
+        periodo: "Integral",
+        numeroEstimadoAlunos: 20,
+      });
+
+      const ambienteFindOneHandler = createMockAmbienteFindOneHandler();
+      ambienteFindOneHandler.execute.mockResolvedValue({
+        id: ambienteId,
+        nome: "Laboratório 1",
+        capacidade: 30,
+      });
+
+      const { handler } = createHandler({ repository, turmaFindOneHandler, ambienteFindOneHandler });
+      const accessContext = createTestAccessContext();
+      const dto = {
+        ...createValidDto(),
+        turmas: [{ id: turmaId }],
+        ambientes: [{ id: ambienteId }],
+      };
+
+      await expect(handler.execute(accessContext, dto)).resolves.toBeDefined();
+    });
+
+    it("should skip capacidade validation silently when turma has no numeroEstimadoAlunos", async () => {
+      const turmaId = createTestId();
+      const ambienteId = createTestId();
+      const repository = createMockAgendamentoRepository();
+      repository.getFindOneQueryResult.mockResolvedValue({ id: createTestId() });
+
+      const turmaFindOneHandler = createMockTurmaFindOneHandler();
+      turmaFindOneHandler.execute.mockResolvedValue({
+        id: turmaId,
+        nome: "Turma A",
+        periodo: "Integral",
+        numeroEstimadoAlunos: null,
+      });
+
+      const ambienteFindOneHandler = createMockAmbienteFindOneHandler();
+      ambienteFindOneHandler.execute.mockResolvedValue({
+        id: ambienteId,
+        nome: "Laboratório 1",
+        capacidade: 1,
+      });
+
+      const { handler } = createHandler({ repository, turmaFindOneHandler, ambienteFindOneHandler });
+      const accessContext = createTestAccessContext();
+      const dto = {
+        ...createValidDto(),
+        turmas: [{ id: turmaId }],
+        ambientes: [{ id: ambienteId }],
+      };
+
+      await expect(handler.execute(accessContext, dto)).resolves.toBeDefined();
+    });
+
+    it("should skip capacidade validation silently when ambiente has no capacidade", async () => {
+      const turmaId = createTestId();
+      const ambienteId = createTestId();
+      const repository = createMockAgendamentoRepository();
+      repository.getFindOneQueryResult.mockResolvedValue({ id: createTestId() });
+
+      const turmaFindOneHandler = createMockTurmaFindOneHandler();
+      turmaFindOneHandler.execute.mockResolvedValue({
+        id: turmaId,
+        nome: "Turma A",
+        periodo: "Integral",
+        numeroEstimadoAlunos: 999,
+      });
+
+      const ambienteFindOneHandler = createMockAmbienteFindOneHandler();
+      ambienteFindOneHandler.execute.mockResolvedValue({
+        id: ambienteId,
+        nome: "Laboratório 1",
+        capacidade: null,
+      });
+
+      const { handler } = createHandler({ repository, turmaFindOneHandler, ambienteFindOneHandler });
+      const accessContext = createTestAccessContext();
+      const dto = {
+        ...createValidDto(),
+        turmas: [{ id: turmaId }],
+        ambientes: [{ id: ambienteId }],
+      };
+
+      await expect(handler.execute(accessContext, dto)).resolves.toBeDefined();
+    });
+  });
+
+  describe("herança de colecaoPadrao do curso", () => {
+    it("should inherit colecaoPadrao from the first turma's curso when dto does not provide colecao", async () => {
+      const turmaId = createTestId();
+      const colecaoPadraoId = createTestId();
+      const repository = createMockAgendamentoRepository();
+      repository.getFindOneQueryResult.mockResolvedValue({ id: createTestId() });
+
+      const turmaFindOneHandler = createMockTurmaFindOneHandler();
+      turmaFindOneHandler.execute.mockResolvedValue({
+        id: turmaId,
+        nome: "Turma A",
+        periodo: "Integral",
+        curso: { colecaoPadrao: { id: colecaoPadraoId } },
+      });
+
+      const { handler } = createHandler({ repository, turmaFindOneHandler });
+      const accessContext = createTestAccessContext();
+      const dto = {
+        ...createValidDto(),
+        turmas: [{ id: turmaId }],
+        colecao: undefined,
+      };
+
+      await handler.execute(accessContext, dto);
+
+      expect(repository.save).toHaveBeenCalledWith(
+        expect.objectContaining({ colecao: { id: colecaoPadraoId } }),
+      );
+    });
+
+    it("should not override colecao when dto explicitly provides another colecao", async () => {
+      const turmaId = createTestId();
+      const colecaoPadraoId = createTestId();
+      const colecaoExplicitaId = createTestId();
+      const repository = createMockAgendamentoRepository();
+      repository.getFindOneQueryResult.mockResolvedValue({ id: createTestId() });
+
+      const turmaFindOneHandler = createMockTurmaFindOneHandler();
+      turmaFindOneHandler.execute.mockResolvedValue({
+        id: turmaId,
+        nome: "Turma A",
+        periodo: "Integral",
+        curso: { colecaoPadrao: { id: colecaoPadraoId } },
+      });
+
+      const { handler } = createHandler({ repository, turmaFindOneHandler });
+      const accessContext = createTestAccessContext();
+      const dto = {
+        ...createValidDto(),
+        turmas: [{ id: turmaId }],
+        colecao: { id: colecaoExplicitaId },
+      };
+
+      await handler.execute(accessContext, dto);
+
+      expect(repository.save).toHaveBeenCalledWith(
+        expect.objectContaining({ colecao: { id: colecaoExplicitaId } }),
+      );
+    });
+
+    it("should not set colecao when turma's curso has no colecaoPadrao", async () => {
+      const turmaId = createTestId();
+      const repository = createMockAgendamentoRepository();
+      repository.getFindOneQueryResult.mockResolvedValue({ id: createTestId() });
+
+      const turmaFindOneHandler = createMockTurmaFindOneHandler();
+      turmaFindOneHandler.execute.mockResolvedValue({
+        id: turmaId,
+        nome: "Turma A",
+        periodo: "Integral",
+        curso: { colecaoPadrao: null },
+      });
+
+      const { handler } = createHandler({ repository, turmaFindOneHandler });
+      const accessContext = createTestAccessContext();
+      const dto = {
+        ...createValidDto(),
+        turmas: [{ id: turmaId }],
+        colecao: undefined,
+      };
+
+      await handler.execute(accessContext, dto);
+
+      expect(repository.save).toHaveBeenCalledWith(expect.objectContaining({ colecao: null }));
+    });
+  });
+
+  describe("colecao sync hook", () => {
+    it("should register a sync change when the agendamento has a colecao", async () => {
+      const colecaoId = createTestId();
+      const repository = createMockAgendamentoRepository();
+      repository.getFindOneQueryResult.mockResolvedValue({ id: createTestId() });
+
+      const colecaoSyncService = createMockColecaoSyncService();
+      const { handler } = createHandler({ repository, colecaoSyncService });
+      const accessContext = createTestAccessContext();
+      const dto = { ...createValidDto(), colecao: { id: colecaoId } };
+
+      await handler.execute(accessContext, dto);
+
+      expect(colecaoSyncService.registrarMudanca).toHaveBeenCalledWith({
+        colecaoId,
+        agendamentoId: expect.any(String),
+        tipoOperacao: "create",
+      });
+    });
+
+    it("should not register a sync change when the agendamento has no colecao", async () => {
+      const repository = createMockAgendamentoRepository();
+      repository.getFindOneQueryResult.mockResolvedValue({ id: createTestId() });
+
+      const colecaoSyncService = createMockColecaoSyncService();
+      const { handler } = createHandler({ repository, colecaoSyncService });
+      const accessContext = createTestAccessContext();
+
+      await handler.execute(accessContext, createValidDto());
+
+      expect(colecaoSyncService.registrarMudanca).not.toHaveBeenCalled();
+    });
   });
 });

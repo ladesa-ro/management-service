@@ -16,7 +16,7 @@ flowchart TD
     A["Apresentação\nREST controllers, GraphQL resolvers"]
     B["Aplicação\ncommand handlers, query handlers, autorização"]
     C["Domínio\nentidades, contratos de repositório, erros, validação, scalars"]
-    D["Infraestrutura\nTypeORM, Keycloak, RabbitMQ, filesystem, config"]
+    D["Infraestrutura\nTypeORM, Keycloak, BullMQ, filesystem, config"]
 
     A --> B --> C
     D -- "implementa contratos de" --> C
@@ -32,7 +32,7 @@ flowchart TD
 |---|---|---|
 | `infrastructure.database` | TypeORM + PostgreSQL | Repositórios, migrações, paginação, connection proxy |
 | `infrastructure.identity-provider` | Keycloak + JWKS | Validação de token, admin client |
-| `infrastructure.message-broker` | RabbitMQ via Rascal | Publicação e consumo de mensagens |
+| `infrastructure.message-broker` | BullMQ sobre PostgreSQL | Publicação e consumo de mensagens |
 | `infrastructure.storage` | Filesystem + Sharp | Upload e redimensionamento de arquivos/imagens |
 | `infrastructure.config` | NestJS ConfigModule | Leitura de variável de ambiente |
 | `infrastructure.graphql` | Apollo Server | Configuração GraphQL, DTOs base, cache LRU |
@@ -96,8 +96,9 @@ modules/<grupo>/<nome-do-modulo>/
 | `armazenamento/` | `arquivo`, `imagem`, `imagem-arquivo` |
 | `ensino/` | `curso`, `diario`, `disciplina`, `modalidade`, `nivel-formacao`, `oferta-formacao`, `turma`, entre outros |
 | `estagio/` | `empresa`, `estagiario`, `estagio`, `responsavel-empresa` |
-| `horarios/` | `calendario-letivo`, `calendario-agendamento`, `gerar-horario`, `horarios-de-aula`, `horario-consulta`, `horario-edicao`, `turma-disponibilidade`, `relatorio` |
+| `calendario/` | `agendamento`, `colecao`, `consultas`, `gerar-horario`, `grade-horaria`, `horario-consulta`, `horario-edicao`, `indisponibilidade-ambiente`, `indisponibilidade-professor`, `letivo`, `solicitacao-mudanca`, `turmas` (disponibilidade) |
 | `localidades/` | `cidade`, `endereco`, `estado` |
+| `relatorios/` | `relatorio` |
 
 `src/modules/@shared/` é legado em remoção, nunca importar dele, ver [Decisões arquiteturais](decisoes-arquiteturais.md).
 

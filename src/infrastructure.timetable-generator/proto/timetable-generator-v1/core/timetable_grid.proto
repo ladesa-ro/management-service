@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package ladesa.timetable_generator.v1.core;
+option csharp_namespace = "Ladesa.TimetableGenerator.v1.Protobuf";
+
+import "core/time_slot.proto";
+import "core/timetable_grid_schedule.proto";
+
+message TimetableGrid {
+  string date_start = 1;
+  string date_end = 2;
+  repeated TimeSlot time_slots = 3;
+  repeated TimetableGridSchedule schedules = 4;
+}

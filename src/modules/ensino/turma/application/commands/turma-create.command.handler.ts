@@ -45,6 +45,7 @@ export class TurmaCreateCommandHandlerImpl implements ITurmaCreateCommandHandler
       periodo: dto.periodo,
       curso: { id: curso.id },
       ambientePadraoAula: ambientePadraoAulaRef,
+      numeroEstimadoAlunos: dto.numeroEstimadoAlunos ?? null,
     });
 
     await this.repository.save(domain);

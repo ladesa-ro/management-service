@@ -29,6 +29,7 @@ export const PerfilSchema = z
     cargo: PerfilFields.cargo.domainSchema,
     campus: ObjectIdUuidFactory.domain,
     usuario: ObjectIdUuidFactory.domain,
+    cargaMaximaSemanal: z.number().int().nullable(),
   })
   .extend(datedSchema.shape);
 
@@ -37,6 +38,7 @@ export const PerfilCreateSchema = createSchema((standard) =>
     cargo: PerfilFields.cargo.create(standard),
     campus: PerfilCampusRefSchema.create(standard),
     usuario: PerfilUsuarioRefSchema.create(standard),
+    cargaMaximaSemanal: PerfilFields.cargaMaximaSemanal.create(standard),
   }),
 );
 
@@ -46,5 +48,6 @@ export const PerfilUpdateSchema = createSchema((standard) =>
     cargo: PerfilFields.cargo.create(standard).optional(),
     campus: PerfilCampusRefSchema.create(standard).optional(),
     usuario: PerfilUsuarioRefSchema.create(standard).optional(),
+    cargaMaximaSemanal: PerfilFields.cargaMaximaSemanal.create(standard),
   }),
 );

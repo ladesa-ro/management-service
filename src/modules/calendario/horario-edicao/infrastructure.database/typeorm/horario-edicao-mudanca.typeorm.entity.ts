@@ -27,6 +27,9 @@ export class HorarioEdicaoMudancaEntity {
   @Column({ name: "dados", type: "jsonb", nullable: false })
   dados!: Record<string, unknown>;
 
+  @Column({ name: "dados_anteriores", type: "jsonb", nullable: true })
+  dadosAnteriores!: Record<string, unknown> | null;
+
   @Column({ name: "date_created", type: "timestamptz", nullable: false })
   dateCreated!: string;
 }

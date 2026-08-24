@@ -6,16 +6,32 @@ import * as ModalidadeRestMapper from "@/modules/ensino/modalidade/presentation.
 import * as OfertaFormacaoRestMapper from "@/modules/ensino/oferta-formacao/presentation.rest/oferta-formacao.rest.mapper";
 import * as TurmaRestMapper from "@/modules/ensino/turma/presentation.rest/turma.rest.mapper";
 import { createListMapper, createMapper, createPaginatedInputMapper, into } from "@/shared/mapping";
-import type { CalendarioAgendamentoTipo } from "../domain/calendario-agendamento.types";
+import type {
+  CalendarioAgendamentoEscopoEdicaoSerie,
+  CalendarioAgendamentoStatus,
+  CalendarioAgendamentoTipo,
+} from "../domain/calendario-agendamento.types";
+import type { CalendarioAgendamentoAdicionarDataAvulsaCommand } from "../domain/commands/calendario-agendamento-adicionar-data-avulsa.command";
+import type { CalendarioAgendamentoCancelarOcorrenciaCommand } from "../domain/commands/calendario-agendamento-cancelar-ocorrencia.command";
 import { CalendarioAgendamentoCreateCommand } from "../domain/commands/calendario-agendamento-create.command";
+import type { CalendarioAgendamentoEditarOcorrenciaCommand } from "../domain/commands/calendario-agendamento-editar-ocorrencia.command";
+import type { CalendarioAgendamentoEditarSerieCommand } from "../domain/commands/calendario-agendamento-editar-serie.command";
+import type { CalendarioAgendamentoImportarIcsCommand } from "../domain/commands/calendario-agendamento-importar-ics.command";
+import type { CalendarioAgendamentoImportarIcsResult } from "../domain/commands/calendario-agendamento-importar-ics.command.result";
 import type { CalendarioAgendamentoUpdateCommand } from "../domain/commands/calendario-agendamento-update.command";
 import type { CalendarioAgendamentoFindOneQuery } from "../domain/queries/calendario-agendamento-find-one.query";
 import type { CalendarioAgendamentoFindOneQueryResult } from "../domain/queries/calendario-agendamento-find-one.query.result";
 import { CalendarioAgendamentoListQuery } from "../domain/queries/calendario-agendamento-list.query";
 import type {
+  CalendarioAgendamentoAdicionarDataAvulsaInputRestDto,
+  CalendarioAgendamentoCancelarOcorrenciaInputRestDto,
   CalendarioAgendamentoCreateInputRestDto,
+  CalendarioAgendamentoEditarOcorrenciaInputRestDto,
+  CalendarioAgendamentoEditarSerieInputRestDto,
   CalendarioAgendamentoFindOneOutputRestDto,
   CalendarioAgendamentoFindOneParamsRestDto,
+  CalendarioAgendamentoImportarIcsInputRestDto,
+  CalendarioAgendamentoImportarIcsOutputRestDto,
   CalendarioAgendamentoListInputRestDto,
   CalendarioAgendamentoUpdateInputRestDto,
 } from "./calendario-agendamento.rest.dto";
@@ -39,6 +55,9 @@ export const createInputDtoToCreateCommand = createMapper<
   command.horarioFim = dto.horarioFim;
   command.cor = dto.cor ?? null;
   command.repeticao = dto.repeticao ?? null;
+  command.campus = dto.campus ? { id: dto.campus.id } : null;
+  command.colecao = dto.colecao ? { id: dto.colecao.id } : null;
+  command.motivo = dto.motivo ?? null;
   command.turmas = dto.turmas;
   command.perfis = dto.perfis;
   command.calendariosLetivos = dto.calendariosLetivos;
@@ -66,6 +85,9 @@ export const updateInputDtoToUpdateCommand = createMapper<
   horarioFim: dto.horarioFim,
   cor: dto.cor !== undefined ? (dto.cor ?? null) : undefined,
   repeticao: dto.repeticao !== undefined ? (dto.repeticao ?? null) : undefined,
+  campus: dto.campus !== undefined ? (dto.campus ? { id: dto.campus.id } : null) : undefined,
+  colecao: dto.colecao !== undefined ? (dto.colecao ? { id: dto.colecao.id } : null) : undefined,
+  motivo: dto.motivo !== undefined ? (dto.motivo ?? null) : undefined,
   turmas: dto.turmas,
   perfis: dto.perfis,
   calendariosLetivos: dto.calendariosLetivos,
@@ -73,6 +95,104 @@ export const updateInputDtoToUpdateCommand = createMapper<
   modalidades: dto.modalidades,
   ambientes: dto.ambientes,
   diarios: dto.diarios,
+}));
+
+export const editarOcorrenciaInputDtoToCommand = createMapper<
+  {
+    params: CalendarioAgendamentoFindOneParamsRestDto;
+    dto: CalendarioAgendamentoEditarOcorrenciaInputRestDto;
+  },
+  CalendarioAgendamentoFindOneQuery & CalendarioAgendamentoEditarOcorrenciaCommand
+>(({ params, dto }) => ({
+  id: params.id,
+  dataOcorrencia: dto.dataOcorrencia,
+  diaInteiro: dto.diaInteiro,
+  horarioInicio: dto.horarioInicio,
+  horarioFim: dto.horarioFim,
+  campus: dto.campus ? { id: dto.campus.id } : undefined,
+  colecao: dto.colecao ? { id: dto.colecao.id } : undefined,
+  motivo: dto.motivo,
+  turmas: dto.turmas,
+  perfis: dto.perfis,
+  calendariosLetivos: dto.calendariosLetivos,
+  ofertasFormacao: dto.ofertasFormacao,
+  modalidades: dto.modalidades,
+  ambientes: dto.ambientes,
+  diarios: dto.diarios,
+}));
+
+export const adicionarDataAvulsaInputDtoToCommand = createMapper<
+  {
+    params: CalendarioAgendamentoFindOneParamsRestDto;
+    dto: CalendarioAgendamentoAdicionarDataAvulsaInputRestDto;
+  },
+  CalendarioAgendamentoFindOneQuery & CalendarioAgendamentoAdicionarDataAvulsaCommand
+>(({ params, dto }) => ({
+  id: params.id,
+  dataOcorrencia: dto.dataOcorrencia,
+  diaInteiro: dto.diaInteiro,
+  horarioInicio: dto.horarioInicio,
+  horarioFim: dto.horarioFim,
+  status: dto.status as CalendarioAgendamentoStatus | undefined,
+  campus: dto.campus ? { id: dto.campus.id } : undefined,
+  colecao: dto.colecao ? { id: dto.colecao.id } : undefined,
+  motivo: dto.motivo,
+  turmas: dto.turmas,
+  perfis: dto.perfis,
+  calendariosLetivos: dto.calendariosLetivos,
+  ofertasFormacao: dto.ofertasFormacao,
+  modalidades: dto.modalidades,
+  ambientes: dto.ambientes,
+  diarios: dto.diarios,
+}));
+
+export const cancelarOcorrenciaInputDtoToCommand = createMapper<
+  {
+    params: CalendarioAgendamentoFindOneParamsRestDto;
+    dto: CalendarioAgendamentoCancelarOcorrenciaInputRestDto;
+  },
+  CalendarioAgendamentoFindOneQuery & CalendarioAgendamentoCancelarOcorrenciaCommand
+>(({ params, dto }) => ({
+  id: params.id,
+  dataOcorrencia: dto.dataOcorrencia,
+  motivo: dto.motivo,
+}));
+
+export const editarSerieInputDtoToCommand = createMapper<
+  {
+    params: CalendarioAgendamentoFindOneParamsRestDto;
+    dto: CalendarioAgendamentoEditarSerieInputRestDto;
+  },
+  CalendarioAgendamentoFindOneQuery & CalendarioAgendamentoEditarSerieCommand
+>(({ params, dto }) => ({
+  id: params.id,
+  dataOcorrencia: dto.dataOcorrencia,
+  escopo: dto.escopo as CalendarioAgendamentoEscopoEdicaoSerie,
+  dataInicio: dto.dataInicio,
+  dataFim: dto.dataFim,
+  diaInteiro: dto.diaInteiro,
+  horarioInicio: dto.horarioInicio,
+  horarioFim: dto.horarioFim,
+  repeticao: dto.repeticao,
+  campus: dto.campus ? { id: dto.campus.id } : undefined,
+  colecao: dto.colecao ? { id: dto.colecao.id } : undefined,
+  motivo: dto.motivo,
+  turmas: dto.turmas,
+  perfis: dto.perfis,
+  calendariosLetivos: dto.calendariosLetivos,
+  ofertasFormacao: dto.ofertasFormacao,
+  modalidades: dto.modalidades,
+  ambientes: dto.ambientes,
+  diarios: dto.diarios,
+}));
+
+export const importarIcsInputDtoToCommand = createMapper<
+  CalendarioAgendamentoImportarIcsInputRestDto,
+  CalendarioAgendamentoImportarIcsCommand
+>((dto) => ({
+  conteudo: dto.conteudo,
+  campus: dto.campus ? { id: dto.campus.id } : null,
+  colecao: dto.colecao ? { id: dto.colecao.id } : null,
 }));
 
 // ============================================================================
@@ -96,6 +216,13 @@ export const findOneQueryResultToOutputDto = createMapper<
   repeticao: output.repeticao,
   status: output.status,
   version: output.version,
+  campus: output.campus,
+  colecao: output.colecao,
+  autorId: output.autorId,
+  motivo: output.motivo,
+  identificadorExternoSerieOrigem: output.identificadorExternoSerieOrigem,
+  dataOcorrenciaReferenciada: output.dataOcorrenciaReferenciada,
+  detalhesOcultos: output.detalhesOcultos,
   turmas: TurmaRestMapper.findOneQueryResultToOutputDto.mapArray(output.turmas),
   perfis: PerfilRestMapper.findOneQueryResultToOutputDto.mapArray(output.perfis),
   calendariosLetivos: CalendarioLetivoRestMapper.findOneQueryResultToOutputDto.mapArray(
@@ -107,6 +234,16 @@ export const findOneQueryResultToOutputDto = createMapper<
   modalidades: ModalidadeRestMapper.findOneQueryResultToOutputDto.mapArray(output.modalidades),
   ambientes: AmbienteRestMapper.findOneQueryResultToOutputDto.mapArray(output.ambientes),
   diarios: DiarioRestMapper.findOneQueryResultToOutputDto.mapArray(output.diarios),
+}));
+
+export const importarIcsResultToOutputDto = createMapper<
+  CalendarioAgendamentoImportarIcsResult,
+  CalendarioAgendamentoImportarIcsOutputRestDto
+>((result) => ({
+  criados: result.criados,
+  puladosPorUidDuplicado: result.puladosPorUidDuplicado,
+  rejeitados: result.rejeitados,
+  idsCriados: result.idsCriados,
 }));
 
 export const listInputDtoToListQuery = createPaginatedInputMapper<

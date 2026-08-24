@@ -13,9 +13,14 @@ export const GerarHorarioAceitarCommandMetadata = createOperationMetadata({
 
 export const IGerarHorarioAceitarCommandHandler = Symbol("IGerarHorarioAceitarCommandHandler");
 
+export interface IGerarHorarioAceitarResult {
+  gerarHorario: GerarHorario;
+  sessaoEdicaoId: string;
+}
+
 export interface IGerarHorarioAceitarCommandHandler {
   execute(
     accessContext: IAccessContext | null,
     command: IGerarHorarioAceitarCommand,
-  ): Promise<GerarHorario>;
+  ): Promise<IGerarHorarioAceitarResult>;
 }

@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package ladesa.timetable_generator.v1.core;
+option csharp_namespace = "Ladesa.TimetableGenerator.v1.Protobuf";
+
+import "core/diary.proto";
+import "core/teacher.proto";
+import "core/group.proto";
+import "core/timetable_grid.proto";
+import "core/time_slot.proto";
+import "core/constraint_kind.proto";
+import "core/timetable_grid_schedule.proto";
+import "core/shift_settings.proto";
+
+message GenerateRequest {
+  string date_start = 1; // date-time
+  string date_end = 2;   // date-time
+
+  repeated Group groups = 3;
+  repeated Teacher teachers = 4;
+  repeated Diary diarys = 5;
+
+  repeated TimeSlot time_slots = 6;
+
+  optional TimetableGrid previous_timetable_grid = 7;
+
+  int32 boost_same_day_of_week_and_time_slot = 8;
+  int32 boost_same_day_of_week_only = 9;
+  int32 boost_same_time_slot_only = 10;
+  int32 boost_lesser_distance_from_day_of_week = 11;
+  int32 boost_lesser_distance_from_time_slot = 12;
+
+  optional ConstraintKindList enabled_constraints = 13;
+
+  repeated TimetableGridSchedule fixed_schedules = 14;
+
+  repeated string non_school_dates = 15;
+
+  optional ShiftSettings shift_settings = 16;
+}

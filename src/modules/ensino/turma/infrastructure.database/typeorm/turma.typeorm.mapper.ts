@@ -16,6 +16,7 @@ export const entityToDomain = createMapper<TurmaEntity, ITurma>((e) => ({
   curso: pickId(e.curso),
   ambientePadraoAula: e.ambientePadraoAula ? pickId(e.ambientePadraoAula) : null,
   imagemCapa: e.imagemCapa ? pickId(e.imagemCapa) : null,
+  numeroEstimadoAlunos: e.numeroEstimadoAlunos,
   dateCreated: e.dateCreated,
   dateUpdated: e.dateUpdated,
   dateDeleted: e.dateDeleted,
@@ -31,6 +32,7 @@ export const entityToFindOneQueryResult = createMapper<TurmaEntity, TurmaFindOne
       ? AmbienteTypeormMapper.entityToFindOneQueryResult.map(e.ambientePadraoAula)
       : null,
     imagemCapa: e.imagemCapa ?? null,
+    numeroEstimadoAlunos: e.numeroEstimadoAlunos,
     dateCreated: e.dateCreated,
     dateUpdated: e.dateUpdated,
     dateDeleted: e.dateDeleted,
@@ -47,6 +49,7 @@ export const domainToPersistence = createMapper<ITurma, DeepPartial<TurmaEntity>
   curso: pickId(d.curso),
   ambientePadraoAula: d.ambientePadraoAula ? pickId(d.ambientePadraoAula) : null,
   imagemCapa: d.imagemCapa ? pickId(d.imagemCapa) : null,
+  numeroEstimadoAlunos: d.numeroEstimadoAlunos,
   dateCreated: d.dateCreated,
   dateUpdated: d.dateUpdated,
   dateDeleted: d.dateDeleted,

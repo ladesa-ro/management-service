@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   ForbiddenError,
   GoneError,
+  PreconditionFailedError,
   ResourceNotFoundError,
   ValidationError,
 } from "@/application/errors";
@@ -53,6 +54,20 @@ describe("buildStandardizedErrorResponse", () => {
       const error = new GoneError("Perfil", "uuid-123");
       const response = buildStandardizedErrorResponse(error);
       expect(response.message).toBe('Perfil com identificador "uuid-123" não está mais ativo(a).');
+    });
+  });
+
+  describe("with PreconditionFailedError", () => {
+    it("returns status 412", () => {
+      const error = new PreconditionFailedError("If-Match não corresponde à versão atual.");
+      const response = buildStandardizedErrorResponse(error);
+      expect(response.statusCode).toBe(412);
+    });
+
+    it("returns code APP.PRECONDITION_FAILED", () => {
+      const error = new PreconditionFailedError("If-Match não corresponde à versão atual.");
+      const response = buildStandardizedErrorResponse(error);
+      expect(response.code).toBe("APP.PRECONDITION_FAILED");
     });
   });
 

@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package ladesa.timetable_generator.v1.core;
+option csharp_namespace = "Ladesa.TimetableGenerator.v1.Protobuf";
+
+message AvailabilityRuleUnavailability {
+  string r_rule = 1;
+  string date_start = 2;
+  optional string date_end = 3;  
+}

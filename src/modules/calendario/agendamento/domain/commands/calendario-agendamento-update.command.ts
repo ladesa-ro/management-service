@@ -11,6 +11,9 @@ export const CalendarioAgendamentoUpdateCommandFields = {
   horarioFim: CalendarioAgendamentoFields.horarioFim,
   cor: CalendarioAgendamentoFields.cor,
   repeticao: CalendarioAgendamentoFields.repeticao,
+  campus: CalendarioAgendamentoFields.campus,
+  colecao: CalendarioAgendamentoFields.colecao,
+  motivo: CalendarioAgendamentoFields.motivo,
   turmas: CalendarioAgendamentoFields.turmas,
   perfis: CalendarioAgendamentoFields.perfis,
   calendariosLetivos: CalendarioAgendamentoFields.calendariosLetivos,
@@ -21,6 +24,8 @@ export const CalendarioAgendamentoUpdateCommandFields = {
 };
 
 export class CalendarioAgendamentoUpdateCommand {
+  ifMatch?: string;
+
   tipo?: CalendarioAgendamentoTipo;
   nome?: string | null;
   dataInicio?: string;
@@ -30,6 +35,9 @@ export class CalendarioAgendamentoUpdateCommand {
   horarioFim?: string;
   cor?: string | null;
   repeticao?: string | null;
+  campus?: ObjectUuidRef | null;
+  colecao?: ObjectUuidRef | null;
+  motivo?: string | null;
 
   turmas?: ObjectUuidRef[];
   perfis?: ObjectUuidRef[];

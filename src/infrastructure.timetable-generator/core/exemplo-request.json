@@ -1,0 +1,23 @@
+{
+  "requestId": "11111111-2222-3333-4444-555555555555",
+  "generateRequest": {
+    "dateStart": "2026-03-02",
+    "dateEnd": "2026-03-06",
+    "groups": [{ "id": "turma-a", "availability": { "rulesUnavailability": [] } }],
+    "teachers": [{ "id": "prof-1", "availability": { "rulesUnavailability": [] } }],
+    "diarys": [
+      {
+        "id": "diario-1",
+        "groupId": "turma-a",
+        "teacherId": "prof-1",
+        "subjectId": "materia-1",
+        "weekLimit": 2,
+        "remaining": 2
+      }
+    ],
+    "timeSlots": [
+      { "start": "07:00:00", "end": "07:50:00" },
+      { "start": "07:50:00", "end": "08:40:00" }
+    ]
+  }
+}

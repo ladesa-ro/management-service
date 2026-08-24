@@ -24,5 +24,6 @@ export interface IHorarioEdicaoMudanca {
   calendarioAgendamento: { id: string } | null;
   tipoOperacao: HorarioEdicaoMudancaTipoOperacao;
   dados: Record<string, unknown>;
+  dadosAnteriores: Record<string, unknown> | null;
   dateCreated: string;
 }

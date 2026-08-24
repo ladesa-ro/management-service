@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, Param, Post } from "@nestjs/common";
+import { Body, Controller, Get, Headers, HttpCode, Param, Post } from "@nestjs/common";
 import {
   ApiAcceptedResponse,
   ApiForbiddenResponse,
@@ -56,8 +56,12 @@ export class GerarHorarioRestController {
   async create(
     @AccessContextHttp() accessContext: IAccessContext,
     @Body() dto: GerarHorarioCreateInputRestDto,
+    @Headers("Idempotency-Key") idempotencyKey?: string,
   ): Promise<GerarHorarioFindOneOutputRestDto> {
-    const queryResult = await this.createHandler.execute(accessContext, dto);
+    const queryResult = await this.createHandler.execute(accessContext, {
+      ...dto,
+      idempotencyKey,
+    });
     return GerarHorarioRestMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 
@@ -84,8 +88,10 @@ export class GerarHorarioRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: GerarHorarioFindOneParamsRestDto,
   ): Promise<GerarHorarioFindOneOutputRestDto> {
-    const queryResult = await this.aceitarHandler.execute(accessContext, { id: params.id });
-    return GerarHorarioRestMapper.findOneQueryResultToOutputDto.map(queryResult);
+    const resultado = await this.aceitarHandler.execute(accessContext, { id: params.id });
+    const dto = GerarHorarioRestMapper.findOneQueryResultToOutputDto.map(resultado.gerarHorario);
+    dto.sessaoEdicaoId = resultado.sessaoEdicaoId;
+    return dto;
   }
 
   @Post("/:id/rejeitar")

@@ -5,7 +5,11 @@
  * Eles nao fazem parte do aggregate versionado.
  */
 import { z } from "zod";
-import { createSchema, ObjectIdUuidFactory } from "@/domain/abstractions";
+import {
+  createSchema,
+  ObjectIdUuidFactory,
+  ObjectIdUuidFactoryNullable,
+} from "@/domain/abstractions";
 import { datedSchema, uuidSchema, versionedSchema } from "@/shared/validation/schemas";
 import {
   CalendarioAgendamentoStatus,
@@ -58,6 +62,14 @@ export const CalendarioAgendamentoSchema = z
     repeticao: z.string().nullable(),
     status: z.nativeEnum(CalendarioAgendamentoStatus).nullable(),
 
+    campus: ObjectIdUuidFactoryNullable.domain,
+    colecao: ObjectIdUuidFactoryNullable.domain,
+    autorId: uuidSchema.nullable(),
+    motivo: z.string().nullable(),
+
+    identificadorExternoSerieOrigem: uuidSchema.nullable(),
+    dataOcorrenciaReferenciada: z.string().nullable(),
+
     turmas: objectIdUuidArraySchema,
     perfis: objectIdUuidArraySchema,
     calendariosLetivos: objectIdUuidArraySchema,
@@ -87,6 +99,11 @@ export const CalendarioAgendamentoCreateSchema = createSchema((standard) =>
         .nativeEnum(CalendarioAgendamentoStatus)
         .optional()
         .default(CalendarioAgendamentoStatus.ATIVO),
+
+      campus: ObjectIdUuidFactoryNullable.create(standard).optional(),
+      colecao: ObjectIdUuidFactoryNullable.create(standard).optional(),
+      autorId: uuidSchema.nullable().optional(),
+      motivo: z.string().nullable().optional(),
 
       turmas: z.array(ObjectIdUuidFactory.create(standard)).optional().default([]),
       perfis: z.array(ObjectIdUuidFactory.create(standard)).optional().default([]),
@@ -124,6 +141,11 @@ export const CalendarioAgendamentoReviseSchema = z
     repeticao: z.string().nullable().optional(),
     status: z.nativeEnum(CalendarioAgendamentoStatus).nullable().optional(),
 
+    campus: ObjectIdUuidFactoryNullable.domain.optional(),
+    colecao: ObjectIdUuidFactoryNullable.domain.optional(),
+    autorId: uuidSchema.nullable().optional(),
+    motivo: z.string().nullable().optional(),
+
     turmas: objectIdUuidArraySchema.optional(),
     perfis: objectIdUuidArraySchema.optional(),
     calendariosLetivos: objectIdUuidArraySchema.optional(),
@@ -146,6 +168,27 @@ export const CalendarioAgendamentoReviseSchema = z
   );
 
 // ============================================================================
+
+export const CalendarioAgendamentoExcecaoSchema = z.object({
+  diaInteiro: z.boolean().optional(),
+  horarioInicio: z.string().optional(),
+  horarioFim: z.string().optional(),
+  status: z.nativeEnum(CalendarioAgendamentoStatus).optional(),
+
+  campus: ObjectIdUuidFactoryNullable.domain.optional(),
+  colecao: ObjectIdUuidFactoryNullable.domain.optional(),
+  autorId: uuidSchema.nullable().optional(),
+  motivo: z.string().nullable().optional(),
+
+  turmas: objectIdUuidArraySchema.optional(),
+  perfis: objectIdUuidArraySchema.optional(),
+  calendariosLetivos: objectIdUuidArraySchema.optional(),
+  ofertasFormacao: objectIdUuidArraySchema.optional(),
+  modalidades: objectIdUuidArraySchema.optional(),
+  ambientes: objectIdUuidArraySchema.optional(),
+  diarios: objectIdUuidArraySchema.optional(),
+});
+
 // Metadata — campos nao-versionados (tabela separada)
 // ============================================================================
 

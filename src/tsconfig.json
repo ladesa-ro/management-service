@@ -23,5 +23,5 @@
     "incremental": true,
     "skipLibCheck": true
   },
-  "exclude": ["scripts"]
+  "exclude": ["scripts", "infrastructure.timetable-generator/worker"]
 }

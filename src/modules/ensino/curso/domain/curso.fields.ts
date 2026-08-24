@@ -32,4 +32,9 @@ export const CursoFields = {
     description: "Imagem de capa do curso",
     nullable: true,
   }),
+  colecaoPadrao: createFieldMetadata({
+    description:
+      "Coleção do calendário herdada por agendamentos criados a partir de turmas deste curso, quando não informada explicitamente",
+    nullable: true,
+  }),
 };

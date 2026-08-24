@@ -1,0 +1,10 @@
+id: no-comments-yaml
+language: yaml
+severity: error
+message: "comentário em YAML: o contexto vai para docs/, não inline"
+rule:
+  kind: comment
+  not:
+    any:
+      - regex: '^#!'
+      - regex: '^#\s*(yamllint|noqa|yaml-language-server)'

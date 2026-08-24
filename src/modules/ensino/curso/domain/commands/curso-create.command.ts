@@ -1,3 +1,4 @@
+import type { ObjectUuidRef } from "@/domain/abstractions";
 import { CampusInputRef } from "@/modules/ambientes/campus";
 import { ImagemInputRef } from "@/modules/armazenamento/imagem";
 import { OfertaFormacaoInputRef } from "@/modules/ensino/oferta-formacao";
@@ -10,6 +11,7 @@ export const CursoCreateCommandFields = {
   quantidadePeriodos: CursoFields.quantidadePeriodos,
   campus: CursoFields.campus,
   ofertaFormacao: CursoFields.ofertaFormacao,
+  colecaoPadrao: CursoFields.colecaoPadrao,
   periodos: CursoPeriodoDisciplinaPeriodoFields.disciplinas,
 };
 
@@ -30,5 +32,6 @@ export class CursoCreateCommand {
   campus!: CampusInputRef;
   ofertaFormacao!: OfertaFormacaoInputRef;
   imagemCapa?: ImagemInputRef | null;
+  colecaoPadrao?: ObjectUuidRef | null;
   periodos?: CursoPeriodoInput[];
 }

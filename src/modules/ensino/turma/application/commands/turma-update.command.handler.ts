@@ -55,6 +55,7 @@ export class TurmaUpdateCommandHandlerImpl implements ITurmaUpdateCommandHandler
       periodo: dto.periodo,
       curso: dto.curso,
       ambientePadraoAula: dto.ambientePadraoAula,
+      numeroEstimadoAlunos: dto.numeroEstimadoAlunos,
     });
 
     await this.repository.save(domain);

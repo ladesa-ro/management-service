@@ -49,6 +49,9 @@ export class TurmaFindOneOutputRestDto extends EntityBaseRestDto {
     type: () => ImagemFindOneOutputRestDto,
   })
   imagemCapa: ImagemFindOneOutputRestDto | null;
+
+  @ApiPropertyOptional(TurmaFindOneQueryResultFields.numeroEstimadoAlunos.swaggerMetadata)
+  numeroEstimadoAlunos: number | null;
 }
 
 // ============================================================================
@@ -139,6 +142,9 @@ export class TurmaCreateInputRestDto {
 
   @ApiPropertyOptional(TurmaCreateCommandFields.ambientePadraoAula.swaggerMetadata)
   ambientePadraoAula?: { id: string } | null;
+
+  @ApiPropertyOptional(TurmaCreateCommandFields.numeroEstimadoAlunos.swaggerMetadata)
+  numeroEstimadoAlunos?: number | null;
 }
 
 @ApiSchema({ name: "TurmaUpdateInputDto" })

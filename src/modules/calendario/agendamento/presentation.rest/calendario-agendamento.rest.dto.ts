@@ -6,6 +6,7 @@ import {
   AmbienteFindOneInputRestDto,
   AmbienteFindOneOutputRestDto,
 } from "@/modules/ambientes/ambiente/presentation.rest/ambiente.rest.dto";
+import { CalendarioAgendamentoFields } from "@/modules/calendario/agendamento/domain/calendario-agendamento.fields";
 import { CalendarioEventoFields } from "@/modules/calendario/agendamento/domain/calendario-evento.fields";
 import {
   CalendarioLetivoFindOneInputRestDto,
@@ -36,6 +37,18 @@ import {
 import { PaginatedFilterByIdRestDto, PaginationMetaRestDto } from "@/shared/presentation/rest/dtos";
 import { CalendarioAgendamentoListQueryFields } from "../domain/queries/calendario-agendamento-list.query";
 import { CalendarioAgendamentoPaginationInputSchema } from "../domain/queries/calendario-agendamento-list.query.schemas";
+
+@ApiSchema({ name: "CalendarioAgendamentoCampusRefInputDto" })
+export class CalendarioAgendamentoCampusRefInputRestDto {
+  @ApiProperty(CalendarioAgendamentoFields.campus.swaggerMetadata)
+  id!: string;
+}
+
+@ApiSchema({ name: "CalendarioAgendamentoColecaoRefInputDto" })
+export class CalendarioAgendamentoColecaoRefInputRestDto {
+  @ApiProperty(CalendarioAgendamentoFields.colecao.swaggerMetadata)
+  id!: string;
+}
 
 // ============================================================================
 // Create Input
@@ -73,6 +86,15 @@ export class CalendarioAgendamentoCreateInputRestDto {
 
   @ApiPropertyOptional(CalendarioEventoFields.repeticao.swaggerMetadata)
   repeticao?: string;
+
+  @ApiPropertyOptional(CalendarioAgendamentoFields.campus.swaggerMetadata)
+  campus?: CalendarioAgendamentoCampusRefInputRestDto;
+
+  @ApiPropertyOptional(CalendarioAgendamentoFields.colecao.swaggerMetadata)
+  colecao?: CalendarioAgendamentoColecaoRefInputRestDto;
+
+  @ApiPropertyOptional(CalendarioAgendamentoFields.motivo.swaggerMetadata)
+  motivo?: string;
 
   @ApiPropertyOptional({
     ...CalendarioEventoFields.turmas.swaggerMetadata,
@@ -139,6 +161,15 @@ export class CalendarioAgendamentoUpdateInputRestDto {
   @ApiPropertyOptional(CalendarioEventoFields.cor.swaggerMetadata) cor?: string;
   @ApiPropertyOptional(CalendarioEventoFields.repeticao.swaggerMetadata) repeticao?: string;
 
+  @ApiPropertyOptional(CalendarioAgendamentoFields.campus.swaggerMetadata)
+  campus?: CalendarioAgendamentoCampusRefInputRestDto;
+
+  @ApiPropertyOptional(CalendarioAgendamentoFields.colecao.swaggerMetadata)
+  colecao?: CalendarioAgendamentoColecaoRefInputRestDto;
+
+  @ApiPropertyOptional(CalendarioAgendamentoFields.motivo.swaggerMetadata)
+  motivo?: string;
+
   @ApiPropertyOptional({
     ...CalendarioEventoFields.turmas.swaggerMetadata,
     type: () => [TurmaFindOneInputRestDto],
@@ -197,6 +228,269 @@ export class CalendarioAgendamentoUpdateStatusInputRestDto {
 }
 
 // ============================================================================
+
+@ApiSchema({ name: "CalendarioAgendamentoEditarOcorrenciaInputDto" })
+export class CalendarioAgendamentoEditarOcorrenciaInputRestDto {
+  @ApiProperty(CalendarioAgendamentoFields.dataOcorrencia.swaggerMetadata)
+  dataOcorrencia: string;
+
+  @ApiPropertyOptional(CalendarioEventoFields.diaInteiro.swaggerMetadata) diaInteiro?: boolean;
+  @ApiPropertyOptional(CalendarioEventoFields.horarioInicio.swaggerMetadata) horarioInicio?: string;
+  @ApiPropertyOptional(CalendarioEventoFields.horarioFim.swaggerMetadata) horarioFim?: string;
+
+  @ApiPropertyOptional({
+    ...CalendarioEventoFields.status.swaggerMetadata,
+    enum: ["ATIVO", "INATIVO", "RASCUNHO"],
+    description: "Novo status desta ocorrência (ATIVO, INATIVO, RASCUNHO)",
+  })
+  status?: string;
+
+  @ApiPropertyOptional(CalendarioAgendamentoFields.campus.swaggerMetadata)
+  campus?: CalendarioAgendamentoCampusRefInputRestDto;
+
+  @ApiPropertyOptional(CalendarioAgendamentoFields.colecao.swaggerMetadata)
+  colecao?: CalendarioAgendamentoColecaoRefInputRestDto;
+
+  @ApiPropertyOptional(CalendarioAgendamentoFields.motivo.swaggerMetadata)
+  motivo?: string;
+
+  @ApiPropertyOptional({
+    ...CalendarioEventoFields.turmas.swaggerMetadata,
+    type: () => [TurmaFindOneInputRestDto],
+  })
+  turmas?: TurmaFindOneInputRestDto[];
+
+  @ApiPropertyOptional({
+    ...CalendarioEventoFields.perfis.swaggerMetadata,
+    type: () => [PerfilFindOneInputRestDto],
+  })
+  perfis?: PerfilFindOneInputRestDto[];
+
+  @ApiPropertyOptional({
+    ...CalendarioEventoFields.calendariosLetivos.swaggerMetadata,
+    type: () => [CalendarioLetivoFindOneInputRestDto],
+  })
+  calendariosLetivos?: CalendarioLetivoFindOneInputRestDto[];
+
+  @ApiPropertyOptional({
+    ...CalendarioEventoFields.ofertasFormacao.swaggerMetadata,
+    type: () => [OfertaFormacaoFindOneInputRestDto],
+  })
+  ofertasFormacao?: OfertaFormacaoFindOneInputRestDto[];
+
+  @ApiPropertyOptional({
+    ...CalendarioEventoFields.modalidades.swaggerMetadata,
+    type: () => [ModalidadeFindOneInputRestDto],
+  })
+  modalidades?: ModalidadeFindOneInputRestDto[];
+
+  @ApiPropertyOptional({
+    ...CalendarioEventoFields.ambientes.swaggerMetadata,
+    type: () => [AmbienteFindOneInputRestDto],
+  })
+  ambientes?: AmbienteFindOneInputRestDto[];
+
+  @ApiPropertyOptional({
+    ...CalendarioEventoFields.diarios.swaggerMetadata,
+    type: () => [DiarioFindOneInputRestDto],
+  })
+  diarios?: DiarioFindOneInputRestDto[];
+}
+
+@ApiSchema({ name: "CalendarioAgendamentoAdicionarDataAvulsaInputDto" })
+export class CalendarioAgendamentoAdicionarDataAvulsaInputRestDto {
+  @ApiProperty(CalendarioAgendamentoFields.dataOcorrencia.swaggerMetadata)
+  dataOcorrencia: string;
+
+  @ApiPropertyOptional(CalendarioEventoFields.diaInteiro.swaggerMetadata) diaInteiro?: boolean;
+  @ApiPropertyOptional(CalendarioEventoFields.horarioInicio.swaggerMetadata) horarioInicio?: string;
+  @ApiPropertyOptional(CalendarioEventoFields.horarioFim.swaggerMetadata) horarioFim?: string;
+
+  @ApiPropertyOptional({
+    ...CalendarioEventoFields.status.swaggerMetadata,
+    enum: ["ATIVO", "INATIVO", "RASCUNHO"],
+    description: "Status desta ocorrência avulsa (ATIVO, INATIVO, RASCUNHO)",
+  })
+  status?: string;
+
+  @ApiPropertyOptional(CalendarioAgendamentoFields.campus.swaggerMetadata)
+  campus?: CalendarioAgendamentoCampusRefInputRestDto;
+
+  @ApiPropertyOptional(CalendarioAgendamentoFields.colecao.swaggerMetadata)
+  colecao?: CalendarioAgendamentoColecaoRefInputRestDto;
+
+  @ApiPropertyOptional(CalendarioAgendamentoFields.motivo.swaggerMetadata)
+  motivo?: string;
+
+  @ApiPropertyOptional({
+    ...CalendarioEventoFields.turmas.swaggerMetadata,
+    type: () => [TurmaFindOneInputRestDto],
+  })
+  turmas?: TurmaFindOneInputRestDto[];
+
+  @ApiPropertyOptional({
+    ...CalendarioEventoFields.perfis.swaggerMetadata,
+    type: () => [PerfilFindOneInputRestDto],
+  })
+  perfis?: PerfilFindOneInputRestDto[];
+
+  @ApiPropertyOptional({
+    ...CalendarioEventoFields.calendariosLetivos.swaggerMetadata,
+    type: () => [CalendarioLetivoFindOneInputRestDto],
+  })
+  calendariosLetivos?: CalendarioLetivoFindOneInputRestDto[];
+
+  @ApiPropertyOptional({
+    ...CalendarioEventoFields.ofertasFormacao.swaggerMetadata,
+    type: () => [OfertaFormacaoFindOneInputRestDto],
+  })
+  ofertasFormacao?: OfertaFormacaoFindOneInputRestDto[];
+
+  @ApiPropertyOptional({
+    ...CalendarioEventoFields.modalidades.swaggerMetadata,
+    type: () => [ModalidadeFindOneInputRestDto],
+  })
+  modalidades?: ModalidadeFindOneInputRestDto[];
+
+  @ApiPropertyOptional({
+    ...CalendarioEventoFields.ambientes.swaggerMetadata,
+    type: () => [AmbienteFindOneInputRestDto],
+  })
+  ambientes?: AmbienteFindOneInputRestDto[];
+
+  @ApiPropertyOptional({
+    ...CalendarioEventoFields.diarios.swaggerMetadata,
+    type: () => [DiarioFindOneInputRestDto],
+  })
+  diarios?: DiarioFindOneInputRestDto[];
+}
+
+@ApiSchema({ name: "CalendarioAgendamentoCancelarOcorrenciaInputDto" })
+export class CalendarioAgendamentoCancelarOcorrenciaInputRestDto {
+  @ApiProperty(CalendarioAgendamentoFields.dataOcorrencia.swaggerMetadata)
+  dataOcorrencia: string;
+
+  @ApiPropertyOptional(CalendarioAgendamentoFields.motivo.swaggerMetadata)
+  motivo?: string;
+}
+
+@ApiSchema({ name: "CalendarioAgendamentoEditarSerieInputDto" })
+export class CalendarioAgendamentoEditarSerieInputRestDto {
+  @ApiProperty(CalendarioAgendamentoFields.dataOcorrencia.swaggerMetadata)
+  dataOcorrencia: string;
+
+  @ApiProperty({
+    ...CalendarioAgendamentoFields.escopo.swaggerMetadata,
+    enum: ["ESTA_E_SEGUINTES", "TODAS"],
+  })
+  escopo: string;
+
+  @ApiPropertyOptional(CalendarioEventoFields.dataInicio.swaggerMetadata) dataInicio?: string;
+  @ApiPropertyOptional(CalendarioEventoFields.dataFim.swaggerMetadata) dataFim?: string;
+  @ApiPropertyOptional(CalendarioEventoFields.diaInteiro.swaggerMetadata) diaInteiro?: boolean;
+  @ApiPropertyOptional(CalendarioEventoFields.horarioInicio.swaggerMetadata) horarioInicio?: string;
+  @ApiPropertyOptional(CalendarioEventoFields.horarioFim.swaggerMetadata) horarioFim?: string;
+  @ApiPropertyOptional(CalendarioEventoFields.repeticao.swaggerMetadata) repeticao?: string;
+
+  @ApiPropertyOptional(CalendarioAgendamentoFields.campus.swaggerMetadata)
+  campus?: CalendarioAgendamentoCampusRefInputRestDto;
+
+  @ApiPropertyOptional(CalendarioAgendamentoFields.colecao.swaggerMetadata)
+  colecao?: CalendarioAgendamentoColecaoRefInputRestDto;
+
+  @ApiPropertyOptional(CalendarioAgendamentoFields.motivo.swaggerMetadata)
+  motivo?: string;
+
+  @ApiPropertyOptional({
+    ...CalendarioEventoFields.turmas.swaggerMetadata,
+    type: () => [TurmaFindOneInputRestDto],
+  })
+  turmas?: TurmaFindOneInputRestDto[];
+
+  @ApiPropertyOptional({
+    ...CalendarioEventoFields.perfis.swaggerMetadata,
+    type: () => [PerfilFindOneInputRestDto],
+  })
+  perfis?: PerfilFindOneInputRestDto[];
+
+  @ApiPropertyOptional({
+    ...CalendarioEventoFields.calendariosLetivos.swaggerMetadata,
+    type: () => [CalendarioLetivoFindOneInputRestDto],
+  })
+  calendariosLetivos?: CalendarioLetivoFindOneInputRestDto[];
+
+  @ApiPropertyOptional({
+    ...CalendarioEventoFields.ofertasFormacao.swaggerMetadata,
+    type: () => [OfertaFormacaoFindOneInputRestDto],
+  })
+  ofertasFormacao?: OfertaFormacaoFindOneInputRestDto[];
+
+  @ApiPropertyOptional({
+    ...CalendarioEventoFields.modalidades.swaggerMetadata,
+    type: () => [ModalidadeFindOneInputRestDto],
+  })
+  modalidades?: ModalidadeFindOneInputRestDto[];
+
+  @ApiPropertyOptional({
+    ...CalendarioEventoFields.ambientes.swaggerMetadata,
+    type: () => [AmbienteFindOneInputRestDto],
+  })
+  ambientes?: AmbienteFindOneInputRestDto[];
+
+  @ApiPropertyOptional({
+    ...CalendarioEventoFields.diarios.swaggerMetadata,
+    type: () => [DiarioFindOneInputRestDto],
+  })
+  diarios?: DiarioFindOneInputRestDto[];
+}
+
+@ApiSchema({ name: "CalendarioAgendamentoImportarIcsInputDto" })
+export class CalendarioAgendamentoImportarIcsInputRestDto {
+  @ApiProperty({
+    type: "string",
+    description: "Conteúdo do arquivo .ics (RFC 5545) a importar",
+  })
+  conteudo: string;
+
+  @ApiPropertyOptional(CalendarioAgendamentoFields.campus.swaggerMetadata)
+  campus?: CalendarioAgendamentoCampusRefInputRestDto;
+
+  @ApiPropertyOptional(CalendarioAgendamentoFields.colecao.swaggerMetadata)
+  colecao?: CalendarioAgendamentoColecaoRefInputRestDto;
+}
+
+@ApiSchema({ name: "CalendarioAgendamentoImportarIcsRejeitadoDto" })
+export class CalendarioAgendamentoImportarIcsRejeitadoRestDto {
+  @ApiProperty({ description: "Posição (1-based) do VEVENT rejeitado no arquivo" })
+  index: number;
+
+  @ApiPropertyOptional({ description: "UID do VEVENT rejeitado, quando presente no arquivo" })
+  uid: string | null;
+
+  @ApiProperty({ description: "Motivo pelo qual o VEVENT foi rejeitado" })
+  motivo: string;
+}
+
+@ApiSchema({ name: "CalendarioAgendamentoImportarIcsOutputDto" })
+export class CalendarioAgendamentoImportarIcsOutputRestDto {
+  @ApiProperty({ description: "Quantidade de agendamentos criados" })
+  criados: number;
+
+  @ApiProperty({
+    description: "Quantidade de VEVENTs pulados por já existir um agendamento com o mesmo UID",
+  })
+  puladosPorUidDuplicado: number;
+
+  @ApiProperty({
+    description: "VEVENTs rejeitados durante o parse ou a criação, com o motivo de cada um",
+    type: () => [CalendarioAgendamentoImportarIcsRejeitadoRestDto],
+  })
+  rejeitados: CalendarioAgendamentoImportarIcsRejeitadoRestDto[];
+
+  @ApiProperty({ description: "Ids dos agendamentos criados", type: [String] })
+  idsCriados: string[];
+}
+
 // Params
 // ============================================================================
 
@@ -237,6 +531,35 @@ export class CalendarioAgendamentoFindOneOutputRestDto {
   @ApiPropertyOptional(CalendarioEventoFields.repeticao.swaggerMetadata) repeticao: string | null;
   @ApiPropertyOptional(CalendarioEventoFields.status.swaggerMetadata) status: string | null;
   @ApiProperty({ type: "integer", description: "Numero da versao" }) version: number;
+
+  @ApiPropertyOptional(CalendarioAgendamentoFields.campus.swaggerMetadata)
+  campus: { id: string } | null;
+
+  @ApiPropertyOptional(CalendarioAgendamentoFields.colecao.swaggerMetadata)
+  colecao: { id: string } | null;
+
+  @ApiPropertyOptional({ description: "Id do usuário autor da versão vigente, quando registrado" })
+  autorId: string | null;
+
+  @ApiPropertyOptional(CalendarioAgendamentoFields.motivo.swaggerMetadata)
+  motivo: string | null;
+
+  @ApiPropertyOptional({
+    description:
+      "Identificador externo da série da qual este agendamento é uma exceção (RECURRENCE-ID), nulo quando não é uma exceção",
+  })
+  identificadorExternoSerieOrigem: string | null;
+
+  @ApiPropertyOptional({
+    description: "Data da ocorrência da série original que este agendamento substitui ou cancela",
+  })
+  dataOcorrenciaReferenciada: string | null;
+
+  @ApiProperty({
+    description:
+      "true quando nome, motivo, autor e as listas de turmas/perfis vêm vazios porque o requisitante só tem papel OCUPACAO na coleção deste agendamento",
+  })
+  detalhesOcultos: boolean;
 
   @ApiPropertyOptional({
     ...CalendarioEventoFields.turmas.swaggerMetadata,
@@ -341,4 +664,64 @@ export class CalendarioAgendamentoListOutputRestDto {
     type: () => [CalendarioAgendamentoFindOneOutputRestDto],
   })
   data: CalendarioAgendamentoFindOneOutputRestDto[];
+}
+
+@ApiSchema({ name: "CalendarioAgendamentoLinhaDoTempoParamsDto" })
+export class CalendarioAgendamentoLinhaDoTempoParamsRestDto {
+  @ApiProperty({ description: "Identificador externo do agendamento (estável entre versões)" })
+  identificadorExterno: string;
+}
+
+@ApiSchema({ name: "CalendarioAgendamentoLinhaDoTempoMudancaDto" })
+export class CalendarioAgendamentoLinhaDoTempoMudancaRestDto {
+  @ApiProperty({ description: "Campo que mudou em relação à versão anterior" })
+  campo: string;
+
+  @ApiProperty({ description: "Valor do campo antes da mudança" })
+  de: unknown;
+
+  @ApiProperty({ description: "Valor do campo depois da mudança" })
+  para: unknown;
+}
+
+@ApiSchema({ name: "CalendarioAgendamentoLinhaDoTempoEntradaDto" })
+export class CalendarioAgendamentoLinhaDoTempoEntradaRestDto {
+  @ApiProperty({ description: "Id da linha desta versão" })
+  id: string;
+
+  @ApiProperty({ description: "Número da versão" })
+  version: number;
+
+  @ApiPropertyOptional({ description: "Id do usuário autor desta versão, quando registrado" })
+  autorId: string | null;
+
+  @ApiPropertyOptional({ description: "Nome do autor desta versão, quando registrado" })
+  autorNome: string | null;
+
+  @ApiPropertyOptional({ description: "Motivo registrado para esta versão" })
+  motivo: string | null;
+
+  @ApiProperty({ description: "Início da vigência desta versão" })
+  validFrom: string;
+
+  @ApiPropertyOptional({ description: "Fim da vigência desta versão, nulo se ainda vigente" })
+  validTo: string | null;
+
+  @ApiProperty({
+    description: "O que mudou em relação à versão anterior",
+    type: () => [CalendarioAgendamentoLinhaDoTempoMudancaRestDto],
+  })
+  mudancas: CalendarioAgendamentoLinhaDoTempoMudancaRestDto[];
+}
+
+@ApiSchema({ name: "CalendarioAgendamentoLinhaDoTempoOutputDto" })
+export class CalendarioAgendamentoLinhaDoTempoOutputRestDto {
+  @ApiProperty({ description: "Identificador externo do agendamento" })
+  identificadorExterno: string;
+
+  @ApiProperty({
+    description: "Versões do agendamento, da mais antiga para a mais recente",
+    type: () => [CalendarioAgendamentoLinhaDoTempoEntradaRestDto],
+  })
+  versoes: CalendarioAgendamentoLinhaDoTempoEntradaRestDto[];
 }
