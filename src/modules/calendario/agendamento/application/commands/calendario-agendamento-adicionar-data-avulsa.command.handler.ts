@@ -105,14 +105,18 @@ export class CalendarioAgendamentoAdicionarDataAvulsaCommandHandlerImpl
     serieOrigem: CalendarioAgendamento,
     dataOcorrencia: string,
   ): boolean {
+    const dtstart = normalizeDate(serieOrigem.dataInicio);
+    const data = normalizeDate(dataOcorrencia);
+
+    let rule: ReturnType<typeof rrulestr>;
     try {
-      const dtstart = normalizeDate(serieOrigem.dataInicio);
-      const data = normalizeDate(dataOcorrencia);
-      const rule = rrulestr(serieOrigem.repeticao!, { dtstart });
-      return rule.between(data, data, true).length > 0;
+      rule = rrulestr(serieOrigem.repeticao!, { dtstart });
     } catch {
-      // Se a RRULE for inválida, deixa a validação para outro lugar — não bloqueia aqui
-      return false;
+      throw new BadRequestException(
+        `A regra de recorrência da série (${serieOrigem.repeticao}) é inválida e não pôde ser avaliada.`,
+      );
     }
+
+    return rule.between(data, data, true).length > 0;
   }
 }
