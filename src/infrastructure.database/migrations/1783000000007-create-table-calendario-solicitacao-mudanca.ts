@@ -60,5 +60,7 @@ export class CreateTableCalendarioSolicitacaoMudanca1783000000007 implements Mig
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.dropTable("calendario_solicitacao_mudanca", true, true, true);
+    await queryRunner.query(`DROP TYPE IF EXISTS "calendario_solicitacao_mudanca_tipo_operacao_enum"`);
+    await queryRunner.query(`DROP TYPE IF EXISTS "calendario_solicitacao_mudanca_status_enum"`);
   }
 }

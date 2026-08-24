@@ -97,5 +97,7 @@ export class CreateTableCalendarioColecaoAcesso1783000000004 implements Migratio
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.dropTable("calendario_colecao_acesso", true, true, true);
+    await queryRunner.query(`DROP TYPE IF EXISTS "calendario_colecao_acesso_escopo_enum"`);
+    await queryRunner.query(`DROP TYPE IF EXISTS "calendario_colecao_acesso_papel_enum"`);
   }
 }

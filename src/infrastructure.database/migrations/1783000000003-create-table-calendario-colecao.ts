@@ -50,5 +50,6 @@ export class CreateTableCalendarioColecao1783000000003 implements MigrationInter
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.dropTable("calendario_colecao", true, true, true);
+    await queryRunner.query(`DROP TYPE IF EXISTS "calendario_colecao_visibilidade_enum"`);
   }
 }
