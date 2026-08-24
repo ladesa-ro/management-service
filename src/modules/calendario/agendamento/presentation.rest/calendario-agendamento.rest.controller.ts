@@ -306,11 +306,13 @@ export class CalendarioAgendamentoRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: CalendarioAgendamentoFindOneParamsRestDto,
     @Body() dto: CalendarioAgendamentoAdicionarDataAvulsaInputRestDto,
+    @Headers("if-match") ifMatch?: string,
   ): Promise<CalendarioAgendamentoFindOneOutputRestDto> {
     const command = CalendarioAgendamentoRestMapper.adicionarDataAvulsaInputDtoToCommand.map({
       params,
       dto,
     });
+    command.ifMatch = ifMatch;
     const queryResult = await this.adicionarDataAvulsaHandler.execute(accessContext, command);
     return CalendarioAgendamentoRestMapper.findOneQueryResultToOutputDto.map(queryResult);
   }

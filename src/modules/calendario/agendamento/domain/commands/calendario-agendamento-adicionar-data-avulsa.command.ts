@@ -25,6 +25,8 @@ export const CalendarioAgendamentoAdicionarDataAvulsaCommandFields = {
  * série raiz não é alterada.
  */
 export class CalendarioAgendamentoAdicionarDataAvulsaCommand {
+  ifMatch?: string;
+
   dataOcorrencia!: string;
   diaInteiro?: boolean;
   horarioInicio?: string;

@@ -1,6 +1,6 @@
 import { BadRequestException } from "@nestjs/common";
 import { rrulestr } from "rrule";
-import { ensureActiveEntity, ensureExists } from "@/application/errors";
+import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { Dep, Impl } from "@/domain/dependency-injection";
 import { CalendarioColecaoSyncService } from "@/modules/calendario/colecao/application/calendario-colecao-sync.service";
@@ -14,6 +14,7 @@ import type { CalendarioAgendamentoFindOneQueryResult } from "../../domain/queri
 import { ICalendarioAgendamentoRepository } from "../../domain/repositories/calendario-agendamento.repository.interface";
 import { CalendarioAgendamentoConflitoService } from "../calendario-agendamento-conflito.service";
 import { normalizeDate } from "./calendario-agendamento-data.util";
+import { ensureIfMatch } from "./calendario-agendamento-precondition.util";
 
 @Impl()
 export class CalendarioAgendamentoAdicionarDataAvulsaCommandHandlerImpl
@@ -38,7 +39,7 @@ export class CalendarioAgendamentoAdicionarDataAvulsaCommandHandlerImpl
 
     const serieOrigem = await this.repository.loadById(accessContext, dto.id);
     ensureExists(serieOrigem, CalendarioAgendamento.entityName, dto.id);
-    ensureActiveEntity(serieOrigem, CalendarioAgendamento.entityName, dto.id);
+    ensureIfMatch(serieOrigem, dto.ifMatch, dto.id);
 
     if (!serieOrigem.repeticao) {
       throw new BadRequestException(
