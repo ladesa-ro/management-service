@@ -1,4 +1,4 @@
-import { type OnModuleDestroy } from "@nestjs/common";
+import { type OnModuleDestroy, type OnModuleInit } from "@nestjs/common";
 import {
   createPostgresBackend,
   type PostgresQueueBackend,
@@ -17,13 +17,16 @@ import type {
 import { Dep, Impl } from "@/domain/dependency-injection";
 import type { IQueueOptions } from "@/infrastructure.config/options/queue/queue-options.interface";
 import { IQueueOptions as IQueueOptionsToken } from "@/infrastructure.config/options/queue/queue-options.interface";
+import { IConnectionHealthRegistry } from "@/shared/resilience/connection-health-registry.interface";
 
 type FilaPostgres = Queue<unknown, unknown, string, unknown, unknown, string, PostgresQueueBackend>;
 type EventosPostgres = QueueEvents<PostgresQueueBackend>;
 type WorkerPostgres = Worker<unknown, unknown, string, PostgresQueueBackend>;
 
+const DEPENDENCY_NAME = "queue";
+
 @Impl()
-export class BullMqQueueService implements IQueueService, OnModuleDestroy {
+export class BullMqQueueService implements IQueueService, OnModuleInit, OnModuleDestroy {
   readonly #filas = new Map<string, FilaPostgres>();
   readonly #eventos = new Map<string, EventosPostgres>();
   readonly #workers = new Map<string, WorkerPostgres>();
@@ -33,7 +36,19 @@ export class BullMqQueueService implements IQueueService, OnModuleDestroy {
     private readonly opcoes: IQueueOptions | null,
     @Dep(ILoggerPort)
     private readonly logger: ILoggerPort,
+    @Dep(IConnectionHealthRegistry)
+    private readonly healthRegistry: IConnectionHealthRegistry,
   ) {}
+
+  onModuleInit(): void {
+    this.healthRegistry.register(DEPENDENCY_NAME);
+
+    if (this.opcoes) {
+      this.healthRegistry.markHealthy(DEPENDENCY_NAME);
+    } else {
+      this.healthRegistry.markUnavailable(DEPENDENCY_NAME, "QUEUE_DATABASE_URL não configurada");
+    }
+  }
 
   isAvailable(): boolean {
     return this.opcoes !== null;
@@ -46,15 +61,24 @@ export class BullMqQueueService implements IQueueService, OnModuleDestroy {
   ): Promise<string> {
     const fila = this.#obterFila(queue);
 
-    const job = await fila.add(queue, payload, {
-      jobId: options?.jobId,
-      attempts: options?.attempts ?? 1,
-      delay: options?.delayMs,
-      removeOnComplete: { age: 86400, count: 1000 },
-      removeOnFail: { age: 604800 },
-    });
+    try {
+      const job = await fila.add(queue, payload, {
+        jobId: options?.jobId,
+        attempts: options?.attempts ?? 1,
+        delay: options?.delayMs,
+        removeOnComplete: { age: 86400, count: 1000 },
+        removeOnFail: { age: 604800 },
+      });
 
-    return String(job.id);
+      this.healthRegistry.markHealthy(DEPENDENCY_NAME);
+      return String(job.id);
+    } catch (error) {
+      this.healthRegistry.markUnavailable(
+        DEPENDENCY_NAME,
+        error instanceof Error ? error.message : String(error),
+      );
+      throw error;
+    }
   }
 
   async request<TPayload, TResult>(
@@ -65,11 +89,21 @@ export class BullMqQueueService implements IQueueService, OnModuleDestroy {
     const fila = this.#obterFila(queue);
     const eventos = this.#obterEventos(queue);
 
-    const job = await fila.add(queue, payload, {
-      attempts: 1,
-      removeOnComplete: { age: 86400, count: 1000 },
-      removeOnFail: { age: 604800 },
-    });
+    let job: Awaited<ReturnType<FilaPostgres["add"]>>;
+    try {
+      job = await fila.add(queue, payload, {
+        attempts: 1,
+        removeOnComplete: { age: 86400, count: 1000 },
+        removeOnFail: { age: 604800 },
+      });
+      this.healthRegistry.markHealthy(DEPENDENCY_NAME);
+    } catch (error) {
+      this.healthRegistry.markUnavailable(
+        DEPENDENCY_NAME,
+        error instanceof Error ? error.message : String(error),
+      );
+      throw error;
+    }
 
     return (await job.waitUntilFinished(eventos, timeoutMs)) as TResult;
   }
