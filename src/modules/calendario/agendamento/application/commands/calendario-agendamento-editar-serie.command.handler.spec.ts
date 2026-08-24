@@ -46,28 +46,51 @@ function createConflitoService(repository: object) {
   );
 }
 
+function createMockTurmaFindOneHandler() {
+  return { execute: vi.fn().mockResolvedValue(null) };
+}
+
+function createMockAmbienteFindOneHandler() {
+  return { execute: vi.fn().mockResolvedValue(null) };
+}
+
 describe("CalendarioAgendamentoEditarSerieCommandHandler", () => {
   function createHandler(
     overrides: {
       repository?: object;
       permissionChecker?: object;
+      turmaFindOneHandler?: object;
+      ambienteFindOneHandler?: object;
       colecaoSyncService?: object;
       conflitoService?: object;
     } = {},
   ) {
     const repository = overrides.repository ?? createMockAgendamentoRepository();
     const permissionChecker = overrides.permissionChecker ?? createMockPermissionChecker();
+    const turmaFindOneHandler = overrides.turmaFindOneHandler ?? createMockTurmaFindOneHandler();
+    const ambienteFindOneHandler =
+      overrides.ambienteFindOneHandler ?? createMockAmbienteFindOneHandler();
     const colecaoSyncService = overrides.colecaoSyncService ?? createMockColecaoSyncService();
     const conflitoService = overrides.conflitoService ?? createConflitoService(repository);
 
     const handler = new CalendarioAgendamentoEditarSerieCommandHandlerImpl(
       repository as any,
       permissionChecker as any,
+      turmaFindOneHandler as any,
+      ambienteFindOneHandler as any,
       colecaoSyncService as any,
       conflitoService as any,
     );
 
-    return { handler, repository, permissionChecker, colecaoSyncService, conflitoService };
+    return {
+      handler,
+      repository,
+      permissionChecker,
+      turmaFindOneHandler,
+      ambienteFindOneHandler,
+      colecaoSyncService,
+      conflitoService,
+    };
   }
 
   it("should throw when the target agendamento is not recurring", async () => {

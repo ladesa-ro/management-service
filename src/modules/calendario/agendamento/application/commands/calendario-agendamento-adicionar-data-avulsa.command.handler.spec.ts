@@ -21,6 +21,14 @@ function createConflitoService(repository: object) {
   );
 }
 
+function createMockTurmaFindOneHandler() {
+  return { execute: vi.fn().mockResolvedValue(null) };
+}
+
+function createMockAmbienteFindOneHandler() {
+  return { execute: vi.fn().mockResolvedValue(null) };
+}
+
 function criarSerieRecorrente(overrides: Record<string, unknown> = {}) {
   return CalendarioAgendamento.create({
     tipo: CalendarioAgendamentoTipo.AULA,
@@ -39,21 +47,35 @@ describe("CalendarioAgendamentoAdicionarDataAvulsaCommandHandler", () => {
     overrides: {
       repository?: object;
       permissionChecker?: object;
+      turmaFindOneHandler?: object;
+      ambienteFindOneHandler?: object;
       colecaoSyncService?: object;
     } = {},
   ) {
     const repository = overrides.repository ?? createMockAgendamentoRepository();
     const permissionChecker = overrides.permissionChecker ?? createMockPermissionChecker();
+    const turmaFindOneHandler = overrides.turmaFindOneHandler ?? createMockTurmaFindOneHandler();
+    const ambienteFindOneHandler =
+      overrides.ambienteFindOneHandler ?? createMockAmbienteFindOneHandler();
     const colecaoSyncService = overrides.colecaoSyncService ?? createMockColecaoSyncService();
 
     const handler = new CalendarioAgendamentoAdicionarDataAvulsaCommandHandlerImpl(
       repository as any,
       permissionChecker as any,
+      turmaFindOneHandler as any,
+      ambienteFindOneHandler as any,
       colecaoSyncService as any,
       createConflitoService(repository) as any,
     );
 
-    return { handler, repository, permissionChecker, colecaoSyncService };
+    return {
+      handler,
+      repository,
+      permissionChecker,
+      turmaFindOneHandler,
+      ambienteFindOneHandler,
+      colecaoSyncService,
+    };
   }
 
   it("should create an addition referencing the origin series with dataOcorrenciaReferenciada null", async () => {
