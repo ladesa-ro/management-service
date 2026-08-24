@@ -20,6 +20,8 @@ export interface IIcsVeventParseado {
   horarioFim: string;
   diaInteiro: boolean;
   rrule: string | null;
+  /** Datas (RFC 5545 EXDATE) excluídas da série — ocorrências que a RRULE geraria mas o calendário de origem cancelou explicitamente. */
+  exdates: string[];
 }
 
 export interface IIcsVeventRejeitado {
@@ -206,7 +208,28 @@ function parseVevent(linhasDoEvento: string[]): Omit<IIcsVeventParseado, "index"
     horarioFim,
     diaInteiro,
     rrule,
+    exdates: extrairExdates(linhasDoEvento),
   };
+}
+
+// EXDATE pode se repetir em várias linhas e cada valor pode trazer múltiplas
+// datas separadas por vírgula (RFC 5545 §3.8.5.1) — por isso a extração varre
+// as linhas brutas em vez de reaproveitar o Map de props, que só guarda a
+// última ocorrência de cada nome de propriedade.
+function extrairExdates(linhasDoEvento: string[]): string[] {
+  const datas: string[] = [];
+
+  for (const linha of linhasDoEvento) {
+    const parsed = parsePropertyLine(linha);
+    if (parsed?.name !== "EXDATE") continue;
+
+    for (const valorBruto of parsed.prop.value.split(",")) {
+      const data = parseIcsDate(valorBruto.trim(), parsed.prop.params);
+      if (data) datas.push(data.data);
+    }
+  }
+
+  return datas;
 }
 
 // Aceita AAAAMMDD (VALUE=DATE, dia inteiro) ou AAAAMMDDTHHMMSS[Z]. O "Z" (UTC)

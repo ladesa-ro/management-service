@@ -77,6 +77,25 @@ export class CalendarioAgendamentoImportarIcsCommandHandlerImpl
         await this.repository.save(domain);
         await this.repository.saveMetadata(metadata);
 
+        if (domain.repeticao) {
+          for (const dataExcluida of evento.exdates) {
+            const cancelamento = CalendarioAgendamento.cancelarOcorrencia(
+              domain,
+              dataExcluida,
+              accessContext?.requestActor?.id ?? null,
+              "Excluída no calendário de origem (EXDATE).",
+            );
+            await this.repository.save(cancelamento);
+            await this.repository.saveMetadata(
+              CalendarioAgendamentoMetadata.create({
+                identificadorExternoCalendarioAgendamento: cancelamento.identificadorExterno,
+                nome: metadata.nome,
+                cor: metadata.cor,
+              }),
+            );
+          }
+        }
+
         if (domain.colecao) {
           await this.colecaoSyncService.registrarMudanca({
             colecaoId: domain.colecao.id,
