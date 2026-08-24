@@ -17,6 +17,7 @@ const conexao = {
   connection: {
     connectionString: config.bancoUrl,
     schema: config.schema,
+    migrate: true,
   },
 };
 
