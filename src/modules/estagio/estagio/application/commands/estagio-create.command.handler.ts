@@ -1,11 +1,11 @@
 import { BadRequestException } from "@nestjs/common";
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
+import { ICampusPolicy } from "@/domain/abstractions/campus-policy.interface";
 import { Dep, Impl } from "@/domain/dependency-injection";
 import { EstagioNotificacaoPushService } from "@/modules/acesso/notificacao/application/services";
 import { IPerfilRepository } from "@/modules/acesso/usuario/perfil/domain/repositories/perfil.repository.interface";
 import type { EstagioCreateCommand } from "@/modules/estagio/estagio/domain/commands/estagio-create.command";
-import { IEstagioCreateCommandHandler } from "@/modules/estagio/estagio/domain/commands/estagio-create.command.handler.interface";
 import { Estagio } from "@/modules/estagio/estagio/domain/estagio";
 import type { EstagioFindOneQueryResult } from "../../domain/queries";
 import { IEstagioRepository } from "../../domain/repositories";
@@ -18,6 +18,7 @@ export class EstagioCreateCommandHandlerImpl implements IEstagioCreateCommandHan
     @Dep(IPerfilRepository)
     private readonly perfilRepository: IPerfilRepository,
     private readonly pushService: EstagioNotificacaoPushService,
+    @Dep(ICampusPolicy) private readonly campusPolicy: ICampusPolicy,
   ) {}
 
   async execute(
@@ -51,6 +52,7 @@ export class EstagioCreateCommandHandlerImpl implements IEstagioCreateCommandHan
         );
       }
     }
+    this.campusPolicy.enforce(dto.campus?.id, accessContext);
 
     const estagio = Estagio.create(dto);
 
