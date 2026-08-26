@@ -1,4 +1,3 @@
-
 export type PapelEfetivo = "EDITOR" | "LEITOR" | "OCUPACAO" | null;
 
 export interface IAcessoParaResolucao {
