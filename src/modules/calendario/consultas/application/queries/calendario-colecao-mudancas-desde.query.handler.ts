@@ -1,7 +1,7 @@
 import type { IAccessContext } from "@/domain/abstractions";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import { CalendarioColecaoSyncService } from "@/modules/calendario/colecao/application/calendario-colecao-sync.service";
 import { ICalendarioAgendamentoRepository } from "@/modules/calendario/agendamento/domain/repositories";
+import { CalendarioColecaoSyncService } from "@/modules/calendario/colecao/application/calendario-colecao-sync.service";
 import type { CalendarioColecaoMudancasDesdeQuery } from "../../domain/queries/calendario-colecao-mudancas-desde.query";
 import { ICalendarioColecaoMudancasDesdeQueryHandler } from "../../domain/queries/calendario-colecao-mudancas-desde.query.handler.interface";
 import type { CalendarioColecaoMudancasDesdeQueryResult } from "../../domain/queries/calendario-colecao-mudancas-desde.query.result";
