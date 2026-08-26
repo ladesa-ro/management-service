@@ -58,6 +58,7 @@ describe("Curso (domain entity)", () => {
         campus: createTestRef(),
         ofertaFormacao: createTestRef(),
         imagemCapa: null,
+        colecaoPadrao: null,
         ...dated,
       });
 
@@ -116,6 +117,7 @@ describe("Curso (domain entity)", () => {
         campus: createTestRef(),
         ofertaFormacao: createTestRef(),
         imagemCapa: createTestRef(),
+        colecaoPadrao: null,
         ...createTestDatedFields(),
       });
       expect(entity.temImagemCapa()).toBe(true);
