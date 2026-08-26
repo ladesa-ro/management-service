@@ -50,14 +50,13 @@ export const CalendarioColecaoCreateSchema = createSchema((standard) =>
     .refine(camposConsistentes, CAMPUS_OBRIGATORIO_MESSAGE),
 );
 
-export const CalendarioColecaoUpdateSchema = createSchema(
-  (standard) =>
-    z.object({
-      campus: ObjectIdUuidFactoryNullable.create(standard).optional(),
-      nome: CalendarioColecaoFields.nome.create(standard).optional(),
-      cor: CalendarioColecaoFields.cor.create(standard).optional(),
-      visibilidade: CalendarioColecaoFields.visibilidade.create(standard).optional(),
-    }),
+export const CalendarioColecaoUpdateSchema = createSchema((standard) =>
+  z.object({
+    campus: ObjectIdUuidFactoryNullable.create(standard).optional(),
+    nome: CalendarioColecaoFields.nome.create(standard).optional(),
+    cor: CalendarioColecaoFields.cor.create(standard).optional(),
+    visibilidade: CalendarioColecaoFields.visibilidade.create(standard).optional(),
+  }),
 );
 
 export const CalendarioColecaoTransferirDonoSchema = createSchema((standard) =>
