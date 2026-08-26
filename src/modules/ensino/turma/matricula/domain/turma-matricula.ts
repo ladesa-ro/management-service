@@ -26,11 +26,7 @@ export class TurmaMatricula {
   private constructor() {}
 
   static create(dados: ITurmaMatriculaCreate): TurmaMatricula {
-    const parsed = zodValidate(
-      TurmaMatricula.entityName,
-      TurmaMatriculaCreateSchema.domain,
-      dados,
-    );
+    const parsed = zodValidate(TurmaMatricula.entityName, TurmaMatriculaCreateSchema.domain, dados);
 
     const instance = new TurmaMatricula();
 
