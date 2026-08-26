@@ -278,7 +278,11 @@ describe("CalendarioAgendamentoUpdateCommandHandler", () => {
         capacidade: 30,
       });
 
-      const { handler } = createHandler({ repository, turmaFindOneHandler, ambienteFindOneHandler });
+      const { handler } = createHandler({
+        repository,
+        turmaFindOneHandler,
+        ambienteFindOneHandler,
+      });
       const accessContext = createTestAccessContext();
       const dto = {
         id: domain.id,
@@ -312,7 +316,11 @@ describe("CalendarioAgendamentoUpdateCommandHandler", () => {
         capacidade: 30,
       });
 
-      const { handler } = createHandler({ repository, turmaFindOneHandler, ambienteFindOneHandler });
+      const { handler } = createHandler({
+        repository,
+        turmaFindOneHandler,
+        ambienteFindOneHandler,
+      });
       const accessContext = createTestAccessContext();
       const dto = {
         id: domain.id,
@@ -346,7 +354,11 @@ describe("CalendarioAgendamentoUpdateCommandHandler", () => {
         capacidade: 1,
       });
 
-      const { handler } = createHandler({ repository, turmaFindOneHandler, ambienteFindOneHandler });
+      const { handler } = createHandler({
+        repository,
+        turmaFindOneHandler,
+        ambienteFindOneHandler,
+      });
       const accessContext = createTestAccessContext();
       const dto = {
         id: domain.id,
@@ -380,7 +392,11 @@ describe("CalendarioAgendamentoUpdateCommandHandler", () => {
         capacidade: null,
       });
 
-      const { handler } = createHandler({ repository, turmaFindOneHandler, ambienteFindOneHandler });
+      const { handler } = createHandler({
+        repository,
+        turmaFindOneHandler,
+        ambienteFindOneHandler,
+      });
       const accessContext = createTestAccessContext();
       const dto = {
         id: domain.id,
