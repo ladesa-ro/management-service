@@ -5,8 +5,8 @@ import { CalendarioColecaoSyncService } from "@/modules/calendario/colecao/appli
 import { uuidSchema } from "@/shared/validation/schemas";
 import { ICalendarioAgendamentoPermissionChecker } from "../../domain/authorization";
 import { CalendarioAgendamento } from "../../domain/calendario-agendamento";
-import { CalendarioAgendamentoMetadata } from "../../domain/calendario-agendamento-metadata";
 import { CalendarioAgendamentoTipo } from "../../domain/calendario-agendamento.types";
+import { CalendarioAgendamentoMetadata } from "../../domain/calendario-agendamento-metadata";
 import type { CalendarioAgendamentoImportarIcsCommand } from "../../domain/commands/calendario-agendamento-importar-ics.command";
 import { ICalendarioAgendamentoImportarIcsCommandHandler } from "../../domain/commands/calendario-agendamento-importar-ics.command.handler.interface";
 import type {
