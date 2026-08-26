@@ -1,4 +1,10 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, it, expect, vi } from "vitest";
+import { ICampusPolicy } from "@/domain/abstractions/campus-policy.interface";
+import { ForbiddenException } from "@nestjs/common";
+function _createMockCampusPolicy(): ICampusPolicy {
+  return { enforce: vi.fn() } as any;
+}
+
 import { ResourceNotFoundError } from "@/application/errors";
 import {
   createMockCqrsRepository,
@@ -60,12 +66,12 @@ describe("EstagioCreateCommandHandler", () => {
     const perfilRepository = createMockPerfilRepository();
     const savedResult = { id: createTestId(), status: "EM_FASE_INICIAL" };
     repository.getFindOneQueryResult.mockResolvedValue(savedResult);
-    const pushService = createMockPushService();
-
+    const campusPolicy = _createMockCampusPolicy();
     const handler = new EstagioCreateCommandHandlerImpl(
       repository as any,
       perfilRepository as any,
       pushService as any,
+      campusPolicy as any,
     );
     const result = await handler.execute(createTestAccessContext(), createValidCreateDto() as any);
 
