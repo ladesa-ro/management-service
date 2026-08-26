@@ -11,11 +11,7 @@ import { CalendarioAgendamento } from "../../domain/calendario-agendamento";
 import { CalendarioAgendamentoImportarIcsCommandHandlerImpl } from "./calendario-agendamento-importar-ics.command.handler";
 
 function createHandler(
-  overrides: {
-    repository?: object;
-    permissionChecker?: object;
-    colecaoSyncService?: object;
-  } = {},
+  overrides: { repository?: object; permissionChecker?: object; colecaoSyncService?: object } = {},
 ) {
   const repository = overrides.repository ?? createMockAgendamentoRepository();
   const permissionChecker = overrides.permissionChecker ?? createMockPermissionChecker();
