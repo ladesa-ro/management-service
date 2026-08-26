@@ -4,8 +4,8 @@ import { TurmaMatriculaFindOneQuery } from "../domain/queries/turma-matricula-fi
 import type { TurmaMatriculaFindOneQueryResult } from "../domain/queries/turma-matricula-find-one.query.result";
 import { TurmaMatriculaListQuery } from "../domain/queries/turma-matricula-list.query";
 import {
-  type TurmaMatriculaFindOneParamsRestDto,
   TurmaMatriculaFindOneOutputRestDto,
+  type TurmaMatriculaFindOneParamsRestDto,
   type TurmaMatriculaListInputRestDto,
   TurmaMatriculaListOutputRestDto,
   type TurmaMatriculaVincularInputRestDto,
