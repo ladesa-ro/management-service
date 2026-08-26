@@ -55,6 +55,8 @@ export class CreateTableCalendarioIndisponibilidadeProfessor1783000000008
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.dropTable("calendario_indisponibilidade_professor", true, true, true);
-    await queryRunner.query(`DROP TYPE IF EXISTS "calendario_indisponibilidade_professor_tipo_enum"`);
+    await queryRunner.query(
+      `DROP TYPE IF EXISTS "calendario_indisponibilidade_professor_tipo_enum"`,
+    );
   }
 }
