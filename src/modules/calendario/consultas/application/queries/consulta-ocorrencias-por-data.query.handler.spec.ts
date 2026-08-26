@@ -357,10 +357,7 @@ describe("ConsultaOcorrenciasPorDataQueryHandlerImpl", () => {
         dataOcorrenciaReferenciada: null,
       });
 
-      (repository.findByDateRange as ReturnType<typeof vi.fn>).mockResolvedValue([
-        serie,
-        avulsa,
-      ]);
+      (repository.findByDateRange as ReturnType<typeof vi.fn>).mockResolvedValue([serie, avulsa]);
       (repository.findExcecoesPorSeries as ReturnType<typeof vi.fn>).mockResolvedValue([]);
 
       const result = await handler.execute(null, createQuery());
@@ -392,10 +389,7 @@ describe("ConsultaOcorrenciasPorDataQueryHandlerImpl", () => {
         dataOcorrenciaReferenciada: null,
       });
 
-      (repository.findByDateRange as ReturnType<typeof vi.fn>).mockResolvedValue([
-        serie,
-        avulsa,
-      ]);
+      (repository.findByDateRange as ReturnType<typeof vi.fn>).mockResolvedValue([serie, avulsa]);
       (repository.findExcecoesPorSeries as ReturnType<typeof vi.fn>).mockResolvedValue([]);
 
       const result = await handler.execute(null, createQuery());
