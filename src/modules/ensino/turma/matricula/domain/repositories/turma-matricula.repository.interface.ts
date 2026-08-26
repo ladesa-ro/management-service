@@ -1,23 +1,21 @@
 import type {
-  IAccessContext,
   IRepositoryGetFindAllQueryResult,
   IRepositoryGetFindOneQueryResult,
   IRepositoryLoadById,
   IRepositorySave,
   IRepositorySoftDeleteById,
 } from "@/domain/abstractions";
-import type { TurmaMatricula } from "../turma-matricula";
 import type {
   TurmaMatriculaFindOneQuery,
   TurmaMatriculaFindOneQueryResult,
   TurmaMatriculaListQuery,
   TurmaMatriculaListQueryResult,
 } from "../queries";
+import type { TurmaMatricula } from "../turma-matricula";
 
 export const ITurmaMatriculaRepository = Symbol("ITurmaMatriculaRepository");
 
 export interface ITurmaMatriculaRepository {
-
   loadById: IRepositoryLoadById<TurmaMatricula>;
 
   save: IRepositorySave<TurmaMatricula>;
