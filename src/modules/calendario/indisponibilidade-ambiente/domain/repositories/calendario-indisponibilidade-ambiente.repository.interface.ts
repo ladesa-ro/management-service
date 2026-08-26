@@ -19,7 +19,6 @@ export const ICalendarioIndisponibilidadeAmbienteRepository = Symbol(
 );
 
 export interface ICalendarioIndisponibilidadeAmbienteRepository {
-
   loadById: IRepositoryLoadById<CalendarioIndisponibilidadeAmbiente>;
 
   save: IRepositorySave<CalendarioIndisponibilidadeAmbiente>;
