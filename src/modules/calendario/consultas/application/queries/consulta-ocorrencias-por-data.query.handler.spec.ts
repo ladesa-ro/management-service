@@ -1,4 +1,10 @@
 import { describe, expect, it, vi } from "vitest";
+
+// Polyfill vi.mocked if the Vitest version does not provide it (used in this repo's tests)
+if (typeof (vi as any).mocked !== "function") {
+  (vi as any).mocked = (fn: any) => fn;
+}
+
 import type { CalendarioAgendamentoFindOneQueryResult } from "@/modules/calendario/agendamento/domain/queries/calendario-agendamento-find-one.query.result";
 import type { ICalendarioAgendamentoRepository } from "@/modules/calendario/agendamento/domain/repositories";
 import { createTestId } from "@/test/helpers";
