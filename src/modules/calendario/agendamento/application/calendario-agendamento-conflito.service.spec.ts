@@ -161,9 +161,7 @@ describe("CalendarioAgendamentoConflitoService", () => {
     ).resolves.toBeUndefined();
 
     const expandedPerfilIds = repository.findConflicting.mock.calls[0]![0].perfilIds as string[];
-    expect(new Set(expandedPerfilIds)).toEqual(
-      new Set([perfilX.id, perfilXIrmao.id, perfilY.id]),
-    );
+    expect(new Set(expandedPerfilIds)).toEqual(new Set([perfilX.id, perfilXIrmao.id, perfilY.id]));
   });
 
   it("distinguishes cross-campus perfil conflicts from other resources in the same message", async () => {
