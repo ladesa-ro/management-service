@@ -23,10 +23,7 @@ function createMockUsuarioFindByIdSimpleHandler() {
 
 describe("CalendarioColecaoTransferirDonoCommandHandlerImpl", () => {
   function createHandler(
-    overrides: {
-      repository?: object;
-      usuarioFindByIdSimpleHandler?: object;
-    } = {},
+    overrides: { repository?: object; usuarioFindByIdSimpleHandler?: object } = {},
   ) {
     const repository = overrides.repository ?? createMockCqrsRepository();
     const usuarioFindByIdSimpleHandler =
@@ -74,9 +71,9 @@ describe("CalendarioColecaoTransferirDonoCommandHandlerImpl", () => {
     const { handler } = createHandler({ repository });
     const accessContext = createTestAccessContext(createTestRequestActor({ id: outroUsuarioId }));
 
-    await expect(
-      handler.execute(accessContext, { id: domain.id, novoDonoId }),
-    ).rejects.toThrow(ForbiddenError);
+    await expect(handler.execute(accessContext, { id: domain.id, novoDonoId })).rejects.toThrow(
+      ForbiddenError,
+    );
     expect(repository.save).not.toHaveBeenCalled();
   });
 
@@ -94,9 +91,9 @@ describe("CalendarioColecaoTransferirDonoCommandHandlerImpl", () => {
     const { handler } = createHandler({ repository, usuarioFindByIdSimpleHandler });
     const accessContext = createTestAccessContext(createTestRequestActor({ id: donoAtualId }));
 
-    await expect(
-      handler.execute(accessContext, { id: domain.id, novoDonoId }),
-    ).rejects.toThrow(ResourceNotFoundError);
+    await expect(handler.execute(accessContext, { id: domain.id, novoDonoId })).rejects.toThrow(
+      ResourceNotFoundError,
+    );
     expect(repository.save).not.toHaveBeenCalled();
   });
 
