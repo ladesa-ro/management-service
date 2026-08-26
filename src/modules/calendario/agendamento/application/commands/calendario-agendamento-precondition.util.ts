@@ -12,8 +12,7 @@ export function ensureIfMatch(
   }
 
   const expectedVersion = Number(ifMatch);
-  const versionMismatch =
-    !Number.isInteger(expectedVersion) || expectedVersion !== entity.version;
+  const versionMismatch = !Number.isInteger(expectedVersion) || expectedVersion !== entity.version;
 
   if (versionMismatch || !entity.isActive()) {
     const motivo = entity.isActive()
