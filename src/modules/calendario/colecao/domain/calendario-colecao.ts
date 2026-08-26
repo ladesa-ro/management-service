@@ -1,6 +1,6 @@
 import type { z } from "zod";
-import { ObjectIdUuidFactory } from "@/domain/abstractions";
 import type { ObjectUuidRef } from "@/domain/abstractions";
+import { ObjectIdUuidFactory } from "@/domain/abstractions";
 import type { IdUuid, ScalarDateTimeString } from "@/domain/abstractions/scalars";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
 import { EntityValidationError } from "@/domain/errors";

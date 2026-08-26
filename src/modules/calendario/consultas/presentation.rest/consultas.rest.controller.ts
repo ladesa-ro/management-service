@@ -140,9 +140,8 @@ export class ConsultasRestController {
 
     return {
       syncToken,
-      agendamentos: CalendarioAgendamentoRestMapper.findOneQueryResultToOutputDto.mapArray(
-        visiveis,
-      ),
+      agendamentos:
+        CalendarioAgendamentoRestMapper.findOneQueryResultToOutputDto.mapArray(visiveis),
     };
   }
 }

@@ -55,6 +55,8 @@ export class CreateTableCalendarioIndisponibilidadeAmbiente1783000000009
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.dropTable("calendario_indisponibilidade_ambiente", true, true, true);
-    await queryRunner.query(`DROP TYPE IF EXISTS "calendario_indisponibilidade_ambiente_tipo_enum"`);
+    await queryRunner.query(
+      `DROP TYPE IF EXISTS "calendario_indisponibilidade_ambiente_tipo_enum"`,
+    );
   }
 }

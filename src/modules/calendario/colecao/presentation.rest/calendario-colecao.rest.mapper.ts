@@ -60,7 +60,10 @@ export const updateInputDtoToUpdateCommand = createMapper<
 }));
 
 export const transferirDonoInputDtoToTransferirDonoCommand = createMapper<
-  { params: CalendarioColecaoFindOneInputRestDto; dto: CalendarioColecaoTransferirDonoInputRestDto },
+  {
+    params: CalendarioColecaoFindOneInputRestDto;
+    dto: CalendarioColecaoTransferirDonoInputRestDto;
+  },
   CalendarioColecaoFindOneQuery & CalendarioColecaoTransferirDonoCommand
 >(({ params, dto }) => ({
   id: params.id,

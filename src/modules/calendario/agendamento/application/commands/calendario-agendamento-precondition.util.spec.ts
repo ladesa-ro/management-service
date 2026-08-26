@@ -30,7 +30,9 @@ describe("ensureIfMatch", () => {
 
   it("does not throw when ifMatch matches the current version and the entity is active", () => {
     const agendamento = criarAgendamento();
-    expect(() => ensureIfMatch(agendamento, String(agendamento.version), agendamento.id)).not.toThrow();
+    expect(() =>
+      ensureIfMatch(agendamento, String(agendamento.version), agendamento.id),
+    ).not.toThrow();
   });
 
   it("rejects with PreconditionFailedError when ifMatch does not match the current version", () => {
@@ -55,9 +57,9 @@ describe("ensureIfMatch", () => {
 
     agendamento.close();
 
-    expect(() =>
-      ensureIfMatch(agendamento, versaoLidaPeloPrimeiroCliente, agendamento.id),
-    ).toThrow(PreconditionFailedError);
+    expect(() => ensureIfMatch(agendamento, versaoLidaPeloPrimeiroCliente, agendamento.id)).toThrow(
+      PreconditionFailedError,
+    );
   });
 
   it("PreconditionFailedError exposes resource and identifier", () => {

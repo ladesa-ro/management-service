@@ -95,7 +95,7 @@ modules/<grupo>/<nome-do-modulo>/
 | `ambientes/` | `ambiente`, `bloco`, `campus` |
 | `armazenamento/` | `arquivo`, `imagem`, `imagem-arquivo` |
 | `ensino/` | `curso`, `diario`, `disciplina`, `modalidade`, `nivel-formacao`, `oferta-formacao`, `turma`, entre outros |
-| `estagio/` | `empresa`, `estagiario`, `estagio`, `responsavel-empresa` |
+| `estagio/` | `empresa`, `estagiario`, `estagio`, `folha-ponto`, `relatorio`, `responsavel-empresa` |
 | `calendario/` | `agendamento`, `colecao`, `consultas`, `gerar-horario`, `grade-horaria`, `horario-consulta`, `horario-edicao`, `indisponibilidade-ambiente`, `indisponibilidade-professor`, `letivo`, `solicitacao-mudanca`, `turmas` (disponibilidade) |
 | `localidades/` | `cidade`, `endereco`, `estado` |
 | `relatorios/` | `relatorio` |

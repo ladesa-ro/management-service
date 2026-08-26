@@ -78,7 +78,9 @@ describe("TurmaMatriculaVincularCommandHandlerImpl", () => {
   });
 
   it("should throw when turma does not exist", async () => {
-    const turmaFindOneHandler = createMockTurmaFindOneHandler({ execute: vi.fn().mockResolvedValue(null) });
+    const turmaFindOneHandler = createMockTurmaFindOneHandler({
+      execute: vi.fn().mockResolvedValue(null),
+    });
 
     const { handler } = createHandler({ turmaFindOneHandler });
 

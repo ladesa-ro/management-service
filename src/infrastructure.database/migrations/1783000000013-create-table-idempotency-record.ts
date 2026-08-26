@@ -46,7 +46,6 @@ export class CreateTableIdempotencyRecord1783000000013 implements MigrationInter
         isUnique: true,
       }),
     );
-
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {

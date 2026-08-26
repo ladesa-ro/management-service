@@ -31,15 +31,11 @@ describe("TurmaMatricula (domain entity)", () => {
     });
 
     it("should reject creation without turma", () => {
-      expect(() =>
-        TurmaMatricula.create({ perfil: { id: createTestId() } } as any),
-      ).toThrow();
+      expect(() => TurmaMatricula.create({ perfil: { id: createTestId() } } as any)).toThrow();
     });
 
     it("should reject creation without perfil", () => {
-      expect(() =>
-        TurmaMatricula.create({ turma: { id: createTestId() } } as any),
-      ).toThrow();
+      expect(() => TurmaMatricula.create({ turma: { id: createTestId() } } as any)).toThrow();
     });
   });
 

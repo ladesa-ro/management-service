@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from "vitest";
 import type { CalendarioAgendamentoVisibilidadeService } from "@/modules/calendario/agendamento/application/authorization/calendario-agendamento-visibilidade.service";
 import type { CalendarioAgendamentoFindOneQueryResult } from "@/modules/calendario/agendamento/domain/queries/calendario-agendamento-find-one.query.result";
-import type { IConsultaOcorrenciasPorDataQueryHandler } from "@/modules/calendario/consultas/domain/queries/consulta-ocorrencias-por-data.query.handler.interface";
 import { CalendarioAgendamentoExportarIcsQueryHandlerImpl } from "@/modules/calendario/consultas/application/queries/calendario-agendamento-exportar-ics.query.handler";
+import type { IConsultaOcorrenciasPorDataQueryHandler } from "@/modules/calendario/consultas/domain/queries/consulta-ocorrencias-por-data.query.handler.interface";
 import { createTestId } from "@/test/helpers";
 import { parseIcs } from "./calendario-agendamento-importar-ics.util";
 

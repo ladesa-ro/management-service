@@ -1,7 +1,12 @@
-import { TurmaMatriculaCreateSchema } from "@/modules/ensino/turma/matricula/domain/turma-matricula.schemas";
 import { TurmaMatriculaFindOneInputSchema } from "@/modules/ensino/turma/matricula/domain/queries/turma-matricula-find-one.query.schemas";
 import { TurmaMatriculaPaginationInputSchema } from "@/modules/ensino/turma/matricula/domain/queries/turma-matricula-list.query.schemas";
-import { ApiProperty, ApiPropertyOptional, ApiSchema, TransformToArray } from "@/shared/presentation/rest";
+import { TurmaMatriculaCreateSchema } from "@/modules/ensino/turma/matricula/domain/turma-matricula.schemas";
+import {
+  ApiProperty,
+  ApiPropertyOptional,
+  ApiSchema,
+  TransformToArray,
+} from "@/shared/presentation/rest";
 import {
   EntityBaseRestDto,
   PaginatedFilterByIdRestDto,

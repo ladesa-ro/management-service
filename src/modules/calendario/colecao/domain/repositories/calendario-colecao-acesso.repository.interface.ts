@@ -17,7 +17,6 @@ import type {
 export const ICalendarioColecaoAcessoRepository = Symbol("ICalendarioColecaoAcessoRepository");
 
 export interface ICalendarioColecaoAcessoRepository {
-
   loadById: IRepositoryLoadById<CalendarioColecaoAcesso>;
 
   save: IRepositorySave<CalendarioColecaoAcesso>;

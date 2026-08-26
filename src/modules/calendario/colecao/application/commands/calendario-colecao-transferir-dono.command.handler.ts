@@ -30,9 +30,7 @@ export class CalendarioColecaoTransferirDonoCommandHandlerImpl
 
     const requestActorId = accessContext?.requestActor?.id;
     if (!requestActorId || requestActorId !== domain.dono.id) {
-      throw new ForbiddenError(
-        "Somente o dono atual da coleção pode transferir a titularidade.",
-      );
+      throw new ForbiddenError("Somente o dono atual da coleção pode transferir a titularidade.");
     }
 
     const novoDono = await this.usuarioFindByIdSimpleHandler.execute(accessContext, {

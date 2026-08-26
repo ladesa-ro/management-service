@@ -57,7 +57,6 @@ describe("Perfil (domain entity)", () => {
 
       expect(entity.cargaMaximaSemanal).toBeNull();
     });
-
   });
 
   describe("update", () => {

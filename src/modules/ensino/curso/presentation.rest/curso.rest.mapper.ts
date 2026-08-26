@@ -65,7 +65,12 @@ export const updateInputDtoToUpdateCommand = createMapper<
   quantidadePeriodos: dto.quantidadePeriodos,
   campus: dto.campus ? { id: dto.campus.id } : undefined,
   ofertaFormacao: dto.ofertaFormacao ? { id: dto.ofertaFormacao.id } : undefined,
-  colecaoPadrao: dto.colecaoPadrao !== undefined ? (dto.colecaoPadrao ? { id: dto.colecaoPadrao.id } : null) : undefined,
+  colecaoPadrao:
+    dto.colecaoPadrao !== undefined
+      ? dto.colecaoPadrao
+        ? { id: dto.colecaoPadrao.id }
+        : null
+      : undefined,
   periodos: dto.periodos,
 }));
 

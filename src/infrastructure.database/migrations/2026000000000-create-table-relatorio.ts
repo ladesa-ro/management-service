@@ -17,6 +17,11 @@ export class CreateTableRelatorio2026000000000 implements MigrationInterface {
             isNullable: false,
           },
           {
+            name: "id_arquivo_fk",
+            type: "uuid",
+            isNullable: true,
+          },
+          {
             name: "date_created",
             type: "timestamptz",
             isNullable: false,
@@ -54,10 +59,22 @@ export class CreateTableRelatorio2026000000000 implements MigrationInterface {
     await queryRunner.createForeignKey(
       "relatorio",
       new TableForeignKey({
+        name: "fk__relatorio__depende__estagio",
         columnNames: ["id_estagio_fk"],
         referencedColumnNames: ["id"],
         referencedTableName: "estagio",
         onDelete: "NO ACTION",
+      }),
+    );
+
+    await queryRunner.createForeignKey(
+      "relatorio",
+      new TableForeignKey({
+        name: "fk__relatorio__depende__arquivo",
+        columnNames: ["id_arquivo_fk"],
+        referencedColumnNames: ["id"],
+        referencedTableName: "arquivo",
+        onDelete: "SET NULL",
       }),
     );
   }

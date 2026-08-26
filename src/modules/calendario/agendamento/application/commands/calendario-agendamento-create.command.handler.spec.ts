@@ -297,7 +297,11 @@ describe("CalendarioAgendamentoCreateCommandHandler", () => {
         capacidade: 30,
       });
 
-      const { handler } = createHandler({ repository, turmaFindOneHandler, ambienteFindOneHandler });
+      const { handler } = createHandler({
+        repository,
+        turmaFindOneHandler,
+        ambienteFindOneHandler,
+      });
       const accessContext = createTestAccessContext();
       const dto = {
         ...createValidDto(),
@@ -329,7 +333,11 @@ describe("CalendarioAgendamentoCreateCommandHandler", () => {
         capacidade: 30,
       });
 
-      const { handler } = createHandler({ repository, turmaFindOneHandler, ambienteFindOneHandler });
+      const { handler } = createHandler({
+        repository,
+        turmaFindOneHandler,
+        ambienteFindOneHandler,
+      });
       const accessContext = createTestAccessContext();
       const dto = {
         ...createValidDto(),
@@ -361,7 +369,11 @@ describe("CalendarioAgendamentoCreateCommandHandler", () => {
         capacidade: 1,
       });
 
-      const { handler } = createHandler({ repository, turmaFindOneHandler, ambienteFindOneHandler });
+      const { handler } = createHandler({
+        repository,
+        turmaFindOneHandler,
+        ambienteFindOneHandler,
+      });
       const accessContext = createTestAccessContext();
       const dto = {
         ...createValidDto(),
@@ -393,7 +405,11 @@ describe("CalendarioAgendamentoCreateCommandHandler", () => {
         capacidade: null,
       });
 
-      const { handler } = createHandler({ repository, turmaFindOneHandler, ambienteFindOneHandler });
+      const { handler } = createHandler({
+        repository,
+        turmaFindOneHandler,
+        ambienteFindOneHandler,
+      });
       const accessContext = createTestAccessContext();
       const dto = {
         ...createValidDto(),

@@ -263,10 +263,7 @@ describe("CalendarioAgendamentoPermissionCheckerImpl", () => {
       );
 
       await expect(
-        checker.ensureCanCancelarPropria(
-          createTestAccessContext(requestActor),
-          createTestId(),
-        ),
+        checker.ensureCanCancelarPropria(createTestAccessContext(requestActor), createTestId()),
       ).resolves.toBeUndefined();
       expect(perfilRepository.findAllActiveByUsuarioId).toHaveBeenCalledWith(
         expect.anything(),

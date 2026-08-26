@@ -25,14 +25,13 @@ export const entityToFindOneQueryResult = createMapper<
   dateDeleted: e.dateDeleted,
 }));
 
-export const domainToPersistence = createMapper<
-  ITurmaMatricula,
-  DeepPartial<TurmaMatriculaEntity>
->((d) => ({
-  id: d.id,
-  turma: pickId(d.turma),
-  perfil: pickId(d.perfil),
-  dateCreated: d.dateCreated,
-  dateUpdated: d.dateUpdated,
-  dateDeleted: d.dateDeleted,
-}));
+export const domainToPersistence = createMapper<ITurmaMatricula, DeepPartial<TurmaMatriculaEntity>>(
+  (d) => ({
+    id: d.id,
+    turma: pickId(d.turma),
+    perfil: pickId(d.perfil),
+    dateCreated: d.dateCreated,
+    dateUpdated: d.dateUpdated,
+    dateDeleted: d.dateDeleted,
+  }),
+);
