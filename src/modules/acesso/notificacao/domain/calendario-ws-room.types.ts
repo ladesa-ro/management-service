@@ -1,4 +1,3 @@
-
 const CALENDARIO_WS_ROOM_PREFIX = "calendario:";
 
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
