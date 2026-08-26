@@ -127,9 +127,7 @@ describe("CalendarioAgendamentoExportarIcsQueryHandlerImpl", () => {
       createMockAgendamento({ id: sharedId, dataInicio: `${data}T00:00:00.000Z` }),
     );
 
-    (consultaOcorrenciasHandler.execute as ReturnType<typeof vi.fn>).mockResolvedValue(
-      ocorrencias,
-    );
+    (consultaOcorrenciasHandler.execute as ReturnType<typeof vi.fn>).mockResolvedValue(ocorrencias);
 
     const ics = await handler.execute(null, createQuery());
 
@@ -173,7 +171,9 @@ describe("CalendarioAgendamentoExportarIcsQueryHandlerImpl", () => {
 
     const ics = await handler.execute(null, createQuery());
 
-    expect(ics).toBe("BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Ladesa RO//Management Service//PT\r\nCALSCALE:GREGORIAN\r\nEND:VCALENDAR\r\n");
+    expect(ics).toBe(
+      "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Ladesa RO//Management Service//PT\r\nCALSCALE:GREGORIAN\r\nEND:VCALENDAR\r\n",
+    );
     expect(ics).not.toContain("VEVENT");
   });
 
