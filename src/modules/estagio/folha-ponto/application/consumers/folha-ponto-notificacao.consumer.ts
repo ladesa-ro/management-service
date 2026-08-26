@@ -49,9 +49,7 @@ export class FolhaPontoNotificacaoConsumer implements OnModuleInit {
         (payload) => this.processar(payload),
       );
     } catch (error) {
-      this.logger.error(
-        `Falha ao registrar consumer de notificação de folha de ponto: ${error}`,
-      );
+      this.logger.error(`Falha ao registrar consumer de notificação de folha de ponto: ${error}`);
     }
   }
 
