@@ -65,12 +65,7 @@ export class TurmaMatriculaTypeOrmRepositoryAdapter implements ITurmaMatriculaRe
   }
 
   softDeleteById(id: string) {
-    return typeormSoftDeleteById(
-      this.appTypeormConnection,
-      TurmaMatriculaEntity,
-      config.alias,
-      id,
-    );
+    return typeormSoftDeleteById(this.appTypeormConnection, TurmaMatriculaEntity, config.alias, id);
   }
 
   async existsActiveByTurmaAndPerfil(turmaId: string, perfilId: string): Promise<boolean> {
@@ -87,10 +82,7 @@ export class TurmaMatriculaTypeOrmRepositoryAdapter implements ITurmaMatriculaRe
     return count > 0;
   }
 
-  getFindOneQueryResult(
-    accessContext: IAccessContext | null,
-    dto: TurmaMatriculaFindOneQuery,
-  ) {
+  getFindOneQueryResult(accessContext: IAccessContext | null, dto: TurmaMatriculaFindOneQuery) {
     return typeormFindById<
       TurmaMatriculaEntity,
       TurmaMatriculaFindOneQuery,
