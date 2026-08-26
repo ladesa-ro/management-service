@@ -51,4 +51,3 @@ export const CalendarioColecaoAcessoCreateSchema = createSchema((standard) =>
     })
     .refine(escopoAlvoConsistente, ESCOPO_ALVO_INCONSISTENTE_MESSAGE),
 );
-
