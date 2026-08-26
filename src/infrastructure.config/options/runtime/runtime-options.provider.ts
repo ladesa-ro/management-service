@@ -47,6 +47,10 @@ export const RuntimeOptionsProvider: Provider = {
 
     const enableMockAccessTokenRaw =
       configService.get<string>(ConfigTokens.RuntimeOptions.EnableMockAccessToken) ?? "false";
+    // Fail closed: reject explicit true in production to avoid accidental mock auth
+    if (nodeEnv === "production" && enableMockAccessTokenRaw === "true") {
+      throw new Error("ENABLE_MOCK_ACCESS_TOKEN must be false in production environments");
+    }
     const enableMockAccessToken = nodeEnv !== "production" && enableMockAccessTokenRaw === "true";
 
     const appPublicBaseUrl =
