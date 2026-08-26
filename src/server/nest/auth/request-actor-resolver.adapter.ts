@@ -35,6 +35,11 @@ export class RequestActorResolverAdapter implements IRequestActorResolver {
         const matricula = matriculaMockMatch[1];
         return this.resolveByMatricula(matricula);
       }
+    } else {
+      // Reject mock tokens when mock auth is disabled (e.g., production)
+      if (/^mock\.matricula\.\d+$/.test(accessToken)) {
+        throw new ForbiddenException("Mock access token not allowed in this environment");
+      }
     }
 
     const tokenSet = await this.identityProvider.getIdentityFromAccessToken(accessToken);
