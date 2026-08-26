@@ -33,6 +33,7 @@ import { EmpresaModule } from "@/modules/estagio/empresa/empresa.module";
 import { EstagiarioModule } from "@/modules/estagio/estagiario/estagiario.module";
 import { EstagioModule } from "@/modules/estagio/estagio/estagio.module";
 import { FolhaPontoModule } from "@/modules/estagio/folha-ponto/folha-ponto.module";
+import { RelatorioEstagioModule } from "@/modules/estagio/relatorio/relatorio.module";
 import { CidadeModule } from "@/modules/localidades/cidade/cidade.module";
 import { EnderecoModule } from "@/modules/localidades/endereco/endereco.module";
 import { EstadoModule } from "@/modules/localidades/estado/estado.module";
@@ -77,6 +78,7 @@ import { NotificationsModule } from "@/notifications/notifications.module";
     FolhaPontoModule,
     NotificacaoModule,
     RelatorioModule,
+    RelatorioEstagioModule,
     GradeHorariaModule,
     TurmaDisponibilidadeModule,
     NotificationsModule,
