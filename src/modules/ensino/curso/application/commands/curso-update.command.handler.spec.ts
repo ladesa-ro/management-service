@@ -26,6 +26,7 @@ describe("CursoUpdateCommandHandler", () => {
       campus: { id: campusId },
       ofertaFormacao: { id: ofertaFormacaoId },
       imagemCapa: null,
+      colecaoPadrao: null,
       dateCreated: createTestDate(),
       dateUpdated: createTestDate(1),
       dateDeleted: null,
