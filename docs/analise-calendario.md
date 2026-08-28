@@ -344,7 +344,7 @@ Dois follow-ups que os agentes sinalizaram sem poder tocar (arquivo em voo de ou
 ### Decisões operacionais em aberto, não são item de produto
 
 - **Agrupamento dos commits**: 147 arquivos não commitados nesta sessão, oito grupos propostos (mensageria BullMQ, gerador de horário, Fases 1–5, apoio) — aguardando confirmação antes de qualquer commit
-- ~~Container `ladesa-rabbitmq` órfão~~ — **removido em 2026-08-22**, junto com as variáveis `MESSAGE_BROKER_*` mortas em `.env`/`.env.example`, substituídas pelas `QUEUE_*` que o código de fato lê (sem elas a fila ficava indisponível em dev). `docs/operacao/comecando.md` atualizado pra não citar mais o container. Ver [Pendências](../operacao/pendencias.md)
+- ~~Container `ladesa-rabbitmq` órfão~~ — **removido em 2026-08-22**, junto com as variáveis `MESSAGE_BROKER_*` mortas em `.env`/`.env.example`, substituídas pelas `QUEUE_*` que o código de fato lê (sem elas a fila ficava indisponível em dev). `docs/operacao/comecando.md` atualizado pra não citar mais o container. Ver [Pendências](operacao/pendencias.md)
 - **Banco de desenvolvimento já está à frente do que está commitado**: pelo menos as migrações `1783000000011` e `1783000000012` foram de fato rodadas (`migration:run`, não só escritas) contra o Postgres do `docker compose` desta sessão, por um agente que confirmou a aplicação. Nenhuma foi revertida, porque migrações de outros agentes rodaram depois na mesma base. Se alguém subir um `docker compose` novo do zero, as migrações rodam na ordem certa igual sempre; o que muda é que **este** ambiente específico já tem o schema novo aplicado antes mesmo do commit — não é problema, só não presuma que "não commitado" significa "banco intocado" se for depurar algo neste ambiente específico
 
 ## Já entregue
