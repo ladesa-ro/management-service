@@ -6,6 +6,11 @@ metadata:
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: "0"
+    argocd-image-updater.argoproj.io/image-list: api=ghcr.io/ladesa-ro/management-service/management-service:development
+    argocd-image-updater.argoproj.io/api.update-strategy: digest
+    argocd-image-updater.argoproj.io/api.helm.image-tag: application.deployment.image.digest
+    argocd-image-updater.argoproj.io/api.force-update: "true"
+    argocd-image-updater.argoproj.io/write-back-method: argocd
 spec:
   project: ladesa-satellites
   source:
