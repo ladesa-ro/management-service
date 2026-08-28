@@ -58,17 +58,19 @@ export class GerarHorarioCreateCommandHandlerImpl implements IGerarHorarioCreate
 
     const request = {
       request_id: domain.id,
-      ...escopo,
+      generate_request: {
+        ...escopo,
 
-      boost_same_day_of_week_and_time_slot: command.boostSameDayOfWeekAndTimeSlot ?? 0,
-      boost_same_day_of_week_only: command.boostSameDayOfWeekOnly ?? 0,
-      boost_same_time_slot_only: command.boostSameTimeSlotOnly ?? 0,
-      boost_lesser_distance_from_day_of_week: command.boostLesserDistanceFromDayOfWeek ?? 0,
-      boost_lesser_distance_from_time_slot: command.boostLesserDistanceFromTimeSlot ?? 0,
+        boost_same_day_of_week_and_time_slot: command.boostSameDayOfWeekAndTimeSlot ?? 0,
+        boost_same_day_of_week_only: command.boostSameDayOfWeekOnly ?? 0,
+        boost_same_time_slot_only: command.boostSameTimeSlotOnly ?? 0,
+        boost_lesser_distance_from_day_of_week: command.boostLesserDistanceFromDayOfWeek ?? 0,
+        boost_lesser_distance_from_time_slot: command.boostLesserDistanceFromTimeSlot ?? 0,
 
-      enabled_constraints: command.enabledConstraints
-        ? { kinds: command.enabledConstraints }
-        : null,
+        enabled_constraints: command.enabledConstraints
+          ? { kinds: command.enabledConstraints }
+          : null,
+      },
     };
 
     await this.messageBrokerService.publishTimetableRequestFireAndForget(request, domain.id);
