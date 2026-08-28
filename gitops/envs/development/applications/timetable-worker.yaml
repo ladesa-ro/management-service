@@ -8,7 +8,7 @@ metadata:
     argocd.argoproj.io/sync-wave: "2"
     argocd-image-updater.argoproj.io/image-list: timetable-worker=ghcr.io/ladesa-ro/management-service/timetable-worker:development
     argocd-image-updater.argoproj.io/timetable-worker.update-strategy: digest
-    argocd-image-updater.argoproj.io/timetable-worker.helm.image-tag: application.deployment.image.digest
+    argocd-image-updater.argoproj.io/timetable-worker.helm.image-tag: application.deployment.image.tag
     argocd-image-updater.argoproj.io/timetable-worker.force-update: "true"
     argocd-image-updater.argoproj.io/write-back-method: argocd
 spec:
