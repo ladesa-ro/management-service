@@ -8,6 +8,11 @@ export const PerfilFindOneQueryMetadata = createOperationMetadata({
   summary: "Busca um perfil por ID",
 });
 
+export const PerfilFindOneByUsuarioQueryMetadata = createOperationMetadata({
+  operationId: "perfilFindByIdViaUsuario",
+  summary: "Busca um perfil de um usuario por ID",
+});
+
 export const IPerfilFindOneQueryHandler = Symbol("IPerfilFindOneQueryHandler");
 
 export type IPerfilFindOneQueryHandler = IQueryHandler<

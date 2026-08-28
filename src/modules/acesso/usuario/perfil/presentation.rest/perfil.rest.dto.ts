@@ -1,3 +1,5 @@
+import { PerfilUpdateCommandFields } from "@/modules/acesso/usuario/perfil/domain/commands/perfil-update.command";
+import { PerfilUpdateSchema } from "@/modules/acesso/usuario/perfil/domain/perfil.schemas";
 import { PerfilFindOneQueryFields } from "@/modules/acesso/usuario/perfil/domain/queries/perfil-find-one.query";
 import { PerfilFindOneQueryResultFields } from "@/modules/acesso/usuario/perfil/domain/queries/perfil-find-one.query.result";
 import { PerfilFindOneInputSchema } from "@/modules/acesso/usuario/perfil/domain/queries/perfil-find-one.query.schemas";
@@ -55,6 +57,24 @@ export class PerfilFindOneInputRestDto {
 
   @ApiProperty(PerfilFindOneQueryFields.id.swaggerMetadata)
   id: string;
+}
+
+// ============================================================================
+// Update Input
+// ============================================================================
+
+@ApiSchema({ name: "PerfilUpdateInputDto" })
+export class PerfilUpdateInputRestDto {
+  static schema = PerfilUpdateSchema.presentation;
+
+  @ApiPropertyOptional(PerfilUpdateCommandFields.ativo.swaggerMetadata)
+  ativo?: boolean;
+
+  @ApiPropertyOptional(PerfilUpdateCommandFields.cargo.swaggerMetadata)
+  cargo?: string;
+
+  @ApiPropertyOptional(PerfilUpdateCommandFields.cargaMaximaSemanal.swaggerMetadata)
+  cargaMaximaSemanal?: number | null;
 }
 
 // ============================================================================

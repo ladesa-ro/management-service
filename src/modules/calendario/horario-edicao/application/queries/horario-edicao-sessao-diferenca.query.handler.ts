@@ -44,6 +44,7 @@ export class HorarioEdicaoSessaoDiferencaQueryHandlerImpl
       switch (mudanca.tipoOperacao) {
         case HorarioEdicaoMudancaTipoOperacao.CRIAR:
           resultado.entram.push({
+            mudancaId: mudanca.id,
             tipoOperacao: HorarioEdicaoMudancaTipoOperacao.CRIAR,
             calendarioAgendamentoId: mudanca.calendarioAgendamento?.id ?? null,
             antes: null,
@@ -53,6 +54,7 @@ export class HorarioEdicaoSessaoDiferencaQueryHandlerImpl
 
         case HorarioEdicaoMudancaTipoOperacao.REMOVER:
           resultado.saem.push({
+            mudancaId: mudanca.id,
             tipoOperacao: HorarioEdicaoMudancaTipoOperacao.REMOVER,
             calendarioAgendamentoId: mudanca.calendarioAgendamento?.id ?? null,
             antes: await this.resolverEstadoAnterior(accessContext, mudanca),
@@ -62,6 +64,7 @@ export class HorarioEdicaoSessaoDiferencaQueryHandlerImpl
 
         case HorarioEdicaoMudancaTipoOperacao.MOVER:
           resultado.mudam.push({
+            mudancaId: mudanca.id,
             tipoOperacao: HorarioEdicaoMudancaTipoOperacao.MOVER,
             calendarioAgendamentoId: mudanca.calendarioAgendamento?.id ?? null,
             antes: await this.resolverEstadoAnterior(accessContext, mudanca),

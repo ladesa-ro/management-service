@@ -50,6 +50,7 @@ import {
   CargoDeleteCommandHandlerImpl,
   CargoUpdateCommandHandlerImpl,
   PerfilDefinirPerfisAtivosCommandHandlerImpl,
+  PerfilUpdateCommandHandlerImpl,
 } from "@/modules/acesso/usuario/perfil/application/commands";
 import {
   CargoFindOneQueryHandlerImpl,
@@ -64,6 +65,7 @@ import {
   ICargoDeleteCommandHandler,
   ICargoUpdateCommandHandler,
   IPerfilDefinirPerfisAtivosCommandHandler,
+  IPerfilUpdateCommandHandler,
 } from "@/modules/acesso/usuario/perfil/domain/commands";
 import {
   ICargoFindOneQueryHandler,
@@ -168,6 +170,7 @@ import { TurmaModule } from "@/modules/ensino/turma/turma.module";
     { provide: IPerfilFindOneQueryHandler, useClass: PerfilFindOneQueryHandlerImpl },
     { provide: IPerfilFindAllActiveQueryHandler, useClass: PerfilFindAllActiveQueryHandlerImpl },
     { provide: IPerfilVinculosFiltroQueryHandler, useClass: PerfilVinculosFiltroQueryHandlerImpl },
+    { provide: IPerfilUpdateCommandHandler, useClass: PerfilUpdateCommandHandlerImpl },
   ],
   exports: [
     IUsuarioFindOneQueryHandler,

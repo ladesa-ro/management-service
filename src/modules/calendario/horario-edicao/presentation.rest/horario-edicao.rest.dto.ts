@@ -68,6 +68,9 @@ export class HorarioEdicaoMudancaOutputRestDto {
 }
 
 export class HorarioEdicaoDiferencaEntradaOutputRestDto {
+  @ApiProperty()
+  mudancaId!: string;
+
   @ApiProperty({ enum: HorarioEdicaoMudancaTipoOperacao })
   tipoOperacao!: "CRIAR" | "MOVER" | "REMOVER";
 

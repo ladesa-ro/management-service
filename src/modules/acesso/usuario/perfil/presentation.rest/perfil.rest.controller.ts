@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query } from "@nestjs/common";
+import { Body, Controller, Get, Param, Patch, Query } from "@nestjs/common";
 import {
   ApiForbiddenResponse,
   ApiNotFoundResponse,
@@ -8,9 +8,14 @@ import {
 } from "@nestjs/swagger";
 import type { IAccessContext } from "@/domain/abstractions";
 import { Dep } from "@/domain/dependency-injection";
+import {
+  IPerfilUpdateCommandHandler,
+  PerfilUpdateCommandMetadata,
+} from "@/modules/acesso/usuario/perfil/domain/commands/perfil-update.command.handler.interface";
 import { PerfilEnsinoByIdQueryMetadata } from "@/modules/acesso/usuario/perfil/domain/queries/perfil-ensino-by-id.query.metadata";
 import {
   IPerfilFindOneQueryHandler,
+  PerfilFindOneByUsuarioQueryMetadata,
   PerfilFindOneQueryMetadata,
 } from "@/modules/acesso/usuario/perfil/domain/queries/perfil-find-one.query.handler.interface";
 import {
@@ -28,6 +33,7 @@ import {
   PerfilFindOneOutputRestDto,
   PerfilListInputRestDto,
   PerfilListOutputRestDto,
+  PerfilUpdateInputRestDto,
   PerfilVinculosFiltroInputRestDto,
 } from "./perfil.rest.dto";
 import * as PerfilRestMapper from "./perfil.rest.mapper";
@@ -42,6 +48,8 @@ export class PerfilListRestController {
     private readonly findOneHandler: IPerfilFindOneQueryHandler,
     @Dep(IPerfilVinculosFiltroQueryHandler)
     private readonly vinculosFiltroHandler: IPerfilVinculosFiltroQueryHandler,
+    @Dep(IPerfilUpdateCommandHandler)
+    private readonly updateHandler: IPerfilUpdateCommandHandler,
   ) {}
 
   @Get("/")
@@ -87,6 +95,21 @@ export class PerfilListRestController {
     const queryResult = await this.findOneHandler.execute(accessContext, query);
     return queryResult ? PerfilRestMapper.findOneQueryResultToOutputDto.map(queryResult) : null;
   }
+
+  @Patch("/:id")
+  @ApiOperation(PerfilUpdateCommandMetadata.swaggerMetadata)
+  @ApiOkResponse({ type: PerfilFindOneOutputRestDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async update(
+    @AccessContextHttp() accessContext: IAccessContext,
+    @Param() params: PerfilFindOneInputRestDto,
+    @Body() dto: PerfilUpdateInputRestDto,
+  ): Promise<PerfilFindOneOutputRestDto> {
+    const command = PerfilRestMapper.updateInputDtoToUpdateCommand.map({ params, dto });
+    const queryResult = await this.updateHandler.execute(accessContext, command);
+    return PerfilRestMapper.findOneQueryResultToOutputDto.map(queryResult);
+  }
 }
 
 @ApiTags("usuarios")
@@ -98,7 +121,7 @@ export class PerfilRestController {
   ) {}
 
   @Get("/:id")
-  @ApiOperation(PerfilFindOneQueryMetadata.swaggerMetadata)
+  @ApiOperation(PerfilFindOneByUsuarioQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: PerfilFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()

@@ -34,6 +34,8 @@ import {
   HorarioEdicaoCancelarCommandMetadata,
   HorarioEdicaoCreateCommandMetadata,
   HorarioEdicaoDesfazerMudancaCommandMetadata,
+  HorarioEdicaoFindOneQueryMetadata,
+  HorarioEdicaoPublicarCommandMetadata,
   HorarioEdicaoSalvarCommandMetadata,
 } from "../domain/horario-edicao.operations";
 import {
@@ -143,6 +145,21 @@ export class HorarioEdicaoRestController {
     return this.toSessaoOutput(saved);
   }
 
+  @Get("/:sessaoId")
+  @ApiOperation(HorarioEdicaoFindOneQueryMetadata.swaggerMetadata)
+  @ApiOkResponse({ type: HorarioEdicaoSessaoOutputRestDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async findOne(
+    @AccessContextHttp() _accessContext: IAccessContext,
+    @Param() params: HorarioEdicaoSessaoParamsRestDto,
+  ): Promise<HorarioEdicaoSessaoOutputRestDto> {
+    const sessao = await this.sessaoRepository.findById(params.sessaoId);
+    ensureExists(sessao, "HorarioEdicaoSessao", params.sessaoId);
+
+    return this.toSessaoOutput(sessao);
+  }
+
   @Patch("/:sessaoId")
   @ApiOperation(HorarioEdicaoApplyChangeCommandMetadata.swaggerMetadata)
   @ApiOkResponse({ type: HorarioEdicaoMudancaOutputRestDto })
@@ -246,7 +263,7 @@ export class HorarioEdicaoRestController {
   }
 
   @Post("/:sessaoId/publicar")
-  @ApiOperation(HorarioEdicaoSalvarCommandMetadata.swaggerMetadata)
+  @ApiOperation(HorarioEdicaoPublicarCommandMetadata.swaggerMetadata)
   @ApiOkResponse({ type: HorarioEdicaoSessaoOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -288,6 +305,7 @@ export class HorarioEdicaoRestController {
     entrada: IHorarioEdicaoDiferencaEntrada,
   ): HorarioEdicaoDiferencaEntradaOutputRestDto {
     const dto = new HorarioEdicaoDiferencaEntradaOutputRestDto();
+    dto.mudancaId = entrada.mudancaId;
     dto.tipoOperacao = entrada.tipoOperacao;
     dto.calendarioAgendamentoId = entrada.calendarioAgendamentoId;
     dto.antes = entrada.antes;

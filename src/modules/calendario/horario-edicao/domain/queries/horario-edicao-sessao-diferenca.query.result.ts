@@ -1,4 +1,5 @@
 export interface IHorarioEdicaoDiferencaEntrada {
+  mudancaId: string;
   tipoOperacao: "CRIAR" | "MOVER" | "REMOVER";
   calendarioAgendamentoId: string | null;
   antes: Record<string, unknown> | null;
