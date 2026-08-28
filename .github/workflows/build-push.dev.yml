@@ -25,8 +25,9 @@ jobs:
     runs-on: ubuntu-latest
 
     permissions:
-      contents: read
+      contents: write
       packages: write
+      pull-requests: write
 
     steps:
       - name: "[CI] Checkout do código-fonte"
@@ -46,6 +47,7 @@ jobs:
           password: ${{ env.REGISTRY_TOKEN }}
 
       - name: "[CI] Construção e publicação da imagem de contêiner"
+        id: build-api
         uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a
         with:
           context: ./src/
@@ -64,6 +66,7 @@ jobs:
             type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_BASENAME }}/management-service:cache-development,mode=max
 
       - name: "[CI] Construção e publicação da imagem do timetable-worker"
+        id: build-timetable-worker
         uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a
         with:
           context: ./src/infrastructure.timetable-generator/
@@ -77,3 +80,37 @@ jobs:
           cache-to: |
             type=gha,scope=timetable-worker-dev,mode=max
             type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_BASENAME }}/timetable-worker:cache-development,mode=max
+
+      - name: "[CD] Abrir/atualizar PR de bump do digest no gitops"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DIGEST_API: ${{ steps.build-api.outputs.digest }}
+          DIGEST_TIMETABLE_WORKER: ${{ steps.build-timetable-worker.outputs.digest }}
+        run: |
+          BRANCH="chore/bump-image-management-service-development"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git fetch origin main
+          git checkout -B "$BRANCH" origin/main
+
+          sed -i -E "s#^(\s*)(tag|digest): .*#\1digest: ${DIGEST_API}#" gitops/apps/api/values-development.yaml
+          sed -i -E "s#^(\s*)(tag|digest): .*#\1digest: ${DIGEST_TIMETABLE_WORKER}#" gitops/apps/timetable-worker/values-development.yaml
+
+          if git diff --quiet; then
+            echo "Digests iguais aos já registrados no gitops, nada a fazer."
+            exit 0
+          fi
+
+          git commit -am "chore(gitops): bump api e timetable-worker para novos digests"
+          git push --force origin "$BRANCH"
+
+          PR_NUMBER=$(gh pr list --head "$BRANCH" --state open --json number --jq '.[0].number')
+          if [ -n "$PR_NUMBER" ]; then
+            gh pr edit "$PR_NUMBER" --body "Imagens publicadas por ${{ github.sha }}. api: ${DIGEST_API} · timetable-worker: ${DIGEST_TIMETABLE_WORKER}"
+          else
+            gh pr create --title "chore(gitops): bump management-service para novas imagens" \
+              --body "Imagens publicadas por ${{ github.sha }}. api: ${DIGEST_API} · timetable-worker: ${DIGEST_TIMETABLE_WORKER}" \
+              --base main --head "$BRANCH"
+          fi
