@@ -6,3 +6,5 @@ export * from "./cargo-update.command";
 export * from "./cargo-update.command.handler.interface";
 export * from "./perfil-definir-perfis-ativos.command";
 export * from "./perfil-definir-perfis-ativos.command.handler.interface";
+export * from "./perfil-update.command";
+export * from "./perfil-update.command.handler.interface";

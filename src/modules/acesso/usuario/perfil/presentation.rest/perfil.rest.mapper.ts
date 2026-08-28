@@ -3,6 +3,7 @@ import {
   type PerfilFindOneQueryResult,
   PerfilListQuery,
 } from "@/modules/acesso/usuario/perfil";
+import type { PerfilUpdateCommand } from "@/modules/acesso/usuario/perfil/domain/commands/perfil-update.command";
 import * as UsuarioRestMapper from "@/modules/acesso/usuario/presentation.rest/usuario.rest.mapper";
 import * as CampusRestMapper from "@/modules/ambientes/campus/presentation.rest/campus.rest.mapper";
 import { createListMapper, createMapper, createPaginatedInputMapper, into } from "@/shared/mapping";
@@ -10,6 +11,7 @@ import {
   PerfilFindOneOutputRestDto,
   type PerfilListInputRestDto,
   PerfilListOutputRestDto,
+  type PerfilUpdateInputRestDto,
 } from "./perfil.rest.dto";
 
 // ============================================================================
@@ -23,6 +25,16 @@ export const findOneInputDtoToFindOneQuery = createMapper<{ id: string }, Perfil
     return input;
   },
 );
+
+export const updateInputDtoToUpdateCommand = createMapper<
+  { params: { id: string }; dto: PerfilUpdateInputRestDto },
+  PerfilFindOneQuery & PerfilUpdateCommand
+>(({ params, dto }) => ({
+  id: params.id,
+  ativo: dto.ativo,
+  cargo: dto.cargo,
+  cargaMaximaSemanal: dto.cargaMaximaSemanal,
+}));
 
 export const listInputDtoToListQuery = createPaginatedInputMapper<
   PerfilListInputRestDto,
