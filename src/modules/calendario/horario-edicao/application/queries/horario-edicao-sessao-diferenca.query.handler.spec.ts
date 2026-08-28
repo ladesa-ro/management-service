@@ -143,6 +143,7 @@ describe("HorarioEdicaoSessaoDiferencaQueryHandlerImpl", () => {
 
     expect(result.entram).toEqual([
       {
+        mudancaId: mudancaCriar.id,
         tipoOperacao: HorarioEdicaoMudancaTipoOperacao.CRIAR,
         calendarioAgendamentoId: null,
         antes: null,
@@ -152,6 +153,7 @@ describe("HorarioEdicaoSessaoDiferencaQueryHandlerImpl", () => {
 
     expect(result.mudam).toEqual([
       {
+        mudancaId: mudancaMover.id,
         tipoOperacao: HorarioEdicaoMudancaTipoOperacao.MOVER,
         calendarioAgendamentoId: moverAgendamentoId,
         antes: { horarioInicio: "09:00:00" },
@@ -161,6 +163,7 @@ describe("HorarioEdicaoSessaoDiferencaQueryHandlerImpl", () => {
 
     expect(result.saem).toEqual([
       {
+        mudancaId: mudancaRemover.id,
         tipoOperacao: HorarioEdicaoMudancaTipoOperacao.REMOVER,
         calendarioAgendamentoId: removerAgendamentoId,
         antes: { nome: "Sera removido" },
@@ -205,6 +208,7 @@ describe("HorarioEdicaoSessaoDiferencaQueryHandlerImpl", () => {
 
     expect(result.mudam).toEqual([
       {
+        mudancaId: mudancaMover.id,
         tipoOperacao: HorarioEdicaoMudancaTipoOperacao.MOVER,
         calendarioAgendamentoId: agendamentoId,
         antes: {
