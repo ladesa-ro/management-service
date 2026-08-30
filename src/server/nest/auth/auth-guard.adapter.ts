@@ -33,11 +33,13 @@ export class AuthGuardAdapter extends AuthGuard(AuthStrategy.ACCESS_TOKEN) {
   }
 
   private checkIfContextNeedsAuth(context: ExecutionContext): boolean {
+    // Política fail-closed: sem decorator explícito, a rota requer autenticação por padrão.
+    // Rotas públicas devem ser marcadas explicitamente com @Public().
     return (
       this.reflector.getAllAndOverride<boolean>(NEEDS_AUTH_KEY, [
         context.getHandler(),
         context.getClass(),
-      ]) ?? false
+      ]) ?? true
     );
   }
 }
