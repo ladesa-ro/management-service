@@ -16,9 +16,12 @@ import { ApiHeader, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { IConfigService } from "@/infrastructure.config";
 import { ConfigTokens } from "@/infrastructure.config/config-tokens";
 import { WahaWebhookEventDto } from "@/integrations/waha/dto/waha-webhook-event.dto";
+import { Public } from "@/server/nest/auth";
 import { WhatsappNotificationsService } from "../services/whatsapp-notifications.service";
 
 @ApiTags("WhatsApp Webhooks")
+// Autenticação feita via HMAC-SHA512 no handler — não usa Bearer token.
+@Public()
 @Controller("webhooks")
 export class WhatsappWebhooksController {
   private readonly logger = new Logger(WhatsappWebhooksController.name);
