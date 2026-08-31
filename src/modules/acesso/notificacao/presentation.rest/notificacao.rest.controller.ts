@@ -32,8 +32,13 @@ export class NotificacaoRestController {
   @ApiOperation(NotificacaoFindAllQueryMetadata.swaggerMetadata)
   @ApiOkResponse()
   @ApiForbiddenResponse()
-  async findAll(@AccessContextHttp() _accessContext: IAccessContext) {
+  async findAll(@AccessContextHttp() accessContext: IAccessContext) {
+    const usuarioId = accessContext.requestActor?.id;
+    if (!usuarioId) {
+      return { data: [] };
+    }
     const entities = await this.notificacaoRepository.find({
+      where: { usuario: { id: usuarioId } },
       order: { dateCreated: "DESC" },
     });
     return {
@@ -52,8 +57,14 @@ export class NotificacaoRestController {
   @ApiOperation(NotificacaoContagemNaoLidasQueryMetadata.swaggerMetadata)
   @ApiOkResponse()
   @ApiForbiddenResponse()
-  async contagemNaoLidas(@AccessContextHttp() _accessContext: IAccessContext) {
-    const count = await this.notificacaoRepository.count({ where: { lida: false } });
+  async contagemNaoLidas(@AccessContextHttp() accessContext: IAccessContext) {
+    const usuarioId = accessContext.requestActor?.id;
+    if (!usuarioId) {
+      return { count: 0 };
+    }
+    const count = await this.notificacaoRepository.count({
+      where: { lida: false, usuario: { id: usuarioId } },
+    });
     return { count };
   }
 
@@ -62,8 +73,15 @@ export class NotificacaoRestController {
   @ApiOkResponse()
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
-  async marcarLida(@AccessContextHttp() _accessContext: IAccessContext, @Param("id") id: string) {
-    const entity = await this.notificacaoRepository.findOneBy({ id });
+  async marcarLida(@AccessContextHttp() accessContext: IAccessContext, @Param("id") id: string) {
+    const usuarioId = accessContext.requestActor?.id;
+    if (!usuarioId) {
+      ensureExists(null, "Notificacao", id);
+    }
+    const entity = await this.notificacaoRepository.findOneBy({
+      id,
+      usuario: { id: usuarioId },
+    });
     ensureExists(entity, "Notificacao", id);
     entity.lida = true;
     await this.notificacaoRepository.save(entity);
