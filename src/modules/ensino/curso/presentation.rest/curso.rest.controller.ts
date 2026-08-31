@@ -56,6 +56,7 @@ import {
   ICursoListQueryHandler,
 } from "@/modules/ensino/curso/domain/queries/curso-list.query.handler.interface";
 import { AccessContextHttp } from "@/server/nest/access-context";
+import { UPLOAD_LIMITS } from "@/shared/presentation/rest";
 import {
   CursoCreateInputRestDto,
   CursoFindOneInputRestDto,
@@ -171,7 +172,7 @@ export class CursoRestController {
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
-  @UseInterceptors(FileInterceptor("file"))
+  @UseInterceptors(FileInterceptor("file", UPLOAD_LIMITS.IMAGE))
   async updateImagemCapa(
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: CursoFindOneInputRestDto,
