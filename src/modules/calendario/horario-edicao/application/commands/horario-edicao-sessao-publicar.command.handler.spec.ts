@@ -1,7 +1,7 @@
 import { BadRequestException } from "@nestjs/common";
 import { describe, expect, it, vi } from "vitest";
-import { ResourceNotFoundError } from "@/application/errors";
-import { createTestAccessContext, createTestId } from "@/test/helpers";
+import { ForbiddenError, ResourceNotFoundError } from "@/application/errors";
+import { createTestAccessContext, createTestId, createTestRequestActor } from "@/test/helpers";
 import {
   HorarioEdicaoMudancaTipoOperacao,
   HorarioEdicaoSessaoStatus,
@@ -10,11 +10,14 @@ import {
 } from "../../domain/horario-edicao.types";
 import { HorarioEdicaoSessaoPublicarCommandHandlerImpl } from "./horario-edicao-sessao-publicar.command.handler";
 
+const testActorId = createTestId();
+const testAccessContext = createTestAccessContext(createTestRequestActor({ id: testActorId }));
+
 function createSessao(overrides: Partial<IHorarioEdicaoSessao> = {}): IHorarioEdicaoSessao {
   return {
     id: createTestId(),
     status: HorarioEdicaoSessaoStatus.ABERTA,
-    usuario: { id: createTestId() },
+    usuario: { id: testActorId },
     dateCreated: "2026-01-01T00:00:00.000Z",
     dateUpdated: "2026-01-01T00:00:00.000Z",
     ...overrides,
@@ -78,7 +81,7 @@ describe("HorarioEdicaoSessaoPublicarCommandHandlerImpl", () => {
     sessaoRepository.findById.mockResolvedValue(sessao);
     mudancaRepository.findBySessaoId.mockResolvedValue(mudancas);
 
-    const resultado = await handler.execute(createTestAccessContext(), { sessaoId: sessao.id });
+    const resultado = await handler.execute(testAccessContext, { sessaoId: sessao.id });
 
     expect(mudancaRepository.findBySessaoId).toHaveBeenCalledWith(sessao.id);
     expect(horarioEdicaoApplicator.applyMudancas).toHaveBeenCalledWith(mudancas);
@@ -88,15 +91,25 @@ describe("HorarioEdicaoSessaoPublicarCommandHandlerImpl", () => {
     );
   });
 
+  it("should throw ForbiddenError when user does not own the sessao", async () => {
+    const sessao = createSessao({ usuario: { id: createTestId() } });
+    const { handler, sessaoRepository } = createHandler();
+    sessaoRepository.findById.mockResolvedValue(sessao);
+
+    await expect(handler.execute(testAccessContext, { sessaoId: sessao.id })).rejects.toThrow(
+      ForbiddenError,
+    );
+  });
+
   it("should throw BadRequestException when the sessao is not ABERTA", async () => {
     const sessao = createSessao({ status: HorarioEdicaoSessaoStatus.SALVA });
 
     const { handler, sessaoRepository, horarioEdicaoApplicator } = createHandler();
     sessaoRepository.findById.mockResolvedValue(sessao);
 
-    await expect(
-      handler.execute(createTestAccessContext(), { sessaoId: sessao.id }),
-    ).rejects.toThrow(BadRequestException);
+    await expect(handler.execute(testAccessContext, { sessaoId: sessao.id })).rejects.toThrow(
+      BadRequestException,
+    );
     expect(horarioEdicaoApplicator.applyMudancas).not.toHaveBeenCalled();
   });
 
@@ -104,9 +117,9 @@ describe("HorarioEdicaoSessaoPublicarCommandHandlerImpl", () => {
     const { handler, sessaoRepository } = createHandler();
     sessaoRepository.findById.mockResolvedValue(null);
 
-    await expect(
-      handler.execute(createTestAccessContext(), { sessaoId: createTestId() }),
-    ).rejects.toThrow(ResourceNotFoundError);
+    await expect(handler.execute(testAccessContext, { sessaoId: createTestId() })).rejects.toThrow(
+      ResourceNotFoundError,
+    );
   });
 
   it("should route execution through the idempotency service with the command's key", async () => {
@@ -114,7 +127,7 @@ describe("HorarioEdicaoSessaoPublicarCommandHandlerImpl", () => {
     const { handler, sessaoRepository, idempotencyService } = createHandler();
     sessaoRepository.findById.mockResolvedValue(sessao);
 
-    await handler.execute(createTestAccessContext(), {
+    await handler.execute(testAccessContext, {
       sessaoId: sessao.id,
       idempotencyKey: "chave-do-cliente",
     });

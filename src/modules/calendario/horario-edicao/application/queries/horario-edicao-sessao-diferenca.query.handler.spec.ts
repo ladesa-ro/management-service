@@ -1,11 +1,12 @@
 import { describe, expect, it, vi } from "vitest";
-import { ResourceNotFoundError } from "@/application/errors/application.error";
+import { ForbiddenError, ResourceNotFoundError } from "@/application/errors/application.error";
 import type { CalendarioAgendamentoFindOneQueryResult } from "@/modules/calendario/agendamento/domain/queries/calendario-agendamento-find-one.query.result";
 import type { ICalendarioAgendamentoRepository } from "@/modules/calendario/agendamento/domain/repositories/calendario-agendamento.repository.interface";
 import {
   createMockAgendamentoRepository,
   createTestAccessContext,
   createTestId,
+  createTestRequestActor,
 } from "@/test/helpers";
 import {
   HorarioEdicaoMudancaTipoOperacao,
@@ -16,6 +17,9 @@ import {
 import type { IHorarioEdicaoMudancaRepository } from "../../domain/repositories/horario-edicao-mudanca.repository.interface";
 import type { IHorarioEdicaoSessaoRepository } from "../../domain/repositories/horario-edicao-sessao.repository.interface";
 import { HorarioEdicaoSessaoDiferencaQueryHandlerImpl } from "./horario-edicao-sessao-diferenca.query.handler";
+
+const testActorId = createTestId();
+const testAccessContext = createTestAccessContext(createTestRequestActor({ id: testActorId }));
 
 function createMockSessaoRepository() {
   return {
@@ -36,7 +40,7 @@ function createSessao(overrides: Partial<IHorarioEdicaoSessao> = {}): IHorarioEd
   return {
     id: createTestId(),
     status: HorarioEdicaoSessaoStatus.ABERTA,
-    usuario: { id: createTestId() },
+    usuario: { id: testActorId },
     dateCreated: "2026-01-01T00:00:00.000Z",
     dateUpdated: "2026-01-01T00:00:00.000Z",
     ...overrides,
@@ -137,7 +141,7 @@ describe("HorarioEdicaoSessaoDiferencaQueryHandlerImpl", () => {
       mudancaRemover,
     ]);
 
-    const result = await handler.execute(null, { sessaoId: sessao.id });
+    const result = await handler.execute(testAccessContext, { sessaoId: sessao.id });
 
     expect(result.sessaoId).toBe(sessao.id);
 
@@ -172,6 +176,16 @@ describe("HorarioEdicaoSessaoDiferencaQueryHandlerImpl", () => {
     ]);
   });
 
+  it("should throw ForbiddenError when user does not own the sessao", async () => {
+    const { handler, sessaoRepository } = createHandler();
+    const sessao = createSessao({ usuario: { id: createTestId() } });
+    sessaoRepository.findById.mockResolvedValue(sessao);
+
+    await expect(handler.execute(testAccessContext, { sessaoId: sessao.id })).rejects.toThrow(
+      ForbiddenError,
+    );
+  });
+
   it("falls back to fetching live state when dadosAnteriores is null on a MOVER/REMOVER mudanca", async () => {
     const { handler, sessaoRepository, mudancaRepository, agendamentoRepository } = createHandler();
     const sessao = createSessao();
@@ -198,11 +212,10 @@ describe("HorarioEdicaoSessaoDiferencaQueryHandlerImpl", () => {
 
     mudancaRepository.findBySessaoId.mockResolvedValue([mudancaMover]);
 
-    const accessContext = createTestAccessContext();
-    const result = await handler.execute(accessContext, { sessaoId: sessao.id });
+    const result = await handler.execute(testAccessContext, { sessaoId: sessao.id });
 
     expect(agendamentoRepository.getFindOneQueryResult).toHaveBeenCalledWith(
-      accessContext,
+      testAccessContext,
       agendamentoId,
     );
 
@@ -239,7 +252,7 @@ describe("HorarioEdicaoSessaoDiferencaQueryHandlerImpl", () => {
 
     mudancaRepository.findBySessaoId.mockResolvedValue([mudancaRemover]);
 
-    await handler.execute(null, { sessaoId: sessao.id });
+    await handler.execute(testAccessContext, { sessaoId: sessao.id });
 
     expect(agendamentoRepository.getFindOneQueryResult).not.toHaveBeenCalled();
   });
@@ -250,7 +263,9 @@ describe("HorarioEdicaoSessaoDiferencaQueryHandlerImpl", () => {
 
     const sessaoId = createTestId();
 
-    await expect(handler.execute(null, { sessaoId })).rejects.toThrow(ResourceNotFoundError);
+    await expect(handler.execute(testAccessContext, { sessaoId })).rejects.toThrow(
+      ResourceNotFoundError,
+    );
   });
 
   it("returns empty entram/mudam/saem for a sessao with no mudancas", async () => {
@@ -259,7 +274,7 @@ describe("HorarioEdicaoSessaoDiferencaQueryHandlerImpl", () => {
     sessaoRepository.findById.mockResolvedValue(sessao);
     mudancaRepository.findBySessaoId.mockResolvedValue([]);
 
-    const result = await handler.execute(null, { sessaoId: sessao.id });
+    const result = await handler.execute(testAccessContext, { sessaoId: sessao.id });
 
     expect(result).toEqual({
       sessaoId: sessao.id,

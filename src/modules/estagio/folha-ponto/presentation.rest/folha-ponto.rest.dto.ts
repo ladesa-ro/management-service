@@ -5,6 +5,7 @@ import {
   TransformToArray,
 } from "@/shared/presentation/rest";
 import { PaginatedFilterByIdRestDto, PaginationMetaRestDto } from "@/shared/presentation/rest/dtos";
+import { findOneUuidInputSchema } from "@/shared/validation/schemas";
 import type { FolhaPontoCreateCommand } from "../domain/commands/folha-ponto-create.command";
 import { FolhaPontoStatus } from "../domain/folha-ponto";
 import { FolhaPontoFields } from "../domain/folha-ponto.fields";
@@ -41,6 +42,8 @@ export class FolhaPontoCreateInputRestDto implements FolhaPontoCreateCommand {
 
 @ApiSchema({ name: "FolhaPontoFindOneParamsRestDto" })
 export class FolhaPontoFindOneParamsRestDto {
+  static schema = findOneUuidInputSchema;
+
   @ApiProperty({ description: "ID da Folha de Ponto" })
   id!: string;
 }

@@ -3,7 +3,9 @@ import { MigrationInterface, QueryRunner } from "typeorm";
 export class AddMissingValuesToGerarHorarioStatus2026082800001 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`ALTER TYPE "gerar_horario_status" ADD VALUE IF NOT EXISTS 'ACEITO'`);
-    await queryRunner.query(`ALTER TYPE "gerar_horario_status" ADD VALUE IF NOT EXISTS 'REJEITADO'`);
+    await queryRunner.query(
+      `ALTER TYPE "gerar_horario_status" ADD VALUE IF NOT EXISTS 'REJEITADO'`,
+    );
   }
 
   public async down(): Promise<void> {

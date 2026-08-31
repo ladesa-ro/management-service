@@ -1,7 +1,7 @@
 import { BadRequestException } from "@nestjs/common";
 import { describe, expect, it, vi } from "vitest";
-import { ResourceNotFoundError } from "@/application/errors";
-import { createTestAccessContext, createTestId } from "@/test/helpers";
+import { ForbiddenError, ResourceNotFoundError } from "@/application/errors";
+import { createTestAccessContext, createTestId, createTestRequestActor } from "@/test/helpers";
 import {
   HorarioEdicaoMudancaTipoOperacao,
   HorarioEdicaoSessaoStatus,
@@ -10,11 +10,14 @@ import {
 } from "../../domain/horario-edicao.types";
 import { HorarioEdicaoSessaoDesfazerMudancaCommandHandlerImpl } from "./horario-edicao-sessao-desfazer-mudanca.command.handler";
 
+const testActorId = createTestId();
+const testAccessContext = createTestAccessContext(createTestRequestActor({ id: testActorId }));
+
 function createSessao(overrides: Partial<IHorarioEdicaoSessao> = {}): IHorarioEdicaoSessao {
   return {
     id: createTestId(),
     status: HorarioEdicaoSessaoStatus.ABERTA,
-    usuario: { id: createTestId() },
+    usuario: { id: testActorId },
     dateCreated: "2026-01-01T00:00:00.000Z",
     dateUpdated: "2026-01-01T00:00:00.000Z",
     ...overrides,
@@ -66,7 +69,7 @@ describe("HorarioEdicaoSessaoDesfazerMudancaCommandHandlerImpl", () => {
     sessaoRepository.findById.mockResolvedValue(sessao);
     mudancaRepository.findById.mockResolvedValue(mudanca);
 
-    const resultado = await handler.execute(createTestAccessContext(), {
+    const resultado = await handler.execute(testAccessContext, {
       sessaoId: sessao.id,
       mudancaId: mudanca.id,
     });
@@ -74,6 +77,19 @@ describe("HorarioEdicaoSessaoDesfazerMudancaCommandHandlerImpl", () => {
     expect(mudancaRepository.deleteById).toHaveBeenCalledWith(mudanca.id);
     expect(resultado.id).toBe(sessao.id);
     expect(sessaoRepository.save).toHaveBeenCalledOnce();
+  });
+
+  it("should throw ForbiddenError when user does not own the sessao", async () => {
+    const sessao = createSessao({ usuario: { id: createTestId() } });
+    const { handler, sessaoRepository } = createHandler();
+    sessaoRepository.findById.mockResolvedValue(sessao);
+
+    await expect(
+      handler.execute(testAccessContext, {
+        sessaoId: sessao.id,
+        mudancaId: createTestId(),
+      }),
+    ).rejects.toThrow(ForbiddenError);
   });
 
   it("should discard a pending MOVER mudanca without touching calendario_agendamento", async () => {
@@ -89,7 +105,7 @@ describe("HorarioEdicaoSessaoDesfazerMudancaCommandHandlerImpl", () => {
     sessaoRepository.findById.mockResolvedValue(sessao);
     mudancaRepository.findById.mockResolvedValue(mudanca);
 
-    await handler.execute(createTestAccessContext(), {
+    await handler.execute(testAccessContext, {
       sessaoId: sessao.id,
       mudancaId: mudanca.id,
     });
@@ -104,7 +120,7 @@ describe("HorarioEdicaoSessaoDesfazerMudancaCommandHandlerImpl", () => {
     sessaoRepository.findById.mockResolvedValue(sessao);
 
     await expect(
-      handler.execute(createTestAccessContext(), {
+      handler.execute(testAccessContext, {
         sessaoId: sessao.id,
         mudancaId: createTestId(),
       }),
@@ -121,7 +137,7 @@ describe("HorarioEdicaoSessaoDesfazerMudancaCommandHandlerImpl", () => {
     mudancaRepository.findById.mockResolvedValue(mudanca);
 
     await expect(
-      handler.execute(createTestAccessContext(), { sessaoId: sessao.id, mudancaId: mudanca.id }),
+      handler.execute(testAccessContext, { sessaoId: sessao.id, mudancaId: mudanca.id }),
     ).rejects.toThrow(BadRequestException);
     expect(mudancaRepository.deleteById).not.toHaveBeenCalled();
   });
@@ -134,7 +150,7 @@ describe("HorarioEdicaoSessaoDesfazerMudancaCommandHandlerImpl", () => {
     mudancaRepository.findById.mockResolvedValue(null);
 
     await expect(
-      handler.execute(createTestAccessContext(), {
+      handler.execute(testAccessContext, {
         sessaoId: sessao.id,
         mudancaId: createTestId(),
       }),
@@ -146,7 +162,7 @@ describe("HorarioEdicaoSessaoDesfazerMudancaCommandHandlerImpl", () => {
     sessaoRepository.findById.mockResolvedValue(null);
 
     await expect(
-      handler.execute(createTestAccessContext(), {
+      handler.execute(testAccessContext, {
         sessaoId: createTestId(),
         mudancaId: createTestId(),
       }),

@@ -81,6 +81,7 @@ import { CidadeEntity } from "@/modules/localidades/cidade/infrastructure.databa
 import { IEnderecoCreateOrUpdateCommandHandler } from "@/modules/localidades/endereco/domain/commands/endereco-create-or-update.command.handler.interface";
 import { IEstadoListQueryHandler } from "@/modules/localidades/estado/domain/queries/estado-list.query.handler.interface";
 import { AccessContextHttp } from "@/server/nest/access-context";
+import { UPLOAD_LIMITS } from "@/shared/presentation/rest";
 import {
   EstagioCreateInputRestDto,
   EstagioFindOneInputRestDto,
@@ -198,7 +199,7 @@ export class EstagioRestController {
   @ApiCreatedResponse({ type: EstagioImportJobOutputRestDto })
   @ApiBadRequestResponse()
   @ApiForbiddenResponse()
-  @UseInterceptors(FileInterceptor("file"))
+  @UseInterceptors(FileInterceptor("file", UPLOAD_LIMITS.SPREADSHEET))
   async importCsv(
     @AccessContextHttp() accessContext: IAccessContext,
     @UploadedFile() file: Express.Multer.File,

@@ -56,6 +56,7 @@ import {
   IBlocoListQueryHandler,
 } from "@/modules/ambientes/bloco/domain/queries/bloco-list.query.handler.interface";
 import { AccessContextHttp } from "@/server/nest/access-context";
+import { UPLOAD_LIMITS } from "@/shared/presentation/rest";
 import {
   BlocoCreateInputRestDto,
   BlocoFindOneInputRestDto,
@@ -173,7 +174,7 @@ export class BlocoRestController {
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
-  @UseInterceptors(FileInterceptor("file"))
+  @UseInterceptors(FileInterceptor("file", UPLOAD_LIMITS.IMAGE))
   async updateImagemCapa(
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: BlocoFindOneInputRestDto,

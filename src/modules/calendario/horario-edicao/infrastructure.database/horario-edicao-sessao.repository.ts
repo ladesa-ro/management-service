@@ -12,7 +12,7 @@ export class HorarioEdicaoSessaoTypeOrmRepositoryAdapter implements IHorarioEdic
 
   async findById(id: string): Promise<HorarioEdicaoSessaoEntity | null> {
     const repo = this.appTypeormConnection.getRepository(HorarioEdicaoSessaoEntity);
-    return repo.findOneBy({ id });
+    return repo.findOne({ where: { id }, relations: { usuario: true } });
   }
 
   async save(entity: HorarioEdicaoSessaoEntity): Promise<HorarioEdicaoSessaoEntity> {

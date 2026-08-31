@@ -1,4 +1,4 @@
-import { ensureExists } from "@/application/errors";
+import { ensureExists, ForbiddenError } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { Dep, Impl } from "@/domain/dependency-injection";
 import { ICalendarioAgendamentoRepository } from "@/modules/calendario/agendamento/domain/repositories/calendario-agendamento.repository.interface";
@@ -31,6 +31,12 @@ export class HorarioEdicaoSessaoDiferencaQueryHandlerImpl
   ): Promise<HorarioEdicaoSessaoDiferencaQueryResult> {
     const sessao = await this.sessaoRepository.findById(query.sessaoId);
     ensureExists(sessao, "HorarioEdicaoSessao", query.sessaoId);
+
+    const isSuperUser = accessContext?.requestActor?.isSuperUser ?? false;
+    const actorId = accessContext?.requestActor?.id;
+    if (!isSuperUser && (!actorId || sessao.usuario?.id !== actorId)) {
+      throw new ForbiddenError("Você não tem permissão para acessar esta sessão de edição.");
+    }
 
     const mudancas = await this.mudancaRepository.findBySessaoId(query.sessaoId);
 

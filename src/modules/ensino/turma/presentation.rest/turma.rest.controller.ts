@@ -68,6 +68,7 @@ import {
 } from "@/modules/ensino/turma/domain/queries/turma-list-estagiarios.query.handler.interface";
 import { Turma } from "@/modules/ensino/turma/domain/turma";
 import { AccessContextHttp } from "@/server/nest/access-context";
+import { UPLOAD_LIMITS } from "@/shared/presentation/rest";
 import {
   TurmaCreateInputRestDto,
   TurmaFindOneInputRestDto,
@@ -219,7 +220,7 @@ export class TurmaRestController {
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
-  @UseInterceptors(FileInterceptor("file"))
+  @UseInterceptors(FileInterceptor("file", UPLOAD_LIMITS.IMAGE))
   async updateImagemCapa(
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: TurmaFindOneInputRestDto,

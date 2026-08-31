@@ -94,6 +94,7 @@ import {
 import { ITurmaListQueryHandler } from "@/modules/ensino/turma/domain/queries/turma-list.query.handler.interface";
 import { AccessContextHttp } from "@/server/nest/access-context";
 import { NeedsAuth } from "@/server/nest/auth";
+import { UPLOAD_LIMITS } from "@/shared/presentation/rest";
 import { parseUsuarioImportCsv } from "../application/helpers/usuario-import-csv.helper";
 import { parseUsuarioImportSuapXls } from "../application/helpers/usuario-import-suap-xls.helper";
 import {
@@ -225,7 +226,7 @@ export class UsuarioRestController {
   @ApiCreatedResponse({ type: UsuarioImportJobOutputRestDto })
   @ApiBadRequestResponse()
   @ApiForbiddenResponse()
-  @UseInterceptors(FileInterceptor("file"))
+  @UseInterceptors(FileInterceptor("file", UPLOAD_LIMITS.SPREADSHEET))
   async importCsv(
     @AccessContextHttp() accessContext: IAccessContext,
     @UploadedFile() file: Express.Multer.File,
@@ -428,7 +429,7 @@ export class UsuarioRestController {
   @ApiCreatedResponse({ type: UsuarioImportJobOutputRestDto })
   @ApiBadRequestResponse()
   @ApiForbiddenResponse()
-  @UseInterceptors(FileInterceptor("file"))
+  @UseInterceptors(FileInterceptor("file", UPLOAD_LIMITS.SPREADSHEET))
   async importAlunosSuapXls(
     @AccessContextHttp() accessContext: IAccessContext,
     @UploadedFile() file: Express.Multer.File,
@@ -835,7 +836,7 @@ export class UsuarioRestController {
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
-  @UseInterceptors(FileInterceptor("file"))
+  @UseInterceptors(FileInterceptor("file", UPLOAD_LIMITS.IMAGE))
   async updateImagemCapa(
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: UsuarioFindOneInputRestDto,
@@ -877,7 +878,7 @@ export class UsuarioRestController {
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
-  @UseInterceptors(FileInterceptor("file"))
+  @UseInterceptors(FileInterceptor("file", UPLOAD_LIMITS.IMAGE))
   async updateImagemPerfil(
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: UsuarioFindOneInputRestDto,

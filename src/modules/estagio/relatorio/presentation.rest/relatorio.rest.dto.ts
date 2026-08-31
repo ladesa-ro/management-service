@@ -5,6 +5,7 @@ import {
   TransformToArray,
 } from "@/shared/presentation/rest";
 import { PaginatedFilterByIdRestDto, PaginationMetaRestDto } from "@/shared/presentation/rest/dtos";
+import { findOneUuidInputSchema } from "@/shared/validation/schemas";
 
 // ==========================================
 // DTOs de Entrada (Inputs/Args)
@@ -58,12 +59,16 @@ export class RelatorioUpdateInputRestDto {
 
 @ApiSchema({ name: "RelatorioFindOneParamsRestDto" })
 export class RelatorioFindOneParamsRestDto {
+  static schema = findOneUuidInputSchema;
+
   @ApiProperty({ description: "ID do Relatório de Estágio" })
   id!: string;
 }
 
 @ApiSchema({ name: "EstagioRelatorioParamsRestDto" })
 export class EstagioRelatorioParamsRestDto {
+  static schema = findOneUuidInputSchema;
+
   @ApiProperty({ description: "ID do Estágio" })
   id!: string;
 }

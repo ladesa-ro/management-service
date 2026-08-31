@@ -56,6 +56,7 @@ import {
   OfertaFormacaoListQueryMetadata,
 } from "@/modules/ensino/oferta-formacao/domain/queries/oferta-formacao-list.query.handler.interface";
 import { AccessContextHttp } from "@/server/nest/access-context";
+import { UPLOAD_LIMITS } from "@/shared/presentation/rest";
 import {
   OfertaFormacaoCreateInputRestDto,
   OfertaFormacaoFindOneInputRestDto,
@@ -173,7 +174,7 @@ export class OfertaFormacaoRestController {
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
-  @UseInterceptors(FileInterceptor("file"))
+  @UseInterceptors(FileInterceptor("file", UPLOAD_LIMITS.IMAGE))
   async updateImagemCapa(
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: OfertaFormacaoFindOneInputRestDto,

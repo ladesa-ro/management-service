@@ -60,6 +60,7 @@ import {
   IDiarioListQueryHandler,
 } from "@/modules/ensino/diario/domain/queries/diario-list.query.handler.interface";
 import { AccessContextHttp } from "@/server/nest/access-context";
+import { UPLOAD_LIMITS } from "@/shared/presentation/rest";
 import {
   DiarioBatchCreateInputRestDto,
   DiarioCreateInputRestDto,
@@ -193,7 +194,7 @@ export class DiarioRestController {
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
-  @UseInterceptors(FileInterceptor("file"))
+  @UseInterceptors(FileInterceptor("file", UPLOAD_LIMITS.IMAGE))
   async updateImagemCapa(
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: DiarioFindOneInputRestDto,
