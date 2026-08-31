@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Get, Post } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Get, Post, UseGuards } from "@nestjs/common";
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
@@ -7,6 +7,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
+import { Throttle, ThrottlerGuard } from "@nestjs/throttler";
 import type { IAccessContext } from "@/domain/abstractions";
 import { Dep } from "@/domain/dependency-injection";
 import {
@@ -47,6 +48,7 @@ import {
 
 @ApiTags("autenticacao")
 @Controller("/autenticacao")
+@UseGuards(ThrottlerGuard)
 export class AutenticacaoRestController {
   constructor(
     @Dep(IUsuarioEnsinoQueryHandler)
@@ -71,12 +73,12 @@ export class AutenticacaoRestController {
   async whoAmIEnsino(
     @AccessContextHttp() accessContext: IAccessContext,
   ): Promise<UsuarioEnsinoOutputRestDto> {
-    const idUsuario = accessContext.requestActor?.id;
-    if (!idUsuario) {
-      throw new BadRequestException();
+    const usuarioId = accessContext.requestActor?.id;
+    if (!usuarioId) {
+      throw new BadRequestException("Usuário não identificado.");
     }
     const result = await this.usuarioEnsinoHandler.execute(accessContext, {
-      id: idUsuario,
+      id: usuarioId,
     });
     return UsuarioRestMapper.toEnsinoOutputDto(result);
   }
@@ -102,6 +104,7 @@ export class AutenticacaoRestController {
 
   @Post("/login")
   @Public()
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
   @ApiOperation(AutenticacaoLoginCommandMetadata.swaggerMetadata)
   @ApiCreatedResponse({ type: AuthSessionCredentialsRestDto })
   @ApiForbiddenResponse()
@@ -114,6 +117,7 @@ export class AutenticacaoRestController {
 
   @Post("/login/refresh")
   @Public()
+  @Throttle({ default: { limit: 15, ttl: 60000 } })
   @ApiOperation(AutenticacaoRefreshCommandMetadata.swaggerMetadata)
   @ApiCreatedResponse({ type: AuthSessionCredentialsRestDto })
   @ApiForbiddenResponse()
@@ -125,6 +129,7 @@ export class AutenticacaoRestController {
   }
 
   @Post("/definir-senha")
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
   @ApiOperation(AutenticacaoDefinirSenhaCommandMetadata.swaggerMetadata)
   @ApiCreatedResponse({ type: Boolean })
   @ApiForbiddenResponse()
@@ -136,6 +141,7 @@ export class AutenticacaoRestController {
   }
 
   @Post("/redefinir-senha")
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
   @ApiOperation(AutenticacaoRecoverPasswordCommandMetadata.swaggerMetadata)
   @ApiCreatedResponse({ type: Boolean })
   @ApiForbiddenResponse()
