@@ -56,6 +56,7 @@ import {
   IEmpresaListQueryHandler,
 } from "@/modules/estagio/empresa/domain/queries/empresa-list.query.handler.interface";
 import { AccessContextHttp } from "@/server/nest/access-context";
+import { UPLOAD_LIMITS } from "@/shared/presentation/rest";
 import {
   EmpresaCreateInputRestDto,
   EmpresaFindOneInputRestDto,
@@ -173,7 +174,7 @@ export class EmpresaRestController {
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
-  @UseInterceptors(FileInterceptor("file"))
+  @UseInterceptors(FileInterceptor("file", UPLOAD_LIMITS.IMAGE))
   async updateFotoEmpresa(
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: EmpresaFindOneInputRestDto,
