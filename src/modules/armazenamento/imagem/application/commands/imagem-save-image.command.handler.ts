@@ -65,7 +65,8 @@ export class ImagemSaveImageCommandHandlerImpl implements IImagemSaveImageComman
 
       for (const transform of options.transforms) {
         let mimeType: string;
-        const transformImage = originalImage.clone().keepMetadata();
+        // Não chamamos keepMetadata() para que o Sharp remova metadados EXIF/GPS por padrão.
+        const transformImage = originalImage.clone();
 
         if (transform.outputAs === "jpeg") {
           transformImage.jpeg();
