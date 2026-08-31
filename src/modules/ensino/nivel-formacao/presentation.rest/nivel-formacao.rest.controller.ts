@@ -56,6 +56,7 @@ import {
   NivelFormacaoListQueryMetadata,
 } from "@/modules/ensino/nivel-formacao/domain/queries/nivel-formacao-list.query.handler.interface";
 import { AccessContextHttp } from "@/server/nest/access-context";
+import { UPLOAD_LIMITS } from "@/shared/presentation/rest";
 import {
   NivelFormacaoCreateInputRestDto,
   NivelFormacaoFindOneInputRestDto,
@@ -173,7 +174,7 @@ export class NivelFormacaoRestController {
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
-  @UseInterceptors(FileInterceptor("file"))
+  @UseInterceptors(FileInterceptor("file", UPLOAD_LIMITS.IMAGE))
   async updateImagemCapa(
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: NivelFormacaoFindOneInputRestDto,
