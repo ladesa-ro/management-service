@@ -25,6 +25,7 @@ import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { Dep } from "@/domain/dependency-injection";
 import { AccessContextHttp } from "@/server/nest/access-context";
+import { UPLOAD_LIMITS } from "@/shared/presentation/rest";
 import {
   IRelatorioDeleteCommandHandler,
   IRelatorioUploadPdfCommandHandler,
@@ -86,7 +87,7 @@ export class EstagioRelatorioRestController {
   @ApiCreatedResponse({ type: RelatorioFindOneOutputRestDto })
   @ApiBadRequestResponse({ description: "Arquivo não informado ou não é PDF" })
   @ApiForbiddenResponse()
-  @UseInterceptors(FileInterceptor("file"))
+  @UseInterceptors(FileInterceptor("file", UPLOAD_LIMITS.DOCUMENT))
   async upload(
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: EstagioRelatorioParamsRestDto,
@@ -117,7 +118,7 @@ export class EstagioRelatorioRestController {
   @ApiCreatedResponse({ type: RelatorioFindOneOutputRestDto })
   @ApiBadRequestResponse({ description: "Arquivo não informado ou não é PDF" })
   @ApiForbiddenResponse()
-  @UseInterceptors(FileInterceptor("file"))
+  @UseInterceptors(FileInterceptor("file", UPLOAD_LIMITS.DOCUMENT))
   async uploadAlias(
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: EstagioRelatorioParamsRestDto,
