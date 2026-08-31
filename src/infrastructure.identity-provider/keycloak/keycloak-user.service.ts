@@ -1,6 +1,8 @@
 import type UserRepresentation from "@keycloak/keycloak-admin-client/lib/defs/userRepresentation";
 import { ServiceUnavailableError } from "@/application/errors";
 import type { IIdpUserService } from "@/domain/abstractions/identity-provider";
+import type { ILoggerPort } from "@/domain/abstractions/logging";
+import { ILoggerPort as ILoggerPortToken } from "@/domain/abstractions/logging";
 import { Dep, Impl } from "@/domain/dependency-injection";
 import type { IAuthOptions } from "../options/auth-options.interface";
 import { IAuthOptions as IAuthOptionsToken } from "../options/auth-options.interface";
@@ -12,6 +14,8 @@ export class KeycloakUserService implements IIdpUserService {
     private readonly keycloakService: KeycloakService,
     @Dep(IAuthOptionsToken)
     private readonly authOptions: IAuthOptions | null,
+    @Dep(ILoggerPortToken)
+    private readonly logger: ILoggerPort,
   ) {}
 
   #ensureAuthOptions(): IAuthOptions {
@@ -50,7 +54,6 @@ export class KeycloakUserService implements IIdpUserService {
     currentMatricula: string,
     data: { matricula?: string | null; email?: string | null },
   ): Promise<void> {
-    console.log(currentMatricula);
     const user = await this.keycloakService.findUserByMatricula(currentMatricula);
 
     if (!user?.id) {
@@ -73,7 +76,11 @@ export class KeycloakUserService implements IIdpUserService {
 
       await kcAdminClient.users.update({ id: user.id }, payload);
     } catch (err) {
-      console.error(JSON.stringify(err, null, 2));
+      this.logger.error(
+        "Falha ao sincronizar usuário no Keycloak",
+        err instanceof Error ? err.stack : undefined,
+        "KeycloakUserService",
+      );
 
       throw err;
     }
