@@ -1,5 +1,5 @@
 import { BadRequestException } from "@nestjs/common";
-import { ensureExists } from "@/application/errors";
+import { ensureExists, ForbiddenError } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { Dep, Impl } from "@/domain/dependency-injection";
 import { IIdempotencyService, type IIdempotencyServiceType } from "@/shared/idempotency";
@@ -32,21 +32,28 @@ export class HorarioEdicaoSessaoPublicarCommandHandlerImpl
   ) {}
 
   async execute(
-    _accessContext: IAccessContext | null,
+    accessContext: IAccessContext | null,
     command: HorarioEdicaoSessaoPublicarCommand,
   ): Promise<IHorarioEdicaoSessao> {
     return this.idempotencyService.execute({
       idempotencyKey: command.idempotencyKey,
       comando: COMANDO,
-      run: () => this.publicar(command),
+      run: () => this.publicar(accessContext, command),
     });
   }
 
   private async publicar(
+    accessContext: IAccessContext | null,
     command: HorarioEdicaoSessaoPublicarCommand,
   ): Promise<IHorarioEdicaoSessao> {
     const sessao = await this.sessaoRepository.findById(command.sessaoId);
     ensureExists(sessao, "HorarioEdicaoSessao", command.sessaoId);
+
+    const isSuperUser = accessContext?.requestActor?.isSuperUser ?? false;
+    const actorId = accessContext?.requestActor?.id;
+    if (!isSuperUser && (!actorId || sessao.usuario?.id !== actorId)) {
+      throw new ForbiddenError("Você não tem permissão para publicar esta sessão de edição.");
+    }
 
     if (sessao.status !== HorarioEdicaoSessaoStatus.ABERTA) {
       throw new BadRequestException(
