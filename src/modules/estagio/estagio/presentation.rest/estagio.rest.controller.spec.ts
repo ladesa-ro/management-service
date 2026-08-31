@@ -198,7 +198,7 @@ describe("EstagioRestController.importCsv", () => {
     } as Express.Multer.File);
 
     // Espera a execução do setImmediate
-    await new Promise((resolve) => setTimeout(resolve, 0));
+    await new Promise((resolve) => setTimeout(resolve, 50));
 
     expect(empresaRepository.findByCnpj).toHaveBeenCalledWith("10.817.343/0002-88");
     expect(usuarioRepository.findByMatricula).toHaveBeenCalledWith("2024102020023");
@@ -327,7 +327,7 @@ describe("EstagioRestController.importCsv", () => {
     } as Express.Multer.File);
 
     // Espera a execução do setImmediate
-    await new Promise((resolve) => setTimeout(resolve, 0));
+    await new Promise((resolve) => setTimeout(resolve, 50));
 
     expect(definirPerfisAtivosHandler.execute).toHaveBeenCalledOnce();
     expect(estagiarioRepository.findByPerfilId).toHaveBeenCalledWith("perfil-aluno-id");
@@ -388,7 +388,7 @@ describe("EstagioRestController.importCsv", () => {
     } as Express.Multer.File);
 
     // Espera a execução do setImmediate
-    await new Promise((resolve) => setTimeout(resolve, 0));
+    await new Promise((resolve) => setTimeout(resolve, 50));
 
     expect(createHandler.execute).not.toHaveBeenCalled();
     expect(result).toMatchObject({
@@ -445,7 +445,7 @@ describe("EstagioRestController.importCsv", () => {
     } as Express.Multer.File);
 
     // Espera a execução do setImmediate
-    await new Promise((resolve) => setTimeout(resolve, 0));
+    await new Promise((resolve) => setTimeout(resolve, 50));
 
     expect(createHandler.execute).not.toHaveBeenCalled();
     expect(result).toMatchObject({
