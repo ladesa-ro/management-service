@@ -18,7 +18,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
-import { ensureExists } from "@/application/errors";
+import { ensureExists, ForbiddenError } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { Dep } from "@/domain/dependency-injection";
 import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7";
@@ -151,11 +151,12 @@ export class HorarioEdicaoRestController {
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async findOne(
-    @AccessContextHttp() _accessContext: IAccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: HorarioEdicaoSessaoParamsRestDto,
   ): Promise<HorarioEdicaoSessaoOutputRestDto> {
     const sessao = await this.sessaoRepository.findById(params.sessaoId);
     ensureExists(sessao, "HorarioEdicaoSessao", params.sessaoId);
+    this.ensureOwnership(sessao, accessContext);
 
     return this.toSessaoOutput(sessao);
   }
@@ -167,12 +168,13 @@ export class HorarioEdicaoRestController {
   @ApiNotFoundResponse()
   @ApiBadRequestResponse()
   async applyChange(
-    @AccessContextHttp() _accessContext: IAccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: HorarioEdicaoSessaoParamsRestDto,
     @Body() dto: HorarioEdicaoMudancaInputRestDto,
   ): Promise<HorarioEdicaoMudancaOutputRestDto> {
     const sessao = await this.sessaoRepository.findById(params.sessaoId);
     ensureExists(sessao, "HorarioEdicaoSessao", params.sessaoId);
+    this.ensureOwnership(sessao, accessContext);
 
     if (sessao.status !== HorarioEdicaoSessaoStatus.ABERTA) {
       throw new BadRequestException(
@@ -212,11 +214,12 @@ export class HorarioEdicaoRestController {
   @ApiNotFoundResponse()
   @ApiBadRequestResponse()
   async salvar(
-    @AccessContextHttp() _accessContext: IAccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: HorarioEdicaoSessaoParamsRestDto,
   ): Promise<HorarioEdicaoSessaoOutputRestDto> {
     const sessao = await this.sessaoRepository.findById(params.sessaoId);
     ensureExists(sessao, "HorarioEdicaoSessao", params.sessaoId);
+    this.ensureOwnership(sessao, accessContext);
 
     if (sessao.status !== HorarioEdicaoSessaoStatus.ABERTA) {
       throw new BadRequestException(
@@ -243,11 +246,12 @@ export class HorarioEdicaoRestController {
   @ApiNotFoundResponse()
   @ApiBadRequestResponse()
   async cancelar(
-    @AccessContextHttp() _accessContext: IAccessContext,
+    @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: HorarioEdicaoSessaoParamsRestDto,
   ): Promise<HorarioEdicaoSessaoOutputRestDto> {
     const sessao = await this.sessaoRepository.findById(params.sessaoId);
     ensureExists(sessao, "HorarioEdicaoSessao", params.sessaoId);
+    this.ensureOwnership(sessao, accessContext);
 
     if (sessao.status !== HorarioEdicaoSessaoStatus.ABERTA) {
       throw new BadRequestException(
@@ -299,6 +303,14 @@ export class HorarioEdicaoRestController {
     const sessao = await this.desfazerMudancaHandler.execute(accessContext, command);
 
     return this.toSessaoOutput(sessao);
+  }
+
+  private ensureOwnership(sessao: IHorarioEdicaoSessao, accessContext: IAccessContext): void {
+    const actorId = accessContext.requestActor?.id;
+    const isSuperUser = accessContext.requestActor?.isSuperUser ?? false;
+    if (!isSuperUser && (!actorId || sessao.usuario?.id !== actorId)) {
+      throw new ForbiddenError("Você não tem permissão para acessar esta sessão de edição.");
+    }
   }
 
   private toDiferencaEntradaOutput(
