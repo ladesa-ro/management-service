@@ -1,4 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseUUIDPipe,
+  Patch,
+  Post,
+  Query,
+} from "@nestjs/common";
 import {
   ApiCreatedResponse,
   ApiForbiddenResponse,
@@ -69,7 +79,7 @@ export class CargoRestController {
   @ApiForbiddenResponse()
   async findOne(
     @AccessContextHttp() accessContext: IAccessContext,
-    @Param("id") id: string,
+    @Param("id", new ParseUUIDPipe()) id: string,
   ): Promise<CargoOutputRestDto | null> {
     return this.findOneHandler.execute(accessContext, { id });
   }
@@ -81,7 +91,7 @@ export class CargoRestController {
   @ApiForbiddenResponse()
   async update(
     @AccessContextHttp() accessContext: IAccessContext,
-    @Param("id") id: string,
+    @Param("id", new ParseUUIDPipe()) id: string,
     @Body() dto: CargoUpdateInputRestDto,
   ): Promise<CargoOutputRestDto | null> {
     return this.updateHandler.execute(accessContext, { id, nome: dto.nome });
@@ -94,7 +104,7 @@ export class CargoRestController {
   @ApiForbiddenResponse()
   async delete(
     @AccessContextHttp() accessContext: IAccessContext,
-    @Param("id") id: string,
+    @Param("id", new ParseUUIDPipe()) id: string,
   ): Promise<boolean> {
     return this.deleteHandler.execute(accessContext, { id });
   }
