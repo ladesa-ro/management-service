@@ -18,7 +18,7 @@ application:
     livenessProbe:
       enabled: true
       httpGet:
-        path: /health/
+        path: /health/live
         port: http-c
       initialDelaySeconds: 10
       periodSeconds: 15
@@ -28,7 +28,7 @@ application:
     readinessProbe:
       enabled: true
       httpGet:
-        path: /health/
+        path: /health/ready
         port: http-c
       initialDelaySeconds: 5
       periodSeconds: 10
