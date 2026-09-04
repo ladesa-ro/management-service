@@ -4,6 +4,7 @@ import { NotificacaoModule } from "@/modules/acesso/notificacao/notificacao.modu
 import { UsuarioModule } from "@/modules/acesso/usuario/usuario.module";
 import { EmpresaModule } from "@/modules/estagio/empresa/empresa.module";
 import { EstagiarioModule } from "@/modules/estagio/estagiario/estagiario.module";
+import { EstagioPermissionCheckerImpl } from "@/modules/estagio/estagio/application/authorization";
 import {
   EstagioCreateCommandHandlerImpl,
   EstagioDeleteCommandHandlerImpl,
@@ -14,6 +15,7 @@ import {
   EstagioFindOneQueryHandlerImpl,
   EstagioListQueryHandlerImpl,
 } from "@/modules/estagio/estagio/application/queries";
+import { IEstagioPermissionChecker } from "@/modules/estagio/estagio/domain/authorization";
 import {
   IEstagioCreateCommandHandler,
   IEstagioDeleteCommandHandler,
@@ -45,6 +47,10 @@ import { EstagioRestController } from "@/modules/estagio/estagio/presentation.re
       provide: IEstagioRepository,
       useClass: EstagioTypeOrmRepositoryAdapter,
     },
+    {
+      provide: IEstagioPermissionChecker,
+      useClass: EstagioPermissionCheckerImpl,
+    },
 
     // Commands
     { provide: IEstagioCreateCommandHandler, useClass: EstagioCreateCommandHandlerImpl },
@@ -60,6 +66,7 @@ import { EstagioRestController } from "@/modules/estagio/estagio/presentation.re
     IEstagioRepository,
     IEstagioCreateCommandHandler,
     IEstagioSolicitarCommandHandler,
+    IEstagioPermissionChecker,
   ],
 })
 export class EstagioModule {}
