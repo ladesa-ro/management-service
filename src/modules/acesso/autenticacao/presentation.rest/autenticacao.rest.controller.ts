@@ -129,6 +129,7 @@ export class AutenticacaoRestController {
   }
 
   @Post("/definir-senha")
+  @Public()
   @Throttle({ default: { limit: 5, ttl: 60000 } })
   @ApiOperation(AutenticacaoDefinirSenhaCommandMetadata.swaggerMetadata)
   @ApiCreatedResponse({ type: Boolean })
@@ -141,6 +142,7 @@ export class AutenticacaoRestController {
   }
 
   @Post("/redefinir-senha")
+  @Public()
   @Throttle({ default: { limit: 5, ttl: 60000 } })
   @ApiOperation(AutenticacaoRecoverPasswordCommandMetadata.swaggerMetadata)
   @ApiCreatedResponse({ type: Boolean })
