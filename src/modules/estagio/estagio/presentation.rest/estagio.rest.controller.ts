@@ -707,18 +707,20 @@ export class EstagioRestController {
               const notificacaoRepository =
                 this.container.get<INotificacaoRepositoryType>(INotificacaoRepository);
 
-              const resumo = `A importação foi finalizada. Sucessos: ${created}, Falhas: ${failed}.`;
-              const detalhes =
-                errorDetails.length > 0
-                  ? `\n\nErros:\n${errorDetails.slice(0, 10).join("\n")}${errorDetails.length > 10 ? `\n... e mais ${errorDetails.length - 10} erros.` : ""}`
-                  : "";
+              if (notificacaoRepository) {
+                const resumo = `A importação foi finalizada. Sucessos: ${created}, Falhas: ${failed}.`;
+                const detalhes =
+                  errorDetails.length > 0
+                    ? `\n\nErros:\n${errorDetails.slice(0, 10).join("\n")}${errorDetails.length > 10 ? `\n... e mais ${errorDetails.length - 10} erros.` : ""}`
+                    : "";
 
-              await notificacaoRepository.save({
-                titulo: "Importação de Estágios",
-                conteudo: `${resumo}${detalhes}`,
-                lida: false,
-                usuario: { id: idUsuarioActor },
-              } as any);
+                await notificacaoRepository.save({
+                  titulo: "Importação de Estágios",
+                  conteudo: `${resumo}${detalhes}`,
+                  lida: false,
+                  usuario: { id: idUsuarioActor },
+                } as any);
+              }
 
               this.pushService.notificarImportacaoConcluida(created, failed, errorDetails);
             } catch (notifError) {
