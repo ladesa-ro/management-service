@@ -1,7 +1,7 @@
 import { INestApplication } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 import request from "supertest";
-import { afterAll, beforeAll, describe, it } from "vitest";
+import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { IRuntimeOptions as IRuntimeOptionsToken } from "@/infrastructure.config/options/runtime/runtime-options.interface";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import { AppController } from "@/server/nest/app.controller";
@@ -83,5 +83,32 @@ describe("AppController (e2e)", () => {
 
   it("/ (GET)", () => {
     return request(app.getHttpServer()).get("/").expect(200);
+  });
+
+  it("/health (GET) returns 200 when healthy", () => {
+    return request(app.getHttpServer())
+      .get("/health")
+      .expect(200)
+      .expect((res) => {
+        expect(res.body.status).toBe("healthy");
+      });
+  });
+
+  it("/health/live (GET) returns 200 and up status", () => {
+    return request(app.getHttpServer())
+      .get("/health/live")
+      .expect(200)
+      .expect((res) => {
+        expect(res.body.status).toBe("up");
+      });
+  });
+
+  it("/health/ready (GET) returns 200 when healthy", () => {
+    return request(app.getHttpServer())
+      .get("/health/ready")
+      .expect(200)
+      .expect((res) => {
+        expect(res.body.status).toBe("healthy");
+      });
   });
 });
