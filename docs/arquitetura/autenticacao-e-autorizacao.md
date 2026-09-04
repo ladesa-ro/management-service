@@ -1,6 +1,6 @@
 # Autenticação e autorização
 
-**TLDR**: autenticação delegada a um servidor Keycloak via OAuth2/OIDC, validada por JWKS, com um mock de token pra desenvolvimento sem depender do Keycloak. Autorização segue "throw on deny" via `IPermissionChecker` por módulo, aplicando validações estritas de identidade (`accessContext.requestActor`), superusuário, mitigação de BOLA/IDOR e regras de isolamento por campus e hierarquia acadêmica. Os conceitos gerais (JWT, JWKS, OAuth2/OIDC) estão em [Autenticação](../aprender/autenticacao.md).
+**TLDR**: autenticação delegada a um servidor Keycloak via OAuth2/OIDC, validada por JWKS, com um mock de token pra desenvolvimento sem depender do Keycloak. Autorização segue "throw on deny" via `IPermissionChecker` por módulo, hoje implementado como no-op na maioria dos módulos. Os conceitos gerais (JWT, JWKS, OAuth2/OIDC) estão em [Autenticação](../aprender/autenticacao.md).
 
 | Termo | Vá pra |
 |---|---|
@@ -59,15 +59,7 @@ flowchart TD
     PC -->|UPDATE| CAN_U["ensureCanUpdate"]
     PC -->|DELETE| CAN_D["ensureCanDelete"]
     CAN_C & CAN_U & CAN_D -->|ok| CONTINUE["Continua execução"]
-    CAN_C & CAN_U & CAN_D -.->|sem token| UNAUTH["401 Unauthorized"]
-    CAN_C & CAN_U & CAN_D -.->|sem permissão| FORBID["403 Forbidden"]
+    CAN_C & CAN_U & CAN_D -.->|throw| DENIED["403 Forbidden"]
 ```
 
-Cada módulo implementa `IPermissionChecker`, ver assinatura completa em [Padrões de código](padroes-de-codigo.md#permission-checker). O padrão é "throw on deny":
-- Requisições sem ator autenticado (`accessContext.requestActor`) lançam `UnauthorizedError` (HTTP 401).
-- Usuários com flag `isSuperUser` possuem autorização global para gerenciar recursos.
-- Para usuários comuns, verificações granulares de permissão são executadas:
-  - **Prevenção de escalonamento de privilégio**: usuários não-administradores não podem atribuir privilégios superiores (`isSuperUser`) ou criar vínculos administrativos indevidos.
-  - **Anti-BOLA/IDOR e integridade cadastral**: edição e exclusão exigem validação da entidade ou escopo da permissão.
-  - **Escopo contextual**: operações vinculadas a campus e departamentos validam a atuação e contexto do solicitante.
-- Caso a validação falhe, `ForbiddenError` (HTTP 403) é lançado e a execução é abortada antes de persistir alterações.
+Cada módulo implementa `IPermissionChecker`, ver assinatura completa em [Padrões de código](padroes-de-codigo.md#permission-checker). O padrão é "throw on deny": sem permissão, `ForbiddenError` é lançado e a operação é abortada. Operações de **leitura** (queries) hoje aceitam acesso com ou sem autenticação, `accessContext` pode ser `null`. Está no roadmap filtrar resultado de leitura por permissão do usuário, ainda não implementado.
