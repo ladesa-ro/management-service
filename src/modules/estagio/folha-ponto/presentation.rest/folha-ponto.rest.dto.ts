@@ -54,9 +54,45 @@ export class FolhaPontoListInputRestDto extends PaginatedFilterByIdRestDto {
   @TransformToArray()
   "filter.status"?: string[];
 
+  @ApiPropertyOptional({ description: "Filtrar por data", isArray: true })
+  @TransformToArray()
+  "filter.data"?: string[];
+
   @ApiPropertyOptional({ description: "Filtrar por estágio", isArray: true })
   @TransformToArray()
   "filter.estagio.id"?: string[];
+
+  @ApiPropertyOptional({ description: "Filtrar por empresa", isArray: true })
+  @TransformToArray()
+  "filter.estagio.empresa.id"?: string[];
+
+  @ApiPropertyOptional({ description: "Filtrar por empresa", isArray: true })
+  @TransformToArray()
+  "filter.empresa.id"?: string[];
+
+  @ApiPropertyOptional({ description: "Filtrar por estagiário", isArray: true })
+  @TransformToArray()
+  "filter.estagio.estagiario.id"?: string[];
+
+  @ApiPropertyOptional({ description: "Filtrar por estagiário", isArray: true })
+  @TransformToArray()
+  "filter.estagiario.id"?: string[];
+
+  @ApiPropertyOptional({ description: "Filtrar por matrícula do estagiário", isArray: true })
+  @TransformToArray()
+  "filter.estagio.estagiario.perfil.usuario.matricula"?: string[];
+
+  @ApiPropertyOptional({ description: "Filtrar por matrícula do estagiário", isArray: true })
+  @TransformToArray()
+  "filter.matricula"?: string[];
+
+  @ApiPropertyOptional({ description: "Filtrar por nome do estagiário", isArray: true })
+  @TransformToArray()
+  "filter.estagio.estagiario.perfil.usuario.nome"?: string[];
+
+  @ApiPropertyOptional({ description: "Filtrar por nome do estagiário", isArray: true })
+  @TransformToArray()
+  "filter.nome"?: string[];
 }
 
 // ==========================================
