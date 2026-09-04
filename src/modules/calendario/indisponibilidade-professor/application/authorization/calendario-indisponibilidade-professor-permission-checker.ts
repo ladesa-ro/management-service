@@ -1,6 +1,6 @@
+import { UnauthorizedError } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { Impl } from "@/domain/dependency-injection";
-import { noop } from "@/utils/noop";
 import type { ICalendarioIndisponibilidadeProfessorPermissionChecker } from "../../domain/authorization";
 
 @Impl()
@@ -9,24 +9,30 @@ export class CalendarioIndisponibilidadeProfessorPermissionCheckerImpl
 {
   async ensureCanCreate(
     accessContext: IAccessContext | null,
-    payload: { dto: unknown },
+    _payload: { dto: unknown },
   ): Promise<void> {
-    noop(accessContext, payload);
+    if (!accessContext?.requestActor) {
+      throw new UnauthorizedError();
+    }
   }
 
   async ensureCanUpdate(
     accessContext: IAccessContext | null,
-    payload: { dto: unknown },
-    id: string,
+    _payload: { dto: unknown },
+    _id: string,
   ): Promise<void> {
-    noop(accessContext, payload, id);
+    if (!accessContext?.requestActor) {
+      throw new UnauthorizedError();
+    }
   }
 
   async ensureCanDelete(
     accessContext: IAccessContext | null,
-    payload: { dto: unknown },
-    id: string,
+    _payload: { dto: unknown },
+    _id: string,
   ): Promise<void> {
-    noop(accessContext, payload, id);
+    if (!accessContext?.requestActor) {
+      throw new UnauthorizedError();
+    }
   }
 }

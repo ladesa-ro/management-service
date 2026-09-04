@@ -15,6 +15,10 @@ export interface ServiceInfo {
   gitCommitHash: string | null;
 }
 
+export interface LivenessResponse {
+  status: "up";
+}
+
 export interface HealthCheckResponse {
   status: "healthy" | "degraded" | "unavailable";
   dependencies: Record<
@@ -41,6 +45,14 @@ export class AppService {
       buildTime: this.runtimeOptions.buildTime,
       gitCommitHash: this.runtimeOptions.gitCommitHash,
     };
+  }
+
+  getLiveness(): LivenessResponse {
+    return { status: "up" };
+  }
+
+  getReadiness(): HealthCheckResponse {
+    return this.healthCheck();
   }
 
   healthCheck(): HealthCheckResponse {

@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { APP_FILTER, APP_INTERCEPTOR } from "@nestjs/core";
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from "@nestjs/core";
 import { ThrottlerModule } from "@nestjs/throttler";
 import { ContainerModule } from "@/infrastructure.dependency-injection";
 import { LoggingModule, RequestLoggingInterceptor } from "@/infrastructure.logging";
@@ -14,6 +14,7 @@ import {
 } from "@/server/nest/filters";
 import { TransactionInterceptor } from "@/server/nest/interceptors/transaction.interceptor";
 import { ModulesModule } from "@/server/nest/modules/modules.module";
+import { AppThrottlerGuard } from "@/server/nest/throttler/app-throttler.guard";
 import { IdempotencyModule } from "@/shared/idempotency";
 import { ResilienceModule } from "@/shared/resilience";
 
@@ -37,9 +38,14 @@ import { ResilienceModule } from "@/shared/resilience";
   providers: [
     AppService,
     {
+      provide: APP_GUARD,
+      useClass: AppThrottlerGuard,
+    },
+    {
       provide: APP_INTERCEPTOR,
       useClass: RequestLoggingInterceptor,
     },
+
     {
       provide: APP_INTERCEPTOR,
       useClass: TransactionInterceptor,

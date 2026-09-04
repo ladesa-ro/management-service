@@ -95,4 +95,24 @@ describe("IdempotencyService", () => {
     expect(runB).toHaveBeenCalledTimes(1);
     expect(repository.records).toHaveLength(2);
   });
+
+  it("handles concurrent requests with the same idempotency key without executing twice", async () => {
+    const repository = createFakeRepository();
+    const service = new IdempotencyService(repository);
+    let counter = 0;
+    const run = vi.fn().mockImplementation(async () => {
+      await new Promise((r) => setTimeout(r, 20));
+      counter++;
+      return { count: counter };
+    });
+
+    const [resA, resB] = await Promise.all([
+      service.execute({ idempotencyKey: "chave-concorrente", comando: "cmd", run }),
+      service.execute({ idempotencyKey: "chave-concorrente", comando: "cmd", run }),
+    ]);
+
+    expect(resA).toEqual({ count: 1 });
+    expect(resB).toEqual({ count: 1 });
+    expect(run).toHaveBeenCalledTimes(1);
+  });
 });

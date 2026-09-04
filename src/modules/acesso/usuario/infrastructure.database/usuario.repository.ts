@@ -20,6 +20,7 @@ import type {
 } from "@/modules/acesso/usuario";
 import { usuarioPaginationSpec } from "@/modules/acesso/usuario/domain/queries";
 import { CursoEntity } from "@/modules/ensino/curso/infrastructure.database/typeorm/curso.typeorm.entity";
+import { DiarioEntity } from "@/modules/ensino/diario/infrastructure.database/typeorm/diario.typeorm.entity";
 import { DisciplinaEntity } from "@/modules/ensino/disciplina/infrastructure.database/typeorm/disciplina.typeorm.entity";
 import { TurmaEntity } from "@/modules/ensino/turma/infrastructure.database/typeorm/turma.typeorm.entity";
 import { UsuarioEntity, UsuarioTypeormMapper } from "./typeorm";
@@ -160,110 +161,68 @@ export class UsuarioTypeOrmRepositoryAdapter implements IUsuarioRepository {
       }>;
     }>;
   }> {
-    const disciplinas = await this.appTypeormConnection.getRepository(DisciplinaEntity).find({
-      where: {
-        diarios: {
-          ativo: true,
-          diariosProfessores: {
-            situacao: true,
-            perfil: {
-              usuario: {
-                id: usuarioId,
-              },
-            },
-          },
-        },
-      },
-    });
+    const diarios = await this.appTypeormConnection
+      .getRepository(DiarioEntity)
+      .createQueryBuilder("diario")
+      .innerJoinAndSelect("diario.disciplina", "disciplina")
+      .innerJoinAndSelect("diario.turma", "turma")
+      .innerJoinAndSelect("turma.curso", "curso")
+      .innerJoin("diario.diariosProfessores", "dp")
+      .innerJoin("dp.perfil", "perfil")
+      .innerJoin("perfil.usuario", "usuario")
+      .where("usuario.id = :usuarioId", { usuarioId })
+      .andWhere("diario.ativo = :ativo", { ativo: true })
+      .andWhere("dp.situacao = :situacao", { situacao: true })
+      .andWhere("diario.date_deleted IS NULL")
+      .getMany();
 
-    const result: Array<{
-      disciplina: DisciplinaEntity;
-      cursos: Array<{
-        curso: CursoEntity;
-        turmas: Array<{
-          turma: TurmaEntity;
-        }>;
-      }>;
-    }> = [];
-
-    for (const disciplina of disciplinas) {
-      const vinculoDisciplina: {
+    const disciplinasMap = new Map<
+      string,
+      {
         disciplina: DisciplinaEntity;
-        cursos: Array<{
-          curso: CursoEntity;
-          turmas: Array<{
-            turma: TurmaEntity;
-          }>;
-        }>;
-      } = {
-        disciplina: disciplina,
-        cursos: [],
-      };
-
-      const cursos = await this.appTypeormConnection.getRepository(CursoEntity).find({
-        where: {
-          turmas: {
-            diarios: {
-              disciplina: {
-                id: disciplina.id,
-              },
-              ativo: true,
-              diariosProfessores: {
-                situacao: true,
-                perfil: {
-                  usuario: {
-                    id: usuarioId,
-                  },
-                },
-              },
-            },
-          },
-        },
-      });
-
-      for (const curso of cursos) {
-        const vinculoCurso: {
-          curso: CursoEntity;
-          turmas: Array<{
-            turma: TurmaEntity;
-          }>;
-        } = {
-          curso: curso,
-          turmas: [],
-        };
-
-        const turmas = await this.appTypeormConnection.getRepository(TurmaEntity).find({
-          where: [
-            {
-              curso: {
-                id: curso.id,
-              },
-              diarios: {
-                ativo: true,
-                disciplina: {
-                  id: disciplina.id,
-                },
-                diariosProfessores: {
-                  situacao: true,
-                  perfil: {
-                    usuario: {
-                      id: usuarioId,
-                    },
-                  },
-                },
-              },
-            },
-          ],
-        });
-
-        for (const turma of turmas) {
-          vinculoCurso.turmas.push({ turma: turma });
-        }
-
-        vinculoDisciplina.cursos.push(vinculoCurso);
+        cursosMap: Map<
+          string,
+          {
+            curso: CursoEntity;
+            turmasMap: Map<string, { turma: TurmaEntity }>;
+          }
+        >;
       }
-      result.push(vinculoDisciplina);
+    >();
+
+    for (const diario of diarios) {
+      const disc = diario.disciplina;
+      const turma = diario.turma;
+      const curso = turma.curso;
+
+      if (!disciplinasMap.has(disc.id)) {
+        disciplinasMap.set(disc.id, {
+          disciplina: disc,
+          cursosMap: new Map(),
+        });
+      }
+
+      const discEntry = disciplinasMap.get(disc.id)!;
+      if (!discEntry.cursosMap.has(curso.id)) {
+        discEntry.cursosMap.set(curso.id, {
+          curso: curso,
+          turmasMap: new Map(),
+        });
+      }
+
+      const cursoEntry = discEntry.cursosMap.get(curso.id)!;
+      if (!cursoEntry.turmasMap.has(turma.id)) {
+        cursoEntry.turmasMap.set(turma.id, { turma: turma });
+      }
     }
+
+    const result = Array.from(disciplinasMap.values()).map((d) => ({
+      disciplina: d.disciplina,
+      cursos: Array.from(d.cursosMap.values()).map((c) => ({
+        curso: c.curso,
+        turmas: Array.from(c.turmasMap.values()),
+      })),
+    }));
 
     return { disciplinas: result };
   }
