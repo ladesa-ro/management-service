@@ -22,6 +22,8 @@ function isUniqueViolation(error: unknown): boolean {
 
 @Impl()
 export class IdempotencyService implements IIdempotencyService {
+  private readonly inFlight = new Map<string, Promise<unknown>>();
+
   constructor(
     @Dep(IIdempotencyRecordRepository)
     private readonly repository: IIdempotencyRecordRepositoryType,
@@ -32,6 +34,28 @@ export class IdempotencyService implements IIdempotencyService {
       return run();
     }
 
+    const key = `${idempotencyKey}:${comando}`;
+
+    const running = this.inFlight.get(key);
+    if (running) {
+      return running as Promise<T>;
+    }
+
+    const promise = this.executeWithPersistence<T>(idempotencyKey, comando, run);
+    this.inFlight.set(key, promise);
+
+    try {
+      return await promise;
+    } finally {
+      this.inFlight.delete(key);
+    }
+  }
+
+  private async executeWithPersistence<T>(
+    idempotencyKey: string,
+    comando: string,
+    run: () => Promise<T>,
+  ): Promise<T> {
     const existing = await this.repository.findByChaveAndComando(idempotencyKey, comando);
     if (existing) {
       return existing.resultado as T;
