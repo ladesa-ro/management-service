@@ -9,8 +9,12 @@ import {
   IEstagiarioCreateCommandHandler,
   IEstagiarioRepository,
 } from "@/modules/estagio/estagiario";
-import { IEstagioCreateCommandHandler } from "@/modules/estagio/estagio/domain/commands";
-import { createTestAccessContext, createTestId } from "@/test/helpers";
+import {
+  IEstagioCreateCommandHandler,
+  IEstagioSolicitarCommandHandler,
+} from "@/modules/estagio/estagio/domain/commands";
+
+import { createTestAccessContext, createTestId, createTestRequestActor } from "@/test/helpers";
 import { EstagioRestController } from "./estagio.rest.controller";
 
 function createController(options?: {
@@ -20,6 +24,9 @@ function createController(options?: {
 }) {
   const createHandler = {
     execute: vi.fn().mockResolvedValue({ id: createTestId() }),
+  };
+  const solicitarHandler = {
+    execute: vi.fn().mockResolvedValue({ id: createTestId(), status: "EM_FASE_INICIAL" }),
   };
   const empresaRepository = options?.empresaRepository ?? {
     findByCnpj: vi.fn().mockResolvedValue({ id: createTestId() }),
@@ -85,6 +92,7 @@ function createController(options?: {
 
   const providers = new Map<any, any>([
     [IEstagioCreateCommandHandler, createHandler],
+    [IEstagioSolicitarCommandHandler, solicitarHandler],
     [IEmpresaRepository, empresaRepository],
     [
       ICursoListQueryHandler,
@@ -127,6 +135,7 @@ function createController(options?: {
     controller,
     container,
     createHandler,
+    solicitarHandler,
     empresaRepository,
     usuarioRepository,
     estagiarioRepository,
@@ -488,5 +497,55 @@ describe("EstagioRestController.findByOrientadorMatricula", () => {
 
     expect(result.data).toHaveLength(1);
     expect(result.total).toBe(1);
+  });
+});
+
+describe("EstagioRestController.solicitar", () => {
+  it("should forward company data to IEstagioSolicitarCommandHandler and return created estagio", async () => {
+    const { controller, solicitarHandler } = createController();
+    const accessContext = createTestAccessContext(
+      createTestRequestActor({ id: "usuario-estagiario-id" }),
+    );
+
+    const estagioId = createTestId();
+    solicitarHandler.execute.mockResolvedValue({
+      id: estagioId,
+      status: "EM_FASE_INICIAL",
+      empresa: { id: "empresa-id" },
+      estagiario: { id: "estagiario-id" },
+      cargaHoraria: 30,
+      aditivo: false,
+      horariosEstagio: [],
+      ativo: true,
+      dateCreated: "2026-09-04T12:00:00.000Z",
+      dateUpdated: "2026-09-04T12:00:00.000Z",
+    });
+
+    const dto = {
+      razaoSocial: "Tech LTDA",
+      nomeFantasia: "Tech",
+      cnpj: "12345678000190",
+      telefone: "69999999999",
+      email: "contato@tech.com",
+      endereco: { id: createTestId() },
+    };
+
+    const result = await controller.solicitar(accessContext, dto as any);
+
+    expect(solicitarHandler.execute).toHaveBeenCalledWith(
+      accessContext,
+      expect.objectContaining({
+        razaoSocial: dto.razaoSocial,
+        nomeFantasia: dto.nomeFantasia,
+        cnpj: dto.cnpj,
+        telefone: dto.telefone,
+        email: dto.email,
+        endereco: { id: dto.endereco.id },
+      }),
+    );
+    expect(result).toMatchObject({
+      id: estagioId,
+      status: "EM_FASE_INICIAL",
+    });
   });
 });

@@ -56,6 +56,6 @@ import { EmpresaGraphqlResolver } from "./presentation.graphql";
       useClass: EmpresaGetFotoEmpresaQueryHandlerImpl,
     },
   ],
-  exports: [IEmpresaFindOneQueryHandler],
+  exports: [IEmpresaFindOneQueryHandler, IEmpresaRepository, IEmpresaCreateCommandHandler],
 })
 export class EmpresaModule {}

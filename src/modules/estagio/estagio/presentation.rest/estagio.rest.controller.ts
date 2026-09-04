@@ -64,6 +64,10 @@ import {
   IEstagioDeleteCommandHandler,
 } from "@/modules/estagio/estagio/domain/commands/estagio-delete.command.handler.interface";
 import {
+  EstagioSolicitarCommandMetadata,
+  IEstagioSolicitarCommandHandler,
+} from "@/modules/estagio/estagio/domain/commands/estagio-solicitar.command.handler.interface";
+import {
   EstagioUpdateCommandMetadata,
   IEstagioUpdateCommandHandler,
 } from "@/modules/estagio/estagio/domain/commands/estagio-update.command.handler.interface";
@@ -89,6 +93,7 @@ import {
   EstagioImportJobOutputRestDto,
   EstagioListInputRestDto,
   EstagioListOutputRestDto,
+  EstagioSolicitarInputRestDto,
   EstagioUpdateInputRestDto,
 } from "./estagio.rest.dto";
 import * as EstagioRestMapper from "./estagio.rest.mapper";
@@ -178,6 +183,23 @@ export class EstagioRestController {
     );
     const command = EstagioRestMapper.createInputDtoToCreateCommand.map(dto);
     const queryResult = await createHandler.execute(accessContext, command);
+    return EstagioRestMapper.findOneQueryResultToOutputDto.map(queryResult);
+  }
+
+  @Post("/solicitar")
+  @ApiOperation(EstagioSolicitarCommandMetadata.swaggerMetadata)
+  @ApiBody({ type: EstagioSolicitarInputRestDto })
+  @ApiCreatedResponse({ type: EstagioFindOneOutputRestDto })
+  @ApiForbiddenResponse()
+  async solicitar(
+    @AccessContextHttp() accessContext: IAccessContext,
+    @Body() dto: EstagioSolicitarInputRestDto,
+  ): Promise<EstagioFindOneOutputRestDto> {
+    const solicitarHandler = this.container.get<IEstagioSolicitarCommandHandler>(
+      IEstagioSolicitarCommandHandler,
+    );
+    const command = EstagioRestMapper.solicitarInputDtoToSolicitarCommand.map(dto);
+    const queryResult = await solicitarHandler.execute(accessContext, command);
     return EstagioRestMapper.findOneQueryResultToOutputDto.map(queryResult);
   }
 

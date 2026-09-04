@@ -294,3 +294,28 @@ export class EstagioImportJobOutputRestDto {
   @ApiProperty()
   message!: string;
 }
+
+@ApiSchema({ name: "EstagioSolicitarInputDto" })
+export class EstagioSolicitarInputRestDto {
+  @ApiProperty(EstagioCreateCommandFields.empresa.swaggerMetadata)
+  razaoSocial!: string;
+
+  @ApiProperty(EstagioCreateCommandFields.empresa.swaggerMetadata)
+  nomeFantasia!: string;
+
+  @ApiProperty({ type: "string", description: "CNPJ da empresa (com ou sem pontuação)" })
+  cnpj!: string;
+
+  @ApiProperty({ type: "string", description: "Telefone da empresa" })
+  telefone!: string;
+
+  @ApiProperty({ type: "string", description: "Email da empresa" })
+  email!: string;
+
+  @ApiProperty({
+    type: "object",
+    properties: { id: { type: "string", format: "uuid" } },
+    description: "Referência ao endereço da empresa",
+  })
+  endereco!: { id: string };
+}
