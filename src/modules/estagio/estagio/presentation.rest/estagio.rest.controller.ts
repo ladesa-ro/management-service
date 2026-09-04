@@ -55,6 +55,7 @@ import {
   resolveEstagioImportStatus,
   resolveEstagioImportSupervisor,
 } from "@/modules/estagio/estagio/application/helpers";
+import { IEstagioPermissionChecker } from "@/modules/estagio/estagio/domain/authorization";
 import {
   EstagioCreateCommandMetadata,
   IEstagioCreateCommandHandler,
@@ -178,6 +179,10 @@ export class EstagioRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Body() dto: EstagioCreateInputRestDto,
   ): Promise<EstagioFindOneOutputRestDto> {
+    await this.container
+      .get<IEstagioPermissionChecker>(IEstagioPermissionChecker)
+      .ensureCanManageEstagio(accessContext);
+
     const createHandler = this.container.get<IEstagioCreateCommandHandler>(
       IEstagioCreateCommandHandler,
     );
@@ -187,7 +192,12 @@ export class EstagioRestController {
   }
 
   @Post("/solicitar")
-  @ApiOperation(EstagioSolicitarCommandMetadata.swaggerMetadata)
+  @ApiOperation({
+    ...EstagioSolicitarCommandMetadata.swaggerMetadata,
+    deprecated: true,
+    description:
+      "DEPRECATED: Utilize POST /solicitacoes-estagio/externo para fluxo oficial de solicitação de estágio com governança do CIEC.",
+  })
   @ApiBody({ type: EstagioSolicitarInputRestDto })
   @ApiCreatedResponse({ type: EstagioFindOneOutputRestDto })
   @ApiForbiddenResponse()
@@ -226,6 +236,10 @@ export class EstagioRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<EstagioImportJobOutputRestDto> {
+    await this.container
+      .get<IEstagioPermissionChecker>(IEstagioPermissionChecker)
+      .ensureCanManageEstagio(accessContext);
+
     if (!file?.buffer) {
       throw new BadRequestException("Arquivo não informado.");
     }
@@ -750,6 +764,10 @@ export class EstagioRestController {
     @Param() params: EstagioFindOneInputRestDto,
     @Body() dto: EstagioUpdateInputRestDto,
   ): Promise<EstagioFindOneOutputRestDto> {
+    await this.container
+      .get<IEstagioPermissionChecker>(IEstagioPermissionChecker)
+      .ensureCanManageEstagio(accessContext);
+
     const updateHandler = this.container.get<IEstagioUpdateCommandHandler>(
       IEstagioUpdateCommandHandler,
     );
@@ -774,6 +792,10 @@ export class EstagioRestController {
     @Param() params: EstagioFindOneInputRestDto,
     @Body() dto: EstagioUpdateInputRestDto,
   ): Promise<EstagioFindOneOutputRestDto> {
+    await this.container
+      .get<IEstagioPermissionChecker>(IEstagioPermissionChecker)
+      .ensureCanManageEstagio(accessContext);
+
     const updateHandler = this.container.get<IEstagioUpdateCommandHandler>(
       IEstagioUpdateCommandHandler,
     );
@@ -791,6 +813,10 @@ export class EstagioRestController {
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: EstagioFindOneInputRestDto,
   ): Promise<{ message: string }> {
+    await this.container
+      .get<IEstagioPermissionChecker>(IEstagioPermissionChecker)
+      .ensureCanManageEstagio(accessContext);
+
     const deleteHandler = this.container.get<IEstagioDeleteCommandHandler>(
       IEstagioDeleteCommandHandler,
     );
