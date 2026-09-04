@@ -22,8 +22,6 @@ Ficam em `src/test/helpers/`:
 | `createTestDatedFields(offset?)` | Campos `dateCreated`, `dateUpdated`, `dateDeleted` |
 | `createMockCrudRepository()` | Repositório mock com todos os métodos (`vi.fn()`) |
 | `createMockPermissionChecker()` | Permission checker mock, no-op por padrão |
-| `createE2ETestApp(options)` | Cria app NestJS com pipeline HTTP completo (pipes Zod, filtros, guard de auth) pra Supertest |
-| `TEST_AUTH_TOKEN` | Bearer token de teste resolvido para ator com perfil de superuser |
 
 ## Configuração
 
