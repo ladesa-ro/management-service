@@ -1,5 +1,6 @@
 import type {
   EstagioCreateCommand,
+  EstagioSolicitarCommand,
   EstagioUpdateCommand,
 } from "@/modules/estagio/estagio/domain/commands";
 import type { EstagioStatus } from "@/modules/estagio/estagio/domain/estagio";
@@ -16,12 +17,25 @@ import type {
   EstagioFindOneOutputRestDto,
   EstagioListInputRestDto,
   EstagioListOutputRestDto,
+  EstagioSolicitarInputRestDto,
   EstagioUpdateInputRestDto,
 } from "./estagio.rest.dto";
 
 // ============================================================================
 // Externa → Interna (Input: Presentation → Core)
 // ============================================================================
+
+export const solicitarInputDtoToSolicitarCommand = createMapper<
+  EstagioSolicitarInputRestDto,
+  EstagioSolicitarCommand
+>((dto) => ({
+  razaoSocial: dto.razaoSocial,
+  nomeFantasia: dto.nomeFantasia,
+  cnpj: dto.cnpj,
+  telefone: dto.telefone,
+  email: dto.email,
+  endereco: { id: dto.endereco.id },
+}));
 
 export const findOneInputDtoToFindOneQuery = createMapper<
   EstagioFindOneInputRestDto,
