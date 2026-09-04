@@ -53,14 +53,77 @@ export const listInputDtoToListQuery = createMapper<EstagioListInputRestDto, Est
     };
 
     into(query).field("filterCampusId").from(dto, "filter.campus.id");
-
     into(query).field("filterEmpresaId").from(dto, "filter.empresa.id");
-
     into(query).field("filterEstagiarioId").from(dto, "filter.estagiario.id");
-
     into(query).field("filterStatus").from(dto, "filter.status");
-
     into(query).field("filterCursoReferenciaId").from(dto, "filter.CursoReferencia.id");
+
+    into(query)
+      .field("filter.id" as any)
+      .from(dto);
+    into(query)
+      .field("filter.campus.id" as any)
+      .from(dto);
+    into(query)
+      .field("filter.empresa.id" as any)
+      .from(dto);
+    into(query)
+      .field("filter.empresa.cnpj" as any)
+      .from(dto);
+    into(query)
+      .field("filter.empresa.razaoSocial" as any)
+      .from(dto);
+    into(query)
+      .field("filter.empresa.nomeFantasia" as any)
+      .from(dto);
+    into(query)
+      .field("filter.estagiario.id" as any)
+      .from(dto);
+    into(query)
+      .field("filter.estagiario.curso.id" as any)
+      .from(dto);
+    into(query)
+      .field("filter.status" as any)
+      .from(dto);
+    into(query)
+      .field("filter.nomeSupervisor" as any)
+      .from(dto);
+    into(query)
+      .field("filter.emailSupervisor" as any)
+      .from(dto);
+    into(query)
+      .field("filter.CursoReferencia.id" as any)
+      .from(dto);
+    into(query)
+      .field("filter.usuarioOrientador.id" as any)
+      .from(dto);
+    into(query)
+      .field("filter.usuarioOrientador.matricula" as any)
+      .from(dto);
+    into(query)
+      .field("filter.usuarioOrientador.nome" as any)
+      .from(dto);
+    into(query)
+      .field("filter.dataInicio" as any)
+      .from(dto);
+    into(query)
+      .field("filter.dataFim" as any)
+      .from(dto);
+    into(query)
+      .field("filter.aditivo" as any)
+      .from(dto);
+
+    const matriculaEstagiario =
+      dto["filter.estagiario.matricula"] ?? dto["filter.estagiario.perfil.usuario.matricula"];
+    if (matriculaEstagiario !== undefined) {
+      (query as any)["filter.estagiario.perfil.usuario.matricula"] = matriculaEstagiario;
+    }
+
+    const nomeEstagiario =
+      dto["filter.estagiario.nome"] ?? dto["filter.estagiario.perfil.usuario.nome"];
+    if (nomeEstagiario !== undefined) {
+      (query as any)["filter.estagiario.perfil.usuario.nome"] = nomeEstagiario;
+    }
 
     return query;
   },

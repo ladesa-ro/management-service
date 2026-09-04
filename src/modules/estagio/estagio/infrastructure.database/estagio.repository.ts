@@ -28,7 +28,13 @@ const config = {
 const estagioRelations = {
   campus: true,
   empresa: true,
-  estagiario: true,
+  estagiario: {
+    perfil: {
+      usuario: true,
+    },
+  },
+  usuarioOrientador: true,
+  CursoReferencia: true,
   horariosEstagio: true,
 };
 

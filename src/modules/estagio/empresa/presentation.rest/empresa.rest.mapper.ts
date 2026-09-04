@@ -42,7 +42,34 @@ export const listInputDtoToListQuery = createPaginatedInputMapper<
   into(query).field("filter.id").from(dto);
   into(query).field("filter.cnpj").from(dto);
   into(query).field("filter.nomeFantasia").from(dto);
+  into(query).field("filter.razaoSocial").from(dto);
+  into(query).field("filter.email").from(dto);
+  into(query).field("filter.telefone").from(dto);
   into(query).field("filter.endereco.id").from(dto);
+  into(query).field("filter.endereco.cidade.id").from(dto);
+  into(query).field("filter.endereco.cidade.nome").from(dto);
+  into(query).field("filter.endereco.cidade.estado.id").from(dto);
+  into(query).field("filter.endereco.cidade.estado.sigla").from(dto);
+
+  const cidadeId = dto["filter.cidade.id"] ?? dto["filter.endereco.cidade.id"];
+  if (cidadeId !== undefined) {
+    query["filter.endereco.cidade.id"] = cidadeId;
+  }
+
+  const cidadeNome = dto["filter.cidade.nome"] ?? dto["filter.endereco.cidade.nome"];
+  if (cidadeNome !== undefined) {
+    query["filter.endereco.cidade.nome"] = cidadeNome;
+  }
+
+  const estadoId = dto["filter.estado.id"] ?? dto["filter.endereco.cidade.estado.id"];
+  if (estadoId !== undefined) {
+    query["filter.endereco.cidade.estado.id"] = estadoId;
+  }
+
+  const estadoSigla = dto["filter.estado.sigla"] ?? dto["filter.endereco.cidade.estado.sigla"];
+  if (estadoSigla !== undefined) {
+    query["filter.endereco.cidade.estado.sigla"] = estadoSigla;
+  }
 });
 
 export const createInputDtoToCreateCommand = createMapper<
