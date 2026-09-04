@@ -29,12 +29,14 @@ import { NivelFormacaoModule } from "@/modules/ensino/nivel-formacao/nivel-forma
 import { OfertaFormacaoModule } from "@/modules/ensino/oferta-formacao/oferta-formacao.module";
 import { TurmaMatriculaModule } from "@/modules/ensino/turma/matricula/turma-matricula.module";
 import { TurmaModule } from "@/modules/ensino/turma/turma.module";
+import { EstagioCandidaturaModule } from "@/modules/estagio/candidatura/estagio-candidatura.module";
 import { EmpresaModule } from "@/modules/estagio/empresa/empresa.module";
 import { EmpresaAvaliacaoModule } from "@/modules/estagio/empresa-avaliacao/empresa-avaliacao.module";
 import { EstagiarioModule } from "@/modules/estagio/estagiario/estagiario.module";
 import { EstagioModule } from "@/modules/estagio/estagio/estagio.module";
 import { FolhaPontoModule } from "@/modules/estagio/folha-ponto/folha-ponto.module";
 import { RelatorioEstagioModule } from "@/modules/estagio/relatorio/relatorio.module";
+import { EstagioSolicitacaoModule } from "@/modules/estagio/solicitacao/estagio-solicitacao.module";
 import { CidadeModule } from "@/modules/localidades/cidade/cidade.module";
 import { EnderecoModule } from "@/modules/localidades/endereco/endereco.module";
 import { EstadoModule } from "@/modules/localidades/estado/estado.module";
@@ -76,6 +78,8 @@ import { NotificationsModule } from "@/notifications/notifications.module";
     EmpresaModule,
     EmpresaAvaliacaoModule,
     EstagioModule,
+    EstagioCandidaturaModule,
+    EstagioSolicitacaoModule,
     EstagiarioModule,
     FolhaPontoModule,
     NotificacaoModule,
