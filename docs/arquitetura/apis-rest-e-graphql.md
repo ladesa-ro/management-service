@@ -29,7 +29,8 @@ flowchart LR
 | Etapa | Implementação real |
 |---|---|
 | Middleware | `correlationIdMiddleware`, gera ID único por requisição pra rastreamento em log (`src/infrastructure.logging/`) |
-| Guard | Valida Bearer token via JWKS (ou mock token em dev), popula `RequestActor` (`src/server/nest/auth/`), ver [Autenticação e autorização](autenticacao-e-autorizacao.md) |
+| Guard de Rate Limit | `AppThrottlerGuard`, limita taxa de requisições suportando contextos híbridos REST e GraphQL (`src/server/nest/throttler/`) |
+| Guard de Auth | Valida Bearer token via JWKS (ou mock token em dev), popula `RequestActor` (`src/server/nest/auth/`), ver [Autenticação e autorização](autenticacao-e-autorizacao.md) |
 | Pipe | `ZodGlobalValidationPipe`, valida body contra `static schema` do DTO |
 | Controller | Extrai o ator (`@AccessContextHttp()`), delega pro handler |
 | Interceptor | `TransactionInterceptor`, abre transação antes do handler, commit/rollback depois, ver [Banco de dados e transações](banco-de-dados-e-transacoes.md#transacao-automatica) |
