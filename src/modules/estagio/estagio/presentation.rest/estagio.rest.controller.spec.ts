@@ -9,6 +9,7 @@ import {
   IEstagiarioCreateCommandHandler,
   IEstagiarioRepository,
 } from "@/modules/estagio/estagiario";
+import { IEstagioPermissionChecker } from "@/modules/estagio/estagio/domain/authorization";
 import {
   IEstagioCreateCommandHandler,
   IEstagioSolicitarCommandHandler,
@@ -118,6 +119,7 @@ function createController(options?: {
     [IUsuarioRepository, usuarioRepository],
     [IEstagiarioRepository, estagiarioRepository],
     [IUsuarioCreateCommandHandler, { execute: vi.fn().mockResolvedValue({ id: createTestId() }) }],
+    [IEstagioPermissionChecker, { ensureCanManageEstagio: vi.fn().mockResolvedValue(undefined) }],
   ]);
 
   const container = {
