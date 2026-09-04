@@ -89,13 +89,15 @@ O Dev Container já configura Biome como formatador padrão com auto-format ao s
 
 | Recurso | URL | Descrição |
 |---|---|---|
-| Health check | `http://localhost:3701/health` | Status por dependência, sempre `200` |
+| Health check (Geral) | `http://localhost:3701/health` | Status de todas as dependências (`200` se saudável, `503` se indisponível) |
+| Liveness probe | `http://localhost:3701/health/live` | Verifica se o processo da API está ativo (`200` com status `up`) |
+| Readiness probe | `http://localhost:3701/health/ready` | Verifica prontidão para receber tráfego (`200` se saudável, `503` se indisponível) |
 | Documentação Scalar | `http://localhost:3701/api/docs` | Documentação interativa REST |
 | OpenAPI JSON | `http://localhost:3701/api/docs/openapi.v3.json` | Schema OpenAPI pra Postman/Insomnia |
 | Swagger UI | `http://localhost:3701/api/docs/swagger` | Interface Swagger clássica |
 | GraphQL Playground | `http://localhost:3701/api/graphql` | GraphiQL |
 
-As URLs usam o prefixo padrão `/api/`. Se `API_PREFIX` mudar no `.env`, as URLs mudam junto, exceto o health check, que fica fora do prefixo.
+As URLs usam o prefixo padrão `/api/`. Se `API_PREFIX` mudar no `.env`, as URLs mudam junto, exceto os endpoints de health check (`/health`, `/health/live`, `/health/ready`), que ficam fora do prefixo.
 
 ## Serviços do ambiente
 
