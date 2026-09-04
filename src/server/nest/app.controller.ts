@@ -1,5 +1,6 @@
-import { Controller, Get } from "@nestjs/common";
+import { Controller, Get, HttpStatus, Res } from "@nestjs/common";
 import { ApiExcludeEndpoint, ApiOperation, ApiTags } from "@nestjs/swagger";
+import type { Response } from "express";
 import { AppService } from "./app.service";
 import { Public } from "./auth";
 
@@ -17,7 +18,27 @@ export class AppController {
 
   @Get("health")
   @ApiExcludeEndpoint()
-  healthCheck() {
-    return this.appService.healthCheck();
+  healthCheck(@Res({ passthrough: true }) res: Response) {
+    const result = this.appService.healthCheck();
+    if (result.status === "unavailable") {
+      res.status(HttpStatus.SERVICE_UNAVAILABLE);
+    }
+    return result;
+  }
+
+  @Get("health/live")
+  @ApiExcludeEndpoint()
+  liveness() {
+    return this.appService.getLiveness();
+  }
+
+  @Get("health/ready")
+  @ApiExcludeEndpoint()
+  readiness(@Res({ passthrough: true }) res: Response) {
+    const result = this.appService.getReadiness();
+    if (result.status === "unavailable") {
+      res.status(HttpStatus.SERVICE_UNAVAILABLE);
+    }
+    return result;
   }
 }
