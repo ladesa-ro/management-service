@@ -198,14 +198,62 @@ export class EstagioListInputRestDto extends PaginationInputRestDto {
   @ApiPropertyOptional(EstagioListQueryFields.filterEmpresaId.swaggerMetadata)
   "filter.empresa.id"?: string | string[];
 
+  @ApiPropertyOptional(EstagioListQueryFields.filterEmpresaCnpj.swaggerMetadata)
+  "filter.empresa.cnpj"?: string | string[];
+
+  @ApiPropertyOptional(EstagioListQueryFields.filterEmpresaRazaoSocial.swaggerMetadata)
+  "filter.empresa.razaoSocial"?: string | string[];
+
+  @ApiPropertyOptional(EstagioListQueryFields.filterEmpresaNomeFantasia.swaggerMetadata)
+  "filter.empresa.nomeFantasia"?: string | string[];
+
   @ApiPropertyOptional(EstagioListQueryFields.filterEstagiarioId.swaggerMetadata)
   "filter.estagiario.id"?: string | string[];
+
+  @ApiPropertyOptional(EstagioListQueryFields.filterEstagiarioMatricula.swaggerMetadata)
+  "filter.estagiario.matricula"?: string | string[];
+
+  @ApiPropertyOptional(EstagioListQueryFields.filterEstagiarioMatricula.swaggerMetadata)
+  "filter.estagiario.perfil.usuario.matricula"?: string | string[];
+
+  @ApiPropertyOptional(EstagioListQueryFields.filterEstagiarioNome.swaggerMetadata)
+  "filter.estagiario.nome"?: string | string[];
+
+  @ApiPropertyOptional(EstagioListQueryFields.filterEstagiarioNome.swaggerMetadata)
+  "filter.estagiario.perfil.usuario.nome"?: string | string[];
+
+  @ApiPropertyOptional(EstagioListQueryFields.filterEstagiarioCursoId.swaggerMetadata)
+  "filter.estagiario.curso.id"?: string | string[];
 
   @ApiPropertyOptional(EstagioListQueryFields.filterStatus.swaggerMetadata)
   "filter.status"?: string | string[];
 
+  @ApiPropertyOptional(EstagioListQueryFields.filterNomeSupervisor.swaggerMetadata)
+  "filter.nomeSupervisor"?: string | string[];
+
+  @ApiPropertyOptional(EstagioListQueryFields.filterEmailSupervisor.swaggerMetadata)
+  "filter.emailSupervisor"?: string | string[];
+
   @ApiPropertyOptional(EstagioListQueryFields.filterCursoReferenciaId.swaggerMetadata)
   "filter.CursoReferencia.id"?: string | string[];
+
+  @ApiPropertyOptional(EstagioListQueryFields.filterUsuarioOrientadorId.swaggerMetadata)
+  "filter.usuarioOrientador.id"?: string | string[];
+
+  @ApiPropertyOptional(EstagioListQueryFields.filterUsuarioOrientadorMatricula.swaggerMetadata)
+  "filter.usuarioOrientador.matricula"?: string | string[];
+
+  @ApiPropertyOptional(EstagioListQueryFields.filterUsuarioOrientadorNome.swaggerMetadata)
+  "filter.usuarioOrientador.nome"?: string | string[];
+
+  @ApiPropertyOptional(EstagioListQueryFields.filterDataInicio.swaggerMetadata)
+  "filter.dataInicio"?: string | string[];
+
+  @ApiPropertyOptional(EstagioListQueryFields.filterDataFim.swaggerMetadata)
+  "filter.dataFim"?: string | string[];
+
+  @ApiPropertyOptional(EstagioListQueryFields.filterAditivo.swaggerMetadata)
+  "filter.aditivo"?: string | string[];
 }
 
 @ApiSchema({ name: "EstagioFindOneOutputDto" })

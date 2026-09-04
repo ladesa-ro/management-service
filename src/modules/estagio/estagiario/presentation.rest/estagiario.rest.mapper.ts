@@ -39,7 +39,30 @@ export const listInputDtoToListQuery = createPaginatedInputMapper<
   into(query).field("filter.id").from(dto);
   into(query).field("filter.perfil.id").from(dto);
   into(query).field("filter.curso.id").from(dto);
-  into(query).field("filter.periodo").from(dto, "filterPeriodo");
+  into(query).field("filter.curso.nome").from(dto);
+  into(query).field("filter.periodo").from(dto);
+  into(query).field("filter.emailInstitucional").from(dto);
+  into(query).field("filter.telefone").from(dto);
+
+  const matricula = dto["filter.matricula"] ?? dto["filter.perfil.usuario.matricula"];
+  if (matricula !== undefined) {
+    query["filter.perfil.usuario.matricula"] = matricula;
+  }
+
+  const nome = dto["filter.nome"] ?? dto["filter.perfil.usuario.nome"];
+  if (nome !== undefined) {
+    query["filter.perfil.usuario.nome"] = nome;
+  }
+
+  const email = dto["filter.email"] ?? dto["filter.perfil.usuario.email"];
+  if (email !== undefined) {
+    query["filter.perfil.usuario.email"] = email;
+  }
+
+  const campusId = dto["filter.campus.id"] ?? dto["filter.perfil.campus.id"];
+  if (campusId !== undefined) {
+    query["filter.perfil.campus.id"] = campusId;
+  }
 });
 
 export const createInputDtoToCreateCommand = createMapper<

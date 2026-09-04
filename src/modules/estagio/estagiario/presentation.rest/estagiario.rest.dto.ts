@@ -71,13 +71,57 @@ export class EstagiarioListInputRestDto extends PaginatedFilterByIdRestDto {
   @TransformToArray()
   "filter.perfil.id"?: string[];
 
+  @ApiPropertyOptional(EstagiarioListQueryFields.filterMatricula.swaggerMetadata)
+  @TransformToArray()
+  "filter.perfil.usuario.matricula"?: string[];
+
+  @ApiPropertyOptional(EstagiarioListQueryFields.filterMatricula.swaggerMetadata)
+  @TransformToArray()
+  "filter.matricula"?: string[];
+
+  @ApiPropertyOptional(EstagiarioListQueryFields.filterNome.swaggerMetadata)
+  @TransformToArray()
+  "filter.perfil.usuario.nome"?: string[];
+
+  @ApiPropertyOptional(EstagiarioListQueryFields.filterNome.swaggerMetadata)
+  @TransformToArray()
+  "filter.nome"?: string[];
+
+  @ApiPropertyOptional(EstagiarioListQueryFields.filterEmail.swaggerMetadata)
+  @TransformToArray()
+  "filter.perfil.usuario.email"?: string[];
+
+  @ApiPropertyOptional(EstagiarioListQueryFields.filterEmail.swaggerMetadata)
+  @TransformToArray()
+  "filter.email"?: string[];
+
+  @ApiPropertyOptional(EstagiarioListQueryFields.filterCampusId.swaggerMetadata)
+  @TransformToArray()
+  "filter.perfil.campus.id"?: string[];
+
+  @ApiPropertyOptional(EstagiarioListQueryFields.filterCampusId.swaggerMetadata)
+  @TransformToArray()
+  "filter.campus.id"?: string[];
+
   @ApiPropertyOptional(EstagiarioListQueryFields.filterCursoId.swaggerMetadata)
   @TransformToArray()
   "filter.curso.id"?: string[];
 
+  @ApiPropertyOptional(EstagiarioListQueryFields.filterCursoNome.swaggerMetadata)
+  @TransformToArray()
+  "filter.curso.nome"?: string[];
+
   @ApiPropertyOptional(EstagiarioListQueryFields.filterPeriodo.swaggerMetadata)
   @TransformToArray()
   "filter.periodo"?: string[];
+
+  @ApiPropertyOptional(EstagiarioListQueryFields.filterEmailInstitucional.swaggerMetadata)
+  @TransformToArray()
+  "filter.emailInstitucional"?: string[];
+
+  @ApiPropertyOptional(EstagiarioListQueryFields.filterTelefone.swaggerMetadata)
+  @TransformToArray()
+  "filter.telefone"?: string[];
 }
 
 @ApiSchema({ name: "EstagiarioListOutputDto" })

@@ -61,6 +61,47 @@ export const listInputDtoToListQuery = createPaginatedInputMapper<
   into(query)
     .field("filter.estagio.id" as any)
     .from(dto);
+  into(query)
+    .field("filter.estagio.empresa.id" as any)
+    .from(dto);
+  into(query)
+    .field("filter.estagio.status" as any)
+    .from(dto);
+  into(query)
+    .field("filter.estagio.estagiario.id" as any)
+    .from(dto);
+  into(query)
+    .field("filter.estagio.estagiario.perfil.usuario.matricula" as any)
+    .from(dto);
+  into(query)
+    .field("filter.estagio.estagiario.perfil.usuario.nome" as any)
+    .from(dto);
+
+  const empresaId = dto["filter.empresa.id"] ?? dto["filter.estagio.empresa.id"];
+  if (empresaId !== undefined) {
+    (query as any)["filter.estagio.empresa.id"] = empresaId;
+  }
+
+  const status = dto["filter.status"] ?? dto["filter.estagio.status"];
+  if (status !== undefined) {
+    (query as any)["filter.estagio.status"] = status;
+  }
+
+  const estagiarioId = dto["filter.estagiario.id"] ?? dto["filter.estagio.estagiario.id"];
+  if (estagiarioId !== undefined) {
+    (query as any)["filter.estagio.estagiario.id"] = estagiarioId;
+  }
+
+  const matricula =
+    dto["filter.matricula"] ?? dto["filter.estagio.estagiario.perfil.usuario.matricula"];
+  if (matricula !== undefined) {
+    (query as any)["filter.estagio.estagiario.perfil.usuario.matricula"] = matricula;
+  }
+
+  const nome = dto["filter.nome"] ?? dto["filter.estagio.estagiario.perfil.usuario.nome"];
+  if (nome !== undefined) {
+    (query as any)["filter.estagio.estagiario.perfil.usuario.nome"] = nome;
+  }
 });
 
 export const listQueryResultToListOutputDto = createListMapper(

@@ -76,9 +76,53 @@ export class EmpresaListInputRestDto extends PaginatedFilterByIdRestDto {
   @TransformToArray()
   "filter.nomeFantasia"?: string[];
 
+  @ApiPropertyOptional(EmpresaListQueryFields.filterRazaoSocial.swaggerMetadata)
+  @TransformToArray()
+  "filter.razaoSocial"?: string[];
+
+  @ApiPropertyOptional(EmpresaListQueryFields.filterEmail.swaggerMetadata)
+  @TransformToArray()
+  "filter.email"?: string[];
+
+  @ApiPropertyOptional(EmpresaListQueryFields.filterTelefone.swaggerMetadata)
+  @TransformToArray()
+  "filter.telefone"?: string[];
+
   @ApiPropertyOptional(EmpresaListQueryFields.filterEnderecoId.swaggerMetadata)
   @TransformToArray()
   "filter.endereco.id"?: string[];
+
+  @ApiPropertyOptional(EmpresaListQueryFields.filterCidadeId.swaggerMetadata)
+  @TransformToArray()
+  "filter.endereco.cidade.id"?: string[];
+
+  @ApiPropertyOptional(EmpresaListQueryFields.filterCidadeId.swaggerMetadata)
+  @TransformToArray()
+  "filter.cidade.id"?: string[];
+
+  @ApiPropertyOptional(EmpresaListQueryFields.filterCidadeNome.swaggerMetadata)
+  @TransformToArray()
+  "filter.endereco.cidade.nome"?: string[];
+
+  @ApiPropertyOptional(EmpresaListQueryFields.filterCidadeNome.swaggerMetadata)
+  @TransformToArray()
+  "filter.cidade.nome"?: string[];
+
+  @ApiPropertyOptional(EmpresaListQueryFields.filterEstadoId.swaggerMetadata)
+  @TransformToArray()
+  "filter.endereco.cidade.estado.id"?: string[];
+
+  @ApiPropertyOptional(EmpresaListQueryFields.filterEstadoId.swaggerMetadata)
+  @TransformToArray()
+  "filter.estado.id"?: string[];
+
+  @ApiPropertyOptional(EmpresaListQueryFields.filterEstadoSigla.swaggerMetadata)
+  @TransformToArray()
+  "filter.endereco.cidade.estado.sigla"?: string[];
+
+  @ApiPropertyOptional(EmpresaListQueryFields.filterEstadoSigla.swaggerMetadata)
+  @TransformToArray()
+  "filter.estado.sigla"?: string[];
 }
 
 @ApiSchema({ name: "EmpresaListOutputDto" })

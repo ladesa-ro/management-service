@@ -19,11 +19,26 @@ export type IEmpresaListQueryHandler = IQueryHandler<
 
 export const empresaPaginationSpec: IPaginationSpec = {
   sortableColumns: ["razaoSocial", "nomeFantasia", "cnpj", "dateCreated"],
-  searchableColumns: ["razaoSocial", "nomeFantasia", "cnpj", "email"],
+  searchableColumns: [
+    "razaoSocial",
+    "nomeFantasia",
+    "cnpj",
+    "email",
+    "telefone",
+    "endereco.cidade.nome",
+    "endereco.cidade.estado.sigla",
+  ],
   defaultSortBy: [["nomeFantasia", "ASC"]],
   filterableColumns: {
     "endereco.id": [PaginationFilter.EQ],
+    "endereco.cidade.id": [PaginationFilter.EQ],
+    "endereco.cidade.nome": [PaginationFilter.EQ, PaginationFilter.ILIKE],
+    "endereco.cidade.estado.id": [PaginationFilter.EQ],
+    "endereco.cidade.estado.sigla": [PaginationFilter.EQ],
     cnpj: [PaginationFilter.EQ],
-    nomeFantasia: [PaginationFilter.EQ],
+    nomeFantasia: [PaginationFilter.EQ, PaginationFilter.ILIKE],
+    razaoSocial: [PaginationFilter.EQ, PaginationFilter.ILIKE],
+    email: [PaginationFilter.EQ, PaginationFilter.ILIKE],
+    telefone: [PaginationFilter.EQ],
   },
 };
