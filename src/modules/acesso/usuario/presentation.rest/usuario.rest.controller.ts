@@ -387,14 +387,15 @@ export class UsuarioRestController {
 
         if (idUsuarioActor) {
           try {
-            const notificacaoRepository =
-              this.container.get<INotificacaoRepositoryType>(INotificacaoRepository);
-            await notificacaoRepository.save({
-              titulo: "Importação de Usuários",
-              conteudo: `A importação foi finalizada. Sucessos: ${created}, Falhas: ${failed}.`,
-              lida: false,
-              usuario: { id: idUsuarioActor },
-            } as any);
+            const notificacaoRepo = (this as any).container?.get?.(INotificacaoRepository);
+            if (notificacaoRepo) {
+              await notificacaoRepo.save({
+                titulo: "Importação de Usuários",
+                conteudo: `A importação foi finalizada. Sucessos: ${created}, Falhas: ${failed}.`,
+                lida: false,
+                usuario: { id: idUsuarioActor },
+              } as any);
+            }
           } catch (notifError) {
             console.error("Erro ao criar notificação:", notifError);
           }
