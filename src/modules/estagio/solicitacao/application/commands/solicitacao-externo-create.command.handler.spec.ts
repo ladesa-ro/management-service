@@ -1,4 +1,4 @@
-import { BadRequestException } from "@nestjs/common";
+import { ConflictException } from "@nestjs/common";
 import { describe, expect, it, vi } from "vitest";
 import { createTestAccessContext, createTestId, createTestRequestActor } from "@/test/helpers";
 import { EstagioSolicitacaoExternoCreateCommandHandlerImpl } from "./solicitacao-externo-create.command.handler";
@@ -23,7 +23,7 @@ describe("EstagioSolicitacaoExternoCreateCommandHandler", () => {
     };
   }
 
-  it("should create external stage request without creating company or internship prematurely", async () => {
+  it("should create external stage request when valid", async () => {
     const mocks = createMocks();
     const handler = new EstagioSolicitacaoExternoCreateCommandHandlerImpl(
       mocks.repository as any,
@@ -37,7 +37,7 @@ describe("EstagioSolicitacaoExternoCreateCommandHandler", () => {
         nomeFantasia: "Parceira Digital",
         cnpj: "11222333000144",
         email: "rh@parceira.com",
-        telefone: "6932110000",
+        telefone: "6933334444",
       },
       supervisor: {
         nome: "Maria Gestora",
@@ -58,7 +58,7 @@ describe("EstagioSolicitacaoExternoCreateCommandHandler", () => {
     expect(mocks.repository.save).toHaveBeenCalled();
   });
 
-  it("should throw BadRequestException if student has reached max active requests", async () => {
+  it("should throw ConflictException with MAX_LIMIT_REACHED if student has reached max active requests", async () => {
     const mocks = createMocks();
     mocks.repository.countActiveByEstagiarioId.mockResolvedValue(3);
 
@@ -68,8 +68,8 @@ describe("EstagioSolicitacaoExternoCreateCommandHandler", () => {
     );
 
     const accessContext = createTestAccessContext(createTestRequestActor({ id: "student-1" }));
-    await expect(
-      handler.execute(accessContext, {
+    try {
+      await handler.execute(accessContext, {
         empresa: {
           razaoSocial: "Parceira Digital LTDA",
           cnpj: "11222333000144",
@@ -77,7 +77,16 @@ describe("EstagioSolicitacaoExternoCreateCommandHandler", () => {
         supervisor: {
           nome: "Maria Gestora",
         },
-      }),
-    ).rejects.toThrow(BadRequestException);
+      });
+      expect.fail("Deveria ter lançado ConflictException");
+    } catch (err: any) {
+      expect(err).toBeInstanceOf(ConflictException);
+      expect(err.getResponse()).toMatchObject({
+        statusCode: 409,
+        error: "Conflict",
+        message: "Limite de solicitações em análise atingido.",
+        code: "MAX_LIMIT_REACHED",
+      });
+    }
   });
 });

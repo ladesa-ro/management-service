@@ -1,3 +1,4 @@
+import { z } from "zod";
 import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@/shared/presentation/rest";
 import { EntityBaseRestDto, PaginationMetaRestDto } from "@/shared/presentation/rest/dtos";
 import type { EmpresaAvaliacaoOrdenacao } from "../domain/queries/empresa-avaliacao-list.query";
@@ -107,12 +108,35 @@ export class EmpresaAvaliacaoUpdateInputRestDto {
 // List Query Params & Output
 // ============================================================================
 
+export const empresaAvaliacaoListInputSchema = z.object({
+  page: z.coerce.number().int().min(1).optional().default(1),
+  limit: z.coerce.number().int().min(1).max(100).optional().default(20),
+  order: z
+    .enum(["relevancia", "mais_recentes", "mais_curtidos", "melhor_avaliacao", "pior_avaliacao"])
+    .optional()
+    .default("relevancia"),
+  rating: z.coerce.number().int().min(1).max(5).optional(),
+});
+
 @ApiSchema({ name: "EmpresaAvaliacaoListInputDto" })
 export class EmpresaAvaliacaoListInputRestDto {
-  @ApiPropertyOptional({ description: "Número da página", default: 1, example: 1 })
+  static schema = empresaAvaliacaoListInputSchema;
+
+  @ApiPropertyOptional({
+    description: "Número da página",
+    minimum: 1,
+    default: 1,
+    example: 1,
+  })
   page?: number;
 
-  @ApiPropertyOptional({ description: "Itens por página", default: 20, example: 20 })
+  @ApiPropertyOptional({
+    description: "Itens por página (máximo 100)",
+    minimum: 1,
+    maximum: 100,
+    default: 20,
+    example: 20,
+  })
   limit?: number;
 
   @ApiPropertyOptional({
@@ -122,7 +146,12 @@ export class EmpresaAvaliacaoListInputRestDto {
   })
   order?: EmpresaAvaliacaoOrdenacao;
 
-  @ApiPropertyOptional({ description: "Filtrar por nota exata (1 a 5)", example: 5 })
+  @ApiPropertyOptional({
+    description: "Filtrar por nota exata (1 a 5)",
+    minimum: 1,
+    maximum: 5,
+    example: 5,
+  })
   rating?: number;
 }
 
@@ -189,4 +218,44 @@ export class EmpresaAvaliacaoHistoricoOutputRestDto {
 
   @ApiProperty({ description: "Data/hora da alteração" })
   dateCreated: string;
+}
+
+// ============================================================================
+// Empresas Elegíveis / Avaliáveis pelo Estagiário
+// ============================================================================
+
+@ApiSchema({ name: "EmpresaAvaliavelOutputDto" })
+export class EmpresaAvaliavelOutputRestDto {
+  @ApiProperty({
+    description: "ID da empresa concedente",
+    example: "018f3a2b-c4d5-7e8f-9a0b-1c2d3e4f5a6b",
+  })
+  empresaId: string;
+
+  @ApiProperty({ description: "Razão social da empresa", example: "Acme Serviços LTDA" })
+  razaoSocial: string;
+
+  @ApiPropertyOptional({ description: "Nome fantasia da empresa", example: "Acme Tech" })
+  nomeFantasia: string | null;
+
+  @ApiProperty({ description: "CNPJ da empresa (apenas dígitos)", example: "12345678000195" })
+  cnpj: string;
+
+  @ApiProperty({
+    description: "Indica se o estágio na empresa já foi concluído (status ENCERRADO)",
+    example: true,
+  })
+  concluido: boolean;
+
+  @ApiProperty({
+    description: "Indica se o estagiário já realizou uma avaliação desta empresa",
+    example: false,
+  })
+  avaliada: boolean;
+
+  @ApiPropertyOptional({
+    description: "ID da avaliação já realizada pelo estagiário, se existir",
+    example: null,
+  })
+  avaliacaoId: string | null;
 }

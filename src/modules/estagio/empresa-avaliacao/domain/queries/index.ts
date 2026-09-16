@@ -5,5 +5,7 @@ export * from "./empresa-avaliacao-historico-list.query";
 export * from "./empresa-avaliacao-historico-list.query.result";
 export * from "./empresa-avaliacao-list.query";
 export * from "./empresa-avaliacao-list.query.result";
+export * from "./empresa-avaliavel-list.query";
+export * from "./empresa-avaliavel-list.query.result";
 export * from "./empresa-score-find-one.query";
 export * from "./empresa-score-find-one.query.result";

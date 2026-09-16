@@ -28,10 +28,12 @@ import {
   EmpresaAvaliacaoFindOneQueryMetadata,
   EmpresaAvaliacaoHistoricoListQueryMetadata,
   EmpresaAvaliacaoListQueryMetadata,
+  EmpresaAvaliavelListQueryMetadata,
   IEmpresaAvaliacaoFindMyQueryHandler,
   IEmpresaAvaliacaoFindOneQueryHandler,
   IEmpresaAvaliacaoHistoricoListQueryHandler,
   IEmpresaAvaliacaoListQueryHandler,
+  IEmpresaAvaliavelListQueryHandler,
 } from "../domain/queries";
 import {
   EmpresaAvaliacaoCreateInputRestDto,
@@ -41,6 +43,7 @@ import {
   EmpresaAvaliacaoListInputRestDto,
   EmpresaAvaliacaoListOutputRestDto,
   EmpresaAvaliacaoUpdateInputRestDto,
+  EmpresaAvaliavelOutputRestDto,
 } from "./empresa-avaliacao.rest.dto";
 import { EmpresaAvaliacaoRestMapper } from "./empresa-avaliacao.rest.mapper";
 
@@ -54,6 +57,8 @@ export class EmpresaAvaliacaoRestController {
     private readonly findOneHandler: IEmpresaAvaliacaoFindOneQueryHandler,
     @Dep(IEmpresaAvaliacaoFindMyQueryHandler)
     private readonly findMyHandler: IEmpresaAvaliacaoFindMyQueryHandler,
+    @Dep(IEmpresaAvaliavelListQueryHandler)
+    private readonly avaliavelListHandler: IEmpresaAvaliavelListQueryHandler,
     @Dep(IEmpresaAvaliacaoCreateCommandHandler)
     private readonly createHandler: IEmpresaAvaliacaoCreateCommandHandler,
     @Dep(IEmpresaAvaliacaoUpdateCommandHandler)
@@ -67,6 +72,16 @@ export class EmpresaAvaliacaoRestController {
     @Dep(IEmpresaAvaliacaoHistoricoListQueryHandler)
     private readonly historicoListHandler: IEmpresaAvaliacaoHistoricoListQueryHandler,
   ) {}
+
+  @Get("/avaliacoes/minhas-elegiveis")
+  @ApiOperation(EmpresaAvaliavelListQueryMetadata.swaggerMetadata)
+  @ApiOkResponse({ type: [EmpresaAvaliavelOutputRestDto] })
+  @ApiForbiddenResponse()
+  async findMinhasElegiveis(
+    @AccessContextHttp() accessContext: IAccessContext,
+  ): Promise<EmpresaAvaliavelOutputRestDto[]> {
+    return this.avaliavelListHandler.execute(accessContext, {});
+  }
 
   @Get("/:empresaId/avaliacoes")
   @ApiOperation(EmpresaAvaliacaoListQueryMetadata.swaggerMetadata)

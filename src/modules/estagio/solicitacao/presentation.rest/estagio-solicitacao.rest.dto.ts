@@ -1,6 +1,9 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { z } from "zod";
 import { ApiSchema } from "@/shared/presentation/rest";
 import { PaginationInputRestDto } from "@/shared/presentation/rest/dtos";
+import { paginationInputSchema, uuidSchema } from "@/shared/validation/schemas";
+
 import {
   EstagioSolicitacaoFields,
   EstagioSolicitacaoSituacaoValues,
@@ -139,8 +142,16 @@ export class EstagioSolicitacaoIndeferirRestDto {
   parecer!: string;
 }
 
+export const estagioSolicitacaoListInputSchema = paginationInputSchema.extend({
+  "filter.situacao": z.string().optional(),
+  "filter.tipo": z.string().optional(),
+  "filter.campusId": uuidSchema.optional(),
+});
+
 @ApiSchema({ name: "EstagioSolicitacaoListInputDto" })
 export class EstagioSolicitacaoListInputRestDto extends PaginationInputRestDto {
+  static schema = estagioSolicitacaoListInputSchema;
+
   @ApiPropertyOptional({
     description: "Filtro por situação da solicitação",
     enum: EstagioSolicitacaoSituacaoValues,

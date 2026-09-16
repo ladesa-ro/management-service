@@ -12,7 +12,12 @@ import {
   PrimitiveException,
 } from "@/domain/errors";
 import { getNowISO } from "@/utils/date";
-import { buildValidationMessage, extractZodErrors, getHttpStatusName } from "./utils";
+import {
+  buildValidationMessage,
+  extractZodErrors,
+  getHttpStatusErrorPhrase,
+  getHttpStatusName,
+} from "./utils";
 
 /**
  * Resposta padronizada para erros (usada em REST e GraphQL).
@@ -20,6 +25,7 @@ import { buildValidationMessage, extractZodErrors, getHttpStatusName } from "./u
 
 export interface StandardizedErrorResponse {
   statusCode: number;
+  error?: string;
   code: string;
   message: string;
   timestamp: string;
@@ -64,6 +70,7 @@ function buildErrorResponse(
 
   const response: StandardizedErrorResponse = {
     statusCode,
+    error: getHttpStatusErrorPhrase(statusCode),
     code: error.code,
     message: error.message,
     timestamp: getNowISO(),
@@ -106,6 +113,7 @@ export function buildStandardizedErrorResponse(
     if (details.length > 0) {
       return {
         statusCode: 422,
+        error: "Unprocessable Entity",
         code: "APP.VALIDATION",
         message: buildValidationMessage(details),
         timestamp: getNowISO(),
@@ -116,6 +124,7 @@ export function buildStandardizedErrorResponse(
 
     return {
       statusCode: 400,
+      error: "Bad Request",
       code: "HTTP.BAD_REQUEST",
       message: exception.message,
       timestamp: getNowISO(),
@@ -127,10 +136,26 @@ export function buildStandardizedErrorResponse(
     const status = exception.getStatus();
     const exceptionResponse = exception.getResponse();
 
+    let customCode: string | undefined;
+    let customMessage: string | undefined;
+
+    if (typeof exceptionResponse === "object" && exceptionResponse !== null) {
+      const respObj = exceptionResponse as Record<string, unknown>;
+      if (typeof respObj.code === "string") {
+        customCode = respObj.code;
+      }
+      if (typeof respObj.message === "string") {
+        customMessage = respObj.message;
+      }
+    }
+
     return {
       statusCode: status,
-      code: `HTTP.${getHttpStatusName(status)}`,
-      message: typeof exceptionResponse === "string" ? exceptionResponse : exception.message,
+      error: getHttpStatusErrorPhrase(status),
+      code: customCode ?? `HTTP.${getHttpStatusName(status)}`,
+      message:
+        customMessage ??
+        (typeof exceptionResponse === "string" ? exceptionResponse : exception.message),
       timestamp: getNowISO(),
       path,
     };
@@ -138,6 +163,7 @@ export function buildStandardizedErrorResponse(
 
   return {
     statusCode: 500,
+    error: "Internal Server Error",
     code: "HTTP.INTERNAL_SERVER_ERROR",
     message: "Ocorreu um erro interno. Tente novamente mais tarde.",
     timestamp: getNowISO(),

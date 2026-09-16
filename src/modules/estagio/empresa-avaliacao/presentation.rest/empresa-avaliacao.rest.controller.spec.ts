@@ -7,6 +7,7 @@ describe("EmpresaAvaliacaoRestController", () => {
     const listHandler = { execute: vi.fn() };
     const findOneHandler = { execute: vi.fn() };
     const findMyHandler = { execute: vi.fn() };
+    const avaliavelListHandler = { execute: vi.fn() };
     const createHandler = { execute: vi.fn() };
     const updateHandler = { execute: vi.fn() };
     const deleteHandler = { execute: vi.fn() };
@@ -18,6 +19,7 @@ describe("EmpresaAvaliacaoRestController", () => {
       listHandler as any,
       findOneHandler as any,
       findMyHandler as any,
+      avaliavelListHandler as any,
       createHandler as any,
       updateHandler as any,
       deleteHandler as any,
@@ -31,6 +33,7 @@ describe("EmpresaAvaliacaoRestController", () => {
       listHandler,
       findOneHandler,
       findMyHandler,
+      avaliavelListHandler,
       createHandler,
       updateHandler,
       deleteHandler,
@@ -136,5 +139,26 @@ describe("EmpresaAvaliacaoRestController", () => {
     const result = await controller.findHistorico(accessContext, avaliacaoId);
     expect(result.length).toBe(1);
     expect(result[0].acao).toBe("CRIACAO");
+  });
+
+  it("findMinhasElegiveis should delegate to avaliavelListHandler", async () => {
+    const { controller, avaliavelListHandler } = createController();
+    const accessContext = createTestAccessContext();
+    const mockList = [
+      {
+        empresaId: createTestId(),
+        razaoSocial: "Acme Corp",
+        nomeFantasia: "Acme",
+        cnpj: "12345678000195",
+        concluido: true,
+        avaliada: false,
+        avaliacaoId: null,
+      },
+    ];
+    avaliavelListHandler.execute.mockResolvedValue(mockList);
+
+    const result = await controller.findMinhasElegiveis(accessContext);
+    expect(result).toEqual(mockList);
+    expect(avaliavelListHandler.execute).toHaveBeenCalledWith(accessContext, {});
   });
 });
