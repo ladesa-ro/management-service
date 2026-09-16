@@ -158,6 +158,8 @@ describe("buildStandardizedErrorResponse", () => {
       const exception = new BadRequestException(zodErrors);
       const response = buildStandardizedErrorResponse(exception);
       expect(response.statusCode).toBe(422);
+      expect(response.error).toBe("Unprocessable Entity");
+      expect(response.message).toBe("Erro de validação: campo obrigatório");
     });
 
     it("returns code APP.VALIDATION when Zod errors are present", () => {
@@ -165,6 +167,7 @@ describe("buildStandardizedErrorResponse", () => {
       const exception = new BadRequestException(zodErrors);
       const response = buildStandardizedErrorResponse(exception);
       expect(response.code).toBe("APP.VALIDATION");
+      expect(response.error).toBe("Unprocessable Entity");
     });
 
     it("includes mapped details from Zod errors", () => {
@@ -181,6 +184,7 @@ describe("buildStandardizedErrorResponse", () => {
       const exception = new BadRequestException({ message: zodErrors, statusCode: 400 });
       const response = buildStandardizedErrorResponse(exception);
       expect(response.statusCode).toBe(422);
+      expect(response.error).toBe("Unprocessable Entity");
     });
   });
 
@@ -239,6 +243,23 @@ describe("buildStandardizedErrorResponse", () => {
       const exception = new HttpException({ error: "detail" }, 422);
       const response = buildStandardizedErrorResponse(exception);
       expect(response.message).toBe(exception.message);
+    });
+
+    it("extracts custom code and message from object response body", () => {
+      const exception = new HttpException(
+        {
+          statusCode: 409,
+          error: "Conflict",
+          message: "Limite de solicitações em análise atingido.",
+          code: "MAX_LIMIT_REACHED",
+        },
+        409,
+      );
+      const response = buildStandardizedErrorResponse(exception);
+      expect(response.statusCode).toBe(409);
+      expect(response.error).toBe("Conflict");
+      expect(response.code).toBe("MAX_LIMIT_REACHED");
+      expect(response.message).toBe("Limite de solicitações em análise atingido.");
     });
   });
 

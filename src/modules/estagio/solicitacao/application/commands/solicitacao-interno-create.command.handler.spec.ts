@@ -1,4 +1,4 @@
-import { BadRequestException } from "@nestjs/common";
+import { ConflictException } from "@nestjs/common";
 import { describe, expect, it, vi } from "vitest";
 import { ForbiddenError } from "@/application/errors";
 import { createTestAccessContext, createTestId, createTestRequestActor } from "@/test/helpers";
@@ -45,7 +45,7 @@ describe("EstagioSolicitacaoInternoCreateCommandHandler", () => {
     expect(mocks.repository.save).toHaveBeenCalled();
   });
 
-  it("should throw BadRequestException if student has reached max active requests", async () => {
+  it("should throw ConflictException with MAX_LIMIT_REACHED if student has reached max active requests", async () => {
     const mocks = createMocks();
     mocks.repository.countActiveByEstagiarioId.mockResolvedValue(3);
 
@@ -55,13 +55,22 @@ describe("EstagioSolicitacaoInternoCreateCommandHandler", () => {
     );
 
     const accessContext = createTestAccessContext(createTestRequestActor({ id: "student-1" }));
-    await expect(
-      handler.execute(accessContext, {
+    try {
+      await handler.execute(accessContext, {
         professorConselheiro: { id: createTestId() },
         local: "Laboratório",
         descricao: "Descrição válida de atividades.",
-      }),
-    ).rejects.toThrow(BadRequestException);
+      });
+      expect.fail("Deveria ter lançado ConflictException");
+    } catch (err: any) {
+      expect(err).toBeInstanceOf(ConflictException);
+      expect(err.getResponse()).toMatchObject({
+        statusCode: 409,
+        error: "Conflict",
+        message: "Limite de solicitações em análise atingido.",
+        code: "MAX_LIMIT_REACHED",
+      });
+    }
   });
 
   it("should throw ForbiddenError if actor is not allowed to create request", async () => {

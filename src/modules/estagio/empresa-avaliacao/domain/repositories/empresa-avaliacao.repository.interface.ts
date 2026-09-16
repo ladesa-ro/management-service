@@ -7,6 +7,7 @@ import type {
   EmpresaAvaliacaoHistoricoQueryResult,
   EmpresaAvaliacaoListQuery,
   EmpresaAvaliacaoListQueryResult,
+  EmpresaAvaliavelQueryResult,
 } from "../queries";
 
 export const IEmpresaAvaliacaoRepository = Symbol("IEmpresaAvaliacaoRepository");
@@ -32,7 +33,10 @@ export interface IEmpresaAvaliacaoRepository {
     empresaId: string,
   ): Promise<{ eligible: boolean; estagiarioId?: string; reason?: string }>;
 
+  findEmpresasAvaliaveisByUserId(userId: string): Promise<EmpresaAvaliavelQueryResult[]>;
+
   // Likes management & auditing
+
   findActiveLike(avaliacaoId: string, usuarioId: string): Promise<EmpresaAvaliacaoCurtida | null>;
   findAnyLike(avaliacaoId: string, usuarioId: string): Promise<EmpresaAvaliacaoCurtida | null>;
   saveLike(like: EmpresaAvaliacaoCurtida): Promise<void>;

@@ -198,8 +198,9 @@ export class EstagioRestController {
     ...EstagioSolicitarCommandMetadata.swaggerMetadata,
     deprecated: true,
     description:
-      "DEPRECATED: Utilize POST /solicitacoes-estagio/externo para fluxo oficial de solicitação de estágio com governança do CIEC.",
+      "DEPRECATED: Esta rota está obsoleta e será descontinuada na v2.0. Utilize `POST /solicitacoes-estagio/externo` (ou `POST /solicitacoes-estagio/interno`) para o fluxo oficial de solicitação de estágio com governança e análise do CIEC.",
   })
+
   @ApiBody({ type: EstagioSolicitarInputRestDto })
   @ApiCreatedResponse({ type: EstagioFindOneOutputRestDto })
   @ApiForbiddenResponse()

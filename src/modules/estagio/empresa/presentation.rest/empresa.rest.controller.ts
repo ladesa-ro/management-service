@@ -145,9 +145,16 @@ export class EmpresaRestController {
 
   @Get("/:id/imagem/foto-empresa")
   @ApiOperation(EmpresaGetFotoEmpresaQueryMetadata.swaggerMetadata)
-  @ApiOkResponse()
+  @ApiOkResponse({
+    description:
+      "Retorna a imagem binária da empresa com o Content-Type apropriado (image/png, image/jpeg, etc.)",
+    schema: {
+      type: "string",
+      format: "binary",
+    },
+  })
   @ApiForbiddenResponse()
-  @ApiNotFoundResponse()
+  @ApiNotFoundResponse({ description: "Empresa ou imagem não encontrada" })
   async getFotoEmpresa(
     @AccessContextHttp() accessContext: IAccessContext,
     @Param() params: EmpresaFindOneInputRestDto,

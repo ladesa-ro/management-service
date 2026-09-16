@@ -5,6 +5,7 @@ import { EmpresaAvaliacaoFindMyQueryHandlerImpl } from "./empresa-avaliacao-find
 import { EmpresaAvaliacaoFindOneQueryHandlerImpl } from "./empresa-avaliacao-find-one.query.handler";
 import { EmpresaAvaliacaoHistoricoListQueryHandlerImpl } from "./empresa-avaliacao-historico-list.query.handler";
 import { EmpresaAvaliacaoListQueryHandlerImpl } from "./empresa-avaliacao-list.query.handler";
+import { EmpresaAvaliavelListQueryHandlerImpl } from "./empresa-avaliavel-list.query.handler";
 import { EmpresaScoreFindOneQueryHandlerImpl } from "./empresa-score-find-one.query.handler";
 
 describe("EmpresaAvaliacaoQueryHandlers", () => {
@@ -95,5 +96,39 @@ describe("EmpresaAvaliacaoQueryHandlers", () => {
     const result = await handler.execute(null, { avaliacaoId: createTestId() });
 
     expect(result).toEqual(historicoList);
+  });
+
+  it("EmpresaAvaliavelListQueryHandler should throw UnauthorizedError if user is not authenticated", async () => {
+    const repository = {
+      findEmpresasAvaliaveisByUserId: vi.fn(),
+    };
+    const handler = new EmpresaAvaliavelListQueryHandlerImpl(repository as any);
+
+    await expect(handler.execute(null, {})).rejects.toThrow(UnauthorizedError);
+  });
+
+  it("EmpresaAvaliavelListQueryHandler should return empresas avaliáveis for authenticated user", async () => {
+    const expected = [
+      {
+        empresaId: createTestId(),
+        razaoSocial: "Acme Corp",
+        nomeFantasia: "Acme",
+        cnpj: "12345678000195",
+        concluido: true,
+        avaliada: true,
+        avaliacaoId: createTestId(),
+      },
+    ];
+    const repository = {
+      findEmpresasAvaliaveisByUserId: vi.fn().mockResolvedValue(expected),
+    };
+    const handler = new EmpresaAvaliavelListQueryHandlerImpl(repository as any);
+    const accessContext = createTestAccessContext();
+
+    const result = await handler.execute(accessContext, {});
+    expect(result).toEqual(expected);
+    expect(repository.findEmpresasAvaliaveisByUserId).toHaveBeenCalledWith(
+      accessContext.requestActor!.id,
+    );
   });
 });

@@ -1,4 +1,4 @@
-import { BadRequestException } from "@nestjs/common";
+import { ConflictException } from "@nestjs/common";
 import type { IAccessContext } from "@/domain/abstractions";
 import { Dep, Impl } from "@/domain/dependency-injection";
 import { IEstagioSolicitacaoPermissionChecker } from "../../domain/authorization/estagio-solicitacao-permission-checker.interface";
@@ -29,9 +29,12 @@ export class EstagioSolicitacaoExternoCreateCommandHandlerImpl
 
     const activeCount = await this.solicitacaoRepository.countActiveByEstagiarioId(estagiarioId);
     if (activeCount >= 3) {
-      throw new BadRequestException(
-        "Você já possui o limite máximo de 3 solicitações de estágio em análise simultaneamente.",
-      );
+      throw new ConflictException({
+        statusCode: 409,
+        error: "Conflict",
+        message: "Limite de solicitações em análise atingido.",
+        code: "MAX_LIMIT_REACHED",
+      });
     }
 
     const solicitacao = EstagioSolicitacao.createExterno({

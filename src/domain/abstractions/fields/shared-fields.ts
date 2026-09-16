@@ -12,7 +12,8 @@ import { createFieldMetadata } from "./field-metadata";
 const uuidSchema = z.string().uuid();
 const dateTimeSchema = z.string().datetime();
 const pageSchema = z.number().int().min(1).optional().default(1);
-const limitSchema = z.number().int().min(1).optional();
+const limitSchema = z.number().int().min(1).max(100).optional();
+
 const searchSchema = z.string().optional();
 const sortBySchema = z.array(z.string()).optional();
 const filterIdSchema = z.array(z.string()).optional();

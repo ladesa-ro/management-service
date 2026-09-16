@@ -3,6 +3,7 @@ import type { IAccessContext } from "@/domain/abstractions";
 import { Dep, Impl } from "@/domain/dependency-injection";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import { EstagiarioTypeormEntity } from "@/modules/estagio/estagiario/infrastructure.database/typeorm/estagiario.typeorm.entity";
+import { EstagioStatus } from "@/modules/estagio/estagio/domain/estagio";
 import { EstagioTypeormEntity } from "@/modules/estagio/estagio/infrastructure.database/typeorm/estagio.typeorm.entity";
 import { EmpresaAvaliacao } from "../domain/empresa-avaliacao";
 import type { EmpresaAvaliacaoCurtida } from "../domain/empresa-avaliacao-curtida";
@@ -12,6 +13,7 @@ import type {
   EmpresaAvaliacaoHistoricoQueryResult,
   EmpresaAvaliacaoListQuery,
   EmpresaAvaliacaoListQueryResult,
+  EmpresaAvaliavelQueryResult,
 } from "../domain/queries";
 import type { IEmpresaAvaliacaoRepository } from "../domain/repositories/empresa-avaliacao.repository.interface";
 import {
@@ -155,6 +157,89 @@ export class EmpresaAvaliacaoTypeOrmRepositoryAdapter implements IEmpresaAvaliac
       estagiarioId: estagiario.id,
       reason: "Estagiário não possui histórico de estágio na empresa informada.",
     };
+  }
+
+  async findEmpresasAvaliaveisByUserId(userId: string): Promise<EmpresaAvaliavelQueryResult[]> {
+    const estagioRepo = this.appTypeormConnection.getRepository(EstagioTypeormEntity);
+
+    // Busca todos os estágios do usuário com suas respectivas empresas
+    const estagios = await estagioRepo
+      .createQueryBuilder("estagio")
+      .innerJoinAndSelect("estagio.empresa", "empresa")
+      .innerJoin("estagio.estagiario", "estagiario")
+      .innerJoin("estagiario.perfil", "perfil")
+      .innerJoin("perfil.usuario", "usuario")
+      .where("usuario.id = :userId", { userId })
+      .andWhere("estagio.dateDeleted IS NULL")
+      .andWhere("empresa.dateDeleted IS NULL")
+      .orderBy("estagio.dateCreated", "DESC")
+      .getMany();
+
+    if (estagios.length === 0) {
+      return [];
+    }
+
+    // Deduplica por empresaId mantendo o status de conclusão (concluido = true se algum estágio com status ENCERRADO)
+    const empresaMap = new Map<
+      string,
+      {
+        empresaId: string;
+        razaoSocial: string;
+        nomeFantasia: string | null;
+        cnpj: string;
+        concluido: boolean;
+      }
+    >();
+
+    for (const est of estagios) {
+      const emp = est.empresa;
+      if (!emp) continue;
+
+      const isEncerrado = est.status === EstagioStatus.ENCERRADO;
+      const existing = empresaMap.get(emp.id);
+
+      if (!existing) {
+        empresaMap.set(emp.id, {
+          empresaId: emp.id,
+          razaoSocial: emp.razaoSocial,
+          nomeFantasia: emp.nomeFantasia ?? null,
+          cnpj: emp.cnpj,
+          concluido: isEncerrado,
+        });
+      } else if (isEncerrado) {
+        existing.concluido = true;
+      }
+    }
+
+    // Busca avaliações ativas do usuário para essas empresas
+    const avaliacaoRepo = this.appTypeormConnection.getRepository(EmpresaAvaliacaoTypeormEntity);
+    const empresaIds = Array.from(empresaMap.keys());
+
+    const avaliacoes = await avaliacaoRepo
+      .createQueryBuilder("avaliacao")
+      .innerJoin("avaliacao.estagiario", "estagiario")
+      .innerJoin("estagiario.perfil", "perfil")
+      .innerJoinAndSelect("avaliacao.empresa", "empresa")
+      .where("perfil.id_usuario_fk = :userId", { userId })
+      .andWhere("avaliacao.id_empresa_fk IN (:...empresaIds)", { empresaIds })
+      .andWhere("avaliacao.dateDeleted IS NULL")
+      .getMany();
+
+    const avaliacaoMap = new Map<string, string>();
+    for (const av of avaliacoes) {
+      if (av.empresa?.id) {
+        avaliacaoMap.set(av.empresa.id, av.id);
+      }
+    }
+
+    return Array.from(empresaMap.values()).map((emp) => {
+      const avaliacaoId = avaliacaoMap.get(emp.empresaId) ?? null;
+      return {
+        ...emp,
+        avaliada: avaliacaoId !== null,
+        avaliacaoId,
+      };
+    });
   }
 
   // ==========================================

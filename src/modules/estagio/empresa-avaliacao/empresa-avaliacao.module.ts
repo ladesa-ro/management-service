@@ -12,6 +12,7 @@ import {
   EmpresaAvaliacaoFindOneQueryHandlerImpl,
   EmpresaAvaliacaoHistoricoListQueryHandlerImpl,
   EmpresaAvaliacaoListQueryHandlerImpl,
+  EmpresaAvaliavelListQueryHandlerImpl,
   EmpresaScoreFindOneQueryHandlerImpl,
 } from "./application/queries";
 import {
@@ -27,6 +28,7 @@ import {
   IEmpresaAvaliacaoFindOneQueryHandler,
   IEmpresaAvaliacaoHistoricoListQueryHandler,
   IEmpresaAvaliacaoListQueryHandler,
+  IEmpresaAvaliavelListQueryHandler,
   IEmpresaScoreFindOneQueryHandler,
 } from "./domain/queries";
 import { IEmpresaAvaliacaoRepository, IEmpresaScoreRepository } from "./domain/repositories";
@@ -90,9 +92,14 @@ import { EmpresaAvaliacaoRestController, EmpresaScoreRestController } from "./pr
       useClass: EmpresaAvaliacaoFindMyQueryHandlerImpl,
     },
     {
+      provide: IEmpresaAvaliavelListQueryHandler,
+      useClass: EmpresaAvaliavelListQueryHandlerImpl,
+    },
+    {
       provide: IEmpresaScoreFindOneQueryHandler,
       useClass: EmpresaScoreFindOneQueryHandlerImpl,
     },
+
     {
       provide: IEmpresaAvaliacaoHistoricoListQueryHandler,
       useClass: EmpresaAvaliacaoHistoricoListQueryHandlerImpl,
