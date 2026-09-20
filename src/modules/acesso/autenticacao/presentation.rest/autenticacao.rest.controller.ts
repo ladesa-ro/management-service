@@ -123,6 +123,7 @@ export class AutenticacaoRestController {
   @Throttle({ default: { limit: 15, ttl: 60000 } })
   @ApiOperation(AutenticacaoRefreshCommandMetadata.swaggerMetadata)
   @ApiCreatedResponse({ type: AuthSessionCredentialsRestDto })
+  @ApiUnauthorizedResponse({ description: "Token de refresh inválido ou expirado." })
   @ApiForbiddenResponse()
   async refresh(
     @AccessContextHttp() accessContext: IAccessContext,
