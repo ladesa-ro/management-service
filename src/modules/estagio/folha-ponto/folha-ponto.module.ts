@@ -3,6 +3,7 @@ import { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adap
 import { MessageBrokerModule } from "@/infrastructure.message-broker/message-broker.module";
 import { WahaModule } from "@/integrations/waha/waha.module";
 import { NotificacaoModule } from "@/modules/acesso/notificacao/notificacao.module";
+import { UsuarioModule } from "@/modules/acesso/usuario/usuario.module";
 import { EstagiarioModule } from "@/modules/estagio/estagiario/estagiario.module";
 import { EstagioModule } from "@/modules/estagio/estagio/estagio.module";
 import { NotificationsModule } from "@/notifications/notifications.module";
@@ -40,6 +41,7 @@ import { FolhaPontoRestController, FolhaPontoTokenRestController } from "./prese
   imports: [
     EstagioModule, // acesso ao IEstagioRepository
     EstagiarioModule, // acesso ao IEstagiarioRepository
+    UsuarioModule, // acesso ao IPerfilRepository
     NotificacaoModule, // WebSocket push (se necessário no futuro)
     WahaModule, // IWhatsAppProvider (se usado diretamente)
     NotificationsModule, // WhatsappNotificationsService
