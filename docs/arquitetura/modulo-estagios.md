@@ -1596,3 +1596,4 @@ O campo `data` (coluna `date` no PostgreSQL) é serializado como string `YYYY-MM
 ### 15.6 Frontend
 
 O frontend não reside neste repositório. Não há código de frontend em `ladesa/management-service`. O frontend é um projeto separado que consome esta API.
+
