@@ -31,6 +31,7 @@ import {
   EstagiarioListQueryMetadata,
   IEstagiarioListQueryHandler,
 } from "@/modules/estagio/estagiario/domain/queries/estagiario-list.query.handler.interface";
+import { IEstagiarioRepository } from "@/modules/estagio/estagiario/domain/repositories/estagiario.repository.interface";
 import { AccessContextHttp } from "@/server/nest/access-context";
 import {
   EstagiarioCreateInputRestDto,
@@ -38,6 +39,8 @@ import {
   EstagiarioFindOneOutputRestDto,
   EstagiarioListInputRestDto,
   EstagiarioListOutputRestDto,
+  EstagiarioSemEstagioInputRestDto,
+  EstagiarioSemEstagioOutputRestDto,
   EstagiarioUpdateInputRestDto,
 } from "./estagiario.rest.dto";
 import * as EstagiarioRestMapper from "./estagiario.rest.mapper";
@@ -56,6 +59,8 @@ export class EstagiarioRestController {
     private readonly updateHandler: IEstagiarioUpdateCommandHandler,
     @Dep(IEstagiarioDeleteCommandHandler)
     private readonly deleteHandler: IEstagiarioDeleteCommandHandler,
+    @Dep(IEstagiarioRepository)
+    private readonly estagiarioRepository: IEstagiarioRepository,
   ) {}
 
   @Get("/")
@@ -69,6 +74,48 @@ export class EstagiarioRestController {
     const query = EstagiarioRestMapper.listInputDtoToListQuery.map(dto);
     const queryResult = await this.listHandler.execute(accessContext, query);
     return EstagiarioRestMapper.listQueryResultToListOutputDto(queryResult);
+  }
+
+  @Get("/sem-estagio")
+  @ApiOperation({
+    operationId: "estagiarioFindSemEstagio",
+    summary: "Lista alunos matriculados sem estágio ativo",
+    description:
+      "Retorna alunos matriculados no 3º ano (ou período informado) que ainda não possuem contrato de estágio ativo, priorizando os mais próximos da conclusão.",
+  })
+  @ApiOkResponse({ type: EstagiarioSemEstagioOutputRestDto })
+  @ApiForbiddenResponse()
+  async findSemEstagio(
+    @AccessContextHttp() accessContext: IAccessContext,
+    @Query() query: EstagiarioSemEstagioInputRestDto,
+  ): Promise<EstagiarioSemEstagioOutputRestDto> {
+    const page = query.page ? Number(query.page) : 1;
+    const limit = query.limit ? Number(query.limit) : 20;
+    const periodo = query.periodo ?? "3";
+
+    const { items, total } = await this.estagiarioRepository.findSemEstagio(accessContext, {
+      cursoId: query.cursoId,
+      periodo,
+      page,
+      limit,
+    });
+
+    const totalPages = Math.ceil(total / limit) || 1;
+
+    return {
+      data: items,
+      meta: {
+        totalItems: total,
+        currentPage: page,
+        totalPages,
+        itemsPerPage: limit,
+        search: "",
+        sortBy: [
+          ["periodo", "DESC"],
+          ["nome", "ASC"],
+        ],
+      },
+    };
   }
 
   @Get("/:id")
