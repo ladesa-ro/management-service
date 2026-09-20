@@ -62,7 +62,8 @@ function normalizeHeader(value: string): string {
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
     .replace(/[^a-zA-Z0-9]/g, "")
-    .toLowerCase();
+    .toLowerCase()
+    .trim();
 }
 
 function normalizeText(value: string): string {
@@ -74,13 +75,26 @@ function normalizeText(value: string): string {
     .toLowerCase();
 }
 
-function parseCsvRows(content: string): string[][] {
+function detectDelimiter(text: string): string {
+  const lines = text.split(/\r?\n/).filter((l) => l.trim().length > 0);
+  if (lines.length === 0) return ",";
+  const firstLine = lines[0];
+  const countComma = (firstLine.match(/,/g) || []).length;
+  const countSemicolon = (firstLine.match(/;/g) || []).length;
+  const countTab = (firstLine.match(/\t/g) || []).length;
+  if (countSemicolon > countComma && countSemicolon > countTab) return ";";
+  if (countTab > countComma && countTab > countSemicolon) return "\t";
+  return ",";
+}
+
+function parseCsvRows(content: string, customDelimiter?: string): string[][] {
   const rows: string[][] = [];
   let currentRow: string[] = [];
   let currentField = "";
   let inQuotes = false;
 
   const text = content.replace(/^\uFEFF/, "");
+  const delimiter = customDelimiter || detectDelimiter(text);
 
   for (let index = 0; index < text.length; index += 1) {
     const char = text[index];
@@ -107,7 +121,7 @@ function parseCsvRows(content: string): string[][] {
       continue;
     }
 
-    if (char === ",") {
+    if (char === delimiter) {
       currentRow.push(currentField);
       currentField = "";
       continue;
@@ -115,7 +129,9 @@ function parseCsvRows(content: string): string[][] {
 
     if (char === "\n") {
       currentRow.push(currentField);
-      rows.push(currentRow);
+      if (currentRow.some((c) => c.trim().length > 0)) {
+        rows.push(currentRow);
+      }
       currentRow = [];
       currentField = "";
       continue;
@@ -130,18 +146,42 @@ function parseCsvRows(content: string): string[][] {
 
   if (currentField.length > 0 || currentRow.length > 0) {
     currentRow.push(currentField);
-    rows.push(currentRow);
+    if (currentRow.some((c) => c.trim().length > 0)) {
+      rows.push(currentRow);
+    }
   }
 
   return rows;
 }
 
 function getCell(row: string[], index: number): string {
+  if (index === -1 || !row || index >= row.length) return "";
   return (row[index] ?? "").trim();
 }
 
-function findHeaderIndex(headers: string[], headerName: string): number {
+function findHeaderFlex(headers: string[], ...candidates: string[]): number {
+  for (const candidate of candidates) {
+    const norm = normalizeHeader(candidate);
+    if (!norm) continue;
+    const idx = headers.indexOf(norm);
+    if (idx !== -1) return idx;
+  }
+  for (const candidate of candidates) {
+    const norm = normalizeHeader(candidate);
+    if (!norm) continue;
+    const idx = headers.findIndex(
+      (h) =>
+        h.length > 0 &&
+        (h.includes(norm) || (norm.length >= 4 && h.length >= 4 && norm.includes(h))),
+    );
+    if (idx !== -1) return idx;
+  }
+  return -1;
+}
+
+function _findHeaderIndex(headers: string[], headerName: string): number {
   return headers.indexOf(headerName);
+  return findHeaderFlex(headers, headerName);
 }
 
 function toNullIfEmpty(value: string): string | null {
@@ -278,50 +318,111 @@ export function parseEstagioImportCsv(content: string): EstagioImportCsvParseRes
   const headers = rows[0].map(normalizeHeader);
 
   const headerIndexes = {
-    estagiario: findHeaderIndex(headers, "estagiario"),
-    situacaoMatricula: findHeaderIndex(headers, "situacaodematricula"),
-    emailPessoalEstagiario: findHeaderIndex(headers, "emailpessoaldoestagiario"),
-    emailAcademicoEstagiario: findHeaderIndex(headers, "emailacademicodoestagiario"),
-    concedente: findHeaderIndex(headers, "concedente"),
-    concedenteCnpj: findHeaderIndex(headers, "concedentecnpj"),
-    concedenteEndereco: findHeaderIndex(headers, "concedenteendereco"),
-    concedenteBairro: findHeaderIndex(headers, "concedentebairro"),
-    concedenteCidade: findHeaderIndex(headers, "concedentecidade"),
-    nomeSupervisor: findHeaderIndex(headers, "nomedosupervisor"),
-    emailSupervisor: findHeaderIndex(headers, "emaildosupervisor"),
-    telefoneSupervisor: findHeaderIndex(headers, "telefonedosupervisor"),
-    nomeOrientador: findHeaderIndex(headers, "nomedoorientador"),
-    matriculaOrientador: findHeaderIndex(headers, "matriculadoorientador"),
-    emailOrientador: findHeaderIndex(headers, "emaildoorientador"),
-    nomeAgenteIntegracao: findHeaderIndex(headers, "nomedoagentedeintegracao"),
-    cnpjAgenteIntegracao: findHeaderIndex(headers, "cnpjdoagentedeintegracao"),
-    dataInicio: findHeaderIndex(headers, "datadeinicio"),
-    dataPrevistaFim: findHeaderIndex(headers, "dataprevistadefim"),
-    nomeSeguradora: findHeaderIndex(headers, "nomedaseguradora"),
-    numeroApoliceSeguro: findHeaderIndex(headers, "numerodaapolicedoseguro"),
-    status: findHeaderIndex(headers, "status"),
-    visitasRealizadas: findHeaderIndex(headers, "visitasrealizadas"),
-    visitasJustificadas: findHeaderIndex(headers, "visitasjustificadas"),
-    visitasAVencer: findHeaderIndex(headers, "visitasavencer"),
-    visitasNaoRealizadas: findHeaderIndex(headers, "visitasnaorealizadas"),
-    resumoPendencias: findHeaderIndex(headers, "resumodependencias"),
-    dataFim: findHeaderIndex(headers, "datadefim"),
-    temAditivo: findHeaderIndex(headers, "temaditivo"),
-    tiposAditivo: findHeaderIndex(headers, "tiposdeaditivo"),
-    encerramentoPor: findHeaderIndex(headers, "encerramentopor"),
-    motivacaoDesligamento: findHeaderIndex(headers, "motivacaododesligamentoencerramento"),
-    motivoRescisao: findHeaderIndex(headers, "motivodarescisao"),
-    mediaNotasSupervisor: findHeaderIndex(
+    estagiario: findHeaderFlex(
+      headers,
+      "estagiario",
+      "aluno",
+      "estudante",
+      "nomealuno",
+      "nomeestagiario",
+    ),
+    situacaoMatricula: findHeaderFlex(
+      headers,
+      "situacaodematricula",
+      "situacaomatricula",
+      "situacao",
+    ),
+    emailPessoalEstagiario: findHeaderFlex(
+      headers,
+      "emailpessoaldoestagiario",
+      "emailpessoal",
+      "email",
+    ),
+    emailAcademicoEstagiario: findHeaderFlex(
+      headers,
+      "emailacademicodoestagiario",
+      "emailacademico",
+      "emailinstitucional",
+    ),
+    concedente: findHeaderFlex(headers, "concedente", "empresa", "razaosocial"),
+    concedenteCnpj: findHeaderFlex(
+      headers,
+      "concedentecnpj",
+      "cnpjconcedente",
+      "cnpjempresa",
+      "cnpj",
+    ),
+    concedenteEndereco: findHeaderFlex(headers, "concedenteendereco", "endereco"),
+    concedenteBairro: findHeaderFlex(headers, "concedentebairro", "bairro"),
+    concedenteCidade: findHeaderFlex(headers, "concedentecidade", "cidade", "municipio"),
+    nomeSupervisor: findHeaderFlex(headers, "nomedosupervisor", "supervisor", "nomesupervisor"),
+    emailSupervisor: findHeaderFlex(headers, "emaildosupervisor", "emailsupervisor"),
+    telefoneSupervisor: findHeaderFlex(
+      headers,
+      "telefonedosupervisor",
+      "telefonesupervisor",
+      "contatosupervisor",
+    ),
+    nomeOrientador: findHeaderFlex(headers, "nomedoorientador", "orientador", "nomeorientador"),
+    matriculaOrientador: findHeaderFlex(
+      headers,
+      "matriculadoorientador",
+      "matriculaorientador",
+      "siapeorientador",
+    ),
+    emailOrientador: findHeaderFlex(headers, "emaildoorientador", "emailorientador"),
+    nomeAgenteIntegracao: findHeaderFlex(headers, "nomedoagentedeintegracao", "agenteintegracao"),
+    cnpjAgenteIntegracao: findHeaderFlex(headers, "cnpjdoagentedeintegracao", "cnpjagente"),
+    dataInicio: findHeaderFlex(headers, "datadeinicio", "datainicio", "inicio"),
+    dataPrevistaFim: findHeaderFlex(
+      headers,
+      "dataprevistadefim",
+      "dataprevistafim",
+      "datafimprevista",
+      "fimprevisto",
+    ),
+    nomeSeguradora: findHeaderFlex(headers, "nomedaseguradora", "seguradora"),
+    numeroApoliceSeguro: findHeaderFlex(
+      headers,
+      "numerodaapolicedoseguro",
+      "apoliceseguro",
+      "apolice",
+    ),
+    status: findHeaderFlex(headers, "status", "situacaoestagio"),
+    visitasRealizadas: findHeaderFlex(headers, "visitasrealizadas"),
+    visitasJustificadas: findHeaderFlex(headers, "visitasjustificadas"),
+    visitasAVencer: findHeaderFlex(headers, "visitasavencer"),
+    visitasNaoRealizadas: findHeaderFlex(headers, "visitasnaorealizadas"),
+    resumoPendencias: findHeaderFlex(headers, "resumodependencias", "pendencias"),
+    dataFim: findHeaderFlex(headers, "datadefim", "datafim", "termino"),
+    temAditivo: findHeaderFlex(headers, "temaditivo", "aditivo"),
+    tiposAditivo: findHeaderFlex(headers, "tiposdeaditivo", "tipoaditivo"),
+    encerramentoPor: findHeaderFlex(headers, "encerramentopor"),
+    motivacaoDesligamento: findHeaderFlex(
+      headers,
+      "motivacaododesligamentoencerramento",
+      "motivodesligamento",
+    ),
+    motivoRescisao: findHeaderFlex(headers, "motivodarescisao", "rescisao"),
+    mediaNotasSupervisor: findHeaderFlex(
       headers,
       "mediadasnotasdeavaliacoessemestraisdosupervisor",
+      "medianotassupervisor",
+      "medianotas",
     ),
-    cargaHorariaFinal: findHeaderIndex(headers, "chfinal"),
-    periodoReferencia: findHeaderIndex(headers, "periododereferencia"),
-    periodoMinimoObrigatorio: findHeaderIndex(headers, "periodominimoparaestagioobrigatorio"),
-    periodoMinimoNaoObrigatorio: findHeaderIndex(headers, "periodominimoparaestagionaobrigatorio"),
-    curso: findHeaderIndex(headers, "curso"),
-    campus: findHeaderIndex(headers, "campus"),
-    foiOuSeraContratado: findHeaderIndex(headers, "foiseracontratadapelaconcedente"),
+    cargaHorariaFinal: findHeaderFlex(
+      headers,
+      "chfinal",
+      "cargahoraria",
+      "cargahorariatotal",
+      "ch",
+    ),
+    periodoReferencia: findHeaderFlex(headers, "periododereferencia", "periodo"),
+    periodoMinimoObrigatorio: findHeaderFlex(headers, "periodominimoparaestagioobrigatorio"),
+    periodoMinimoNaoObrigatorio: findHeaderFlex(headers, "periodominimoparaestagionaobrigatorio"),
+    curso: findHeaderFlex(headers, "curso", "nomecurso"),
+    campus: findHeaderFlex(headers, "campus", "unidade"),
+    foiOuSeraContratado: findHeaderFlex(headers, "foiseracontratadapelaconcedente", "contratado"),
   };
 
   const missingHeaders = [
