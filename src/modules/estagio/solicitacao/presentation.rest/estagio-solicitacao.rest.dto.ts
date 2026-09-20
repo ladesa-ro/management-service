@@ -106,7 +106,7 @@ export class EstagioSolicitacaoDeferirRestDto {
   empresaEnderecoId?: string;
 
   @ApiPropertyOptional({
-    description: "Parecer descritivo da aprovação do CIEC",
+    description: "Parecer descritivo da aprovação da CIEC",
     example: "Solicitação aprovada em conformidade com o regulamento de estágio.",
   })
   parecer?: string | null;
@@ -223,10 +223,10 @@ export class EstagioSolicitacaoOutputRestDto {
   @ApiPropertyOptional({ description: "Telefone do supervisor indicado" })
   supervisorTelefone?: string | null;
 
-  @ApiPropertyOptional({ description: "Servidor analista do CIEC" })
+  @ApiPropertyOptional({ description: "Servidor analista da CIEC" })
   analista?: { id: string } | null;
 
-  @ApiPropertyOptional({ description: "Parecer da análise do CIEC" })
+  @ApiPropertyOptional({ description: "Parecer da análise da CIEC" })
   parecerAnalise?: string | null;
 
   @ApiPropertyOptional({ description: "Data de conclusão da análise" })
