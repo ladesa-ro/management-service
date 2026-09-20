@@ -58,7 +58,7 @@ export class IdentityProviderService implements IIdentityProvider {
 
       if (decoded && exp) {
         this.#cache.set(accessToken, identityResponse, {
-          ttl: Math.max(exp / 1000 - getNowTime(), 1),
+          ttl: Math.max(exp * 1000 - getNowTime(), 1000),
         });
       } else {
         this.#cache.set(accessToken, identityResponse, {
