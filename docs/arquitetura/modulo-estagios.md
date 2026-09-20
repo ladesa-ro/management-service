@@ -40,17 +40,17 @@ O módulo de Estágios é o núcleo da aplicação. Ele gerencia todo o ciclo de
 
 ### Sub-módulos
 
-| Sub-módulo | Localização | Responsabilidade |
-|---|---|---|
-| `estagio` | `src/modules/estagio/estagio/` | Entidade principal do estágio; CRUD, filtros, carga horária, importação em massa |
-| `estagiario` | `src/modules/estagio/estagiario/` | Perfil do aluno/estagiário vinculado a um usuário do sistema |
-| `candidatura` | `src/modules/estagio/candidatura/` | Fila de espera: candidaturas, convocações, cancelamentos |
-| `solicitacao` | `src/modules/estagio/solicitacao/` | Solicitações de estágio (interno/externo) submetidas pelo aluno à CIEC |
-| `folha-ponto` | `src/modules/estagio/folha-ponto/` | Registro de frequência diária; aprovação pelo supervisor via link tokenizado |
-| `empresa` | `src/modules/estagio/empresa/` | Empresas concedentes (CRUD + foto) |
-| `empresa-avaliacao` | `src/modules/estagio/empresa-avaliacao/` | Avaliações e score das empresas pelos estagiários |
-| `relatorio` | `src/modules/estagio/relatorio/` | Relatório de estágio (PDF upload/download por estágio) |
-| `responsavel-empresa` | `src/modules/estagio/responsavel-empresa/` | Responsável legal da empresa concedente |
+| Sub-módulo            | Localização                                | Responsabilidade                                                                 |
+| --------------------- | ------------------------------------------ | -------------------------------------------------------------------------------- |
+| `estagio`             | `src/modules/estagio/estagio/`             | Entidade principal do estágio; CRUD, filtros, carga horária, importação em massa |
+| `estagiario`          | `src/modules/estagio/estagiario/`          | Perfil do aluno/estagiário vinculado a um usuário do sistema                     |
+| `candidatura`         | `src/modules/estagio/candidatura/`         | Fila de espera: candidaturas, convocações, cancelamentos                         |
+| `solicitacao`         | `src/modules/estagio/solicitacao/`         | Solicitações de estágio (interno/externo) submetidas pelo aluno à CIEC           |
+| `folha-ponto`         | `src/modules/estagio/folha-ponto/`         | Registro de frequência diária; aprovação pelo supervisor via link tokenizado     |
+| `empresa`             | `src/modules/estagio/empresa/`             | Empresas concedentes (CRUD + foto)                                               |
+| `empresa-avaliacao`   | `src/modules/estagio/empresa-avaliacao/`   | Avaliações e score das empresas pelos estagiários                                |
+| `relatorio`           | `src/modules/estagio/relatorio/`           | Relatório de estágio (PDF upload/download por estágio)                           |
+| `responsavel-empresa` | `src/modules/estagio/responsavel-empresa/` | Responsável legal da empresa concedente                                          |
 
 ---
 
@@ -91,112 +91,112 @@ Todos os endpoints descritos neste documento são relativos a esse prefixo. Exem
 
 Entidade TypeORM: `EstagioTypeormEntity` (`src/modules/estagio/estagio/infrastructure.database/typeorm/estagio.typeorm.entity.ts`)
 
-| Coluna | Tipo PostgreSQL | Nullable | Descrição |
-|---|---|---|---|
-| `id` | `uuid` | NOT NULL | PK (UUIDv7) |
-| `id_campus_fk` | `uuid` | NULL | FK → `campus` |
-| `id_empresa_fk` | `uuid` | NOT NULL | FK → `empresa` |
-| `id_estagiario_fk` | `uuid` | NULL | FK → `estagiario`; NULL = vaga sem aluno |
-| `id_usuario_orientador_fk` | `uuid` | NULL | FK → `usuario` (professor orientador) |
-| `id_curso_fk` | `uuid` | NULL | FK → `curso` (curso de referência da vaga) |
-| `carga_horaria` | `integer` | NOT NULL | Carga horária total contratual (horas) |
-| `data_inicio` | `date` | NULL | Data de início do estágio |
-| `data_fim` | `date` | NULL | Data de encerramento real |
-| `status` | `enum` | NOT NULL | Ver [seção 4.1](#41-status-do-estagio) |
-| `nome_supervisor` | `varchar(255)` | NULL | Nome do supervisor na empresa |
-| `email_supervisor` | `varchar(255)` | NULL | E-mail do supervisor |
-| `telefone_supervisor` | `varchar(20)` | NULL | Telefone do supervisor |
-| `aditivo` | `boolean` | NOT NULL | Indica se há aditivo ao contrato |
-| `tipo_aditivo` | `varchar(255)` | NULL | Descrição do tipo de aditivo |
-| `data_prevista_fim` | `date` | NULL | Data prevista de encerramento |
-| `nome_seguradora` | `varchar(255)` | NULL | Seguradora do estágio |
-| `numero_apolice_seguro` | `varchar(100)` | NULL | Número da apólice de seguro |
-| `visitas_realizadas` | `integer` | NULL | Número de visitas realizadas pela CIEC |
-| `visitas_justificadas` | `integer` | NULL | Número de visitas justificadas |
-| `visitas_a_vencer` | `integer` | NULL | Número de visitas a vencer |
-| `visitas_nao_realizadas` | `integer` | NULL | Número de visitas não realizadas |
-| `resumo_pendencias` | `varchar(1000)` | NULL | Resumo das pendências do estágio |
-| `encerramento_por` | `varchar(255)` | NULL | Responsável pelo encerramento |
-| `motivacao_desligamento` | `varchar(1000)` | NULL | Motivo do desligamento |
-| `motivo_rescisao` | `varchar(1000)` | NULL | Motivo da rescisão contratual |
-| `media_notas_supervisor` | `decimal(5,2)` | NULL | Média das notas atribuídas pelo supervisor |
-| `foi_ou_sera_contratado` | `boolean` | NULL | Indica contratação efetiva |
-| `date_created` | `timestamptz` | NOT NULL | Data de criação |
-| `date_updated` | `timestamptz` | NOT NULL | Data da última atualização |
-| `date_deleted` | `timestamptz` | NULL | Data de soft delete |
+| Coluna                     | Tipo PostgreSQL | Nullable | Descrição                                  |
+| -------------------------- | --------------- | -------- | ------------------------------------------ |
+| `id`                       | `uuid`          | NOT NULL | PK (UUIDv7)                                |
+| `id_campus_fk`             | `uuid`          | NULL     | FK → `campus`                              |
+| `id_empresa_fk`            | `uuid`          | NOT NULL | FK → `empresa`                             |
+| `id_estagiario_fk`         | `uuid`          | NULL     | FK → `estagiario`; NULL = vaga sem aluno   |
+| `id_usuario_orientador_fk` | `uuid`          | NULL     | FK → `usuario` (professor orientador)      |
+| `id_curso_fk`              | `uuid`          | NULL     | FK → `curso` (curso de referência da vaga) |
+| `carga_horaria`            | `integer`       | NOT NULL | Carga horária total contratual (horas)     |
+| `data_inicio`              | `date`          | NULL     | Data de início do estágio                  |
+| `data_fim`                 | `date`          | NULL     | Data de encerramento real                  |
+| `status`                   | `enum`          | NOT NULL | Ver [seção 4.1](#41-status-do-estagio)     |
+| `nome_supervisor`          | `varchar(255)`  | NULL     | Nome do supervisor na empresa              |
+| `email_supervisor`         | `varchar(255)`  | NULL     | E-mail do supervisor                       |
+| `telefone_supervisor`      | `varchar(20)`   | NULL     | Telefone do supervisor                     |
+| `aditivo`                  | `boolean`       | NOT NULL | Indica se há aditivo ao contrato           |
+| `tipo_aditivo`             | `varchar(255)`  | NULL     | Descrição do tipo de aditivo               |
+| `data_prevista_fim`        | `date`          | NULL     | Data prevista de encerramento              |
+| `nome_seguradora`          | `varchar(255)`  | NULL     | Seguradora do estágio                      |
+| `numero_apolice_seguro`    | `varchar(100)`  | NULL     | Número da apólice de seguro                |
+| `visitas_realizadas`       | `integer`       | NULL     | Número de visitas realizadas pela CIEC     |
+| `visitas_justificadas`     | `integer`       | NULL     | Número de visitas justificadas             |
+| `visitas_a_vencer`         | `integer`       | NULL     | Número de visitas a vencer                 |
+| `visitas_nao_realizadas`   | `integer`       | NULL     | Número de visitas não realizadas           |
+| `resumo_pendencias`        | `varchar(1000)` | NULL     | Resumo das pendências do estágio           |
+| `encerramento_por`         | `varchar(255)`  | NULL     | Responsável pelo encerramento              |
+| `motivacao_desligamento`   | `varchar(1000)` | NULL     | Motivo do desligamento                     |
+| `motivo_rescisao`          | `varchar(1000)` | NULL     | Motivo da rescisão contratual              |
+| `media_notas_supervisor`   | `decimal(5,2)`  | NULL     | Média das notas atribuídas pelo supervisor |
+| `foi_ou_sera_contratado`   | `boolean`       | NULL     | Indica contratação efetiva                 |
+| `date_created`             | `timestamptz`   | NOT NULL | Data de criação                            |
+| `date_updated`             | `timestamptz`   | NOT NULL | Data da última atualização                 |
+| `date_deleted`             | `timestamptz`   | NULL     | Data de soft delete                        |
 
 ### 3.2 Tabela `estagio_candidatura`
 
 Entidade TypeORM: `EstagioCandidaturaTypeormEntity` (`src/modules/estagio/candidatura/infrastructure.database/typeorm/estagio-candidatura.typeorm.entity.ts`)
 
-| Coluna | Tipo PostgreSQL | Nullable | Descrição |
-|---|---|---|---|
-| `id` | `uuid` | NOT NULL | PK (UUIDv7) |
-| `id_estagio_fk` | `uuid` | NOT NULL | FK → `estagio` |
-| `id_estagiario_fk` | `uuid` | NOT NULL | FK → `estagiario` |
-| `situacao` | `enum` | NOT NULL | Ver [seção 4.2](#42-situacao-da-candidatura) |
-| `data_inscricao` | `timestamptz` | NOT NULL | Momento da inscrição na fila |
-| `data_oferta` | `timestamptz` | NULL | Quando a oferta foi feita ao candidato |
-| `expira_em` | `timestamptz` | NULL | Prazo para aceite da oferta |
-| `data_resposta` | `timestamptz` | NULL | Quando o aluno respondeu à oferta |
-| `data_cancelamento` | `timestamptz` | NULL | Quando a candidatura foi cancelada |
-| `id_autor_convocacao_fk` | `uuid` | NULL | FK → `usuario` (quem convocou) |
-| `motivo_cancelamento` | `text` | NULL | Motivo do cancelamento |
-| `date_created` | `timestamptz` | NOT NULL | Data de criação |
-| `date_updated` | `timestamptz` | NOT NULL | Data da última atualização |
-| `date_deleted` | `timestamptz` | NULL | Data de soft delete |
+| Coluna                   | Tipo PostgreSQL | Nullable | Descrição                                    |
+| ------------------------ | --------------- | -------- | -------------------------------------------- |
+| `id`                     | `uuid`          | NOT NULL | PK (UUIDv7)                                  |
+| `id_estagio_fk`          | `uuid`          | NOT NULL | FK → `estagio`                               |
+| `id_estagiario_fk`       | `uuid`          | NOT NULL | FK → `estagiario`                            |
+| `situacao`               | `enum`          | NOT NULL | Ver [seção 4.2](#42-situacao-da-candidatura) |
+| `data_inscricao`         | `timestamptz`   | NOT NULL | Momento da inscrição na fila                 |
+| `data_oferta`            | `timestamptz`   | NULL     | Quando a oferta foi feita ao candidato       |
+| `expira_em`              | `timestamptz`   | NULL     | Prazo para aceite da oferta                  |
+| `data_resposta`          | `timestamptz`   | NULL     | Quando o aluno respondeu à oferta            |
+| `data_cancelamento`      | `timestamptz`   | NULL     | Quando a candidatura foi cancelada           |
+| `id_autor_convocacao_fk` | `uuid`          | NULL     | FK → `usuario` (quem convocou)               |
+| `motivo_cancelamento`    | `text`          | NULL     | Motivo do cancelamento                       |
+| `date_created`           | `timestamptz`   | NOT NULL | Data de criação                              |
+| `date_updated`           | `timestamptz`   | NOT NULL | Data da última atualização                   |
+| `date_deleted`           | `timestamptz`   | NULL     | Data de soft delete                          |
 
 ### 3.3 Tabela `estagio_solicitacao`
 
 Entidade TypeORM: `EstagioSolicitacaoTypeormEntity` (`src/modules/estagio/solicitacao/infrastructure.database/typeorm/estagio-solicitacao.typeorm.entity.ts`)
 
-| Coluna | Tipo PostgreSQL | Nullable | Descrição |
-|---|---|---|---|
-| `id` | `uuid` | NOT NULL | PK (UUIDv7) |
-| `tipo` | `enum('INTERNO','EXTERNO')` | NOT NULL | Tipo de solicitação |
-| `situacao` | `enum` | NOT NULL | Ver [seção 4.3](#43-situacao-da-solicitacao) |
-| `id_estagiario_fk` | `uuid` | NOT NULL | FK → `estagiario` |
-| `id_campus_fk` | `uuid` | NOT NULL | FK → `campus` |
-| `id_professor_orientador_fk` | `uuid` | NULL | FK → `usuario` (professor orientador sugerido) |
-| `local_interno` | `varchar(255)` | NULL | Local do estágio (para tipo INTERNO) |
-| `descricao_atividades` | `text` | NULL | Descrição das atividades |
-| `id_empresa_fk` | `uuid` | NULL | FK → `empresa` (se empresa já cadastrada) |
-| `empresa_razao_social` | `varchar(255)` | NULL | Razão social da empresa (externo) |
-| `empresa_nome_fantasia` | `varchar(255)` | NULL | Nome fantasia (externo) |
-| `empresa_cnpj` | `varchar(20)` | NULL | CNPJ da empresa (externo) |
-| `empresa_telefone` | `varchar(20)` | NULL | Telefone da empresa (externo) |
-| `empresa_email` | `varchar(255)` | NULL | E-mail da empresa (externo) |
-| `supervisor_nome` | `varchar(255)` | NULL | Nome do supervisor na empresa |
-| `supervisor_email` | `varchar(255)` | NULL | E-mail do supervisor |
-| `supervisor_telefone` | `varchar(20)` | NULL | Telefone do supervisor |
-| `id_analista_fk` | `uuid` | NULL | FK → `usuario` (analista CIEC que avaliou) |
-| `parecer_analise` | `text` | NULL | Parecer da análise pela CIEC |
-| `data_analise` | `timestamptz` | NULL | Momento da análise |
-| `id_estagio_gerado_fk` | `uuid` | NULL | FK → `estagio` (criado ao deferir) |
-| `date_created` | `timestamptz` | NOT NULL | Data de criação |
-| `date_updated` | `timestamptz` | NOT NULL | Data da última atualização |
-| `date_deleted` | `timestamptz` | NULL | Data de soft delete |
+| Coluna                       | Tipo PostgreSQL             | Nullable | Descrição                                      |
+| ---------------------------- | --------------------------- | -------- | ---------------------------------------------- |
+| `id`                         | `uuid`                      | NOT NULL | PK (UUIDv7)                                    |
+| `tipo`                       | `enum('INTERNO','EXTERNO')` | NOT NULL | Tipo de solicitação                            |
+| `situacao`                   | `enum`                      | NOT NULL | Ver [seção 4.3](#43-situacao-da-solicitacao)   |
+| `id_estagiario_fk`           | `uuid`                      | NOT NULL | FK → `estagiario`                              |
+| `id_campus_fk`               | `uuid`                      | NOT NULL | FK → `campus`                                  |
+| `id_professor_orientador_fk` | `uuid`                      | NULL     | FK → `usuario` (professor orientador sugerido) |
+| `local_interno`              | `varchar(255)`              | NULL     | Local do estágio (para tipo INTERNO)           |
+| `descricao_atividades`       | `text`                      | NULL     | Descrição das atividades                       |
+| `id_empresa_fk`              | `uuid`                      | NULL     | FK → `empresa` (se empresa já cadastrada)      |
+| `empresa_razao_social`       | `varchar(255)`              | NULL     | Razão social da empresa (externo)              |
+| `empresa_nome_fantasia`      | `varchar(255)`              | NULL     | Nome fantasia (externo)                        |
+| `empresa_cnpj`               | `varchar(20)`               | NULL     | CNPJ da empresa (externo)                      |
+| `empresa_telefone`           | `varchar(20)`               | NULL     | Telefone da empresa (externo)                  |
+| `empresa_email`              | `varchar(255)`              | NULL     | E-mail da empresa (externo)                    |
+| `supervisor_nome`            | `varchar(255)`              | NULL     | Nome do supervisor na empresa                  |
+| `supervisor_email`           | `varchar(255)`              | NULL     | E-mail do supervisor                           |
+| `supervisor_telefone`        | `varchar(20)`               | NULL     | Telefone do supervisor                         |
+| `id_analista_fk`             | `uuid`                      | NULL     | FK → `usuario` (analista CIEC que avaliou)     |
+| `parecer_analise`            | `text`                      | NULL     | Parecer da análise pela CIEC                   |
+| `data_analise`               | `timestamptz`               | NULL     | Momento da análise                             |
+| `id_estagio_gerado_fk`       | `uuid`                      | NULL     | FK → `estagio` (criado ao deferir)             |
+| `date_created`               | `timestamptz`               | NOT NULL | Data de criação                                |
+| `date_updated`               | `timestamptz`               | NOT NULL | Data da última atualização                     |
+| `date_deleted`               | `timestamptz`               | NULL     | Data de soft delete                            |
 
 ### 3.4 Tabela `folha_ponto`
 
 Entidade TypeORM: `FolhaPontoTypeormEntity` (`src/modules/estagio/folha-ponto/infrastructure.database/typeorm/folha-ponto.typeorm.entity.ts`)
 
-| Coluna | Tipo PostgreSQL | Nullable | Descrição |
-|---|---|---|---|
-| `id` | `uuid` | NOT NULL | PK (UUIDv7) |
-| `id_estagio_fk` | `uuid` | NOT NULL | FK → `estagio` |
-| `data` | `date` | NOT NULL | Data do turno (YYYY-MM-DD) |
-| `hora_inicio` | `time` | NOT NULL | Hora de início (HH:MM) |
-| `hora_fim` | `time` | NOT NULL | Hora de término (HH:MM) |
-| `quantidade_horas` | `decimal(5,2)` | NOT NULL | Total de horas calculado |
-| `observacoes` | `text` | NULL | Observações do estagiário |
-| `status` | `varchar(20)` | NOT NULL | Ver [seção 4.4](#44-status-da-folha-de-ponto) |
-| `data_solicitacao` | `timestamptz` | NOT NULL | Quando o registro foi criado |
-| `data_aprovacao` | `timestamptz` | NULL | Quando o supervisor aprovou |
-| `data_rejeicao` | `timestamptz` | NULL | Quando o supervisor rejeitou |
-| `date_created` | `timestamptz` | NOT NULL | Data de criação |
-| `date_updated` | `timestamptz` | NOT NULL | Data da última atualização |
-| `date_deleted` | `timestamptz` | NULL | Data de soft delete |
+| Coluna             | Tipo PostgreSQL | Nullable | Descrição                                     |
+| ------------------ | --------------- | -------- | --------------------------------------------- |
+| `id`               | `uuid`          | NOT NULL | PK (UUIDv7)                                   |
+| `id_estagio_fk`    | `uuid`          | NOT NULL | FK → `estagio`                                |
+| `data`             | `date`          | NOT NULL | Data do turno (YYYY-MM-DD)                    |
+| `hora_inicio`      | `time`          | NOT NULL | Hora de início (HH:MM)                        |
+| `hora_fim`         | `time`          | NOT NULL | Hora de término (HH:MM)                       |
+| `quantidade_horas` | `decimal(5,2)`  | NOT NULL | Total de horas calculado                      |
+| `observacoes`      | `text`          | NULL     | Observações do estagiário                     |
+| `status`           | `varchar(20)`   | NOT NULL | Ver [seção 4.4](#44-status-da-folha-de-ponto) |
+| `data_solicitacao` | `timestamptz`   | NOT NULL | Quando o registro foi criado                  |
+| `data_aprovacao`   | `timestamptz`   | NULL     | Quando o supervisor aprovou                   |
+| `data_rejeicao`    | `timestamptz`   | NULL     | Quando o supervisor rejeitou                  |
+| `date_created`     | `timestamptz`   | NOT NULL | Data de criação                               |
+| `date_updated`     | `timestamptz`   | NOT NULL | Data da última atualização                    |
+| `date_deleted`     | `timestamptz`   | NULL     | Data de soft delete                           |
 
 A tabela `folha_ponto` possui uma relação `@OneToMany` com a tabela de tokens (`folha_ponto_token`), usada no fluxo de aprovação por link.
 
@@ -208,15 +208,15 @@ A tabela `folha_ponto` possui uma relação `@OneToMany` com a tabela de tokens 
 
 Enum: `EstagioStatus` (`src/modules/estagio/estagio/domain/estagio.ts`)
 
-| Valor | Descrição |
-|---|---|
-| `DISPONIVEL` | Vaga aberta, sem estagiário vinculado. Aceita candidaturas. |
-| `EM_FASE_INICIAL` | Solicitação deferida ou estágio criado, aguardando início formal. (Default ao criar.) |
-| `EM_ANDAMENTO` | Estágio em execução. Estagiário registrando frequência. |
-| `RESCINDIDO` | Contrato rescindido antes do prazo. |
-| `COM_PENDENCIA` | Estágio com pendências a resolver (documentos, visitas etc.). |
-| `ENCERRADO` | Estágio concluído. |
-| `APTO_PARA_ENCERRAMENTO` | Critérios de encerramento atendidos, aguardando formalização. |
+| Valor                    | Descrição                                                                             |
+| ------------------------ | ------------------------------------------------------------------------------------- |
+| `DISPONIVEL`             | Vaga aberta, sem estagiário vinculado. Aceita candidaturas.                           |
+| `EM_FASE_INICIAL`        | Solicitação deferida ou estágio criado, aguardando início formal. (Default ao criar.) |
+| `EM_ANDAMENTO`           | Estágio em execução. Estagiário registrando frequência.                               |
+| `RESCINDIDO`             | Contrato rescindido antes do prazo.                                                   |
+| `COM_PENDENCIA`          | Estágio com pendências a resolver (documentos, visitas etc.).                         |
+| `ENCERRADO`              | Estágio concluído.                                                                    |
+| `APTO_PARA_ENCERRAMENTO` | Critérios de encerramento atendidos, aguardando formalização.                         |
 
 > **Nota:** O valor default do campo `status` na entity TypeORM é `EM_FASE_INICIAL` (não `DISPONIVEL`). Vagas criadas como disponíveis devem ter o campo `status` explicitamente definido como `DISPONIVEL` na criação.
 
@@ -224,38 +224,38 @@ Enum: `EstagioStatus` (`src/modules/estagio/estagio/domain/estagio.ts`)
 
 Enum inline em: `EstagioCandidaturaTypeormEntity` (`src/modules/estagio/candidatura/infrastructure.database/typeorm/estagio-candidatura.typeorm.entity.ts`)
 
-| Valor | Descrição |
-|---|---|
-| `PENDING` | Na fila de espera, aguardando convocação. |
-| `OFFERED` | Convocado pela CIEC, aguardando aceite do aluno. |
-| `ACCEPTED` | Oferta aceita pelo aluno. Candidaturas ativas concorrentes são canceladas automaticamente. |
-| `REJECTED` | Candidatura rejeitada pelo aluno ou pela CIEC. |
-| `CANCELLED` | Cancelada (pelo aluno ou pela CIEC). |
-| `EXPIRED` | A oferta expirou sem resposta do aluno. |
+| Valor       | Descrição                                                                                  |
+| ----------- | ------------------------------------------------------------------------------------------ |
+| `PENDING`   | Na fila de espera, aguardando convocação.                                                  |
+| `OFFERED`   | Convocado pela CIEC, aguardando aceite do aluno.                                           |
+| `ACCEPTED`  | Oferta aceita pelo aluno. Candidaturas ativas concorrentes são canceladas automaticamente. |
+| `REJECTED`  | Candidatura rejeitada pelo aluno ou pela CIEC.                                             |
+| `CANCELLED` | Cancelada (pelo aluno ou pela CIEC).                                                       |
+| `EXPIRED`   | A oferta expirou sem resposta do aluno.                                                    |
 
 ### 4.3 Situação da Solicitação
 
 Enum em: `EstagioSolicitacaoTypeormEntity` (`src/modules/estagio/solicitacao/infrastructure.database/typeorm/estagio-solicitacao.typeorm.entity.ts`)
 
-| Valor | Descrição |
-|---|---|
-| `PENDENTE` | Recém-criada, aguardando análise da CIEC. (Default) |
-| `EM_ANALISE` | Em avaliação pela equipe da CIEC. |
-| `DEFERIDA` | Aprovada. O estágio é gerado automaticamente de forma transacional. |
-| `INDEFERIDA` | Rejeitada com parecer obrigatório. |
-| `CANCELADA` | Cancelada pelo aluno (somente `PENDENTE` ou `EM_ANALISE`). |
+| Valor        | Descrição                                                           |
+| ------------ | ------------------------------------------------------------------- |
+| `PENDENTE`   | Recém-criada, aguardando análise da CIEC. (Default)                 |
+| `EM_ANALISE` | Em avaliação pela equipe da CIEC.                                   |
+| `DEFERIDA`   | Aprovada. O estágio é gerado automaticamente de forma transacional. |
+| `INDEFERIDA` | Rejeitada com parecer obrigatório.                                  |
+| `CANCELADA`  | Cancelada pelo aluno (somente `PENDENTE` ou `EM_ANALISE`).          |
 
 ### 4.4 Status da Folha de Ponto
 
 Enum: `FolhaPontoStatus`
 
-| Valor | Descrição |
-|---|---|
-| `PENDING` | Aguardando validação do supervisor. |
-| `APPROVED` | Aprovada pelo supervisor via link tokenizado ou pela CIEC. |
-| `REJECTED` | Rejeitada pelo supervisor. |
-| `EXPIRED` | Token expirou sem ação do supervisor. |
-| `CANCELLED` | Cancelada pelo estagiário antes da aprovação. |
+| Valor       | Descrição                                                  |
+| ----------- | ---------------------------------------------------------- |
+| `PENDING`   | Aguardando validação do supervisor.                        |
+| `APPROVED`  | Aprovada pelo supervisor via link tokenizado ou pela CIEC. |
+| `REJECTED`  | Rejeitada pelo supervisor.                                 |
+| `EXPIRED`   | Token expirou sem ação do supervisor.                      |
+| `CANCELLED` | Cancelada pelo estagiário antes da aprovação.              |
 
 ---
 
@@ -272,36 +272,41 @@ Enum: `FolhaPontoStatus`
 
 O sistema distingue dois grandes perfis de usuário:
 
-| Perfil | Identificação | Capacidades principais |
-|---|---|---|
-| **Aluno / Estagiário** | Usuário com perfil de estagiário cadastrado | Candidatar-se, ver suas candidaturas e solicitações, registrar folha de ponto |
-| **Staff CIEC / Coordenador** | Cargo diferente de "aluno" no perfil ativo | Gerenciar todos os estágios, deferir/indeferir solicitações, convocar candidatos, visualizar todas as folhas de ponto |
+| Perfil                       | Identificação                               | Capacidades principais                                                                                                |
+| ---------------------------- | ------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| **Aluno / Estagiário**       | Usuário com perfil de estagiário cadastrado | Candidatar-se, ver suas candidaturas e solicitações, registrar folha de ponto                                         |
+| **Staff CIEC / Coordenador** | Cargo diferente de "aluno" no perfil ativo  | Gerenciar todos os estágios, deferir/indeferir solicitações, convocar candidatos, visualizar todas as folhas de ponto |
 
 ### 5.3 Regras de Autorização por Módulo
 
 #### Estágio
+
 - **Listar/Visualizar**: qualquer usuário autenticado.
 - **Criar/Atualizar/Deletar**: `ensureCanManageEstagio` → apenas staff CIEC.
 - **Importar CSV**: `ensureCanManageEstagio` → apenas staff CIEC.
 
 #### Candidatura
+
 - **Candidatar-se** (`POST /:estagioId/candidaturas`): usuário deve ter perfil de estagiário.
 - **Visualizar fila** (`GET /:estagioId/candidaturas`): apenas staff CIEC / coordenadores.
 - **Convocar** (`POST /candidaturas/:id/convocar`): apenas staff CIEC.
 - **Cancelar** (`DELETE /candidaturas/:id`): aluno cancela a **própria** candidatura; staff CIEC cancela qualquer.
 
 #### Solicitação
+
 - **Criar interno/externo**: usuário com perfil de estagiário.
 - **Listar todas**: apenas staff CIEC.
 - **Deferir/Indeferir**: apenas staff CIEC.
 - **Minhas solicitações / Cancelar**: aluno autenticado (cancela a própria solicitação).
 
 #### Folha de Ponto
+
 - **Criar**: estagiário vinculado ao estágio.
 - **Listar/Visualizar todas**: staff CIEC, orientadores e o próprio estagiário.
 - **Aprovar/Rejeitar via token**: supervisor da empresa (sem autenticação JWT, via link único tokenizado).
 
 #### Empresa e Avaliações
+
 - **CRUD de empresa**: staff CIEC.
 - **Avaliar empresa**: estagiário que teve estágio na empresa (empresa "elegível").
 - **Curtir/Descurtir avaliação**: qualquer estagiário.
@@ -333,38 +338,39 @@ Lista estágios com filtros e paginação.
 
 **Query params**:
 
-| Parâmetro | Tipo | Descrição |
-|---|---|---|
-| `limit` | `number` | Itens por página (padrão: 25) |
-| `page` | `number` | Página (padrão: 1) |
-| `search` | `string` | Busca textual geral |
-| `sortBy` | `string[]` | Ordenação (ex: `dataInicio:DESC`) |
-| `filter.campus.id` | `string[]` | Filtro por ID(s) do campus |
-| `filter.empresa.id` | `string[]` | Filtro por ID(s) da empresa |
-| `filter.empresa.cnpj` | `string[]` | Filtro por CNPJ(s) da empresa |
-| `filter.empresa.razaoSocial` | `string[]` | Filtro por razão social |
-| `filter.empresa.nomeFantasia` | `string[]` | Filtro por nome fantasia |
-| `filter.estagiario.id` | `string[]` | Filtro por ID do estagiário |
-| `filter.estagiario.matricula` | `string[]` | Filtro por matrícula do estagiário |
-| `filter.estagiario.perfil.usuario.matricula` | `string[]` | Alias: filtro por matrícula |
-| `filter.estagiario.nome` | `string[]` | Filtro por nome do estagiário |
-| `filter.estagiario.perfil.usuario.nome` | `string[]` | Alias: filtro por nome |
-| `filter.estagiario.curso.id` | `string[]` | Filtro por ID do curso do estagiário |
-| `filter.status` | `string[]` | Filtro por status do estágio |
-| `status` | `string[]` | Alias para `filter.status` |
-| `filter.nomeSupervisor` | `string[]` | Filtro por nome do supervisor |
-| `filter.emailSupervisor` | `string[]` | Filtro por e-mail do supervisor |
-| `filter.CursoReferencia.id` | `string[]` | Filtro por ID do curso de referência |
-| `filter.curso.id` | `string[]` | Alias para `filter.CursoReferencia.id` |
-| `filter.usuarioOrientador.id` | `string[]` | Filtro por ID do orientador |
-| `filter.usuarioOrientador.matricula` | `string[]` | Filtro por matrícula do orientador |
-| `filter.usuarioOrientador.nome` | `string[]` | Filtro por nome do orientador |
-| `filter.dataInicio` | `string[]` | Filtro por data de início (ISO 8601) |
-| `filter.dataFim` | `string[]` | Filtro por data de término |
-| `filter.aditivo` | `string[]` | Filtro por existência de aditivo |
-| `disponivel` | `boolean` | Se `true`, retorna apenas vagas disponíveis |
+| Parâmetro                                    | Tipo       | Descrição                                   |
+| -------------------------------------------- | ---------- | ------------------------------------------- |
+| `limit`                                      | `number`   | Itens por página (padrão: 25)               |
+| `page`                                       | `number`   | Página (padrão: 1)                          |
+| `search`                                     | `string`   | Busca textual geral                         |
+| `sortBy`                                     | `string[]` | Ordenação (ex: `dataInicio:DESC`)           |
+| `filter.campus.id`                           | `string[]` | Filtro por ID(s) do campus                  |
+| `filter.empresa.id`                          | `string[]` | Filtro por ID(s) da empresa                 |
+| `filter.empresa.cnpj`                        | `string[]` | Filtro por CNPJ(s) da empresa               |
+| `filter.empresa.razaoSocial`                 | `string[]` | Filtro por razão social                     |
+| `filter.empresa.nomeFantasia`                | `string[]` | Filtro por nome fantasia                    |
+| `filter.estagiario.id`                       | `string[]` | Filtro por ID do estagiário                 |
+| `filter.estagiario.matricula`                | `string[]` | Filtro por matrícula do estagiário          |
+| `filter.estagiario.perfil.usuario.matricula` | `string[]` | Alias: filtro por matrícula                 |
+| `filter.estagiario.nome`                     | `string[]` | Filtro por nome do estagiário               |
+| `filter.estagiario.perfil.usuario.nome`      | `string[]` | Alias: filtro por nome                      |
+| `filter.estagiario.curso.id`                 | `string[]` | Filtro por ID do curso do estagiário        |
+| `filter.status`                              | `string[]` | Filtro por status do estágio                |
+| `status`                                     | `string[]` | Alias para `filter.status`                  |
+| `filter.nomeSupervisor`                      | `string[]` | Filtro por nome do supervisor               |
+| `filter.emailSupervisor`                     | `string[]` | Filtro por e-mail do supervisor             |
+| `filter.CursoReferencia.id`                  | `string[]` | Filtro por ID do curso de referência        |
+| `filter.curso.id`                            | `string[]` | Alias para `filter.CursoReferencia.id`      |
+| `filter.usuarioOrientador.id`                | `string[]` | Filtro por ID do orientador                 |
+| `filter.usuarioOrientador.matricula`         | `string[]` | Filtro por matrícula do orientador          |
+| `filter.usuarioOrientador.nome`              | `string[]` | Filtro por nome do orientador               |
+| `filter.dataInicio`                          | `string[]` | Filtro por data de início (ISO 8601)        |
+| `filter.dataFim`                             | `string[]` | Filtro por data de término                  |
+| `filter.aditivo`                             | `string[]` | Filtro por existência de aditivo            |
+| `disponivel`                                 | `boolean`  | Se `true`, retorna apenas vagas disponíveis |
 
 **Resposta 200**:
+
 ```json
 {
   "data": [ { ...EstagioFindOneOutputDto } ],
@@ -400,6 +406,7 @@ Lista estágios de um orientador pela matrícula.
 
 **Autenticação**: Obrigatória  
 **Path params**:
+
 - `matricula` — matrícula do orientador
 
 **Query params**: mesmos de `GET /api/estagios`.
@@ -414,6 +421,7 @@ Detalha um estágio pelo UUID.
 
 **Autenticação**: Obrigatória  
 **Path params**:
+
 - `id` — UUID do estágio
 
 **Resposta 200**: objeto `EstagioFindOneOutputDto`  
@@ -434,21 +442,21 @@ Cria um novo estágio.
 
 ```jsonc
 {
-  "campus": { "id": "uuid" },        // opcional
-  "empresa": { "id": "uuid" },       // obrigatório
-  "estagiario": { "id": "uuid" },    // opcional — null = vaga sem aluno
+  "campus": { "id": "uuid" }, // opcional
+  "empresa": { "id": "uuid" }, // obrigatório
+  "estagiario": { "id": "uuid" }, // opcional — null = vaga sem aluno
   "usuarioOrientador": { "id": "uuid" }, // opcional
-  "cargaHoraria": 300,               // obrigatório (horas inteiras)
+  "cargaHoraria": 300, // obrigatório (horas inteiras)
   "CursoReferencia": { "id": "uuid" }, // opcional
-  "dataInicio": "2026-03-01",        // opcional (ISO 8601 date)
-  "dataFim": "2026-08-31",           // opcional
-  "status": "DISPONIVEL",            // opcional (ver enum EstagioStatus)
-  "nomeSupervisor": "João Silva",    // opcional
+  "dataInicio": "2026-03-01", // opcional (ISO 8601 date)
+  "dataFim": "2026-08-31", // opcional
+  "status": "DISPONIVEL", // opcional (ver enum EstagioStatus)
+  "nomeSupervisor": "João Silva", // opcional
   "emailSupervisor": "joao@empresa.com", // opcional
   "telefoneSupervisor": "+5511999999999", // opcional
-  "aditivo": false,                  // opcional
-  "tipoAditivo": null,               // opcional
-  "horariosEstagio": []              // opcional — array de horários
+  "aditivo": false, // opcional
+  "tipoAditivo": null, // opcional
+  "horariosEstagio": [], // opcional — array de horários
 }
 ```
 
@@ -508,21 +516,22 @@ Retorna o consolidado de carga horária do estágio.
 **Path params**: `id` — UUID do estágio
 
 **Resposta 200**:
+
 ```jsonc
 {
   "id": "uuid",
-  "cargaHorariaPrevista": 300,      // horas contratadas
-  "cargaHorariaRegistrada": 120.5,  // total submetido (não cancelado)
-  "cargaHorariaComprovada": 100.5,  // total APPROVED
-  "cargaHorariaPendente": 20.0,     // total PENDING
-  "cargaHorariaRejeitada": 0.0,     // total REJECTED
-  "cargaHorariaRestante": 199.5,    // prevista - comprovada
-  "percentualConcluido": 33.5,      // (comprovada / prevista) * 100
-  "situacao": "EM_ANDAMENTO",       // string descritiva
+  "cargaHorariaPrevista": 300, // horas contratadas
+  "cargaHorariaRegistrada": 120.5, // total submetido (não cancelado)
+  "cargaHorariaComprovada": 100.5, // total APPROVED
+  "cargaHorariaPendente": 20.0, // total PENDING
+  "cargaHorariaRejeitada": 0.0, // total REJECTED
+  "cargaHorariaRestante": 199.5, // prevista - comprovada
+  "percentualConcluido": 33.5, // (comprovada / prevista) * 100
+  "situacao": "EM_ANDAMENTO", // string descritiva
   "totalRegistros": 25,
   "totalAprovados": 20,
   "totalPendentes": 5,
-  "totalRejeitados": 0
+  "totalRejeitados": 0,
 }
 ```
 
@@ -537,17 +546,22 @@ Importa estágios em massa via arquivo CSV ou XLSX.
 **Content-Type**: `multipart/form-data`
 
 **Form fields**:
+
 - `file` — arquivo CSV ou XLSX (obrigatório)
 - `campusId` — UUID do campus (opcional)
 
 **Comportamento**: O processamento ocorre em **background**. O endpoint retorna imediatamente com status 200 enquanto o job roda em segundo plano.
 
 **Resposta 200**:
+
 ```json
-{ "message": "A importação foi iniciada em background e pode levar alguns minutos." }
+{
+  "message": "A importação foi iniciada em background e pode levar alguns minutos."
+}
 ```
 
 Ao concluir, o sistema:
+
 1. Cria uma notificação para o usuário que disparou a importação (via `INotificacaoRepository`).
 2. Emite um evento WebSocket via `EstagioNotificacaoPushService`.
 
@@ -564,6 +578,7 @@ Cria uma solicitação de estágio diretamente associada a um estágio existente
 
 **Path params**: `id` — UUID do estágio  
 **Body**:
+
 ```json
 {
   "razaoSocial": "string",
@@ -609,14 +624,15 @@ Lista alunos matriculados no período informado (padrão: 3º ano) que não poss
 
 **Query params**:
 
-| Parâmetro | Tipo | Padrão | Descrição |
-|---|---|---|---|
-| `cursoId` | `string` (UUID) | — | Filtra por curso |
-| `periodo` | `string` | `"3"` | Período/ano letivo a filtrar |
-| `page` | `number` | `1` | Página |
-| `limit` | `number` | `20` | Itens por página |
+| Parâmetro | Tipo            | Padrão | Descrição                    |
+| --------- | --------------- | ------ | ---------------------------- |
+| `cursoId` | `string` (UUID) | —      | Filtra por curso             |
+| `periodo` | `string`        | `"3"`  | Período/ano letivo a filtrar |
+| `page`    | `number`        | `1`    | Página                       |
+| `limit`   | `number`        | `20`   | Itens por página             |
 
 **Resposta 200**:
+
 ```jsonc
 {
   "data": [ { ...EstagiarioSemEstagioItem } ],
@@ -690,12 +706,12 @@ Lista a fila de espera de uma vaga de estágio.
 
 **Query params**:
 
-| Parâmetro | Tipo | Descrição |
-|---|---|---|
-| `page` | `number` | Página (padrão: 1) |
-| `limit` | `number` | Itens por página (padrão: 20) |
-| `situacao` | `string` | Filtra por situação da candidatura |
-| `filter.situacao` | `string` | Alias para `situacao` |
+| Parâmetro         | Tipo     | Descrição                          |
+| ----------------- | -------- | ---------------------------------- |
+| `page`            | `number` | Página (padrão: 1)                 |
+| `limit`           | `number` | Itens por página (padrão: 20)      |
+| `situacao`        | `string` | Filtra por situação da candidatura |
+| `filter.situacao` | `string` | Alias para `situacao`              |
 
 **Resposta 200**: `FilaEsperaListOutputDto`  
 **Resposta 401**: token ausente/inválido  
@@ -715,6 +731,7 @@ Candidata o aluno autenticado à vaga de estágio.
 **Body**: nenhum
 
 **Regras de negócio**:
+
 - O aluno não pode ter candidatura ativa (`PENDING` ou `OFFERED`) na mesma vaga.
 - O aluno não pode ter estágio já em andamento.
 
@@ -736,11 +753,13 @@ Convoca um candidato da fila de espera (altera situação para `OFFERED`).
 **Path params**: `candidaturaId` — UUID da candidatura
 
 **Body**:
+
 ```json
 { "diasValidade": 5 }
 ```
 
 **Regras de negócio**:
+
 - Só pode haver uma oferta ativa (`OFFERED`) por vaga ao mesmo tempo.
 - Um prazo de validade é definido (campo `expiraEm`).
 
@@ -755,12 +774,14 @@ Cancela ou remove da fila uma candidatura.
 
 **Autenticação**: Obrigatória  
 **Permissão**:
+
 - Aluno: pode cancelar **apenas** a própria candidatura (`PENDING` ou `OFFERED`).
 - Staff CIEC: pode cancelar qualquer candidatura.
 
 **Path params**: `candidaturaId` — UUID
 
 **Body** (opcional):
+
 ```json
 { "motivo": "Desistência voluntária" }
 ```
@@ -842,11 +863,11 @@ Lista todas as solicitações de estágio (para a CIEC).
 
 **Query params**:
 
-| Parâmetro | Tipo | Descrição |
-|---|---|---|
-| `filter.situacao` | `string` | Filtra por situação (`PENDENTE`, `EM_ANALISE`, etc.) |
-| `filter.tipo` | `string` | Filtra por tipo (`INTERNO`, `EXTERNO`) |
-| `filter.campusId` | `string` (UUID) | Filtra por campus |
+| Parâmetro         | Tipo            | Descrição                                            |
+| ----------------- | --------------- | ---------------------------------------------------- |
+| `filter.situacao` | `string`        | Filtra por situação (`PENDENTE`, `EM_ANALISE`, etc.) |
+| `filter.tipo`     | `string`        | Filtra por tipo (`INTERNO`, `EXTERNO`)               |
+| `filter.campusId` | `string` (UUID) | Filtra por campus                                    |
 
 **Resposta 200**: array de `EstagioSolicitacaoOutputDto`
 
@@ -864,6 +885,7 @@ Defere uma solicitação de estágio.
 **Body** (`EstagioSolicitacaoDeferirRestDto`): dados adicionais para geração do estágio.
 
 **Comportamento transacional**:
+
 1. Valida/cadastra a empresa concedente.
 2. Cria o estágio vinculado.
 3. Altera situação da solicitação para `DEFERIDA`.
@@ -883,9 +905,11 @@ Indefere uma solicitação de estágio.
 **Permissão**: Staff CIEC
 
 **Body** (`EstagioSolicitacaoIndeferirRestDto`):
+
 ```json
 { "parecer": "Documentação incompleta." }
 ```
+
 O campo `parecer` é **obrigatório**.
 
 **Resposta 200**: `EstagioSolicitacaoOutputDto`  
@@ -948,22 +972,23 @@ Lista folhas de ponto com filtros.
 
 **Query params**:
 
-| Parâmetro | Tipo | Descrição |
-|---|---|---|
-| `page` / `limit` | `number` | Paginação |
-| `filter.status` | `string[]` | Filtro por status (`PENDING`, `APPROVED`, `REJECTED`, `EXPIRED`, `CANCELLED`) |
-| `filter.data` | `string[]` | Filtro por data (`YYYY-MM-DD`) |
-| `filter.estagio.id` | `string[]` | Filtro por ID do estágio |
-| `filter.estagio.empresa.id` | `string[]` | Filtro por ID da empresa |
-| `filter.empresa.id` | `string[]` | Alias para filtro por empresa |
-| `filter.estagio.estagiario.id` | `string[]` | Filtro por ID do estagiário |
-| `filter.estagiario.id` | `string[]` | Alias |
-| `filter.estagio.estagiario.perfil.usuario.matricula` | `string[]` | Filtro por matrícula |
-| `filter.matricula` | `string[]` | Alias |
-| `filter.estagio.estagiario.perfil.usuario.nome` | `string[]` | Filtro por nome |
-| `filter.nome` | `string[]` | Alias |
+| Parâmetro                                            | Tipo       | Descrição                                                                     |
+| ---------------------------------------------------- | ---------- | ----------------------------------------------------------------------------- |
+| `page` / `limit`                                     | `number`   | Paginação                                                                     |
+| `filter.status`                                      | `string[]` | Filtro por status (`PENDING`, `APPROVED`, `REJECTED`, `EXPIRED`, `CANCELLED`) |
+| `filter.data`                                        | `string[]` | Filtro por data (`YYYY-MM-DD`)                                                |
+| `filter.estagio.id`                                  | `string[]` | Filtro por ID do estágio                                                      |
+| `filter.estagio.empresa.id`                          | `string[]` | Filtro por ID da empresa                                                      |
+| `filter.empresa.id`                                  | `string[]` | Alias para filtro por empresa                                                 |
+| `filter.estagio.estagiario.id`                       | `string[]` | Filtro por ID do estagiário                                                   |
+| `filter.estagiario.id`                               | `string[]` | Alias                                                                         |
+| `filter.estagio.estagiario.perfil.usuario.matricula` | `string[]` | Filtro por matrícula                                                          |
+| `filter.matricula`                                   | `string[]` | Alias                                                                         |
+| `filter.estagio.estagiario.perfil.usuario.nome`      | `string[]` | Filtro por nome                                                               |
+| `filter.nome`                                        | `string[]` | Alias                                                                         |
 
 **Resposta 200**:
+
 ```json
 {
   "data": [ { ...FolhaPontoFindOneOutputDto } ],
@@ -978,11 +1003,12 @@ Lista folhas de ponto com filtros.
 Detalha uma folha de ponto pelo UUID.
 
 **Resposta 200**: `FolhaPontoFindOneOutputDto`
+
 ```jsonc
 {
   "id": "uuid",
   "estagio": { "id": "uuid" },
-  "data": "2026-03-10",          // YYYY-MM-DD (sem deslocamento UTC)
+  "data": "2026-03-10", // YYYY-MM-DD (sem deslocamento UTC)
   "horaInicio": "08:00",
   "horaFim": "12:00",
   "quantidadeHoras": 4.0,
@@ -990,7 +1016,7 @@ Detalha uma folha de ponto pelo UUID.
   "status": "PENDING",
   "dataSolicitacao": "2026-03-10T12:05:00.000Z",
   "dataAprovacao": null,
-  "dataRejeicao": null
+  "dataRejeicao": null,
 }
 ```
 
@@ -1006,6 +1032,7 @@ Registra uma nova folha de ponto.
 **Permissão**: Estagiário vinculado ao estágio
 
 **Body**:
+
 ```json
 {
   "estagio": { "id": "uuid" },
@@ -1070,16 +1097,19 @@ Confirma a ação do supervisor (aprovação/rejeição/cancelamento).
 **Rate limit**: 5 req/minuto por IP
 
 **Headers de request**:
+
 - Se `Accept: application/json` → resposta em JSON.
 - Caso contrário → resposta em HTML (página de sucesso/erro).
 
 **Comportamento**:
+
 1. Valida o token (existência, expiração).
 2. Executa a mutação correspondente ao tipo do token (`APROVACAO`, `REJEICAO`, `CANCELAMENTO`).
 3. Invalida o token e todos os tokens irmãos da mesma folha.
 4. Registra IP e user-agent para auditoria.
 
 **Resposta 200 (JSON)**:
+
 ```json
 { "sucesso": true, "acao": "APROVACAO", "folhaPontoId": "uuid" }
 ```
@@ -1096,15 +1126,15 @@ Confirma a ação do supervisor (aprovação/rejeição/cancelamento).
 
 ---
 
-| Método | Endpoint | Descrição |
-|---|---|---|
-| `GET` | `/api/empresas` | Lista empresas com paginação e filtros |
-| `GET` | `/api/empresas/:id` | Detalha uma empresa |
-| `POST` | `/api/empresas` | Cria uma empresa |
-| `PATCH` | `/api/empresas/:id` | Atualiza parcialmente uma empresa |
-| `DELETE` | `/api/empresas/:id` | Remove uma empresa (soft delete) |
-| `GET` | `/api/empresas/:id/imagem/foto-empresa` | Retorna a imagem (binário) da empresa |
-| `PUT` | `/api/empresas/:id/imagem/foto-empresa` | Faz upload/atualização da foto (multipart/form-data) |
+| Método   | Endpoint                                | Descrição                                            |
+| -------- | --------------------------------------- | ---------------------------------------------------- |
+| `GET`    | `/api/empresas`                         | Lista empresas com paginação e filtros               |
+| `GET`    | `/api/empresas/:id`                     | Detalha uma empresa                                  |
+| `POST`   | `/api/empresas`                         | Cria uma empresa                                     |
+| `PATCH`  | `/api/empresas/:id`                     | Atualiza parcialmente uma empresa                    |
+| `DELETE` | `/api/empresas/:id`                     | Remove uma empresa (soft delete)                     |
+| `GET`    | `/api/empresas/:id/imagem/foto-empresa` | Retorna a imagem (binário) da empresa                |
+| `PUT`    | `/api/empresas/:id/imagem/foto-empresa` | Faz upload/atualização da foto (multipart/form-data) |
 
 ---
 
@@ -1116,20 +1146,21 @@ Confirma a ação do supervisor (aprovação/rejeição/cancelamento).
 
 ---
 
-| Método | Endpoint | Descrição |
-|---|---|---|
-| `GET` | `/api/empresas/avaliacoes/minhas-elegiveis` | Lista empresas que o usuário pode avaliar |
-| `GET` | `/api/empresas/:empresaId/avaliacoes` | Lista avaliações de uma empresa (paginado) |
-| `GET` | `/api/empresas/:empresaId/avaliacoes/minha` | Retorna a avaliação do usuário para a empresa |
-| `POST` | `/api/empresas/:empresaId/avaliacoes` | Cria uma avaliação para a empresa |
-| `GET` | `/api/empresas/avaliacoes/:id` | Detalha uma avaliação |
-| `PATCH` | `/api/empresas/avaliacoes/:id` | Atualiza uma avaliação |
-| `DELETE` | `/api/empresas/avaliacoes/:id` | Remove uma avaliação |
-| `POST` | `/api/empresas/avaliacoes/:id/curtidas` | Curte uma avaliação |
-| `DELETE` | `/api/empresas/avaliacoes/:id/curtidas` | Remove curtida de uma avaliação |
-| `GET` | `/api/empresas/avaliacoes/:id/historico` | Histórico de edições de uma avaliação |
+| Método   | Endpoint                                    | Descrição                                     |
+| -------- | ------------------------------------------- | --------------------------------------------- |
+| `GET`    | `/api/empresas/avaliacoes/minhas-elegiveis` | Lista empresas que o usuário pode avaliar     |
+| `GET`    | `/api/empresas/:empresaId/avaliacoes`       | Lista avaliações de uma empresa (paginado)    |
+| `GET`    | `/api/empresas/:empresaId/avaliacoes/minha` | Retorna a avaliação do usuário para a empresa |
+| `POST`   | `/api/empresas/:empresaId/avaliacoes`       | Cria uma avaliação para a empresa             |
+| `GET`    | `/api/empresas/avaliacoes/:id`              | Detalha uma avaliação                         |
+| `PATCH`  | `/api/empresas/avaliacoes/:id`              | Atualiza uma avaliação                        |
+| `DELETE` | `/api/empresas/avaliacoes/:id`              | Remove uma avaliação                          |
+| `POST`   | `/api/empresas/avaliacoes/:id/curtidas`     | Curte uma avaliação                           |
+| `DELETE` | `/api/empresas/avaliacoes/:id/curtidas`     | Remove curtida de uma avaliação               |
+| `GET`    | `/api/empresas/avaliacoes/:id/historico`    | Histórico de edições de uma avaliação         |
 
 **Regras de negócio**:
+
 - Um estagiário só pode avaliar empresas onde trabalhou (`minhas-elegiveis`).
 - Score é recalculado automaticamente a cada criação/atualização/exclusão de avaliação.
 
@@ -1146,105 +1177,107 @@ Existem dois controllers para relatórios: um CRUD geral (`/relatorios-estagio`)
 
 #### CRUD Geral
 
-| Método | Endpoint | Descrição |
-|---|---|---|
-| `GET` | `/api/relatorios-estagio` | Lista relatórios com filtros |
-| `GET` | `/api/relatorios-estagio/:id` | Detalha um relatório |
-| `POST` | `/api/relatorios-estagio` | Cria um relatório |
-| `PATCH` | `/api/relatorios-estagio/:id` | Atualiza um relatório |
-| `PUT` | `/api/relatorios-estagio/:id` | Substitui completamente |
-| `DELETE` | `/api/relatorios-estagio/:id` | Remove o relatório |
+| Método   | Endpoint                      | Descrição                    |
+| -------- | ----------------------------- | ---------------------------- |
+| `GET`    | `/api/relatorios-estagio`     | Lista relatórios com filtros |
+| `GET`    | `/api/relatorios-estagio/:id` | Detalha um relatório         |
+| `POST`   | `/api/relatorios-estagio`     | Cria um relatório            |
+| `PATCH`  | `/api/relatorios-estagio/:id` | Atualiza um relatório        |
+| `PUT`    | `/api/relatorios-estagio/:id` | Substitui completamente      |
+| `DELETE` | `/api/relatorios-estagio/:id` | Remove o relatório           |
 
 #### Nested por Estágio
 
-| Método | Endpoint | Descrição |
-|---|---|---|
-| `GET` | `/api/estagios/:id/relatorio` | Busca o relatório do estágio |
-| `POST` | `/api/estagios/:id/relatorio` | Upload do PDF do relatório |
-| `POST` | `/api/estagios/:id/relatorio/upload` | Alias do endpoint de upload |
-| `GET` | `/api/estagios/:id/relatorio/pdf` | Download do PDF |
-| `GET` | `/api/estagios/:id/relatorio/download` | Alias do download |
-| `DELETE` | `/api/estagios/:id/relatorio` | Remove o relatório do estágio |
+| Método   | Endpoint                               | Descrição                     |
+| -------- | -------------------------------------- | ----------------------------- |
+| `GET`    | `/api/estagios/:id/relatorio`          | Busca o relatório do estágio  |
+| `POST`   | `/api/estagios/:id/relatorio`          | Upload do PDF do relatório    |
+| `POST`   | `/api/estagios/:id/relatorio/upload`   | Alias do endpoint de upload   |
+| `GET`    | `/api/estagios/:id/relatorio/pdf`      | Download do PDF               |
+| `GET`    | `/api/estagios/:id/relatorio/download` | Alias do download             |
+| `DELETE` | `/api/estagios/:id/relatorio`          | Remove o relatório do estágio |
 
 **Upload de PDF**:
+
 - `Content-Type`: `multipart/form-data`
 - Campo: `file` (arquivo PDF)
 - Retorna `RelatorioFindOneOutputDto`
 
 **Download de PDF**:
+
 - Resposta: stream binário com `Content-Type: application/pdf`
 
 ---
 
 ## 7. Tabela Consolidada de Endpoints
 
-| Método | Endpoint | Permissão | Descrição |
-|---|---|---|---|
-| `GET` | `/api/estagios` | Autenticado | Lista estágios |
-| `POST` | `/api/estagios` | Staff CIEC | Cria estágio |
-| `GET` | `/api/estagios/disponiveis` | Autenticado | Vagas disponíveis |
-| `GET` | `/api/estagios/orientador/:matricula` | Autenticado | Estágios por orientador |
-| `GET` | `/api/estagios/:id` | Autenticado | Detalha estágio |
-| `PATCH` | `/api/estagios/:id` | Staff CIEC | Atualiza parcial |
-| `PUT` | `/api/estagios/:id` | Staff CIEC | Substitui completo |
-| `DELETE` | `/api/estagios/:id` | Staff CIEC | Remove (soft delete) |
-| `GET` | `/api/estagios/:id/carga-horaria` | Autenticado | Consolidado de horas |
-| `POST` | `/api/estagios/importar` | Staff CIEC | Importação CSV/XLSX |
-| `POST` | `/api/estagios/:id/solicitar` | Staff CIEC | Solicitar estágio |
-| `GET` | `/api/estagios/:id/relatorio` | Autenticado | Relatório do estágio |
-| `POST` | `/api/estagios/:id/relatorio` | Autenticado | Upload PDF do relatório |
-| `POST` | `/api/estagios/:id/relatorio/upload` | Autenticado | Alias upload PDF |
-| `GET` | `/api/estagios/:id/relatorio/pdf` | Autenticado | Download PDF |
-| `GET` | `/api/estagios/:id/relatorio/download` | Autenticado | Alias download PDF |
-| `DELETE` | `/api/estagios/:id/relatorio` | Autenticado | Remove relatório |
-| `GET` | `/api/estagiarios` | Autenticado | Lista estagiários |
-| `GET` | `/api/estagiarios/sem-estagio` | Autenticado | Alunos sem estágio |
-| `GET` | `/api/estagiarios/:id` | Autenticado | Detalha estagiário |
-| `POST` | `/api/estagiarios` | Staff CIEC | Cria estagiário |
-| `PATCH` | `/api/estagiarios/:id` | Staff CIEC | Atualiza estagiário |
-| `DELETE` | `/api/estagiarios/:id` | Staff CIEC | Remove estagiário |
-| `GET` | `/api/estagios/:estagioId/candidaturas` | Staff CIEC | Fila de espera da vaga |
-| `POST` | `/api/estagios/:estagioId/candidaturas` | Estagiário | Candidatar-se |
-| `POST` | `/api/estagios/candidaturas/:id/convocar` | Staff CIEC | Convocar candidato |
-| `POST` | `/api/estagios/candidaturas/:id/aceitar` | Estagiário | Aceitar oferta |
-| `DELETE` | `/api/estagios/candidaturas/:id` | Próprio/CIEC | Cancelar candidatura |
-| `GET` | `/api/estagios/minhas-candidaturas` | Estagiário | Minhas candidaturas |
-| `POST` | `/api/solicitacoes-estagio/interno` | Estagiário | Solicitar estágio interno |
-| `POST` | `/api/solicitacoes-estagio/externo` | Estagiário | Solicitar estágio externo |
-| `GET` | `/api/solicitacoes-estagio` | Staff CIEC | Lista solicitações |
-| `POST` | `/api/solicitacoes-estagio/:id/deferir` | Staff CIEC | Deferir solicitação |
-| `POST` | `/api/solicitacoes-estagio/:id/indeferir` | Staff CIEC | Indeferir solicitação |
-| `GET` | `/api/minhas-solicitacoes` | Estagiário | Minhas solicitações |
-| `DELETE` | `/api/minhas-solicitacoes/:id` | Próprio aluno | Cancelar solicitação |
-| `GET` | `/api/folha-ponto` | Autenticado | Lista folhas de ponto |
-| `GET` | `/api/folha-ponto/:id` | Autenticado | Detalha folha de ponto |
-| `POST` | `/api/folha-ponto` | Estagiário | Registrar frequência |
-| `DELETE` | `/api/folha-ponto/:id` | Próprio/CIEC | Cancelar folha de ponto |
-| `GET` | `/api/folha-ponto/tokens/:id/confirmar` | **Público** | Tela de confirmação |
-| `POST` | `/api/folha-ponto/tokens/:id/confirmar` | **Público** | Confirmar ação do supervisor |
-| `GET` | `/api/empresas` | Autenticado | Lista empresas |
-| `GET` | `/api/empresas/:id` | Autenticado | Detalha empresa |
-| `POST` | `/api/empresas` | Staff CIEC | Cria empresa |
-| `PATCH` | `/api/empresas/:id` | Staff CIEC | Atualiza empresa |
-| `DELETE` | `/api/empresas/:id` | Staff CIEC | Remove empresa |
-| `GET` | `/api/empresas/:id/imagem/foto-empresa` | Autenticado | Foto da empresa |
-| `PUT` | `/api/empresas/:id/imagem/foto-empresa` | Staff CIEC | Upload foto empresa |
-| `GET` | `/api/empresas/avaliacoes/minhas-elegiveis` | Estagiário | Empresas avaliáveis |
-| `GET` | `/api/empresas/:id/avaliacoes` | Autenticado | Avaliações da empresa |
-| `GET` | `/api/empresas/:id/avaliacoes/minha` | Estagiário | Minha avaliação |
-| `POST` | `/api/empresas/:id/avaliacoes` | Estagiário | Avaliar empresa |
-| `GET` | `/api/empresas/avaliacoes/:id` | Autenticado | Detalha avaliação |
-| `PATCH` | `/api/empresas/avaliacoes/:id` | Próprio avaliador | Editar avaliação |
-| `DELETE` | `/api/empresas/avaliacoes/:id` | Próprio avaliador | Remover avaliação |
-| `POST` | `/api/empresas/avaliacoes/:id/curtidas` | Estagiário | Curtir avaliação |
-| `DELETE` | `/api/empresas/avaliacoes/:id/curtidas` | Estagiário | Descurtir avaliação |
-| `GET` | `/api/empresas/avaliacoes/:id/historico` | Autenticado | Histórico da avaliação |
-| `GET` | `/api/relatorios-estagio` | Autenticado | Lista relatórios |
-| `GET` | `/api/relatorios-estagio/:id` | Autenticado | Detalha relatório |
-| `POST` | `/api/relatorios-estagio` | Autenticado | Cria relatório |
-| `PATCH` | `/api/relatorios-estagio/:id` | Autenticado | Atualiza relatório |
-| `PUT` | `/api/relatorios-estagio/:id` | Autenticado | Substitui relatório |
-| `DELETE` | `/api/relatorios-estagio/:id` | Autenticado | Remove relatório |
+| Método   | Endpoint                                    | Permissão         | Descrição                    |
+| -------- | ------------------------------------------- | ----------------- | ---------------------------- |
+| `GET`    | `/api/estagios`                             | Autenticado       | Lista estágios               |
+| `POST`   | `/api/estagios`                             | Staff CIEC        | Cria estágio                 |
+| `GET`    | `/api/estagios/disponiveis`                 | Autenticado       | Vagas disponíveis            |
+| `GET`    | `/api/estagios/orientador/:matricula`       | Autenticado       | Estágios por orientador      |
+| `GET`    | `/api/estagios/:id`                         | Autenticado       | Detalha estágio              |
+| `PATCH`  | `/api/estagios/:id`                         | Staff CIEC        | Atualiza parcial             |
+| `PUT`    | `/api/estagios/:id`                         | Staff CIEC        | Substitui completo           |
+| `DELETE` | `/api/estagios/:id`                         | Staff CIEC        | Remove (soft delete)         |
+| `GET`    | `/api/estagios/:id/carga-horaria`           | Autenticado       | Consolidado de horas         |
+| `POST`   | `/api/estagios/importar`                    | Staff CIEC        | Importação CSV/XLSX          |
+| `POST`   | `/api/estagios/:id/solicitar`               | Staff CIEC        | Solicitar estágio            |
+| `GET`    | `/api/estagios/:id/relatorio`               | Autenticado       | Relatório do estágio         |
+| `POST`   | `/api/estagios/:id/relatorio`               | Autenticado       | Upload PDF do relatório      |
+| `POST`   | `/api/estagios/:id/relatorio/upload`        | Autenticado       | Alias upload PDF             |
+| `GET`    | `/api/estagios/:id/relatorio/pdf`           | Autenticado       | Download PDF                 |
+| `GET`    | `/api/estagios/:id/relatorio/download`      | Autenticado       | Alias download PDF           |
+| `DELETE` | `/api/estagios/:id/relatorio`               | Autenticado       | Remove relatório             |
+| `GET`    | `/api/estagiarios`                          | Autenticado       | Lista estagiários            |
+| `GET`    | `/api/estagiarios/sem-estagio`              | Autenticado       | Alunos sem estágio           |
+| `GET`    | `/api/estagiarios/:id`                      | Autenticado       | Detalha estagiário           |
+| `POST`   | `/api/estagiarios`                          | Staff CIEC        | Cria estagiário              |
+| `PATCH`  | `/api/estagiarios/:id`                      | Staff CIEC        | Atualiza estagiário          |
+| `DELETE` | `/api/estagiarios/:id`                      | Staff CIEC        | Remove estagiário            |
+| `GET`    | `/api/estagios/:estagioId/candidaturas`     | Staff CIEC        | Fila de espera da vaga       |
+| `POST`   | `/api/estagios/:estagioId/candidaturas`     | Estagiário        | Candidatar-se                |
+| `POST`   | `/api/estagios/candidaturas/:id/convocar`   | Staff CIEC        | Convocar candidato           |
+| `POST`   | `/api/estagios/candidaturas/:id/aceitar`    | Estagiário        | Aceitar oferta               |
+| `DELETE` | `/api/estagios/candidaturas/:id`            | Próprio/CIEC      | Cancelar candidatura         |
+| `GET`    | `/api/estagios/minhas-candidaturas`         | Estagiário        | Minhas candidaturas          |
+| `POST`   | `/api/solicitacoes-estagio/interno`         | Estagiário        | Solicitar estágio interno    |
+| `POST`   | `/api/solicitacoes-estagio/externo`         | Estagiário        | Solicitar estágio externo    |
+| `GET`    | `/api/solicitacoes-estagio`                 | Staff CIEC        | Lista solicitações           |
+| `POST`   | `/api/solicitacoes-estagio/:id/deferir`     | Staff CIEC        | Deferir solicitação          |
+| `POST`   | `/api/solicitacoes-estagio/:id/indeferir`   | Staff CIEC        | Indeferir solicitação        |
+| `GET`    | `/api/minhas-solicitacoes`                  | Estagiário        | Minhas solicitações          |
+| `DELETE` | `/api/minhas-solicitacoes/:id`              | Próprio aluno     | Cancelar solicitação         |
+| `GET`    | `/api/folha-ponto`                          | Autenticado       | Lista folhas de ponto        |
+| `GET`    | `/api/folha-ponto/:id`                      | Autenticado       | Detalha folha de ponto       |
+| `POST`   | `/api/folha-ponto`                          | Estagiário        | Registrar frequência         |
+| `DELETE` | `/api/folha-ponto/:id`                      | Próprio/CIEC      | Cancelar folha de ponto      |
+| `GET`    | `/api/folha-ponto/tokens/:id/confirmar`     | **Público**       | Tela de confirmação          |
+| `POST`   | `/api/folha-ponto/tokens/:id/confirmar`     | **Público**       | Confirmar ação do supervisor |
+| `GET`    | `/api/empresas`                             | Autenticado       | Lista empresas               |
+| `GET`    | `/api/empresas/:id`                         | Autenticado       | Detalha empresa              |
+| `POST`   | `/api/empresas`                             | Staff CIEC        | Cria empresa                 |
+| `PATCH`  | `/api/empresas/:id`                         | Staff CIEC        | Atualiza empresa             |
+| `DELETE` | `/api/empresas/:id`                         | Staff CIEC        | Remove empresa               |
+| `GET`    | `/api/empresas/:id/imagem/foto-empresa`     | Autenticado       | Foto da empresa              |
+| `PUT`    | `/api/empresas/:id/imagem/foto-empresa`     | Staff CIEC        | Upload foto empresa          |
+| `GET`    | `/api/empresas/avaliacoes/minhas-elegiveis` | Estagiário        | Empresas avaliáveis          |
+| `GET`    | `/api/empresas/:id/avaliacoes`              | Autenticado       | Avaliações da empresa        |
+| `GET`    | `/api/empresas/:id/avaliacoes/minha`        | Estagiário        | Minha avaliação              |
+| `POST`   | `/api/empresas/:id/avaliacoes`              | Estagiário        | Avaliar empresa              |
+| `GET`    | `/api/empresas/avaliacoes/:id`              | Autenticado       | Detalha avaliação            |
+| `PATCH`  | `/api/empresas/avaliacoes/:id`              | Próprio avaliador | Editar avaliação             |
+| `DELETE` | `/api/empresas/avaliacoes/:id`              | Próprio avaliador | Remover avaliação            |
+| `POST`   | `/api/empresas/avaliacoes/:id/curtidas`     | Estagiário        | Curtir avaliação             |
+| `DELETE` | `/api/empresas/avaliacoes/:id/curtidas`     | Estagiário        | Descurtir avaliação          |
+| `GET`    | `/api/empresas/avaliacoes/:id/historico`    | Autenticado       | Histórico da avaliação       |
+| `GET`    | `/api/relatorios-estagio`                   | Autenticado       | Lista relatórios             |
+| `GET`    | `/api/relatorios-estagio/:id`               | Autenticado       | Detalha relatório            |
+| `POST`   | `/api/relatorios-estagio`                   | Autenticado       | Cria relatório               |
+| `PATCH`  | `/api/relatorios-estagio/:id`               | Autenticado       | Atualiza relatório           |
+| `PUT`    | `/api/relatorios-estagio/:id`               | Autenticado       | Substitui relatório          |
+| `DELETE` | `/api/relatorios-estagio/:id`               | Autenticado       | Remove relatório             |
 
 ---
 
@@ -1349,41 +1382,43 @@ O helper `parseEstagioImportCsv` (`src/modules/estagio/estagio/application/helpe
 ### 10.2 Mapeamento de Colunas
 
 O mapeamento de cabeçalhos é flexível (`findHeaderFlex`). O algoritmo:
+
 1. Tenta correspondência exata (case-insensitive, normalizado).
 2. Tenta correspondência por substring — exige comprimento mínimo de 4 caracteres para evitar falsos positivos.
 
 ### 10.3 Campos Suportados no CSV
 
-| Campo CSV | Campo do Estágio |
-|---|---|
-| Matrícula / matrícula do aluno | `estagiario.matricula` |
-| CNPJ / empresa | `empresa.cnpj` |
-| Carga Horária | `cargaHoraria` |
-| Data Início / data_inicio | `dataInicio` |
-| Data Fim / data_fim | `dataFim` |
-| Status | `status` |
-| Supervisor / Nome Supervisor | `nomeSupervisor` |
-| Email Supervisor | `emailSupervisor` |
-| Telefone Supervisor | `telefoneSupervisor` |
-| Tem Aditivo | `aditivo` |
-| Tipo Aditivo | `tipoAditivo` |
-| Data Prevista Fim | `dataPrevistaFim` |
-| Nome Seguradora | `nomeSeguradora` |
-| Número Apólice Seguro | `numeroApoliceSeguro` |
-| Visitas Realizadas | `visitasRealizadas` |
-| Visitas Justificadas | `visitasJustificadas` |
-| Visitas a Vencer | `visitasAVencer` |
-| Visitas Não Realizadas | `visitasNaoRealizadas` |
-| Resumo Pendências | `resumoPendencias` |
-| Encerramento Por | `encerramentoPor` |
-| Motivação Desligamento | `motivacaoDesligamento` |
-| Motivo Rescisão | `motivoRescisao` |
-| Média Notas Supervisor | `mediaNotasSupervisor` |
-| Foi ou Será Contratado | `foiOuSeraContratado` |
+| Campo CSV                      | Campo do Estágio        |
+| ------------------------------ | ----------------------- |
+| Matrícula / matrícula do aluno | `estagiario.matricula`  |
+| CNPJ / empresa                 | `empresa.cnpj`          |
+| Carga Horária                  | `cargaHoraria`          |
+| Data Início / data_inicio      | `dataInicio`            |
+| Data Fim / data_fim            | `dataFim`               |
+| Status                         | `status`                |
+| Supervisor / Nome Supervisor   | `nomeSupervisor`        |
+| Email Supervisor               | `emailSupervisor`       |
+| Telefone Supervisor            | `telefoneSupervisor`    |
+| Tem Aditivo                    | `aditivo`               |
+| Tipo Aditivo                   | `tipoAditivo`           |
+| Data Prevista Fim              | `dataPrevistaFim`       |
+| Nome Seguradora                | `nomeSeguradora`        |
+| Número Apólice Seguro          | `numeroApoliceSeguro`   |
+| Visitas Realizadas             | `visitasRealizadas`     |
+| Visitas Justificadas           | `visitasJustificadas`   |
+| Visitas a Vencer               | `visitasAVencer`        |
+| Visitas Não Realizadas         | `visitasNaoRealizadas`  |
+| Resumo Pendências              | `resumoPendencias`      |
+| Encerramento Por               | `encerramentoPor`       |
+| Motivação Desligamento         | `motivacaoDesligamento` |
+| Motivo Rescisão                | `motivoRescisao`        |
+| Média Notas Supervisor         | `mediaNotasSupervisor`  |
+| Foi ou Será Contratado         | `foiOuSeraContratado`   |
 
 ### 10.4 Resolução de Entidades
 
 Durante a importação, o sistema resolve automaticamente:
+
 - **Estagiário**: por matrícula → busca perfil no banco; cria usuário se não existir.
 - **Empresa**: por CNPJ → busca no banco; cria se não existir.
 - **Orientador**: por matrícula ou e-mail → busca no banco; cria se não existir.
@@ -1392,6 +1427,7 @@ Durante a importação, o sistema resolve automaticamente:
 ### 10.5 Notificação de Conclusão
 
 Ao final do job (com ou sem erros), o sistema:
+
 1. Cria uma notificação persistente no banco para o usuário que disparou a importação.
 2. Emite um evento WebSocket via `EstagioNotificacaoPushService.notificarImportacaoConcluida(created, failed, errorDetails)`.
 
@@ -1533,17 +1569,17 @@ erDiagram
 
 ## 12. Integrações com Outros Módulos
 
-| Módulo | Integração |
-|---|---|
-| `acesso/usuario` | Criação de usuário (estagiário/orientador) durante importação; lookup por matrícula/e-mail |
-| `acesso/autenticacao` | Guard JWT; refresh token |
-| `acesso/notificacao` | Notificações persistentes ao concluir importação em massa |
-| `ambientes/campus` | FK em `estagio` e `estagio_solicitacao`; filtros de listagem |
-| `ensino/curso` | FK `CursoReferencia` em `estagio`; filtro por curso do estagiário; criação de curso durante importação |
-| `ensino/oferta-formacao` | Consulta durante importação para resolução de cursos |
-| `localidades/cidade` | Resolução de cidade durante importação de empresa |
-| `localidades/estado` | Resolução de estado durante importação |
-| `localidades/endereco` | Criação/atualização de endereço durante importação de empresa |
+| Módulo                   | Integração                                                                                             |
+| ------------------------ | ------------------------------------------------------------------------------------------------------ |
+| `acesso/usuario`         | Criação de usuário (estagiário/orientador) durante importação; lookup por matrícula/e-mail             |
+| `acesso/autenticacao`    | Guard JWT; refresh token                                                                               |
+| `acesso/notificacao`     | Notificações persistentes ao concluir importação em massa                                              |
+| `ambientes/campus`       | FK em `estagio` e `estagio_solicitacao`; filtros de listagem                                           |
+| `ensino/curso`           | FK `CursoReferencia` em `estagio`; filtro por curso do estagiário; criação de curso durante importação |
+| `ensino/oferta-formacao` | Consulta durante importação para resolução de cursos                                                   |
+| `localidades/cidade`     | Resolução de cidade durante importação de empresa                                                      |
+| `localidades/estado`     | Resolução de estado durante importação                                                                 |
+| `localidades/endereco`   | Criação/atualização de endereço durante importação de empresa                                          |
 
 ---
 
@@ -1559,15 +1595,15 @@ O adapter Redis é configurado via `RedisIoAdapter` antes de qualquer outra conf
 
 ## 14. Possíveis Erros e Códigos HTTP
 
-| Código | Situação |
-|---|---|
-| `200 OK` | Operação bem-sucedida |
-| `201 Created` | Recurso criado |
-| `400 Bad Request` | Dados inválidos (falha de validação de DTO, arquivo não enviado, etc.) |
-| `401 Unauthorized` | Token JWT ausente, expirado ou inválido |
-| `403 Forbidden` | Usuário autenticado não tem permissão para a operação |
-| `404 Not Found` | Recurso não encontrado (estágio, candidatura, folha de ponto, empresa, etc.) |
-| `409 Conflict` | Candidatura duplicada; oferta ativa existente; solicitação já finalizada; limite de solicitações atingido |
+| Código             | Situação                                                                                                  |
+| ------------------ | --------------------------------------------------------------------------------------------------------- |
+| `200 OK`           | Operação bem-sucedida                                                                                     |
+| `201 Created`      | Recurso criado                                                                                            |
+| `400 Bad Request`  | Dados inválidos (falha de validação de DTO, arquivo não enviado, etc.)                                    |
+| `401 Unauthorized` | Token JWT ausente, expirado ou inválido                                                                   |
+| `403 Forbidden`    | Usuário autenticado não tem permissão para a operação                                                     |
+| `404 Not Found`    | Recurso não encontrado (estágio, candidatura, folha de ponto, empresa, etc.)                              |
+| `409 Conflict`     | Candidatura duplicada; oferta ativa existente; solicitação já finalizada; limite de solicitações atingido |
 
 ---
 
@@ -1596,4 +1632,3 @@ O campo `data` (coluna `date` no PostgreSQL) é serializado como string `YYYY-MM
 ### 15.6 Frontend
 
 O frontend não reside neste repositório. Não há código de frontend em `ladesa/management-service`. O frontend é um projeto separado que consome esta API.
-
