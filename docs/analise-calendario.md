@@ -12,8 +12,8 @@ Análise feita em 2026-08-22, lendo esquema, entidades e manipuladores de comand
 | Alterar só uma ocorrência de uma série | [Recorte 2](#recorte-2-a-recorrencia-para-na-primeira-excecao) |
 | Compartilhamento entre campi | [Recorte 4](#recorte-4-o-evento-e-a-unica-coisa-sem-campus) |
 | Por que a grade gerada não vira aula | [Recorte 5](#recorte-5-gerar-editar-e-agendar-nao-se-encontram) |
-| O que precisa ser feito | [Checklist de execução](#checklist-de-execução) |
-| O que precisa ser descoberto | [Roteiro de investigação](#roteiro-de-descoberta-e-investigação) |
+| O que precisa ser feito | [Checklist de execução](#checklist-de-execucao) |
+| O que precisa ser descoberto | [Roteiro de investigação](#roteiro-de-descoberta-e-investigacao) |
 
 ## Síntese
 
@@ -301,7 +301,7 @@ Nenhuma issue menciona compartilhamento entre campi, exportação de calendário
 
 # Checklist de execução
 
-O que precisa ser escrito, mudado ou reescrito. É a lista de **fazer**, distinta do [roteiro de investigação](#roteiro-de-descoberta-e-investigação), que é a lista de **descobrir**. Um item daqui pode depender de um item de lá, e nesse caso está anotado.
+O que precisa ser escrito, mudado ou reescrito. É a lista de **fazer**, distinta do [roteiro de investigação](#roteiro-de-descoberta-e-investigacao), que é a lista de **descobrir**. Um item daqui pode depender de um item de lá, e nesse caso está anotado.
 
 Marcado significa entregue e verificado.
 
