@@ -93,7 +93,7 @@ describe("EstagioSolicitacaoIndeferirCommandHandler", () => {
   it("should throw ForbiddenError if actor is not CIEC staff", async () => {
     const mocks = createMocks();
     mocks.permissionChecker.ensureCanManageSolicitacoes.mockRejectedValue(
-      new ForbiddenError("Apenas servidores do CIEC podem indeferir."),
+      new ForbiddenError("Apenas servidores da CIEC podem indeferir."),
     );
 
     const handler = new EstagioSolicitacaoIndeferirCommandHandlerImpl(

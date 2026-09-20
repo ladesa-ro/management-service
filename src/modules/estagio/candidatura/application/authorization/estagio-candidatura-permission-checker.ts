@@ -56,7 +56,32 @@ export class EstagioCandidaturaPermissionCheckerImpl
 
     if (!hasStaffCargo) {
       throw new ForbiddenError(
-        "Apenas servidores do CIEC ou coordenadores autorizados podem convocar candidatos.",
+        "Apenas servidores da CIEC ou coordenadores autorizados podem convocar candidatos.",
+      );
+    }
+  }
+
+  async ensureCanListFila(accessContext: IAccessContext | null): Promise<void> {
+    const actor = accessContext?.requestActor;
+    if (!actor) {
+      throw new UnauthorizedError(
+        "Usuário deve estar autenticado para visualizar a fila de espera.",
+      );
+    }
+
+    if (actor.isSuperUser) {
+      return;
+    }
+
+    const perfis = await this.perfilRepository.findAllActiveByUsuarioId(accessContext, actor.id);
+    const hasStaffCargo = perfis.some((p) => {
+      const cargoNome = p.cargo?.nome?.toLowerCase() ?? "";
+      return cargoNome !== "aluno" && cargoNome !== "";
+    });
+
+    if (!hasStaffCargo) {
+      throw new ForbiddenError(
+        "Apenas servidores da CIEC ou coordenadores autorizados podem visualizar a fila de espera.",
       );
     }
   }
@@ -93,9 +118,22 @@ export class EstagioCandidaturaPermissionCheckerImpl
       throw new UnauthorizedError("Usuário deve estar autenticado para cancelar uma candidatura.");
     }
 
+    if (actor.isSuperUser) {
+      return;
+    }
+
+    const perfis = await this.perfilRepository.findAllActiveByUsuarioId(accessContext, actor.id);
+    const hasStaffCargo = perfis.some((p) => {
+      const cargoNome = p.cargo?.nome?.toLowerCase() ?? "";
+      return cargoNome !== "aluno" && cargoNome !== "";
+    });
+
+    if (hasStaffCargo) {
+      return;
+    }
+
     let estagiario = await this.estagiarioRepository.findByUsuarioId(actor.id);
     if (!estagiario) {
-      const perfis = await this.perfilRepository.findAllActiveByUsuarioId(accessContext, actor.id);
       for (const perfil of perfis) {
         estagiario = await this.estagiarioRepository.findByPerfilId(perfil.id);
         if (estagiario) break;

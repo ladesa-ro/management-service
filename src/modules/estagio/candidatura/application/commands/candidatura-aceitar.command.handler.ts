@@ -103,6 +103,13 @@ export class CandidaturaAceitarCommandHandlerImpl implements ICandidaturaAceitar
     candidatura.aceitar();
     await this.repository.save(candidatura);
 
+    // 2.1 Cancela outras candidaturas ativas do mesmo aluno em outras vagas
+    await this.repository.cancelarCandidaturasAtivasDoEstagiario(
+      estagiario.id,
+      "Oferta de outro estágio aceita",
+      candidatura.id,
+    );
+
     // 3. Notificação Push / WebSocket
     try {
       this.pushService.notificarEstagioFaseInicial(

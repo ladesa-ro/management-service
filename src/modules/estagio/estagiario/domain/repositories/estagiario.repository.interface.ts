@@ -1,4 +1,5 @@
 import type {
+  IAccessContext,
   IRepositoryGetFindAllQueryResult,
   IRepositoryGetFindOneQueryResult,
   IRepositoryLoadById,
@@ -58,4 +59,15 @@ export interface IEstagiarioRepository {
     EstagiarioListQuery,
     EstagiarioListQueryResult
   >;
+
+  /** Busca alunos sem estágio ativo (ex: 3º ano ou período especificado), filtrados opcionalmente por curso. */
+  findSemEstagio(
+    accessContext: IAccessContext | null,
+    filters: {
+      cursoId?: string;
+      periodo?: string;
+      page?: number;
+      limit?: number;
+    },
+  ): Promise<{ items: any[]; total: number }>;
 }

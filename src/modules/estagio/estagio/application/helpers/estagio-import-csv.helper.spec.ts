@@ -124,6 +124,24 @@ describe("parseEstagioImportCsv", () => {
       "CSV inválido: colunas obrigatórias ausentes",
     );
   });
+
+  it("should parse CSV with semicolon delimiter and blank lines", () => {
+    const csvWithSemicolon = [
+      "Estagiário;Concedente;Concedente CNPJ;Matrícula do Orientador;Data de Início;Data Prevista de Fim;Status",
+      "",
+      "Carlos Silva (202410203001);Empresa XYZ;11.222.333/0001-44;1234567;2026-03-01;2026-09-01;Em Andamento",
+      "   ",
+    ].join("\n");
+
+    const result = parseEstagioImportCsv(csvWithSemicolon);
+    expect(result.totalRows).toBe(1);
+    expect(result.entries).toHaveLength(1);
+    expect(result.entries[0].estagiarioNome).toBe("Carlos Silva");
+    expect(result.entries[0].estagiarioMatricula).toBe("202410203001");
+    expect(result.entries[0].concedente).toBe("Empresa XYZ");
+    expect(result.entries[0].concedenteCnpj).toBe("11.222.333/0001-44");
+    expect(result.entries[0].status).toBe(EstagioStatus.EM_ANDAMENTO);
+  });
 });
 
 describe("resolveEstagioImportSupervisor", () => {

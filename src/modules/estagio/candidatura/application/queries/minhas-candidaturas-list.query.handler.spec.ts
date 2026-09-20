@@ -1,5 +1,4 @@
 import { describe, expect, it, vi } from "vitest";
-import { ForbiddenError } from "@/application/errors";
 import { createTestAccessContext, createTestId, createTestRequestActor } from "@/test/helpers";
 import { MinhasCandidaturasListQueryHandlerImpl } from "./minhas-candidaturas-list.query.handler";
 
@@ -60,7 +59,7 @@ describe("MinhasCandidaturasListQueryHandler", () => {
     );
   });
 
-  it("should throw ForbiddenError if user is not a student", async () => {
+  it("should return empty list if user does not have estagiario profile yet", async () => {
     const mocks = createMocks();
     mocks.estagiarioRepository.findByUsuarioId.mockResolvedValue(null);
     mocks.perfilRepository.findAllActiveByUsuarioId.mockResolvedValue([]);
@@ -71,7 +70,12 @@ describe("MinhasCandidaturasListQueryHandler", () => {
       mocks.perfilRepository as any,
     );
 
-    const accessContext = createTestAccessContext(createTestRequestActor({ id: "non-student" }));
-    await expect(handler.execute(accessContext, {})).rejects.toThrow(ForbiddenError);
+    const accessContext = createTestAccessContext(
+      createTestRequestActor({ id: "user-without-estagiario" }),
+    );
+    const result = await handler.execute(accessContext, {});
+    expect(result.data).toEqual([]);
+    expect(result.meta.totalItems).toBe(0);
+    expect(result.meta.totalPages).toBe(1);
   });
 });

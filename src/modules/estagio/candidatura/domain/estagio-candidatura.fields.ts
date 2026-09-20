@@ -38,7 +38,7 @@ export const EstagioCandidaturaFields = {
     schema: createSchema(() => z.string()),
   }),
   dataOferta: createFieldMetadata({
-    description: "Data e hora em que a convocação/oferta foi emitida pelo CIEC",
+    description: "Data e hora em que a convocação/oferta foi emitida pela CIEC",
     schema: createSchema(() => z.string().nullable()),
     nullable: true,
   }),
@@ -58,7 +58,7 @@ export const EstagioCandidaturaFields = {
     nullable: true,
   }),
   autorConvocacao: createFieldMetadata({
-    description: "Servidor / CIEC responsável pela convocação",
+    description: "Servidor da CIEC responsável pela convocação",
     nullable: true,
   }),
   motivoCancelamento: createFieldMetadata({

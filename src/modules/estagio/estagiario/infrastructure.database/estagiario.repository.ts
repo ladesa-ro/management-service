@@ -158,4 +158,76 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
     if (!entity) return null;
     return Estagiario.load(EstagiarioTypeormMapper.entityToDomain.map(entity));
   }
+
+  async findSemEstagio(
+    _accessContext: IAccessContext | null,
+    filters: {
+      cursoId?: string;
+      periodo?: string;
+      page?: number;
+      limit?: number;
+    },
+  ): Promise<{ items: any[]; total: number }> {
+    const page = filters.page && filters.page > 0 ? filters.page : 1;
+    const limit = filters.limit && filters.limit > 0 ? filters.limit : 20;
+    const skip = (page - 1) * limit;
+
+    const repo = this.appTypeormConnection.getRepository(EstagiarioTypeormEntity);
+    const qb = repo
+      .createQueryBuilder("estagiario")
+      .innerJoinAndSelect("estagiario.perfil", "perfil")
+      .innerJoinAndSelect("perfil.usuario", "usuario")
+      .leftJoinAndSelect("estagiario.curso", "curso")
+      .leftJoin(
+        "estagio",
+        "estagio",
+        "estagio.id_estagiario_fk = estagiario.id AND estagio.date_deleted IS NULL AND estagio.status IN (:...activeStatuses)",
+        {
+          activeStatuses: [
+            "EM_ANDAMENTO",
+            "EM_FASE_INICIAL",
+            "COM_PENDENCIA",
+            "APTO_PARA_ENCERRAMENTO",
+          ],
+        },
+      )
+      .where("estagiario.dateDeleted IS NULL")
+      .andWhere("perfil.dateDeleted IS NULL")
+      .andWhere("usuario.dateDeleted IS NULL")
+      .andWhere("estagio.id IS NULL");
+
+    if (filters.cursoId) {
+      qb.andWhere("estagiario.id_curso_fk = :cursoId", { cursoId: filters.cursoId });
+    }
+
+    if (filters.periodo) {
+      qb.andWhere("estagiario.periodo ILIKE :periodo", { periodo: `%${filters.periodo}%` });
+    }
+
+    qb.orderBy("estagiario.periodo", "DESC")
+      .addOrderBy("usuario.nome", "ASC")
+      .skip(skip)
+      .take(limit);
+
+    const [entities, total] = await qb.getManyAndCount();
+
+    const items = entities.map((entity) => ({
+      id: entity.id,
+      nome: entity.perfil.usuario.nome,
+      matricula: entity.perfil.usuario.matricula,
+      email: entity.perfil.usuario.email,
+      emailInstitucional: entity.emailInstitucional,
+      telefone: entity.telefone,
+      periodo: entity.periodo,
+      dataNascimento: entity.dataNascimento,
+      curso: entity.curso
+        ? {
+            id: entity.curso.id,
+            nome: entity.curso.nome,
+          }
+        : null,
+    }));
+
+    return { items, total };
+  }
 }

@@ -9,7 +9,21 @@ const formatTime = (time: string | null | undefined) => {
   return time.length > 5 ? time.substring(0, 5) : time;
 };
 
-const formatDate = (date: string | Date | null | undefined): string | null => {
+const formatDateOnly = (date: string | Date | null | undefined): string | null => {
+  if (!date) return null;
+  if (typeof date === "string") {
+    return date.slice(0, 10);
+  }
+  if (date instanceof Date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  }
+  return null;
+};
+
+const formatDateTime = (date: string | Date | null | undefined): string | null => {
   if (!date) return null;
   // TypeORM might return JS Date objects for timestamptz fields
   return date instanceof Date ? date.toISOString() : (date as string);
@@ -40,18 +54,18 @@ export const FolhaPontoTypeormMapper = {
     return FolhaPonto.load({
       id: entity.id,
       estagio: { id: entity.estagio?.id ?? entity.estagioId },
-      data: formatDate(entity.data) as string,
+      data: formatDateOnly(entity.data) as string,
       horaInicio: formatTime(entity.horaInicio) as string,
       horaFim: formatTime(entity.horaFim) as string,
       quantidadeHoras: Number(entity.quantidadeHoras), // PostgreSQL Decimal vem como string em algumas libs
       observacoes: entity.observacoes,
       status: entity.status,
-      dataSolicitacao: formatDate(entity.dataSolicitacao) as string,
-      dataAprovacao: formatDate(entity.dataAprovacao),
-      dataRejeicao: formatDate(entity.dataRejeicao),
-      dateCreated: formatDate(entity.dateCreated) as string,
-      dateUpdated: formatDate(entity.dateUpdated) as string,
-      dateDeleted: formatDate(entity.dateDeleted),
+      dataSolicitacao: formatDateTime(entity.dataSolicitacao) as string,
+      dataAprovacao: formatDateTime(entity.dataAprovacao),
+      dataRejeicao: formatDateTime(entity.dataRejeicao),
+      dateCreated: formatDateTime(entity.dateCreated) as string,
+      dateUpdated: formatDateTime(entity.dateUpdated) as string,
+      dateDeleted: formatDateTime(entity.dateDeleted),
     });
   }),
 
@@ -60,18 +74,18 @@ export const FolhaPontoTypeormMapper = {
       return {
         id: entity.id,
         estagio: { id: entity.estagio?.id ?? entity.estagioId },
-        data: formatDate(entity.data) as string,
+        data: formatDateOnly(entity.data) as string,
         horaInicio: formatTime(entity.horaInicio) as string,
         horaFim: formatTime(entity.horaFim) as string,
         quantidadeHoras: Number(entity.quantidadeHoras),
         observacoes: entity.observacoes,
         status: entity.status as any,
-        dataSolicitacao: formatDate(entity.dataSolicitacao) as string,
-        dataAprovacao: formatDate(entity.dataAprovacao),
-        dataRejeicao: formatDate(entity.dataRejeicao),
-        dateCreated: formatDate(entity.dateCreated) as string,
-        dateUpdated: formatDate(entity.dateUpdated) as string,
-        dateDeleted: formatDate(entity.dateDeleted),
+        dataSolicitacao: formatDateTime(entity.dataSolicitacao) as string,
+        dataAprovacao: formatDateTime(entity.dataAprovacao),
+        dataRejeicao: formatDateTime(entity.dataRejeicao),
+        dateCreated: formatDateTime(entity.dateCreated) as string,
+        dateUpdated: formatDateTime(entity.dateUpdated) as string,
+        dateDeleted: formatDateTime(entity.dateDeleted),
       };
     },
   ),

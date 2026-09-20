@@ -25,6 +25,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from "@nestjs/swagger";
+import { IsNull } from "typeorm";
 import * as xlsx from "xlsx";
 import { ensureExists } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
@@ -82,13 +83,16 @@ import {
   EstagioListQueryMetadata,
   IEstagioListQueryHandler,
 } from "@/modules/estagio/estagio/domain/queries/estagio-list.query.handler.interface";
+import { FolhaPontoTypeormEntity } from "@/modules/estagio/folha-ponto/infrastructure.database/typeorm/folha-ponto.typeorm.entity";
 import { ICidadeListQueryHandler } from "@/modules/localidades/cidade/domain/queries/cidade-list.query.handler.interface";
 import { CidadeEntity } from "@/modules/localidades/cidade/infrastructure.database/typeorm/cidade.typeorm.entity";
 import { IEnderecoCreateOrUpdateCommandHandler } from "@/modules/localidades/endereco/domain/commands/endereco-create-or-update.command.handler.interface";
 import { IEstadoListQueryHandler } from "@/modules/localidades/estado/domain/queries/estado-list.query.handler.interface";
 import { AccessContextHttp } from "@/server/nest/access-context";
 import { UPLOAD_LIMITS } from "@/shared/presentation/rest";
+import { IEstagioRepository } from "../domain/repositories";
 import {
+  EstagioCargaHorariaOutputRestDto,
   EstagioCreateInputRestDto,
   EstagioFindOneInputRestDto,
   EstagioFindOneOutputRestDto,
@@ -154,6 +158,28 @@ export class EstagioRestController {
     return EstagioRestMapper.listQueryResultToListOutputDto.map(queryResult);
   }
 
+  @Get("/disponiveis")
+  @ApiOperation({
+    operationId: "estagioFindDisponiveis",
+    summary: "Lista vagas de estágio disponíveis",
+    description:
+      "Retorna vagas de estágio disponíveis para candidatura (sem aluno vinculado e com status DISPONIVEL).",
+  })
+  @ApiOkResponse({ type: EstagioListOutputRestDto })
+  @ApiForbiddenResponse()
+  async findDisponiveis(
+    @AccessContextHttp() accessContext: IAccessContext,
+    @Query() dto: EstagioListInputRestDto,
+  ): Promise<EstagioListOutputRestDto> {
+    const listHandler = this.container.get<IEstagioListQueryHandler>(IEstagioListQueryHandler);
+    const query = EstagioRestMapper.listInputDtoToListQuery.map({
+      ...dto,
+      disponivel: true,
+    });
+    const queryResult = await listHandler.execute(accessContext, query);
+    return EstagioRestMapper.listQueryResultToListOutputDto.map(queryResult);
+  }
+
   @Get("/:id")
   @ApiOperation(EstagioFindOneQueryMetadata.swaggerMetadata)
   @ApiOkResponse({ type: EstagioFindOneOutputRestDto })
@@ -170,6 +196,101 @@ export class EstagioRestController {
     const queryResult = await findOneHandler.execute(accessContext, query);
     ensureExists(queryResult, Estagio.entityName, query.id);
     return EstagioRestMapper.findOneQueryResultToOutputDto.map(queryResult);
+  }
+
+  @Get("/:id/carga-horaria")
+  @ApiOperation({
+    operationId: "estagioGetCargaHoraria",
+    summary: "Consulta consolidada da carga horária e progresso do estágio",
+    description:
+      "Retorna o progresso de frequência do estágio, totalizando carga horária contratual, horas comprovadas (aprovadas), horas pendentes, saldo restante e percentual de conclusão.",
+  })
+  @ApiOkResponse({
+    description: "Carga horária e progresso calculados com sucesso",
+    type: EstagioCargaHorariaOutputRestDto,
+  })
+  @ApiNotFoundResponse({ description: "Estágio não encontrado" })
+  async getCargaHoraria(
+    @AccessContextHttp() accessContext: IAccessContext,
+    @Param("id") id: string,
+  ): Promise<EstagioCargaHorariaOutputRestDto> {
+    const estagioRepo = this.container.get<IEstagioRepository>(IEstagioRepository);
+    const estagio = await estagioRepo.loadById(accessContext, id);
+    ensureExists(estagio, Estagio.entityName, id);
+
+    const appConnection = this.container.get<IAppTypeormConnection>(IAppTypeormConnection);
+    const folhaPontoRepo = appConnection.getRepository(FolhaPontoTypeormEntity);
+
+    const folhas = await folhaPontoRepo.find({
+      where: [
+        { estagioId: id, dateDeleted: IsNull() },
+        { estagio: { id }, dateDeleted: IsNull() },
+      ],
+    });
+
+    const cargaHorariaPrevista = estagio.cargaHoraria ?? 0;
+
+    let cargaHorariaRegistrada = 0;
+    let cargaHorariaComprovada = 0;
+    let cargaHorariaPendente = 0;
+    let cargaHorariaRejeitada = 0;
+    let totalAprovados = 0;
+    let totalPendentes = 0;
+    let totalRejeitados = 0;
+
+    for (const folha of folhas) {
+      const horas = Number(folha.quantidadeHoras) || 0;
+      if (folha.status !== "CANCELLED") {
+        cargaHorariaRegistrada += horas;
+      }
+      if (folha.status === "APPROVED") {
+        cargaHorariaComprovada += horas;
+        totalAprovados += 1;
+      } else if (folha.status === "PENDING") {
+        cargaHorariaPendente += horas;
+        totalPendentes += 1;
+      } else if (folha.status === "REJECTED") {
+        cargaHorariaRejeitada += horas;
+        totalRejeitados += 1;
+      }
+    }
+
+    const cargaHorariaRestante = Math.max(
+      0,
+      Number((cargaHorariaPrevista - cargaHorariaComprovada).toFixed(2)),
+    );
+
+    const percentualConcluido =
+      cargaHorariaPrevista > 0
+        ? Number(Math.min(100, (cargaHorariaComprovada / cargaHorariaPrevista) * 100).toFixed(2))
+        : 0;
+
+    let situacao = "EM_ANDAMENTO";
+    if (cargaHorariaComprovada >= cargaHorariaPrevista && cargaHorariaPrevista > 0) {
+      situacao = "CONCLUIDO";
+    } else if (estagio.status === "APTO_PARA_ENCERRAMENTO") {
+      situacao = "APTO_PARA_ENCERRAMENTO";
+    } else if (estagio.status === "ENCERRADO") {
+      situacao = "ENCERRADO";
+    } else if (estagio.status === "RESCINDIDO") {
+      situacao = "RESCINDIDO";
+    }
+
+    return {
+      id: estagio.id,
+      cargaHorariaPrevista: Number(cargaHorariaPrevista.toFixed(2)),
+      cargaHorariaRegistrada: Number(cargaHorariaRegistrada.toFixed(2)),
+      cargaHorariaComprovada: Number(cargaHorariaComprovada.toFixed(2)),
+      cargaHorariaPendente: Number(cargaHorariaPendente.toFixed(2)),
+      cargaHorariaRejeitada: Number(cargaHorariaRejeitada.toFixed(2)),
+      cargaHorariaRestante,
+      percentualConcluido,
+      situacao,
+      totalRegistros: folhas.length,
+      totalAprovados,
+      totalPendentes,
+      totalRejeitados,
+    };
   }
 
   @Post("/")
@@ -198,7 +319,7 @@ export class EstagioRestController {
     ...EstagioSolicitarCommandMetadata.swaggerMetadata,
     deprecated: true,
     description:
-      "DEPRECATED: Esta rota está obsoleta e será descontinuada na v2.0. Utilize `POST /solicitacoes-estagio/externo` (ou `POST /solicitacoes-estagio/interno`) para o fluxo oficial de solicitação de estágio com governança e análise do CIEC.",
+      "DEPRECATED: Esta rota está obsoleta e será descontinuada na v2.0. Utilize `POST /solicitacoes-estagio/externo` (ou `POST /solicitacoes-estagio/interno`) para o fluxo oficial de solicitação de estágio com governança e análise da CIEC.",
   })
 
   @ApiBody({ type: EstagioSolicitarInputRestDto })

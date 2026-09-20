@@ -77,14 +77,7 @@ export class EstagioCreateCommandHandlerImpl implements IEstagioCreateCommandHan
       result = await this.repository.getFindOneQueryResult(accessContext, {
         id: estagio.id,
       });
-    } catch (err) {
-      if (process.env.DEBUG_CSV_IMPORT) {
-        console.log(
-          "[CSV import][handler] falha ao mapear queryResult após save — aplicando fallback parcial",
-          { id: estagio.id, error: err instanceof Error ? err.message : String(err) },
-        );
-      }
-
+    } catch {
       // Fallback: construir um objeto mínimo compatível com EstagioFindOneQueryResult
       result = {
         id: estagio.id,

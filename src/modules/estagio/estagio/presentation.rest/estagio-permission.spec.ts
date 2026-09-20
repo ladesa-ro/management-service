@@ -18,7 +18,7 @@ describe("EstagioRestController permissions hardening", () => {
     const permissionChecker = {
       ensureCanManageEstagio: vi.fn().mockImplementation(async () => {
         if (!isAuthorized) {
-          throw new ForbiddenError("Apenas servidores do CIEC podem gerenciar estágios.");
+          throw new ForbiddenError("Apenas servidores da CIEC podem gerenciar estágios.");
         }
       }),
     };

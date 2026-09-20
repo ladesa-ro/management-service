@@ -29,13 +29,26 @@ function normalizeHeader(value: string): string {
     .toLowerCase();
 }
 
-function parseCsvRows(content: string): string[][] {
+function detectDelimiter(text: string): string {
+  const lines = text.split(/\r?\n/).filter((l) => l.trim().length > 0);
+  if (lines.length === 0) return ",";
+  const firstLine = lines[0];
+  const countComma = (firstLine.match(/,/g) || []).length;
+  const countSemicolon = (firstLine.match(/;/g) || []).length;
+  const countTab = (firstLine.match(/\t/g) || []).length;
+  if (countSemicolon > countComma && countSemicolon > countTab) return ";";
+  if (countTab > countComma && countTab > countSemicolon) return "\t";
+  return ",";
+}
+
+function parseCsvRows(content: string, customDelimiter?: string): string[][] {
   const rows: string[][] = [];
   let currentRow: string[] = [];
   let currentField = "";
   let inQuotes = false;
 
   const text = content.replace(/^\uFEFF/, "");
+  const delimiter = customDelimiter || detectDelimiter(text);
 
   for (let index = 0; index < text.length; index += 1) {
     const char = text[index];
@@ -62,7 +75,7 @@ function parseCsvRows(content: string): string[][] {
       continue;
     }
 
-    if (char === ",") {
+    if (char === delimiter) {
       currentRow.push(currentField);
       currentField = "";
       continue;
@@ -70,7 +83,9 @@ function parseCsvRows(content: string): string[][] {
 
     if (char === "\n") {
       currentRow.push(currentField);
-      rows.push(currentRow);
+      if (currentRow.some((c) => c.trim().length > 0)) {
+        rows.push(currentRow);
+      }
       currentRow = [];
       currentField = "";
       continue;
@@ -85,14 +100,37 @@ function parseCsvRows(content: string): string[][] {
 
   if (currentField.length > 0 || currentRow.length > 0) {
     currentRow.push(currentField);
-    rows.push(currentRow);
+    if (currentRow.some((c) => c.trim().length > 0)) {
+      rows.push(currentRow);
+    }
   }
 
   return rows;
 }
 
 function getCell(row: string[], index: number): string {
+  if (index === -1 || !row || index >= row.length) return "";
   return (row[index] ?? "").trim();
+}
+
+function findHeaderFlex(headers: string[], ...candidates: string[]): number {
+  for (const candidate of candidates) {
+    const norm = normalizeHeader(candidate);
+    if (!norm) continue;
+    const idx = headers.indexOf(norm);
+    if (idx !== -1) return idx;
+  }
+  for (const candidate of candidates) {
+    const norm = normalizeHeader(candidate);
+    if (!norm) continue;
+    const idx = headers.findIndex(
+      (h) =>
+        h.length > 0 &&
+        (h.includes(norm) || (norm.length >= 4 && h.length >= 4 && norm.includes(h))),
+    );
+    if (idx !== -1) return idx;
+  }
+  return -1;
 }
 
 export function parseUsuarioImportCsv(content: string): UsuarioImportCsvParseResult {
@@ -103,12 +141,12 @@ export function parseUsuarioImportCsv(content: string): UsuarioImportCsvParseRes
   }
 
   const headers = rows[0].map(normalizeHeader);
-  const nomeIndex = headers.indexOf("nome");
-  const matriculaIndex = headers.indexOf("matricula");
-  const emailPessoalIndex = headers.indexOf("emailpessoal");
-  const cursoIndex = headers.indexOf("curso");
-  const campusIndex = headers.indexOf("campus");
-  const situacaoIndex = headers.indexOf("situacao");
+  const nomeIndex = findHeaderFlex(headers, "nome", "nomecompleto", "nomealuno", "nomeestudante");
+  const matriculaIndex = findHeaderFlex(headers, "matricula", "matriculaaluno", "identificacao");
+  const emailPessoalIndex = findHeaderFlex(headers, "emailpessoal", "emailsecundario");
+  const cursoIndex = findHeaderFlex(headers, "curso", "nomecurso");
+  const campusIndex = findHeaderFlex(headers, "campus", "unidade");
+  const situacaoIndex = findHeaderFlex(headers, "situacao", "situacaomatricula");
 
   const missingHeaders = [
     nomeIndex === -1 ? "Nome" : null,

@@ -24,7 +24,7 @@ export const EstagioSolicitacaoFields = {
     schema: createSchema(() => EstagioSolicitacaoTipoSchema),
   }),
   situacao: createFieldMetadata({
-    description: "Situação da solicitação no workflow de análise do CIEC",
+    description: "Situação da solicitação no workflow de análise da CIEC",
     schema: createSchema(() => EstagioSolicitacaoSituacaoSchema),
   }),
   estagiario: createFieldMetadata({
@@ -92,16 +92,16 @@ export const EstagioSolicitacaoFields = {
     nullable: true,
   }),
   analista: createFieldMetadata({
-    description: "Servidor do CIEC responsável pela análise do pedido",
+    description: "Servidor da CIEC responsável pela análise do pedido",
     nullable: true,
   }),
   parecerAnalise: createFieldMetadata({
-    description: "Parecer descritivo da análise do CIEC (obrigatório em caso de indeferimento)",
+    description: "Parecer descritivo da análise da CIEC (obrigatório em caso de indeferimento)",
     schema: createSchema(() => z.string().max(2000).nullable()),
     nullable: true,
   }),
   dataAnalise: createFieldMetadata({
-    description: "Data e hora em que a análise pelo CIEC foi concluída",
+    description: "Data e hora em que a análise pela CIEC foi concluída",
     schema: createSchema(() => z.string().nullable()),
     nullable: true,
   }),

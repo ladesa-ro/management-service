@@ -4,6 +4,7 @@
  * Define os schemas zod para validacao dos parametros de entrada
  * da query (paginacao, filtros, ordenacao).
  */
+import { z } from "zod";
 import {
   coerceFilterArray,
   createPaginationInputSchema,
@@ -33,4 +34,8 @@ export const EstagioPaginationInputSchema = createPaginationInputSchema({
   "filter.dataInicio": stringFilterSchema,
   "filter.dataFim": stringFilterSchema,
   "filter.aditivo": stringFilterSchema,
+  status: coerceFilterArray(EstagioStatusSchema),
+  disponivel: z.union([z.boolean(), z.string()]).optional(),
+  "filter.curso.id": stringFilterSchema,
+  cursoId: stringFilterSchema,
 });

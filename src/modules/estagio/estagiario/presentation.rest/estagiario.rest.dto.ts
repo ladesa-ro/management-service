@@ -232,3 +232,61 @@ export class EstagiarioFindOneInputRestDto {
   @ApiProperty(EstagiarioFindOneQueryFields.id.swaggerMetadata)
   id: string;
 }
+
+// ============================================================================
+// Sem Estágio Input / Output
+// ============================================================================
+
+@ApiSchema({ name: "EstagiarioSemEstagioInputDto" })
+export class EstagiarioSemEstagioInputRestDto {
+  @ApiPropertyOptional({ description: "ID do curso para filtrar alunos" })
+  cursoId?: string;
+
+  @ApiPropertyOptional({ description: "Período para filtrar (ex: '3', '3º ano', '5º período')" })
+  periodo?: string;
+
+  @ApiPropertyOptional({ description: "Número da página", default: 1 })
+  page?: number;
+
+  @ApiPropertyOptional({ description: "Itens por página", default: 20 })
+  limit?: number;
+}
+
+@ApiSchema({ name: "EstagiarioSemEstagioItemOutputDto" })
+export class EstagiarioSemEstagioItemOutputRestDto {
+  @ApiProperty({ description: "ID do estagiário" })
+  id!: string;
+
+  @ApiProperty({ description: "Nome do aluno" })
+  nome!: string;
+
+  @ApiProperty({ description: "Matrícula do aluno" })
+  matricula!: string;
+
+  @ApiProperty({ description: "E-mail pessoal do aluno" })
+  email!: string;
+
+  @ApiPropertyOptional({ description: "E-mail institucional do aluno" })
+  emailInstitucional!: string | null;
+
+  @ApiProperty({ description: "Telefone de contato do aluno" })
+  telefone!: string;
+
+  @ApiProperty({ description: "Período letivo atual do aluno" })
+  periodo!: string;
+
+  @ApiProperty({ description: "Data de nascimento do aluno" })
+  dataNascimento!: string;
+
+  @ApiPropertyOptional({ description: "Dados do curso do aluno" })
+  curso!: { id: string; nome: string } | null;
+}
+
+@ApiSchema({ name: "EstagiarioSemEstagioOutputDto" })
+export class EstagiarioSemEstagioOutputRestDto {
+  @ApiProperty({ type: () => [EstagiarioSemEstagioItemOutputRestDto] })
+  data!: EstagiarioSemEstagioItemOutputRestDto[];
+
+  @ApiProperty({ type: () => PaginationMetaRestDto })
+  meta!: PaginationMetaRestDto;
+}

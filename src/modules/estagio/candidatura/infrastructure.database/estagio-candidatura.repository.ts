@@ -6,6 +6,7 @@ import { dateToISO, dateToISONullable } from "@/infrastructure.database/typeorm/
 import { EstagioCandidatura } from "../domain/estagio-candidatura";
 import {
   IEstagioCandidaturaRepository,
+  type IFilaEsperaItem,
   type IMinhasCandidaturasItem,
 } from "../domain/repositories/estagio-candidatura.repository.interface";
 import { EstagioCandidaturaTypeormEntity } from "./typeorm/estagio-candidatura.typeorm.entity";
@@ -183,6 +184,115 @@ export class EstagioCandidaturaTypeOrmRepositoryAdapter implements IEstagioCandi
     );
 
     return { items, total };
+  }
+
+  async findFilaByEstagio(
+    _accessContext: IAccessContext | null,
+    estagioId: string,
+    options: {
+      page?: number;
+      limit?: number;
+      situacao?: string;
+    },
+  ): Promise<{ items: IFilaEsperaItem[]; total: number }> {
+    const page = options.page && options.page > 0 ? options.page : 1;
+    const limit = options.limit && options.limit > 0 ? options.limit : 20;
+    const skip = (page - 1) * limit;
+
+    const qb = this.repo
+      .createQueryBuilder("c")
+      .leftJoinAndSelect("c.estagiario", "estagiario")
+      .leftJoinAndSelect("estagiario.perfil", "perfil")
+      .leftJoinAndSelect("perfil.usuario", "usuario")
+      .leftJoinAndSelect("estagiario.curso", "curso")
+      .where("c.id_estagio_fk = :estagioId", { estagioId })
+      .andWhere("c.dateDeleted IS NULL");
+
+    if (options.situacao) {
+      qb.andWhere("c.situacao = :situacao", { situacao: options.situacao });
+    }
+
+    qb.addOrderBy(
+      `CASE 
+        WHEN c.situacao = 'OFFERED' THEN 1 
+        WHEN c.situacao = 'PENDING' THEN 2 
+        ELSE 3 
+      END`,
+      "ASC",
+    )
+      .addOrderBy("c.data_inscricao", "ASC")
+      .skip(skip)
+      .take(limit);
+
+    const [entities, total] = await qb.getManyAndCount();
+
+    const items: IFilaEsperaItem[] = await Promise.all(
+      entities.map(async (entity) => {
+        let posicaoFila: number | null = null;
+        if (entity.situacao === "PENDING") {
+          posicaoFila = await this.calcularPosicaoFila(estagioId, entity.dataInscricao, entity.id);
+        }
+
+        return {
+          id: entity.id,
+          situacao: entity.situacao,
+          posicaoFila,
+          dataInscricao: dateToISO(entity.dataInscricao),
+          dataOferta: dateToISONullable(entity.dataOferta),
+          expiraEm: dateToISONullable(entity.expiraEm),
+          dataResposta: dateToISONullable(entity.dataResposta),
+          motivoCancelamento: entity.motivoCancelamento ?? null,
+          estagiario: {
+            id: entity.estagiario?.id,
+            periodo: entity.estagiario?.periodo ?? "",
+            telefone: entity.estagiario?.telefone ?? "",
+            emailInstitucional: entity.estagiario?.emailInstitucional ?? null,
+            aluno: entity.estagiario?.perfil?.usuario
+              ? {
+                  id: entity.estagiario.perfil.usuario.id,
+                  nome: entity.estagiario.perfil.usuario.nome ?? "",
+                  matricula: entity.estagiario.perfil.usuario.matricula ?? null,
+                  email: entity.estagiario.perfil.usuario.email ?? "",
+                }
+              : null,
+            curso: entity.estagiario?.curso
+              ? {
+                  id: entity.estagiario.curso.id,
+                  nome: entity.estagiario.curso.nome,
+                }
+              : null,
+          },
+        };
+      }),
+    );
+
+    return { items, total };
+  }
+
+  async cancelarCandidaturasAtivasDoEstagiario(
+    estagiarioId: string,
+    motivo: string,
+    excetoCandidaturaId?: string,
+  ): Promise<number> {
+    const qb = this.repo
+      .createQueryBuilder()
+      .update(EstagioCandidaturaTypeormEntity)
+      .set({
+        situacao: "CANCELLED" as any,
+        motivoCancelamento: motivo,
+        dataCancelamento: new Date().toISOString(),
+        dateUpdated: new Date().toISOString(),
+      })
+      .where("id_estagiario_fk = :estagiarioId", { estagiarioId })
+      .andWhere("situacao IN (:...situacoes)", { situacoes: ["PENDING", "OFFERED"] })
+      .andWhere("date_deleted IS NULL");
+
+    if (excetoCandidaturaId) {
+      qb.andWhere("id != :excetoCandidaturaId", { excetoCandidaturaId });
+    }
+
+    const result = await qb.execute();
+    return result.affected ?? 0;
   }
 
   async getFindOneQueryResult(
