@@ -8,12 +8,14 @@ import { CandidaturaAceitarCommandHandlerImpl } from "./application/commands/can
 import { CandidaturaCancelarCommandHandlerImpl } from "./application/commands/candidatura-cancelar.command.handler";
 import { CandidaturaConvocarCommandHandlerImpl } from "./application/commands/candidatura-convocar.command.handler";
 import { CandidaturaCreateCommandHandlerImpl } from "./application/commands/candidatura-create.command.handler";
+import { FilaEsperaListQueryHandlerImpl } from "./application/queries/fila-espera-list.query.handler";
 import { MinhasCandidaturasListQueryHandlerImpl } from "./application/queries/minhas-candidaturas-list.query.handler";
 import { IEstagioCandidaturaPermissionChecker } from "./domain/authorization/estagio-candidatura-permission-checker.interface";
 import { ICandidaturaAceitarCommandHandler } from "./domain/commands/candidatura-aceitar.command.handler.interface";
 import { ICandidaturaCancelarCommandHandler } from "./domain/commands/candidatura-cancelar.command.handler.interface";
 import { ICandidaturaConvocarCommandHandler } from "./domain/commands/candidatura-convocar.command.handler.interface";
 import { ICandidaturaCreateCommandHandler } from "./domain/commands/candidatura-create.command.handler.interface";
+import { IFilaEsperaListQueryHandler } from "./domain/queries/fila-espera-list.query.handler.interface";
 import { IMinhasCandidaturasListQueryHandler } from "./domain/queries/minhas-candidaturas-list.query.handler.interface";
 import { IEstagioCandidaturaRepository } from "./domain/repositories/estagio-candidatura.repository.interface";
 import { EstagioCandidaturaTypeOrmRepositoryAdapter } from "./infrastructure.database/estagio-candidatura.repository";
@@ -52,6 +54,10 @@ import { MinhasCandidaturasRestController } from "./presentation.rest/minhas-can
       provide: IMinhasCandidaturasListQueryHandler,
       useClass: MinhasCandidaturasListQueryHandlerImpl,
     },
+    {
+      provide: IFilaEsperaListQueryHandler,
+      useClass: FilaEsperaListQueryHandlerImpl,
+    },
   ],
   exports: [
     IEstagioCandidaturaRepository,
@@ -61,6 +67,7 @@ import { MinhasCandidaturasRestController } from "./presentation.rest/minhas-can
     ICandidaturaConvocarCommandHandler,
     ICandidaturaAceitarCommandHandler,
     IMinhasCandidaturasListQueryHandler,
+    IFilaEsperaListQueryHandler,
   ],
 })
 export class EstagioCandidaturaModule {}
