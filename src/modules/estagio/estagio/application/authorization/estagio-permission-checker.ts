@@ -29,7 +29,7 @@ export class EstagioPermissionCheckerImpl implements IEstagioPermissionChecker {
 
     if (!hasStaffCargo) {
       throw new ForbiddenError(
-        "Apenas servidores do CIEC, coordenadores ou administradores podem gerenciar vagas e contratos de estágio diretamente.",
+        "Apenas servidores da CIEC, coordenadores ou administradores podem gerenciar vagas e contratos de estágio diretamente.",
       );
     }
   }
