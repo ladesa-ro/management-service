@@ -280,6 +280,30 @@ export class EstagioListInputRestDto extends PaginatedFilterByIdRestDto {
   @TransformToArray()
   @ApiPropertyOptional(EstagioListQueryFields.filterAditivo.swaggerMetadata)
   "filter.aditivo"?: string[];
+
+  @TransformToArray()
+  @ApiPropertyOptional(EstagioListQueryFields.filterStatus.swaggerMetadata)
+  status?: string[];
+
+  @ApiPropertyOptional({
+    description: "Filtro para listar apenas vagas disponíveis (sem estagiário vinculado)",
+    type: Boolean,
+  })
+  disponivel?: boolean | string;
+
+  @TransformToArray()
+  @ApiPropertyOptional({
+    description: "Filtro por ID do curso de referência",
+    type: [String],
+  })
+  "filter.curso.id"?: string[];
+
+  @TransformToArray()
+  @ApiPropertyOptional({
+    description: "Filtro por ID do curso de referência",
+    type: [String],
+  })
+  cursoId?: string[];
 }
 
 @ApiSchema({ name: "EstagioFindOneOutputDto" })
@@ -392,4 +416,67 @@ export class EstagioSolicitarInputRestDto {
     description: "Referência ao endereço da empresa",
   })
   endereco!: { id: string };
+}
+
+@ApiSchema({ name: "EstagioCargaHorariaOutputDto" })
+export class EstagioCargaHorariaOutputRestDto {
+  @ApiProperty({ description: "ID do estágio", format: "uuid" })
+  id!: string;
+
+  @ApiProperty({
+    description: "Carga horária total exigida/prevista em contrato (horas)",
+    example: 300,
+  })
+  cargaHorariaPrevista!: number;
+
+  @ApiProperty({
+    description: "Total de horas registradas/submetidas em folhas de ponto não canceladas",
+    example: 120.5,
+  })
+  cargaHorariaRegistrada!: number;
+
+  @ApiProperty({
+    description: "Total de horas comprovadas em folhas de ponto aprovadas (status APPROVED)",
+    example: 100.5,
+  })
+  cargaHorariaComprovada!: number;
+
+  @ApiProperty({
+    description: "Total de horas pendentes de aprovação pelo supervisor/orientador",
+    example: 20,
+  })
+  cargaHorariaPendente!: number;
+
+  @ApiProperty({ description: "Total de horas rejeitadas", example: 0 })
+  cargaHorariaRejeitada!: number;
+
+  @ApiProperty({
+    description: "Saldo de horas restantes para conclusão do estágio",
+    example: 199.5,
+  })
+  cargaHorariaRestante!: number;
+
+  @ApiProperty({
+    description: "Percentual concluído da carga horária (0 a 100%)",
+    example: 33.5,
+  })
+  percentualConcluido!: number;
+
+  @ApiProperty({
+    description: "Situação do progresso de carga horária do estágio",
+    example: "EM_ANDAMENTO",
+  })
+  situacao!: string;
+
+  @ApiProperty({ description: "Quantidade total de folhas de ponto submetidas", example: 25 })
+  totalRegistros!: number;
+
+  @ApiProperty({ description: "Quantidade de folhas de ponto aprovadas", example: 20 })
+  totalAprovados!: number;
+
+  @ApiProperty({ description: "Quantidade de folhas de ponto pendentes", example: 5 })
+  totalPendentes!: number;
+
+  @ApiProperty({ description: "Quantidade de folhas de ponto rejeitadas", example: 0 })
+  totalRejeitados!: number;
 }
