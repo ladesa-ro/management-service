@@ -68,7 +68,7 @@ export class EstagioSolicitacaoRestController {
       "Permite ao estudante submeter uma proposta de estágio externo em empresa parceira. Não cria empresa nem estágio antes da análise da CIEC.",
   })
   @ApiCreatedResponse({
-    description: "Solicitação externa registrada com sucesso para análise do CIEC",
+    description: "Solicitação externa registrada com sucesso para análise da CIEC",
     type: EstagioSolicitacaoOutputRestDto,
   })
   @ApiUnauthorizedResponse({ description: "Usuário não autenticado" })
@@ -89,14 +89,14 @@ export class EstagioSolicitacaoRestController {
   @ApiOperation({
     summary: "Listar solicitações de estágio (CIEC)",
     description:
-      "Permite à equipe do CIEC ou coordenadores listarem todas as solicitações de estágio (internas e externas) com filtros.",
+      "Permite à equipe da CIEC ou coordenadores listarem todas as solicitações de estágio (internas e externas) com filtros.",
   })
   @ApiOkResponse({
     description: "Lista de solicitações retornada com sucesso",
     type: [EstagioSolicitacaoOutputRestDto],
   })
   @ApiUnauthorizedResponse({ description: "Usuário não autenticado" })
-  @ApiForbiddenResponse({ description: "Acesso restrito ao CIEC e administradores" })
+  @ApiForbiddenResponse({ description: "Acesso restrito à CIEC e administradores" })
   async list(
     @AccessContextHttp() accessContext: IAccessContext,
     @Query() query: EstagioSolicitacaoListInputRestDto,
@@ -125,7 +125,7 @@ export class EstagioSolicitacaoRestController {
     type: EstagioSolicitacaoOutputRestDto,
   })
   @ApiUnauthorizedResponse({ description: "Usuário não autenticado" })
-  @ApiForbiddenResponse({ description: "Acesso restrito ao CIEC e administradores" })
+  @ApiForbiddenResponse({ description: "Acesso restrito à CIEC e administradores" })
   @ApiNotFoundResponse({ description: "Solicitação não encontrada" })
   @ApiConflictResponse({ description: "Solicitação já se encontra finalizada" })
   async deferir(
@@ -152,7 +152,7 @@ export class EstagioSolicitacaoRestController {
     type: EstagioSolicitacaoOutputRestDto,
   })
   @ApiUnauthorizedResponse({ description: "Usuário não autenticado" })
-  @ApiForbiddenResponse({ description: "Acesso restrito ao CIEC e administradores" })
+  @ApiForbiddenResponse({ description: "Acesso restrito à CIEC e administradores" })
   @ApiNotFoundResponse({ description: "Solicitação não encontrada" })
   @ApiConflictResponse({ description: "Solicitação já se encontra finalizada" })
   async indeferir(
