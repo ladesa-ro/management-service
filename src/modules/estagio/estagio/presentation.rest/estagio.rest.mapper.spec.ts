@@ -66,6 +66,41 @@ describe("Estagio REST Mapper - Query Filters", () => {
     expect((query as any)["filter.aditivo"]).toEqual(["true"]);
   });
 
+  it("should map direct status filter and filter.status", () => {
+    const fromDirect = EstagioRestMapper.listInputDtoToListQuery.map({
+      status: ["DISPONIVEL"],
+    } as EstagioListInputRestDto);
+    expect((fromDirect as any)["filter.status"]).toEqual(["DISPONIVEL"]);
+    expect(fromDirect.filterStatus).toEqual(["DISPONIVEL"]);
+
+    const fromPrefixed = EstagioRestMapper.listInputDtoToListQuery.map({
+      "filter.status": ["EM_ANDAMENTO"],
+    } as EstagioListInputRestDto);
+    expect((fromPrefixed as any)["filter.status"]).toEqual(["EM_ANDAMENTO"]);
+    expect(fromPrefixed.filterStatus).toEqual(["EM_ANDAMENTO"]);
+  });
+
+  it("should map disponivel=true to null estagiario and DISPONIVEL status", () => {
+    const query = EstagioRestMapper.listInputDtoToListQuery.map({
+      disponivel: true,
+    } as EstagioListInputRestDto);
+    expect((query as any)["filter.estagiario.id"]).toEqual("$null");
+    expect((query as any)["filter.status"]).toEqual(["DISPONIVEL"]);
+    expect(query.filterStatus).toEqual(["DISPONIVEL"]);
+  });
+
+  it("should map cursoId and filter.curso.id to CursoReferencia.id", () => {
+    const fromCursoId = EstagioRestMapper.listInputDtoToListQuery.map({
+      cursoId: ["curso-uuid-1"],
+    } as EstagioListInputRestDto);
+    expect((fromCursoId as any)["filter.CursoReferencia.id"]).toEqual(["curso-uuid-1"]);
+
+    const fromPrefixed = EstagioRestMapper.listInputDtoToListQuery.map({
+      "filter.curso.id": ["curso-uuid-2"],
+    } as EstagioListInputRestDto);
+    expect((fromPrefixed as any)["filter.CursoReferencia.id"]).toEqual(["curso-uuid-2"]);
+  });
+
   it("should have all expected filterable and searchable columns in estagioPaginationSpec", () => {
     expect(estagioPaginationSpec.filterableColumns).toHaveProperty(
       "estagiario.perfil.usuario.matricula",
