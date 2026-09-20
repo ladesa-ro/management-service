@@ -22,6 +22,33 @@ export interface IMinhasCandidaturasItem {
   };
 }
 
+export interface IFilaEsperaItem {
+  id: string;
+  situacao: string;
+  posicaoFila: number | null;
+  dataInscricao: string;
+  dataOferta: string | null;
+  expiraEm: string | null;
+  dataResposta: string | null;
+  motivoCancelamento: string | null;
+  estagiario: {
+    id: string;
+    periodo: string;
+    telefone: string;
+    emailInstitucional: string | null;
+    aluno: {
+      id: string;
+      nome: string;
+      matricula: string | null;
+      email: string;
+    } | null;
+    curso: {
+      id: string;
+      nome: string;
+    } | null;
+  };
+}
+
 export interface IEstagioCandidaturaRepository {
   loadById(accessContext: IAccessContext | null, id: string): Promise<EstagioCandidatura | null>;
   save(aggregate: EstagioCandidatura): Promise<void>;
@@ -44,6 +71,20 @@ export interface IEstagioCandidaturaRepository {
       situacao?: string;
     },
   ): Promise<{ items: IMinhasCandidaturasItem[]; total: number }>;
+  findFilaByEstagio(
+    accessContext: IAccessContext | null,
+    estagioId: string,
+    options: {
+      page?: number;
+      limit?: number;
+      situacao?: string;
+    },
+  ): Promise<{ items: IFilaEsperaItem[]; total: number }>;
+  cancelarCandidaturasAtivasDoEstagiario(
+    estagiarioId: string,
+    motivo: string,
+    excetoCandidaturaId?: string,
+  ): Promise<number>;
   getFindOneQueryResult(
     accessContext: IAccessContext | null,
     id: string,
