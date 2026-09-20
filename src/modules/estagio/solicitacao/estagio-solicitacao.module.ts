@@ -1,5 +1,6 @@
 import { forwardRef, Module } from "@nestjs/common";
 import { UsuarioModule } from "@/modules/acesso/usuario/usuario.module";
+import { EstagioCandidaturaModule } from "@/modules/estagio/candidatura/estagio-candidatura.module";
 import { EmpresaModule } from "@/modules/estagio/empresa/empresa.module";
 import { EstagiarioModule } from "@/modules/estagio/estagiario/estagiario.module";
 import { EstagioModule } from "@/modules/estagio/estagio/estagio.module";
@@ -32,6 +33,7 @@ import { MinhasSolicitacoesRestController } from "./presentation.rest/minhas-sol
   imports: [
     forwardRef(() => EstagioModule),
     forwardRef(() => EmpresaModule),
+    forwardRef(() => EstagioCandidaturaModule),
     EstagiarioModule,
     UsuarioModule,
   ],
