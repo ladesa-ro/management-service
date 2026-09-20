@@ -9,6 +9,7 @@ describe("CandidaturaAceitarCommandHandler", () => {
     const repository = {
       loadById: vi.fn(),
       save: vi.fn(),
+      cancelarCandidaturasAtivasDoEstagiario: vi.fn().mockResolvedValue(0),
       getFindOneQueryResult: vi.fn().mockResolvedValue({
         id: createTestId(),
         situacao: "ACCEPTED",
