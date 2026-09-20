@@ -74,6 +74,8 @@ nav:
       - CI/CD e deploy: arquitetura/ci-cd-e-deploy.md
       - Stack tecnológico: arquitetura/stack-tecnologico.md
       - Diagrama de entidades: arquitetura/diagrama-de-entidades.md
+      - Módulo de Estágios: arquitetura/modulo-estagios.md
+      - Análise do calendário: analise-calendario.md
   - Operação:
       - Visão geral: operacao/index.md
       - Comece por aqui: operacao/comecando.md
