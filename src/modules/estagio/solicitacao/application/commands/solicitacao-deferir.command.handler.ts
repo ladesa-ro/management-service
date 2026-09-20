@@ -3,6 +3,7 @@ import type { IAccessContext } from "@/domain/abstractions";
 import { Dep, Impl } from "@/domain/dependency-injection";
 import { IAppTypeormConnection } from "@/infrastructure.database/typeorm/connection/app-typeorm-connection.interface";
 import { CampusEntity } from "@/modules/ambientes/campus/infrastructure.database/typeorm/campus.typeorm.entity";
+import { IEstagioCandidaturaRepository } from "@/modules/estagio/candidatura/domain/repositories/estagio-candidatura.repository.interface";
 import { IEmpresaCreateCommandHandler, IEmpresaRepository } from "@/modules/estagio/empresa";
 import { EstagioStatus, IEstagioCreateCommandHandler } from "@/modules/estagio/estagio";
 import { IEstagioSolicitacaoPermissionChecker } from "../../domain/authorization/estagio-solicitacao-permission-checker.interface";
@@ -30,6 +31,8 @@ export class EstagioSolicitacaoDeferirCommandHandlerImpl
     private readonly estagioCreateHandler: IEstagioCreateCommandHandler,
     @Dep(IAppTypeormConnection)
     private readonly appTypeormConnection: IAppTypeormConnection,
+    @Dep(IEstagioCandidaturaRepository)
+    private readonly candidaturaRepository: IEstagioCandidaturaRepository,
   ) {}
 
   async execute(
@@ -143,6 +146,14 @@ export class EstagioSolicitacaoDeferirCommandHandlerImpl
 
     // Atualiza a solicitação
     solicitacao.deferir(userId, estagio.id, empresaId, dto.parecer);
-    return await this.solicitacaoRepository.save(solicitacao);
+    const saved = await this.solicitacaoRepository.save(solicitacao);
+
+    // Cancela eventuais candidaturas ativas na fila de espera após formalização do estágio
+    await this.candidaturaRepository.cancelarCandidaturasAtivasDoEstagiario(
+      solicitacao.estagiario.id,
+      "Solicitação de estágio deferida",
+    );
+
+    return saved;
   }
 }
