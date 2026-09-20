@@ -39,7 +39,7 @@ export class CreateTableEstagioSolicitacao1783000000020 implements MigrationInte
           { name: "supervisor_email", type: "varchar", length: "255", isNullable: true },
           { name: "supervisor_telefone", type: "varchar", length: "20", isNullable: true },
 
-          // Auditoria e Análise do CIEC
+          // Auditoria e Análise da CIEC
           { name: "id_analista_fk", type: "uuid", isNullable: true },
           { name: "parecer_analise", type: "text", isNullable: true },
           { name: "data_analise", type: "timestamptz", isNullable: true },
