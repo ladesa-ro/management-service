@@ -1,4 +1,4 @@
-import { ForbiddenError, UnauthorizedError } from "@/application/errors";
+import { UnauthorizedError } from "@/application/errors";
 import type { IAccessContext } from "@/domain/abstractions";
 import { Dep, Impl } from "@/domain/dependency-injection";
 import { IPerfilRepository } from "@/modules/acesso/usuario/perfil/domain/repositories/perfil.repository.interface";
@@ -37,13 +37,21 @@ export class MinhasCandidaturasListQueryHandlerImpl implements IMinhasCandidatur
       }
     }
 
-    if (!estagiario) {
-      throw new ForbiddenError("Usuário não possui perfil de estagiário cadastrado.");
-    }
-
     const page = query?.page ?? 1;
     const limit = query?.limit ?? 10;
     const situacao = query?.["filter.situacao"] as string | undefined;
+
+    if (!estagiario) {
+      return {
+        data: [],
+        meta: {
+          totalItems: 0,
+          currentPage: page,
+          totalPages: 1,
+          itemsPerPage: limit,
+        },
+      };
+    }
 
     const { items, total } = await this.repository.findMinhasCandidaturas(
       accessContext,
