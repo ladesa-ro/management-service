@@ -91,7 +91,7 @@ export class EstagioSolicitacaoPermissionCheckerImpl
 
     if (!hasStaffCargo) {
       throw new ForbiddenError(
-        "Apenas servidores do CIEC ou administradores podem analisar solicitações.",
+        "Apenas servidores da CIEC ou administradores podem analisar solicitações.",
       );
     }
 
