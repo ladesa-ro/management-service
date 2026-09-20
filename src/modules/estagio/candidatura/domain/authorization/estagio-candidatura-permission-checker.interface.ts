@@ -9,6 +9,7 @@ export interface IEstagioCandidaturaPermissionChecker {
     accessContext: IAccessContext | null,
     estagiarioIdDaCandidatura: string,
   ): Promise<void>;
+  ensureCanListFila(accessContext: IAccessContext | null): Promise<void>;
   ensureCanCancelar(
     accessContext: IAccessContext | null,
     estagiarioIdDaCandidatura: string,
