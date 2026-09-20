@@ -94,7 +94,7 @@ describe("CandidaturaConvocarCommandHandler", () => {
   it("should throw ForbiddenError if caller is not authorized CIEC staff", async () => {
     const mocks = createMocks();
     mocks.permissionChecker.ensureCanConvocar.mockRejectedValue(
-      new ForbiddenError("Apenas servidores do CIEC podem convocar."),
+      new ForbiddenError("Apenas servidores da CIEC podem convocar."),
     );
 
     const handler = new CandidaturaConvocarCommandHandlerImpl(
