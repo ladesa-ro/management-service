@@ -40,6 +40,10 @@ describe("EstagioSolicitacaoDeferirCommandHandler", () => {
       getRepository: vi.fn().mockReturnValue(campusRepo),
     };
 
+    const candidaturaRepository = {
+      cancelarCandidaturasAtivasDoEstagiario: vi.fn().mockResolvedValue(0),
+    };
+
     return {
       solicitacaoRepository,
       permissionChecker,
@@ -48,6 +52,7 @@ describe("EstagioSolicitacaoDeferirCommandHandler", () => {
       estagioCreateHandler,
       campusRepo,
       appTypeormConnection,
+      candidaturaRepository,
     };
   }
 
@@ -82,6 +87,7 @@ describe("EstagioSolicitacaoDeferirCommandHandler", () => {
       mocks.empresaCreateHandler as any,
       mocks.estagioCreateHandler as any,
       mocks.appTypeormConnection as any,
+      mocks.candidaturaRepository as any,
     );
 
     const accessContext = createTestAccessContext(createTestRequestActor({ id: "ciec-user-id" }));
@@ -108,6 +114,10 @@ describe("EstagioSolicitacaoDeferirCommandHandler", () => {
       "Documentação aprovada.",
     );
     expect(mocks.solicitacaoRepository.save).toHaveBeenCalled();
+    expect(mocks.candidaturaRepository.cancelarCandidaturasAtivasDoEstagiario).toHaveBeenCalledWith(
+      estagiarioId,
+      "Solicitação de estágio deferida",
+    );
   });
 
   it("should throw ConflictError if request is already DEFERIDA", async () => {
@@ -126,6 +136,7 @@ describe("EstagioSolicitacaoDeferirCommandHandler", () => {
       mocks.empresaCreateHandler as any,
       mocks.estagioCreateHandler as any,
       mocks.appTypeormConnection as any,
+      mocks.candidaturaRepository as any,
     );
 
     const accessContext = createTestAccessContext(createTestRequestActor({ id: "ciec-user-id" }));
@@ -145,6 +156,7 @@ describe("EstagioSolicitacaoDeferirCommandHandler", () => {
       mocks.empresaCreateHandler as any,
       mocks.estagioCreateHandler as any,
       mocks.appTypeormConnection as any,
+      mocks.candidaturaRepository as any,
     );
 
     const accessContext = createTestAccessContext(createTestRequestActor({ id: "ciec-user-id" }));
@@ -156,7 +168,7 @@ describe("EstagioSolicitacaoDeferirCommandHandler", () => {
   it("should throw ForbiddenError if actor is not authorized CIEC staff", async () => {
     const mocks = createMocks();
     mocks.permissionChecker.ensureCanManageSolicitacoes.mockRejectedValue(
-      new ForbiddenError("Apenas servidores do CIEC podem deferir solicitações."),
+      new ForbiddenError("Apenas servidores da CIEC podem deferir solicitações."),
     );
 
     const handler = new EstagioSolicitacaoDeferirCommandHandlerImpl(
@@ -166,6 +178,7 @@ describe("EstagioSolicitacaoDeferirCommandHandler", () => {
       mocks.empresaCreateHandler as any,
       mocks.estagioCreateHandler as any,
       mocks.appTypeormConnection as any,
+      mocks.candidaturaRepository as any,
     );
 
     const accessContext = createTestAccessContext(createTestRequestActor({ id: "aluno-1" }));
