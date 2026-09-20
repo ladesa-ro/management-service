@@ -35,9 +35,7 @@ export class OpenidConnectTokenService implements IIdpTokenService {
       id_token: tokenset.id_token ?? null,
       refresh_token: tokenset.refresh_token ?? null,
       expires_in: tokenset.expires_in ?? null,
-      expires_at: tokenset.expires_in
-        ? new Date(getNowTime() + tokenset.expires_in).getTime()
-        : null,
+      expires_at: tokenset.expires_in ? getNowTime() + tokenset.expires_in * 1000 : null,
       session_state: (tokenset.session_state as string) ?? null,
       scope: tokenset.scope ?? null,
     };
