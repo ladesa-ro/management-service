@@ -7,7 +7,7 @@ export const CandidaturaConvocarCommandMetadata = createOperationMetadata({
   operationId: "estagioCandidaturaConvocar",
   summary: "Convoca candidato da fila de espera para ocupar a vaga",
   description:
-    "Operação restrita ao CIEC e servidores autorizados. Transiciona a candidatura de PENDING para OFFERED com prazo de expiração determinado.",
+    "Operação restrita à CIEC e servidores autorizados. Transiciona a candidatura de PENDING para OFFERED com prazo de expiração determinado.",
 });
 
 export const ICandidaturaConvocarCommandHandler = Symbol("ICandidaturaConvocarCommandHandler");
