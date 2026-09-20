@@ -6,31 +6,31 @@ Documentação técnica e arquitetural completa do módulo de Estágios do **man
 
 ## Índice
 
-1. [Visão Geral](#1-visão-geral)
-2. [Arquitetura do Módulo](#2-arquitetura-do-módulo)
+1. [Visão Geral](#1-visao-geral)
+2. [Arquitetura do Módulo](#2-arquitetura-do-modulo)
 3. [Entidades e Banco de Dados](#3-entidades-e-banco-de-dados)
 4. [Status e Enums](#4-status-e-enums)
-5. [Autenticação e Autorização](#5-autenticação-e-autorização)
-6. [Referência de Endpoints REST](#6-referência-de-endpoints-rest)
-   - [Estágios](#61-estágios)
-   - [Estagiários](#62-estagiários)
-   - [Candidaturas / Fila de Espera](#63-candidaturas--fila-de-espera)
-   - [Solicitações de Estágio](#64-solicitações-de-estágio)
-   - [Minhas Solicitações (Aluno)](#65-minhas-solicitações-aluno)
+5. [Autenticação e Autorização](#5-autenticacao-e-autorizacao)
+6. [Referência de Endpoints REST](#6-referencia-de-endpoints-rest)
+   - [Estágios](#61-estagios)
+   - [Estagiários](#62-estagiarios)
+   - [Candidaturas / Fila de Espera](#63-candidaturas-fila-de-espera)
+   - [Solicitações de Estágio](#64-solicitacoes-de-estagio)
+   - [Minhas Solicitações (Aluno)](#65-minhas-solicitacoes-aluno)
    - [Folha de Ponto](#66-folha-de-ponto)
    - [Tokens de Folha de Ponto (Supervisor)](#67-tokens-de-folha-de-ponto-supervisor)
    - [Empresas](#68-empresas)
-   - [Avaliações de Empresas](#69-avaliações-de-empresas)
-   - [Relatórios de Estágio](#610-relatórios-de-estágio)
+   - [Avaliações de Empresas](#69-avaliacoes-de-empresas)
+   - [Relatórios de Estágio](#610-relatorios-de-estagio)
 7. [Tabela Consolidada de Endpoints](#7-tabela-consolidada-de-endpoints)
-8. [Regras de Negócio](#8-regras-de-negócio)
+8. [Regras de Negócio](#8-regras-de-negocio)
 9. [Fluxos Principais](#9-fluxos-principais)
-10. [Importação em Massa (CSV/XLSX)](#10-importação-em-massa-csvxlsx)
+10. [Importação em Massa (CSV/XLSX)](#10-importacao-em-massa-csvxlsx)
 11. [Diagrama ERD](#11-diagrama-erd)
-12. [Integrações com Outros Módulos](#12-integrações-com-outros-módulos)
-13. [Notificações e WebSockets](#13-notificações-e-websockets)
-14. [Possíveis Erros e Códigos HTTP](#14-possíveis-erros-e-códigos-http)
-15. [Inconsistências e Observações Técnicas](#15-inconsistências-e-observações-técnicas)
+12. [Integrações com Outros Módulos](#12-integracoes-com-outros-modulos)
+13. [Notificações e WebSockets](#13-notificacoes-e-websockets)
+14. [Possíveis Erros e Códigos HTTP](#14-possiveis-erros-e-codigos-http)
+15. [Inconsistências e Observações Técnicas](#15-inconsistencias-e-observacoes-tecnicas)
 
 ---
 
@@ -89,7 +89,7 @@ Todos os endpoints descritos neste documento são relativos a esse prefixo. Exem
 
 ### 3.1 Tabela `estagio`
 
-Entidade TypeORM: [`EstagioTypeormEntity`](../../src/modules/estagio/estagio/infrastructure.database/typeorm/estagio.typeorm.entity.ts)
+Entidade TypeORM: `EstagioTypeormEntity` (`src/modules/estagio/estagio/infrastructure.database/typeorm/estagio.typeorm.entity.ts`)
 
 | Coluna | Tipo PostgreSQL | Nullable | Descrição |
 |---|---|---|---|
@@ -102,7 +102,7 @@ Entidade TypeORM: [`EstagioTypeormEntity`](../../src/modules/estagio/estagio/inf
 | `carga_horaria` | `integer` | NOT NULL | Carga horária total contratual (horas) |
 | `data_inicio` | `date` | NULL | Data de início do estágio |
 | `data_fim` | `date` | NULL | Data de encerramento real |
-| `status` | `enum` | NOT NULL | Ver [seção 4.1](#41-status-do-estágio) |
+| `status` | `enum` | NOT NULL | Ver [seção 4.1](#41-status-do-estagio) |
 | `nome_supervisor` | `varchar(255)` | NULL | Nome do supervisor na empresa |
 | `email_supervisor` | `varchar(255)` | NULL | E-mail do supervisor |
 | `telefone_supervisor` | `varchar(20)` | NULL | Telefone do supervisor |
@@ -127,14 +127,14 @@ Entidade TypeORM: [`EstagioTypeormEntity`](../../src/modules/estagio/estagio/inf
 
 ### 3.2 Tabela `estagio_candidatura`
 
-Entidade TypeORM: [`EstagioCandidaturaTypeormEntity`](../../src/modules/estagio/candidatura/infrastructure.database/typeorm/estagio-candidatura.typeorm.entity.ts)
+Entidade TypeORM: `EstagioCandidaturaTypeormEntity` (`src/modules/estagio/candidatura/infrastructure.database/typeorm/estagio-candidatura.typeorm.entity.ts`)
 
 | Coluna | Tipo PostgreSQL | Nullable | Descrição |
 |---|---|---|---|
 | `id` | `uuid` | NOT NULL | PK (UUIDv7) |
 | `id_estagio_fk` | `uuid` | NOT NULL | FK → `estagio` |
 | `id_estagiario_fk` | `uuid` | NOT NULL | FK → `estagiario` |
-| `situacao` | `enum` | NOT NULL | Ver [seção 4.2](#42-situação-da-candidatura) |
+| `situacao` | `enum` | NOT NULL | Ver [seção 4.2](#42-situacao-da-candidatura) |
 | `data_inscricao` | `timestamptz` | NOT NULL | Momento da inscrição na fila |
 | `data_oferta` | `timestamptz` | NULL | Quando a oferta foi feita ao candidato |
 | `expira_em` | `timestamptz` | NULL | Prazo para aceite da oferta |
@@ -148,13 +148,13 @@ Entidade TypeORM: [`EstagioCandidaturaTypeormEntity`](../../src/modules/estagio/
 
 ### 3.3 Tabela `estagio_solicitacao`
 
-Entidade TypeORM: [`EstagioSolicitacaoTypeormEntity`](../../src/modules/estagio/solicitacao/infrastructure.database/typeorm/estagio-solicitacao.typeorm.entity.ts)
+Entidade TypeORM: `EstagioSolicitacaoTypeormEntity` (`src/modules/estagio/solicitacao/infrastructure.database/typeorm/estagio-solicitacao.typeorm.entity.ts`)
 
 | Coluna | Tipo PostgreSQL | Nullable | Descrição |
 |---|---|---|---|
 | `id` | `uuid` | NOT NULL | PK (UUIDv7) |
 | `tipo` | `enum('INTERNO','EXTERNO')` | NOT NULL | Tipo de solicitação |
-| `situacao` | `enum` | NOT NULL | Ver [seção 4.3](#43-situação-da-solicitação) |
+| `situacao` | `enum` | NOT NULL | Ver [seção 4.3](#43-situacao-da-solicitacao) |
 | `id_estagiario_fk` | `uuid` | NOT NULL | FK → `estagiario` |
 | `id_campus_fk` | `uuid` | NOT NULL | FK → `campus` |
 | `id_professor_orientador_fk` | `uuid` | NULL | FK → `usuario` (professor orientador sugerido) |
@@ -179,7 +179,7 @@ Entidade TypeORM: [`EstagioSolicitacaoTypeormEntity`](../../src/modules/estagio/
 
 ### 3.4 Tabela `folha_ponto`
 
-Entidade TypeORM: [`FolhaPontoTypeormEntity`](../../src/modules/estagio/folha-ponto/infrastructure.database/typeorm/folha-ponto.typeorm.entity.ts)
+Entidade TypeORM: `FolhaPontoTypeormEntity` (`src/modules/estagio/folha-ponto/infrastructure.database/typeorm/folha-ponto.typeorm.entity.ts`)
 
 | Coluna | Tipo PostgreSQL | Nullable | Descrição |
 |---|---|---|---|
@@ -206,7 +206,7 @@ A tabela `folha_ponto` possui uma relação `@OneToMany` com a tabela de tokens 
 
 ### 4.1 Status do Estágio
 
-Enum: [`EstagioStatus`](../../src/modules/estagio/estagio/domain/estagio.ts)
+Enum: `EstagioStatus` (`src/modules/estagio/estagio/domain/estagio.ts`)
 
 | Valor | Descrição |
 |---|---|
@@ -222,7 +222,7 @@ Enum: [`EstagioStatus`](../../src/modules/estagio/estagio/domain/estagio.ts)
 
 ### 4.2 Situação da Candidatura
 
-Enum inline em: [`EstagioCandidaturaTypeormEntity`](../../src/modules/estagio/candidatura/infrastructure.database/typeorm/estagio-candidatura.typeorm.entity.ts)
+Enum inline em: `EstagioCandidaturaTypeormEntity` (`src/modules/estagio/candidatura/infrastructure.database/typeorm/estagio-candidatura.typeorm.entity.ts`)
 
 | Valor | Descrição |
 |---|---|
@@ -235,7 +235,7 @@ Enum inline em: [`EstagioCandidaturaTypeormEntity`](../../src/modules/estagio/ca
 
 ### 4.3 Situação da Solicitação
 
-Enum em: [`EstagioSolicitacaoTypeormEntity`](../../src/modules/estagio/solicitacao/infrastructure.database/typeorm/estagio-solicitacao.typeorm.entity.ts)
+Enum em: `EstagioSolicitacaoTypeormEntity` (`src/modules/estagio/solicitacao/infrastructure.database/typeorm/estagio-solicitacao.typeorm.entity.ts`)
 
 | Valor | Descrição |
 |---|---|
@@ -318,7 +318,7 @@ O sistema distingue dois grandes perfis de usuário:
 
 ### 6.1 Estágios
 
-**Controller**: [`EstagioRestController`](../../src/modules/estagio/estagio/presentation.rest/estagio.rest.controller.ts)
+**Controller**: `EstagioRestController` (`src/modules/estagio/estagio/presentation.rest/estagio.rest.controller.ts`)
 **Tag OpenAPI**: `estagios`
 **Prefixo**: `/api/estagios`
 
@@ -551,7 +551,7 @@ Ao concluir, o sistema:
 1. Cria uma notificação para o usuário que disparou a importação (via `INotificacaoRepository`).
 2. Emite um evento WebSocket via `EstagioNotificacaoPushService`.
 
-Ver detalhes em [Importação em Massa](#10-importação-em-massa-csvxlsx).
+Ver detalhes em [Importação em Massa](#10-importacao-em-massa-csvxlsx).
 
 ---
 
@@ -581,7 +581,7 @@ Cria uma solicitação de estágio diretamente associada a um estágio existente
 
 ### 6.2 Estagiários
 
-**Controller**: [`EstagiarioRestController`](../../src/modules/estagio/estagiario/presentation.rest/estagiario.rest.controller.ts)
+**Controller**: `EstagiarioRestController` (`src/modules/estagio/estagiario/presentation.rest/estagiario.rest.controller.ts`)
 **Tag OpenAPI**: `estagiarios`
 **Prefixo**: `/api/estagiarios`
 
@@ -674,7 +674,7 @@ Remove um estagiário (soft delete).
 
 ### 6.3 Candidaturas / Fila de Espera
 
-**Controller**: [`EstagioCandidaturaRestController`](../../src/modules/estagio/candidatura/presentation.rest/estagio-candidatura.rest.controller.ts) + [`MinhasCandidaturasRestController`](../../src/modules/estagio/candidatura/presentation.rest/minhas-candidaturas.rest.controller.ts)
+**Controller**: `EstagioCandidaturaRestController` (`src/modules/estagio/candidatura/presentation.rest/estagio-candidatura.rest.controller.ts`) + `MinhasCandidaturasRestController` (`src/modules/estagio/candidatura/presentation.rest/minhas-candidaturas.rest.controller.ts`)
 **Tags OpenAPI**: `estagios-candidaturas`, `estagios-minhas-candidaturas`
 
 ---
@@ -798,7 +798,7 @@ Aceita uma oferta de vaga (situação `OFFERED` → `ACCEPTED`).
 
 ### 6.4 Solicitações de Estágio
 
-**Controller**: [`EstagioSolicitacaoRestController`](../../src/modules/estagio/solicitacao/presentation.rest/estagio-solicitacao.rest.controller.ts)
+**Controller**: `EstagioSolicitacaoRestController` (`src/modules/estagio/solicitacao/presentation.rest/estagio-solicitacao.rest.controller.ts`)
 **Tag OpenAPI**: `estagios-solicitacoes`
 **Prefixo**: `/api/solicitacoes-estagio`
 
@@ -895,7 +895,7 @@ O campo `parecer` é **obrigatório**.
 
 ### 6.5 Minhas Solicitações (Aluno)
 
-**Controller**: [`MinhasSolicitacoesRestController`](../../src/modules/estagio/solicitacao/presentation.rest/minhas-solicitacoes.rest.controller.ts)
+**Controller**: `MinhasSolicitacoesRestController` (`src/modules/estagio/solicitacao/presentation.rest/minhas-solicitacoes.rest.controller.ts`)
 **Tag OpenAPI**: `estagios-minhas-solicitacoes`
 **Prefixo**: `/api/minhas-solicitacoes`
 
@@ -933,7 +933,7 @@ Cancela uma solicitação do aluno autenticado.
 
 ### 6.6 Folha de Ponto
 
-**Controller**: [`FolhaPontoRestController`](../../src/modules/estagio/folha-ponto/presentation.rest/folha-ponto.rest.controller.ts)
+**Controller**: `FolhaPontoRestController` (`src/modules/estagio/folha-ponto/presentation.rest/folha-ponto.rest.controller.ts`)
 **Tag OpenAPI**: `folha-ponto`
 **Prefixo**: `/api/folha-ponto`
 
@@ -1038,7 +1038,7 @@ Cancela uma folha de ponto (soft delete).
 
 ### 6.7 Tokens de Folha de Ponto (Supervisor)
 
-**Controller**: [`FolhaPontoTokenRestController`](../../src/modules/estagio/folha-ponto/presentation.rest/folha-ponto-token.rest.controller.ts)
+**Controller**: `FolhaPontoTokenRestController` (`src/modules/estagio/folha-ponto/presentation.rest/folha-ponto-token.rest.controller.ts`)
 **Tag OpenAPI**: `folha-ponto-tokens`
 **Prefixo**: `/api/folha-ponto/tokens`
 **Autenticação**: **Não requerida** (rota pública `@Public()`)
@@ -1090,7 +1090,7 @@ Confirma a ação do supervisor (aprovação/rejeição/cancelamento).
 
 ### 6.8 Empresas
 
-**Controller**: [`EmpresaRestController`](../../src/modules/estagio/empresa/presentation.rest/empresa.rest.controller.ts)
+**Controller**: `EmpresaRestController` (`src/modules/estagio/empresa/presentation.rest/empresa.rest.controller.ts`)
 **Tag OpenAPI**: `empresas`
 **Prefixo**: `/api/empresas`
 
@@ -1110,7 +1110,7 @@ Confirma a ação do supervisor (aprovação/rejeição/cancelamento).
 
 ### 6.9 Avaliações de Empresas
 
-**Controller**: [`EmpresaAvaliacaoRestController`](../../src/modules/estagio/empresa-avaliacao/presentation.rest/empresa-avaliacao.rest.controller.ts)
+**Controller**: `EmpresaAvaliacaoRestController` (`src/modules/estagio/empresa-avaliacao/presentation.rest/empresa-avaliacao.rest.controller.ts`)
 **Tag OpenAPI**: `empresas-avaliacoes`
 **Prefixo**: `/api/empresas`
 
@@ -1139,7 +1139,7 @@ Confirma a ação do supervisor (aprovação/rejeição/cancelamento).
 
 Existem dois controllers para relatórios: um CRUD geral (`/relatorios-estagio`) e um nested por estágio (`/estagios/:id/relatorio`).
 
-**Controllers**: [`RelatorioRestController`](../../src/modules/estagio/relatorio/presentation.rest/relatorio.rest.controller.ts) + [`EstagioRelatorioRestController`](../../src/modules/estagio/relatorio/presentation.rest/estagio-relatorio.rest.controller.ts)
+**Controllers**: `RelatorioRestController` (`src/modules/estagio/relatorio/presentation.rest/relatorio.rest.controller.ts`) + `EstagioRelatorioRestController` (`src/modules/estagio/relatorio/presentation.rest/estagio-relatorio.rest.controller.ts`)
 **Tags OpenAPI**: `relatorios-estagio`, `estagios`
 
 ---
@@ -1344,7 +1344,7 @@ O endpoint `POST /api/estagios/importar` aceita arquivos CSV e XLSX para cadastr
 
 ### 10.1 Detecção Automática de Delimitador
 
-O helper [`parseEstagioImportCsv`](../../src/modules/estagio/estagio/application/helpers/estagio-import-csv.helper.ts) detecta automaticamente o delimitador do CSV testando `,`, `;` e `\t` e escolhendo o que gera mais colunas.
+O helper `parseEstagioImportCsv` (`src/modules/estagio/estagio/application/helpers/estagio-import-csv.helper.ts`) detecta automaticamente o delimitador do CSV testando `,`, `;` e `\t` e escolhendo o que gera mais colunas.
 
 ### 10.2 Mapeamento de Colunas
 
@@ -1549,7 +1549,7 @@ erDiagram
 
 ## 13. Notificações e WebSockets
 
-O sistema usa Redis como adapter para Socket.IO (configurado em `setup-server.ts`). O serviço [`EstagioNotificacaoPushService`](../../src/modules/acesso/notificacao/application/services/) emite eventos para o cliente ao:
+O sistema usa Redis como adapter para Socket.IO (configurado em `setup-server.ts`). O serviço `EstagioNotificacaoPushService` (`src/modules/acesso/notificacao/application/services/`) emite eventos para o cliente ao:
 
 - Concluir uma importação em massa (`notificarImportacaoConcluida`)
 
