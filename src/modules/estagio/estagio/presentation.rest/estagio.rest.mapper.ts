@@ -3,7 +3,7 @@ import type {
   EstagioSolicitarCommand,
   EstagioUpdateCommand,
 } from "@/modules/estagio/estagio/domain/commands";
-import type { EstagioStatus } from "@/modules/estagio/estagio/domain/estagio";
+import { EstagioStatus } from "@/modules/estagio/estagio/domain/estagio";
 import type {
   EstagioFindOneQuery,
   EstagioFindOneQueryResult,
@@ -123,6 +123,27 @@ export const listInputDtoToListQuery = createMapper<EstagioListInputRestDto, Est
       dto["filter.estagiario.nome"] ?? dto["filter.estagiario.perfil.usuario.nome"];
     if (nomeEstagiario !== undefined) {
       (query as any)["filter.estagiario.perfil.usuario.nome"] = nomeEstagiario;
+    }
+
+    const statusFilter = dto.status ?? dto["filter.status"];
+    if (statusFilter !== undefined) {
+      into(query).field("filterStatus").from({ "filter.status": statusFilter }, "filter.status");
+      (query as any)["filter.status"] = statusFilter;
+    }
+
+    const cursoFilter = dto.cursoId ?? dto["filter.curso.id"] ?? dto["filter.CursoReferencia.id"];
+    if (cursoFilter !== undefined) {
+      (query as any)["filter.CursoReferencia.id"] = cursoFilter;
+      into(query)
+        .field("filterCursoReferenciaId")
+        .from({ "filter.CursoReferencia.id": cursoFilter }, "filter.CursoReferencia.id");
+    }
+
+    const isDisponivel = dto.disponivel === true || dto.disponivel === "true";
+    if (isDisponivel) {
+      (query as any)["filter.estagiario.id"] = "$null";
+      (query as any)["filter.status"] = [EstagioStatus.DISPONIVEL];
+      query.filterStatus = [EstagioStatus.DISPONIVEL];
     }
 
     return query;
