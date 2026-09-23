@@ -41,6 +41,10 @@ Fluxo real, implementado em `src/server/nest/auth/request-actor-resolver.adapter
 
 O JWKS é buscado na URL `{OAUTH2_CLIENT_PROVIDER_OIDC_ISSUER}/.well-known/openid-configuration`. As credenciais de client (`KC_CLIENT_ID`, `KC_CLIENT_SECRET`) autenticam o admin client do Keycloak pra operação administrativa (como criar usuário), não o fluxo de validação de token em si.
 
+### Ciclo de vida e cache de validação
+
+A autoridade emissora dos tokens é o **Keycloak**. A duração dos tokens (`Access Token Lifespan`, `SSO Session Idle/Max`) é configurada no Realm do Keycloak. O backend aceita dinamicamente a expiração informada pelo Keycloak (`expires_in`) e mantém um cache LRU de validação (`IdentityProviderService`) com teto de segurança de **5 minutos**, garantindo que revogações de credenciais no Keycloak sejam propagadas para a API mesmo quando os tokens tiverem longa duração.
+
 ## Tokens mock em desenvolvimento
 
 ```bash
