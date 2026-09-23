@@ -38,4 +38,6 @@ export const ConfigTokensMap = new Map<symbol, string>([
   [ConfigTokens.WhatsAppOptions.Timeout, EnvKeys.WAHA_TIMEOUT],
   [ConfigTokens.WhatsAppOptions.Session, EnvKeys.WAHA_SESSION],
   [ConfigTokens.WhatsAppOptions.WebhookHmacKey, EnvKeys.WAHA_WEBHOOK_HMAC_KEY],
+  [ConfigTokens.RateLimitOptions.Ttl, EnvKeys.RATE_LIMIT_TTL],
+  [ConfigTokens.RateLimitOptions.Limit, EnvKeys.RATE_LIMIT_LIMIT],
 ]);
