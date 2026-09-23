@@ -34,6 +34,20 @@ describe("AutenticacaoRestController", () => {
     expect(redefinirSenhaNeedsAuth).toBe(false);
   });
 
+  it("should configure expected throttle limits on sensitive endpoints", () => {
+    expect(Reflect.getMetadata("THROTTLER:LIMITdefault", controller.login)).toBe(20);
+    expect(Reflect.getMetadata("THROTTLER:TTLdefault", controller.login)).toBe(60000);
+
+    expect(Reflect.getMetadata("THROTTLER:LIMITdefault", controller.refresh)).toBe(60);
+    expect(Reflect.getMetadata("THROTTLER:TTLdefault", controller.refresh)).toBe(60000);
+
+    expect(Reflect.getMetadata("THROTTLER:LIMITdefault", controller.definirSenha)).toBe(10);
+    expect(Reflect.getMetadata("THROTTLER:TTLdefault", controller.definirSenha)).toBe(60000);
+
+    expect(Reflect.getMetadata("THROTTLER:LIMITdefault", controller.redefinirSenha)).toBe(10);
+    expect(Reflect.getMetadata("THROTTLER:TTLdefault", controller.redefinirSenha)).toBe(60000);
+  });
+
   it("should NOT mark private endpoints as public", () => {
     const whoAmINeedsAuth = reflector.get(NEEDS_AUTH_KEY, controller.whoAmI);
     const whoAmIEnsinoNeedsAuth = reflector.get(NEEDS_AUTH_KEY, controller.whoAmIEnsino);

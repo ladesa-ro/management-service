@@ -107,7 +107,7 @@ export class AutenticacaoRestController {
 
   @Post("/login")
   @Public()
-  @Throttle({ default: { limit: 10, ttl: 60000 } })
+  @Throttle({ default: { limit: 20, ttl: 60000 } })
   @ApiOperation(AutenticacaoLoginCommandMetadata.swaggerMetadata)
   @ApiCreatedResponse({ type: AuthSessionCredentialsRestDto })
   @ApiForbiddenResponse()
@@ -120,7 +120,7 @@ export class AutenticacaoRestController {
 
   @Post("/login/refresh")
   @Public()
-  @Throttle({ default: { limit: 15, ttl: 60000 } })
+  @Throttle({ default: { limit: 60, ttl: 60000 } })
   @ApiOperation(AutenticacaoRefreshCommandMetadata.swaggerMetadata)
   @ApiCreatedResponse({ type: AuthSessionCredentialsRestDto })
   @ApiUnauthorizedResponse({ description: "Token de refresh inválido ou expirado." })
@@ -134,7 +134,7 @@ export class AutenticacaoRestController {
 
   @Post("/definir-senha")
   @Public()
-  @Throttle({ default: { limit: 5, ttl: 60000 } })
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
   @ApiOperation(AutenticacaoDefinirSenhaCommandMetadata.swaggerMetadata)
   @ApiCreatedResponse({ type: Boolean })
   @ApiForbiddenResponse()
@@ -147,7 +147,7 @@ export class AutenticacaoRestController {
 
   @Post("/redefinir-senha")
   @Public()
-  @Throttle({ default: { limit: 5, ttl: 60000 } })
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
   @ApiOperation(AutenticacaoRecoverPasswordCommandMetadata.swaggerMetadata)
   @ApiCreatedResponse({ type: Boolean })
   @ApiForbiddenResponse()

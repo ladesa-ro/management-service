@@ -43,4 +43,8 @@ export const ConfigTokens = {
     Session: Symbol("WhatsAppOptions.Session"),
     WebhookHmacKey: Symbol("WhatsAppOptions.WebhookHmacKey"),
   },
+  RateLimitOptions: {
+    Ttl: Symbol("RateLimitOptions.Ttl"),
+    Limit: Symbol("RateLimitOptions.Limit"),
+  },
 } as const;

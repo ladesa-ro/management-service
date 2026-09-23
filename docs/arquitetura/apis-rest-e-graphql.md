@@ -29,6 +29,7 @@ flowchart LR
 | Etapa | Implementação real |
 |---|---|
 | Middleware | `correlationIdMiddleware`, gera ID único por requisição pra rastreamento em log (`src/infrastructure.logging/`) |
+| Rate Limiting | `AppThrottlerGuard` global (`@nestjs/throttler`), configurável via `RATE_LIMIT_TTL` e `RATE_LIMIT_LIMIT` (padrão: 200 req/60s), com limites dedicados em endpoints críticos |
 | Guard | Valida Bearer token via JWKS (ou mock token em dev), popula `RequestActor` (`src/server/nest/auth/`), ver [Autenticação e autorização](autenticacao-e-autorizacao.md) |
 | Pipe | `ZodGlobalValidationPipe`, valida body contra `static schema` do DTO |
 | Controller | Extrai o ator (`@AccessContextHttp()`), delega pro handler |
