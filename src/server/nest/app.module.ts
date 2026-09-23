@@ -1,6 +1,7 @@
 import { Module } from "@nestjs/common";
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from "@nestjs/core";
 import { ThrottlerModule } from "@nestjs/throttler";
+import { ConfigTokens, IConfigService } from "@/infrastructure.config";
 import { ContainerModule } from "@/infrastructure.dependency-injection";
 import { LoggingModule, RequestLoggingInterceptor } from "@/infrastructure.logging";
 import { InfrastructureModule } from "@/infrastructure.module";
@@ -20,12 +21,22 @@ import { ResilienceModule } from "@/shared/resilience";
 
 @Module({
   imports: [
-    ThrottlerModule.forRoot([
-      {
-        ttl: 60000,
-        limit: 20,
+    ThrottlerModule.forRootAsync({
+      inject: [IConfigService],
+      useFactory: (configService: IConfigService) => {
+        const rawTtl = configService.get<number | string>(ConfigTokens.RateLimitOptions.Ttl);
+        const rawLimit = configService.get<number | string>(ConfigTokens.RateLimitOptions.Limit);
+        const ttl = rawTtl ? Number(rawTtl) || 60000 : 60000;
+        const limit = rawLimit ? Number(rawLimit) || 200 : 200;
+
+        return [
+          {
+            ttl,
+            limit,
+          },
+        ];
       },
-    ]),
+    }),
     ResilienceModule,
     IdempotencyModule,
     LoggingModule,
