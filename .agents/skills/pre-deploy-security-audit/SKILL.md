@@ -153,7 +153,7 @@ cat src/server/plugins/use-helmet.ts
 
 ### 🔒 4. Rate Limiting
 
-**Configuração global atual**: `ThrottlerModule` com `ttl: 60000, limit: 20` (20 req/min global).
+**Configuração global**: `ThrottlerModule.forRootAsync` com `ttl: 60000, limit: 200` padrão (200 req/min global, parametrizável via `RATE_LIMIT_TTL` e `RATE_LIMIT_LIMIT`).
 
 ```bash
 # Verificar endpoints com throttling específico
@@ -162,7 +162,7 @@ just exec grep -rn "ThrottlerGuard\|@Throttle" src/modules/ --include="*.ts"
 
 **Verificações:**
 
-- [ ] Endpoints de autenticação (`/autenticacao/login`, `/autenticacao/login/refresh`) têm throttling mais restritivo que o global?
+- [ ] Endpoints de autenticação (`/autenticacao/login`, `/autenticacao/login/refresh`) têm throttling configurado adequadamente (`/login` 20 req/min, `/login/refresh` 60 req/min)?
 - [ ] O `ThrottlerGuard` global está aplicado? (verificar se há `APP_GUARD` com `ThrottlerGuard` em `AppModule`)
 - [ ] Endpoints de `redefinir-senha` e `definir-senha` têm proteção adicional?
 
@@ -412,12 +412,12 @@ import { Throttle } from "@nestjs/throttler";
 
 @Post("/login")
 @Public()
-@Throttle({ default: { limit: 5, ttl: 60000 } })  // 5 tentativas por minuto
+@Throttle({ default: { limit: 20, ttl: 60000 } })  // 20 tentativas por minuto
 async login(...) { ... }
 
 @Post("/login/refresh")
 @Public()
-@Throttle({ default: { limit: 10, ttl: 60000 } })  // 10 por minuto
+@Throttle({ default: { limit: 60, ttl: 60000 } })  // 60 por minuto
 async refresh(...) { ... }
 ```
 
