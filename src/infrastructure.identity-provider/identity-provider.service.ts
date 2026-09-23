@@ -48,6 +48,8 @@ export class IdentityProviderService implements IIdentityProvider {
     throw new UnauthorizedException("The provided access token is either invalid or expired.");
   }
 
+  private static readonly MAX_CACHE_TTL_MS = 5 * 60 * 1000;
+
   private async getIdentityResponseFromAccessTokenSoft(
     accessToken: string,
   ): Promise<IntrospectionResponseWithUser> {
@@ -57,8 +59,12 @@ export class IdentityProviderService implements IIdentityProvider {
       const exp = decoded?.exp;
 
       if (decoded && exp) {
+        const tokenRemainingTtl = exp * 1000 - getNowTime();
         this.#cache.set(accessToken, identityResponse, {
-          ttl: Math.max(exp * 1000 - getNowTime(), 1000),
+          ttl: Math.max(
+            Math.min(tokenRemainingTtl, IdentityProviderService.MAX_CACHE_TTL_MS),
+            1000,
+          ),
         });
       } else {
         this.#cache.set(accessToken, identityResponse, {
