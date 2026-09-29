@@ -39,7 +39,7 @@ services:
 
   db:
     container_name: ladesa-management-service-db
-    image: docker.io/bitnamilegacy/postgresql:15
+    image: docker.io/soldevelo/postgresql:15
     volumes:
       - "management-service-db-data:/bitnami/postgresql"
     networks:
